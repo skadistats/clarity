@@ -117,7 +117,12 @@ public class PacketHandlerRegistry {
 			@Override
 			public void apply(CSVCMsg_PacketEntities message, Match match) {
 				EntityCollection entities = match.getEntityCollection();
-				List<Pair<PVS, Entity>> changes = new PacketEntitiesDecoder(message, match.getReceivePropsByClass()).decode(entities);
+				List<Pair<PVS, Entity>> changes = new PacketEntitiesDecoder(
+					message.getEntityData().toByteArray(), 
+					message.getUpdatedEntries(),
+					message.getIsDelta(),
+					match.getReceivePropsByClass()
+				).decode(match.getEntityCollection());
 				for (Pair<PVS, Entity> change : changes) {
 					PVS pvs = change.getValue0();
 					Entity entity = change.getValue1();
@@ -150,7 +155,18 @@ public class PacketHandlerRegistry {
 		EMBED.put(SVC_Messages.svc_ServerInfo_VALUE, new DemoPacketHandler<CSVCMsg_ServerInfo>(CSVCMsg_ServerInfo.class));
 		EMBED.put(SVC_Messages.svc_SetView_VALUE, new DemoPacketHandler<CSVCMsg_SetView>(CSVCMsg_SetView.class));
 		EMBED.put(SVC_Messages.svc_Sounds_VALUE, new DemoPacketHandler<CSVCMsg_Sounds>(CSVCMsg_Sounds.class));
-		EMBED.put(SVC_Messages.svc_TempEntities_VALUE, new DemoPacketHandler<CSVCMsg_TempEntities>(CSVCMsg_TempEntities.class));
+		EMBED.put(SVC_Messages.svc_TempEntities_VALUE, new DemoPacketHandler<CSVCMsg_TempEntities>(CSVCMsg_TempEntities.class) {
+			@Override
+			public void apply(CSVCMsg_TempEntities message, Match match) {
+//				List<Pair<PVS, Entity>> changes = new PacketEntitiesDecoder(
+//					message.getEntityData().toByteArray(), 
+//					message.getNumEntries(),
+//					false,
+//					match.getReceivePropsByClass()
+//				).decode(match.getEntityCollection());
+//				System.out.println(changes);
+			}
+		});
 		EMBED.put(SVC_Messages.svc_UpdateStringTable_VALUE, new DemoPacketHandler<CSVCMsg_UpdateStringTable>(CSVCMsg_UpdateStringTable.class) {
 			@Override
 			public void apply(CSVCMsg_UpdateStringTable message, Match match) {

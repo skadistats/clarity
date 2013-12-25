@@ -13,32 +13,33 @@ import clarity.model.EntityCollection;
 import clarity.model.PVS;
 import clarity.model.ReceiveProp;
 
-import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
-
 public class PacketEntitiesDecoder {
 	
-	private final CSVCMsg_PacketEntities message;
 	private final Map<Integer, List<ReceiveProp>> receivePropsByClass;
 	private final int classBits;
+	private final int numEntries;
+	private final boolean isDelta;
 	private final EntityBitStream stream;
 
-	public PacketEntitiesDecoder(CSVCMsg_PacketEntities message, Map<Integer, List<ReceiveProp>> receivePropsByClass) {
-		this.message = message;
+	public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, Map<Integer, List<ReceiveProp>> receivePropsByClass) {
+		this.stream = new EntityBitStream(data);
+		this.numEntries = numEntries;
+		this.isDelta = isDelta;
 		this.receivePropsByClass = receivePropsByClass;
 		this.classBits = Util.calcBitsNeededFor(receivePropsByClass.size() - 1);
-		this.stream = new EntityBitStream(message.getEntityData().toByteArray());
+		
 	}
 	
 	public List<Pair<PVS, Entity>> decode(EntityCollection world) {
 		List<Pair<PVS, Entity>> patch = new LinkedList<Pair<PVS, Entity>>();
 		int index = -1;
 		//System.out.println("------ decoding packet entities, num " + message.getUpdatedEntries());
-		while (patch.size() < message.getUpdatedEntries()) {
+		while (patch.size() < numEntries) {
 			Pair<PVS, Entity> diff = decodeDiff(index, world);
 			index = diff.getValue1().getIndex();
 			patch.add(diff);
 		}
-		if (message.getIsDelta()) {
+		if (isDelta) {
 			patch.addAll(decodeDeletionDiffs());
 		}
 		return patch;
