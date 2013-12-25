@@ -6,6 +6,8 @@ import java.util.Collection;
 import clarity.match.Match;
 import clarity.parser.Peek;
 
+import com.google.protobuf.GeneratedMessage;
+
 public interface PacketHandler<T> {
 
 	Collection<Peek> scan(int tick, byte[] message) throws IOException;

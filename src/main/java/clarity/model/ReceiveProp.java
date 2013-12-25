@@ -58,8 +58,6 @@ public class ReceiveProp implements Prop {
 		return sendProp.getTemplate();
 	}
 	
-	
-
 	public int getNumElements() {
 		return sendProp.getNumElements();
 	}

@@ -65,10 +65,10 @@ public class SendTableFlattener {
 	}
 	
 	private List<ReceiveProp> sort() {
-		List<ReceiveProp> recv_props = new ArrayList<ReceiveProp>(receiveProps);
+		List<ReceiveProp> sorted = new ArrayList<ReceiveProp>(receiveProps);
 		Set<Integer> priorities = new TreeSet<Integer>();
 		priorities.add(64);
-		for (ReceiveProp rp : recv_props) {
+		for (ReceiveProp rp : sorted) {
 			priorities.add(rp.getPriority());
 		}
         int offset = 0;
@@ -76,19 +76,19 @@ public class SendTableFlattener {
         for (Integer priority : priorities) {
             int hole = offset;
             int cursor = offset;
-            while (cursor < recv_props.size()) {
-            	ReceiveProp recv_prop = recv_props.get(cursor);
-                boolean flagged_changes_often = recv_prop.isFlagSet(PropFlag.CHANGES_OFTEN);
+            while (cursor < sorted.size()) {
+            	ReceiveProp rp = sorted.get(cursor);
+                boolean flagged_changes_often = rp.isFlagSet(PropFlag.CHANGES_OFTEN);
                 boolean changes_often = flagged_changes_often && priority == 64;
-                if (changes_often || recv_prop.getPriority() == priority) {
-                	Collections.swap(recv_props, cursor, hole);
+                if (changes_often || rp.getPriority() == priority) {
+                	Collections.swap(sorted, cursor, hole);
                 	hole++;
                 	offset++;
                 }
                 cursor++;
             }
         }
-        return recv_props;
+        return sorted;
 	}
 	
 	public List<ReceiveProp> flatten() {

@@ -28,7 +28,7 @@ public class EntityBitStream extends BitStream {
     }
     
     public List<Integer> readEntityPropList() {
-        List<Integer> prop_list = new ArrayList<Integer>();
+        List<Integer> propList = new ArrayList<Integer>();
         int cursor = -1;
 
         while(true) {
@@ -37,12 +37,12 @@ public class EntityBitStream extends BitStream {
             } else {
                 int offset = readVarInt();
                 if (offset == 0x3fff) {
-                    return prop_list;
+                    return propList;
                 } else {
                     cursor += offset + 1;
                 }
             }
-            prop_list.add(cursor);
+            propList.add(cursor);
         }
     }
     

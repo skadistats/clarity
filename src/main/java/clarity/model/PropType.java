@@ -25,7 +25,7 @@ public enum PropType {
 		this.decoder = decoder;
 	}
 
-	public DtDecoder getDecoder() {
+	public DtDecoder<?> getDecoder() {
 		return decoder;
 	}
     

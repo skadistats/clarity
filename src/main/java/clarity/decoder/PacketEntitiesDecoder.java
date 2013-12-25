@@ -88,12 +88,9 @@ public class PacketEntitiesDecoder {
 	
 	private Map<Integer, Object> decodeProperties(int cls, List<Integer> propIndices) {
 		Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
-		int c = 0;
 		for (Integer i : propIndices) {
-			c++;
 			ReceiveProp r = receivePropsByClass.get(cls).get(i);
 			//System.out.print(c + ": " + r);
-			
 			Object dec = r.getType().getDecoder().decode(stream, r);
 			decodedProps.put(i, dec);
 			// System.out.println(" := " + dec.toString());
