@@ -1,0 +1,99 @@
+//====== Copyright (c) 2012, Valve Corporation, All rights reserved. ========//
+//
+// Redistribution and use in source and binary forms, with or without 
+// modification, are permitted provided that the following conditions are met:
+//
+// Redistributions of source code must retain the above copyright notice, this
+// list of conditions and the following disclaimer.
+// Redistributions in binary form must reproduce the above copyright notice, 
+// this list of conditions and the following disclaimer in the documentation 
+// and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+// THE POSSIBILITY OF SUCH DAMAGE.
+//===========================================================================//
+//
+// Purpose: The file defines our Google Protocol Buffers which are used in over 
+// the wire messages for the Source engine.
+//
+//=============================================================================
+
+// We care more about speed than code size
+option optimize_for = SPEED;
+
+// We don't use the service generation functionality
+option cc_generic_services = false;
+
+
+// 
+// STYLE NOTES:
+//
+// Use CamelCase CMsgMyMessageName style names for messages.
+// 
+// Use lowercase _ delimited names like my_steam_id for field names, this is non-standard for Steam,
+// but plays nice with the Google formatted code generation.  
+// 
+// Try not to use required fields ever. Only do so if you are really really sure you'll never want them removed. 
+// Optional should be preffered as it will make versioning easier and cleaner in the future if someone refactors
+// your message and wants to remove or rename fields.
+//
+// Use fixed64 for JobId_t, GID_t, or SteamID.  This is appropriate for any field that is normally
+// going to be larger than 2^56.  Otherwise use int64 for 64 bit values that are frequently smaller
+// than 2^56 as it will safe space on the wire in those cases.
+//
+// Similar to fixed64, use fixed32 for RTime32 or other 32 bit values that are frequently larger than
+// 2^28.  It will safe space in those cases, otherwise use int32 which will safe space for smaller values.
+// An exception to this rule for RTime32 is if the value will frequently be zero rather than set to an actual 
+// time.
+//
+
+import "google/protobuf/descriptor.proto";
+
+// for CMsgVector, etc.
+import "netmessages.proto";
+
+enum DOTA_MODIFIER_ENTRY_TYPE
+{
+	DOTA_MODIFIER_ENTRY_TYPE_ACTIVE = 1;
+	DOTA_MODIFIER_ENTRY_TYPE_REMOVED = 2;
+};
+
+message CDOTAModifierBuffTableEntry
+{
+	required DOTA_MODIFIER_ENTRY_TYPE entry_type = 1;
+	required int32 parent = 2; // ehandle to parent owner
+	required int32 index = 3; // index into the modifier list on the entity (local to each entity)
+	required int32 serial_num = 4; // global serial number
+
+	optional int32 name = 5; // index into the modifier name string table
+	optional int32 ability_level = 6;
+	optional int32 stack_count = 7;
+	optional float creation_time = 8;
+	optional float duration = 9 [ default = -1.0 ];
+	optional int32 caster = 10;
+	optional int32 ability = 11;
+
+	// optional custom data
+	optional int32 armor = 12; // used by invoker
+	optional float fade_time = 13; // used by invisiblity
+	optional bool subtle = 14; // used by invisiblity
+	optional float channel_time = 15; // used by teleport
+	optional CMsgVector v_start = 16; // used by teleport
+	optional CMsgVector v_end = 17; // used by teleport
+	optional string portal_loop_appear = 18; // used by teleport
+	optional string portal_loop_disappear = 19; // used by teleport
+	optional string hero_loop_appear = 20; // used by teleport
+	optional string hero_loop_disappear = 21; // used by teleport
+	optional int32 movement_speed = 22;	// used by smoke of deceit
+	optional bool aura = 23;
+}
+

@@ -1,0 +1,214 @@
+//====== Copyright (c) 2012, Valve Corporation, All rights reserved. ========//
+//
+// Redistribution and use in source and binary forms, with or without 
+// modification, are permitted provided that the following conditions are met:
+//
+// Redistributions of source code must retain the above copyright notice, this
+// list of conditions and the following disclaimer.
+// Redistributions in binary form must reproduce the above copyright notice, 
+// this list of conditions and the following disclaimer in the documentation 
+// and/or other materials provided with the distribution.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+// AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE 
+// IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE 
+// ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE 
+// LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
+// CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF 
+// SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS 
+// INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN 
+// CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) 
+// ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF 
+// THE POSSIBILITY OF SUCH DAMAGE.
+//===========================================================================//
+//
+// Purpose: The file defines our Google Protocol Buffers which are used in over
+// the wire messages for the Source engine.
+//
+//=============================================================================
+
+// Note about encoding:
+//	http://code.google.com/apis/protocolbuffers/docs/encoding.html
+//
+// TL;DR: Use sint32/sint64 for values that may be negative.
+//
+// There is an important difference between the signed int types (sint32 and sint64)
+// and the "standard" int types (int32 and int64) when it comes to encoding negative
+// numbers.  If you use int32 or int64 as the type for a negative number, the
+// resulting varint is always ten bytes long – it is, effectively, treated like a
+// very large unsigned integer.  If you use one of the signed types, the resulting
+// varint uses ZigZag encoding, which is much more efficient.
+
+
+// Commenting this out allows it to be compiled for SPEED or LITE_RUNTIME.
+// option optimize_for = SPEED;
+
+// We don't use the service generation functionality
+option cc_generic_services = false;
+
+
+//
+// STYLE NOTES:
+//
+// Use CamelCase CMsgMyMessageName style names for messages.
+//
+// Use lowercase _ delimited names like my_steam_id for field names, this is non-standard for Steam,
+// but plays nice with the Google formatted code generation.
+//
+// Try not to use required fields ever. Only do so if you are really really sure you'll never want them removed.
+// Optional should be preffered as it will make versioning easier and cleaner in the future if someone refactors
+// your message and wants to remove or rename fields.
+//
+// Use fixed64 for JobId_t, GID_t, or SteamID.  This is appropriate for any field that is normally
+// going to be larger than 2^56.  Otherwise use int64 for 64 bit values that are frequently smaller
+// than 2^56 as it will safe space on the wire in those cases.
+//
+// Similar to fixed64, use fixed32 for RTime32 or other 32 bit values that are frequently larger than
+// 2^28.  It will safe space in those cases, otherwise use int32 which will safe space for smaller values.
+// An exception to this rule for RTime32 is if the value will frequently be zero rather than set to an actual
+// time.
+//
+
+import "google/protobuf/descriptor.proto";
+
+enum EDemoCommands
+{
+	DEM_Error				= -1;
+	DEM_Stop				= 0;
+	DEM_FileHeader			= 1;
+	DEM_FileInfo			= 2;
+	DEM_SyncTick			= 3;
+	DEM_SendTables			= 4;
+	DEM_ClassInfo			= 5;
+	DEM_StringTables		= 6;
+	DEM_Packet				= 7;
+	DEM_SignonPacket		= 8;
+	DEM_ConsoleCmd			= 9;
+	DEM_CustomData			= 10;
+	DEM_CustomDataCallbacks = 11;
+	DEM_UserCmd				= 12;
+	DEM_FullPacket			= 13;
+
+	DEM_Max					= 14;
+	DEM_IsCompressed		= 0x70;
+}
+
+message CDemoFileHeader
+{
+	required string demo_file_stamp = 1;
+	optional int32 network_protocol = 2;
+	optional string server_name = 3;
+	optional string client_name = 4;
+	optional string map_name = 5;
+	optional string game_directory = 6;
+	optional int32 fullpackets_version = 7;
+	optional bool allow_clientside_entities = 8;
+}
+
+message CGameInfo
+{
+	message CDotaGameInfo
+	{
+		message CPlayerInfo
+		{
+			optional string hero_name = 1;
+			optional string player_name = 2;
+			optional bool is_fake_client = 3;
+		}
+
+		optional uint32 match_id = 1;
+		optional int32 game_mode = 2;
+		optional int32 game_winner = 3;
+		repeated CPlayerInfo player_info = 4;
+	}
+
+	optional CDotaGameInfo dota = 4;
+}
+
+message CDemoFileInfo
+{
+	optional float playback_time = 1;
+	optional int32 playback_ticks = 2;
+	optional int32 playback_frames = 3;
+	optional CGameInfo game_info = 4;
+}
+
+message CDemoPacket
+{
+	optional int32 sequence_in = 1;
+	optional int32 sequence_out_ack = 2;
+	optional bytes data = 3;
+}
+
+message CDemoFullPacket
+{
+	optional CDemoStringTables string_table = 1;
+	optional CDemoPacket packet = 2;
+}
+
+message CDemoSyncTick
+{
+}
+
+message CDemoConsoleCmd
+{
+	optional string cmdstring = 1;
+}
+
+message CDemoSendTables
+{
+	optional bytes data = 1;
+}
+
+message CDemoClassInfo
+{
+	message class_t
+	{
+		optional int32 class_id = 1;
+		optional string network_name = 2;
+		optional string table_name = 3;
+	}
+
+	repeated class_t classes = 1;
+}
+
+message CDemoCustomData
+{
+	optional int32 callback_index = 1;
+	optional bytes data = 2;
+}
+
+message CDemoCustomDataCallbacks
+{
+	repeated string save_id = 1;
+}
+
+message CDemoStringTables
+{
+	message items_t
+	{
+		optional string str = 1;
+		optional bytes data = 2;
+	}
+
+	message table_t
+	{
+		optional string table_name = 1;
+		repeated items_t items = 2;
+		repeated items_t items_clientside = 3;
+		optional int32 table_flags = 4;
+	}
+
+	repeated table_t tables = 1;
+}
+
+message CDemoStop
+{
+}
+
+message CDemoUserCmd
+{
+	optional int32 cmd_number = 1;
+	optional bytes data = 2;
+}
+
