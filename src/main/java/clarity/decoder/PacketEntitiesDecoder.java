@@ -105,13 +105,13 @@ public class PacketEntitiesDecoder {
 	
 	private Map<Integer, Object> decodeBaseProperties(int cls) {
 		Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
-		ByteString s = baseline.get(cls);
-//		if (s != null) {
-//			new BaseInstanceDecoder().decode(
-//				s.toByteArray(), 
-//				receivePropsByClass.get(cls)
-//			);
-//		}
+		ByteString s = baseline.getByName(String.valueOf(cls));
+		if (s != null) {
+			new BaseInstanceDecoder().decode(
+				s.toByteArray(), 
+				receivePropsByClass.get(cls)
+			);
+		}
 		return decodedProps;
 	}
 

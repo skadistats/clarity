@@ -27,6 +27,8 @@ import com.dota2.proto.Demo.CDemoPacket;
 import com.dota2.proto.Demo.CDemoSendTables;
 import com.dota2.proto.Demo.CDemoStop;
 import com.dota2.proto.Demo.CDemoStringTables;
+import com.dota2.proto.Demo.CDemoStringTables.items_t;
+import com.dota2.proto.Demo.CDemoStringTables.table_t;
 import com.dota2.proto.Demo.CDemoSyncTick;
 import com.dota2.proto.Demo.CDemoUserCmd;
 import com.dota2.proto.Demo.EDemoCommands;
@@ -80,7 +82,14 @@ public class PacketHandlerRegistry {
 		DEMO.put(EDemoCommands.DEM_StringTables_VALUE, new DemoPacketHandler<CDemoStringTables>(CDemoStringTables.class) {
 			@Override
 			public void apply(CDemoStringTables message, Match match) {
-				//System.out.println(message);
+				for (table_t t : message.getTablesList()) {
+					StringTable st = match.getStringTableByName(t.getTableName());
+					List<items_t> l = t.getItemsList();
+					//System.out.println(l.size());
+					for (int i = 0; i < l.size(); i++) {
+						st.set(i, l.get(i).getStr(), l.get(i).getData());
+					}
+				}
 			}
 		});
 		DEMO.put(EDemoCommands.DEM_Packet_VALUE, new EmbedPacketHandler<CDemoPacket>(CDemoPacket.class) { protected ByteString getData(GeneratedMessage message) { return ((CDemoPacket) message).getData(); }});

@@ -29,8 +29,11 @@ public class Test {
 			Match match = new Match();
 			while (iter.hasNext()) {
 				Peek p = iter.next();
+				//System.out.println(p);
 				p.getPacketHandler().apply(p.getMessage(), match);
 				if (p.getMessage() instanceof CDemoSyncTick) {
+					//System.out.println();
+					//System.out.println();
 					for (Map.Entry<String, SendTable> e : match.getSendTableByDT().entrySet()) {
 						String dt = e.getKey();
 						SendTable sendTable = e.getValue();

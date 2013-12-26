@@ -30,6 +30,16 @@ public class StringTable {
 		return values[index];
 	}
 
+	public ByteString getByName(String name) {
+		for (int i = 0; i < names.length; i++) {
+			if (name.equals(names[i])) {
+				return values[i];
+			}
+		}
+		return null;
+	}
+
+	
 	public int getMaxEntries() {
 		return createMessage.getMaxEntries();
 	}
