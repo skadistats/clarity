@@ -5,7 +5,6 @@ import clarity.match.Match;
 import clarity.parser.Peek;
 import clarity.parser.ReplayFile;
 import clarity.parser.ReplayIndex;
-import clarity.parser.handler.HandlerRegistry;
 
 public class Test {
 
@@ -15,24 +14,20 @@ public class Test {
             long tStart = System.currentTimeMillis();
 
             ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
-            Match match = new Match();
-
-            for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
-                Peek p = i.next();
-                System.out.println(p);
-                HandlerRegistry.apply(p.getMessage(), match);
-            }
-
-            System.out.println("--------------------------------------------------------------------------");
-
+            Match match = new Match(idx);
+            long tInit = System.currentTimeMillis() - tStart;
+            System.out.println("init: " + tInit / 1000.0 + "s");
+            
+            tStart = System.currentTimeMillis();
             for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
                 Peek p = i.next();
-                HandlerRegistry.apply(p.getMessage(), match);
+                p.apply(match);
             }
+            long tMatch = System.currentTimeMillis() - tStart;
+            System.out.println("match: " + tMatch / 1000.0 + "s");
 
-            long tEnd = System.currentTimeMillis();
-            System.out.println((double) (tEnd - tStart) / 1000.0 + "s");
-
+            System.out.println("total: " + (tInit + tMatch) / 1000.0 + "s");
+            
         } catch (Throwable e) {
             System.out.flush();
             throw e;

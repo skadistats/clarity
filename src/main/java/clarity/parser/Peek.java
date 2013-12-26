@@ -1,5 +1,8 @@
 package clarity.parser;
 
+import clarity.match.Match;
+import clarity.parser.handler.HandlerRegistry;
+
 import com.google.protobuf.GeneratedMessage;
 
 public class Peek {
@@ -18,6 +21,10 @@ public class Peek {
 
     public GeneratedMessage getMessage() {
         return message;
+    }
+    
+    public void apply(Match match) {
+        HandlerRegistry.apply(message, match);
     }
 
     @Override
