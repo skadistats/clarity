@@ -6,13 +6,13 @@ public class Entity {
 
     private final Integer index;
     private final Integer serial;
-    private final Integer cls;
+    private final DTClass dtClass;
     private final Map<Integer, Object> state;
 
-    public Entity(Integer index, Integer serial, Integer cls, Map<Integer, Object> state) {
+    public Entity(Integer index, Integer serial, DTClass cls, Map<Integer, Object> state) {
         this.index = index;
         this.serial = serial;
-        this.cls = cls;
+        this.dtClass = cls;
         this.state = state;
     }
 
@@ -30,8 +30,8 @@ public class Entity {
         return serial;
     }
 
-    public Integer getCls() {
-        return cls;
+    public DTClass getDtClass() {
+        return dtClass;
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.javatuples.Pair;
 
+import clarity.model.DTClass;
 import clarity.model.DTClassCollection;
 import clarity.model.Entity;
 import clarity.model.EntityCollection;
@@ -54,14 +55,14 @@ public class PacketEntitiesDecoder {
     private Pair<PVS, Entity> decodeDiff(int index, EntityCollection entities) {
         index = stream.readEntityIndex(index);
         PVS pvs = stream.readEntityPVS();
-        Integer cls = null;
+        DTClass cls = null;
         Integer serial = null;
         Map<Integer, Object> state = null;
         List<Integer> propList = null;
         // System.out.println(pvs + " at " + index);
         switch (pvs) {
         case ENTER:
-            cls = stream.readNumericBits(classBits);
+            cls = dtClasses.forClassId(stream.readNumericBits(classBits));
             serial = stream.readNumericBits(10);
             propList = stream.readEntityPropList();
             // System.out.println("class: " + cls + ", serial: " + serial +
@@ -71,7 +72,7 @@ public class PacketEntitiesDecoder {
             break;
         case PRESERVE:
             Entity entity = entities.get(index);
-            cls = entity.getCls();
+            cls = entity.getDtClass();
             serial = entity.getSerial();
             propList = stream.readEntityPropList();
             state = decodeProperties(cls, propList);
@@ -94,10 +95,10 @@ public class PacketEntitiesDecoder {
         return deletions;
     }
 
-    private Map<Integer, Object> decodeProperties(int cls, List<Integer> propIndices) {
+    private Map<Integer, Object> decodeProperties(DTClass cls, List<Integer> propIndices) {
         Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
         for (Integer i : propIndices) {
-            ReceiveProp r = dtClasses.forClassId(cls).getReceiveProps().get(i);
+            ReceiveProp r = cls.getReceiveProps().get(i);
             // System.out.print(c + ": " + r);
             Object dec = r.getType().getDecoder().decode(stream, r);
             decodedProps.put(i, dec);
@@ -106,12 +107,12 @@ public class PacketEntitiesDecoder {
         return decodedProps;
     }
 
-    private Map<Integer, Object> decodeBaseProperties(int cls) {
+    private Map<Integer, Object> decodeBaseProperties(DTClass cls) {
         Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
-        ByteString s = baseline.getByName(String.valueOf(cls));
+        ByteString s = baseline.getByName(String.valueOf(cls.getClassId()));
         BaseInstanceDecoder.decode(
             s.toByteArray(),
-            dtClasses.forClassId(cls).getReceiveProps()
+            cls.getReceiveProps()
             );
         return decodedProps;
     }
