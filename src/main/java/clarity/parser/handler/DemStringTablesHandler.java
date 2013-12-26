@@ -11,16 +11,16 @@ import com.dota2.proto.Demo.CDemoStringTables.table_t;
 
 public class DemStringTablesHandler implements Handler<CDemoStringTables> {
 
-	@Override
-	public void apply(CDemoStringTables message, Match match) {
-//		for (table_t t : message.getTablesList()) {
-//			StringTable st = match.getStringTableByName(t.getTableName());
-//			List<items_t> l = t.getItemsList();
-//			//System.out.println(l.size());
-//			for (int i = 0; i < l.size(); i++) {
-//				st.set(i, l.get(i).getStr(), l.get(i).getData());
-//			}
-//		}
-	}
+    @Override
+    public void apply(CDemoStringTables message, Match match) {
+        // for (table_t t : message.getTablesList()) {
+        // StringTable st = match.getStringTableByName(t.getTableName());
+        // List<items_t> l = t.getItemsList();
+        // //System.out.println(l.size());
+        // for (int i = 0; i < l.size(); i++) {
+        // st.set(i, l.get(i).getStr(), l.get(i).getData());
+        // }
+        // }
+    }
 
 }

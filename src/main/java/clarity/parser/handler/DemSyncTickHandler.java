@@ -12,18 +12,18 @@ import com.dota2.proto.Demo.CDemoSyncTick;
 
 public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
 
-	@Override
-	public void apply(CDemoSyncTick message, Match match) {
-		// last packet of the prologue: compile receive tables!
-		
-		for (Iterator<DTClass> i = match.getDtClasses().iterator(); i.hasNext();) {
-			DTClass dtc = i.next();
-			if (!dtc.getSendTable().getMessage().getNeedsDecoder()) {
-				continue;
-			}
-			List<ReceiveProp> rps = new SendTableFlattener(match.getDtClasses(), dtc.getSendTable()).flatten();
-			dtc.setReceiveProps(rps);
-		}
-	}
-	
+    @Override
+    public void apply(CDemoSyncTick message, Match match) {
+        // last packet of the prologue: compile receive tables!
+
+        for (Iterator<DTClass> i = match.getDtClasses().iterator(); i.hasNext();) {
+            DTClass dtc = i.next();
+            if (!dtc.getSendTable().getMessage().getNeedsDecoder()) {
+                continue;
+            }
+            List<ReceiveProp> rps = new SendTableFlattener(match.getDtClasses(), dtc.getSendTable()).flatten();
+            dtc.setReceiveProps(rps);
+        }
+    }
+
 }

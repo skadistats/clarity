@@ -8,10 +8,10 @@ import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 
 public class SvcSendTableHandler implements Handler<CSVCMsg_SendTable> {
 
-	@Override
-	public void apply(CSVCMsg_SendTable message, Match match) {
-		SendTable st = new SendTable(message);
-		match.getDtClasses().add(new DTClass(st.getMessage().getNetTableName(), st));
-	}
+    @Override
+    public void apply(CSVCMsg_SendTable message, Match match) {
+        SendTable st = new SendTable(message);
+        match.getDtClasses().add(new DTClass(st.getMessage().getNetTableName(), st));
+    }
 
 }

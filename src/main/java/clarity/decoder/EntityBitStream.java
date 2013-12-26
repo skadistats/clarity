@@ -7,11 +7,11 @@ import clarity.model.PVS;
 
 public class EntityBitStream extends BitStream {
 
-	public EntityBitStream(byte[] data) {
-		super(data);
-	}
-	
-	public int readEntityIndex(int baseIndex) {
+    public EntityBitStream(byte[] data) {
+        super(data);
+    }
+
+    public int readEntityIndex(int baseIndex) {
         int encodedIndex = readNumericBits(6);
         if ((encodedIndex & 0x30) != 0) {
             int a = (encodedIndex >> 4) & 3;
@@ -20,18 +20,17 @@ public class EntityBitStream extends BitStream {
             encodedIndex = i | (encodedIndex & 0x0f);
         }
         return baseIndex + encodedIndex + 1;
-	}
-	
-	
-    public PVS readEntityPVS() {
-    	return PVS.values()[(readNumericBits(1) << 1) | readNumericBits(1)];
     }
-    
+
+    public PVS readEntityPVS() {
+        return PVS.values()[(readNumericBits(1) << 1) | readNumericBits(1)];
+    }
+
     public List<Integer> readEntityPropList() {
         List<Integer> propList = new ArrayList<Integer>();
         int cursor = -1;
 
-        while(true) {
+        while (true) {
             if (readBit()) {
                 cursor += 1;
             } else {
@@ -45,5 +44,5 @@ public class EntityBitStream extends BitStream {
             propList.add(cursor);
         }
     }
-    
+
 }

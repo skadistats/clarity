@@ -9,36 +9,35 @@ import clarity.parser.handler.HandlerRegistry;
 
 public class Test {
 
-	public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws Exception {
 
-		try {
-			long tStart = System.currentTimeMillis();
+        try {
+            long tStart = System.currentTimeMillis();
 
-			ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
-			Match match = new Match();
-			
-			for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
-				Peek p = i.next();
-				System.out.println(p);
-				HandlerRegistry.apply(p.getMessage(), match);
-			}
+            ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
+            Match match = new Match();
 
-			System.out.println("--------------------------------------------------------------------------");
-			
-			for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
-				Peek p = i.next();
-				HandlerRegistry.apply(p.getMessage(), match);
-			}
-			
-			long tEnd = System.currentTimeMillis();
-			System.out.println((double)(tEnd - tStart) / 1000.0 + "s");
-			
-		} catch (Throwable e) {
-			System.out.flush();
-			throw e;
-		}
-		 
-	}
-	
+            for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
+                Peek p = i.next();
+                System.out.println(p);
+                HandlerRegistry.apply(p.getMessage(), match);
+            }
+
+            System.out.println("--------------------------------------------------------------------------");
+
+            for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
+                Peek p = i.next();
+                HandlerRegistry.apply(p.getMessage(), match);
+            }
+
+            long tEnd = System.currentTimeMillis();
+            System.out.println((double) (tEnd - tStart) / 1000.0 + "s");
+
+        } catch (Throwable e) {
+            System.out.flush();
+            throw e;
+        }
+
+    }
 
 }

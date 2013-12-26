@@ -4,79 +4,77 @@ import org.javatuples.Pair;
 
 public class ReceiveProp implements Prop {
 
-	private final SendProp sendProp;
-	private final String source;
-	private final String name;
-	
-	public ReceiveProp(SendProp sendProp, String source, String name) {
-		this.sendProp = sendProp;
-		this.source = source;
-		this.name = name;
-	}
+    private final SendProp sendProp;
+    private final String source;
+    private final String name;
 
-	public boolean isFlagSet(PropFlag flag) {
-		return sendProp.isFlagSet(flag);
-	}
+    public ReceiveProp(SendProp sendProp, String source, String name) {
+        this.sendProp = sendProp;
+        this.source = source;
+        this.name = name;
+    }
 
-	public Pair<String, String> getExcludeIdentifier() {
-		return sendProp.getExcludeIdentifier();
-	}
+    public boolean isFlagSet(PropFlag flag) {
+        return sendProp.isFlagSet(flag);
+    }
 
-	public PropType getType() {
-		return sendProp.getType();
-	}
+    public Pair<String, String> getExcludeIdentifier() {
+        return sendProp.getExcludeIdentifier();
+    }
 
-	public String getSrc() {
-		return source;
-	}
+    public PropType getType() {
+        return sendProp.getType();
+    }
 
-	public String getDtName() {
-		return sendProp.getDtName();
-	}
+    public String getSrc() {
+        return source;
+    }
 
-	public String getVarName() {
-		return name;
-	}
+    public String getDtName() {
+        return sendProp.getDtName();
+    }
 
-	public int getPriority() {
-		return sendProp.getPriority();
-	}
+    public String getVarName() {
+        return name;
+    }
 
-	public float getLowValue() {
-		return sendProp.getLowValue();
-	}
+    public int getPriority() {
+        return sendProp.getPriority();
+    }
 
-	public float getHighValue() {
-		return sendProp.getHighValue();
-	}
-	
-	public int getNumBits() {
-		return sendProp.getNumBits();
-	}
-	
-	public SendProp getTemplate() {
-		return sendProp.getTemplate();
-	}
-	
-	public int getNumElements() {
-		return sendProp.getNumElements();
-	}
+    public float getLowValue() {
+        return sendProp.getLowValue();
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("ReceiveProp [source=");
-		builder.append(source);
-		builder.append(", name=");
-		builder.append(name);
-		builder.append(", type=");
-		builder.append(getType());
-		builder.append(", prio=");
-		builder.append(getPriority());
-		builder.append("]");
-		return builder.toString();
-	}
-	
-	
-	
+    public float getHighValue() {
+        return sendProp.getHighValue();
+    }
+
+    public int getNumBits() {
+        return sendProp.getNumBits();
+    }
+
+    public SendProp getTemplate() {
+        return sendProp.getTemplate();
+    }
+
+    public int getNumElements() {
+        return sendProp.getNumElements();
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("ReceiveProp [source=");
+        builder.append(source);
+        builder.append(", name=");
+        builder.append(name);
+        builder.append(", type=");
+        builder.append(getType());
+        builder.append(", prio=");
+        builder.append(getPriority());
+        builder.append("]");
+        return builder.toString();
+    }
+
 }

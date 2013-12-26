@@ -5,6 +5,6 @@ import clarity.model.Prop;
 
 public interface PropDecoder<T> {
 
-	T decode(EntityBitStream stream, Prop prop);
-	
+    T decode(EntityBitStream stream, Prop prop);
+
 }

@@ -7,72 +7,71 @@ import com.google.protobuf.ByteString;
 
 public class StringTable {
 
-	private final CSVCMsg_CreateStringTable createMessage;
-	private final String[] names;
-	private final ByteString[] values;
-	
-	public StringTable(CSVCMsg_CreateStringTable createMessage) {
-		this.createMessage = createMessage;
-		this.names = new String[createMessage.getMaxEntries()];
-		this.values = new ByteString[createMessage.getMaxEntries()];
-	}
-	
-	public void set(int index, String name, ByteString value) {
-		if (index < names.length) { 
-			this.names[index] = name;
-			this.values[index] = value;
-		} else {
-			throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
-		}
-	}
-	
-	public ByteString get(int index) {
-		return values[index];
-	}
+    private final CSVCMsg_CreateStringTable createMessage;
+    private final String[] names;
+    private final ByteString[] values;
 
-	public ByteString getByName(String name) {
-		for (int i = 0; i < names.length; i++) {
-			if (name.equals(names[i])) {
-				return values[i];
-			}
-		}
-		return null;
-	}
+    public StringTable(CSVCMsg_CreateStringTable createMessage) {
+        this.createMessage = createMessage;
+        this.names = new String[createMessage.getMaxEntries()];
+        this.values = new ByteString[createMessage.getMaxEntries()];
+    }
 
-	
-	public int getMaxEntries() {
-		return createMessage.getMaxEntries();
-	}
+    public void set(int index, String name, ByteString value) {
+        if (index < names.length) {
+            this.names[index] = name;
+            this.values[index] = value;
+        } else {
+            throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
+        }
+    }
 
-	public boolean getUserDataFixedSize() {
-		return createMessage.getUserDataFixedSize();
-	}
+    public ByteString get(int index) {
+        return values[index];
+    }
 
-	public int getUserDataSize() {
-		return createMessage.getUserDataSize();
-	}
+    public ByteString getByName(String name) {
+        for (int i = 0; i < names.length; i++) {
+            if (name.equals(names[i])) {
+                return values[i];
+            }
+        }
+        return null;
+    }
 
-	public int getUserDataSizeBits() {
-		return createMessage.getUserDataSizeBits();
-	}
+    public int getMaxEntries() {
+        return createMessage.getMaxEntries();
+    }
 
-	public String getName() {
-		return createMessage.getName();
-	}
-	
-	public String toString() {
-		StringBuffer buf = new StringBuffer();
-		String[] convValues = new String[names.length];
-		for (int i = 0; i < names.length; i++) {
-			convValues[i] = values[i] == null ? "NULL" : Util.convertByteString(values[i], "ISO-8859-1");
-		}
-		for (int i = 0; i < names.length; i++) {
-			buf.append(names[i]);
-			buf.append(" = ");
-			buf.append(convValues[i]);
-			buf.append("\r\n");
-		}
-		return buf.toString();
-	}
-	
+    public boolean getUserDataFixedSize() {
+        return createMessage.getUserDataFixedSize();
+    }
+
+    public int getUserDataSize() {
+        return createMessage.getUserDataSize();
+    }
+
+    public int getUserDataSizeBits() {
+        return createMessage.getUserDataSizeBits();
+    }
+
+    public String getName() {
+        return createMessage.getName();
+    }
+
+    public String toString() {
+        StringBuffer buf = new StringBuffer();
+        String[] convValues = new String[names.length];
+        for (int i = 0; i < names.length; i++) {
+            convValues[i] = values[i] == null ? "NULL" : Util.convertByteString(values[i], "ISO-8859-1");
+        }
+        for (int i = 0; i < names.length; i++) {
+            buf.append(names[i]);
+            buf.append(" = ");
+            buf.append(convValues[i]);
+            buf.append("\r\n");
+        }
+        return buf.toString();
+    }
+
 }
