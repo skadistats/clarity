@@ -10,7 +10,7 @@ public class SvcUpdateStringTableHandler implements Handler<CSVCMsg_UpdateString
 
     @Override
     public void apply(CSVCMsg_UpdateStringTable message, Match match) {
-        StringTable table = match.getStringTables().byId(message.getTableId());
+        StringTable table = match.getStringTables().forId(message.getTableId());
         // System.out.println("updating " + table.getName());
         StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumChangedEntries());
     }

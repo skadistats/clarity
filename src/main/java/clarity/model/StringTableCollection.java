@@ -15,11 +15,11 @@ public class StringTableCollection {
         byName.put(table.getName(), table);
     }
 
-    public StringTable byName(String name) {
+    public StringTable forName(String name) {
         return byName.get(name);
     }
 
-    public StringTable byId(int id) {
+    public StringTable forId(int id) {
         return byId.get(id);
     }
 

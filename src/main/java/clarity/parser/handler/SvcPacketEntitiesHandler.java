@@ -22,7 +22,7 @@ public class SvcPacketEntitiesHandler implements Handler<CSVCMsg_PacketEntities>
             message.getUpdatedEntries(),
             message.getIsDelta(),
             match.getDtClasses(),
-            match.getStringTables().byName("instancebaseline")
+            match.getStringTables().forName("instancebaseline")
             ).decode(match.getEntityCollection());
 
         for (Pair<PVS, Entity> change : changes) {
