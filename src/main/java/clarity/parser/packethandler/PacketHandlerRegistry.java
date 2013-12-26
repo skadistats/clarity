@@ -88,7 +88,12 @@ public class PacketHandlerRegistry {
 		DEMO.put(EDemoCommands.DEM_ConsoleCmd_VALUE, new DemoPacketHandler<CDemoConsoleCmd>(CDemoConsoleCmd.class));
 		DEMO.put(EDemoCommands.DEM_CustomData_VALUE, new DemoPacketHandler<CDemoCustomData>(CDemoCustomData.class));
 		DEMO.put(EDemoCommands.DEM_CustomDataCallbacks_VALUE, new DemoPacketHandler<CDemoCustomDataCallbacks>(CDemoCustomDataCallbacks.class));
-		DEMO.put(EDemoCommands.DEM_UserCmd_VALUE, new DemoPacketHandler<CDemoUserCmd>(CDemoUserCmd.class));
+		DEMO.put(EDemoCommands.DEM_UserCmd_VALUE, new DemoPacketHandler<CDemoUserCmd>(CDemoUserCmd.class) {
+			@Override
+			public void apply(CDemoUserCmd message, Match match) {
+				System.out.println(message);
+			}
+		});
 		DEMO.put(EDemoCommands.DEM_FullPacket_VALUE, new DemoPacketHandler<CDemoFullPacket>(CDemoFullPacket.class));
 		
 		
@@ -102,7 +107,12 @@ public class PacketHandlerRegistry {
 				//System.out.println(message);
 			}
 		});
-		EMBED.put(SVC_Messages.svc_ClassInfo_VALUE, new DemoPacketHandler<CSVCMsg_ClassInfo>(CSVCMsg_ClassInfo.class));
+		EMBED.put(SVC_Messages.svc_ClassInfo_VALUE, new DemoPacketHandler<CSVCMsg_ClassInfo>(CSVCMsg_ClassInfo.class) {
+			@Override
+			public void apply(CSVCMsg_ClassInfo message, Match match) {
+				//System.out.println(message);
+			}
+		});
 		EMBED.put(SVC_Messages.svc_CreateStringTable_VALUE, new DemoPacketHandler<CSVCMsg_CreateStringTable>(CSVCMsg_CreateStringTable.class) {
 			@Override
 			public void apply(CSVCMsg_CreateStringTable message, Match match) {
@@ -111,8 +121,18 @@ public class PacketHandlerRegistry {
 				match.getStringTables().add(table);
 			}
 		});
-		EMBED.put(SVC_Messages.svc_GameEventList_VALUE, new DemoPacketHandler<CSVCMsg_GameEventList>(CSVCMsg_GameEventList.class));
-		EMBED.put(SVC_Messages.svc_Menu_VALUE, new DemoPacketHandler<CSVCMsg_Menu>(CSVCMsg_Menu.class));
+		EMBED.put(SVC_Messages.svc_GameEventList_VALUE, new DemoPacketHandler<CSVCMsg_GameEventList>(CSVCMsg_GameEventList.class) {
+			@Override
+			public void apply(CSVCMsg_GameEventList message, Match match) {
+				//System.out.println(message);
+			}
+		});
+		EMBED.put(SVC_Messages.svc_Menu_VALUE, new DemoPacketHandler<CSVCMsg_Menu>(CSVCMsg_Menu.class) {
+			@Override
+			public void apply(CSVCMsg_Menu message, Match match) {
+				//System.out.println(message);
+			}
+		});
 		EMBED.put(SVC_Messages.svc_PacketEntities_VALUE, new DemoPacketHandler<CSVCMsg_PacketEntities>(CSVCMsg_PacketEntities.class) {
 			@Override
 			public void apply(CSVCMsg_PacketEntities message, Match match) {
@@ -121,7 +141,8 @@ public class PacketHandlerRegistry {
 					message.getEntityData().toByteArray(), 
 					message.getUpdatedEntries(),
 					message.getIsDelta(),
-					match.getReceivePropsByClass()
+					match.getReceivePropsByClass(),
+					match.getStringTableByName("instancebaseline")
 				).decode(match.getEntityCollection());
 				for (Pair<PVS, Entity> change : changes) {
 					PVS pvs = change.getValue0();
@@ -153,7 +174,12 @@ public class PacketHandlerRegistry {
 			}
 		});
 		EMBED.put(SVC_Messages.svc_ServerInfo_VALUE, new DemoPacketHandler<CSVCMsg_ServerInfo>(CSVCMsg_ServerInfo.class));
-		EMBED.put(SVC_Messages.svc_SetView_VALUE, new DemoPacketHandler<CSVCMsg_SetView>(CSVCMsg_SetView.class));
+		EMBED.put(SVC_Messages.svc_SetView_VALUE, new DemoPacketHandler<CSVCMsg_SetView>(CSVCMsg_SetView.class) {
+			@Override
+			public void apply(CSVCMsg_SetView message, Match match) {
+				//System.out.println(message);
+			}
+		});
 		EMBED.put(SVC_Messages.svc_Sounds_VALUE, new DemoPacketHandler<CSVCMsg_Sounds>(CSVCMsg_Sounds.class));
 		EMBED.put(SVC_Messages.svc_TempEntities_VALUE, new DemoPacketHandler<CSVCMsg_TempEntities>(CSVCMsg_TempEntities.class) {
 			@Override
@@ -177,8 +203,18 @@ public class PacketHandlerRegistry {
 		});
 		EMBED.put(SVC_Messages.svc_VoiceInit_VALUE, new DemoPacketHandler<CSVCMsg_VoiceInit>(CSVCMsg_VoiceInit.class));
 		EMBED.put(SVC_Messages.svc_VoiceData_VALUE, new DemoPacketHandler<CSVCMsg_VoiceData>(CSVCMsg_VoiceData.class));
-		EMBED.put(SVC_Messages.svc_GameEvent_VALUE, new DemoPacketHandler<CSVCMsg_GameEvent>(CSVCMsg_GameEvent.class));
-		EMBED.put(SVC_Messages.svc_UserMessage_VALUE, new DemoPacketHandler<CSVCMsg_UserMessage>(CSVCMsg_UserMessage.class));
+		EMBED.put(SVC_Messages.svc_GameEvent_VALUE, new DemoPacketHandler<CSVCMsg_GameEvent>(CSVCMsg_GameEvent.class) {
+			@Override
+			public void apply(CSVCMsg_GameEvent message, Match match) {
+				//System.out.println(message);
+			}
+		});
+		EMBED.put(SVC_Messages.svc_UserMessage_VALUE, new DemoPacketHandler<CSVCMsg_UserMessage>(CSVCMsg_UserMessage.class) {
+			@Override
+			public void apply(CSVCMsg_UserMessage message, Match match) {
+				//System.out.println(message);
+			}
+		});
 	}
 	
 	public static PacketHandler<?> forDemo(int kind) {

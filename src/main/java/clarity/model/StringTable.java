@@ -1,5 +1,7 @@
 package clarity.model;
 
+import clarity.decoder.Util;
+
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
 import com.google.protobuf.ByteString;
 
@@ -23,6 +25,10 @@ public class StringTable {
 			throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
 		}
 	}
+	
+	public ByteString get(int index) {
+		return values[index];
+	}
 
 	public int getMaxEntries() {
 		return createMessage.getMaxEntries();
@@ -42,6 +48,21 @@ public class StringTable {
 
 	public String getName() {
 		return createMessage.getName();
+	}
+	
+	public String toString() {
+		StringBuffer buf = new StringBuffer();
+		String[] convValues = new String[names.length];
+		for (int i = 0; i < names.length; i++) {
+			convValues[i] = values[i] == null ? "NULL" : Util.convertByteString(values[i], "ISO-8859-1");
+		}
+		for (int i = 0; i < names.length; i++) {
+			buf.append(names[i]);
+			buf.append(" = ");
+			buf.append(convValues[i]);
+			buf.append("\r\n");
+		}
+		return buf.toString();
 	}
 	
 }

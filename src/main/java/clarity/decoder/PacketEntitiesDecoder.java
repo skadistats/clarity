@@ -12,22 +12,26 @@ import clarity.model.Entity;
 import clarity.model.EntityCollection;
 import clarity.model.PVS;
 import clarity.model.ReceiveProp;
+import clarity.model.StringTable;
+
+import com.google.protobuf.ByteString;
 
 public class PacketEntitiesDecoder {
 	
 	private final Map<Integer, List<ReceiveProp>> receivePropsByClass;
+	private final StringTable baseline;
 	private final int classBits;
 	private final int numEntries;
 	private final boolean isDelta;
 	private final EntityBitStream stream;
 
-	public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, Map<Integer, List<ReceiveProp>> receivePropsByClass) {
+	public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, Map<Integer, List<ReceiveProp>> receivePropsByClass, StringTable baseline) {
+		this.receivePropsByClass = receivePropsByClass;
+		this.baseline = baseline;
 		this.stream = new EntityBitStream(data);
 		this.numEntries = numEntries;
 		this.isDelta = isDelta;
-		this.receivePropsByClass = receivePropsByClass;
 		this.classBits = Util.calcBitsNeededFor(receivePropsByClass.size() - 1);
-		
 	}
 	
 	public List<Pair<PVS, Entity>> decode(EntityCollection world) {
@@ -59,7 +63,8 @@ public class PacketEntitiesDecoder {
                 serial = stream.readNumericBits(10);
                 propList = stream.readEntityPropList();
                 //System.out.println("class: " + cls + ", serial: " + serial + ", props: " + propList);
-                state = decodeProperties(cls, propList);
+                state = decodeBaseProperties(cls); 
+                state.putAll(decodeProperties(cls, propList));
                 break;
         	case PRESERVE:
                 Entity entity = entities.get(index);
@@ -98,5 +103,16 @@ public class PacketEntitiesDecoder {
 		return decodedProps;
 	}
 	
+	private Map<Integer, Object> decodeBaseProperties(int cls) {
+		Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
+		ByteString s = baseline.get(cls);
+//		if (s != null) {
+//			new BaseInstanceDecoder().decode(
+//				s.toByteArray(), 
+//				receivePropsByClass.get(cls)
+//			);
+//		}
+		return decodedProps;
+	}
 
 }
