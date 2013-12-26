@@ -39,8 +39,7 @@ public class PacketEntitiesDecoder {
     public List<Pair<PVS, Entity>> decode(EntityCollection world) {
         List<Pair<PVS, Entity>> patch = new LinkedList<Pair<PVS, Entity>>();
         int index = -1;
-        // System.out.println("------ decoding packet entities, num " +
-        // message.getUpdatedEntries());
+        //System.out.println("------ decoding packet entities, num " + numEntries);
         while (patch.size() < numEntries) {
             Pair<PVS, Entity> diff = decodeDiff(index, world);
             index = diff.getValue1().getIndex();
@@ -59,14 +58,11 @@ public class PacketEntitiesDecoder {
         Integer serial = null;
         Map<Integer, Object> state = null;
         List<Integer> propList = null;
-        // System.out.println(pvs + " at " + index);
         switch (pvs) {
         case ENTER:
             cls = dtClasses.forClassId(stream.readNumericBits(classBits));
             serial = stream.readNumericBits(10);
             propList = stream.readEntityPropList();
-            // System.out.println("class: " + cls + ", serial: " + serial +
-            // ", props: " + propList);
             state = decodeBaseProperties(cls);
             state.putAll(decodeProperties(cls, propList));
             break;
@@ -99,10 +95,9 @@ public class PacketEntitiesDecoder {
         Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
         for (Integer i : propIndices) {
             ReceiveProp r = cls.getReceiveProps().get(i);
-            // System.out.print(c + ": " + r);
             Object dec = r.getType().getDecoder().decode(stream, r);
             decodedProps.put(i, dec);
-            // System.out.println(" := " + dec.toString());
+            //System.out.println(r + " := " + dec.toString());
         }
         return decodedProps;
     }
