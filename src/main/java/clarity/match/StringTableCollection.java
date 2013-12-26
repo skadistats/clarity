@@ -1,9 +1,11 @@
-package clarity.model;
+package clarity.match;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+
+import clarity.model.StringTable;
 
 public class StringTableCollection {
 

@@ -3,6 +3,7 @@ package clarity.parser.handler;
 import clarity.match.Match;
 import clarity.model.DTClass;
 import clarity.model.SendTable;
+import clarity.parser.Handler;
 
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 

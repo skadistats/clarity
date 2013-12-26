@@ -1,6 +1,7 @@
 package clarity.parser.handler;
 
 import clarity.match.Match;
+import clarity.parser.Handler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoClassInfo.class_t;

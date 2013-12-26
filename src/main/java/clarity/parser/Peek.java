@@ -1,7 +1,6 @@
 package clarity.parser;
 
 import clarity.match.Match;
-import clarity.parser.handler.HandlerRegistry;
 
 import com.google.protobuf.GeneratedMessage;
 

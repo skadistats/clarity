@@ -1,8 +1,11 @@
-package clarity.model;
+package clarity.match;
 
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+
+import clarity.model.DTClass;
+import clarity.model.SendTable;
 
 public class DTClassCollection {
 

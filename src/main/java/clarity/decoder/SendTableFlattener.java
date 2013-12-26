@@ -1,4 +1,4 @@
-package clarity.model;
+package clarity.decoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,6 +8,13 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.javatuples.Pair;
+
+import clarity.match.DTClassCollection;
+import clarity.model.PropFlag;
+import clarity.model.PropType;
+import clarity.model.ReceiveProp;
+import clarity.model.SendProp;
+import clarity.model.SendTable;
 
 public class SendTableFlattener {
 

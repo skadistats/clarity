@@ -3,10 +3,11 @@ package clarity.parser.handler;
 import java.util.Iterator;
 import java.util.List;
 
+import clarity.decoder.SendTableFlattener;
 import clarity.match.Match;
 import clarity.model.DTClass;
 import clarity.model.ReceiveProp;
-import clarity.model.SendTableFlattener;
+import clarity.parser.Handler;
 
 import com.dota2.proto.Demo.CDemoSyncTick;
 

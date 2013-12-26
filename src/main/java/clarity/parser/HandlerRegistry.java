@@ -1,9 +1,16 @@
-package clarity.parser.handler;
+package clarity.parser;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import clarity.match.Match;
+import clarity.parser.handler.DemClassInfoHandler;
+import clarity.parser.handler.DemStringTablesHandler;
+import clarity.parser.handler.DemSyncTickHandler;
+import clarity.parser.handler.SvcCreateStringTableHandler;
+import clarity.parser.handler.SvcPacketEntitiesHandler;
+import clarity.parser.handler.SvcSendTableHandler;
+import clarity.parser.handler.SvcUpdateStringTableHandler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoStringTables;

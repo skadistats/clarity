@@ -1,4 +1,6 @@
-package clarity.model;
+package clarity.match;
+
+import clarity.model.Entity;
 
 public class EntityCollection {
 

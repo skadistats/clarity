@@ -4,6 +4,7 @@ import java.util.List;
 
 import clarity.match.Match;
 import clarity.model.StringTable;
+import clarity.parser.Handler;
 
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoStringTables.items_t;

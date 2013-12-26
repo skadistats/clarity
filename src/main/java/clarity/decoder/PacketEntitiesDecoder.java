@@ -8,10 +8,10 @@ import java.util.Map;
 
 import org.javatuples.Pair;
 
+import clarity.match.DTClassCollection;
+import clarity.match.EntityCollection;
 import clarity.model.DTClass;
-import clarity.model.DTClassCollection;
 import clarity.model.Entity;
-import clarity.model.EntityCollection;
 import clarity.model.PVS;
 import clarity.model.ReceiveProp;
 import clarity.model.StringTable;

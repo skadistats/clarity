@@ -1,4 +1,4 @@
-package clarity.parser.handler;
+package clarity.parser;
 
 import clarity.match.Match;
 

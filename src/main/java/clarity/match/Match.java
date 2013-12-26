@@ -1,9 +1,6 @@
 package clarity.match;
 
 import clarity.iterator.BidiIterator;
-import clarity.model.DTClassCollection;
-import clarity.model.EntityCollection;
-import clarity.model.StringTableCollection;
 import clarity.parser.Peek;
 import clarity.parser.ReplayIndex;
 
