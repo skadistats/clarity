@@ -1,4 +1,4 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -7,7 +7,7 @@ import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 import clarity.model.PropFlag;
 
-public class FloatDecoder implements DtDecoder<Float> {
+public class FloatDecoder implements PropDecoder<Float> {
 
 	@Override
 	public Float decode(EntityBitStream stream, Prop prop) {

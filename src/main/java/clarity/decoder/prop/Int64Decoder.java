@@ -1,10 +1,10 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 import clarity.model.PropFlag;
 
-public class Int64Decoder implements DtDecoder<Long> {
+public class Int64Decoder implements PropDecoder<Long> {
 
 	@Override
 	public Long decode(EntityBitStream stream, Prop prop) {

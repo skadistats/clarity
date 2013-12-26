@@ -1,13 +1,13 @@
 package clarity.model;
 
-import clarity.decoder.dt.ArrayDecoder;
-import clarity.decoder.dt.DtDecoder;
-import clarity.decoder.dt.FloatDecoder;
-import clarity.decoder.dt.Int64Decoder;
-import clarity.decoder.dt.IntDecoder;
-import clarity.decoder.dt.StringDecoder;
-import clarity.decoder.dt.VectorDecoder;
-import clarity.decoder.dt.VectorXYDecoder;
+import clarity.decoder.prop.ArrayDecoder;
+import clarity.decoder.prop.PropDecoder;
+import clarity.decoder.prop.FloatDecoder;
+import clarity.decoder.prop.Int64Decoder;
+import clarity.decoder.prop.IntDecoder;
+import clarity.decoder.prop.StringDecoder;
+import clarity.decoder.prop.VectorDecoder;
+import clarity.decoder.prop.VectorXYDecoder;
 
 public enum PropType {
     INT(new IntDecoder()), 
@@ -19,13 +19,13 @@ public enum PropType {
     DATATABLE(null), 
     INT64(new Int64Decoder());
     
-    private final DtDecoder<?> decoder;
+    private final PropDecoder<?> decoder;
 
-	private PropType(DtDecoder<?> decoder) {
+	private PropType(PropDecoder<?> decoder) {
 		this.decoder = decoder;
 	}
 
-	public DtDecoder<?> getDecoder() {
+	public PropDecoder<?> getDecoder() {
 		return decoder;
 	}
     

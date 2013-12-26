@@ -1,10 +1,10 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 import clarity.model.PropFlag;
 
-public class IntDecoder implements DtDecoder<Integer> {
+public class IntDecoder implements PropDecoder<Integer> {
 
 	@Override
 	public Integer decode(EntityBitStream stream, Prop prop) {

@@ -1,9 +1,9 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 
-public interface DtDecoder<T> {
+public interface PropDecoder<T> {
 
 	T decode(EntityBitStream stream, Prop prop);
 	

@@ -1,4 +1,4 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import org.javatuples.Pair;
 
@@ -6,7 +6,7 @@ import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 import clarity.model.PropType;
 
-public class VectorXYDecoder implements DtDecoder<Pair<Float, Float>> {
+public class VectorXYDecoder implements PropDecoder<Pair<Float, Float>> {
 
 	@Override
 	public Pair<Float, Float> decode(EntityBitStream stream, Prop prop) {

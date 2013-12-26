@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import clarity.decoder.dt.DtDecoder;
+import clarity.decoder.prop.PropDecoder;
 import clarity.model.ReceiveProp;
 
 public class BaseInstanceDecoder {
@@ -16,7 +16,7 @@ public class BaseInstanceDecoder {
 		Map<Integer, Object> state = new HashMap<Integer, Object>();
 		for (int i : propList) {
 			ReceiveProp p = receiveProps.get(i);
-			DtDecoder<?> d = p.getType().getDecoder();
+			PropDecoder<?> d = p.getType().getDecoder();
 			Object value = d.decode(stream, p);
 			state.put(i, value);
 		}

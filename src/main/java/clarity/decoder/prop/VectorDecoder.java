@@ -1,4 +1,4 @@
-package clarity.decoder.dt;
+package clarity.decoder.prop;
 
 import org.javatuples.Triplet;
 
@@ -7,7 +7,7 @@ import clarity.model.Prop;
 import clarity.model.PropFlag;
 import clarity.model.PropType;
 
-public class VectorDecoder implements DtDecoder<Triplet<Float, Float, Float>> {
+public class VectorDecoder implements PropDecoder<Triplet<Float, Float, Float>> {
 
 	@Override
 	public Triplet<Float, Float, Float> decode(EntityBitStream stream, Prop prop) {
