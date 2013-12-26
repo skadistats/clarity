@@ -93,4 +93,8 @@ public enum UserMessageType {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
 }
