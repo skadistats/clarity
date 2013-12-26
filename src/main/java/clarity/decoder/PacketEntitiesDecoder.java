@@ -38,7 +38,8 @@ public class PacketEntitiesDecoder {
     public List<Pair<PVS, Entity>> decode(EntityCollection world) {
         List<Pair<PVS, Entity>> patch = new LinkedList<Pair<PVS, Entity>>();
         int index = -1;
-        // System.out.println("------ decoding packet entities, num " + message.getUpdatedEntries());
+        // System.out.println("------ decoding packet entities, num " +
+        // message.getUpdatedEntries());
         while (patch.size() < numEntries) {
             Pair<PVS, Entity> diff = decodeDiff(index, world);
             index = diff.getValue1().getIndex();
@@ -108,12 +109,10 @@ public class PacketEntitiesDecoder {
     private Map<Integer, Object> decodeBaseProperties(int cls) {
         Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
         ByteString s = baseline.getByName(String.valueOf(cls));
-        if (s != null) {
-            new BaseInstanceDecoder().decode(
-                s.toByteArray(),
-                dtClasses.forClassId(cls).getReceiveProps()
-                );
-        }
+        BaseInstanceDecoder.decode(
+            s.toByteArray(),
+            dtClasses.forClassId(cls).getReceiveProps()
+            );
         return decodedProps;
     }
 
