@@ -1,25 +1,17 @@
 package clarity.parser;
 
-import clarity.parser.packethandler.PacketHandler;
-
 import com.google.protobuf.GeneratedMessage;
 
 public class Peek {
 	
-	private final PacketHandler<?> packetHandler;
 	private final int tick;
 	private final GeneratedMessage message;
 
-	public Peek(PacketHandler<?> packetHandler, int tick, GeneratedMessage message) {
-		this.packetHandler = packetHandler;
+	public Peek(int tick, GeneratedMessage message) {
 		this.tick = tick;
 		this.message = message;
 	}
 	
-	public PacketHandler getPacketHandler() {
-		return packetHandler;
-	}
-
 	public int getTick() {
 		return tick;
 	}
