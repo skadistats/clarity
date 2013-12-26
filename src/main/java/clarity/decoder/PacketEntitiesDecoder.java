@@ -1,12 +1,6 @@
 package clarity.decoder;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-
-import org.javatuples.Pair;
 
 import clarity.match.DTClassCollection;
 import clarity.match.EntityCollection;
@@ -36,27 +30,25 @@ public class PacketEntitiesDecoder {
         this.classBits = Util.calcBitsNeededFor(dtClasses.size() - 1);
     }
 
-    public List<Pair<PVS, Entity>> decode(EntityCollection world) {
-        List<Pair<PVS, Entity>> patch = new LinkedList<Pair<PVS, Entity>>();
+    public void decodeAndApply(EntityCollection world) {
         int index = -1;
         //System.out.println("------ decoding packet entities, num " + numEntries);
-        while (patch.size() < numEntries) {
-            Pair<PVS, Entity> diff = decodeDiff(index, world);
-            index = diff.getValue1().getIndex();
-            patch.add(diff);
+        int count = 0;
+        while (count < numEntries) {
+            index = decodeDiff(index, world);
+            count++;
         }
         if (isDelta) {
-            patch.addAll(decodeDeletionDiffs());
+            decodeDeletionDiffs(world);
         }
-        return patch;
     }
 
-    private Pair<PVS, Entity> decodeDiff(int index, EntityCollection entities) {
+    private int decodeDiff(int index, EntityCollection entities) {
         index = stream.readEntityIndex(index);
         PVS pvs = stream.readEntityPVS();
         DTClass cls = null;
         Integer serial = null;
-        Map<Integer, Object> state = null;
+        Object[] state = null;
         List<Integer> propList = null;
         switch (pvs) {
         case ENTER:
@@ -64,52 +56,46 @@ public class PacketEntitiesDecoder {
             serial = stream.readNumericBits(10);
             propList = stream.readEntityPropList();
             state = decodeBaseProperties(cls);
-            state.putAll(decodeProperties(cls, propList));
+            decodeProperties(state, cls, propList);
+            entities.put(index, new Entity(index, serial, cls, state));
             break;
         case PRESERVE:
             Entity entity = entities.get(index);
             cls = entity.getDtClass();
             serial = entity.getSerial();
             propList = stream.readEntityPropList();
-            state = decodeProperties(cls, propList);
+            decodeProperties(entity.getState(), cls, propList);
             break;
         case LEAVE:
+            break;
         case LEAVE_AND_DELETE:
-            state = new HashMap<Integer, Object>();
+            entities.put(index, null);
             break;
         }
-        return new Pair<PVS, Entity>(pvs, new Entity(index, serial, cls, state));
+        return index;
     }
 
-    private List<Pair<PVS, Entity>> decodeDeletionDiffs() {
-        List<Pair<PVS, Entity>> deletions = new ArrayList<Pair<PVS, Entity>>();
-
+    private void decodeDeletionDiffs(EntityCollection entities) {
         while (stream.readBit()) {
             int index = stream.readNumericBits(11); // max is 2^11-1, or 2047
-            deletions.add(new Pair<PVS, Entity>(PVS.LEAVE_AND_DELETE, new Entity(index, null, null, null)));
+            entities.put(index, null);
         }
-        return deletions;
     }
 
-    private Map<Integer, Object> decodeProperties(DTClass cls, List<Integer> propIndices) {
-        Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
+    private void decodeProperties(Object[] state, DTClass cls, List<Integer> propIndices) {
         for (Integer i : propIndices) {
             ReceiveProp r = cls.getReceiveProps().get(i);
             Object dec = r.getType().getDecoder().decode(stream, r);
-            decodedProps.put(i, dec);
-            //System.out.println(r + " := " + dec.toString());
+            state[i] = dec;
         }
-        return decodedProps;
     }
 
-    private Map<Integer, Object> decodeBaseProperties(DTClass cls) {
-        Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
+    private Object[] decodeBaseProperties(DTClass cls) {
         ByteString s = baseline.getByName(String.valueOf(cls.getClassId()));
-        BaseInstanceDecoder.decode(
+        return BaseInstanceDecoder.decode(
             s.toByteArray(),
             cls.getReceiveProps()
             );
-        return decodedProps;
     }
 
 }
