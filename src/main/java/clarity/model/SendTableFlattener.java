@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -12,22 +11,22 @@ import org.javatuples.Pair;
 
 public class SendTableFlattener {
 	
-	private final Map<String, SendTable> lookup;
+	private final DTClassCollection lookup;
 	private final SendTable descendant;
 	private final Set<Pair<String, String>> exclusions;
 	private final List<ReceiveProp> receiveProps;
 	
-	public SendTableFlattener(Map<String, SendTable> lookup, SendTable descendant) {
+	public SendTableFlattener(DTClassCollection lookup, SendTable descendant) {
 		this.lookup = lookup;
 		this.descendant = descendant;
 		this.exclusions = aggregateExclusions(descendant);
 		this.receiveProps = new LinkedList<ReceiveProp>(); 
 	}
-
+	
 	private Set<Pair<String, String>> aggregateExclusions(SendTable table) {
 		Set<Pair<String, String>> result = table.getAllExclusions();
 		for (SendProp sp : table.getAllRelations()) {
-			result.addAll(aggregateExclusions(lookup.get(sp.getDtName())));
+			result.addAll(aggregateExclusions(lookup.sendTableForDtName(sp.getDtName())));
 		}
 		return result;
 	}
@@ -54,9 +53,9 @@ public class SendTableFlattener {
 			}
 			if (sp.getType() == PropType.DATATABLE) {
 				if (sp.isFlagSet(PropFlag.COLLAPSIBLE)) {
-					_flattenCollapsible(lookup.get(sp.getDtName()), accumulator);
+					_flattenCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator);
 				} else {
-					_flatten(lookup.get(sp.getDtName()), new LinkedList<SendProp>(), ancestor.getMessage().getNetTableName());
+					_flatten(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), ancestor.getMessage().getNetTableName());
 				}
 			} else {
 				accumulator.add(sp);

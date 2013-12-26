@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.javatuples.Pair;
 
+import clarity.model.DTClassCollection;
 import clarity.model.Entity;
 import clarity.model.EntityCollection;
 import clarity.model.PVS;
@@ -18,20 +19,20 @@ import com.google.protobuf.ByteString;
 
 public class PacketEntitiesDecoder {
 	
-	private final Map<Integer, List<ReceiveProp>> receivePropsByClass;
+	private final DTClassCollection dtClasses;
 	private final StringTable baseline;
 	private final int classBits;
 	private final int numEntries;
 	private final boolean isDelta;
 	private final EntityBitStream stream;
 
-	public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, Map<Integer, List<ReceiveProp>> receivePropsByClass, StringTable baseline) {
-		this.receivePropsByClass = receivePropsByClass;
+	public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, DTClassCollection dtClasses, StringTable baseline) {
+		this.dtClasses = dtClasses;
 		this.baseline = baseline;
 		this.stream = new EntityBitStream(data);
 		this.numEntries = numEntries;
 		this.isDelta = isDelta;
-		this.classBits = Util.calcBitsNeededFor(receivePropsByClass.size() - 1);
+		this.classBits = Util.calcBitsNeededFor(dtClasses.size() - 1);
 	}
 	
 	public List<Pair<PVS, Entity>> decode(EntityCollection world) {
@@ -94,7 +95,7 @@ public class PacketEntitiesDecoder {
 	private Map<Integer, Object> decodeProperties(int cls, List<Integer> propIndices) {
 		Map<Integer, Object> decodedProps = new HashMap<Integer, Object>();
 		for (Integer i : propIndices) {
-			ReceiveProp r = receivePropsByClass.get(cls).get(i);
+			ReceiveProp r = dtClasses.forClassId(cls).getReceiveProps().get(i);
 			//System.out.print(c + ": " + r);
 			Object dec = r.getType().getDecoder().decode(stream, r);
 			decodedProps.put(i, dec);
@@ -109,7 +110,7 @@ public class PacketEntitiesDecoder {
 		if (s != null) {
 			new BaseInstanceDecoder().decode(
 				s.toByteArray(), 
-				receivePropsByClass.get(cls)
+				dtClasses.forClassId(cls).getReceiveProps()
 			);
 		}
 		return decodedProps;

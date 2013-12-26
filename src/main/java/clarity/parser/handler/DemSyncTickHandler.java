@@ -1,11 +1,11 @@
 package clarity.parser.handler;
 
+import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import clarity.match.Match;
+import clarity.model.DTClass;
 import clarity.model.ReceiveProp;
-import clarity.model.SendTable;
 import clarity.model.SendTableFlattener;
 
 import com.dota2.proto.Demo.CDemoSyncTick;
@@ -16,17 +16,13 @@ public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
 	public void apply(CDemoSyncTick message, Match match) {
 		// last packet of the prologue: compile receive tables!
 		
-		for (Map.Entry<String, SendTable> e : match.getSendTableByDT().entrySet()) {
-			String dt = e.getKey();
-			SendTable sendTable = e.getValue();
-			//System.out.println();
-			//System.out.println("------------------------------------- processing send table " + sendTable.getMessage().getNetTableName());
-			if (!sendTable.getMessage().getNeedsDecoder()) {
+		for (Iterator<DTClass> i = match.getDtClasses().iterator(); i.hasNext();) {
+			DTClass dtc = i.next();
+			if (!dtc.getSendTable().getMessage().getNeedsDecoder()) {
 				continue;
 			}
-			Integer cls = match.getClassByDT().get(dt);
-			List<ReceiveProp> rps = new SendTableFlattener(match.getSendTableByDT(), sendTable).flatten();
-			match.getReceivePropsByClass().put(cls, rps);
+			List<ReceiveProp> rps = new SendTableFlattener(match.getDtClasses(), dtc.getSendTable()).flatten();
+			dtc.setReceiveProps(rps);
 		}
 	}
 	

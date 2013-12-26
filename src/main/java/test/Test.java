@@ -19,6 +19,7 @@ public class Test {
 			
 			for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
 				Peek p = i.next();
+				System.out.println(p);
 				HandlerRegistry.apply(p.getMessage(), match);
 			}
 

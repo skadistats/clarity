@@ -10,7 +10,7 @@ public class DemClassInfoHandler implements Handler<CDemoClassInfo> {
 	@Override
 	public void apply(CDemoClassInfo message, Match match) {
 		for (class_t ct : message.getClassesList()) {
-			match.getClassByDT().put(ct.getTableName(), ct.getClassId());
+			match.getDtClasses().setClassIdForDtName(ct.getTableName(), ct.getClassId());
 		}
 	}
 
