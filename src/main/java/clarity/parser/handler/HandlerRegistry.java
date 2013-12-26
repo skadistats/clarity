@@ -33,6 +33,7 @@ public class HandlerRegistry {
     }
 
     public static <T> void apply(T message, Match match) {
+        @SuppressWarnings("unchecked")
         Handler<T> h = (Handler<T>) H.get(message.getClass());
         if (h != null) {
             h.apply(message, match);
