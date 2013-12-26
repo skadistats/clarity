@@ -157,8 +157,9 @@ public class ReplayIndex {
             return CDemoSyncTick.parseFrom(data);
         case DEM_UserCmd:
             return CDemoUserCmd.parseFrom(data);
+        default:
+            return null;
         }
-        return null;
     }
 
     private GeneratedMessage parseEmbedded(int kind, byte[] data) throws InvalidProtocolBufferException {
@@ -200,8 +201,10 @@ public class ReplayIndex {
             return CSVCMsg_VoiceInit.parseFrom(data);
         case SVC_Messages.svc_VoiceData_VALUE:
             return CSVCMsg_VoiceData.parseFrom(data);
+
+        default:
+            return null;
         }
-        return null;
     }
 
 }
