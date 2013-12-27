@@ -53,6 +53,7 @@ import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_TutorialTipInfo;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_UnitEvent;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_UpdateSharedContent;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_WorldLine;
+import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 import com.dota2.proto.DotaUsermessages.EDotaUserMessages;
 import com.dota2.proto.Usermessages.CUserMsg_AchievementEvent;
 import com.dota2.proto.Usermessages.CUserMsg_CloseCaption;
@@ -161,7 +162,7 @@ public enum UserMessageType {
     UPDATE_SHARED_CONTENT(EDotaUserMessages.DOTA_UM_UpdateSharedContent_VALUE, CDOTAUserMsg_UpdateSharedContent.class),
     TUTORIAL_REQUEST_EXP(EDotaUserMessages.DOTA_UM_TutorialRequestExp_VALUE, CDOTAUserMsg_TutorialRequestExp.class),
     TUTORIAL_PING_MINIMAP(EDotaUserMessages.DOTA_UM_TutorialPingMinimap_VALUE, CDOTAUserMsg_TutorialPingMinimap.class),
-    GAMERULES_STATE_CHANGED(EDotaUserMessages.DOTA_UM_GamerulesStateChanged_VALUE, null), // MISSING
+    GAMERULES_STATE_CHANGED(EDotaUserMessages.DOTA_UM_GamerulesStateChanged_VALUE, CDOTA_UM_GamerulesStateChanged.class),
     SHOW_SURVEY(EDotaUserMessages.DOTA_UM_ShowSurvey_VALUE, CDOTAUserMsg_ShowSurvey.class),
     TUTORIAL_FADE(EDotaUserMessages.DOTA_UM_TutorialFade_VALUE, CDOTAUserMsg_TutorialFade.class),
     ADD_QUEST_LOG_ENTRY(EDotaUserMessages.DOTA_UM_AddQuestLogEntry_VALUE, CDOTAUserMsg_AddQuestLogEntry.class),
