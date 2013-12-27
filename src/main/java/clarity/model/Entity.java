@@ -1,6 +1,7 @@
 package clarity.model;
 
 
+
 public class Entity {
 
     private final Integer index;
@@ -30,5 +31,26 @@ public class Entity {
     public Object[] getState() {
         return state;
     }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("\n\n-- Entity [index=");
+        builder.append(index);
+        builder.append(", serial=");
+        builder.append(serial);
+        builder.append(", dtClass=");
+        builder.append(dtClass.getDtName());
+        builder.append("]");
+        for (int i = 0; i < state.length; i++) {
+            builder.append("\n");
+            builder.append(dtClass.getReceiveProps().get(i).getVarName());
+            builder.append(" = ");
+            builder.append(state[i]);
+        }
+        
+        return builder.toString();
+    }
+    
 
 }
