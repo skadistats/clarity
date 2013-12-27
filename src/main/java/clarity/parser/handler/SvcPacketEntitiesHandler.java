@@ -16,7 +16,7 @@ public class SvcPacketEntitiesHandler implements Handler<CSVCMsg_PacketEntities>
             message.getIsDelta(),
             match.getDtClasses(),
             match.getStringTables().forName("instancebaseline")
-            ).decodeAndApply(match.getEntityCollection());
+            ).decodeAndApply(match.getEntities());
     }
 
 }

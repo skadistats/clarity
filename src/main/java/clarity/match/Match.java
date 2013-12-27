@@ -8,7 +8,9 @@ public class Match {
 
     private final DTClassCollection dtClasses = new DTClassCollection();
     private final StringTableCollection stringTables = new StringTableCollection();
-    private final EntityCollection entityCollection = new EntityCollection();
+    private final EntityCollection entities = new EntityCollection();
+    private final GameEventDescriptorCollection gameEventDescriptors = new GameEventDescriptorCollection();
+    private final GameEventCollection gameEvents = new GameEventCollection();
     
     public Match(ReplayIndex idx) {
         for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
@@ -25,8 +27,18 @@ public class Match {
         return stringTables;
     }
 
-    public EntityCollection getEntityCollection() {
-        return entityCollection;
+    public EntityCollection getEntities() {
+        return entities;
     }
+
+    public GameEventDescriptorCollection getGameEventDescriptors() {
+        return gameEventDescriptors;
+    }
+
+    public GameEventCollection getGameEvents() {
+        return gameEvents;
+    }
+    
+    
 
 }
