@@ -80,7 +80,7 @@ public final class DotaModifiers {
   public interface CDOTAModifierBuffTableEntryOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1;
+    // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1 [default = DOTA_MODIFIER_ENTRY_TYPE_ACTIVE];
     boolean hasEntryType();
     DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE getEntryType();
     
@@ -96,9 +96,9 @@ public final class DotaModifiers {
     boolean hasSerialNum();
     int getSerialNum();
     
-    // optional int32 name = 5;
-    boolean hasName();
-    int getName();
+    // optional int32 modifier_class = 5;
+    boolean hasModifierClass();
+    int getModifierClass();
     
     // optional int32 ability_level = 6;
     boolean hasAbilityLevel();
@@ -142,13 +142,13 @@ public final class DotaModifiers {
     
     // optional .CMsgVector v_start = 16;
     boolean hasVStart();
-    Netmessages.CMsgVector getVStart();
-    Netmessages.CMsgVectorOrBuilder getVStartOrBuilder();
+    Networkbasetypes.CMsgVector getVStart();
+    Networkbasetypes.CMsgVectorOrBuilder getVStartOrBuilder();
     
     // optional .CMsgVector v_end = 17;
     boolean hasVEnd();
-    Netmessages.CMsgVector getVEnd();
-    Netmessages.CMsgVectorOrBuilder getVEndOrBuilder();
+    Networkbasetypes.CMsgVector getVEnd();
+    Networkbasetypes.CMsgVectorOrBuilder getVEndOrBuilder();
     
     // optional string portal_loop_appear = 18;
     boolean hasPortalLoopAppear();
@@ -173,6 +173,26 @@ public final class DotaModifiers {
     // optional bool aura = 23;
     boolean hasAura();
     boolean getAura();
+    
+    // optional int32 activity = 24;
+    boolean hasActivity();
+    int getActivity();
+    
+    // optional int32 damage = 25;
+    boolean hasDamage();
+    int getDamage();
+    
+    // optional int32 range = 26;
+    boolean hasRange();
+    int getRange();
+    
+    // optional int32 dd_modifier_index = 27;
+    boolean hasDdModifierIndex();
+    int getDdModifierIndex();
+    
+    // optional int32 dd_ability_index = 28;
+    boolean hasDdAbilityIndex();
+    int getDdAbilityIndex();
   }
   public static final class CDOTAModifierBuffTableEntry extends
       com.google.protobuf.GeneratedMessage
@@ -203,7 +223,7 @@ public final class DotaModifiers {
     }
     
     private int bitField0_;
-    // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1;
+    // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1 [default = DOTA_MODIFIER_ENTRY_TYPE_ACTIVE];
     public static final int ENTRY_TYPE_FIELD_NUMBER = 1;
     private DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE entryType_;
     public boolean hasEntryType() {
@@ -243,14 +263,14 @@ public final class DotaModifiers {
       return serialNum_;
     }
     
-    // optional int32 name = 5;
-    public static final int NAME_FIELD_NUMBER = 5;
-    private int name_;
-    public boolean hasName() {
+    // optional int32 modifier_class = 5;
+    public static final int MODIFIER_CLASS_FIELD_NUMBER = 5;
+    private int modifierClass_;
+    public boolean hasModifierClass() {
       return ((bitField0_ & 0x00000010) == 0x00000010);
     }
-    public int getName() {
-      return name_;
+    public int getModifierClass() {
+      return modifierClass_;
     }
     
     // optional int32 ability_level = 6;
@@ -355,27 +375,27 @@ public final class DotaModifiers {
     
     // optional .CMsgVector v_start = 16;
     public static final int V_START_FIELD_NUMBER = 16;
-    private Netmessages.CMsgVector vStart_;
+    private Networkbasetypes.CMsgVector vStart_;
     public boolean hasVStart() {
       return ((bitField0_ & 0x00008000) == 0x00008000);
     }
-    public Netmessages.CMsgVector getVStart() {
+    public Networkbasetypes.CMsgVector getVStart() {
       return vStart_;
     }
-    public Netmessages.CMsgVectorOrBuilder getVStartOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getVStartOrBuilder() {
       return vStart_;
     }
     
     // optional .CMsgVector v_end = 17;
     public static final int V_END_FIELD_NUMBER = 17;
-    private Netmessages.CMsgVector vEnd_;
+    private Networkbasetypes.CMsgVector vEnd_;
     public boolean hasVEnd() {
       return ((bitField0_ & 0x00010000) == 0x00010000);
     }
-    public Netmessages.CMsgVector getVEnd() {
+    public Networkbasetypes.CMsgVector getVEnd() {
       return vEnd_;
     }
-    public Netmessages.CMsgVectorOrBuilder getVEndOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getVEndOrBuilder() {
       return vEnd_;
     }
     
@@ -527,12 +547,62 @@ public final class DotaModifiers {
       return aura_;
     }
     
+    // optional int32 activity = 24;
+    public static final int ACTIVITY_FIELD_NUMBER = 24;
+    private int activity_;
+    public boolean hasActivity() {
+      return ((bitField0_ & 0x00800000) == 0x00800000);
+    }
+    public int getActivity() {
+      return activity_;
+    }
+    
+    // optional int32 damage = 25;
+    public static final int DAMAGE_FIELD_NUMBER = 25;
+    private int damage_;
+    public boolean hasDamage() {
+      return ((bitField0_ & 0x01000000) == 0x01000000);
+    }
+    public int getDamage() {
+      return damage_;
+    }
+    
+    // optional int32 range = 26;
+    public static final int RANGE_FIELD_NUMBER = 26;
+    private int range_;
+    public boolean hasRange() {
+      return ((bitField0_ & 0x02000000) == 0x02000000);
+    }
+    public int getRange() {
+      return range_;
+    }
+    
+    // optional int32 dd_modifier_index = 27;
+    public static final int DD_MODIFIER_INDEX_FIELD_NUMBER = 27;
+    private int ddModifierIndex_;
+    public boolean hasDdModifierIndex() {
+      return ((bitField0_ & 0x04000000) == 0x04000000);
+    }
+    public int getDdModifierIndex() {
+      return ddModifierIndex_;
+    }
+    
+    // optional int32 dd_ability_index = 28;
+    public static final int DD_ABILITY_INDEX_FIELD_NUMBER = 28;
+    private int ddAbilityIndex_;
+    public boolean hasDdAbilityIndex() {
+      return ((bitField0_ & 0x08000000) == 0x08000000);
+    }
+    public int getDdAbilityIndex() {
+      return ddAbilityIndex_;
+    }
+    
     private void initFields() {
       entryType_ = DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE;
       parent_ = 0;
       index_ = 0;
       serialNum_ = 0;
-      name_ = 0;
+      modifierClass_ = 0;
       abilityLevel_ = 0;
       stackCount_ = 0;
       creationTime_ = 0F;
@@ -543,14 +613,19 @@ public final class DotaModifiers {
       fadeTime_ = 0F;
       subtle_ = false;
       channelTime_ = 0F;
-      vStart_ = Netmessages.CMsgVector.getDefaultInstance();
-      vEnd_ = Netmessages.CMsgVector.getDefaultInstance();
+      vStart_ = Networkbasetypes.CMsgVector.getDefaultInstance();
+      vEnd_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       portalLoopAppear_ = "";
       portalLoopDisappear_ = "";
       heroLoopAppear_ = "";
       heroLoopDisappear_ = "";
       movementSpeed_ = 0;
       aura_ = false;
+      activity_ = 0;
+      damage_ = 0;
+      range_ = 0;
+      ddModifierIndex_ = 0;
+      ddAbilityIndex_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -593,7 +668,7 @@ public final class DotaModifiers {
         output.writeInt32(4, serialNum_);
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeInt32(5, name_);
+        output.writeInt32(5, modifierClass_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeInt32(6, abilityLevel_);
@@ -649,6 +724,21 @@ public final class DotaModifiers {
       if (((bitField0_ & 0x00400000) == 0x00400000)) {
         output.writeBool(23, aura_);
       }
+      if (((bitField0_ & 0x00800000) == 0x00800000)) {
+        output.writeInt32(24, activity_);
+      }
+      if (((bitField0_ & 0x01000000) == 0x01000000)) {
+        output.writeInt32(25, damage_);
+      }
+      if (((bitField0_ & 0x02000000) == 0x02000000)) {
+        output.writeInt32(26, range_);
+      }
+      if (((bitField0_ & 0x04000000) == 0x04000000)) {
+        output.writeInt32(27, ddModifierIndex_);
+      }
+      if (((bitField0_ & 0x08000000) == 0x08000000)) {
+        output.writeInt32(28, ddAbilityIndex_);
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -676,7 +766,7 @@ public final class DotaModifiers {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(5, name_);
+          .computeInt32Size(5, modifierClass_);
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
@@ -749,6 +839,26 @@ public final class DotaModifiers {
       if (((bitField0_ & 0x00400000) == 0x00400000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(23, aura_);
+      }
+      if (((bitField0_ & 0x00800000) == 0x00800000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(24, activity_);
+      }
+      if (((bitField0_ & 0x01000000) == 0x01000000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(25, damage_);
+      }
+      if (((bitField0_ & 0x02000000) == 0x02000000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(26, range_);
+      }
+      if (((bitField0_ & 0x04000000) == 0x04000000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(27, ddModifierIndex_);
+      }
+      if (((bitField0_ & 0x08000000) == 0x08000000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(28, ddAbilityIndex_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -884,7 +994,7 @@ public final class DotaModifiers {
         bitField0_ = (bitField0_ & ~0x00000004);
         serialNum_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
-        name_ = 0;
+        modifierClass_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
         abilityLevel_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
@@ -907,13 +1017,13 @@ public final class DotaModifiers {
         channelTime_ = 0F;
         bitField0_ = (bitField0_ & ~0x00004000);
         if (vStartBuilder_ == null) {
-          vStart_ = Netmessages.CMsgVector.getDefaultInstance();
+          vStart_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           vStartBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00008000);
         if (vEndBuilder_ == null) {
-          vEnd_ = Netmessages.CMsgVector.getDefaultInstance();
+          vEnd_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           vEndBuilder_.clear();
         }
@@ -930,6 +1040,16 @@ public final class DotaModifiers {
         bitField0_ = (bitField0_ & ~0x00200000);
         aura_ = false;
         bitField0_ = (bitField0_ & ~0x00400000);
+        activity_ = 0;
+        bitField0_ = (bitField0_ & ~0x00800000);
+        damage_ = 0;
+        bitField0_ = (bitField0_ & ~0x01000000);
+        range_ = 0;
+        bitField0_ = (bitField0_ & ~0x02000000);
+        ddModifierIndex_ = 0;
+        bitField0_ = (bitField0_ & ~0x04000000);
+        ddAbilityIndex_ = 0;
+        bitField0_ = (bitField0_ & ~0x08000000);
         return this;
       }
       
@@ -987,7 +1107,7 @@ public final class DotaModifiers {
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.name_ = name_;
+        result.modifierClass_ = modifierClass_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
         }
@@ -1068,6 +1188,26 @@ public final class DotaModifiers {
           to_bitField0_ |= 0x00400000;
         }
         result.aura_ = aura_;
+        if (((from_bitField0_ & 0x00800000) == 0x00800000)) {
+          to_bitField0_ |= 0x00800000;
+        }
+        result.activity_ = activity_;
+        if (((from_bitField0_ & 0x01000000) == 0x01000000)) {
+          to_bitField0_ |= 0x01000000;
+        }
+        result.damage_ = damage_;
+        if (((from_bitField0_ & 0x02000000) == 0x02000000)) {
+          to_bitField0_ |= 0x02000000;
+        }
+        result.range_ = range_;
+        if (((from_bitField0_ & 0x04000000) == 0x04000000)) {
+          to_bitField0_ |= 0x04000000;
+        }
+        result.ddModifierIndex_ = ddModifierIndex_;
+        if (((from_bitField0_ & 0x08000000) == 0x08000000)) {
+          to_bitField0_ |= 0x08000000;
+        }
+        result.ddAbilityIndex_ = ddAbilityIndex_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1096,8 +1236,8 @@ public final class DotaModifiers {
         if (other.hasSerialNum()) {
           setSerialNum(other.getSerialNum());
         }
-        if (other.hasName()) {
-          setName(other.getName());
+        if (other.hasModifierClass()) {
+          setModifierClass(other.getModifierClass());
         }
         if (other.hasAbilityLevel()) {
           setAbilityLevel(other.getAbilityLevel());
@@ -1152,6 +1292,21 @@ public final class DotaModifiers {
         }
         if (other.hasAura()) {
           setAura(other.getAura());
+        }
+        if (other.hasActivity()) {
+          setActivity(other.getActivity());
+        }
+        if (other.hasDamage()) {
+          setDamage(other.getDamage());
+        }
+        if (other.hasRange()) {
+          setRange(other.getRange());
+        }
+        if (other.hasDdModifierIndex()) {
+          setDdModifierIndex(other.getDdModifierIndex());
+        }
+        if (other.hasDdAbilityIndex()) {
+          setDdAbilityIndex(other.getDdAbilityIndex());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1228,7 +1383,7 @@ public final class DotaModifiers {
             }
             case 40: {
               bitField0_ |= 0x00000010;
-              name_ = input.readInt32();
+              modifierClass_ = input.readInt32();
               break;
             }
             case 48: {
@@ -1282,7 +1437,7 @@ public final class DotaModifiers {
               break;
             }
             case 130: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasVStart()) {
                 subBuilder.mergeFrom(getVStart());
               }
@@ -1291,7 +1446,7 @@ public final class DotaModifiers {
               break;
             }
             case 138: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasVEnd()) {
                 subBuilder.mergeFrom(getVEnd());
               }
@@ -1329,13 +1484,38 @@ public final class DotaModifiers {
               aura_ = input.readBool();
               break;
             }
+            case 192: {
+              bitField0_ |= 0x00800000;
+              activity_ = input.readInt32();
+              break;
+            }
+            case 200: {
+              bitField0_ |= 0x01000000;
+              damage_ = input.readInt32();
+              break;
+            }
+            case 208: {
+              bitField0_ |= 0x02000000;
+              range_ = input.readInt32();
+              break;
+            }
+            case 216: {
+              bitField0_ |= 0x04000000;
+              ddModifierIndex_ = input.readInt32();
+              break;
+            }
+            case 224: {
+              bitField0_ |= 0x08000000;
+              ddAbilityIndex_ = input.readInt32();
+              break;
+            }
           }
         }
       }
       
       private int bitField0_;
       
-      // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1;
+      // required .DOTA_MODIFIER_ENTRY_TYPE entry_type = 1 [default = DOTA_MODIFIER_ENTRY_TYPE_ACTIVE];
       private DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE entryType_ = DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE;
       public boolean hasEntryType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -1422,23 +1602,23 @@ public final class DotaModifiers {
         return this;
       }
       
-      // optional int32 name = 5;
-      private int name_ ;
-      public boolean hasName() {
+      // optional int32 modifier_class = 5;
+      private int modifierClass_ ;
+      public boolean hasModifierClass() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public int getName() {
-        return name_;
+      public int getModifierClass() {
+        return modifierClass_;
       }
-      public Builder setName(int value) {
+      public Builder setModifierClass(int value) {
         bitField0_ |= 0x00000010;
-        name_ = value;
+        modifierClass_ = value;
         onChanged();
         return this;
       }
-      public Builder clearName() {
+      public Builder clearModifierClass() {
         bitField0_ = (bitField0_ & ~0x00000010);
-        name_ = 0;
+        modifierClass_ = 0;
         onChanged();
         return this;
       }
@@ -1654,20 +1834,20 @@ public final class DotaModifiers {
       }
       
       // optional .CMsgVector v_start = 16;
-      private Netmessages.CMsgVector vStart_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector vStart_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> vStartBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> vStartBuilder_;
       public boolean hasVStart() {
         return ((bitField0_ & 0x00008000) == 0x00008000);
       }
-      public Netmessages.CMsgVector getVStart() {
+      public Networkbasetypes.CMsgVector getVStart() {
         if (vStartBuilder_ == null) {
           return vStart_;
         } else {
           return vStartBuilder_.getMessage();
         }
       }
-      public Builder setVStart(Netmessages.CMsgVector value) {
+      public Builder setVStart(Networkbasetypes.CMsgVector value) {
         if (vStartBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1681,7 +1861,7 @@ public final class DotaModifiers {
         return this;
       }
       public Builder setVStart(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (vStartBuilder_ == null) {
           vStart_ = builderForValue.build();
           onChanged();
@@ -1691,12 +1871,12 @@ public final class DotaModifiers {
         bitField0_ |= 0x00008000;
         return this;
       }
-      public Builder mergeVStart(Netmessages.CMsgVector value) {
+      public Builder mergeVStart(Networkbasetypes.CMsgVector value) {
         if (vStartBuilder_ == null) {
           if (((bitField0_ & 0x00008000) == 0x00008000) &&
-              vStart_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              vStart_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             vStart_ =
-              Netmessages.CMsgVector.newBuilder(vStart_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(vStart_).mergeFrom(value).buildPartial();
           } else {
             vStart_ = value;
           }
@@ -1709,7 +1889,7 @@ public final class DotaModifiers {
       }
       public Builder clearVStart() {
         if (vStartBuilder_ == null) {
-          vStart_ = Netmessages.CMsgVector.getDefaultInstance();
+          vStart_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           vStartBuilder_.clear();
@@ -1717,12 +1897,12 @@ public final class DotaModifiers {
         bitField0_ = (bitField0_ & ~0x00008000);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getVStartBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getVStartBuilder() {
         bitField0_ |= 0x00008000;
         onChanged();
         return getVStartFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getVStartOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getVStartOrBuilder() {
         if (vStartBuilder_ != null) {
           return vStartBuilder_.getMessageOrBuilder();
         } else {
@@ -1730,11 +1910,11 @@ public final class DotaModifiers {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getVStartFieldBuilder() {
         if (vStartBuilder_ == null) {
           vStartBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   vStart_,
                   getParentForChildren(),
                   isClean());
@@ -1744,20 +1924,20 @@ public final class DotaModifiers {
       }
       
       // optional .CMsgVector v_end = 17;
-      private Netmessages.CMsgVector vEnd_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector vEnd_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> vEndBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> vEndBuilder_;
       public boolean hasVEnd() {
         return ((bitField0_ & 0x00010000) == 0x00010000);
       }
-      public Netmessages.CMsgVector getVEnd() {
+      public Networkbasetypes.CMsgVector getVEnd() {
         if (vEndBuilder_ == null) {
           return vEnd_;
         } else {
           return vEndBuilder_.getMessage();
         }
       }
-      public Builder setVEnd(Netmessages.CMsgVector value) {
+      public Builder setVEnd(Networkbasetypes.CMsgVector value) {
         if (vEndBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -1771,7 +1951,7 @@ public final class DotaModifiers {
         return this;
       }
       public Builder setVEnd(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (vEndBuilder_ == null) {
           vEnd_ = builderForValue.build();
           onChanged();
@@ -1781,12 +1961,12 @@ public final class DotaModifiers {
         bitField0_ |= 0x00010000;
         return this;
       }
-      public Builder mergeVEnd(Netmessages.CMsgVector value) {
+      public Builder mergeVEnd(Networkbasetypes.CMsgVector value) {
         if (vEndBuilder_ == null) {
           if (((bitField0_ & 0x00010000) == 0x00010000) &&
-              vEnd_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              vEnd_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             vEnd_ =
-              Netmessages.CMsgVector.newBuilder(vEnd_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(vEnd_).mergeFrom(value).buildPartial();
           } else {
             vEnd_ = value;
           }
@@ -1799,7 +1979,7 @@ public final class DotaModifiers {
       }
       public Builder clearVEnd() {
         if (vEndBuilder_ == null) {
-          vEnd_ = Netmessages.CMsgVector.getDefaultInstance();
+          vEnd_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           vEndBuilder_.clear();
@@ -1807,12 +1987,12 @@ public final class DotaModifiers {
         bitField0_ = (bitField0_ & ~0x00010000);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getVEndBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getVEndBuilder() {
         bitField0_ |= 0x00010000;
         onChanged();
         return getVEndFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getVEndOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getVEndOrBuilder() {
         if (vEndBuilder_ != null) {
           return vEndBuilder_.getMessageOrBuilder();
         } else {
@@ -1820,11 +2000,11 @@ public final class DotaModifiers {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getVEndFieldBuilder() {
         if (vEndBuilder_ == null) {
           vEndBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   vEnd_,
                   getParentForChildren(),
                   isClean());
@@ -2019,6 +2199,111 @@ public final class DotaModifiers {
         return this;
       }
       
+      // optional int32 activity = 24;
+      private int activity_ ;
+      public boolean hasActivity() {
+        return ((bitField0_ & 0x00800000) == 0x00800000);
+      }
+      public int getActivity() {
+        return activity_;
+      }
+      public Builder setActivity(int value) {
+        bitField0_ |= 0x00800000;
+        activity_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearActivity() {
+        bitField0_ = (bitField0_ & ~0x00800000);
+        activity_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 damage = 25;
+      private int damage_ ;
+      public boolean hasDamage() {
+        return ((bitField0_ & 0x01000000) == 0x01000000);
+      }
+      public int getDamage() {
+        return damage_;
+      }
+      public Builder setDamage(int value) {
+        bitField0_ |= 0x01000000;
+        damage_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDamage() {
+        bitField0_ = (bitField0_ & ~0x01000000);
+        damage_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 range = 26;
+      private int range_ ;
+      public boolean hasRange() {
+        return ((bitField0_ & 0x02000000) == 0x02000000);
+      }
+      public int getRange() {
+        return range_;
+      }
+      public Builder setRange(int value) {
+        bitField0_ |= 0x02000000;
+        range_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearRange() {
+        bitField0_ = (bitField0_ & ~0x02000000);
+        range_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 dd_modifier_index = 27;
+      private int ddModifierIndex_ ;
+      public boolean hasDdModifierIndex() {
+        return ((bitField0_ & 0x04000000) == 0x04000000);
+      }
+      public int getDdModifierIndex() {
+        return ddModifierIndex_;
+      }
+      public Builder setDdModifierIndex(int value) {
+        bitField0_ |= 0x04000000;
+        ddModifierIndex_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDdModifierIndex() {
+        bitField0_ = (bitField0_ & ~0x04000000);
+        ddModifierIndex_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 dd_ability_index = 28;
+      private int ddAbilityIndex_ ;
+      public boolean hasDdAbilityIndex() {
+        return ((bitField0_ & 0x08000000) == 0x08000000);
+      }
+      public int getDdAbilityIndex() {
+        return ddAbilityIndex_;
+      }
+      public Builder setDdAbilityIndex(int value) {
+        bitField0_ |= 0x08000000;
+        ddAbilityIndex_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearDdAbilityIndex() {
+        bitField0_ = (bitField0_ & ~0x08000000);
+        ddAbilityIndex_ = 0;
+        onChanged();
+        return this;
+      }
+      
       // @@protoc_insertion_point(builder_scope:CDOTAModifierBuffTableEntry)
     }
     
@@ -2045,24 +2330,27 @@ public final class DotaModifiers {
   static {
     java.lang.String[] descriptorData = {
       "\n\024dota_modifiers.proto\032 google/protobuf/" +
-      "descriptor.proto\032\021netmessages.proto\"\241\004\n\033" +
-      "CDOTAModifierBuffTableEntry\022-\n\nentry_typ" +
-      "e\030\001 \002(\0162\031.DOTA_MODIFIER_ENTRY_TYPE\022\016\n\006pa" +
-      "rent\030\002 \002(\005\022\r\n\005index\030\003 \002(\005\022\022\n\nserial_num\030" +
-      "\004 \002(\005\022\014\n\004name\030\005 \001(\005\022\025\n\rability_level\030\006 \001" +
-      "(\005\022\023\n\013stack_count\030\007 \001(\005\022\025\n\rcreation_time" +
-      "\030\010 \001(\002\022\024\n\010duration\030\t \001(\002:\002-1\022\016\n\006caster\030\n" +
-      " \001(\005\022\017\n\007ability\030\013 \001(\005\022\r\n\005armor\030\014 \001(\005\022\021\n\t" +
-      "fade_time\030\r \001(\002\022\016\n\006subtle\030\016 \001(\010\022\024\n\014chann",
-      "el_time\030\017 \001(\002\022\034\n\007v_start\030\020 \001(\0132\013.CMsgVec" +
-      "tor\022\032\n\005v_end\030\021 \001(\0132\013.CMsgVector\022\032\n\022porta" +
-      "l_loop_appear\030\022 \001(\t\022\035\n\025portal_loop_disap" +
-      "pear\030\023 \001(\t\022\030\n\020hero_loop_appear\030\024 \001(\t\022\033\n\023" +
-      "hero_loop_disappear\030\025 \001(\t\022\026\n\016movement_sp" +
-      "eed\030\026 \001(\005\022\014\n\004aura\030\027 \001(\010*e\n\030DOTA_MODIFIER" +
-      "_ENTRY_TYPE\022#\n\037DOTA_MODIFIER_ENTRY_TYPE_" +
-      "ACTIVE\020\001\022$\n DOTA_MODIFIER_ENTRY_TYPE_REM" +
-      "OVED\020\002B\005H\001\200\001\000"
+      "descriptor.proto\032\026networkbasetypes.proto" +
+      "\"\262\005\n\033CDOTAModifierBuffTableEntry\022N\n\nentr" +
+      "y_type\030\001 \002(\0162\031.DOTA_MODIFIER_ENTRY_TYPE:" +
+      "\037DOTA_MODIFIER_ENTRY_TYPE_ACTIVE\022\016\n\006pare" +
+      "nt\030\002 \002(\005\022\r\n\005index\030\003 \002(\005\022\022\n\nserial_num\030\004 " +
+      "\002(\005\022\026\n\016modifier_class\030\005 \001(\005\022\025\n\rability_l" +
+      "evel\030\006 \001(\005\022\023\n\013stack_count\030\007 \001(\005\022\025\n\rcreat" +
+      "ion_time\030\010 \001(\002\022\024\n\010duration\030\t \001(\002:\002-1\022\016\n\006" +
+      "caster\030\n \001(\005\022\017\n\007ability\030\013 \001(\005\022\r\n\005armor\030\014",
+      " \001(\005\022\021\n\tfade_time\030\r \001(\002\022\016\n\006subtle\030\016 \001(\010\022" +
+      "\024\n\014channel_time\030\017 \001(\002\022\034\n\007v_start\030\020 \001(\0132\013" +
+      ".CMsgVector\022\032\n\005v_end\030\021 \001(\0132\013.CMsgVector\022" +
+      "\032\n\022portal_loop_appear\030\022 \001(\t\022\035\n\025portal_lo" +
+      "op_disappear\030\023 \001(\t\022\030\n\020hero_loop_appear\030\024" +
+      " \001(\t\022\033\n\023hero_loop_disappear\030\025 \001(\t\022\026\n\016mov" +
+      "ement_speed\030\026 \001(\005\022\014\n\004aura\030\027 \001(\010\022\020\n\010activ" +
+      "ity\030\030 \001(\005\022\016\n\006damage\030\031 \001(\005\022\r\n\005range\030\032 \001(\005" +
+      "\022\031\n\021dd_modifier_index\030\033 \001(\005\022\030\n\020dd_abilit" +
+      "y_index\030\034 \001(\005*e\n\030DOTA_MODIFIER_ENTRY_TYP",
+      "E\022#\n\037DOTA_MODIFIER_ENTRY_TYPE_ACTIVE\020\001\022$" +
+      "\n DOTA_MODIFIER_ENTRY_TYPE_REMOVED\020\002"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -2074,7 +2362,7 @@ public final class DotaModifiers {
           internal_static_CDOTAModifierBuffTableEntry_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAModifierBuffTableEntry_descriptor,
-              new java.lang.String[] { "EntryType", "Parent", "Index", "SerialNum", "Name", "AbilityLevel", "StackCount", "CreationTime", "Duration", "Caster", "Ability", "Armor", "FadeTime", "Subtle", "ChannelTime", "VStart", "VEnd", "PortalLoopAppear", "PortalLoopDisappear", "HeroLoopAppear", "HeroLoopDisappear", "MovementSpeed", "Aura", },
+              new java.lang.String[] { "EntryType", "Parent", "Index", "SerialNum", "ModifierClass", "AbilityLevel", "StackCount", "CreationTime", "Duration", "Caster", "Ability", "Armor", "FadeTime", "Subtle", "ChannelTime", "VStart", "VEnd", "PortalLoopAppear", "PortalLoopDisappear", "HeroLoopAppear", "HeroLoopDisappear", "MovementSpeed", "Aura", "Activity", "Damage", "Range", "DdModifierIndex", "DdAbilityIndex", },
               DotaModifiers.CDOTAModifierBuffTableEntry.class,
               DotaModifiers.CDOTAModifierBuffTableEntry.Builder.class);
           return null;
@@ -2084,7 +2372,7 @@ public final class DotaModifiers {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.DescriptorProtos.getDescriptor(),
-          Netmessages.getDescriptor(),
+          Networkbasetypes.getDescriptor(),
         }, assigner);
   }
   

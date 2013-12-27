@@ -14,6 +14,8 @@ public class SvcCreateStringTableHandler implements Handler<CSVCMsg_CreateString
         StringTable table = new StringTable(message);
         StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumEntries());
         match.getStringTables().add(table);
+//        System.out.println("created string table " + table.getName());
+//        System.out.println(table);
     }
 
 }

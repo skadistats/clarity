@@ -40,6 +40,29 @@ public final class DotaUsermessages {
     DOTA_UM_ItemPurchased(27, 92),
     DOTA_UM_Ping(28, 93),
     DOTA_UM_ItemFound(29, 94),
+    DOTA_UM_CharacterSpeakConcept(30, 95),
+    DOTA_UM_SwapVerify(31, 96),
+    DOTA_UM_WorldLine(32, 97),
+    DOTA_UM_TournamentDrop(33, 98),
+    DOTA_UM_ItemAlert(34, 99),
+    DOTA_UM_HalloweenDrops(35, 100),
+    DOTA_UM_ChatWheel(36, 101),
+    DOTA_UM_ReceivedXmasGift(37, 102),
+    DOTA_UM_UpdateSharedContent(38, 103),
+    DOTA_UM_TutorialRequestExp(39, 104),
+    DOTA_UM_TutorialPingMinimap(40, 105),
+    DOTA_UM_GamerulesStateChanged(41, 106),
+    DOTA_UM_ShowSurvey(42, 107),
+    DOTA_UM_TutorialFade(43, 108),
+    DOTA_UM_AddQuestLogEntry(44, 109),
+    DOTA_UM_SendStatPopup(45, 110),
+    DOTA_UM_TutorialFinish(46, 111),
+    DOTA_UM_SendRoshanPopup(47, 112),
+    DOTA_UM_SendGenericToolTip(48, 113),
+    DOTA_UM_SendFinalGold(49, 114),
+    DOTA_UM_CustomMsg(50, 115),
+    DOTA_UM_CoachHUDPing(51, 116),
+    DOTA_UM_ClientLoadGridNav(52, 117),
     ;
     
     public static final int DOTA_UM_AddUnitToSelection_VALUE = 64;
@@ -72,6 +95,29 @@ public final class DotaUsermessages {
     public static final int DOTA_UM_ItemPurchased_VALUE = 92;
     public static final int DOTA_UM_Ping_VALUE = 93;
     public static final int DOTA_UM_ItemFound_VALUE = 94;
+    public static final int DOTA_UM_CharacterSpeakConcept_VALUE = 95;
+    public static final int DOTA_UM_SwapVerify_VALUE = 96;
+    public static final int DOTA_UM_WorldLine_VALUE = 97;
+    public static final int DOTA_UM_TournamentDrop_VALUE = 98;
+    public static final int DOTA_UM_ItemAlert_VALUE = 99;
+    public static final int DOTA_UM_HalloweenDrops_VALUE = 100;
+    public static final int DOTA_UM_ChatWheel_VALUE = 101;
+    public static final int DOTA_UM_ReceivedXmasGift_VALUE = 102;
+    public static final int DOTA_UM_UpdateSharedContent_VALUE = 103;
+    public static final int DOTA_UM_TutorialRequestExp_VALUE = 104;
+    public static final int DOTA_UM_TutorialPingMinimap_VALUE = 105;
+    public static final int DOTA_UM_GamerulesStateChanged_VALUE = 106;
+    public static final int DOTA_UM_ShowSurvey_VALUE = 107;
+    public static final int DOTA_UM_TutorialFade_VALUE = 108;
+    public static final int DOTA_UM_AddQuestLogEntry_VALUE = 109;
+    public static final int DOTA_UM_SendStatPopup_VALUE = 110;
+    public static final int DOTA_UM_TutorialFinish_VALUE = 111;
+    public static final int DOTA_UM_SendRoshanPopup_VALUE = 112;
+    public static final int DOTA_UM_SendGenericToolTip_VALUE = 113;
+    public static final int DOTA_UM_SendFinalGold_VALUE = 114;
+    public static final int DOTA_UM_CustomMsg_VALUE = 115;
+    public static final int DOTA_UM_CoachHUDPing_VALUE = 116;
+    public static final int DOTA_UM_ClientLoadGridNav_VALUE = 117;
     
     
     public final int getNumber() { return value; }
@@ -108,6 +154,29 @@ public final class DotaUsermessages {
         case 92: return DOTA_UM_ItemPurchased;
         case 93: return DOTA_UM_Ping;
         case 94: return DOTA_UM_ItemFound;
+        case 95: return DOTA_UM_CharacterSpeakConcept;
+        case 96: return DOTA_UM_SwapVerify;
+        case 97: return DOTA_UM_WorldLine;
+        case 98: return DOTA_UM_TournamentDrop;
+        case 99: return DOTA_UM_ItemAlert;
+        case 100: return DOTA_UM_HalloweenDrops;
+        case 101: return DOTA_UM_ChatWheel;
+        case 102: return DOTA_UM_ReceivedXmasGift;
+        case 103: return DOTA_UM_UpdateSharedContent;
+        case 104: return DOTA_UM_TutorialRequestExp;
+        case 105: return DOTA_UM_TutorialPingMinimap;
+        case 106: return DOTA_UM_GamerulesStateChanged;
+        case 107: return DOTA_UM_ShowSurvey;
+        case 108: return DOTA_UM_TutorialFade;
+        case 109: return DOTA_UM_AddQuestLogEntry;
+        case 110: return DOTA_UM_SendStatPopup;
+        case 111: return DOTA_UM_TutorialFinish;
+        case 112: return DOTA_UM_SendRoshanPopup;
+        case 113: return DOTA_UM_SendGenericToolTip;
+        case 114: return DOTA_UM_SendFinalGold;
+        case 115: return DOTA_UM_CustomMsg;
+        case 116: return DOTA_UM_CoachHUDPing;
+        case 117: return DOTA_UM_ClientLoadGridNav;
         default: return null;
       }
     }
@@ -138,7 +207,7 @@ public final class DotaUsermessages {
     }
     
     private static final EDotaUserMessages[] VALUES = {
-      DOTA_UM_AddUnitToSelection, DOTA_UM_AIDebugLine, DOTA_UM_ChatEvent, DOTA_UM_CombatHeroPositions, DOTA_UM_CombatLogData, DOTA_UM_CombatLogShowDeath, DOTA_UM_CreateLinearProjectile, DOTA_UM_DestroyLinearProjectile, DOTA_UM_DodgeTrackingProjectiles, DOTA_UM_GlobalLightColor, DOTA_UM_GlobalLightDirection, DOTA_UM_InvalidCommand, DOTA_UM_LocationPing, DOTA_UM_MapLine, DOTA_UM_MiniKillCamInfo, DOTA_UM_MinimapDebugPoint, DOTA_UM_MinimapEvent, DOTA_UM_NevermoreRequiem, DOTA_UM_OverheadEvent, DOTA_UM_SetNextAutobuyItem, DOTA_UM_SharedCooldown, DOTA_UM_SpectatorPlayerClick, DOTA_UM_TutorialTipInfo, DOTA_UM_UnitEvent, DOTA_UM_ParticleManager, DOTA_UM_BotChat, DOTA_UM_HudError, DOTA_UM_ItemPurchased, DOTA_UM_Ping, DOTA_UM_ItemFound, 
+      DOTA_UM_AddUnitToSelection, DOTA_UM_AIDebugLine, DOTA_UM_ChatEvent, DOTA_UM_CombatHeroPositions, DOTA_UM_CombatLogData, DOTA_UM_CombatLogShowDeath, DOTA_UM_CreateLinearProjectile, DOTA_UM_DestroyLinearProjectile, DOTA_UM_DodgeTrackingProjectiles, DOTA_UM_GlobalLightColor, DOTA_UM_GlobalLightDirection, DOTA_UM_InvalidCommand, DOTA_UM_LocationPing, DOTA_UM_MapLine, DOTA_UM_MiniKillCamInfo, DOTA_UM_MinimapDebugPoint, DOTA_UM_MinimapEvent, DOTA_UM_NevermoreRequiem, DOTA_UM_OverheadEvent, DOTA_UM_SetNextAutobuyItem, DOTA_UM_SharedCooldown, DOTA_UM_SpectatorPlayerClick, DOTA_UM_TutorialTipInfo, DOTA_UM_UnitEvent, DOTA_UM_ParticleManager, DOTA_UM_BotChat, DOTA_UM_HudError, DOTA_UM_ItemPurchased, DOTA_UM_Ping, DOTA_UM_ItemFound, DOTA_UM_CharacterSpeakConcept, DOTA_UM_SwapVerify, DOTA_UM_WorldLine, DOTA_UM_TournamentDrop, DOTA_UM_ItemAlert, DOTA_UM_HalloweenDrops, DOTA_UM_ChatWheel, DOTA_UM_ReceivedXmasGift, DOTA_UM_UpdateSharedContent, DOTA_UM_TutorialRequestExp, DOTA_UM_TutorialPingMinimap, DOTA_UM_GamerulesStateChanged, DOTA_UM_ShowSurvey, DOTA_UM_TutorialFade, DOTA_UM_AddQuestLogEntry, DOTA_UM_SendStatPopup, DOTA_UM_TutorialFinish, DOTA_UM_SendRoshanPopup, DOTA_UM_SendGenericToolTip, DOTA_UM_SendFinalGold, DOTA_UM_CustomMsg, DOTA_UM_CoachHUDPing, DOTA_UM_ClientLoadGridNav, 
     };
     
     public static EDotaUserMessages valueOf(
@@ -212,6 +281,23 @@ public final class DotaUsermessages {
     CHAT_MESSAGE_TAUNT(46, 45),
     CHAT_MESSAGE_RANDOM(47, 46),
     CHAT_MESSAGE_RD_TURN(48, 47),
+    CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY(49, 48),
+    CHAT_MESSAGE_DROP_RATE_BONUS(50, 49),
+    CHAT_MESSAGE_NO_BATTLE_POINTS(51, 50),
+    CHAT_MESSAGE_DENIED_AEGIS(52, 51),
+    CHAT_MESSAGE_INFORMATIONAL(53, 52),
+    CHAT_MESSAGE_AEGIS_STOLEN(54, 53),
+    CHAT_MESSAGE_ROSHAN_CANDY(55, 54),
+    CHAT_MESSAGE_ITEM_GIFTED(56, 55),
+    CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL(57, 56),
+    CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED(58, 57),
+    CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED(59, 58),
+    CHAT_MESSAGE_HOLDOUT_WALL_FINISHED(60, 59),
+    CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK(61, 60),
+    CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY(62, 61),
+    CHAT_MESSAGE_ABANDON_LIMITED_HERO(63, 62),
+    CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION(64, 63),
+    CHAT_MESSAGE_DISCONNECT_LIMITED_HERO(65, 64),
     ;
     
     public static final int CHAT_MESSAGE_INVALID_VALUE = -1;
@@ -263,6 +349,23 @@ public final class DotaUsermessages {
     public static final int CHAT_MESSAGE_TAUNT_VALUE = 45;
     public static final int CHAT_MESSAGE_RANDOM_VALUE = 46;
     public static final int CHAT_MESSAGE_RD_TURN_VALUE = 47;
+    public static final int CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY_VALUE = 48;
+    public static final int CHAT_MESSAGE_DROP_RATE_BONUS_VALUE = 49;
+    public static final int CHAT_MESSAGE_NO_BATTLE_POINTS_VALUE = 50;
+    public static final int CHAT_MESSAGE_DENIED_AEGIS_VALUE = 51;
+    public static final int CHAT_MESSAGE_INFORMATIONAL_VALUE = 52;
+    public static final int CHAT_MESSAGE_AEGIS_STOLEN_VALUE = 53;
+    public static final int CHAT_MESSAGE_ROSHAN_CANDY_VALUE = 54;
+    public static final int CHAT_MESSAGE_ITEM_GIFTED_VALUE = 55;
+    public static final int CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL_VALUE = 56;
+    public static final int CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED_VALUE = 57;
+    public static final int CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED_VALUE = 58;
+    public static final int CHAT_MESSAGE_HOLDOUT_WALL_FINISHED_VALUE = 59;
+    public static final int CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_VALUE = 60;
+    public static final int CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY_VALUE = 61;
+    public static final int CHAT_MESSAGE_ABANDON_LIMITED_HERO_VALUE = 62;
+    public static final int CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION_VALUE = 63;
+    public static final int CHAT_MESSAGE_DISCONNECT_LIMITED_HERO_VALUE = 64;
     
     
     public final int getNumber() { return value; }
@@ -318,6 +421,23 @@ public final class DotaUsermessages {
         case 45: return CHAT_MESSAGE_TAUNT;
         case 46: return CHAT_MESSAGE_RANDOM;
         case 47: return CHAT_MESSAGE_RD_TURN;
+        case 48: return CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY;
+        case 49: return CHAT_MESSAGE_DROP_RATE_BONUS;
+        case 50: return CHAT_MESSAGE_NO_BATTLE_POINTS;
+        case 51: return CHAT_MESSAGE_DENIED_AEGIS;
+        case 52: return CHAT_MESSAGE_INFORMATIONAL;
+        case 53: return CHAT_MESSAGE_AEGIS_STOLEN;
+        case 54: return CHAT_MESSAGE_ROSHAN_CANDY;
+        case 55: return CHAT_MESSAGE_ITEM_GIFTED;
+        case 56: return CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL;
+        case 57: return CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED;
+        case 58: return CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED;
+        case 59: return CHAT_MESSAGE_HOLDOUT_WALL_FINISHED;
+        case 60: return CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK;
+        case 61: return CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY;
+        case 62: return CHAT_MESSAGE_ABANDON_LIMITED_HERO;
+        case 63: return CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION;
+        case 64: return CHAT_MESSAGE_DISCONNECT_LIMITED_HERO;
         default: return null;
       }
     }
@@ -348,7 +468,7 @@ public final class DotaUsermessages {
     }
     
     private static final DOTA_CHAT_MESSAGE[] VALUES = {
-      CHAT_MESSAGE_INVALID, CHAT_MESSAGE_HERO_KILL, CHAT_MESSAGE_HERO_DENY, CHAT_MESSAGE_BARRACKS_KILL, CHAT_MESSAGE_TOWER_KILL, CHAT_MESSAGE_TOWER_DENY, CHAT_MESSAGE_FIRSTBLOOD, CHAT_MESSAGE_STREAK_KILL, CHAT_MESSAGE_BUYBACK, CHAT_MESSAGE_AEGIS, CHAT_MESSAGE_ROSHAN_KILL, CHAT_MESSAGE_COURIER_LOST, CHAT_MESSAGE_COURIER_RESPAWNED, CHAT_MESSAGE_GLYPH_USED, CHAT_MESSAGE_ITEM_PURCHASE, CHAT_MESSAGE_CONNECT, CHAT_MESSAGE_DISCONNECT, CHAT_MESSAGE_DISCONNECT_WAIT_FOR_RECONNECT, CHAT_MESSAGE_DISCONNECT_TIME_REMAINING, CHAT_MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL, CHAT_MESSAGE_RECONNECT, CHAT_MESSAGE_ABANDON, CHAT_MESSAGE_SAFE_TO_LEAVE, CHAT_MESSAGE_RUNE_PICKUP, CHAT_MESSAGE_RUNE_BOTTLE, CHAT_MESSAGE_INTHEBAG, CHAT_MESSAGE_SECRETSHOP, CHAT_MESSAGE_ITEM_AUTOPURCHASED, CHAT_MESSAGE_ITEMS_COMBINED, CHAT_MESSAGE_SUPER_CREEPS, CHAT_MESSAGE_CANT_USE_ACTION_ITEM, CHAT_MESSAGE_CHARGES_EXHAUSTED, CHAT_MESSAGE_CANTPAUSE, CHAT_MESSAGE_NOPAUSESLEFT, CHAT_MESSAGE_CANTPAUSEYET, CHAT_MESSAGE_PAUSED, CHAT_MESSAGE_UNPAUSE_COUNTDOWN, CHAT_MESSAGE_UNPAUSED, CHAT_MESSAGE_AUTO_UNPAUSED, CHAT_MESSAGE_YOUPAUSED, CHAT_MESSAGE_CANTUNPAUSETEAM, CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER, CHAT_MESSAGE_VOICE_TEXT_BANNED, CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME, CHAT_MESSAGE_REPORT_REMINDER, CHAT_MESSAGE_ECON_ITEM, CHAT_MESSAGE_TAUNT, CHAT_MESSAGE_RANDOM, CHAT_MESSAGE_RD_TURN, 
+      CHAT_MESSAGE_INVALID, CHAT_MESSAGE_HERO_KILL, CHAT_MESSAGE_HERO_DENY, CHAT_MESSAGE_BARRACKS_KILL, CHAT_MESSAGE_TOWER_KILL, CHAT_MESSAGE_TOWER_DENY, CHAT_MESSAGE_FIRSTBLOOD, CHAT_MESSAGE_STREAK_KILL, CHAT_MESSAGE_BUYBACK, CHAT_MESSAGE_AEGIS, CHAT_MESSAGE_ROSHAN_KILL, CHAT_MESSAGE_COURIER_LOST, CHAT_MESSAGE_COURIER_RESPAWNED, CHAT_MESSAGE_GLYPH_USED, CHAT_MESSAGE_ITEM_PURCHASE, CHAT_MESSAGE_CONNECT, CHAT_MESSAGE_DISCONNECT, CHAT_MESSAGE_DISCONNECT_WAIT_FOR_RECONNECT, CHAT_MESSAGE_DISCONNECT_TIME_REMAINING, CHAT_MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL, CHAT_MESSAGE_RECONNECT, CHAT_MESSAGE_ABANDON, CHAT_MESSAGE_SAFE_TO_LEAVE, CHAT_MESSAGE_RUNE_PICKUP, CHAT_MESSAGE_RUNE_BOTTLE, CHAT_MESSAGE_INTHEBAG, CHAT_MESSAGE_SECRETSHOP, CHAT_MESSAGE_ITEM_AUTOPURCHASED, CHAT_MESSAGE_ITEMS_COMBINED, CHAT_MESSAGE_SUPER_CREEPS, CHAT_MESSAGE_CANT_USE_ACTION_ITEM, CHAT_MESSAGE_CHARGES_EXHAUSTED, CHAT_MESSAGE_CANTPAUSE, CHAT_MESSAGE_NOPAUSESLEFT, CHAT_MESSAGE_CANTPAUSEYET, CHAT_MESSAGE_PAUSED, CHAT_MESSAGE_UNPAUSE_COUNTDOWN, CHAT_MESSAGE_UNPAUSED, CHAT_MESSAGE_AUTO_UNPAUSED, CHAT_MESSAGE_YOUPAUSED, CHAT_MESSAGE_CANTUNPAUSETEAM, CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER, CHAT_MESSAGE_VOICE_TEXT_BANNED, CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME, CHAT_MESSAGE_REPORT_REMINDER, CHAT_MESSAGE_ECON_ITEM, CHAT_MESSAGE_TAUNT, CHAT_MESSAGE_RANDOM, CHAT_MESSAGE_RD_TURN, CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY, CHAT_MESSAGE_DROP_RATE_BONUS, CHAT_MESSAGE_NO_BATTLE_POINTS, CHAT_MESSAGE_DENIED_AEGIS, CHAT_MESSAGE_INFORMATIONAL, CHAT_MESSAGE_AEGIS_STOLEN, CHAT_MESSAGE_ROSHAN_CANDY, CHAT_MESSAGE_ITEM_GIFTED, CHAT_MESSAGE_HERO_KILL_WITH_GREEVIL, CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED, CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED, CHAT_MESSAGE_HOLDOUT_WALL_FINISHED, CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK, CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY, CHAT_MESSAGE_ABANDON_LIMITED_HERO, CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION, CHAT_MESSAGE_DISCONNECT_LIMITED_HERO, 
     };
     
     public static DOTA_CHAT_MESSAGE valueOf(
@@ -371,6 +491,225 @@ public final class DotaUsermessages {
     // @@protoc_insertion_point(enum_scope:DOTA_CHAT_MESSAGE)
   }
   
+  public enum DOTA_NO_BATTLE_POINTS_REASONS
+      implements com.google.protobuf.ProtocolMessageEnum {
+    NO_BATTLE_POINTS_WRONG_LOBBY_TYPE(0, 1),
+    NO_BATTLE_POINTS_PRACTICE_BOTS(1, 2),
+    NO_BATTLE_POINTS_CHEATS_ENABLED(2, 3),
+    NO_BATTLE_POINTS_LOW_PRIORITY(3, 4),
+    ;
+    
+    public static final int NO_BATTLE_POINTS_WRONG_LOBBY_TYPE_VALUE = 1;
+    public static final int NO_BATTLE_POINTS_PRACTICE_BOTS_VALUE = 2;
+    public static final int NO_BATTLE_POINTS_CHEATS_ENABLED_VALUE = 3;
+    public static final int NO_BATTLE_POINTS_LOW_PRIORITY_VALUE = 4;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static DOTA_NO_BATTLE_POINTS_REASONS valueOf(int value) {
+      switch (value) {
+        case 1: return NO_BATTLE_POINTS_WRONG_LOBBY_TYPE;
+        case 2: return NO_BATTLE_POINTS_PRACTICE_BOTS;
+        case 3: return NO_BATTLE_POINTS_CHEATS_ENABLED;
+        case 4: return NO_BATTLE_POINTS_LOW_PRIORITY;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<DOTA_NO_BATTLE_POINTS_REASONS>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<DOTA_NO_BATTLE_POINTS_REASONS>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<DOTA_NO_BATTLE_POINTS_REASONS>() {
+            public DOTA_NO_BATTLE_POINTS_REASONS findValueByNumber(int number) {
+              return DOTA_NO_BATTLE_POINTS_REASONS.valueOf(number);
+            }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(2);
+    }
+    
+    private static final DOTA_NO_BATTLE_POINTS_REASONS[] VALUES = {
+      NO_BATTLE_POINTS_WRONG_LOBBY_TYPE, NO_BATTLE_POINTS_PRACTICE_BOTS, NO_BATTLE_POINTS_CHEATS_ENABLED, NO_BATTLE_POINTS_LOW_PRIORITY, 
+    };
+    
+    public static DOTA_NO_BATTLE_POINTS_REASONS valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    
+    private final int index;
+    private final int value;
+    
+    private DOTA_NO_BATTLE_POINTS_REASONS(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    // @@protoc_insertion_point(enum_scope:DOTA_NO_BATTLE_POINTS_REASONS)
+  }
+  
+  public enum DOTA_CHAT_INFORMATIONAL
+      implements com.google.protobuf.ProtocolMessageEnum {
+    COOP_BATTLE_POINTS_RULES(0, 1),
+    ;
+    
+    public static final int COOP_BATTLE_POINTS_RULES_VALUE = 1;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static DOTA_CHAT_INFORMATIONAL valueOf(int value) {
+      switch (value) {
+        case 1: return COOP_BATTLE_POINTS_RULES;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<DOTA_CHAT_INFORMATIONAL>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<DOTA_CHAT_INFORMATIONAL>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<DOTA_CHAT_INFORMATIONAL>() {
+            public DOTA_CHAT_INFORMATIONAL findValueByNumber(int number) {
+              return DOTA_CHAT_INFORMATIONAL.valueOf(number);
+            }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(3);
+    }
+    
+    private static final DOTA_CHAT_INFORMATIONAL[] VALUES = {
+      COOP_BATTLE_POINTS_RULES, 
+    };
+    
+    public static DOTA_CHAT_INFORMATIONAL valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    
+    private final int index;
+    private final int value;
+    
+    private DOTA_CHAT_INFORMATIONAL(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    // @@protoc_insertion_point(enum_scope:DOTA_CHAT_INFORMATIONAL)
+  }
+  
+  public enum DOTA_COMBATLOG_TYPES
+      implements com.google.protobuf.ProtocolMessageEnum {
+    DOTA_COMBATLOG_DAMAGE(0, 0),
+    DOTA_COMBATLOG_HEAL(1, 1),
+    DOTA_COMBATLOG_MODIFIER_ADD(2, 2),
+    DOTA_COMBATLOG_MODIFIER_REMOVE(3, 3),
+    DOTA_COMBATLOG_DEATH(4, 4),
+    ;
+    
+    public static final int DOTA_COMBATLOG_DAMAGE_VALUE = 0;
+    public static final int DOTA_COMBATLOG_HEAL_VALUE = 1;
+    public static final int DOTA_COMBATLOG_MODIFIER_ADD_VALUE = 2;
+    public static final int DOTA_COMBATLOG_MODIFIER_REMOVE_VALUE = 3;
+    public static final int DOTA_COMBATLOG_DEATH_VALUE = 4;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static DOTA_COMBATLOG_TYPES valueOf(int value) {
+      switch (value) {
+        case 0: return DOTA_COMBATLOG_DAMAGE;
+        case 1: return DOTA_COMBATLOG_HEAL;
+        case 2: return DOTA_COMBATLOG_MODIFIER_ADD;
+        case 3: return DOTA_COMBATLOG_MODIFIER_REMOVE;
+        case 4: return DOTA_COMBATLOG_DEATH;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<DOTA_COMBATLOG_TYPES>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<DOTA_COMBATLOG_TYPES>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<DOTA_COMBATLOG_TYPES>() {
+            public DOTA_COMBATLOG_TYPES findValueByNumber(int number) {
+              return DOTA_COMBATLOG_TYPES.valueOf(number);
+            }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(4);
+    }
+    
+    private static final DOTA_COMBATLOG_TYPES[] VALUES = {
+      DOTA_COMBATLOG_DAMAGE, DOTA_COMBATLOG_HEAL, DOTA_COMBATLOG_MODIFIER_ADD, DOTA_COMBATLOG_MODIFIER_REMOVE, DOTA_COMBATLOG_DEATH, 
+    };
+    
+    public static DOTA_COMBATLOG_TYPES valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    
+    private final int index;
+    private final int value;
+    
+    private DOTA_COMBATLOG_TYPES(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    // @@protoc_insertion_point(enum_scope:DOTA_COMBATLOG_TYPES)
+  }
+  
   public enum EDotaEntityMessages
       implements com.google.protobuf.ProtocolMessageEnum {
     DOTA_UNIT_SPEECH(0, 0),
@@ -379,6 +718,7 @@ public final class DotaUsermessages {
     DOTA_UNIT_REMOVE_GESTURE(3, 3),
     DOTA_UNIT_REMOVE_ALL_GESTURES(4, 4),
     DOTA_UNIT_FADE_GESTURE(5, 6),
+    DOTA_UNIT_SPEECH_CLIENTSIDE_RULES(6, 7),
     ;
     
     public static final int DOTA_UNIT_SPEECH_VALUE = 0;
@@ -387,6 +727,7 @@ public final class DotaUsermessages {
     public static final int DOTA_UNIT_REMOVE_GESTURE_VALUE = 3;
     public static final int DOTA_UNIT_REMOVE_ALL_GESTURES_VALUE = 4;
     public static final int DOTA_UNIT_FADE_GESTURE_VALUE = 6;
+    public static final int DOTA_UNIT_SPEECH_CLIENTSIDE_RULES_VALUE = 7;
     
     
     public final int getNumber() { return value; }
@@ -399,6 +740,7 @@ public final class DotaUsermessages {
         case 3: return DOTA_UNIT_REMOVE_GESTURE;
         case 4: return DOTA_UNIT_REMOVE_ALL_GESTURES;
         case 6: return DOTA_UNIT_FADE_GESTURE;
+        case 7: return DOTA_UNIT_SPEECH_CLIENTSIDE_RULES;
         default: return null;
       }
     }
@@ -425,11 +767,11 @@ public final class DotaUsermessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return DotaUsermessages.getDescriptor().getEnumTypes().get(2);
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(5);
     }
     
     private static final EDotaEntityMessages[] VALUES = {
-      DOTA_UNIT_SPEECH, DOTA_UNIT_SPEECH_MUTE, DOTA_UNIT_ADD_GESTURE, DOTA_UNIT_REMOVE_GESTURE, DOTA_UNIT_REMOVE_ALL_GESTURES, DOTA_UNIT_FADE_GESTURE, 
+      DOTA_UNIT_SPEECH, DOTA_UNIT_SPEECH_MUTE, DOTA_UNIT_ADD_GESTURE, DOTA_UNIT_REMOVE_GESTURE, DOTA_UNIT_REMOVE_ALL_GESTURES, DOTA_UNIT_FADE_GESTURE, DOTA_UNIT_SPEECH_CLIENTSIDE_RULES, 
     };
     
     public static EDotaEntityMessages valueOf(
@@ -465,6 +807,8 @@ public final class DotaUsermessages {
     DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING(8, 8),
     DOTA_PARTICLE_MANAGER_EVENT_RELEASE(9, 9),
     DOTA_PARTICLE_MANAGER_EVENT_LATENCY(10, 10),
+    DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW(11, 11),
+    DOTA_PARTICLE_MANAGER_EVENT_FROZEN(12, 12),
     ;
     
     public static final int DOTA_PARTICLE_MANAGER_EVENT_CREATE_VALUE = 0;
@@ -478,6 +822,8 @@ public final class DotaUsermessages {
     public static final int DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING_VALUE = 8;
     public static final int DOTA_PARTICLE_MANAGER_EVENT_RELEASE_VALUE = 9;
     public static final int DOTA_PARTICLE_MANAGER_EVENT_LATENCY_VALUE = 10;
+    public static final int DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW_VALUE = 11;
+    public static final int DOTA_PARTICLE_MANAGER_EVENT_FROZEN_VALUE = 12;
     
     
     public final int getNumber() { return value; }
@@ -495,6 +841,8 @@ public final class DotaUsermessages {
         case 8: return DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING;
         case 9: return DOTA_PARTICLE_MANAGER_EVENT_RELEASE;
         case 10: return DOTA_PARTICLE_MANAGER_EVENT_LATENCY;
+        case 11: return DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW;
+        case 12: return DOTA_PARTICLE_MANAGER_EVENT_FROZEN;
         default: return null;
       }
     }
@@ -521,11 +869,11 @@ public final class DotaUsermessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return DotaUsermessages.getDescriptor().getEnumTypes().get(3);
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(6);
     }
     
     private static final DOTA_PARTICLE_MESSAGE[] VALUES = {
-      DOTA_PARTICLE_MANAGER_EVENT_CREATE, DOTA_PARTICLE_MANAGER_EVENT_UPDATE, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET, DOTA_PARTICLE_MANAGER_EVENT_DESTROY, DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING, DOTA_PARTICLE_MANAGER_EVENT_RELEASE, DOTA_PARTICLE_MANAGER_EVENT_LATENCY, 
+      DOTA_PARTICLE_MANAGER_EVENT_CREATE, DOTA_PARTICLE_MANAGER_EVENT_UPDATE, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FORWARD, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ORIENTATION, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_FALLBACK, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT, DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OFFSET, DOTA_PARTICLE_MANAGER_EVENT_DESTROY, DOTA_PARTICLE_MANAGER_EVENT_DESTROY_INVOLVING, DOTA_PARTICLE_MANAGER_EVENT_RELEASE, DOTA_PARTICLE_MANAGER_EVENT_LATENCY, DOTA_PARTICLE_MANAGER_EVENT_SHOULD_DRAW, DOTA_PARTICLE_MANAGER_EVENT_FROZEN, 
     };
     
     public static DOTA_PARTICLE_MESSAGE valueOf(
@@ -560,6 +908,12 @@ public final class DotaUsermessages {
     OVERHEAD_ALERT_EVADE(7, 7),
     OVERHEAD_ALERT_BLOCK(8, 8),
     OVERHEAD_ALERT_BONUS_POISON_DAMAGE(9, 9),
+    OVERHEAD_ALERT_HEAL(10, 10),
+    OVERHEAD_ALERT_MANA_ADD(11, 11),
+    OVERHEAD_ALERT_MANA_LOSS(12, 12),
+    OVERHEAD_ALERT_LAST_HIT_EARLY(13, 13),
+    OVERHEAD_ALERT_LAST_HIT_CLOSE(14, 14),
+    OVERHEAD_ALERT_LAST_HIT_MISS(15, 15),
     ;
     
     public static final int OVERHEAD_ALERT_GOLD_VALUE = 0;
@@ -572,6 +926,12 @@ public final class DotaUsermessages {
     public static final int OVERHEAD_ALERT_EVADE_VALUE = 7;
     public static final int OVERHEAD_ALERT_BLOCK_VALUE = 8;
     public static final int OVERHEAD_ALERT_BONUS_POISON_DAMAGE_VALUE = 9;
+    public static final int OVERHEAD_ALERT_HEAL_VALUE = 10;
+    public static final int OVERHEAD_ALERT_MANA_ADD_VALUE = 11;
+    public static final int OVERHEAD_ALERT_MANA_LOSS_VALUE = 12;
+    public static final int OVERHEAD_ALERT_LAST_HIT_EARLY_VALUE = 13;
+    public static final int OVERHEAD_ALERT_LAST_HIT_CLOSE_VALUE = 14;
+    public static final int OVERHEAD_ALERT_LAST_HIT_MISS_VALUE = 15;
     
     
     public final int getNumber() { return value; }
@@ -588,6 +948,12 @@ public final class DotaUsermessages {
         case 7: return OVERHEAD_ALERT_EVADE;
         case 8: return OVERHEAD_ALERT_BLOCK;
         case 9: return OVERHEAD_ALERT_BONUS_POISON_DAMAGE;
+        case 10: return OVERHEAD_ALERT_HEAL;
+        case 11: return OVERHEAD_ALERT_MANA_ADD;
+        case 12: return OVERHEAD_ALERT_MANA_LOSS;
+        case 13: return OVERHEAD_ALERT_LAST_HIT_EARLY;
+        case 14: return OVERHEAD_ALERT_LAST_HIT_CLOSE;
+        case 15: return OVERHEAD_ALERT_LAST_HIT_MISS;
         default: return null;
       }
     }
@@ -614,11 +980,11 @@ public final class DotaUsermessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return DotaUsermessages.getDescriptor().getEnumTypes().get(4);
+      return DotaUsermessages.getDescriptor().getEnumTypes().get(7);
     }
     
     private static final DOTA_OVERHEAD_ALERT[] VALUES = {
-      OVERHEAD_ALERT_GOLD, OVERHEAD_ALERT_DENY, OVERHEAD_ALERT_CRITICAL, OVERHEAD_ALERT_XP, OVERHEAD_ALERT_BONUS_SPELL_DAMAGE, OVERHEAD_ALERT_MISS, OVERHEAD_ALERT_DAMAGE, OVERHEAD_ALERT_EVADE, OVERHEAD_ALERT_BLOCK, OVERHEAD_ALERT_BONUS_POISON_DAMAGE, 
+      OVERHEAD_ALERT_GOLD, OVERHEAD_ALERT_DENY, OVERHEAD_ALERT_CRITICAL, OVERHEAD_ALERT_XP, OVERHEAD_ALERT_BONUS_SPELL_DAMAGE, OVERHEAD_ALERT_MISS, OVERHEAD_ALERT_DAMAGE, OVERHEAD_ALERT_EVADE, OVERHEAD_ALERT_BLOCK, OVERHEAD_ALERT_BONUS_POISON_DAMAGE, OVERHEAD_ALERT_HEAL, OVERHEAD_ALERT_MANA_ADD, OVERHEAD_ALERT_MANA_LOSS, OVERHEAD_ALERT_LAST_HIT_EARLY, OVERHEAD_ALERT_LAST_HIT_CLOSE, OVERHEAD_ALERT_LAST_HIT_MISS, 
     };
     
     public static DOTA_OVERHEAD_ALERT valueOf(
@@ -1391,10 +1757,348 @@ public final class DotaUsermessages {
     // @@protoc_insertion_point(class_scope:CDOTAUserMsg_Ping)
   }
   
+  public interface CDOTAUserMsg_SwapVerifyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional uint32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+  }
+  public static final class CDOTAUserMsg_SwapVerify extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_SwapVerifyOrBuilder {
+    // Use CDOTAUserMsg_SwapVerify.newBuilder() to construct.
+    private CDOTAUserMsg_SwapVerify(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_SwapVerify(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_SwapVerify defaultInstance;
+    public static CDOTAUserMsg_SwapVerify getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_SwapVerify getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SwapVerify_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SwapVerify_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional uint32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, playerId_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, playerId_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SwapVerify parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_SwapVerify prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_SwapVerifyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SwapVerify_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SwapVerify_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_SwapVerify.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_SwapVerify.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SwapVerify getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_SwapVerify.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SwapVerify build() {
+        DotaUsermessages.CDOTAUserMsg_SwapVerify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_SwapVerify buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_SwapVerify result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SwapVerify buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_SwapVerify result = new DotaUsermessages.CDOTAUserMsg_SwapVerify(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_SwapVerify) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_SwapVerify)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_SwapVerify other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_SwapVerify.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readUInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional uint32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_SwapVerify)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_SwapVerify(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SwapVerify)
+  }
+  
   public interface CDOTAUserMsg_ChatEventOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .DOTA_CHAT_MESSAGE type = 1;
+    // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
     boolean hasType();
     DotaUsermessages.DOTA_CHAT_MESSAGE getType();
     
@@ -1455,7 +2159,7 @@ public final class DotaUsermessages {
     }
     
     private int bitField0_;
-    // required .DOTA_CHAT_MESSAGE type = 1;
+    // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
     public static final int TYPE_FIELD_NUMBER = 1;
     private DotaUsermessages.DOTA_CHAT_MESSAGE type_;
     public boolean hasType() {
@@ -1963,7 +2667,7 @@ public final class DotaUsermessages {
       
       private int bitField0_;
       
-      // required .DOTA_CHAT_MESSAGE type = 1;
+      // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
       private DotaUsermessages.DOTA_CHAT_MESSAGE type_ = DotaUsermessages.DOTA_CHAT_MESSAGE.CHAT_MESSAGE_INVALID;
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -2148,9 +2852,9 @@ public final class DotaUsermessages {
   public interface CDOTAUserMsg_CombatLogDataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // optional uint32 type = 1;
+    // optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
     boolean hasType();
-    int getType();
+    DotaUsermessages.DOTA_COMBATLOG_TYPES getType();
     
     // optional uint32 target_name = 2;
     boolean hasTargetName();
@@ -2213,13 +2917,13 @@ public final class DotaUsermessages {
     }
     
     private int bitField0_;
-    // optional uint32 type = 1;
+    // optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
     public static final int TYPE_FIELD_NUMBER = 1;
-    private int type_;
+    private DotaUsermessages.DOTA_COMBATLOG_TYPES type_;
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public int getType() {
+    public DotaUsermessages.DOTA_COMBATLOG_TYPES getType() {
       return type_;
     }
     
@@ -2304,7 +3008,7 @@ public final class DotaUsermessages {
     }
     
     private void initFields() {
-      type_ = 0;
+      type_ = DotaUsermessages.DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE;
       targetName_ = 0;
       attackerName_ = 0;
       attackerIllusion_ = false;
@@ -2327,7 +3031,7 @@ public final class DotaUsermessages {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt32(1, type_);
+        output.writeEnum(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeUInt32(2, targetName_);
@@ -2364,7 +3068,7 @@ public final class DotaUsermessages {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, type_);
+          .computeEnumSize(1, type_.getNumber());
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
@@ -2522,7 +3226,7 @@ public final class DotaUsermessages {
       
       public Builder clear() {
         super.clear();
-        type_ = 0;
+        type_ = DotaUsermessages.DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE;
         bitField0_ = (bitField0_ & ~0x00000001);
         targetName_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -2689,8 +3393,14 @@ public final class DotaUsermessages {
               break;
             }
             case 8: {
-              bitField0_ |= 0x00000001;
-              type_ = input.readUInt32();
+              int rawValue = input.readEnum();
+              DotaUsermessages.DOTA_COMBATLOG_TYPES value = DotaUsermessages.DOTA_COMBATLOG_TYPES.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                type_ = value;
+              }
               break;
             }
             case 16: {
@@ -2739,15 +3449,18 @@ public final class DotaUsermessages {
       
       private int bitField0_;
       
-      // optional uint32 type = 1;
-      private int type_ ;
+      // optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
+      private DotaUsermessages.DOTA_COMBATLOG_TYPES type_ = DotaUsermessages.DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE;
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public int getType() {
+      public DotaUsermessages.DOTA_COMBATLOG_TYPES getType() {
         return type_;
       }
-      public Builder setType(int value) {
+      public Builder setType(DotaUsermessages.DOTA_COMBATLOG_TYPES value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         bitField0_ |= 0x00000001;
         type_ = value;
         onChanged();
@@ -2755,7 +3468,7 @@ public final class DotaUsermessages {
       }
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        type_ = 0;
+        type_ = DotaUsermessages.DOTA_COMBATLOG_TYPES.DOTA_COMBATLOG_DAMAGE;
         onChanged();
         return this;
       }
@@ -3848,8 +4561,8 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector2D world_pos = 3;
     boolean hasWorldPos();
-    Netmessages.CMsgVector2D getWorldPos();
-    Netmessages.CMsgVector2DOrBuilder getWorldPosOrBuilder();
+    Networkbasetypes.CMsgVector2D getWorldPos();
+    Networkbasetypes.CMsgVector2DOrBuilder getWorldPosOrBuilder();
     
     // optional int32 health = 4;
     boolean hasHealth();
@@ -3906,14 +4619,14 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector2D world_pos = 3;
     public static final int WORLD_POS_FIELD_NUMBER = 3;
-    private Netmessages.CMsgVector2D worldPos_;
+    private Networkbasetypes.CMsgVector2D worldPos_;
     public boolean hasWorldPos() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public Netmessages.CMsgVector2D getWorldPos() {
+    public Networkbasetypes.CMsgVector2D getWorldPos() {
       return worldPos_;
     }
-    public Netmessages.CMsgVector2DOrBuilder getWorldPosOrBuilder() {
+    public Networkbasetypes.CMsgVector2DOrBuilder getWorldPosOrBuilder() {
       return worldPos_;
     }
     
@@ -3930,7 +4643,7 @@ public final class DotaUsermessages {
     private void initFields() {
       index_ = 0;
       time_ = 0;
-      worldPos_ = Netmessages.CMsgVector2D.getDefaultInstance();
+      worldPos_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
       health_ = 0;
     }
     private byte memoizedIsInitialized = -1;
@@ -4112,7 +4825,7 @@ public final class DotaUsermessages {
         time_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         if (worldPosBuilder_ == null) {
-          worldPos_ = Netmessages.CMsgVector2D.getDefaultInstance();
+          worldPos_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
         } else {
           worldPosBuilder_.clear();
         }
@@ -4247,7 +4960,7 @@ public final class DotaUsermessages {
               break;
             }
             case 26: {
-              Netmessages.CMsgVector2D.Builder subBuilder = Netmessages.CMsgVector2D.newBuilder();
+              Networkbasetypes.CMsgVector2D.Builder subBuilder = Networkbasetypes.CMsgVector2D.newBuilder();
               if (hasWorldPos()) {
                 subBuilder.mergeFrom(getWorldPos());
               }
@@ -4309,20 +5022,20 @@ public final class DotaUsermessages {
       }
       
       // optional .CMsgVector2D world_pos = 3;
-      private Netmessages.CMsgVector2D worldPos_ = Netmessages.CMsgVector2D.getDefaultInstance();
+      private Networkbasetypes.CMsgVector2D worldPos_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder> worldPosBuilder_;
+          Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder> worldPosBuilder_;
       public boolean hasWorldPos() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public Netmessages.CMsgVector2D getWorldPos() {
+      public Networkbasetypes.CMsgVector2D getWorldPos() {
         if (worldPosBuilder_ == null) {
           return worldPos_;
         } else {
           return worldPosBuilder_.getMessage();
         }
       }
-      public Builder setWorldPos(Netmessages.CMsgVector2D value) {
+      public Builder setWorldPos(Networkbasetypes.CMsgVector2D value) {
         if (worldPosBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -4336,7 +5049,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setWorldPos(
-          Netmessages.CMsgVector2D.Builder builderForValue) {
+          Networkbasetypes.CMsgVector2D.Builder builderForValue) {
         if (worldPosBuilder_ == null) {
           worldPos_ = builderForValue.build();
           onChanged();
@@ -4346,12 +5059,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000004;
         return this;
       }
-      public Builder mergeWorldPos(Netmessages.CMsgVector2D value) {
+      public Builder mergeWorldPos(Networkbasetypes.CMsgVector2D value) {
         if (worldPosBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              worldPos_ != Netmessages.CMsgVector2D.getDefaultInstance()) {
+              worldPos_ != Networkbasetypes.CMsgVector2D.getDefaultInstance()) {
             worldPos_ =
-              Netmessages.CMsgVector2D.newBuilder(worldPos_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector2D.newBuilder(worldPos_).mergeFrom(value).buildPartial();
           } else {
             worldPos_ = value;
           }
@@ -4364,7 +5077,7 @@ public final class DotaUsermessages {
       }
       public Builder clearWorldPos() {
         if (worldPosBuilder_ == null) {
-          worldPos_ = Netmessages.CMsgVector2D.getDefaultInstance();
+          worldPos_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
           onChanged();
         } else {
           worldPosBuilder_.clear();
@@ -4372,12 +5085,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-      public Netmessages.CMsgVector2D.Builder getWorldPosBuilder() {
+      public Networkbasetypes.CMsgVector2D.Builder getWorldPosBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getWorldPosFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVector2DOrBuilder getWorldPosOrBuilder() {
+      public Networkbasetypes.CMsgVector2DOrBuilder getWorldPosOrBuilder() {
         if (worldPosBuilder_ != null) {
           return worldPosBuilder_.getMessageOrBuilder();
         } else {
@@ -4385,11 +5098,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder> 
+          Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder> 
           getWorldPosFieldBuilder() {
         if (worldPosBuilder_ == null) {
           worldPosBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder>(
+              Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder>(
                   worldPos_,
                   getParentForChildren(),
                   isClean());
@@ -6444,8 +7157,8 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector direction = 1;
     boolean hasDirection();
-    Netmessages.CMsgVector getDirection();
-    Netmessages.CMsgVectorOrBuilder getDirectionOrBuilder();
+    Networkbasetypes.CMsgVector getDirection();
+    Networkbasetypes.CMsgVectorOrBuilder getDirectionOrBuilder();
     
     // optional float duration = 2;
     boolean hasDuration();
@@ -6482,14 +7195,14 @@ public final class DotaUsermessages {
     private int bitField0_;
     // optional .CMsgVector direction = 1;
     public static final int DIRECTION_FIELD_NUMBER = 1;
-    private Netmessages.CMsgVector direction_;
+    private Networkbasetypes.CMsgVector direction_;
     public boolean hasDirection() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public Netmessages.CMsgVector getDirection() {
+    public Networkbasetypes.CMsgVector getDirection() {
       return direction_;
     }
-    public Netmessages.CMsgVectorOrBuilder getDirectionOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getDirectionOrBuilder() {
       return direction_;
     }
     
@@ -6504,7 +7217,7 @@ public final class DotaUsermessages {
     }
     
     private void initFields() {
-      direction_ = Netmessages.CMsgVector.getDefaultInstance();
+      direction_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       duration_ = 0F;
     }
     private byte memoizedIsInitialized = -1;
@@ -6668,7 +7381,7 @@ public final class DotaUsermessages {
       public Builder clear() {
         super.clear();
         if (directionBuilder_ == null) {
-          direction_ = Netmessages.CMsgVector.getDefaultInstance();
+          direction_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           directionBuilder_.clear();
         }
@@ -6779,7 +7492,7 @@ public final class DotaUsermessages {
               break;
             }
             case 10: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasDirection()) {
                 subBuilder.mergeFrom(getDirection());
               }
@@ -6799,20 +7512,20 @@ public final class DotaUsermessages {
       private int bitField0_;
       
       // optional .CMsgVector direction = 1;
-      private Netmessages.CMsgVector direction_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector direction_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> directionBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> directionBuilder_;
       public boolean hasDirection() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public Netmessages.CMsgVector getDirection() {
+      public Networkbasetypes.CMsgVector getDirection() {
         if (directionBuilder_ == null) {
           return direction_;
         } else {
           return directionBuilder_.getMessage();
         }
       }
-      public Builder setDirection(Netmessages.CMsgVector value) {
+      public Builder setDirection(Networkbasetypes.CMsgVector value) {
         if (directionBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -6826,7 +7539,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setDirection(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (directionBuilder_ == null) {
           direction_ = builderForValue.build();
           onChanged();
@@ -6836,12 +7549,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeDirection(Netmessages.CMsgVector value) {
+      public Builder mergeDirection(Networkbasetypes.CMsgVector value) {
         if (directionBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              direction_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              direction_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             direction_ =
-              Netmessages.CMsgVector.newBuilder(direction_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(direction_).mergeFrom(value).buildPartial();
           } else {
             direction_ = value;
           }
@@ -6854,7 +7567,7 @@ public final class DotaUsermessages {
       }
       public Builder clearDirection() {
         if (directionBuilder_ == null) {
-          direction_ = Netmessages.CMsgVector.getDefaultInstance();
+          direction_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           directionBuilder_.clear();
@@ -6862,12 +7575,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getDirectionBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getDirectionBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getDirectionFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getDirectionOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getDirectionOrBuilder() {
         if (directionBuilder_ != null) {
           return directionBuilder_.getMessageOrBuilder();
         } else {
@@ -6875,11 +7588,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getDirectionFieldBuilder() {
         if (directionBuilder_ == null) {
           directionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   direction_,
                   getParentForChildren(),
                   isClean());
@@ -7399,6 +8112,487 @@ public final class DotaUsermessages {
     }
     
     // @@protoc_insertion_point(class_scope:CDOTAUserMsg_LocationPing)
+  }
+  
+  public interface CDOTAUserMsg_ItemAlertOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional uint32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional .CDOTAMsg_ItemAlert item_alert = 2;
+    boolean hasItemAlert();
+    DotaCommonmessages.CDOTAMsg_ItemAlert getItemAlert();
+    DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder getItemAlertOrBuilder();
+  }
+  public static final class CDOTAUserMsg_ItemAlert extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_ItemAlertOrBuilder {
+    // Use CDOTAUserMsg_ItemAlert.newBuilder() to construct.
+    private CDOTAUserMsg_ItemAlert(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_ItemAlert(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_ItemAlert defaultInstance;
+    public static CDOTAUserMsg_ItemAlert getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_ItemAlert getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ItemAlert_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ItemAlert_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional uint32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional .CDOTAMsg_ItemAlert item_alert = 2;
+    public static final int ITEM_ALERT_FIELD_NUMBER = 2;
+    private DotaCommonmessages.CDOTAMsg_ItemAlert itemAlert_;
+    public boolean hasItemAlert() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public DotaCommonmessages.CDOTAMsg_ItemAlert getItemAlert() {
+      return itemAlert_;
+    }
+    public DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder getItemAlertOrBuilder() {
+      return itemAlert_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      itemAlert_ = DotaCommonmessages.CDOTAMsg_ItemAlert.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, itemAlert_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, itemAlert_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ItemAlert parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ItemAlert prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_ItemAlertOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ItemAlert_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ItemAlert_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_ItemAlert.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getItemAlertFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (itemAlertBuilder_ == null) {
+          itemAlert_ = DotaCommonmessages.CDOTAMsg_ItemAlert.getDefaultInstance();
+        } else {
+          itemAlertBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_ItemAlert.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ItemAlert getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_ItemAlert.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ItemAlert build() {
+        DotaUsermessages.CDOTAUserMsg_ItemAlert result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_ItemAlert buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_ItemAlert result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ItemAlert buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_ItemAlert result = new DotaUsermessages.CDOTAUserMsg_ItemAlert(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (itemAlertBuilder_ == null) {
+          result.itemAlert_ = itemAlert_;
+        } else {
+          result.itemAlert_ = itemAlertBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_ItemAlert) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_ItemAlert)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ItemAlert other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_ItemAlert.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasItemAlert()) {
+          mergeItemAlert(other.getItemAlert());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              DotaCommonmessages.CDOTAMsg_ItemAlert.Builder subBuilder = DotaCommonmessages.CDOTAMsg_ItemAlert.newBuilder();
+              if (hasItemAlert()) {
+                subBuilder.mergeFrom(getItemAlert());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setItemAlert(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional uint32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional .CDOTAMsg_ItemAlert item_alert = 2;
+      private DotaCommonmessages.CDOTAMsg_ItemAlert itemAlert_ = DotaCommonmessages.CDOTAMsg_ItemAlert.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_ItemAlert, DotaCommonmessages.CDOTAMsg_ItemAlert.Builder, DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder> itemAlertBuilder_;
+      public boolean hasItemAlert() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public DotaCommonmessages.CDOTAMsg_ItemAlert getItemAlert() {
+        if (itemAlertBuilder_ == null) {
+          return itemAlert_;
+        } else {
+          return itemAlertBuilder_.getMessage();
+        }
+      }
+      public Builder setItemAlert(DotaCommonmessages.CDOTAMsg_ItemAlert value) {
+        if (itemAlertBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          itemAlert_ = value;
+          onChanged();
+        } else {
+          itemAlertBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setItemAlert(
+          DotaCommonmessages.CDOTAMsg_ItemAlert.Builder builderForValue) {
+        if (itemAlertBuilder_ == null) {
+          itemAlert_ = builderForValue.build();
+          onChanged();
+        } else {
+          itemAlertBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeItemAlert(DotaCommonmessages.CDOTAMsg_ItemAlert value) {
+        if (itemAlertBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              itemAlert_ != DotaCommonmessages.CDOTAMsg_ItemAlert.getDefaultInstance()) {
+            itemAlert_ =
+              DotaCommonmessages.CDOTAMsg_ItemAlert.newBuilder(itemAlert_).mergeFrom(value).buildPartial();
+          } else {
+            itemAlert_ = value;
+          }
+          onChanged();
+        } else {
+          itemAlertBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearItemAlert() {
+        if (itemAlertBuilder_ == null) {
+          itemAlert_ = DotaCommonmessages.CDOTAMsg_ItemAlert.getDefaultInstance();
+          onChanged();
+        } else {
+          itemAlertBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public DotaCommonmessages.CDOTAMsg_ItemAlert.Builder getItemAlertBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getItemAlertFieldBuilder().getBuilder();
+      }
+      public DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder getItemAlertOrBuilder() {
+        if (itemAlertBuilder_ != null) {
+          return itemAlertBuilder_.getMessageOrBuilder();
+        } else {
+          return itemAlert_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_ItemAlert, DotaCommonmessages.CDOTAMsg_ItemAlert.Builder, DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder> 
+          getItemAlertFieldBuilder() {
+        if (itemAlertBuilder_ == null) {
+          itemAlertBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaCommonmessages.CDOTAMsg_ItemAlert, DotaCommonmessages.CDOTAMsg_ItemAlert.Builder, DotaCommonmessages.CDOTAMsg_ItemAlertOrBuilder>(
+                  itemAlert_,
+                  getParentForChildren(),
+                  isClean());
+          itemAlert_ = null;
+        }
+        return itemAlertBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ItemAlert)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_ItemAlert(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ItemAlert)
   }
   
   public interface CDOTAUserMsg_MinimapEventOrBuilder
@@ -8453,8 +9647,8 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector location = 1;
     boolean hasLocation();
-    Netmessages.CMsgVector getLocation();
-    Netmessages.CMsgVectorOrBuilder getLocationOrBuilder();
+    Networkbasetypes.CMsgVector getLocation();
+    Networkbasetypes.CMsgVectorOrBuilder getLocationOrBuilder();
     
     // optional uint32 color = 2;
     boolean hasColor();
@@ -8499,14 +9693,14 @@ public final class DotaUsermessages {
     private int bitField0_;
     // optional .CMsgVector location = 1;
     public static final int LOCATION_FIELD_NUMBER = 1;
-    private Netmessages.CMsgVector location_;
+    private Networkbasetypes.CMsgVector location_;
     public boolean hasLocation() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public Netmessages.CMsgVector getLocation() {
+    public Networkbasetypes.CMsgVector getLocation() {
       return location_;
     }
-    public Netmessages.CMsgVectorOrBuilder getLocationOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getLocationOrBuilder() {
       return location_;
     }
     
@@ -8541,7 +9735,7 @@ public final class DotaUsermessages {
     }
     
     private void initFields() {
-      location_ = Netmessages.CMsgVector.getDefaultInstance();
+      location_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       color_ = 0;
       size_ = 0;
       duration_ = 0F;
@@ -8721,7 +9915,7 @@ public final class DotaUsermessages {
       public Builder clear() {
         super.clear();
         if (locationBuilder_ == null) {
-          location_ = Netmessages.CMsgVector.getDefaultInstance();
+          location_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           locationBuilder_.clear();
         }
@@ -8850,7 +10044,7 @@ public final class DotaUsermessages {
               break;
             }
             case 10: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasLocation()) {
                 subBuilder.mergeFrom(getLocation());
               }
@@ -8880,20 +10074,20 @@ public final class DotaUsermessages {
       private int bitField0_;
       
       // optional .CMsgVector location = 1;
-      private Netmessages.CMsgVector location_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector location_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> locationBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> locationBuilder_;
       public boolean hasLocation() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public Netmessages.CMsgVector getLocation() {
+      public Networkbasetypes.CMsgVector getLocation() {
         if (locationBuilder_ == null) {
           return location_;
         } else {
           return locationBuilder_.getMessage();
         }
       }
-      public Builder setLocation(Netmessages.CMsgVector value) {
+      public Builder setLocation(Networkbasetypes.CMsgVector value) {
         if (locationBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -8907,7 +10101,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setLocation(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (locationBuilder_ == null) {
           location_ = builderForValue.build();
           onChanged();
@@ -8917,12 +10111,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeLocation(Netmessages.CMsgVector value) {
+      public Builder mergeLocation(Networkbasetypes.CMsgVector value) {
         if (locationBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              location_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              location_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             location_ =
-              Netmessages.CMsgVector.newBuilder(location_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(location_).mergeFrom(value).buildPartial();
           } else {
             location_ = value;
           }
@@ -8935,7 +10129,7 @@ public final class DotaUsermessages {
       }
       public Builder clearLocation() {
         if (locationBuilder_ == null) {
-          location_ = Netmessages.CMsgVector.getDefaultInstance();
+          location_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           locationBuilder_.clear();
@@ -8943,12 +10137,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getLocationBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getLocationBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getLocationFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getLocationOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getLocationOrBuilder() {
         if (locationBuilder_ != null) {
           return locationBuilder_.getMessageOrBuilder();
         } else {
@@ -8956,11 +10150,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getLocationFieldBuilder() {
         if (locationBuilder_ == null) {
           locationBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   location_,
                   getParentForChildren(),
                   isClean());
@@ -9048,13 +10242,13 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector origin = 1;
     boolean hasOrigin();
-    Netmessages.CMsgVector getOrigin();
-    Netmessages.CMsgVectorOrBuilder getOriginOrBuilder();
+    Networkbasetypes.CMsgVector getOrigin();
+    Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder();
     
     // optional .CMsgVector2D velocity = 2;
     boolean hasVelocity();
-    Netmessages.CMsgVector2D getVelocity();
-    Netmessages.CMsgVector2DOrBuilder getVelocityOrBuilder();
+    Networkbasetypes.CMsgVector2D getVelocity();
+    Networkbasetypes.CMsgVector2DOrBuilder getVelocityOrBuilder();
     
     // optional int32 latency = 3;
     boolean hasLatency();
@@ -9103,27 +10297,27 @@ public final class DotaUsermessages {
     private int bitField0_;
     // optional .CMsgVector origin = 1;
     public static final int ORIGIN_FIELD_NUMBER = 1;
-    private Netmessages.CMsgVector origin_;
+    private Networkbasetypes.CMsgVector origin_;
     public boolean hasOrigin() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public Netmessages.CMsgVector getOrigin() {
+    public Networkbasetypes.CMsgVector getOrigin() {
       return origin_;
     }
-    public Netmessages.CMsgVectorOrBuilder getOriginOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder() {
       return origin_;
     }
     
     // optional .CMsgVector2D velocity = 2;
     public static final int VELOCITY_FIELD_NUMBER = 2;
-    private Netmessages.CMsgVector2D velocity_;
+    private Networkbasetypes.CMsgVector2D velocity_;
     public boolean hasVelocity() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public Netmessages.CMsgVector2D getVelocity() {
+    public Networkbasetypes.CMsgVector2D getVelocity() {
       return velocity_;
     }
-    public Netmessages.CMsgVector2DOrBuilder getVelocityOrBuilder() {
+    public Networkbasetypes.CMsgVector2DOrBuilder getVelocityOrBuilder() {
       return velocity_;
     }
     
@@ -9168,8 +10362,8 @@ public final class DotaUsermessages {
     }
     
     private void initFields() {
-      origin_ = Netmessages.CMsgVector.getDefaultInstance();
-      velocity_ = Netmessages.CMsgVector2D.getDefaultInstance();
+      origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
+      velocity_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
       latency_ = 0;
       entindex_ = 0;
       particleIndex_ = 0;
@@ -9365,13 +10559,13 @@ public final class DotaUsermessages {
       public Builder clear() {
         super.clear();
         if (originBuilder_ == null) {
-          origin_ = Netmessages.CMsgVector.getDefaultInstance();
+          origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           originBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000001);
         if (velocityBuilder_ == null) {
-          velocity_ = Netmessages.CMsgVector2D.getDefaultInstance();
+          velocity_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
         } else {
           velocityBuilder_.clear();
         }
@@ -9520,7 +10714,7 @@ public final class DotaUsermessages {
               break;
             }
             case 10: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasOrigin()) {
                 subBuilder.mergeFrom(getOrigin());
               }
@@ -9529,7 +10723,7 @@ public final class DotaUsermessages {
               break;
             }
             case 18: {
-              Netmessages.CMsgVector2D.Builder subBuilder = Netmessages.CMsgVector2D.newBuilder();
+              Networkbasetypes.CMsgVector2D.Builder subBuilder = Networkbasetypes.CMsgVector2D.newBuilder();
               if (hasVelocity()) {
                 subBuilder.mergeFrom(getVelocity());
               }
@@ -9564,20 +10758,20 @@ public final class DotaUsermessages {
       private int bitField0_;
       
       // optional .CMsgVector origin = 1;
-      private Netmessages.CMsgVector origin_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> originBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> originBuilder_;
       public boolean hasOrigin() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public Netmessages.CMsgVector getOrigin() {
+      public Networkbasetypes.CMsgVector getOrigin() {
         if (originBuilder_ == null) {
           return origin_;
         } else {
           return originBuilder_.getMessage();
         }
       }
-      public Builder setOrigin(Netmessages.CMsgVector value) {
+      public Builder setOrigin(Networkbasetypes.CMsgVector value) {
         if (originBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9591,7 +10785,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setOrigin(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (originBuilder_ == null) {
           origin_ = builderForValue.build();
           onChanged();
@@ -9601,12 +10795,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeOrigin(Netmessages.CMsgVector value) {
+      public Builder mergeOrigin(Networkbasetypes.CMsgVector value) {
         if (originBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              origin_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              origin_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             origin_ =
-              Netmessages.CMsgVector.newBuilder(origin_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(origin_).mergeFrom(value).buildPartial();
           } else {
             origin_ = value;
           }
@@ -9619,7 +10813,7 @@ public final class DotaUsermessages {
       }
       public Builder clearOrigin() {
         if (originBuilder_ == null) {
-          origin_ = Netmessages.CMsgVector.getDefaultInstance();
+          origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           originBuilder_.clear();
@@ -9627,12 +10821,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getOriginBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getOriginBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getOriginFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getOriginOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder() {
         if (originBuilder_ != null) {
           return originBuilder_.getMessageOrBuilder();
         } else {
@@ -9640,11 +10834,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getOriginFieldBuilder() {
         if (originBuilder_ == null) {
           originBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   origin_,
                   getParentForChildren(),
                   isClean());
@@ -9654,20 +10848,20 @@ public final class DotaUsermessages {
       }
       
       // optional .CMsgVector2D velocity = 2;
-      private Netmessages.CMsgVector2D velocity_ = Netmessages.CMsgVector2D.getDefaultInstance();
+      private Networkbasetypes.CMsgVector2D velocity_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder> velocityBuilder_;
+          Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder> velocityBuilder_;
       public boolean hasVelocity() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector2D getVelocity() {
+      public Networkbasetypes.CMsgVector2D getVelocity() {
         if (velocityBuilder_ == null) {
           return velocity_;
         } else {
           return velocityBuilder_.getMessage();
         }
       }
-      public Builder setVelocity(Netmessages.CMsgVector2D value) {
+      public Builder setVelocity(Networkbasetypes.CMsgVector2D value) {
         if (velocityBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -9681,7 +10875,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setVelocity(
-          Netmessages.CMsgVector2D.Builder builderForValue) {
+          Networkbasetypes.CMsgVector2D.Builder builderForValue) {
         if (velocityBuilder_ == null) {
           velocity_ = builderForValue.build();
           onChanged();
@@ -9691,12 +10885,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000002;
         return this;
       }
-      public Builder mergeVelocity(Netmessages.CMsgVector2D value) {
+      public Builder mergeVelocity(Networkbasetypes.CMsgVector2D value) {
         if (velocityBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              velocity_ != Netmessages.CMsgVector2D.getDefaultInstance()) {
+              velocity_ != Networkbasetypes.CMsgVector2D.getDefaultInstance()) {
             velocity_ =
-              Netmessages.CMsgVector2D.newBuilder(velocity_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector2D.newBuilder(velocity_).mergeFrom(value).buildPartial();
           } else {
             velocity_ = value;
           }
@@ -9709,7 +10903,7 @@ public final class DotaUsermessages {
       }
       public Builder clearVelocity() {
         if (velocityBuilder_ == null) {
-          velocity_ = Netmessages.CMsgVector2D.getDefaultInstance();
+          velocity_ = Networkbasetypes.CMsgVector2D.getDefaultInstance();
           onChanged();
         } else {
           velocityBuilder_.clear();
@@ -9717,12 +10911,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      public Netmessages.CMsgVector2D.Builder getVelocityBuilder() {
+      public Networkbasetypes.CMsgVector2D.Builder getVelocityBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getVelocityFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVector2DOrBuilder getVelocityOrBuilder() {
+      public Networkbasetypes.CMsgVector2DOrBuilder getVelocityOrBuilder() {
         if (velocityBuilder_ != null) {
           return velocityBuilder_.getMessageOrBuilder();
         } else {
@@ -9730,11 +10924,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder> 
+          Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder> 
           getVelocityFieldBuilder() {
         if (velocityBuilder_ == null) {
           velocityBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector2D, Netmessages.CMsgVector2D.Builder, Netmessages.CMsgVector2DOrBuilder>(
+              Networkbasetypes.CMsgVector2D, Networkbasetypes.CMsgVector2D.Builder, Networkbasetypes.CMsgVector2DOrBuilder>(
                   velocity_,
                   getParentForChildren(),
                   isClean());
@@ -10995,8 +12189,8 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector origin = 3;
     boolean hasOrigin();
-    Netmessages.CMsgVector getOrigin();
-    Netmessages.CMsgVectorOrBuilder getOriginOrBuilder();
+    Networkbasetypes.CMsgVector getOrigin();
+    Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder();
   }
   public static final class CDOTAUserMsg_NevermoreRequiem extends
       com.google.protobuf.GeneratedMessage
@@ -11049,21 +12243,21 @@ public final class DotaUsermessages {
     
     // optional .CMsgVector origin = 3;
     public static final int ORIGIN_FIELD_NUMBER = 3;
-    private Netmessages.CMsgVector origin_;
+    private Networkbasetypes.CMsgVector origin_;
     public boolean hasOrigin() {
       return ((bitField0_ & 0x00000004) == 0x00000004);
     }
-    public Netmessages.CMsgVector getOrigin() {
+    public Networkbasetypes.CMsgVector getOrigin() {
       return origin_;
     }
-    public Netmessages.CMsgVectorOrBuilder getOriginOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder() {
       return origin_;
     }
     
     private void initFields() {
       entityHandle_ = 0;
       lines_ = 0;
-      origin_ = Netmessages.CMsgVector.getDefaultInstance();
+      origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -11237,7 +12431,7 @@ public final class DotaUsermessages {
         lines_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         if (originBuilder_ == null) {
-          origin_ = Netmessages.CMsgVector.getDefaultInstance();
+          origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           originBuilder_.clear();
         }
@@ -11363,7 +12557,7 @@ public final class DotaUsermessages {
               break;
             }
             case 26: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasOrigin()) {
                 subBuilder.mergeFrom(getOrigin());
               }
@@ -11420,20 +12614,20 @@ public final class DotaUsermessages {
       }
       
       // optional .CMsgVector origin = 3;
-      private Netmessages.CMsgVector origin_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> originBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> originBuilder_;
       public boolean hasOrigin() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public Netmessages.CMsgVector getOrigin() {
+      public Networkbasetypes.CMsgVector getOrigin() {
         if (originBuilder_ == null) {
           return origin_;
         } else {
           return originBuilder_.getMessage();
         }
       }
-      public Builder setOrigin(Netmessages.CMsgVector value) {
+      public Builder setOrigin(Networkbasetypes.CMsgVector value) {
         if (originBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -11447,7 +12641,7 @@ public final class DotaUsermessages {
         return this;
       }
       public Builder setOrigin(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (originBuilder_ == null) {
           origin_ = builderForValue.build();
           onChanged();
@@ -11457,12 +12651,12 @@ public final class DotaUsermessages {
         bitField0_ |= 0x00000004;
         return this;
       }
-      public Builder mergeOrigin(Netmessages.CMsgVector value) {
+      public Builder mergeOrigin(Networkbasetypes.CMsgVector value) {
         if (originBuilder_ == null) {
           if (((bitField0_ & 0x00000004) == 0x00000004) &&
-              origin_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              origin_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             origin_ =
-              Netmessages.CMsgVector.newBuilder(origin_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(origin_).mergeFrom(value).buildPartial();
           } else {
             origin_ = value;
           }
@@ -11475,7 +12669,7 @@ public final class DotaUsermessages {
       }
       public Builder clearOrigin() {
         if (originBuilder_ == null) {
-          origin_ = Netmessages.CMsgVector.getDefaultInstance();
+          origin_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           originBuilder_.clear();
@@ -11483,12 +12677,12 @@ public final class DotaUsermessages {
         bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getOriginBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getOriginBuilder() {
         bitField0_ |= 0x00000004;
         onChanged();
         return getOriginFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getOriginOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getOriginOrBuilder() {
         if (originBuilder_ != null) {
           return originBuilder_.getMessageOrBuilder();
         } else {
@@ -11496,11 +12690,11 @@ public final class DotaUsermessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getOriginFieldBuilder() {
         if (originBuilder_ == null) {
           originBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   origin_,
                   getParentForChildren(),
                   isClean());
@@ -13154,10 +14348,2374 @@ public final class DotaUsermessages {
     // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SetNextAutobuyItem)
   }
   
+  public interface CDOTAUserMsg_HalloweenDropsOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // repeated uint32 item_defs = 1;
+    java.util.List<java.lang.Integer> getItemDefsList();
+    int getItemDefsCount();
+    int getItemDefs(int index);
+    
+    // repeated uint32 player_ids = 2;
+    java.util.List<java.lang.Integer> getPlayerIdsList();
+    int getPlayerIdsCount();
+    int getPlayerIds(int index);
+    
+    // optional uint32 prize_list = 3;
+    boolean hasPrizeList();
+    int getPrizeList();
+  }
+  public static final class CDOTAUserMsg_HalloweenDrops extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_HalloweenDropsOrBuilder {
+    // Use CDOTAUserMsg_HalloweenDrops.newBuilder() to construct.
+    private CDOTAUserMsg_HalloweenDrops(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_HalloweenDrops(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_HalloweenDrops defaultInstance;
+    public static CDOTAUserMsg_HalloweenDrops getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_HalloweenDrops getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_HalloweenDrops_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_HalloweenDrops_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // repeated uint32 item_defs = 1;
+    public static final int ITEM_DEFS_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Integer> itemDefs_;
+    public java.util.List<java.lang.Integer>
+        getItemDefsList() {
+      return itemDefs_;
+    }
+    public int getItemDefsCount() {
+      return itemDefs_.size();
+    }
+    public int getItemDefs(int index) {
+      return itemDefs_.get(index);
+    }
+    
+    // repeated uint32 player_ids = 2;
+    public static final int PLAYER_IDS_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Integer> playerIds_;
+    public java.util.List<java.lang.Integer>
+        getPlayerIdsList() {
+      return playerIds_;
+    }
+    public int getPlayerIdsCount() {
+      return playerIds_.size();
+    }
+    public int getPlayerIds(int index) {
+      return playerIds_.get(index);
+    }
+    
+    // optional uint32 prize_list = 3;
+    public static final int PRIZE_LIST_FIELD_NUMBER = 3;
+    private int prizeList_;
+    public boolean hasPrizeList() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPrizeList() {
+      return prizeList_;
+    }
+    
+    private void initFields() {
+      itemDefs_ = java.util.Collections.emptyList();;
+      playerIds_ = java.util.Collections.emptyList();;
+      prizeList_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < itemDefs_.size(); i++) {
+        output.writeUInt32(1, itemDefs_.get(i));
+      }
+      for (int i = 0; i < playerIds_.size(); i++) {
+        output.writeUInt32(2, playerIds_.get(i));
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(3, prizeList_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < itemDefs_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(itemDefs_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getItemDefsList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < playerIds_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(playerIds_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getPlayerIdsList().size();
+      }
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(3, prizeList_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_HalloweenDrops parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_HalloweenDrops prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_HalloweenDropsOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_HalloweenDrops_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_HalloweenDrops_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_HalloweenDrops.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        itemDefs_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerIds_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        prizeList_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_HalloweenDrops.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_HalloweenDrops getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_HalloweenDrops.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_HalloweenDrops build() {
+        DotaUsermessages.CDOTAUserMsg_HalloweenDrops result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_HalloweenDrops buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_HalloweenDrops result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_HalloweenDrops buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_HalloweenDrops result = new DotaUsermessages.CDOTAUserMsg_HalloweenDrops(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          itemDefs_ = java.util.Collections.unmodifiableList(itemDefs_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.itemDefs_ = itemDefs_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          playerIds_ = java.util.Collections.unmodifiableList(playerIds_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.playerIds_ = playerIds_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.prizeList_ = prizeList_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_HalloweenDrops) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_HalloweenDrops)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_HalloweenDrops other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_HalloweenDrops.getDefaultInstance()) return this;
+        if (!other.itemDefs_.isEmpty()) {
+          if (itemDefs_.isEmpty()) {
+            itemDefs_ = other.itemDefs_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureItemDefsIsMutable();
+            itemDefs_.addAll(other.itemDefs_);
+          }
+          onChanged();
+        }
+        if (!other.playerIds_.isEmpty()) {
+          if (playerIds_.isEmpty()) {
+            playerIds_ = other.playerIds_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensurePlayerIdsIsMutable();
+            playerIds_.addAll(other.playerIds_);
+          }
+          onChanged();
+        }
+        if (other.hasPrizeList()) {
+          setPrizeList(other.getPrizeList());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              ensureItemDefsIsMutable();
+              itemDefs_.add(input.readUInt32());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addItemDefs(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 16: {
+              ensurePlayerIdsIsMutable();
+              playerIds_.add(input.readUInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addPlayerIds(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              prizeList_ = input.readUInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // repeated uint32 item_defs = 1;
+      private java.util.List<java.lang.Integer> itemDefs_ = java.util.Collections.emptyList();;
+      private void ensureItemDefsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          itemDefs_ = new java.util.ArrayList<java.lang.Integer>(itemDefs_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getItemDefsList() {
+        return java.util.Collections.unmodifiableList(itemDefs_);
+      }
+      public int getItemDefsCount() {
+        return itemDefs_.size();
+      }
+      public int getItemDefs(int index) {
+        return itemDefs_.get(index);
+      }
+      public Builder setItemDefs(
+          int index, int value) {
+        ensureItemDefsIsMutable();
+        itemDefs_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addItemDefs(int value) {
+        ensureItemDefsIsMutable();
+        itemDefs_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllItemDefs(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureItemDefsIsMutable();
+        super.addAll(values, itemDefs_);
+        onChanged();
+        return this;
+      }
+      public Builder clearItemDefs() {
+        itemDefs_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      
+      // repeated uint32 player_ids = 2;
+      private java.util.List<java.lang.Integer> playerIds_ = java.util.Collections.emptyList();;
+      private void ensurePlayerIdsIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          playerIds_ = new java.util.ArrayList<java.lang.Integer>(playerIds_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getPlayerIdsList() {
+        return java.util.Collections.unmodifiableList(playerIds_);
+      }
+      public int getPlayerIdsCount() {
+        return playerIds_.size();
+      }
+      public int getPlayerIds(int index) {
+        return playerIds_.get(index);
+      }
+      public Builder setPlayerIds(
+          int index, int value) {
+        ensurePlayerIdsIsMutable();
+        playerIds_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addPlayerIds(int value) {
+        ensurePlayerIdsIsMutable();
+        playerIds_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllPlayerIds(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensurePlayerIdsIsMutable();
+        super.addAll(values, playerIds_);
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerIds() {
+        playerIds_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      
+      // optional uint32 prize_list = 3;
+      private int prizeList_ ;
+      public boolean hasPrizeList() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getPrizeList() {
+        return prizeList_;
+      }
+      public Builder setPrizeList(int value) {
+        bitField0_ |= 0x00000004;
+        prizeList_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPrizeList() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        prizeList_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_HalloweenDrops)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_HalloweenDrops(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_HalloweenDrops)
+  }
+  
+  public interface CDOTAResponseQuerySerializedOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // repeated .CDOTAResponseQuerySerialized.Fact facts = 1;
+    java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact> 
+        getFactsList();
+    DotaUsermessages.CDOTAResponseQuerySerialized.Fact getFacts(int index);
+    int getFactsCount();
+    java.util.List<? extends DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder> 
+        getFactsOrBuilderList();
+    DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder getFactsOrBuilder(
+        int index);
+  }
+  public static final class CDOTAResponseQuerySerialized extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAResponseQuerySerializedOrBuilder {
+    // Use CDOTAResponseQuerySerialized.newBuilder() to construct.
+    private CDOTAResponseQuerySerialized(Builder builder) {
+      super(builder);
+    }
+    private CDOTAResponseQuerySerialized(boolean noInit) {}
+    
+    private static final CDOTAResponseQuerySerialized defaultInstance;
+    public static CDOTAResponseQuerySerialized getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAResponseQuerySerialized getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_fieldAccessorTable;
+    }
+    
+    public interface FactOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+      
+      // required int32 key = 1;
+      boolean hasKey();
+      int getKey();
+      
+      // required .CDOTAResponseQuerySerialized.Fact.ValueType valtype = 2 [default = NUMERIC];
+      boolean hasValtype();
+      DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType getValtype();
+      
+      // optional float val_numeric = 3;
+      boolean hasValNumeric();
+      float getValNumeric();
+      
+      // optional string val_string = 4;
+      boolean hasValString();
+      String getValString();
+    }
+    public static final class Fact extends
+        com.google.protobuf.GeneratedMessage
+        implements FactOrBuilder {
+      // Use Fact.newBuilder() to construct.
+      private Fact(Builder builder) {
+        super(builder);
+      }
+      private Fact(boolean noInit) {}
+      
+      private static final Fact defaultInstance;
+      public static Fact getDefaultInstance() {
+        return defaultInstance;
+      }
+      
+      public Fact getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+      
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_Fact_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_Fact_fieldAccessorTable;
+      }
+      
+      public enum ValueType
+          implements com.google.protobuf.ProtocolMessageEnum {
+        NUMERIC(0, 1),
+        STRING(1, 2),
+        ;
+        
+        public static final int NUMERIC_VALUE = 1;
+        public static final int STRING_VALUE = 2;
+        
+        
+        public final int getNumber() { return value; }
+        
+        public static ValueType valueOf(int value) {
+          switch (value) {
+            case 1: return NUMERIC;
+            case 2: return STRING;
+            default: return null;
+          }
+        }
+        
+        public static com.google.protobuf.Internal.EnumLiteMap<ValueType>
+            internalGetValueMap() {
+          return internalValueMap;
+        }
+        private static com.google.protobuf.Internal.EnumLiteMap<ValueType>
+            internalValueMap =
+              new com.google.protobuf.Internal.EnumLiteMap<ValueType>() {
+                public ValueType findValueByNumber(int number) {
+                  return ValueType.valueOf(number);
+                }
+              };
+        
+        public final com.google.protobuf.Descriptors.EnumValueDescriptor
+            getValueDescriptor() {
+          return getDescriptor().getValues().get(index);
+        }
+        public final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptorForType() {
+          return getDescriptor();
+        }
+        public static final com.google.protobuf.Descriptors.EnumDescriptor
+            getDescriptor() {
+          return DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDescriptor().getEnumTypes().get(0);
+        }
+        
+        private static final ValueType[] VALUES = {
+          NUMERIC, STRING, 
+        };
+        
+        public static ValueType valueOf(
+            com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+          if (desc.getType() != getDescriptor()) {
+            throw new java.lang.IllegalArgumentException(
+              "EnumValueDescriptor is not for this type.");
+          }
+          return VALUES[desc.getIndex()];
+        }
+        
+        private final int index;
+        private final int value;
+        
+        private ValueType(int index, int value) {
+          this.index = index;
+          this.value = value;
+        }
+        
+        // @@protoc_insertion_point(enum_scope:CDOTAResponseQuerySerialized.Fact.ValueType)
+      }
+      
+      private int bitField0_;
+      // required int32 key = 1;
+      public static final int KEY_FIELD_NUMBER = 1;
+      private int key_;
+      public boolean hasKey() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getKey() {
+        return key_;
+      }
+      
+      // required .CDOTAResponseQuerySerialized.Fact.ValueType valtype = 2 [default = NUMERIC];
+      public static final int VALTYPE_FIELD_NUMBER = 2;
+      private DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType valtype_;
+      public boolean hasValtype() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType getValtype() {
+        return valtype_;
+      }
+      
+      // optional float val_numeric = 3;
+      public static final int VAL_NUMERIC_FIELD_NUMBER = 3;
+      private float valNumeric_;
+      public boolean hasValNumeric() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public float getValNumeric() {
+        return valNumeric_;
+      }
+      
+      // optional string val_string = 4;
+      public static final int VAL_STRING_FIELD_NUMBER = 4;
+      private java.lang.Object valString_;
+      public boolean hasValString() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public String getValString() {
+        java.lang.Object ref = valString_;
+        if (ref instanceof String) {
+          return (String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+            valString_ = s;
+          }
+          return s;
+        }
+      }
+      private com.google.protobuf.ByteString getValStringBytes() {
+        java.lang.Object ref = valString_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+          valString_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      private void initFields() {
+        key_ = 0;
+        valtype_ = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType.NUMERIC;
+        valNumeric_ = 0F;
+        valString_ = "";
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+        
+        if (!hasKey()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        if (!hasValtype()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+        memoizedIsInitialized = 1;
+        return true;
+      }
+      
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeInt32(1, key_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeEnum(2, valtype_.getNumber());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          output.writeFloat(3, valNumeric_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeBytes(4, getValStringBytes());
+        }
+        getUnknownFields().writeTo(output);
+      }
+      
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+      
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(1, key_);
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeEnumSize(2, valtype_.getNumber());
+        }
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeFloatSize(3, valNumeric_);
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(4, getValStringBytes());
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+      
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+      
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAResponseQuerySerialized.Fact parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(DotaUsermessages.CDOTAResponseQuerySerialized.Fact prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+      
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_Fact_descriptor;
+        }
+        
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_Fact_fieldAccessorTable;
+        }
+        
+        // Construct using DotaUsermessages.CDOTAResponseQuerySerialized.Fact.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+        
+        private Builder(BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+        
+        public Builder clear() {
+          super.clear();
+          key_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          valtype_ = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType.NUMERIC;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          valNumeric_ = 0F;
+          bitField0_ = (bitField0_ & ~0x00000004);
+          valString_ = "";
+          bitField0_ = (bitField0_ & ~0x00000008);
+          return this;
+        }
+        
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+        
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDescriptor();
+        }
+        
+        public DotaUsermessages.CDOTAResponseQuerySerialized.Fact getDefaultInstanceForType() {
+          return DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDefaultInstance();
+        }
+        
+        public DotaUsermessages.CDOTAResponseQuerySerialized.Fact build() {
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+        
+        private DotaUsermessages.CDOTAResponseQuerySerialized.Fact buildParsed()
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(
+              result).asInvalidProtocolBufferException();
+          }
+          return result;
+        }
+        
+        public DotaUsermessages.CDOTAResponseQuerySerialized.Fact buildPartial() {
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact result = new DotaUsermessages.CDOTAResponseQuerySerialized.Fact(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.key_ = key_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.valtype_ = valtype_;
+          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+            to_bitField0_ |= 0x00000004;
+          }
+          result.valNumeric_ = valNumeric_;
+          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.valString_ = valString_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+        
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof DotaUsermessages.CDOTAResponseQuerySerialized.Fact) {
+            return mergeFrom((DotaUsermessages.CDOTAResponseQuerySerialized.Fact)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+        
+        public Builder mergeFrom(DotaUsermessages.CDOTAResponseQuerySerialized.Fact other) {
+          if (other == DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDefaultInstance()) return this;
+          if (other.hasKey()) {
+            setKey(other.getKey());
+          }
+          if (other.hasValtype()) {
+            setValtype(other.getValtype());
+          }
+          if (other.hasValNumeric()) {
+            setValNumeric(other.getValNumeric());
+          }
+          if (other.hasValString()) {
+            setValString(other.getValString());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+        
+        public final boolean isInitialized() {
+          if (!hasKey()) {
+            
+            return false;
+          }
+          if (!hasValtype()) {
+            
+            return false;
+          }
+          return true;
+        }
+        
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder(
+              this.getUnknownFields());
+          while (true) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                }
+                break;
+              }
+              case 8: {
+                bitField0_ |= 0x00000001;
+                key_ = input.readInt32();
+                break;
+              }
+              case 16: {
+                int rawValue = input.readEnum();
+                DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType value = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType.valueOf(rawValue);
+                if (value == null) {
+                  unknownFields.mergeVarintField(2, rawValue);
+                } else {
+                  bitField0_ |= 0x00000002;
+                  valtype_ = value;
+                }
+                break;
+              }
+              case 29: {
+                bitField0_ |= 0x00000004;
+                valNumeric_ = input.readFloat();
+                break;
+              }
+              case 34: {
+                bitField0_ |= 0x00000008;
+                valString_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        }
+        
+        private int bitField0_;
+        
+        // required int32 key = 1;
+        private int key_ ;
+        public boolean hasKey() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        public int getKey() {
+          return key_;
+        }
+        public Builder setKey(int value) {
+          bitField0_ |= 0x00000001;
+          key_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearKey() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          key_ = 0;
+          onChanged();
+          return this;
+        }
+        
+        // required .CDOTAResponseQuerySerialized.Fact.ValueType valtype = 2 [default = NUMERIC];
+        private DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType valtype_ = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType.NUMERIC;
+        public boolean hasValtype() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        public DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType getValtype() {
+          return valtype_;
+        }
+        public Builder setValtype(DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType value) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          bitField0_ |= 0x00000002;
+          valtype_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearValtype() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          valtype_ = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.ValueType.NUMERIC;
+          onChanged();
+          return this;
+        }
+        
+        // optional float val_numeric = 3;
+        private float valNumeric_ ;
+        public boolean hasValNumeric() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        public float getValNumeric() {
+          return valNumeric_;
+        }
+        public Builder setValNumeric(float value) {
+          bitField0_ |= 0x00000004;
+          valNumeric_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearValNumeric() {
+          bitField0_ = (bitField0_ & ~0x00000004);
+          valNumeric_ = 0F;
+          onChanged();
+          return this;
+        }
+        
+        // optional string val_string = 4;
+        private java.lang.Object valString_ = "";
+        public boolean hasValString() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        public String getValString() {
+          java.lang.Object ref = valString_;
+          if (!(ref instanceof String)) {
+            String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+            valString_ = s;
+            return s;
+          } else {
+            return (String) ref;
+          }
+        }
+        public Builder setValString(String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+          valString_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearValString() {
+          bitField0_ = (bitField0_ & ~0x00000008);
+          valString_ = getDefaultInstance().getValString();
+          onChanged();
+          return this;
+        }
+        void setValString(com.google.protobuf.ByteString value) {
+          bitField0_ |= 0x00000008;
+          valString_ = value;
+          onChanged();
+        }
+        
+        // @@protoc_insertion_point(builder_scope:CDOTAResponseQuerySerialized.Fact)
+      }
+      
+      static {
+        defaultInstance = new Fact(true);
+        defaultInstance.initFields();
+      }
+      
+      // @@protoc_insertion_point(class_scope:CDOTAResponseQuerySerialized.Fact)
+    }
+    
+    // repeated .CDOTAResponseQuerySerialized.Fact facts = 1;
+    public static final int FACTS_FIELD_NUMBER = 1;
+    private java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact> facts_;
+    public java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact> getFactsList() {
+      return facts_;
+    }
+    public java.util.List<? extends DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder> 
+        getFactsOrBuilderList() {
+      return facts_;
+    }
+    public int getFactsCount() {
+      return facts_.size();
+    }
+    public DotaUsermessages.CDOTAResponseQuerySerialized.Fact getFacts(int index) {
+      return facts_.get(index);
+    }
+    public DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder getFactsOrBuilder(
+        int index) {
+      return facts_.get(index);
+    }
+    
+    private void initFields() {
+      facts_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      for (int i = 0; i < getFactsCount(); i++) {
+        if (!getFacts(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < facts_.size(); i++) {
+        output.writeMessage(1, facts_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      for (int i = 0; i < facts_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(1, facts_.get(i));
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAResponseQuerySerialized parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAResponseQuerySerialized prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAResponseQuerySerialized_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAResponseQuerySerialized.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getFactsFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        if (factsBuilder_ == null) {
+          facts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+        } else {
+          factsBuilder_.clear();
+        }
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAResponseQuerySerialized.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAResponseQuerySerialized getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAResponseQuerySerialized build() {
+        DotaUsermessages.CDOTAResponseQuerySerialized result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAResponseQuerySerialized buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAResponseQuerySerialized result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAResponseQuerySerialized buildPartial() {
+        DotaUsermessages.CDOTAResponseQuerySerialized result = new DotaUsermessages.CDOTAResponseQuerySerialized(this);
+        int from_bitField0_ = bitField0_;
+        if (factsBuilder_ == null) {
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            facts_ = java.util.Collections.unmodifiableList(facts_);
+            bitField0_ = (bitField0_ & ~0x00000001);
+          }
+          result.facts_ = facts_;
+        } else {
+          result.facts_ = factsBuilder_.build();
+        }
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAResponseQuerySerialized) {
+          return mergeFrom((DotaUsermessages.CDOTAResponseQuerySerialized)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAResponseQuerySerialized other) {
+        if (other == DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance()) return this;
+        if (factsBuilder_ == null) {
+          if (!other.facts_.isEmpty()) {
+            if (facts_.isEmpty()) {
+              facts_ = other.facts_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+            } else {
+              ensureFactsIsMutable();
+              facts_.addAll(other.facts_);
+            }
+            onChanged();
+          }
+        } else {
+          if (!other.facts_.isEmpty()) {
+            if (factsBuilder_.isEmpty()) {
+              factsBuilder_.dispose();
+              factsBuilder_ = null;
+              facts_ = other.facts_;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              factsBuilder_ = 
+                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                   getFactsFieldBuilder() : null;
+            } else {
+              factsBuilder_.addAllMessages(other.facts_);
+            }
+          }
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        for (int i = 0; i < getFactsCount(); i++) {
+          if (!getFacts(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder subBuilder = DotaUsermessages.CDOTAResponseQuerySerialized.Fact.newBuilder();
+              input.readMessage(subBuilder, extensionRegistry);
+              addFacts(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // repeated .CDOTAResponseQuerySerialized.Fact facts = 1;
+      private java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact> facts_ =
+        java.util.Collections.emptyList();
+      private void ensureFactsIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          facts_ = new java.util.ArrayList<DotaUsermessages.CDOTAResponseQuerySerialized.Fact>(facts_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      
+      private com.google.protobuf.RepeatedFieldBuilder<
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder, DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder> factsBuilder_;
+      
+      public java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact> getFactsList() {
+        if (factsBuilder_ == null) {
+          return java.util.Collections.unmodifiableList(facts_);
+        } else {
+          return factsBuilder_.getMessageList();
+        }
+      }
+      public int getFactsCount() {
+        if (factsBuilder_ == null) {
+          return facts_.size();
+        } else {
+          return factsBuilder_.getCount();
+        }
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Fact getFacts(int index) {
+        if (factsBuilder_ == null) {
+          return facts_.get(index);
+        } else {
+          return factsBuilder_.getMessage(index);
+        }
+      }
+      public Builder setFacts(
+          int index, DotaUsermessages.CDOTAResponseQuerySerialized.Fact value) {
+        if (factsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFactsIsMutable();
+          facts_.set(index, value);
+          onChanged();
+        } else {
+          factsBuilder_.setMessage(index, value);
+        }
+        return this;
+      }
+      public Builder setFacts(
+          int index, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder builderForValue) {
+        if (factsBuilder_ == null) {
+          ensureFactsIsMutable();
+          facts_.set(index, builderForValue.build());
+          onChanged();
+        } else {
+          factsBuilder_.setMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addFacts(DotaUsermessages.CDOTAResponseQuerySerialized.Fact value) {
+        if (factsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFactsIsMutable();
+          facts_.add(value);
+          onChanged();
+        } else {
+          factsBuilder_.addMessage(value);
+        }
+        return this;
+      }
+      public Builder addFacts(
+          int index, DotaUsermessages.CDOTAResponseQuerySerialized.Fact value) {
+        if (factsBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          ensureFactsIsMutable();
+          facts_.add(index, value);
+          onChanged();
+        } else {
+          factsBuilder_.addMessage(index, value);
+        }
+        return this;
+      }
+      public Builder addFacts(
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder builderForValue) {
+        if (factsBuilder_ == null) {
+          ensureFactsIsMutable();
+          facts_.add(builderForValue.build());
+          onChanged();
+        } else {
+          factsBuilder_.addMessage(builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addFacts(
+          int index, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder builderForValue) {
+        if (factsBuilder_ == null) {
+          ensureFactsIsMutable();
+          facts_.add(index, builderForValue.build());
+          onChanged();
+        } else {
+          factsBuilder_.addMessage(index, builderForValue.build());
+        }
+        return this;
+      }
+      public Builder addAllFacts(
+          java.lang.Iterable<? extends DotaUsermessages.CDOTAResponseQuerySerialized.Fact> values) {
+        if (factsBuilder_ == null) {
+          ensureFactsIsMutable();
+          super.addAll(values, facts_);
+          onChanged();
+        } else {
+          factsBuilder_.addAllMessages(values);
+        }
+        return this;
+      }
+      public Builder clearFacts() {
+        if (factsBuilder_ == null) {
+          facts_ = java.util.Collections.emptyList();
+          bitField0_ = (bitField0_ & ~0x00000001);
+          onChanged();
+        } else {
+          factsBuilder_.clear();
+        }
+        return this;
+      }
+      public Builder removeFacts(int index) {
+        if (factsBuilder_ == null) {
+          ensureFactsIsMutable();
+          facts_.remove(index);
+          onChanged();
+        } else {
+          factsBuilder_.remove(index);
+        }
+        return this;
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder getFactsBuilder(
+          int index) {
+        return getFactsFieldBuilder().getBuilder(index);
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder getFactsOrBuilder(
+          int index) {
+        if (factsBuilder_ == null) {
+          return facts_.get(index);  } else {
+          return factsBuilder_.getMessageOrBuilder(index);
+        }
+      }
+      public java.util.List<? extends DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder> 
+           getFactsOrBuilderList() {
+        if (factsBuilder_ != null) {
+          return factsBuilder_.getMessageOrBuilderList();
+        } else {
+          return java.util.Collections.unmodifiableList(facts_);
+        }
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder addFactsBuilder() {
+        return getFactsFieldBuilder().addBuilder(
+            DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDefaultInstance());
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder addFactsBuilder(
+          int index) {
+        return getFactsFieldBuilder().addBuilder(
+            index, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.getDefaultInstance());
+      }
+      public java.util.List<DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder> 
+           getFactsBuilderList() {
+        return getFactsFieldBuilder().getBuilderList();
+      }
+      private com.google.protobuf.RepeatedFieldBuilder<
+          DotaUsermessages.CDOTAResponseQuerySerialized.Fact, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder, DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder> 
+          getFactsFieldBuilder() {
+        if (factsBuilder_ == null) {
+          factsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+              DotaUsermessages.CDOTAResponseQuerySerialized.Fact, DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder, DotaUsermessages.CDOTAResponseQuerySerialized.FactOrBuilder>(
+                  facts_,
+                  ((bitField0_ & 0x00000001) == 0x00000001),
+                  getParentForChildren(),
+                  isClean());
+          facts_ = null;
+        }
+        return factsBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAResponseQuerySerialized)
+    }
+    
+    static {
+      defaultInstance = new CDOTAResponseQuerySerialized(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAResponseQuerySerialized)
+  }
+  
+  public interface CDOTASpeechMatchOnClientOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 concept = 1;
+    boolean hasConcept();
+    int getConcept();
+    
+    // optional int32 recipient_type = 2;
+    boolean hasRecipientType();
+    int getRecipientType();
+    
+    // optional .CDOTAResponseQuerySerialized responsequery = 3;
+    boolean hasResponsequery();
+    DotaUsermessages.CDOTAResponseQuerySerialized getResponsequery();
+    DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder getResponsequeryOrBuilder();
+    
+    // optional sfixed32 randomseed = 4 [default = 0];
+    boolean hasRandomseed();
+    int getRandomseed();
+  }
+  public static final class CDOTASpeechMatchOnClient extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTASpeechMatchOnClientOrBuilder {
+    // Use CDOTASpeechMatchOnClient.newBuilder() to construct.
+    private CDOTASpeechMatchOnClient(Builder builder) {
+      super(builder);
+    }
+    private CDOTASpeechMatchOnClient(boolean noInit) {}
+    
+    private static final CDOTASpeechMatchOnClient defaultInstance;
+    public static CDOTASpeechMatchOnClient getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTASpeechMatchOnClient getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTASpeechMatchOnClient_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTASpeechMatchOnClient_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 concept = 1;
+    public static final int CONCEPT_FIELD_NUMBER = 1;
+    private int concept_;
+    public boolean hasConcept() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getConcept() {
+      return concept_;
+    }
+    
+    // optional int32 recipient_type = 2;
+    public static final int RECIPIENT_TYPE_FIELD_NUMBER = 2;
+    private int recipientType_;
+    public boolean hasRecipientType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getRecipientType() {
+      return recipientType_;
+    }
+    
+    // optional .CDOTAResponseQuerySerialized responsequery = 3;
+    public static final int RESPONSEQUERY_FIELD_NUMBER = 3;
+    private DotaUsermessages.CDOTAResponseQuerySerialized responsequery_;
+    public boolean hasResponsequery() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public DotaUsermessages.CDOTAResponseQuerySerialized getResponsequery() {
+      return responsequery_;
+    }
+    public DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder getResponsequeryOrBuilder() {
+      return responsequery_;
+    }
+    
+    // optional sfixed32 randomseed = 4 [default = 0];
+    public static final int RANDOMSEED_FIELD_NUMBER = 4;
+    private int randomseed_;
+    public boolean hasRandomseed() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public int getRandomseed() {
+      return randomseed_;
+    }
+    
+    private void initFields() {
+      concept_ = 0;
+      recipientType_ = 0;
+      responsequery_ = DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance();
+      randomseed_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      if (hasResponsequery()) {
+        if (!getResponsequery().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, concept_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, recipientType_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, responsequery_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeSFixed32(4, randomseed_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, concept_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, recipientType_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, responsequery_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeSFixed32Size(4, randomseed_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTASpeechMatchOnClient parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTASpeechMatchOnClient prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTASpeechMatchOnClient_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTASpeechMatchOnClient_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTASpeechMatchOnClient.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getResponsequeryFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        concept_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        recipientType_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        if (responsequeryBuilder_ == null) {
+          responsequery_ = DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance();
+        } else {
+          responsequeryBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        randomseed_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTASpeechMatchOnClient.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTASpeechMatchOnClient getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTASpeechMatchOnClient build() {
+        DotaUsermessages.CDOTASpeechMatchOnClient result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTASpeechMatchOnClient buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTASpeechMatchOnClient result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTASpeechMatchOnClient buildPartial() {
+        DotaUsermessages.CDOTASpeechMatchOnClient result = new DotaUsermessages.CDOTASpeechMatchOnClient(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.concept_ = concept_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.recipientType_ = recipientType_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (responsequeryBuilder_ == null) {
+          result.responsequery_ = responsequery_;
+        } else {
+          result.responsequery_ = responsequeryBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.randomseed_ = randomseed_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTASpeechMatchOnClient) {
+          return mergeFrom((DotaUsermessages.CDOTASpeechMatchOnClient)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTASpeechMatchOnClient other) {
+        if (other == DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance()) return this;
+        if (other.hasConcept()) {
+          setConcept(other.getConcept());
+        }
+        if (other.hasRecipientType()) {
+          setRecipientType(other.getRecipientType());
+        }
+        if (other.hasResponsequery()) {
+          mergeResponsequery(other.getResponsequery());
+        }
+        if (other.hasRandomseed()) {
+          setRandomseed(other.getRandomseed());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        if (hasResponsequery()) {
+          if (!getResponsequery().isInitialized()) {
+            
+            return false;
+          }
+        }
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              concept_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              recipientType_ = input.readInt32();
+              break;
+            }
+            case 26: {
+              DotaUsermessages.CDOTAResponseQuerySerialized.Builder subBuilder = DotaUsermessages.CDOTAResponseQuerySerialized.newBuilder();
+              if (hasResponsequery()) {
+                subBuilder.mergeFrom(getResponsequery());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setResponsequery(subBuilder.buildPartial());
+              break;
+            }
+            case 37: {
+              bitField0_ |= 0x00000008;
+              randomseed_ = input.readSFixed32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 concept = 1;
+      private int concept_ ;
+      public boolean hasConcept() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getConcept() {
+        return concept_;
+      }
+      public Builder setConcept(int value) {
+        bitField0_ |= 0x00000001;
+        concept_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearConcept() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        concept_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 recipient_type = 2;
+      private int recipientType_ ;
+      public boolean hasRecipientType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getRecipientType() {
+        return recipientType_;
+      }
+      public Builder setRecipientType(int value) {
+        bitField0_ |= 0x00000002;
+        recipientType_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearRecipientType() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        recipientType_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional .CDOTAResponseQuerySerialized responsequery = 3;
+      private DotaUsermessages.CDOTAResponseQuerySerialized responsequery_ = DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTAResponseQuerySerialized, DotaUsermessages.CDOTAResponseQuerySerialized.Builder, DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder> responsequeryBuilder_;
+      public boolean hasResponsequery() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized getResponsequery() {
+        if (responsequeryBuilder_ == null) {
+          return responsequery_;
+        } else {
+          return responsequeryBuilder_.getMessage();
+        }
+      }
+      public Builder setResponsequery(DotaUsermessages.CDOTAResponseQuerySerialized value) {
+        if (responsequeryBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          responsequery_ = value;
+          onChanged();
+        } else {
+          responsequeryBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      public Builder setResponsequery(
+          DotaUsermessages.CDOTAResponseQuerySerialized.Builder builderForValue) {
+        if (responsequeryBuilder_ == null) {
+          responsequery_ = builderForValue.build();
+          onChanged();
+        } else {
+          responsequeryBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      public Builder mergeResponsequery(DotaUsermessages.CDOTAResponseQuerySerialized value) {
+        if (responsequeryBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              responsequery_ != DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance()) {
+            responsequery_ =
+              DotaUsermessages.CDOTAResponseQuerySerialized.newBuilder(responsequery_).mergeFrom(value).buildPartial();
+          } else {
+            responsequery_ = value;
+          }
+          onChanged();
+        } else {
+          responsequeryBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      public Builder clearResponsequery() {
+        if (responsequeryBuilder_ == null) {
+          responsequery_ = DotaUsermessages.CDOTAResponseQuerySerialized.getDefaultInstance();
+          onChanged();
+        } else {
+          responsequeryBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerialized.Builder getResponsequeryBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getResponsequeryFieldBuilder().getBuilder();
+      }
+      public DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder getResponsequeryOrBuilder() {
+        if (responsequeryBuilder_ != null) {
+          return responsequeryBuilder_.getMessageOrBuilder();
+        } else {
+          return responsequery_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTAResponseQuerySerialized, DotaUsermessages.CDOTAResponseQuerySerialized.Builder, DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder> 
+          getResponsequeryFieldBuilder() {
+        if (responsequeryBuilder_ == null) {
+          responsequeryBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaUsermessages.CDOTAResponseQuerySerialized, DotaUsermessages.CDOTAResponseQuerySerialized.Builder, DotaUsermessages.CDOTAResponseQuerySerializedOrBuilder>(
+                  responsequery_,
+                  getParentForChildren(),
+                  isClean());
+          responsequery_ = null;
+        }
+        return responsequeryBuilder_;
+      }
+      
+      // optional sfixed32 randomseed = 4 [default = 0];
+      private int randomseed_ ;
+      public boolean hasRandomseed() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public int getRandomseed() {
+        return randomseed_;
+      }
+      public Builder setRandomseed(int value) {
+        bitField0_ |= 0x00000008;
+        randomseed_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearRandomseed() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        randomseed_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTASpeechMatchOnClient)
+    }
+    
+    static {
+      defaultInstance = new CDOTASpeechMatchOnClient(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTASpeechMatchOnClient)
+  }
+  
   public interface CDOTAUserMsg_UnitEventOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .EDotaEntityMessages msg_type = 1;
+    // required .EDotaEntityMessages msg_type = 1 [default = DOTA_UNIT_SPEECH];
     boolean hasMsgType();
     DotaUsermessages.EDotaEntityMessages getMsgType();
     
@@ -13194,6 +16752,11 @@ public final class DotaUsermessages {
     boolean hasFadeGesture();
     DotaUsermessages.CDOTAUserMsg_UnitEvent.FadeGesture getFadeGesture();
     DotaUsermessages.CDOTAUserMsg_UnitEvent.FadeGestureOrBuilder getFadeGestureOrBuilder();
+    
+    // optional .CDOTASpeechMatchOnClient speech_match_on_client = 9;
+    boolean hasSpeechMatchOnClient();
+    DotaUsermessages.CDOTASpeechMatchOnClient getSpeechMatchOnClient();
+    DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder getSpeechMatchOnClientOrBuilder();
   }
   public static final class CDOTAUserMsg_UnitEvent extends
       com.google.protobuf.GeneratedMessage
@@ -13241,6 +16804,10 @@ public final class DotaUsermessages {
       // optional int32 level = 4;
       boolean hasLevel();
       int getLevel();
+      
+      // optional bool muteable = 5 [default = false];
+      boolean hasMuteable();
+      boolean getMuteable();
     }
     public static final class Speech extends
         com.google.protobuf.GeneratedMessage
@@ -13333,11 +16900,22 @@ public final class DotaUsermessages {
         return level_;
       }
       
+      // optional bool muteable = 5 [default = false];
+      public static final int MUTEABLE_FIELD_NUMBER = 5;
+      private boolean muteable_;
+      public boolean hasMuteable() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      public boolean getMuteable() {
+        return muteable_;
+      }
+      
       private void initFields() {
         concept_ = 0;
         response_ = "";
         recipientType_ = 0;
         level_ = 0;
+        muteable_ = false;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -13363,6 +16941,9 @@ public final class DotaUsermessages {
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           output.writeInt32(4, level_);
         }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeBool(5, muteable_);
+        }
         getUnknownFields().writeTo(output);
       }
       
@@ -13387,6 +16968,10 @@ public final class DotaUsermessages {
         if (((bitField0_ & 0x00000008) == 0x00000008)) {
           size += com.google.protobuf.CodedOutputStream
             .computeInt32Size(4, level_);
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(5, muteable_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -13520,6 +17105,8 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000004);
           level_ = 0;
           bitField0_ = (bitField0_ & ~0x00000008);
+          muteable_ = false;
+          bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
         
@@ -13574,6 +17161,10 @@ public final class DotaUsermessages {
             to_bitField0_ |= 0x00000008;
           }
           result.level_ = level_;
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          result.muteable_ = muteable_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -13601,6 +17192,9 @@ public final class DotaUsermessages {
           }
           if (other.hasLevel()) {
             setLevel(other.getLevel());
+          }
+          if (other.hasMuteable()) {
+            setMuteable(other.getMuteable());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -13651,6 +17245,11 @@ public final class DotaUsermessages {
               case 32: {
                 bitField0_ |= 0x00000008;
                 level_ = input.readInt32();
+                break;
+              }
+              case 40: {
+                bitField0_ |= 0x00000010;
+                muteable_ = input.readBool();
                 break;
               }
             }
@@ -13754,6 +17353,27 @@ public final class DotaUsermessages {
         public Builder clearLevel() {
           bitField0_ = (bitField0_ & ~0x00000008);
           level_ = 0;
+          onChanged();
+          return this;
+        }
+        
+        // optional bool muteable = 5 [default = false];
+        private boolean muteable_ ;
+        public boolean hasMuteable() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        public boolean getMuteable() {
+          return muteable_;
+        }
+        public Builder setMuteable(boolean value) {
+          bitField0_ |= 0x00000010;
+          muteable_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearMuteable() {
+          bitField0_ = (bitField0_ & ~0x00000010);
+          muteable_ = false;
           onChanged();
           return this;
         }
@@ -14110,7 +17730,7 @@ public final class DotaUsermessages {
     public interface AddGestureOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
       
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       boolean hasActivity();
       AiActivity.Activity getActivity();
       
@@ -14155,7 +17775,7 @@ public final class DotaUsermessages {
       }
       
       private int bitField0_;
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       public static final int ACTIVITY_FIELD_NUMBER = 1;
       private AiActivity.Activity activity_;
       public boolean hasActivity() {
@@ -14527,7 +18147,7 @@ public final class DotaUsermessages {
         
         private int bitField0_;
         
-        // optional .Activity activity = 1;
+        // optional .Activity activity = 1 [default = ACT_INVALID];
         private AiActivity.Activity activity_ = AiActivity.Activity.ACT_INVALID;
         public boolean hasActivity() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -14628,7 +18248,7 @@ public final class DotaUsermessages {
     public interface RemoveGestureOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
       
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       boolean hasActivity();
       AiActivity.Activity getActivity();
     }
@@ -14661,7 +18281,7 @@ public final class DotaUsermessages {
       }
       
       private int bitField0_;
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       public static final int ACTIVITY_FIELD_NUMBER = 1;
       private AiActivity.Activity activity_;
       public boolean hasActivity() {
@@ -14937,7 +18557,7 @@ public final class DotaUsermessages {
         
         private int bitField0_;
         
-        // optional .Activity activity = 1;
+        // optional .Activity activity = 1 [default = ACT_INVALID];
         private AiActivity.Activity activity_ = AiActivity.Activity.ACT_INVALID;
         public boolean hasActivity() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -15427,7 +19047,7 @@ public final class DotaUsermessages {
     public interface FadeGestureOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
       
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       boolean hasActivity();
       AiActivity.Activity getActivity();
     }
@@ -15460,7 +19080,7 @@ public final class DotaUsermessages {
       }
       
       private int bitField0_;
-      // optional .Activity activity = 1;
+      // optional .Activity activity = 1 [default = ACT_INVALID];
       public static final int ACTIVITY_FIELD_NUMBER = 1;
       private AiActivity.Activity activity_;
       public boolean hasActivity() {
@@ -15736,7 +19356,7 @@ public final class DotaUsermessages {
         
         private int bitField0_;
         
-        // optional .Activity activity = 1;
+        // optional .Activity activity = 1 [default = ACT_INVALID];
         private AiActivity.Activity activity_ = AiActivity.Activity.ACT_INVALID;
         public boolean hasActivity() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -15772,7 +19392,7 @@ public final class DotaUsermessages {
     }
     
     private int bitField0_;
-    // required .EDotaEntityMessages msg_type = 1;
+    // required .EDotaEntityMessages msg_type = 1 [default = DOTA_UNIT_SPEECH];
     public static final int MSG_TYPE_FIELD_NUMBER = 1;
     private DotaUsermessages.EDotaEntityMessages msgType_;
     public boolean hasMsgType() {
@@ -15870,6 +19490,19 @@ public final class DotaUsermessages {
       return fadeGesture_;
     }
     
+    // optional .CDOTASpeechMatchOnClient speech_match_on_client = 9;
+    public static final int SPEECH_MATCH_ON_CLIENT_FIELD_NUMBER = 9;
+    private DotaUsermessages.CDOTASpeechMatchOnClient speechMatchOnClient_;
+    public boolean hasSpeechMatchOnClient() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    public DotaUsermessages.CDOTASpeechMatchOnClient getSpeechMatchOnClient() {
+      return speechMatchOnClient_;
+    }
+    public DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder getSpeechMatchOnClientOrBuilder() {
+      return speechMatchOnClient_;
+    }
+    
     private void initFields() {
       msgType_ = DotaUsermessages.EDotaEntityMessages.DOTA_UNIT_SPEECH;
       entityIndex_ = 0;
@@ -15879,6 +19512,7 @@ public final class DotaUsermessages {
       removeGesture_ = DotaUsermessages.CDOTAUserMsg_UnitEvent.RemoveGesture.getDefaultInstance();
       bloodImpact_ = DotaUsermessages.CDOTAUserMsg_UnitEvent.BloodImpact.getDefaultInstance();
       fadeGesture_ = DotaUsermessages.CDOTAUserMsg_UnitEvent.FadeGesture.getDefaultInstance();
+      speechMatchOnClient_ = DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -15892,6 +19526,12 @@ public final class DotaUsermessages {
       if (!hasEntityIndex()) {
         memoizedIsInitialized = 0;
         return false;
+      }
+      if (hasSpeechMatchOnClient()) {
+        if (!getSpeechMatchOnClient().isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
       }
       memoizedIsInitialized = 1;
       return true;
@@ -15923,6 +19563,9 @@ public final class DotaUsermessages {
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeMessage(8, fadeGesture_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeMessage(9, speechMatchOnClient_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -15964,6 +19607,10 @@ public final class DotaUsermessages {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeMessageSize(8, fadeGesture_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(9, speechMatchOnClient_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -16087,6 +19734,7 @@ public final class DotaUsermessages {
           getRemoveGestureFieldBuilder();
           getBloodImpactFieldBuilder();
           getFadeGestureFieldBuilder();
+          getSpeechMatchOnClientFieldBuilder();
         }
       }
       private static Builder create() {
@@ -16135,6 +19783,12 @@ public final class DotaUsermessages {
           fadeGestureBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000080);
+        if (speechMatchOnClientBuilder_ == null) {
+          speechMatchOnClient_ = DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance();
+        } else {
+          speechMatchOnClientBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
       
@@ -16229,6 +19883,14 @@ public final class DotaUsermessages {
         } else {
           result.fadeGesture_ = fadeGestureBuilder_.build();
         }
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        if (speechMatchOnClientBuilder_ == null) {
+          result.speechMatchOnClient_ = speechMatchOnClient_;
+        } else {
+          result.speechMatchOnClient_ = speechMatchOnClientBuilder_.build();
+        }
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -16269,6 +19931,9 @@ public final class DotaUsermessages {
         if (other.hasFadeGesture()) {
           mergeFadeGesture(other.getFadeGesture());
         }
+        if (other.hasSpeechMatchOnClient()) {
+          mergeSpeechMatchOnClient(other.getSpeechMatchOnClient());
+        }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
       }
@@ -16281,6 +19946,12 @@ public final class DotaUsermessages {
         if (!hasEntityIndex()) {
           
           return false;
+        }
+        if (hasSpeechMatchOnClient()) {
+          if (!getSpeechMatchOnClient().isInitialized()) {
+            
+            return false;
+          }
         }
         return true;
       }
@@ -16378,13 +20049,22 @@ public final class DotaUsermessages {
               setFadeGesture(subBuilder.buildPartial());
               break;
             }
+            case 74: {
+              DotaUsermessages.CDOTASpeechMatchOnClient.Builder subBuilder = DotaUsermessages.CDOTASpeechMatchOnClient.newBuilder();
+              if (hasSpeechMatchOnClient()) {
+                subBuilder.mergeFrom(getSpeechMatchOnClient());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setSpeechMatchOnClient(subBuilder.buildPartial());
+              break;
+            }
           }
         }
       }
       
       private int bitField0_;
       
-      // required .EDotaEntityMessages msg_type = 1;
+      // required .EDotaEntityMessages msg_type = 1 [default = DOTA_UNIT_SPEECH];
       private DotaUsermessages.EDotaEntityMessages msgType_ = DotaUsermessages.EDotaEntityMessages.DOTA_UNIT_SPEECH;
       public boolean hasMsgType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -16967,6 +20647,96 @@ public final class DotaUsermessages {
           fadeGesture_ = null;
         }
         return fadeGestureBuilder_;
+      }
+      
+      // optional .CDOTASpeechMatchOnClient speech_match_on_client = 9;
+      private DotaUsermessages.CDOTASpeechMatchOnClient speechMatchOnClient_ = DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTASpeechMatchOnClient, DotaUsermessages.CDOTASpeechMatchOnClient.Builder, DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder> speechMatchOnClientBuilder_;
+      public boolean hasSpeechMatchOnClient() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      public DotaUsermessages.CDOTASpeechMatchOnClient getSpeechMatchOnClient() {
+        if (speechMatchOnClientBuilder_ == null) {
+          return speechMatchOnClient_;
+        } else {
+          return speechMatchOnClientBuilder_.getMessage();
+        }
+      }
+      public Builder setSpeechMatchOnClient(DotaUsermessages.CDOTASpeechMatchOnClient value) {
+        if (speechMatchOnClientBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          speechMatchOnClient_ = value;
+          onChanged();
+        } else {
+          speechMatchOnClientBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000100;
+        return this;
+      }
+      public Builder setSpeechMatchOnClient(
+          DotaUsermessages.CDOTASpeechMatchOnClient.Builder builderForValue) {
+        if (speechMatchOnClientBuilder_ == null) {
+          speechMatchOnClient_ = builderForValue.build();
+          onChanged();
+        } else {
+          speechMatchOnClientBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000100;
+        return this;
+      }
+      public Builder mergeSpeechMatchOnClient(DotaUsermessages.CDOTASpeechMatchOnClient value) {
+        if (speechMatchOnClientBuilder_ == null) {
+          if (((bitField0_ & 0x00000100) == 0x00000100) &&
+              speechMatchOnClient_ != DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance()) {
+            speechMatchOnClient_ =
+              DotaUsermessages.CDOTASpeechMatchOnClient.newBuilder(speechMatchOnClient_).mergeFrom(value).buildPartial();
+          } else {
+            speechMatchOnClient_ = value;
+          }
+          onChanged();
+        } else {
+          speechMatchOnClientBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000100;
+        return this;
+      }
+      public Builder clearSpeechMatchOnClient() {
+        if (speechMatchOnClientBuilder_ == null) {
+          speechMatchOnClient_ = DotaUsermessages.CDOTASpeechMatchOnClient.getDefaultInstance();
+          onChanged();
+        } else {
+          speechMatchOnClientBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000100);
+        return this;
+      }
+      public DotaUsermessages.CDOTASpeechMatchOnClient.Builder getSpeechMatchOnClientBuilder() {
+        bitField0_ |= 0x00000100;
+        onChanged();
+        return getSpeechMatchOnClientFieldBuilder().getBuilder();
+      }
+      public DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder getSpeechMatchOnClientOrBuilder() {
+        if (speechMatchOnClientBuilder_ != null) {
+          return speechMatchOnClientBuilder_.getMessageOrBuilder();
+        } else {
+          return speechMatchOnClient_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTASpeechMatchOnClient, DotaUsermessages.CDOTASpeechMatchOnClient.Builder, DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder> 
+          getSpeechMatchOnClientFieldBuilder() {
+        if (speechMatchOnClientBuilder_ == null) {
+          speechMatchOnClientBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaUsermessages.CDOTASpeechMatchOnClient, DotaUsermessages.CDOTASpeechMatchOnClient.Builder, DotaUsermessages.CDOTASpeechMatchOnClientOrBuilder>(
+                  speechMatchOnClient_,
+                  getParentForChildren(),
+                  isClean());
+          speechMatchOnClient_ = null;
+        }
+        return speechMatchOnClientBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_UnitEvent)
@@ -17887,7 +21657,7 @@ public final class DotaUsermessages {
   public interface CDOTAUserMsg_ParticleManagerOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .DOTA_PARTICLE_MESSAGE type = 1;
+    // required .DOTA_PARTICLE_MESSAGE type = 1 [default = DOTA_PARTICLE_MANAGER_EVENT_CREATE];
     boolean hasType();
     DotaUsermessages.DOTA_PARTICLE_MESSAGE getType();
     
@@ -17945,10 +21715,15 @@ public final class DotaUsermessages {
     DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleEnt getUpdateParticleEnt();
     DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleEntOrBuilder getUpdateParticleEntOrBuilder();
     
-    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleLatency update_particle_latency = 13;
-    boolean hasUpdateParticleLatency();
-    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency getUpdateParticleLatency();
-    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder getUpdateParticleLatencyOrBuilder();
+    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw update_particle_should_draw = 14;
+    boolean hasUpdateParticleShouldDraw();
+    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw getUpdateParticleShouldDraw();
+    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder getUpdateParticleShouldDrawOrBuilder();
+    
+    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen update_particle_set_frozen = 15;
+    boolean hasUpdateParticleSetFrozen();
+    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen getUpdateParticleSetFrozen();
+    DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder getUpdateParticleSetFrozenOrBuilder();
   }
   public static final class CDOTAUserMsg_ParticleManager extends
       com.google.protobuf.GeneratedMessage
@@ -19448,8 +23223,8 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector position = 2;
       boolean hasPosition();
-      Netmessages.CMsgVector getPosition();
-      Netmessages.CMsgVectorOrBuilder getPositionOrBuilder();
+      Networkbasetypes.CMsgVector getPosition();
+      Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder();
     }
     public static final class UpdateParticle extends
         com.google.protobuf.GeneratedMessage
@@ -19492,20 +23267,20 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector position = 2;
       public static final int POSITION_FIELD_NUMBER = 2;
-      private Netmessages.CMsgVector position_;
+      private Networkbasetypes.CMsgVector position_;
       public boolean hasPosition() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector getPosition() {
+      public Networkbasetypes.CMsgVector getPosition() {
         return position_;
       }
-      public Netmessages.CMsgVectorOrBuilder getPositionOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder() {
         return position_;
       }
       
       private void initFields() {
         controlPoint_ = 0;
-        position_ = Netmessages.CMsgVector.getDefaultInstance();
+        position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -19670,7 +23445,7 @@ public final class DotaUsermessages {
           controlPoint_ = 0;
           bitField0_ = (bitField0_ & ~0x00000001);
           if (positionBuilder_ == null) {
-            position_ = Netmessages.CMsgVector.getDefaultInstance();
+            position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             positionBuilder_.clear();
           }
@@ -19784,7 +23559,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 18: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasPosition()) {
                   subBuilder.mergeFrom(getPosition());
                 }
@@ -19820,20 +23595,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector position = 2;
-        private Netmessages.CMsgVector position_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> positionBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> positionBuilder_;
         public boolean hasPosition() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
-        public Netmessages.CMsgVector getPosition() {
+        public Networkbasetypes.CMsgVector getPosition() {
           if (positionBuilder_ == null) {
             return position_;
           } else {
             return positionBuilder_.getMessage();
           }
         }
-        public Builder setPosition(Netmessages.CMsgVector value) {
+        public Builder setPosition(Networkbasetypes.CMsgVector value) {
           if (positionBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -19847,7 +23622,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setPosition(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (positionBuilder_ == null) {
             position_ = builderForValue.build();
             onChanged();
@@ -19857,12 +23632,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000002;
           return this;
         }
-        public Builder mergePosition(Netmessages.CMsgVector value) {
+        public Builder mergePosition(Networkbasetypes.CMsgVector value) {
           if (positionBuilder_ == null) {
             if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                position_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                position_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               position_ =
-                Netmessages.CMsgVector.newBuilder(position_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(position_).mergeFrom(value).buildPartial();
             } else {
               position_ = value;
             }
@@ -19875,7 +23650,7 @@ public final class DotaUsermessages {
         }
         public Builder clearPosition() {
           if (positionBuilder_ == null) {
-            position_ = Netmessages.CMsgVector.getDefaultInstance();
+            position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             positionBuilder_.clear();
@@ -19883,12 +23658,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getPositionBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getPositionBuilder() {
           bitField0_ |= 0x00000002;
           onChanged();
           return getPositionFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getPositionOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder() {
           if (positionBuilder_ != null) {
             return positionBuilder_.getMessageOrBuilder();
           } else {
@@ -19896,11 +23671,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getPositionFieldBuilder() {
           if (positionBuilder_ == null) {
             positionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     position_,
                     getParentForChildren(),
                     isClean());
@@ -19929,8 +23704,8 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector forward = 2;
       boolean hasForward();
-      Netmessages.CMsgVector getForward();
-      Netmessages.CMsgVectorOrBuilder getForwardOrBuilder();
+      Networkbasetypes.CMsgVector getForward();
+      Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder();
     }
     public static final class UpdateParticleFwd extends
         com.google.protobuf.GeneratedMessage
@@ -19973,20 +23748,20 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector forward = 2;
       public static final int FORWARD_FIELD_NUMBER = 2;
-      private Netmessages.CMsgVector forward_;
+      private Networkbasetypes.CMsgVector forward_;
       public boolean hasForward() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector getForward() {
+      public Networkbasetypes.CMsgVector getForward() {
         return forward_;
       }
-      public Netmessages.CMsgVectorOrBuilder getForwardOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder() {
         return forward_;
       }
       
       private void initFields() {
         controlPoint_ = 0;
-        forward_ = Netmessages.CMsgVector.getDefaultInstance();
+        forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -20151,7 +23926,7 @@ public final class DotaUsermessages {
           controlPoint_ = 0;
           bitField0_ = (bitField0_ & ~0x00000001);
           if (forwardBuilder_ == null) {
-            forward_ = Netmessages.CMsgVector.getDefaultInstance();
+            forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             forwardBuilder_.clear();
           }
@@ -20265,7 +24040,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 18: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasForward()) {
                   subBuilder.mergeFrom(getForward());
                 }
@@ -20301,20 +24076,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector forward = 2;
-        private Netmessages.CMsgVector forward_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> forwardBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> forwardBuilder_;
         public boolean hasForward() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
-        public Netmessages.CMsgVector getForward() {
+        public Networkbasetypes.CMsgVector getForward() {
           if (forwardBuilder_ == null) {
             return forward_;
           } else {
             return forwardBuilder_.getMessage();
           }
         }
-        public Builder setForward(Netmessages.CMsgVector value) {
+        public Builder setForward(Networkbasetypes.CMsgVector value) {
           if (forwardBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -20328,7 +24103,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setForward(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (forwardBuilder_ == null) {
             forward_ = builderForValue.build();
             onChanged();
@@ -20338,12 +24113,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000002;
           return this;
         }
-        public Builder mergeForward(Netmessages.CMsgVector value) {
+        public Builder mergeForward(Networkbasetypes.CMsgVector value) {
           if (forwardBuilder_ == null) {
             if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                forward_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                forward_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               forward_ =
-                Netmessages.CMsgVector.newBuilder(forward_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(forward_).mergeFrom(value).buildPartial();
             } else {
               forward_ = value;
             }
@@ -20356,7 +24131,7 @@ public final class DotaUsermessages {
         }
         public Builder clearForward() {
           if (forwardBuilder_ == null) {
-            forward_ = Netmessages.CMsgVector.getDefaultInstance();
+            forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             forwardBuilder_.clear();
@@ -20364,12 +24139,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getForwardBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getForwardBuilder() {
           bitField0_ |= 0x00000002;
           onChanged();
           return getForwardFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getForwardOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder() {
           if (forwardBuilder_ != null) {
             return forwardBuilder_.getMessageOrBuilder();
           } else {
@@ -20377,11 +24152,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getForwardFieldBuilder() {
           if (forwardBuilder_ == null) {
             forwardBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     forward_,
                     getParentForChildren(),
                     isClean());
@@ -20410,18 +24185,18 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector forward = 2;
       boolean hasForward();
-      Netmessages.CMsgVector getForward();
-      Netmessages.CMsgVectorOrBuilder getForwardOrBuilder();
+      Networkbasetypes.CMsgVector getForward();
+      Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder();
       
       // optional .CMsgVector right = 3;
       boolean hasRight();
-      Netmessages.CMsgVector getRight();
-      Netmessages.CMsgVectorOrBuilder getRightOrBuilder();
+      Networkbasetypes.CMsgVector getRight();
+      Networkbasetypes.CMsgVectorOrBuilder getRightOrBuilder();
       
       // optional .CMsgVector up = 4;
       boolean hasUp();
-      Netmessages.CMsgVector getUp();
-      Netmessages.CMsgVectorOrBuilder getUpOrBuilder();
+      Networkbasetypes.CMsgVector getUp();
+      Networkbasetypes.CMsgVectorOrBuilder getUpOrBuilder();
     }
     public static final class UpdateParticleOrient extends
         com.google.protobuf.GeneratedMessage
@@ -20464,48 +24239,48 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector forward = 2;
       public static final int FORWARD_FIELD_NUMBER = 2;
-      private Netmessages.CMsgVector forward_;
+      private Networkbasetypes.CMsgVector forward_;
       public boolean hasForward() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector getForward() {
+      public Networkbasetypes.CMsgVector getForward() {
         return forward_;
       }
-      public Netmessages.CMsgVectorOrBuilder getForwardOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder() {
         return forward_;
       }
       
       // optional .CMsgVector right = 3;
       public static final int RIGHT_FIELD_NUMBER = 3;
-      private Netmessages.CMsgVector right_;
+      private Networkbasetypes.CMsgVector right_;
       public boolean hasRight() {
         return ((bitField0_ & 0x00000004) == 0x00000004);
       }
-      public Netmessages.CMsgVector getRight() {
+      public Networkbasetypes.CMsgVector getRight() {
         return right_;
       }
-      public Netmessages.CMsgVectorOrBuilder getRightOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getRightOrBuilder() {
         return right_;
       }
       
       // optional .CMsgVector up = 4;
       public static final int UP_FIELD_NUMBER = 4;
-      private Netmessages.CMsgVector up_;
+      private Networkbasetypes.CMsgVector up_;
       public boolean hasUp() {
         return ((bitField0_ & 0x00000008) == 0x00000008);
       }
-      public Netmessages.CMsgVector getUp() {
+      public Networkbasetypes.CMsgVector getUp() {
         return up_;
       }
-      public Netmessages.CMsgVectorOrBuilder getUpOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getUpOrBuilder() {
         return up_;
       }
       
       private void initFields() {
         controlPoint_ = 0;
-        forward_ = Netmessages.CMsgVector.getDefaultInstance();
-        right_ = Netmessages.CMsgVector.getDefaultInstance();
-        up_ = Netmessages.CMsgVector.getDefaultInstance();
+        forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
+        right_ = Networkbasetypes.CMsgVector.getDefaultInstance();
+        up_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -20686,19 +24461,19 @@ public final class DotaUsermessages {
           controlPoint_ = 0;
           bitField0_ = (bitField0_ & ~0x00000001);
           if (forwardBuilder_ == null) {
-            forward_ = Netmessages.CMsgVector.getDefaultInstance();
+            forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             forwardBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000002);
           if (rightBuilder_ == null) {
-            right_ = Netmessages.CMsgVector.getDefaultInstance();
+            right_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             rightBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000004);
           if (upBuilder_ == null) {
-            up_ = Netmessages.CMsgVector.getDefaultInstance();
+            up_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             upBuilder_.clear();
           }
@@ -20834,7 +24609,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 18: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasForward()) {
                   subBuilder.mergeFrom(getForward());
                 }
@@ -20843,7 +24618,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 26: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasRight()) {
                   subBuilder.mergeFrom(getRight());
                 }
@@ -20852,7 +24627,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 34: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasUp()) {
                   subBuilder.mergeFrom(getUp());
                 }
@@ -20888,20 +24663,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector forward = 2;
-        private Netmessages.CMsgVector forward_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> forwardBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> forwardBuilder_;
         public boolean hasForward() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
-        public Netmessages.CMsgVector getForward() {
+        public Networkbasetypes.CMsgVector getForward() {
           if (forwardBuilder_ == null) {
             return forward_;
           } else {
             return forwardBuilder_.getMessage();
           }
         }
-        public Builder setForward(Netmessages.CMsgVector value) {
+        public Builder setForward(Networkbasetypes.CMsgVector value) {
           if (forwardBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -20915,7 +24690,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setForward(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (forwardBuilder_ == null) {
             forward_ = builderForValue.build();
             onChanged();
@@ -20925,12 +24700,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000002;
           return this;
         }
-        public Builder mergeForward(Netmessages.CMsgVector value) {
+        public Builder mergeForward(Networkbasetypes.CMsgVector value) {
           if (forwardBuilder_ == null) {
             if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                forward_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                forward_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               forward_ =
-                Netmessages.CMsgVector.newBuilder(forward_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(forward_).mergeFrom(value).buildPartial();
             } else {
               forward_ = value;
             }
@@ -20943,7 +24718,7 @@ public final class DotaUsermessages {
         }
         public Builder clearForward() {
           if (forwardBuilder_ == null) {
-            forward_ = Netmessages.CMsgVector.getDefaultInstance();
+            forward_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             forwardBuilder_.clear();
@@ -20951,12 +24726,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getForwardBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getForwardBuilder() {
           bitField0_ |= 0x00000002;
           onChanged();
           return getForwardFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getForwardOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getForwardOrBuilder() {
           if (forwardBuilder_ != null) {
             return forwardBuilder_.getMessageOrBuilder();
           } else {
@@ -20964,11 +24739,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getForwardFieldBuilder() {
           if (forwardBuilder_ == null) {
             forwardBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     forward_,
                     getParentForChildren(),
                     isClean());
@@ -20978,20 +24753,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector right = 3;
-        private Netmessages.CMsgVector right_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector right_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> rightBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> rightBuilder_;
         public boolean hasRight() {
           return ((bitField0_ & 0x00000004) == 0x00000004);
         }
-        public Netmessages.CMsgVector getRight() {
+        public Networkbasetypes.CMsgVector getRight() {
           if (rightBuilder_ == null) {
             return right_;
           } else {
             return rightBuilder_.getMessage();
           }
         }
-        public Builder setRight(Netmessages.CMsgVector value) {
+        public Builder setRight(Networkbasetypes.CMsgVector value) {
           if (rightBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -21005,7 +24780,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setRight(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (rightBuilder_ == null) {
             right_ = builderForValue.build();
             onChanged();
@@ -21015,12 +24790,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000004;
           return this;
         }
-        public Builder mergeRight(Netmessages.CMsgVector value) {
+        public Builder mergeRight(Networkbasetypes.CMsgVector value) {
           if (rightBuilder_ == null) {
             if (((bitField0_ & 0x00000004) == 0x00000004) &&
-                right_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                right_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               right_ =
-                Netmessages.CMsgVector.newBuilder(right_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(right_).mergeFrom(value).buildPartial();
             } else {
               right_ = value;
             }
@@ -21033,7 +24808,7 @@ public final class DotaUsermessages {
         }
         public Builder clearRight() {
           if (rightBuilder_ == null) {
-            right_ = Netmessages.CMsgVector.getDefaultInstance();
+            right_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             rightBuilder_.clear();
@@ -21041,12 +24816,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000004);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getRightBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getRightBuilder() {
           bitField0_ |= 0x00000004;
           onChanged();
           return getRightFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getRightOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getRightOrBuilder() {
           if (rightBuilder_ != null) {
             return rightBuilder_.getMessageOrBuilder();
           } else {
@@ -21054,11 +24829,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getRightFieldBuilder() {
           if (rightBuilder_ == null) {
             rightBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     right_,
                     getParentForChildren(),
                     isClean());
@@ -21068,20 +24843,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector up = 4;
-        private Netmessages.CMsgVector up_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector up_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> upBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> upBuilder_;
         public boolean hasUp() {
           return ((bitField0_ & 0x00000008) == 0x00000008);
         }
-        public Netmessages.CMsgVector getUp() {
+        public Networkbasetypes.CMsgVector getUp() {
           if (upBuilder_ == null) {
             return up_;
           } else {
             return upBuilder_.getMessage();
           }
         }
-        public Builder setUp(Netmessages.CMsgVector value) {
+        public Builder setUp(Networkbasetypes.CMsgVector value) {
           if (upBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -21095,7 +24870,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setUp(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (upBuilder_ == null) {
             up_ = builderForValue.build();
             onChanged();
@@ -21105,12 +24880,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000008;
           return this;
         }
-        public Builder mergeUp(Netmessages.CMsgVector value) {
+        public Builder mergeUp(Networkbasetypes.CMsgVector value) {
           if (upBuilder_ == null) {
             if (((bitField0_ & 0x00000008) == 0x00000008) &&
-                up_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                up_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               up_ =
-                Netmessages.CMsgVector.newBuilder(up_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(up_).mergeFrom(value).buildPartial();
             } else {
               up_ = value;
             }
@@ -21123,7 +24898,7 @@ public final class DotaUsermessages {
         }
         public Builder clearUp() {
           if (upBuilder_ == null) {
-            up_ = Netmessages.CMsgVector.getDefaultInstance();
+            up_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             upBuilder_.clear();
@@ -21131,12 +24906,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000008);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getUpBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getUpBuilder() {
           bitField0_ |= 0x00000008;
           onChanged();
           return getUpFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getUpOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getUpOrBuilder() {
           if (upBuilder_ != null) {
             return upBuilder_.getMessageOrBuilder();
           } else {
@@ -21144,11 +24919,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getUpFieldBuilder() {
           if (upBuilder_ == null) {
             upBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     up_,
                     getParentForChildren(),
                     isClean());
@@ -21177,8 +24952,8 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector position = 2;
       boolean hasPosition();
-      Netmessages.CMsgVector getPosition();
-      Netmessages.CMsgVectorOrBuilder getPositionOrBuilder();
+      Networkbasetypes.CMsgVector getPosition();
+      Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder();
     }
     public static final class UpdateParticleFallback extends
         com.google.protobuf.GeneratedMessage
@@ -21221,20 +24996,20 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector position = 2;
       public static final int POSITION_FIELD_NUMBER = 2;
-      private Netmessages.CMsgVector position_;
+      private Networkbasetypes.CMsgVector position_;
       public boolean hasPosition() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector getPosition() {
+      public Networkbasetypes.CMsgVector getPosition() {
         return position_;
       }
-      public Netmessages.CMsgVectorOrBuilder getPositionOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder() {
         return position_;
       }
       
       private void initFields() {
         controlPoint_ = 0;
-        position_ = Netmessages.CMsgVector.getDefaultInstance();
+        position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -21399,7 +25174,7 @@ public final class DotaUsermessages {
           controlPoint_ = 0;
           bitField0_ = (bitField0_ & ~0x00000001);
           if (positionBuilder_ == null) {
-            position_ = Netmessages.CMsgVector.getDefaultInstance();
+            position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             positionBuilder_.clear();
           }
@@ -21513,7 +25288,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 18: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasPosition()) {
                   subBuilder.mergeFrom(getPosition());
                 }
@@ -21549,20 +25324,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector position = 2;
-        private Netmessages.CMsgVector position_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> positionBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> positionBuilder_;
         public boolean hasPosition() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
-        public Netmessages.CMsgVector getPosition() {
+        public Networkbasetypes.CMsgVector getPosition() {
           if (positionBuilder_ == null) {
             return position_;
           } else {
             return positionBuilder_.getMessage();
           }
         }
-        public Builder setPosition(Netmessages.CMsgVector value) {
+        public Builder setPosition(Networkbasetypes.CMsgVector value) {
           if (positionBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -21576,7 +25351,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setPosition(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (positionBuilder_ == null) {
             position_ = builderForValue.build();
             onChanged();
@@ -21586,12 +25361,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000002;
           return this;
         }
-        public Builder mergePosition(Netmessages.CMsgVector value) {
+        public Builder mergePosition(Networkbasetypes.CMsgVector value) {
           if (positionBuilder_ == null) {
             if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                position_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                position_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               position_ =
-                Netmessages.CMsgVector.newBuilder(position_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(position_).mergeFrom(value).buildPartial();
             } else {
               position_ = value;
             }
@@ -21604,7 +25379,7 @@ public final class DotaUsermessages {
         }
         public Builder clearPosition() {
           if (positionBuilder_ == null) {
-            position_ = Netmessages.CMsgVector.getDefaultInstance();
+            position_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             positionBuilder_.clear();
@@ -21612,12 +25387,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getPositionBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getPositionBuilder() {
           bitField0_ |= 0x00000002;
           onChanged();
           return getPositionFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getPositionOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getPositionOrBuilder() {
           if (positionBuilder_ != null) {
             return positionBuilder_.getMessageOrBuilder();
           } else {
@@ -21625,11 +25400,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getPositionFieldBuilder() {
           if (positionBuilder_ == null) {
             positionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     position_,
                     getParentForChildren(),
                     isClean());
@@ -21658,8 +25433,8 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector origin_offset = 2;
       boolean hasOriginOffset();
-      Netmessages.CMsgVector getOriginOffset();
-      Netmessages.CMsgVectorOrBuilder getOriginOffsetOrBuilder();
+      Networkbasetypes.CMsgVector getOriginOffset();
+      Networkbasetypes.CMsgVectorOrBuilder getOriginOffsetOrBuilder();
     }
     public static final class UpdateParticleOffset extends
         com.google.protobuf.GeneratedMessage
@@ -21702,20 +25477,20 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector origin_offset = 2;
       public static final int ORIGIN_OFFSET_FIELD_NUMBER = 2;
-      private Netmessages.CMsgVector originOffset_;
+      private Networkbasetypes.CMsgVector originOffset_;
       public boolean hasOriginOffset() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgVector getOriginOffset() {
+      public Networkbasetypes.CMsgVector getOriginOffset() {
         return originOffset_;
       }
-      public Netmessages.CMsgVectorOrBuilder getOriginOffsetOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getOriginOffsetOrBuilder() {
         return originOffset_;
       }
       
       private void initFields() {
         controlPoint_ = 0;
-        originOffset_ = Netmessages.CMsgVector.getDefaultInstance();
+        originOffset_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -21880,7 +25655,7 @@ public final class DotaUsermessages {
           controlPoint_ = 0;
           bitField0_ = (bitField0_ & ~0x00000001);
           if (originOffsetBuilder_ == null) {
-            originOffset_ = Netmessages.CMsgVector.getDefaultInstance();
+            originOffset_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             originOffsetBuilder_.clear();
           }
@@ -21994,7 +25769,7 @@ public final class DotaUsermessages {
                 break;
               }
               case 18: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasOriginOffset()) {
                   subBuilder.mergeFrom(getOriginOffset());
                 }
@@ -22030,20 +25805,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector origin_offset = 2;
-        private Netmessages.CMsgVector originOffset_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector originOffset_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> originOffsetBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> originOffsetBuilder_;
         public boolean hasOriginOffset() {
           return ((bitField0_ & 0x00000002) == 0x00000002);
         }
-        public Netmessages.CMsgVector getOriginOffset() {
+        public Networkbasetypes.CMsgVector getOriginOffset() {
           if (originOffsetBuilder_ == null) {
             return originOffset_;
           } else {
             return originOffsetBuilder_.getMessage();
           }
         }
-        public Builder setOriginOffset(Netmessages.CMsgVector value) {
+        public Builder setOriginOffset(Networkbasetypes.CMsgVector value) {
           if (originOffsetBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -22057,7 +25832,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setOriginOffset(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (originOffsetBuilder_ == null) {
             originOffset_ = builderForValue.build();
             onChanged();
@@ -22067,12 +25842,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000002;
           return this;
         }
-        public Builder mergeOriginOffset(Netmessages.CMsgVector value) {
+        public Builder mergeOriginOffset(Networkbasetypes.CMsgVector value) {
           if (originOffsetBuilder_ == null) {
             if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                originOffset_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                originOffset_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               originOffset_ =
-                Netmessages.CMsgVector.newBuilder(originOffset_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(originOffset_).mergeFrom(value).buildPartial();
             } else {
               originOffset_ = value;
             }
@@ -22085,7 +25860,7 @@ public final class DotaUsermessages {
         }
         public Builder clearOriginOffset() {
           if (originOffsetBuilder_ == null) {
-            originOffset_ = Netmessages.CMsgVector.getDefaultInstance();
+            originOffset_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             originOffsetBuilder_.clear();
@@ -22093,12 +25868,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getOriginOffsetBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getOriginOffsetBuilder() {
           bitField0_ |= 0x00000002;
           onChanged();
           return getOriginOffsetFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getOriginOffsetOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getOriginOffsetOrBuilder() {
           if (originOffsetBuilder_ != null) {
             return originOffsetBuilder_.getMessageOrBuilder();
           } else {
@@ -22106,11 +25881,11 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getOriginOffsetFieldBuilder() {
           if (originOffsetBuilder_ == null) {
             originOffsetBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     originOffset_,
                     getParentForChildren(),
                     isClean());
@@ -22151,8 +25926,12 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector fallback_position = 5;
       boolean hasFallbackPosition();
-      Netmessages.CMsgVector getFallbackPosition();
-      Netmessages.CMsgVectorOrBuilder getFallbackPositionOrBuilder();
+      Networkbasetypes.CMsgVector getFallbackPosition();
+      Networkbasetypes.CMsgVectorOrBuilder getFallbackPositionOrBuilder();
+      
+      // optional bool include_wearables = 6;
+      boolean hasIncludeWearables();
+      boolean getIncludeWearables();
     }
     public static final class UpdateParticleEnt extends
         com.google.protobuf.GeneratedMessage
@@ -22225,15 +26004,25 @@ public final class DotaUsermessages {
       
       // optional .CMsgVector fallback_position = 5;
       public static final int FALLBACK_POSITION_FIELD_NUMBER = 5;
-      private Netmessages.CMsgVector fallbackPosition_;
+      private Networkbasetypes.CMsgVector fallbackPosition_;
       public boolean hasFallbackPosition() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
-      public Netmessages.CMsgVector getFallbackPosition() {
+      public Networkbasetypes.CMsgVector getFallbackPosition() {
         return fallbackPosition_;
       }
-      public Netmessages.CMsgVectorOrBuilder getFallbackPositionOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getFallbackPositionOrBuilder() {
         return fallbackPosition_;
+      }
+      
+      // optional bool include_wearables = 6;
+      public static final int INCLUDE_WEARABLES_FIELD_NUMBER = 6;
+      private boolean includeWearables_;
+      public boolean hasIncludeWearables() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      public boolean getIncludeWearables() {
+        return includeWearables_;
       }
       
       private void initFields() {
@@ -22241,7 +26030,8 @@ public final class DotaUsermessages {
         entityHandle_ = 0;
         attachType_ = 0;
         attachment_ = 0;
-        fallbackPosition_ = Netmessages.CMsgVector.getDefaultInstance();
+        fallbackPosition_ = Networkbasetypes.CMsgVector.getDefaultInstance();
+        includeWearables_ = false;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -22269,6 +26059,9 @@ public final class DotaUsermessages {
         }
         if (((bitField0_ & 0x00000010) == 0x00000010)) {
           output.writeMessage(5, fallbackPosition_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeBool(6, includeWearables_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -22298,6 +26091,10 @@ public final class DotaUsermessages {
         if (((bitField0_ & 0x00000010) == 0x00000010)) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(5, fallbackPosition_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(6, includeWearables_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -22433,11 +26230,13 @@ public final class DotaUsermessages {
           attachment_ = 0;
           bitField0_ = (bitField0_ & ~0x00000008);
           if (fallbackPositionBuilder_ == null) {
-            fallbackPosition_ = Netmessages.CMsgVector.getDefaultInstance();
+            fallbackPosition_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           } else {
             fallbackPositionBuilder_.clear();
           }
           bitField0_ = (bitField0_ & ~0x00000010);
+          includeWearables_ = false;
+          bitField0_ = (bitField0_ & ~0x00000020);
           return this;
         }
         
@@ -22500,6 +26299,10 @@ public final class DotaUsermessages {
           } else {
             result.fallbackPosition_ = fallbackPositionBuilder_.build();
           }
+          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          result.includeWearables_ = includeWearables_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -22530,6 +26333,9 @@ public final class DotaUsermessages {
           }
           if (other.hasFallbackPosition()) {
             mergeFallbackPosition(other.getFallbackPosition());
+          }
+          if (other.hasIncludeWearables()) {
+            setIncludeWearables(other.getIncludeWearables());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -22583,12 +26389,17 @@ public final class DotaUsermessages {
                 break;
               }
               case 42: {
-                Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+                Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
                 if (hasFallbackPosition()) {
                   subBuilder.mergeFrom(getFallbackPosition());
                 }
                 input.readMessage(subBuilder, extensionRegistry);
                 setFallbackPosition(subBuilder.buildPartial());
+                break;
+              }
+              case 48: {
+                bitField0_ |= 0x00000020;
+                includeWearables_ = input.readBool();
                 break;
               }
             }
@@ -22682,20 +26493,20 @@ public final class DotaUsermessages {
         }
         
         // optional .CMsgVector fallback_position = 5;
-        private Netmessages.CMsgVector fallbackPosition_ = Netmessages.CMsgVector.getDefaultInstance();
+        private Networkbasetypes.CMsgVector fallbackPosition_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> fallbackPositionBuilder_;
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> fallbackPositionBuilder_;
         public boolean hasFallbackPosition() {
           return ((bitField0_ & 0x00000010) == 0x00000010);
         }
-        public Netmessages.CMsgVector getFallbackPosition() {
+        public Networkbasetypes.CMsgVector getFallbackPosition() {
           if (fallbackPositionBuilder_ == null) {
             return fallbackPosition_;
           } else {
             return fallbackPositionBuilder_.getMessage();
           }
         }
-        public Builder setFallbackPosition(Netmessages.CMsgVector value) {
+        public Builder setFallbackPosition(Networkbasetypes.CMsgVector value) {
           if (fallbackPositionBuilder_ == null) {
             if (value == null) {
               throw new NullPointerException();
@@ -22709,7 +26520,7 @@ public final class DotaUsermessages {
           return this;
         }
         public Builder setFallbackPosition(
-            Netmessages.CMsgVector.Builder builderForValue) {
+            Networkbasetypes.CMsgVector.Builder builderForValue) {
           if (fallbackPositionBuilder_ == null) {
             fallbackPosition_ = builderForValue.build();
             onChanged();
@@ -22719,12 +26530,12 @@ public final class DotaUsermessages {
           bitField0_ |= 0x00000010;
           return this;
         }
-        public Builder mergeFallbackPosition(Netmessages.CMsgVector value) {
+        public Builder mergeFallbackPosition(Networkbasetypes.CMsgVector value) {
           if (fallbackPositionBuilder_ == null) {
             if (((bitField0_ & 0x00000010) == 0x00000010) &&
-                fallbackPosition_ != Netmessages.CMsgVector.getDefaultInstance()) {
+                fallbackPosition_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
               fallbackPosition_ =
-                Netmessages.CMsgVector.newBuilder(fallbackPosition_).mergeFrom(value).buildPartial();
+                Networkbasetypes.CMsgVector.newBuilder(fallbackPosition_).mergeFrom(value).buildPartial();
             } else {
               fallbackPosition_ = value;
             }
@@ -22737,7 +26548,7 @@ public final class DotaUsermessages {
         }
         public Builder clearFallbackPosition() {
           if (fallbackPositionBuilder_ == null) {
-            fallbackPosition_ = Netmessages.CMsgVector.getDefaultInstance();
+            fallbackPosition_ = Networkbasetypes.CMsgVector.getDefaultInstance();
             onChanged();
           } else {
             fallbackPositionBuilder_.clear();
@@ -22745,12 +26556,12 @@ public final class DotaUsermessages {
           bitField0_ = (bitField0_ & ~0x00000010);
           return this;
         }
-        public Netmessages.CMsgVector.Builder getFallbackPositionBuilder() {
+        public Networkbasetypes.CMsgVector.Builder getFallbackPositionBuilder() {
           bitField0_ |= 0x00000010;
           onChanged();
           return getFallbackPositionFieldBuilder().getBuilder();
         }
-        public Netmessages.CMsgVectorOrBuilder getFallbackPositionOrBuilder() {
+        public Networkbasetypes.CMsgVectorOrBuilder getFallbackPositionOrBuilder() {
           if (fallbackPositionBuilder_ != null) {
             return fallbackPositionBuilder_.getMessageOrBuilder();
           } else {
@@ -22758,17 +26569,38 @@ public final class DotaUsermessages {
           }
         }
         private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+            Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
             getFallbackPositionFieldBuilder() {
           if (fallbackPositionBuilder_ == null) {
             fallbackPositionBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+                Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                     fallbackPosition_,
                     getParentForChildren(),
                     isClean());
             fallbackPosition_ = null;
           }
           return fallbackPositionBuilder_;
+        }
+        
+        // optional bool include_wearables = 6;
+        private boolean includeWearables_ ;
+        public boolean hasIncludeWearables() {
+          return ((bitField0_ & 0x00000020) == 0x00000020);
+        }
+        public boolean getIncludeWearables() {
+          return includeWearables_;
+        }
+        public Builder setIncludeWearables(boolean value) {
+          bitField0_ |= 0x00000020;
+          includeWearables_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearIncludeWearables() {
+          bitField0_ = (bitField0_ & ~0x00000020);
+          includeWearables_ = false;
+          onChanged();
+          return this;
         }
         
         // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ParticleManager.UpdateParticleEnt)
@@ -22782,69 +26614,54 @@ public final class DotaUsermessages {
       // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ParticleManager.UpdateParticleEnt)
     }
     
-    public interface UpdateParticleLatencyOrBuilder
+    public interface UpdateParticleSetFrozenOrBuilder
         extends com.google.protobuf.MessageOrBuilder {
       
-      // optional int32 player_latency = 1;
-      boolean hasPlayerLatency();
-      int getPlayerLatency();
-      
-      // optional int32 tick = 2;
-      boolean hasTick();
-      int getTick();
+      // optional bool set_frozen = 1;
+      boolean hasSetFrozen();
+      boolean getSetFrozen();
     }
-    public static final class UpdateParticleLatency extends
+    public static final class UpdateParticleSetFrozen extends
         com.google.protobuf.GeneratedMessage
-        implements UpdateParticleLatencyOrBuilder {
-      // Use UpdateParticleLatency.newBuilder() to construct.
-      private UpdateParticleLatency(Builder builder) {
+        implements UpdateParticleSetFrozenOrBuilder {
+      // Use UpdateParticleSetFrozen.newBuilder() to construct.
+      private UpdateParticleSetFrozen(Builder builder) {
         super(builder);
       }
-      private UpdateParticleLatency(boolean noInit) {}
+      private UpdateParticleSetFrozen(boolean noInit) {}
       
-      private static final UpdateParticleLatency defaultInstance;
-      public static UpdateParticleLatency getDefaultInstance() {
+      private static final UpdateParticleSetFrozen defaultInstance;
+      public static UpdateParticleSetFrozen getDefaultInstance() {
         return defaultInstance;
       }
       
-      public UpdateParticleLatency getDefaultInstanceForType() {
+      public UpdateParticleSetFrozen getDefaultInstanceForType() {
         return defaultInstance;
       }
       
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_descriptor;
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_fieldAccessorTable;
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_fieldAccessorTable;
       }
       
       private int bitField0_;
-      // optional int32 player_latency = 1;
-      public static final int PLAYER_LATENCY_FIELD_NUMBER = 1;
-      private int playerLatency_;
-      public boolean hasPlayerLatency() {
+      // optional bool set_frozen = 1;
+      public static final int SET_FROZEN_FIELD_NUMBER = 1;
+      private boolean setFrozen_;
+      public boolean hasSetFrozen() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public int getPlayerLatency() {
-        return playerLatency_;
-      }
-      
-      // optional int32 tick = 2;
-      public static final int TICK_FIELD_NUMBER = 2;
-      private int tick_;
-      public boolean hasTick() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public int getTick() {
-        return tick_;
+      public boolean getSetFrozen() {
+        return setFrozen_;
       }
       
       private void initFields() {
-        playerLatency_ = 0;
-        tick_ = 0;
+        setFrozen_ = false;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -22859,10 +26676,7 @@ public final class DotaUsermessages {
                           throws java.io.IOException {
         getSerializedSize();
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeInt32(1, playerLatency_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeInt32(2, tick_);
+          output.writeBool(1, setFrozen_);
         }
         getUnknownFields().writeTo(output);
       }
@@ -22875,11 +26689,7 @@ public final class DotaUsermessages {
         size = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
           size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(1, playerLatency_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(2, tick_);
+            .computeBoolSize(1, setFrozen_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -22893,41 +26703,41 @@ public final class DotaUsermessages {
         return super.writeReplace();
       }
       
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           com.google.protobuf.ByteString data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data).buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           com.google.protobuf.ByteString data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data, extensionRegistry)
                  .buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(byte[] data)
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(byte[] data)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data).buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           byte[] data,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
         return newBuilder().mergeFrom(data, extensionRegistry)
                  .buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(java.io.InputStream input)
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(java.io.InputStream input)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input).buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input, extensionRegistry)
                  .buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseDelimitedFrom(java.io.InputStream input)
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseDelimitedFrom(java.io.InputStream input)
           throws java.io.IOException {
         Builder builder = newBuilder();
         if (builder.mergeDelimitedFrom(input)) {
@@ -22936,7 +26746,7 @@ public final class DotaUsermessages {
           return null;
         }
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseDelimitedFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseDelimitedFrom(
           java.io.InputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -22947,12 +26757,12 @@ public final class DotaUsermessages {
           return null;
         }
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           com.google.protobuf.CodedInputStream input)
           throws java.io.IOException {
         return newBuilder().mergeFrom(input).buildParsed();
       }
-      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency parseFrom(
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen parseFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
@@ -22962,7 +26772,7 @@ public final class DotaUsermessages {
       
       public static Builder newBuilder() { return Builder.create(); }
       public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency prototype) {
+      public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen prototype) {
         return newBuilder().mergeFrom(prototype);
       }
       public Builder toBuilder() { return newBuilder(this); }
@@ -22975,18 +26785,18 @@ public final class DotaUsermessages {
       }
       public static final class Builder extends
           com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder {
+         implements DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder {
         public static final com.google.protobuf.Descriptors.Descriptor
             getDescriptor() {
-          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_descriptor;
+          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_descriptor;
         }
         
         protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
             internalGetFieldAccessorTable() {
-          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_fieldAccessorTable;
+          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_fieldAccessorTable;
         }
         
-        // Construct using DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.newBuilder()
+        // Construct using DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.newBuilder()
         private Builder() {
           maybeForceBuilderInitialization();
         }
@@ -23005,10 +26815,8 @@ public final class DotaUsermessages {
         
         public Builder clear() {
           super.clear();
-          playerLatency_ = 0;
+          setFrozen_ = false;
           bitField0_ = (bitField0_ & ~0x00000001);
-          tick_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000002);
           return this;
         }
         
@@ -23018,24 +26826,24 @@ public final class DotaUsermessages {
         
         public com.google.protobuf.Descriptors.Descriptor
             getDescriptorForType() {
-          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDescriptor();
+          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDescriptor();
         }
         
-        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency getDefaultInstanceForType() {
-          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance();
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen getDefaultInstanceForType() {
+          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance();
         }
         
-        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency build() {
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency result = buildPartial();
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen build() {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(result);
           }
           return result;
         }
         
-        private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency buildParsed()
+        private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen buildParsed()
             throws com.google.protobuf.InvalidProtocolBufferException {
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency result = buildPartial();
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen result = buildPartial();
           if (!result.isInitialized()) {
             throw newUninitializedMessageException(
               result).asInvalidProtocolBufferException();
@@ -23043,39 +26851,32 @@ public final class DotaUsermessages {
           return result;
         }
         
-        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency buildPartial() {
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency result = new DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency(this);
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen buildPartial() {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen result = new DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen(this);
           int from_bitField0_ = bitField0_;
           int to_bitField0_ = 0;
           if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
             to_bitField0_ |= 0x00000001;
           }
-          result.playerLatency_ = playerLatency_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          result.tick_ = tick_;
+          result.setFrozen_ = setFrozen_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
         }
         
         public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency) {
-            return mergeFrom((DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency)other);
+          if (other instanceof DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen) {
+            return mergeFrom((DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen)other);
           } else {
             super.mergeFrom(other);
             return this;
           }
         }
         
-        public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency other) {
-          if (other == DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance()) return this;
-          if (other.hasPlayerLatency()) {
-            setPlayerLatency(other.getPlayerLatency());
-          }
-          if (other.hasTick()) {
-            setTick(other.getTick());
+        public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen other) {
+          if (other == DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance()) return this;
+          if (other.hasSetFrozen()) {
+            setSetFrozen(other.getSetFrozen());
           }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
@@ -23110,12 +26911,7 @@ public final class DotaUsermessages {
               }
               case 8: {
                 bitField0_ |= 0x00000001;
-                playerLatency_ = input.readInt32();
-                break;
-              }
-              case 16: {
-                bitField0_ |= 0x00000002;
-                tick_ = input.readInt32();
+                setFrozen_ = input.readBool();
                 break;
               }
             }
@@ -23124,61 +26920,378 @@ public final class DotaUsermessages {
         
         private int bitField0_;
         
-        // optional int32 player_latency = 1;
-        private int playerLatency_ ;
-        public boolean hasPlayerLatency() {
+        // optional bool set_frozen = 1;
+        private boolean setFrozen_ ;
+        public boolean hasSetFrozen() {
           return ((bitField0_ & 0x00000001) == 0x00000001);
         }
-        public int getPlayerLatency() {
-          return playerLatency_;
+        public boolean getSetFrozen() {
+          return setFrozen_;
         }
-        public Builder setPlayerLatency(int value) {
+        public Builder setSetFrozen(boolean value) {
           bitField0_ |= 0x00000001;
-          playerLatency_ = value;
+          setFrozen_ = value;
           onChanged();
           return this;
         }
-        public Builder clearPlayerLatency() {
+        public Builder clearSetFrozen() {
           bitField0_ = (bitField0_ & ~0x00000001);
-          playerLatency_ = 0;
+          setFrozen_ = false;
           onChanged();
           return this;
         }
         
-        // optional int32 tick = 2;
-        private int tick_ ;
-        public boolean hasTick() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        public int getTick() {
-          return tick_;
-        }
-        public Builder setTick(int value) {
-          bitField0_ |= 0x00000002;
-          tick_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearTick() {
-          bitField0_ = (bitField0_ & ~0x00000002);
-          tick_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ParticleManager.UpdateParticleLatency)
+        // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen)
       }
       
       static {
-        defaultInstance = new UpdateParticleLatency(true);
+        defaultInstance = new UpdateParticleSetFrozen(true);
         defaultInstance.initFields();
       }
       
-      // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ParticleManager.UpdateParticleLatency)
+      // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen)
+    }
+    
+    public interface UpdateParticleShouldDrawOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+      
+      // optional bool should_draw = 1;
+      boolean hasShouldDraw();
+      boolean getShouldDraw();
+    }
+    public static final class UpdateParticleShouldDraw extends
+        com.google.protobuf.GeneratedMessage
+        implements UpdateParticleShouldDrawOrBuilder {
+      // Use UpdateParticleShouldDraw.newBuilder() to construct.
+      private UpdateParticleShouldDraw(Builder builder) {
+        super(builder);
+      }
+      private UpdateParticleShouldDraw(boolean noInit) {}
+      
+      private static final UpdateParticleShouldDraw defaultInstance;
+      public static UpdateParticleShouldDraw getDefaultInstance() {
+        return defaultInstance;
+      }
+      
+      public UpdateParticleShouldDraw getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+      
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_fieldAccessorTable;
+      }
+      
+      private int bitField0_;
+      // optional bool should_draw = 1;
+      public static final int SHOULD_DRAW_FIELD_NUMBER = 1;
+      private boolean shouldDraw_;
+      public boolean hasShouldDraw() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public boolean getShouldDraw() {
+        return shouldDraw_;
+      }
+      
+      private void initFields() {
+        shouldDraw_ = false;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+        
+        memoizedIsInitialized = 1;
+        return true;
+      }
+      
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBool(1, shouldDraw_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+      
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+      
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBoolSize(1, shouldDraw_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+      
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+      
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return newBuilder().mergeFrom(data, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        Builder builder = newBuilder();
+        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+          return builder.buildParsed();
+        } else {
+          return null;
+        }
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input).buildParsed();
+      }
+      public static DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return newBuilder().mergeFrom(input, extensionRegistry)
+                 .buildParsed();
+      }
+      
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+      
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_descriptor;
+        }
+        
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return DotaUsermessages.internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_fieldAccessorTable;
+        }
+        
+        // Construct using DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+        
+        private Builder(BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+        
+        public Builder clear() {
+          super.clear();
+          shouldDraw_ = false;
+          bitField0_ = (bitField0_ & ~0x00000001);
+          return this;
+        }
+        
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+        
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDescriptor();
+        }
+        
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw getDefaultInstanceForType() {
+          return DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance();
+        }
+        
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw build() {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+        
+        private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw buildParsed()
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(
+              result).asInvalidProtocolBufferException();
+          }
+          return result;
+        }
+        
+        public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw buildPartial() {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw result = new DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.shouldDraw_ = shouldDraw_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+        
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw) {
+            return mergeFrom((DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+        
+        public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw other) {
+          if (other == DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance()) return this;
+          if (other.hasShouldDraw()) {
+            setShouldDraw(other.getShouldDraw());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+        
+        public final boolean isInitialized() {
+          return true;
+        }
+        
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder(
+              this.getUnknownFields());
+          while (true) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                }
+                break;
+              }
+              case 8: {
+                bitField0_ |= 0x00000001;
+                shouldDraw_ = input.readBool();
+                break;
+              }
+            }
+          }
+        }
+        
+        private int bitField0_;
+        
+        // optional bool should_draw = 1;
+        private boolean shouldDraw_ ;
+        public boolean hasShouldDraw() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        public boolean getShouldDraw() {
+          return shouldDraw_;
+        }
+        public Builder setShouldDraw(boolean value) {
+          bitField0_ |= 0x00000001;
+          shouldDraw_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearShouldDraw() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          shouldDraw_ = false;
+          onChanged();
+          return this;
+        }
+        
+        // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw)
+      }
+      
+      static {
+        defaultInstance = new UpdateParticleShouldDraw(true);
+        defaultInstance.initFields();
+      }
+      
+      // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw)
     }
     
     private int bitField0_;
-    // required .DOTA_PARTICLE_MESSAGE type = 1;
+    // required .DOTA_PARTICLE_MESSAGE type = 1 [default = DOTA_PARTICLE_MANAGER_EVENT_CREATE];
     public static final int TYPE_FIELD_NUMBER = 1;
     private DotaUsermessages.DOTA_PARTICLE_MESSAGE type_;
     public boolean hasType() {
@@ -23328,17 +27441,30 @@ public final class DotaUsermessages {
       return updateParticleEnt_;
     }
     
-    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleLatency update_particle_latency = 13;
-    public static final int UPDATE_PARTICLE_LATENCY_FIELD_NUMBER = 13;
-    private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency updateParticleLatency_;
-    public boolean hasUpdateParticleLatency() {
+    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw update_particle_should_draw = 14;
+    public static final int UPDATE_PARTICLE_SHOULD_DRAW_FIELD_NUMBER = 14;
+    private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw updateParticleShouldDraw_;
+    public boolean hasUpdateParticleShouldDraw() {
       return ((bitField0_ & 0x00001000) == 0x00001000);
     }
-    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency getUpdateParticleLatency() {
-      return updateParticleLatency_;
+    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw getUpdateParticleShouldDraw() {
+      return updateParticleShouldDraw_;
     }
-    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder getUpdateParticleLatencyOrBuilder() {
-      return updateParticleLatency_;
+    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder getUpdateParticleShouldDrawOrBuilder() {
+      return updateParticleShouldDraw_;
+    }
+    
+    // optional .CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen update_particle_set_frozen = 15;
+    public static final int UPDATE_PARTICLE_SET_FROZEN_FIELD_NUMBER = 15;
+    private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen updateParticleSetFrozen_;
+    public boolean hasUpdateParticleSetFrozen() {
+      return ((bitField0_ & 0x00002000) == 0x00002000);
+    }
+    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen getUpdateParticleSetFrozen() {
+      return updateParticleSetFrozen_;
+    }
+    public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder getUpdateParticleSetFrozenOrBuilder() {
+      return updateParticleSetFrozen_;
     }
     
     private void initFields() {
@@ -23354,7 +27480,8 @@ public final class DotaUsermessages {
       updateParticleFallback_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleFallback.getDefaultInstance();
       updateParticleOffset_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleOffset.getDefaultInstance();
       updateParticleEnt_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleEnt.getDefaultInstance();
-      updateParticleLatency_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance();
+      updateParticleShouldDraw_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance();
+      updateParticleSetFrozen_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -23413,7 +27540,10 @@ public final class DotaUsermessages {
         output.writeMessage(12, updateParticleEnt_);
       }
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
-        output.writeMessage(13, updateParticleLatency_);
+        output.writeMessage(14, updateParticleShouldDraw_);
+      }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        output.writeMessage(15, updateParticleSetFrozen_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -23474,7 +27604,11 @@ public final class DotaUsermessages {
       }
       if (((bitField0_ & 0x00001000) == 0x00001000)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(13, updateParticleLatency_);
+          .computeMessageSize(14, updateParticleShouldDraw_);
+      }
+      if (((bitField0_ & 0x00002000) == 0x00002000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(15, updateParticleSetFrozen_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -23602,7 +27736,8 @@ public final class DotaUsermessages {
           getUpdateParticleFallbackFieldBuilder();
           getUpdateParticleOffsetFieldBuilder();
           getUpdateParticleEntFieldBuilder();
-          getUpdateParticleLatencyFieldBuilder();
+          getUpdateParticleShouldDrawFieldBuilder();
+          getUpdateParticleSetFrozenFieldBuilder();
         }
       }
       private static Builder create() {
@@ -23675,12 +27810,18 @@ public final class DotaUsermessages {
           updateParticleEntBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00000800);
-        if (updateParticleLatencyBuilder_ == null) {
-          updateParticleLatency_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance();
+        if (updateParticleShouldDrawBuilder_ == null) {
+          updateParticleShouldDraw_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance();
         } else {
-          updateParticleLatencyBuilder_.clear();
+          updateParticleShouldDrawBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00001000);
+        if (updateParticleSetFrozenBuilder_ == null) {
+          updateParticleSetFrozen_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance();
+        } else {
+          updateParticleSetFrozenBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00002000);
         return this;
       }
       
@@ -23810,10 +27951,18 @@ public final class DotaUsermessages {
         if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
           to_bitField0_ |= 0x00001000;
         }
-        if (updateParticleLatencyBuilder_ == null) {
-          result.updateParticleLatency_ = updateParticleLatency_;
+        if (updateParticleShouldDrawBuilder_ == null) {
+          result.updateParticleShouldDraw_ = updateParticleShouldDraw_;
         } else {
-          result.updateParticleLatency_ = updateParticleLatencyBuilder_.build();
+          result.updateParticleShouldDraw_ = updateParticleShouldDrawBuilder_.build();
+        }
+        if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+          to_bitField0_ |= 0x00002000;
+        }
+        if (updateParticleSetFrozenBuilder_ == null) {
+          result.updateParticleSetFrozen_ = updateParticleSetFrozen_;
+        } else {
+          result.updateParticleSetFrozen_ = updateParticleSetFrozenBuilder_.build();
         }
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -23867,8 +28016,11 @@ public final class DotaUsermessages {
         if (other.hasUpdateParticleEnt()) {
           mergeUpdateParticleEnt(other.getUpdateParticleEnt());
         }
-        if (other.hasUpdateParticleLatency()) {
-          mergeUpdateParticleLatency(other.getUpdateParticleLatency());
+        if (other.hasUpdateParticleShouldDraw()) {
+          mergeUpdateParticleShouldDraw(other.getUpdateParticleShouldDraw());
+        }
+        if (other.hasUpdateParticleSetFrozen()) {
+          mergeUpdateParticleSetFrozen(other.getUpdateParticleSetFrozen());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -24015,13 +28167,22 @@ public final class DotaUsermessages {
               setUpdateParticleEnt(subBuilder.buildPartial());
               break;
             }
-            case 106: {
-              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder subBuilder = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.newBuilder();
-              if (hasUpdateParticleLatency()) {
-                subBuilder.mergeFrom(getUpdateParticleLatency());
+            case 114: {
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder subBuilder = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.newBuilder();
+              if (hasUpdateParticleShouldDraw()) {
+                subBuilder.mergeFrom(getUpdateParticleShouldDraw());
               }
               input.readMessage(subBuilder, extensionRegistry);
-              setUpdateParticleLatency(subBuilder.buildPartial());
+              setUpdateParticleShouldDraw(subBuilder.buildPartial());
+              break;
+            }
+            case 122: {
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder subBuilder = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.newBuilder();
+              if (hasUpdateParticleSetFrozen()) {
+                subBuilder.mergeFrom(getUpdateParticleSetFrozen());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setUpdateParticleSetFrozen(subBuilder.buildPartial());
               break;
             }
           }
@@ -24030,7 +28191,7 @@ public final class DotaUsermessages {
       
       private int bitField0_;
       
-      // required .DOTA_PARTICLE_MESSAGE type = 1;
+      // required .DOTA_PARTICLE_MESSAGE type = 1 [default = DOTA_PARTICLE_MANAGER_EVENT_CREATE];
       private DotaUsermessages.DOTA_PARTICLE_MESSAGE type_ = DotaUsermessages.DOTA_PARTICLE_MESSAGE.DOTA_PARTICLE_MANAGER_EVENT_CREATE;
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -24975,94 +29136,184 @@ public final class DotaUsermessages {
         return updateParticleEntBuilder_;
       }
       
-      // optional .CDOTAUserMsg_ParticleManager.UpdateParticleLatency update_particle_latency = 13;
-      private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency updateParticleLatency_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance();
+      // optional .CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw update_particle_should_draw = 14;
+      private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw updateParticleShouldDraw_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder> updateParticleLatencyBuilder_;
-      public boolean hasUpdateParticleLatency() {
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder> updateParticleShouldDrawBuilder_;
+      public boolean hasUpdateParticleShouldDraw() {
         return ((bitField0_ & 0x00001000) == 0x00001000);
       }
-      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency getUpdateParticleLatency() {
-        if (updateParticleLatencyBuilder_ == null) {
-          return updateParticleLatency_;
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw getUpdateParticleShouldDraw() {
+        if (updateParticleShouldDrawBuilder_ == null) {
+          return updateParticleShouldDraw_;
         } else {
-          return updateParticleLatencyBuilder_.getMessage();
+          return updateParticleShouldDrawBuilder_.getMessage();
         }
       }
-      public Builder setUpdateParticleLatency(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency value) {
-        if (updateParticleLatencyBuilder_ == null) {
+      public Builder setUpdateParticleShouldDraw(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw value) {
+        if (updateParticleShouldDrawBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
           }
-          updateParticleLatency_ = value;
+          updateParticleShouldDraw_ = value;
           onChanged();
         } else {
-          updateParticleLatencyBuilder_.setMessage(value);
+          updateParticleShouldDrawBuilder_.setMessage(value);
         }
         bitField0_ |= 0x00001000;
         return this;
       }
-      public Builder setUpdateParticleLatency(
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder builderForValue) {
-        if (updateParticleLatencyBuilder_ == null) {
-          updateParticleLatency_ = builderForValue.build();
+      public Builder setUpdateParticleShouldDraw(
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder builderForValue) {
+        if (updateParticleShouldDrawBuilder_ == null) {
+          updateParticleShouldDraw_ = builderForValue.build();
           onChanged();
         } else {
-          updateParticleLatencyBuilder_.setMessage(builderForValue.build());
+          updateParticleShouldDrawBuilder_.setMessage(builderForValue.build());
         }
         bitField0_ |= 0x00001000;
         return this;
       }
-      public Builder mergeUpdateParticleLatency(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency value) {
-        if (updateParticleLatencyBuilder_ == null) {
+      public Builder mergeUpdateParticleShouldDraw(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw value) {
+        if (updateParticleShouldDrawBuilder_ == null) {
           if (((bitField0_ & 0x00001000) == 0x00001000) &&
-              updateParticleLatency_ != DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance()) {
-            updateParticleLatency_ =
-              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.newBuilder(updateParticleLatency_).mergeFrom(value).buildPartial();
+              updateParticleShouldDraw_ != DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance()) {
+            updateParticleShouldDraw_ =
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.newBuilder(updateParticleShouldDraw_).mergeFrom(value).buildPartial();
           } else {
-            updateParticleLatency_ = value;
+            updateParticleShouldDraw_ = value;
           }
           onChanged();
         } else {
-          updateParticleLatencyBuilder_.mergeFrom(value);
+          updateParticleShouldDrawBuilder_.mergeFrom(value);
         }
         bitField0_ |= 0x00001000;
         return this;
       }
-      public Builder clearUpdateParticleLatency() {
-        if (updateParticleLatencyBuilder_ == null) {
-          updateParticleLatency_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.getDefaultInstance();
+      public Builder clearUpdateParticleShouldDraw() {
+        if (updateParticleShouldDrawBuilder_ == null) {
+          updateParticleShouldDraw_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.getDefaultInstance();
           onChanged();
         } else {
-          updateParticleLatencyBuilder_.clear();
+          updateParticleShouldDrawBuilder_.clear();
         }
         bitField0_ = (bitField0_ & ~0x00001000);
         return this;
       }
-      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder getUpdateParticleLatencyBuilder() {
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder getUpdateParticleShouldDrawBuilder() {
         bitField0_ |= 0x00001000;
         onChanged();
-        return getUpdateParticleLatencyFieldBuilder().getBuilder();
+        return getUpdateParticleShouldDrawFieldBuilder().getBuilder();
       }
-      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder getUpdateParticleLatencyOrBuilder() {
-        if (updateParticleLatencyBuilder_ != null) {
-          return updateParticleLatencyBuilder_.getMessageOrBuilder();
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder getUpdateParticleShouldDrawOrBuilder() {
+        if (updateParticleShouldDrawBuilder_ != null) {
+          return updateParticleShouldDrawBuilder_.getMessageOrBuilder();
         } else {
-          return updateParticleLatency_;
+          return updateParticleShouldDraw_;
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder> 
-          getUpdateParticleLatencyFieldBuilder() {
-        if (updateParticleLatencyBuilder_ == null) {
-          updateParticleLatencyBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatencyOrBuilder>(
-                  updateParticleLatency_,
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder> 
+          getUpdateParticleShouldDrawFieldBuilder() {
+        if (updateParticleShouldDrawBuilder_ == null) {
+          updateParticleShouldDrawBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDrawOrBuilder>(
+                  updateParticleShouldDraw_,
                   getParentForChildren(),
                   isClean());
-          updateParticleLatency_ = null;
+          updateParticleShouldDraw_ = null;
         }
-        return updateParticleLatencyBuilder_;
+        return updateParticleShouldDrawBuilder_;
+      }
+      
+      // optional .CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen update_particle_set_frozen = 15;
+      private DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen updateParticleSetFrozen_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder> updateParticleSetFrozenBuilder_;
+      public boolean hasUpdateParticleSetFrozen() {
+        return ((bitField0_ & 0x00002000) == 0x00002000);
+      }
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen getUpdateParticleSetFrozen() {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          return updateParticleSetFrozen_;
+        } else {
+          return updateParticleSetFrozenBuilder_.getMessage();
+        }
+      }
+      public Builder setUpdateParticleSetFrozen(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen value) {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          updateParticleSetFrozen_ = value;
+          onChanged();
+        } else {
+          updateParticleSetFrozenBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      public Builder setUpdateParticleSetFrozen(
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder builderForValue) {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          updateParticleSetFrozen_ = builderForValue.build();
+          onChanged();
+        } else {
+          updateParticleSetFrozenBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      public Builder mergeUpdateParticleSetFrozen(DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen value) {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          if (((bitField0_ & 0x00002000) == 0x00002000) &&
+              updateParticleSetFrozen_ != DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance()) {
+            updateParticleSetFrozen_ =
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.newBuilder(updateParticleSetFrozen_).mergeFrom(value).buildPartial();
+          } else {
+            updateParticleSetFrozen_ = value;
+          }
+          onChanged();
+        } else {
+          updateParticleSetFrozenBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00002000;
+        return this;
+      }
+      public Builder clearUpdateParticleSetFrozen() {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          updateParticleSetFrozen_ = DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.getDefaultInstance();
+          onChanged();
+        } else {
+          updateParticleSetFrozenBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00002000);
+        return this;
+      }
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder getUpdateParticleSetFrozenBuilder() {
+        bitField0_ |= 0x00002000;
+        onChanged();
+        return getUpdateParticleSetFrozenFieldBuilder().getBuilder();
+      }
+      public DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder getUpdateParticleSetFrozenOrBuilder() {
+        if (updateParticleSetFrozenBuilder_ != null) {
+          return updateParticleSetFrozenBuilder_.getMessageOrBuilder();
+        } else {
+          return updateParticleSetFrozen_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder> 
+          getUpdateParticleSetFrozenFieldBuilder() {
+        if (updateParticleSetFrozenBuilder_ == null) {
+          updateParticleSetFrozenBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder, DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozenOrBuilder>(
+                  updateParticleSetFrozen_,
+                  getParentForChildren(),
+                  isClean());
+          updateParticleSetFrozen_ = null;
+        }
+        return updateParticleSetFrozenBuilder_;
       }
       
       // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ParticleManager)
@@ -25079,7 +29330,7 @@ public final class DotaUsermessages {
   public interface CDOTAUserMsg_OverheadEventOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // required .DOTA_OVERHEAD_ALERT message_type = 1;
+    // required .DOTA_OVERHEAD_ALERT message_type = 1 [default = OVERHEAD_ALERT_GOLD];
     boolean hasMessageType();
     DotaUsermessages.DOTA_OVERHEAD_ALERT getMessageType();
     
@@ -25128,7 +29379,7 @@ public final class DotaUsermessages {
     }
     
     private int bitField0_;
-    // required .DOTA_OVERHEAD_ALERT message_type = 1;
+    // required .DOTA_OVERHEAD_ALERT message_type = 1 [default = OVERHEAD_ALERT_GOLD];
     public static final int MESSAGE_TYPE_FIELD_NUMBER = 1;
     private DotaUsermessages.DOTA_OVERHEAD_ALERT messageType_;
     public boolean hasMessageType() {
@@ -25540,7 +29791,7 @@ public final class DotaUsermessages {
       
       private int bitField0_;
       
-      // required .DOTA_OVERHEAD_ALERT message_type = 1;
+      // required .DOTA_OVERHEAD_ALERT message_type = 1 [default = OVERHEAD_ALERT_GOLD];
       private DotaUsermessages.DOTA_OVERHEAD_ALERT messageType_ = DotaUsermessages.DOTA_OVERHEAD_ALERT.OVERHEAD_ALERT_GOLD;
       public boolean hasMessageType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -26091,6 +30342,8559 @@ public final class DotaUsermessages {
     // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialTipInfo)
   }
   
+  public interface CDOTAUserMsg_TutorialFinishOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string heading = 1;
+    boolean hasHeading();
+    String getHeading();
+    
+    // optional string emblem = 2;
+    boolean hasEmblem();
+    String getEmblem();
+    
+    // optional string body = 3;
+    boolean hasBody();
+    String getBody();
+    
+    // optional bool success = 4;
+    boolean hasSuccess();
+    boolean getSuccess();
+  }
+  public static final class CDOTAUserMsg_TutorialFinish extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_TutorialFinishOrBuilder {
+    // Use CDOTAUserMsg_TutorialFinish.newBuilder() to construct.
+    private CDOTAUserMsg_TutorialFinish(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_TutorialFinish(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_TutorialFinish defaultInstance;
+    public static CDOTAUserMsg_TutorialFinish getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_TutorialFinish getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFinish_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFinish_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string heading = 1;
+    public static final int HEADING_FIELD_NUMBER = 1;
+    private java.lang.Object heading_;
+    public boolean hasHeading() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getHeading() {
+      java.lang.Object ref = heading_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          heading_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getHeadingBytes() {
+      java.lang.Object ref = heading_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        heading_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional string emblem = 2;
+    public static final int EMBLEM_FIELD_NUMBER = 2;
+    private java.lang.Object emblem_;
+    public boolean hasEmblem() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getEmblem() {
+      java.lang.Object ref = emblem_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          emblem_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getEmblemBytes() {
+      java.lang.Object ref = emblem_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        emblem_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional string body = 3;
+    public static final int BODY_FIELD_NUMBER = 3;
+    private java.lang.Object body_;
+    public boolean hasBody() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public String getBody() {
+      java.lang.Object ref = body_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          body_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getBodyBytes() {
+      java.lang.Object ref = body_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        body_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional bool success = 4;
+    public static final int SUCCESS_FIELD_NUMBER = 4;
+    private boolean success_;
+    public boolean hasSuccess() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public boolean getSuccess() {
+      return success_;
+    }
+    
+    private void initFields() {
+      heading_ = "";
+      emblem_ = "";
+      body_ = "";
+      success_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getHeadingBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getEmblemBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getBodyBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(4, success_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getHeadingBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getEmblemBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getBodyBytes());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, success_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFinish parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_TutorialFinish prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_TutorialFinishOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFinish_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFinish_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_TutorialFinish.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        heading_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        emblem_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        body_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        success_ = false;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialFinish.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFinish getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialFinish.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFinish build() {
+        DotaUsermessages.CDOTAUserMsg_TutorialFinish result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_TutorialFinish buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_TutorialFinish result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFinish buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_TutorialFinish result = new DotaUsermessages.CDOTAUserMsg_TutorialFinish(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.heading_ = heading_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.emblem_ = emblem_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.body_ = body_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.success_ = success_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_TutorialFinish) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_TutorialFinish)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_TutorialFinish other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_TutorialFinish.getDefaultInstance()) return this;
+        if (other.hasHeading()) {
+          setHeading(other.getHeading());
+        }
+        if (other.hasEmblem()) {
+          setEmblem(other.getEmblem());
+        }
+        if (other.hasBody()) {
+          setBody(other.getBody());
+        }
+        if (other.hasSuccess()) {
+          setSuccess(other.getSuccess());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              heading_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              emblem_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              body_ = input.readBytes();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              success_ = input.readBool();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string heading = 1;
+      private java.lang.Object heading_ = "";
+      public boolean hasHeading() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getHeading() {
+        java.lang.Object ref = heading_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          heading_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setHeading(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        heading_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearHeading() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        heading_ = getDefaultInstance().getHeading();
+        onChanged();
+        return this;
+      }
+      void setHeading(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        heading_ = value;
+        onChanged();
+      }
+      
+      // optional string emblem = 2;
+      private java.lang.Object emblem_ = "";
+      public boolean hasEmblem() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getEmblem() {
+        java.lang.Object ref = emblem_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          emblem_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setEmblem(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        emblem_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearEmblem() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        emblem_ = getDefaultInstance().getEmblem();
+        onChanged();
+        return this;
+      }
+      void setEmblem(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        emblem_ = value;
+        onChanged();
+      }
+      
+      // optional string body = 3;
+      private java.lang.Object body_ = "";
+      public boolean hasBody() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public String getBody() {
+        java.lang.Object ref = body_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          body_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setBody(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        body_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearBody() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        body_ = getDefaultInstance().getBody();
+        onChanged();
+        return this;
+      }
+      void setBody(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000004;
+        body_ = value;
+        onChanged();
+      }
+      
+      // optional bool success = 4;
+      private boolean success_ ;
+      public boolean hasSuccess() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public boolean getSuccess() {
+        return success_;
+      }
+      public Builder setSuccess(boolean value) {
+        bitField0_ |= 0x00000008;
+        success_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSuccess() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        success_ = false;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_TutorialFinish)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_TutorialFinish(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialFinish)
+  }
+  
+  public interface CDOTAUserMsg_SendGenericToolTipOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string title = 1;
+    boolean hasTitle();
+    String getTitle();
+    
+    // optional string text = 2;
+    boolean hasText();
+    String getText();
+    
+    // optional int32 entindex = 3;
+    boolean hasEntindex();
+    int getEntindex();
+    
+    // optional bool close = 4;
+    boolean hasClose();
+    boolean getClose();
+  }
+  public static final class CDOTAUserMsg_SendGenericToolTip extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_SendGenericToolTipOrBuilder {
+    // Use CDOTAUserMsg_SendGenericToolTip.newBuilder() to construct.
+    private CDOTAUserMsg_SendGenericToolTip(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_SendGenericToolTip(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_SendGenericToolTip defaultInstance;
+    public static CDOTAUserMsg_SendGenericToolTip getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_SendGenericToolTip getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendGenericToolTip_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendGenericToolTip_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string title = 1;
+    public static final int TITLE_FIELD_NUMBER = 1;
+    private java.lang.Object title_;
+    public boolean hasTitle() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getTitle() {
+      java.lang.Object ref = title_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          title_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTitleBytes() {
+      java.lang.Object ref = title_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        title_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional string text = 2;
+    public static final int TEXT_FIELD_NUMBER = 2;
+    private java.lang.Object text_;
+    public boolean hasText() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getText() {
+      java.lang.Object ref = text_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          text_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getTextBytes() {
+      java.lang.Object ref = text_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        text_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional int32 entindex = 3;
+    public static final int ENTINDEX_FIELD_NUMBER = 3;
+    private int entindex_;
+    public boolean hasEntindex() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getEntindex() {
+      return entindex_;
+    }
+    
+    // optional bool close = 4;
+    public static final int CLOSE_FIELD_NUMBER = 4;
+    private boolean close_;
+    public boolean hasClose() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public boolean getClose() {
+      return close_;
+    }
+    
+    private void initFields() {
+      title_ = "";
+      text_ = "";
+      entindex_ = 0;
+      close_ = false;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getTitleBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getTextBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, entindex_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBool(4, close_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getTitleBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getTextBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, entindex_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(4, close_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendGenericToolTip parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_SendGenericToolTip prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_SendGenericToolTipOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendGenericToolTip_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendGenericToolTip_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        title_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        text_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        entindex_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        close_ = false;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendGenericToolTip getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendGenericToolTip build() {
+        DotaUsermessages.CDOTAUserMsg_SendGenericToolTip result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_SendGenericToolTip buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_SendGenericToolTip result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendGenericToolTip buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_SendGenericToolTip result = new DotaUsermessages.CDOTAUserMsg_SendGenericToolTip(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.title_ = title_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.text_ = text_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.entindex_ = entindex_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.close_ = close_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_SendGenericToolTip) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_SendGenericToolTip)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_SendGenericToolTip other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.getDefaultInstance()) return this;
+        if (other.hasTitle()) {
+          setTitle(other.getTitle());
+        }
+        if (other.hasText()) {
+          setText(other.getText());
+        }
+        if (other.hasEntindex()) {
+          setEntindex(other.getEntindex());
+        }
+        if (other.hasClose()) {
+          setClose(other.getClose());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              title_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              text_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              entindex_ = input.readInt32();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              close_ = input.readBool();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string title = 1;
+      private java.lang.Object title_ = "";
+      public boolean hasTitle() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getTitle() {
+        java.lang.Object ref = title_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          title_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setTitle(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        title_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTitle() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        title_ = getDefaultInstance().getTitle();
+        onChanged();
+        return this;
+      }
+      void setTitle(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        title_ = value;
+        onChanged();
+      }
+      
+      // optional string text = 2;
+      private java.lang.Object text_ = "";
+      public boolean hasText() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getText() {
+        java.lang.Object ref = text_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          text_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setText(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        text_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearText() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        text_ = getDefaultInstance().getText();
+        onChanged();
+        return this;
+      }
+      void setText(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        text_ = value;
+        onChanged();
+      }
+      
+      // optional int32 entindex = 3;
+      private int entindex_ ;
+      public boolean hasEntindex() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getEntindex() {
+        return entindex_;
+      }
+      public Builder setEntindex(int value) {
+        bitField0_ |= 0x00000004;
+        entindex_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearEntindex() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        entindex_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional bool close = 4;
+      private boolean close_ ;
+      public boolean hasClose() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public boolean getClose() {
+        return close_;
+      }
+      public Builder setClose(boolean value) {
+        bitField0_ |= 0x00000008;
+        close_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearClose() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        close_ = false;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_SendGenericToolTip)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_SendGenericToolTip(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendGenericToolTip)
+  }
+  
+  public interface CDOTAUserMsg_WorldLineOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional .CDOTAMsg_WorldLine worldline = 2;
+    boolean hasWorldline();
+    DotaCommonmessages.CDOTAMsg_WorldLine getWorldline();
+    DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder getWorldlineOrBuilder();
+  }
+  public static final class CDOTAUserMsg_WorldLine extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_WorldLineOrBuilder {
+    // Use CDOTAUserMsg_WorldLine.newBuilder() to construct.
+    private CDOTAUserMsg_WorldLine(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_WorldLine(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_WorldLine defaultInstance;
+    public static CDOTAUserMsg_WorldLine getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_WorldLine getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_WorldLine_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_WorldLine_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional .CDOTAMsg_WorldLine worldline = 2;
+    public static final int WORLDLINE_FIELD_NUMBER = 2;
+    private DotaCommonmessages.CDOTAMsg_WorldLine worldline_;
+    public boolean hasWorldline() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public DotaCommonmessages.CDOTAMsg_WorldLine getWorldline() {
+      return worldline_;
+    }
+    public DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder getWorldlineOrBuilder() {
+      return worldline_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      worldline_ = DotaCommonmessages.CDOTAMsg_WorldLine.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, worldline_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, worldline_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_WorldLine parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_WorldLine prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_WorldLineOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_WorldLine_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_WorldLine_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_WorldLine.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getWorldlineFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (worldlineBuilder_ == null) {
+          worldline_ = DotaCommonmessages.CDOTAMsg_WorldLine.getDefaultInstance();
+        } else {
+          worldlineBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_WorldLine.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_WorldLine getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_WorldLine.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_WorldLine build() {
+        DotaUsermessages.CDOTAUserMsg_WorldLine result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_WorldLine buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_WorldLine result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_WorldLine buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_WorldLine result = new DotaUsermessages.CDOTAUserMsg_WorldLine(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (worldlineBuilder_ == null) {
+          result.worldline_ = worldline_;
+        } else {
+          result.worldline_ = worldlineBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_WorldLine) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_WorldLine)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_WorldLine other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_WorldLine.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasWorldline()) {
+          mergeWorldline(other.getWorldline());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              DotaCommonmessages.CDOTAMsg_WorldLine.Builder subBuilder = DotaCommonmessages.CDOTAMsg_WorldLine.newBuilder();
+              if (hasWorldline()) {
+                subBuilder.mergeFrom(getWorldline());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setWorldline(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional .CDOTAMsg_WorldLine worldline = 2;
+      private DotaCommonmessages.CDOTAMsg_WorldLine worldline_ = DotaCommonmessages.CDOTAMsg_WorldLine.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_WorldLine, DotaCommonmessages.CDOTAMsg_WorldLine.Builder, DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder> worldlineBuilder_;
+      public boolean hasWorldline() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public DotaCommonmessages.CDOTAMsg_WorldLine getWorldline() {
+        if (worldlineBuilder_ == null) {
+          return worldline_;
+        } else {
+          return worldlineBuilder_.getMessage();
+        }
+      }
+      public Builder setWorldline(DotaCommonmessages.CDOTAMsg_WorldLine value) {
+        if (worldlineBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          worldline_ = value;
+          onChanged();
+        } else {
+          worldlineBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setWorldline(
+          DotaCommonmessages.CDOTAMsg_WorldLine.Builder builderForValue) {
+        if (worldlineBuilder_ == null) {
+          worldline_ = builderForValue.build();
+          onChanged();
+        } else {
+          worldlineBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeWorldline(DotaCommonmessages.CDOTAMsg_WorldLine value) {
+        if (worldlineBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              worldline_ != DotaCommonmessages.CDOTAMsg_WorldLine.getDefaultInstance()) {
+            worldline_ =
+              DotaCommonmessages.CDOTAMsg_WorldLine.newBuilder(worldline_).mergeFrom(value).buildPartial();
+          } else {
+            worldline_ = value;
+          }
+          onChanged();
+        } else {
+          worldlineBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearWorldline() {
+        if (worldlineBuilder_ == null) {
+          worldline_ = DotaCommonmessages.CDOTAMsg_WorldLine.getDefaultInstance();
+          onChanged();
+        } else {
+          worldlineBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public DotaCommonmessages.CDOTAMsg_WorldLine.Builder getWorldlineBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getWorldlineFieldBuilder().getBuilder();
+      }
+      public DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder getWorldlineOrBuilder() {
+        if (worldlineBuilder_ != null) {
+          return worldlineBuilder_.getMessageOrBuilder();
+        } else {
+          return worldline_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_WorldLine, DotaCommonmessages.CDOTAMsg_WorldLine.Builder, DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder> 
+          getWorldlineFieldBuilder() {
+        if (worldlineBuilder_ == null) {
+          worldlineBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaCommonmessages.CDOTAMsg_WorldLine, DotaCommonmessages.CDOTAMsg_WorldLine.Builder, DotaCommonmessages.CDOTAMsg_WorldLineOrBuilder>(
+                  worldline_,
+                  getParentForChildren(),
+                  isClean());
+          worldline_ = null;
+        }
+        return worldlineBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_WorldLine)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_WorldLine(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_WorldLine)
+  }
+  
+  public interface CDOTAUserMsg_TournamentDropOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string winner_name = 1;
+    boolean hasWinnerName();
+    String getWinnerName();
+    
+    // optional int32 event_type = 2;
+    boolean hasEventType();
+    int getEventType();
+  }
+  public static final class CDOTAUserMsg_TournamentDrop extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_TournamentDropOrBuilder {
+    // Use CDOTAUserMsg_TournamentDrop.newBuilder() to construct.
+    private CDOTAUserMsg_TournamentDrop(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_TournamentDrop(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_TournamentDrop defaultInstance;
+    public static CDOTAUserMsg_TournamentDrop getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_TournamentDrop getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TournamentDrop_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TournamentDrop_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string winner_name = 1;
+    public static final int WINNER_NAME_FIELD_NUMBER = 1;
+    private java.lang.Object winnerName_;
+    public boolean hasWinnerName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getWinnerName() {
+      java.lang.Object ref = winnerName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          winnerName_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getWinnerNameBytes() {
+      java.lang.Object ref = winnerName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        winnerName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional int32 event_type = 2;
+    public static final int EVENT_TYPE_FIELD_NUMBER = 2;
+    private int eventType_;
+    public boolean hasEventType() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getEventType() {
+      return eventType_;
+    }
+    
+    private void initFields() {
+      winnerName_ = "";
+      eventType_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getWinnerNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, eventType_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getWinnerNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, eventType_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TournamentDrop parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_TournamentDrop prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_TournamentDropOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TournamentDrop_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TournamentDrop_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_TournamentDrop.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        winnerName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        eventType_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_TournamentDrop.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TournamentDrop getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_TournamentDrop.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TournamentDrop build() {
+        DotaUsermessages.CDOTAUserMsg_TournamentDrop result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_TournamentDrop buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_TournamentDrop result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TournamentDrop buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_TournamentDrop result = new DotaUsermessages.CDOTAUserMsg_TournamentDrop(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.winnerName_ = winnerName_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.eventType_ = eventType_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_TournamentDrop) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_TournamentDrop)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_TournamentDrop other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_TournamentDrop.getDefaultInstance()) return this;
+        if (other.hasWinnerName()) {
+          setWinnerName(other.getWinnerName());
+        }
+        if (other.hasEventType()) {
+          setEventType(other.getEventType());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              winnerName_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              eventType_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string winner_name = 1;
+      private java.lang.Object winnerName_ = "";
+      public boolean hasWinnerName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getWinnerName() {
+        java.lang.Object ref = winnerName_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          winnerName_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setWinnerName(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        winnerName_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearWinnerName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        winnerName_ = getDefaultInstance().getWinnerName();
+        onChanged();
+        return this;
+      }
+      void setWinnerName(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        winnerName_ = value;
+        onChanged();
+      }
+      
+      // optional int32 event_type = 2;
+      private int eventType_ ;
+      public boolean hasEventType() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getEventType() {
+        return eventType_;
+      }
+      public Builder setEventType(int value) {
+        bitField0_ |= 0x00000002;
+        eventType_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearEventType() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        eventType_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_TournamentDrop)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_TournamentDrop(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TournamentDrop)
+  }
+  
+  public interface CDOTAUserMsg_ChatWheelOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional .EDOTAChatWheelMessage chat_message = 1 [default = k_EDOTA_CW_Ok];
+    boolean hasChatMessage();
+    DotaCommonmessages.EDOTAChatWheelMessage getChatMessage();
+    
+    // optional uint32 player_id = 2;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional uint32 account_id = 3;
+    boolean hasAccountId();
+    int getAccountId();
+    
+    // optional uint32 param_hero_id = 4;
+    boolean hasParamHeroId();
+    int getParamHeroId();
+  }
+  public static final class CDOTAUserMsg_ChatWheel extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_ChatWheelOrBuilder {
+    // Use CDOTAUserMsg_ChatWheel.newBuilder() to construct.
+    private CDOTAUserMsg_ChatWheel(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_ChatWheel(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_ChatWheel defaultInstance;
+    public static CDOTAUserMsg_ChatWheel getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_ChatWheel getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ChatWheel_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ChatWheel_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional .EDOTAChatWheelMessage chat_message = 1 [default = k_EDOTA_CW_Ok];
+    public static final int CHAT_MESSAGE_FIELD_NUMBER = 1;
+    private DotaCommonmessages.EDOTAChatWheelMessage chatMessage_;
+    public boolean hasChatMessage() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public DotaCommonmessages.EDOTAChatWheelMessage getChatMessage() {
+      return chatMessage_;
+    }
+    
+    // optional uint32 player_id = 2;
+    public static final int PLAYER_ID_FIELD_NUMBER = 2;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional uint32 account_id = 3;
+    public static final int ACCOUNT_ID_FIELD_NUMBER = 3;
+    private int accountId_;
+    public boolean hasAccountId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getAccountId() {
+      return accountId_;
+    }
+    
+    // optional uint32 param_hero_id = 4;
+    public static final int PARAM_HERO_ID_FIELD_NUMBER = 4;
+    private int paramHeroId_;
+    public boolean hasParamHeroId() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public int getParamHeroId() {
+      return paramHeroId_;
+    }
+    
+    private void initFields() {
+      chatMessage_ = DotaCommonmessages.EDOTAChatWheelMessage.k_EDOTA_CW_Ok;
+      playerId_ = 0;
+      accountId_ = 0;
+      paramHeroId_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeEnum(1, chatMessage_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeUInt32(2, playerId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeUInt32(3, accountId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt32(4, paramHeroId_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(1, chatMessage_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(2, playerId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(3, accountId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, paramHeroId_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ChatWheel parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ChatWheel prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_ChatWheelOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ChatWheel_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ChatWheel_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_ChatWheel.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        chatMessage_ = DotaCommonmessages.EDOTAChatWheelMessage.k_EDOTA_CW_Ok;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        accountId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        paramHeroId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_ChatWheel.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ChatWheel getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_ChatWheel.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ChatWheel build() {
+        DotaUsermessages.CDOTAUserMsg_ChatWheel result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_ChatWheel buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_ChatWheel result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ChatWheel buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_ChatWheel result = new DotaUsermessages.CDOTAUserMsg_ChatWheel(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.chatMessage_ = chatMessage_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.accountId_ = accountId_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.paramHeroId_ = paramHeroId_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_ChatWheel) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_ChatWheel)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ChatWheel other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_ChatWheel.getDefaultInstance()) return this;
+        if (other.hasChatMessage()) {
+          setChatMessage(other.getChatMessage());
+        }
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasAccountId()) {
+          setAccountId(other.getAccountId());
+        }
+        if (other.hasParamHeroId()) {
+          setParamHeroId(other.getParamHeroId());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              int rawValue = input.readEnum();
+              DotaCommonmessages.EDOTAChatWheelMessage value = DotaCommonmessages.EDOTAChatWheelMessage.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(1, rawValue);
+              } else {
+                bitField0_ |= 0x00000001;
+                chatMessage_ = value;
+              }
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              playerId_ = input.readUInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              accountId_ = input.readUInt32();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              paramHeroId_ = input.readUInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional .EDOTAChatWheelMessage chat_message = 1 [default = k_EDOTA_CW_Ok];
+      private DotaCommonmessages.EDOTAChatWheelMessage chatMessage_ = DotaCommonmessages.EDOTAChatWheelMessage.k_EDOTA_CW_Ok;
+      public boolean hasChatMessage() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public DotaCommonmessages.EDOTAChatWheelMessage getChatMessage() {
+        return chatMessage_;
+      }
+      public Builder setChatMessage(DotaCommonmessages.EDOTAChatWheelMessage value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000001;
+        chatMessage_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearChatMessage() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        chatMessage_ = DotaCommonmessages.EDOTAChatWheelMessage.k_EDOTA_CW_Ok;
+        onChanged();
+        return this;
+      }
+      
+      // optional uint32 player_id = 2;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000002;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional uint32 account_id = 3;
+      private int accountId_ ;
+      public boolean hasAccountId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getAccountId() {
+        return accountId_;
+      }
+      public Builder setAccountId(int value) {
+        bitField0_ |= 0x00000004;
+        accountId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearAccountId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        accountId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional uint32 param_hero_id = 4;
+      private int paramHeroId_ ;
+      public boolean hasParamHeroId() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public int getParamHeroId() {
+        return paramHeroId_;
+      }
+      public Builder setParamHeroId(int value) {
+        bitField0_ |= 0x00000008;
+        paramHeroId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearParamHeroId() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        paramHeroId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ChatWheel)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_ChatWheel(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ChatWheel)
+  }
+  
+  public interface CDOTAUserMsg_ReceivedXmasGiftOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional string item_name = 2;
+    boolean hasItemName();
+    String getItemName();
+    
+    // optional int32 inventory_slot = 3;
+    boolean hasInventorySlot();
+    int getInventorySlot();
+  }
+  public static final class CDOTAUserMsg_ReceivedXmasGift extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_ReceivedXmasGiftOrBuilder {
+    // Use CDOTAUserMsg_ReceivedXmasGift.newBuilder() to construct.
+    private CDOTAUserMsg_ReceivedXmasGift(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_ReceivedXmasGift(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_ReceivedXmasGift defaultInstance;
+    public static CDOTAUserMsg_ReceivedXmasGift getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_ReceivedXmasGift getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ReceivedXmasGift_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ReceivedXmasGift_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional string item_name = 2;
+    public static final int ITEM_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object itemName_;
+    public boolean hasItemName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getItemName() {
+      java.lang.Object ref = itemName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          itemName_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getItemNameBytes() {
+      java.lang.Object ref = itemName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        itemName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional int32 inventory_slot = 3;
+    public static final int INVENTORY_SLOT_FIELD_NUMBER = 3;
+    private int inventorySlot_;
+    public boolean hasInventorySlot() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getInventorySlot() {
+      return inventorySlot_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      itemName_ = "";
+      inventorySlot_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getItemNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, inventorySlot_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getItemNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, inventorySlot_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_ReceivedXmasGiftOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ReceivedXmasGift_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ReceivedXmasGift_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        itemName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        inventorySlot_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift build() {
+        DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift result = new DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.itemName_ = itemName_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.inventorySlot_ = inventorySlot_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasItemName()) {
+          setItemName(other.getItemName());
+        }
+        if (other.hasInventorySlot()) {
+          setInventorySlot(other.getInventorySlot());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              itemName_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              inventorySlot_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional string item_name = 2;
+      private java.lang.Object itemName_ = "";
+      public boolean hasItemName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getItemName() {
+        java.lang.Object ref = itemName_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          itemName_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setItemName(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        itemName_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearItemName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        itemName_ = getDefaultInstance().getItemName();
+        onChanged();
+        return this;
+      }
+      void setItemName(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        itemName_ = value;
+        onChanged();
+      }
+      
+      // optional int32 inventory_slot = 3;
+      private int inventorySlot_ ;
+      public boolean hasInventorySlot() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getInventorySlot() {
+        return inventorySlot_;
+      }
+      public Builder setInventorySlot(int value) {
+        bitField0_ |= 0x00000004;
+        inventorySlot_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearInventorySlot() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        inventorySlot_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ReceivedXmasGift)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_ReceivedXmasGift(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ReceivedXmasGift)
+  }
+  
+  public interface CDOTAUserMsg_ShowSurveyOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 survey_id = 1;
+    boolean hasSurveyId();
+    int getSurveyId();
+    
+    // optional uint32 match_id = 2;
+    boolean hasMatchId();
+    int getMatchId();
+    
+    // optional string response_style = 3;
+    boolean hasResponseStyle();
+    String getResponseStyle();
+  }
+  public static final class CDOTAUserMsg_ShowSurvey extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_ShowSurveyOrBuilder {
+    // Use CDOTAUserMsg_ShowSurvey.newBuilder() to construct.
+    private CDOTAUserMsg_ShowSurvey(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_ShowSurvey(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_ShowSurvey defaultInstance;
+    public static CDOTAUserMsg_ShowSurvey getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_ShowSurvey getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ShowSurvey_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ShowSurvey_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 survey_id = 1;
+    public static final int SURVEY_ID_FIELD_NUMBER = 1;
+    private int surveyId_;
+    public boolean hasSurveyId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getSurveyId() {
+      return surveyId_;
+    }
+    
+    // optional uint32 match_id = 2;
+    public static final int MATCH_ID_FIELD_NUMBER = 2;
+    private int matchId_;
+    public boolean hasMatchId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getMatchId() {
+      return matchId_;
+    }
+    
+    // optional string response_style = 3;
+    public static final int RESPONSE_STYLE_FIELD_NUMBER = 3;
+    private java.lang.Object responseStyle_;
+    public boolean hasResponseStyle() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public String getResponseStyle() {
+      java.lang.Object ref = responseStyle_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          responseStyle_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getResponseStyleBytes() {
+      java.lang.Object ref = responseStyle_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        responseStyle_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      surveyId_ = 0;
+      matchId_ = 0;
+      responseStyle_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, surveyId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeUInt32(2, matchId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getResponseStyleBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, surveyId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(2, matchId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getResponseStyleBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ShowSurvey parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ShowSurvey prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_ShowSurveyOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ShowSurvey_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ShowSurvey_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_ShowSurvey.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        surveyId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        matchId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        responseStyle_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_ShowSurvey.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ShowSurvey getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_ShowSurvey.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ShowSurvey build() {
+        DotaUsermessages.CDOTAUserMsg_ShowSurvey result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_ShowSurvey buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_ShowSurvey result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ShowSurvey buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_ShowSurvey result = new DotaUsermessages.CDOTAUserMsg_ShowSurvey(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.surveyId_ = surveyId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.matchId_ = matchId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.responseStyle_ = responseStyle_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_ShowSurvey) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_ShowSurvey)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ShowSurvey other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_ShowSurvey.getDefaultInstance()) return this;
+        if (other.hasSurveyId()) {
+          setSurveyId(other.getSurveyId());
+        }
+        if (other.hasMatchId()) {
+          setMatchId(other.getMatchId());
+        }
+        if (other.hasResponseStyle()) {
+          setResponseStyle(other.getResponseStyle());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              surveyId_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              matchId_ = input.readUInt32();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              responseStyle_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 survey_id = 1;
+      private int surveyId_ ;
+      public boolean hasSurveyId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getSurveyId() {
+        return surveyId_;
+      }
+      public Builder setSurveyId(int value) {
+        bitField0_ |= 0x00000001;
+        surveyId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSurveyId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        surveyId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional uint32 match_id = 2;
+      private int matchId_ ;
+      public boolean hasMatchId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getMatchId() {
+        return matchId_;
+      }
+      public Builder setMatchId(int value) {
+        bitField0_ |= 0x00000002;
+        matchId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearMatchId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        matchId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional string response_style = 3;
+      private java.lang.Object responseStyle_ = "";
+      public boolean hasResponseStyle() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public String getResponseStyle() {
+        java.lang.Object ref = responseStyle_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          responseStyle_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setResponseStyle(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        responseStyle_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearResponseStyle() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        responseStyle_ = getDefaultInstance().getResponseStyle();
+        onChanged();
+        return this;
+      }
+      void setResponseStyle(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000004;
+        responseStyle_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ShowSurvey)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_ShowSurvey(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ShowSurvey)
+  }
+  
+  public interface CDOTAUserMsg_UpdateSharedContentOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 slot_type = 1;
+    boolean hasSlotType();
+    int getSlotType();
+  }
+  public static final class CDOTAUserMsg_UpdateSharedContent extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_UpdateSharedContentOrBuilder {
+    // Use CDOTAUserMsg_UpdateSharedContent.newBuilder() to construct.
+    private CDOTAUserMsg_UpdateSharedContent(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_UpdateSharedContent(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_UpdateSharedContent defaultInstance;
+    public static CDOTAUserMsg_UpdateSharedContent getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_UpdateSharedContent getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_UpdateSharedContent_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_UpdateSharedContent_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 slot_type = 1;
+    public static final int SLOT_TYPE_FIELD_NUMBER = 1;
+    private int slotType_;
+    public boolean hasSlotType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getSlotType() {
+      return slotType_;
+    }
+    
+    private void initFields() {
+      slotType_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, slotType_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, slotType_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_UpdateSharedContent parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_UpdateSharedContent prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_UpdateSharedContentOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_UpdateSharedContent_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_UpdateSharedContent_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        slotType_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_UpdateSharedContent getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_UpdateSharedContent build() {
+        DotaUsermessages.CDOTAUserMsg_UpdateSharedContent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_UpdateSharedContent buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_UpdateSharedContent result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_UpdateSharedContent buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_UpdateSharedContent result = new DotaUsermessages.CDOTAUserMsg_UpdateSharedContent(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.slotType_ = slotType_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_UpdateSharedContent) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_UpdateSharedContent)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_UpdateSharedContent other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.getDefaultInstance()) return this;
+        if (other.hasSlotType()) {
+          setSlotType(other.getSlotType());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              slotType_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 slot_type = 1;
+      private int slotType_ ;
+      public boolean hasSlotType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getSlotType() {
+        return slotType_;
+      }
+      public Builder setSlotType(int value) {
+        bitField0_ |= 0x00000001;
+        slotType_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearSlotType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        slotType_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_UpdateSharedContent)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_UpdateSharedContent(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_UpdateSharedContent)
+  }
+  
+  public interface CDOTAUserMsg_TutorialRequestExpOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+  }
+  public static final class CDOTAUserMsg_TutorialRequestExp extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_TutorialRequestExpOrBuilder {
+    // Use CDOTAUserMsg_TutorialRequestExp.newBuilder() to construct.
+    private CDOTAUserMsg_TutorialRequestExp(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_TutorialRequestExp(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_TutorialRequestExp defaultInstance;
+    public static CDOTAUserMsg_TutorialRequestExp getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_TutorialRequestExp getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialRequestExp_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialRequestExp_fieldAccessorTable;
+    }
+    
+    private void initFields() {
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialRequestExp parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_TutorialRequestExp prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_TutorialRequestExpOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialRequestExp_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialRequestExp_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialRequestExp getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialRequestExp build() {
+        DotaUsermessages.CDOTAUserMsg_TutorialRequestExp result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_TutorialRequestExp buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_TutorialRequestExp result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialRequestExp buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_TutorialRequestExp result = new DotaUsermessages.CDOTAUserMsg_TutorialRequestExp(this);
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_TutorialRequestExp) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_TutorialRequestExp)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_TutorialRequestExp other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_TutorialRequestExp)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_TutorialRequestExp(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialRequestExp)
+  }
+  
+  public interface CDOTAUserMsg_TutorialFadeOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 tgt_alpha = 1;
+    boolean hasTgtAlpha();
+    int getTgtAlpha();
+  }
+  public static final class CDOTAUserMsg_TutorialFade extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_TutorialFadeOrBuilder {
+    // Use CDOTAUserMsg_TutorialFade.newBuilder() to construct.
+    private CDOTAUserMsg_TutorialFade(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_TutorialFade(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_TutorialFade defaultInstance;
+    public static CDOTAUserMsg_TutorialFade getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_TutorialFade getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFade_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFade_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 tgt_alpha = 1;
+    public static final int TGT_ALPHA_FIELD_NUMBER = 1;
+    private int tgtAlpha_;
+    public boolean hasTgtAlpha() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getTgtAlpha() {
+      return tgtAlpha_;
+    }
+    
+    private void initFields() {
+      tgtAlpha_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, tgtAlpha_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, tgtAlpha_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialFade parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_TutorialFade prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_TutorialFadeOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFade_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialFade_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_TutorialFade.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        tgtAlpha_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialFade.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFade getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialFade.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFade build() {
+        DotaUsermessages.CDOTAUserMsg_TutorialFade result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_TutorialFade buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_TutorialFade result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialFade buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_TutorialFade result = new DotaUsermessages.CDOTAUserMsg_TutorialFade(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.tgtAlpha_ = tgtAlpha_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_TutorialFade) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_TutorialFade)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_TutorialFade other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_TutorialFade.getDefaultInstance()) return this;
+        if (other.hasTgtAlpha()) {
+          setTgtAlpha(other.getTgtAlpha());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              tgtAlpha_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 tgt_alpha = 1;
+      private int tgtAlpha_ ;
+      public boolean hasTgtAlpha() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getTgtAlpha() {
+        return tgtAlpha_;
+      }
+      public Builder setTgtAlpha(int value) {
+        bitField0_ |= 0x00000001;
+        tgtAlpha_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTgtAlpha() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tgtAlpha_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_TutorialFade)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_TutorialFade(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialFade)
+  }
+  
+  public interface CDOTAUserMsg_TutorialPingMinimapOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional uint32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional float pos_x = 2;
+    boolean hasPosX();
+    float getPosX();
+    
+    // optional float pos_y = 3;
+    boolean hasPosY();
+    float getPosY();
+    
+    // optional float pos_z = 4;
+    boolean hasPosZ();
+    float getPosZ();
+    
+    // optional int32 entity_index = 5;
+    boolean hasEntityIndex();
+    int getEntityIndex();
+  }
+  public static final class CDOTAUserMsg_TutorialPingMinimap extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_TutorialPingMinimapOrBuilder {
+    // Use CDOTAUserMsg_TutorialPingMinimap.newBuilder() to construct.
+    private CDOTAUserMsg_TutorialPingMinimap(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_TutorialPingMinimap(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_TutorialPingMinimap defaultInstance;
+    public static CDOTAUserMsg_TutorialPingMinimap getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_TutorialPingMinimap getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialPingMinimap_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialPingMinimap_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional uint32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional float pos_x = 2;
+    public static final int POS_X_FIELD_NUMBER = 2;
+    private float posX_;
+    public boolean hasPosX() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public float getPosX() {
+      return posX_;
+    }
+    
+    // optional float pos_y = 3;
+    public static final int POS_Y_FIELD_NUMBER = 3;
+    private float posY_;
+    public boolean hasPosY() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public float getPosY() {
+      return posY_;
+    }
+    
+    // optional float pos_z = 4;
+    public static final int POS_Z_FIELD_NUMBER = 4;
+    private float posZ_;
+    public boolean hasPosZ() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    public float getPosZ() {
+      return posZ_;
+    }
+    
+    // optional int32 entity_index = 5;
+    public static final int ENTITY_INDEX_FIELD_NUMBER = 5;
+    private int entityIndex_;
+    public boolean hasEntityIndex() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    public int getEntityIndex() {
+      return entityIndex_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      posX_ = 0F;
+      posY_ = 0F;
+      posZ_ = 0F;
+      entityIndex_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeFloat(2, posX_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeFloat(3, posY_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeFloat(4, posZ_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeInt32(5, entityIndex_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(2, posX_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(3, posY_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(4, posZ_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(5, entityIndex_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_TutorialPingMinimapOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialPingMinimap_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_TutorialPingMinimap_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        posX_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        posY_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        posZ_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        entityIndex_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap build() {
+        DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap result = new DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.posX_ = posX_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.posY_ = posY_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.posZ_ = posZ_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.entityIndex_ = entityIndex_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasPosX()) {
+          setPosX(other.getPosX());
+        }
+        if (other.hasPosY()) {
+          setPosY(other.getPosY());
+        }
+        if (other.hasPosZ()) {
+          setPosZ(other.getPosZ());
+        }
+        if (other.hasEntityIndex()) {
+          setEntityIndex(other.getEntityIndex());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readUInt32();
+              break;
+            }
+            case 21: {
+              bitField0_ |= 0x00000002;
+              posX_ = input.readFloat();
+              break;
+            }
+            case 29: {
+              bitField0_ |= 0x00000004;
+              posY_ = input.readFloat();
+              break;
+            }
+            case 37: {
+              bitField0_ |= 0x00000008;
+              posZ_ = input.readFloat();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              entityIndex_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional uint32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional float pos_x = 2;
+      private float posX_ ;
+      public boolean hasPosX() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public float getPosX() {
+        return posX_;
+      }
+      public Builder setPosX(float value) {
+        bitField0_ |= 0x00000002;
+        posX_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPosX() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        posX_ = 0F;
+        onChanged();
+        return this;
+      }
+      
+      // optional float pos_y = 3;
+      private float posY_ ;
+      public boolean hasPosY() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public float getPosY() {
+        return posY_;
+      }
+      public Builder setPosY(float value) {
+        bitField0_ |= 0x00000004;
+        posY_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPosY() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        posY_ = 0F;
+        onChanged();
+        return this;
+      }
+      
+      // optional float pos_z = 4;
+      private float posZ_ ;
+      public boolean hasPosZ() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public float getPosZ() {
+        return posZ_;
+      }
+      public Builder setPosZ(float value) {
+        bitField0_ |= 0x00000008;
+        posZ_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPosZ() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        posZ_ = 0F;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 entity_index = 5;
+      private int entityIndex_ ;
+      public boolean hasEntityIndex() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      public int getEntityIndex() {
+        return entityIndex_;
+      }
+      public Builder setEntityIndex(int value) {
+        bitField0_ |= 0x00000010;
+        entityIndex_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearEntityIndex() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        entityIndex_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_TutorialPingMinimap)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_TutorialPingMinimap(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_TutorialPingMinimap)
+  }
+  
+  public interface CDOTA_UM_GamerulesStateChangedOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional uint32 state = 1;
+    boolean hasState();
+    int getState();
+  }
+  public static final class CDOTA_UM_GamerulesStateChanged extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTA_UM_GamerulesStateChangedOrBuilder {
+    // Use CDOTA_UM_GamerulesStateChanged.newBuilder() to construct.
+    private CDOTA_UM_GamerulesStateChanged(Builder builder) {
+      super(builder);
+    }
+    private CDOTA_UM_GamerulesStateChanged(boolean noInit) {}
+    
+    private static final CDOTA_UM_GamerulesStateChanged defaultInstance;
+    public static CDOTA_UM_GamerulesStateChanged getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTA_UM_GamerulesStateChanged getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTA_UM_GamerulesStateChanged_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTA_UM_GamerulesStateChanged_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional uint32 state = 1;
+    public static final int STATE_FIELD_NUMBER = 1;
+    private int state_;
+    public boolean hasState() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getState() {
+      return state_;
+    }
+    
+    private void initFields() {
+      state_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, state_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, state_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTA_UM_GamerulesStateChanged parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTA_UM_GamerulesStateChanged prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTA_UM_GamerulesStateChangedOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTA_UM_GamerulesStateChanged_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTA_UM_GamerulesStateChanged_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTA_UM_GamerulesStateChanged.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        state_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTA_UM_GamerulesStateChanged.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTA_UM_GamerulesStateChanged getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTA_UM_GamerulesStateChanged.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTA_UM_GamerulesStateChanged build() {
+        DotaUsermessages.CDOTA_UM_GamerulesStateChanged result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTA_UM_GamerulesStateChanged buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTA_UM_GamerulesStateChanged result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTA_UM_GamerulesStateChanged buildPartial() {
+        DotaUsermessages.CDOTA_UM_GamerulesStateChanged result = new DotaUsermessages.CDOTA_UM_GamerulesStateChanged(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.state_ = state_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTA_UM_GamerulesStateChanged) {
+          return mergeFrom((DotaUsermessages.CDOTA_UM_GamerulesStateChanged)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTA_UM_GamerulesStateChanged other) {
+        if (other == DotaUsermessages.CDOTA_UM_GamerulesStateChanged.getDefaultInstance()) return this;
+        if (other.hasState()) {
+          setState(other.getState());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              state_ = input.readUInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional uint32 state = 1;
+      private int state_ ;
+      public boolean hasState() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getState() {
+        return state_;
+      }
+      public Builder setState(int value) {
+        bitField0_ |= 0x00000001;
+        state_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearState() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        state_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTA_UM_GamerulesStateChanged)
+    }
+    
+    static {
+      defaultInstance = new CDOTA_UM_GamerulesStateChanged(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTA_UM_GamerulesStateChanged)
+  }
+  
+  public interface CDOTAUserMsg_AddQuestLogEntryOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string npc_name = 1;
+    boolean hasNpcName();
+    String getNpcName();
+    
+    // optional string npc_dialog = 2;
+    boolean hasNpcDialog();
+    String getNpcDialog();
+  }
+  public static final class CDOTAUserMsg_AddQuestLogEntry extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_AddQuestLogEntryOrBuilder {
+    // Use CDOTAUserMsg_AddQuestLogEntry.newBuilder() to construct.
+    private CDOTAUserMsg_AddQuestLogEntry(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_AddQuestLogEntry(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_AddQuestLogEntry defaultInstance;
+    public static CDOTAUserMsg_AddQuestLogEntry getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_AddQuestLogEntry getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_AddQuestLogEntry_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_AddQuestLogEntry_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string npc_name = 1;
+    public static final int NPC_NAME_FIELD_NUMBER = 1;
+    private java.lang.Object npcName_;
+    public boolean hasNpcName() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getNpcName() {
+      java.lang.Object ref = npcName_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          npcName_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getNpcNameBytes() {
+      java.lang.Object ref = npcName_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        npcName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional string npc_dialog = 2;
+    public static final int NPC_DIALOG_FIELD_NUMBER = 2;
+    private java.lang.Object npcDialog_;
+    public boolean hasNpcDialog() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public String getNpcDialog() {
+      java.lang.Object ref = npcDialog_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          npcDialog_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getNpcDialogBytes() {
+      java.lang.Object ref = npcDialog_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        npcDialog_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    private void initFields() {
+      npcName_ = "";
+      npcDialog_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getNpcNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getNpcDialogBytes());
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getNpcNameBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getNpcDialogBytes());
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_AddQuestLogEntryOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_AddQuestLogEntry_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_AddQuestLogEntry_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        npcName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        npcDialog_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry build() {
+        DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry result = new DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.npcName_ = npcName_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.npcDialog_ = npcDialog_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.getDefaultInstance()) return this;
+        if (other.hasNpcName()) {
+          setNpcName(other.getNpcName());
+        }
+        if (other.hasNpcDialog()) {
+          setNpcDialog(other.getNpcDialog());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              npcName_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              npcDialog_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string npc_name = 1;
+      private java.lang.Object npcName_ = "";
+      public boolean hasNpcName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getNpcName() {
+        java.lang.Object ref = npcName_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          npcName_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setNpcName(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        npcName_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearNpcName() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        npcName_ = getDefaultInstance().getNpcName();
+        onChanged();
+        return this;
+      }
+      void setNpcName(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        npcName_ = value;
+        onChanged();
+      }
+      
+      // optional string npc_dialog = 2;
+      private java.lang.Object npcDialog_ = "";
+      public boolean hasNpcDialog() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public String getNpcDialog() {
+        java.lang.Object ref = npcDialog_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          npcDialog_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setNpcDialog(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        npcDialog_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearNpcDialog() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        npcDialog_ = getDefaultInstance().getNpcDialog();
+        onChanged();
+        return this;
+      }
+      void setNpcDialog(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000002;
+        npcDialog_ = value;
+        onChanged();
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_AddQuestLogEntry)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_AddQuestLogEntry(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_AddQuestLogEntry)
+  }
+  
+  public interface CDOTAUserMsg_SendStatPopupOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional int32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional .CDOTAMsg_SendStatPopup statpopup = 2;
+    boolean hasStatpopup();
+    DotaCommonmessages.CDOTAMsg_SendStatPopup getStatpopup();
+    DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder getStatpopupOrBuilder();
+  }
+  public static final class CDOTAUserMsg_SendStatPopup extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_SendStatPopupOrBuilder {
+    // Use CDOTAUserMsg_SendStatPopup.newBuilder() to construct.
+    private CDOTAUserMsg_SendStatPopup(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_SendStatPopup(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_SendStatPopup defaultInstance;
+    public static CDOTAUserMsg_SendStatPopup getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_SendStatPopup getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendStatPopup_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendStatPopup_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional int32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional .CDOTAMsg_SendStatPopup statpopup = 2;
+    public static final int STATPOPUP_FIELD_NUMBER = 2;
+    private DotaCommonmessages.CDOTAMsg_SendStatPopup statpopup_;
+    public boolean hasStatpopup() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public DotaCommonmessages.CDOTAMsg_SendStatPopup getStatpopup() {
+      return statpopup_;
+    }
+    public DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder getStatpopupOrBuilder() {
+      return statpopup_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      statpopup_ = DotaCommonmessages.CDOTAMsg_SendStatPopup.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, statpopup_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, statpopup_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendStatPopup parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_SendStatPopup prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_SendStatPopupOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendStatPopup_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendStatPopup_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_SendStatPopup.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getStatpopupFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (statpopupBuilder_ == null) {
+          statpopup_ = DotaCommonmessages.CDOTAMsg_SendStatPopup.getDefaultInstance();
+        } else {
+          statpopupBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendStatPopup.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendStatPopup getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendStatPopup.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendStatPopup build() {
+        DotaUsermessages.CDOTAUserMsg_SendStatPopup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_SendStatPopup buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_SendStatPopup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendStatPopup buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_SendStatPopup result = new DotaUsermessages.CDOTAUserMsg_SendStatPopup(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (statpopupBuilder_ == null) {
+          result.statpopup_ = statpopup_;
+        } else {
+          result.statpopup_ = statpopupBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_SendStatPopup) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_SendStatPopup)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_SendStatPopup other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_SendStatPopup.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasStatpopup()) {
+          mergeStatpopup(other.getStatpopup());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readInt32();
+              break;
+            }
+            case 18: {
+              DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder subBuilder = DotaCommonmessages.CDOTAMsg_SendStatPopup.newBuilder();
+              if (hasStatpopup()) {
+                subBuilder.mergeFrom(getStatpopup());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setStatpopup(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional int32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional .CDOTAMsg_SendStatPopup statpopup = 2;
+      private DotaCommonmessages.CDOTAMsg_SendStatPopup statpopup_ = DotaCommonmessages.CDOTAMsg_SendStatPopup.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_SendStatPopup, DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder, DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder> statpopupBuilder_;
+      public boolean hasStatpopup() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public DotaCommonmessages.CDOTAMsg_SendStatPopup getStatpopup() {
+        if (statpopupBuilder_ == null) {
+          return statpopup_;
+        } else {
+          return statpopupBuilder_.getMessage();
+        }
+      }
+      public Builder setStatpopup(DotaCommonmessages.CDOTAMsg_SendStatPopup value) {
+        if (statpopupBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          statpopup_ = value;
+          onChanged();
+        } else {
+          statpopupBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setStatpopup(
+          DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder builderForValue) {
+        if (statpopupBuilder_ == null) {
+          statpopup_ = builderForValue.build();
+          onChanged();
+        } else {
+          statpopupBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeStatpopup(DotaCommonmessages.CDOTAMsg_SendStatPopup value) {
+        if (statpopupBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              statpopup_ != DotaCommonmessages.CDOTAMsg_SendStatPopup.getDefaultInstance()) {
+            statpopup_ =
+              DotaCommonmessages.CDOTAMsg_SendStatPopup.newBuilder(statpopup_).mergeFrom(value).buildPartial();
+          } else {
+            statpopup_ = value;
+          }
+          onChanged();
+        } else {
+          statpopupBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearStatpopup() {
+        if (statpopupBuilder_ == null) {
+          statpopup_ = DotaCommonmessages.CDOTAMsg_SendStatPopup.getDefaultInstance();
+          onChanged();
+        } else {
+          statpopupBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder getStatpopupBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getStatpopupFieldBuilder().getBuilder();
+      }
+      public DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder getStatpopupOrBuilder() {
+        if (statpopupBuilder_ != null) {
+          return statpopupBuilder_.getMessageOrBuilder();
+        } else {
+          return statpopup_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_SendStatPopup, DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder, DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder> 
+          getStatpopupFieldBuilder() {
+        if (statpopupBuilder_ == null) {
+          statpopupBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaCommonmessages.CDOTAMsg_SendStatPopup, DotaCommonmessages.CDOTAMsg_SendStatPopup.Builder, DotaCommonmessages.CDOTAMsg_SendStatPopupOrBuilder>(
+                  statpopup_,
+                  getParentForChildren(),
+                  isClean());
+          statpopup_ = null;
+        }
+        return statpopupBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_SendStatPopup)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_SendStatPopup(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendStatPopup)
+  }
+  
+  public interface CDOTAUserMsg_SendRoshanPopupOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional bool reclaimed = 1;
+    boolean hasReclaimed();
+    boolean getReclaimed();
+    
+    // optional int32 gametime = 2;
+    boolean hasGametime();
+    int getGametime();
+  }
+  public static final class CDOTAUserMsg_SendRoshanPopup extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_SendRoshanPopupOrBuilder {
+    // Use CDOTAUserMsg_SendRoshanPopup.newBuilder() to construct.
+    private CDOTAUserMsg_SendRoshanPopup(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_SendRoshanPopup(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_SendRoshanPopup defaultInstance;
+    public static CDOTAUserMsg_SendRoshanPopup getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_SendRoshanPopup getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendRoshanPopup_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendRoshanPopup_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional bool reclaimed = 1;
+    public static final int RECLAIMED_FIELD_NUMBER = 1;
+    private boolean reclaimed_;
+    public boolean hasReclaimed() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public boolean getReclaimed() {
+      return reclaimed_;
+    }
+    
+    // optional int32 gametime = 2;
+    public static final int GAMETIME_FIELD_NUMBER = 2;
+    private int gametime_;
+    public boolean hasGametime() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getGametime() {
+      return gametime_;
+    }
+    
+    private void initFields() {
+      reclaimed_ = false;
+      gametime_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBool(1, reclaimed_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, gametime_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(1, reclaimed_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, gametime_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendRoshanPopup parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_SendRoshanPopup prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_SendRoshanPopupOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendRoshanPopup_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendRoshanPopup_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        reclaimed_ = false;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        gametime_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendRoshanPopup getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendRoshanPopup build() {
+        DotaUsermessages.CDOTAUserMsg_SendRoshanPopup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_SendRoshanPopup buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_SendRoshanPopup result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendRoshanPopup buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_SendRoshanPopup result = new DotaUsermessages.CDOTAUserMsg_SendRoshanPopup(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.reclaimed_ = reclaimed_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.gametime_ = gametime_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_SendRoshanPopup) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_SendRoshanPopup)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_SendRoshanPopup other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.getDefaultInstance()) return this;
+        if (other.hasReclaimed()) {
+          setReclaimed(other.getReclaimed());
+        }
+        if (other.hasGametime()) {
+          setGametime(other.getGametime());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              reclaimed_ = input.readBool();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              gametime_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional bool reclaimed = 1;
+      private boolean reclaimed_ ;
+      public boolean hasReclaimed() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public boolean getReclaimed() {
+        return reclaimed_;
+      }
+      public Builder setReclaimed(boolean value) {
+        bitField0_ |= 0x00000001;
+        reclaimed_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearReclaimed() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        reclaimed_ = false;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 gametime = 2;
+      private int gametime_ ;
+      public boolean hasGametime() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getGametime() {
+        return gametime_;
+      }
+      public Builder setGametime(int value) {
+        bitField0_ |= 0x00000002;
+        gametime_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearGametime() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        gametime_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_SendRoshanPopup)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_SendRoshanPopup(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendRoshanPopup)
+  }
+  
+  public interface CDOTAUserMsg_SendFinalGoldOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // repeated uint32 reliable_gold = 1;
+    java.util.List<java.lang.Integer> getReliableGoldList();
+    int getReliableGoldCount();
+    int getReliableGold(int index);
+    
+    // repeated uint32 unreliable_gold = 2;
+    java.util.List<java.lang.Integer> getUnreliableGoldList();
+    int getUnreliableGoldCount();
+    int getUnreliableGold(int index);
+  }
+  public static final class CDOTAUserMsg_SendFinalGold extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_SendFinalGoldOrBuilder {
+    // Use CDOTAUserMsg_SendFinalGold.newBuilder() to construct.
+    private CDOTAUserMsg_SendFinalGold(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_SendFinalGold(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_SendFinalGold defaultInstance;
+    public static CDOTAUserMsg_SendFinalGold getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_SendFinalGold getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendFinalGold_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_SendFinalGold_fieldAccessorTable;
+    }
+    
+    // repeated uint32 reliable_gold = 1;
+    public static final int RELIABLE_GOLD_FIELD_NUMBER = 1;
+    private java.util.List<java.lang.Integer> reliableGold_;
+    public java.util.List<java.lang.Integer>
+        getReliableGoldList() {
+      return reliableGold_;
+    }
+    public int getReliableGoldCount() {
+      return reliableGold_.size();
+    }
+    public int getReliableGold(int index) {
+      return reliableGold_.get(index);
+    }
+    
+    // repeated uint32 unreliable_gold = 2;
+    public static final int UNRELIABLE_GOLD_FIELD_NUMBER = 2;
+    private java.util.List<java.lang.Integer> unreliableGold_;
+    public java.util.List<java.lang.Integer>
+        getUnreliableGoldList() {
+      return unreliableGold_;
+    }
+    public int getUnreliableGoldCount() {
+      return unreliableGold_.size();
+    }
+    public int getUnreliableGold(int index) {
+      return unreliableGold_.get(index);
+    }
+    
+    private void initFields() {
+      reliableGold_ = java.util.Collections.emptyList();;
+      unreliableGold_ = java.util.Collections.emptyList();;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      for (int i = 0; i < reliableGold_.size(); i++) {
+        output.writeUInt32(1, reliableGold_.get(i));
+      }
+      for (int i = 0; i < unreliableGold_.size(); i++) {
+        output.writeUInt32(2, unreliableGold_.get(i));
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      {
+        int dataSize = 0;
+        for (int i = 0; i < reliableGold_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(reliableGold_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getReliableGoldList().size();
+      }
+      {
+        int dataSize = 0;
+        for (int i = 0; i < unreliableGold_.size(); i++) {
+          dataSize += com.google.protobuf.CodedOutputStream
+            .computeUInt32SizeNoTag(unreliableGold_.get(i));
+        }
+        size += dataSize;
+        size += 1 * getUnreliableGoldList().size();
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_SendFinalGold parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_SendFinalGold prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_SendFinalGoldOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendFinalGold_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_SendFinalGold_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_SendFinalGold.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        reliableGold_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        unreliableGold_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendFinalGold.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendFinalGold getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_SendFinalGold.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendFinalGold build() {
+        DotaUsermessages.CDOTAUserMsg_SendFinalGold result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_SendFinalGold buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_SendFinalGold result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_SendFinalGold buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_SendFinalGold result = new DotaUsermessages.CDOTAUserMsg_SendFinalGold(this);
+        int from_bitField0_ = bitField0_;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          reliableGold_ = java.util.Collections.unmodifiableList(reliableGold_);
+          bitField0_ = (bitField0_ & ~0x00000001);
+        }
+        result.reliableGold_ = reliableGold_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          unreliableGold_ = java.util.Collections.unmodifiableList(unreliableGold_);
+          bitField0_ = (bitField0_ & ~0x00000002);
+        }
+        result.unreliableGold_ = unreliableGold_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_SendFinalGold) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_SendFinalGold)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_SendFinalGold other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_SendFinalGold.getDefaultInstance()) return this;
+        if (!other.reliableGold_.isEmpty()) {
+          if (reliableGold_.isEmpty()) {
+            reliableGold_ = other.reliableGold_;
+            bitField0_ = (bitField0_ & ~0x00000001);
+          } else {
+            ensureReliableGoldIsMutable();
+            reliableGold_.addAll(other.reliableGold_);
+          }
+          onChanged();
+        }
+        if (!other.unreliableGold_.isEmpty()) {
+          if (unreliableGold_.isEmpty()) {
+            unreliableGold_ = other.unreliableGold_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureUnreliableGoldIsMutable();
+            unreliableGold_.addAll(other.unreliableGold_);
+          }
+          onChanged();
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              ensureReliableGoldIsMutable();
+              reliableGold_.add(input.readUInt32());
+              break;
+            }
+            case 10: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addReliableGold(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+            case 16: {
+              ensureUnreliableGoldIsMutable();
+              unreliableGold_.add(input.readUInt32());
+              break;
+            }
+            case 18: {
+              int length = input.readRawVarint32();
+              int limit = input.pushLimit(length);
+              while (input.getBytesUntilLimit() > 0) {
+                addUnreliableGold(input.readUInt32());
+              }
+              input.popLimit(limit);
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // repeated uint32 reliable_gold = 1;
+      private java.util.List<java.lang.Integer> reliableGold_ = java.util.Collections.emptyList();;
+      private void ensureReliableGoldIsMutable() {
+        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
+          reliableGold_ = new java.util.ArrayList<java.lang.Integer>(reliableGold_);
+          bitField0_ |= 0x00000001;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getReliableGoldList() {
+        return java.util.Collections.unmodifiableList(reliableGold_);
+      }
+      public int getReliableGoldCount() {
+        return reliableGold_.size();
+      }
+      public int getReliableGold(int index) {
+        return reliableGold_.get(index);
+      }
+      public Builder setReliableGold(
+          int index, int value) {
+        ensureReliableGoldIsMutable();
+        reliableGold_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addReliableGold(int value) {
+        ensureReliableGoldIsMutable();
+        reliableGold_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllReliableGold(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureReliableGoldIsMutable();
+        super.addAll(values, reliableGold_);
+        onChanged();
+        return this;
+      }
+      public Builder clearReliableGold() {
+        reliableGold_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        onChanged();
+        return this;
+      }
+      
+      // repeated uint32 unreliable_gold = 2;
+      private java.util.List<java.lang.Integer> unreliableGold_ = java.util.Collections.emptyList();;
+      private void ensureUnreliableGoldIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          unreliableGold_ = new java.util.ArrayList<java.lang.Integer>(unreliableGold_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+      public java.util.List<java.lang.Integer>
+          getUnreliableGoldList() {
+        return java.util.Collections.unmodifiableList(unreliableGold_);
+      }
+      public int getUnreliableGoldCount() {
+        return unreliableGold_.size();
+      }
+      public int getUnreliableGold(int index) {
+        return unreliableGold_.get(index);
+      }
+      public Builder setUnreliableGold(
+          int index, int value) {
+        ensureUnreliableGoldIsMutable();
+        unreliableGold_.set(index, value);
+        onChanged();
+        return this;
+      }
+      public Builder addUnreliableGold(int value) {
+        ensureUnreliableGoldIsMutable();
+        unreliableGold_.add(value);
+        onChanged();
+        return this;
+      }
+      public Builder addAllUnreliableGold(
+          java.lang.Iterable<? extends java.lang.Integer> values) {
+        ensureUnreliableGoldIsMutable();
+        super.addAll(values, unreliableGold_);
+        onChanged();
+        return this;
+      }
+      public Builder clearUnreliableGold() {
+        unreliableGold_ = java.util.Collections.emptyList();;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_SendFinalGold)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_SendFinalGold(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_SendFinalGold)
+  }
+  
+  public interface CDOTAUserMsg_CustomMsgOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional string message = 1;
+    boolean hasMessage();
+    String getMessage();
+    
+    // optional int32 player_id = 2;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional int32 value = 3;
+    boolean hasValue();
+    int getValue();
+  }
+  public static final class CDOTAUserMsg_CustomMsg extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_CustomMsgOrBuilder {
+    // Use CDOTAUserMsg_CustomMsg.newBuilder() to construct.
+    private CDOTAUserMsg_CustomMsg(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_CustomMsg(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_CustomMsg defaultInstance;
+    public static CDOTAUserMsg_CustomMsg getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_CustomMsg getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_CustomMsg_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_CustomMsg_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional string message = 1;
+    public static final int MESSAGE_FIELD_NUMBER = 1;
+    private java.lang.Object message_;
+    public boolean hasMessage() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public String getMessage() {
+      java.lang.Object ref = message_;
+      if (ref instanceof String) {
+        return (String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        String s = bs.toStringUtf8();
+        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+          message_ = s;
+        }
+        return s;
+      }
+    }
+    private com.google.protobuf.ByteString getMessageBytes() {
+      java.lang.Object ref = message_;
+      if (ref instanceof String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+        message_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+    
+    // optional int32 player_id = 2;
+    public static final int PLAYER_ID_FIELD_NUMBER = 2;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional int32 value = 3;
+    public static final int VALUE_FIELD_NUMBER = 3;
+    private int value_;
+    public boolean hasValue() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getValue() {
+      return value_;
+    }
+    
+    private void initFields() {
+      message_ = "";
+      playerId_ = 0;
+      value_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getMessageBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, playerId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, value_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getMessageBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, playerId_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, value_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CustomMsg parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_CustomMsg prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_CustomMsgOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_CustomMsg_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_CustomMsg_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_CustomMsg.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        message_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        value_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_CustomMsg.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CustomMsg getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_CustomMsg.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CustomMsg build() {
+        DotaUsermessages.CDOTAUserMsg_CustomMsg result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_CustomMsg buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_CustomMsg result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CustomMsg buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_CustomMsg result = new DotaUsermessages.CDOTAUserMsg_CustomMsg(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.message_ = message_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.value_ = value_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_CustomMsg) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_CustomMsg)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_CustomMsg other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_CustomMsg.getDefaultInstance()) return this;
+        if (other.hasMessage()) {
+          setMessage(other.getMessage());
+        }
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasValue()) {
+          setValue(other.getValue());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              message_ = input.readBytes();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              playerId_ = input.readInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              value_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional string message = 1;
+      private java.lang.Object message_ = "";
+      public boolean hasMessage() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public String getMessage() {
+        java.lang.Object ref = message_;
+        if (!(ref instanceof String)) {
+          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+          message_ = s;
+          return s;
+        } else {
+          return (String) ref;
+        }
+      }
+      public Builder setMessage(String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        message_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearMessage() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        message_ = getDefaultInstance().getMessage();
+        onChanged();
+        return this;
+      }
+      void setMessage(com.google.protobuf.ByteString value) {
+        bitField0_ |= 0x00000001;
+        message_ = value;
+        onChanged();
+      }
+      
+      // optional int32 player_id = 2;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000002;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional int32 value = 3;
+      private int value_ ;
+      public boolean hasValue() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getValue() {
+        return value_;
+      }
+      public Builder setValue(int value) {
+        bitField0_ |= 0x00000004;
+        value_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearValue() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        value_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_CustomMsg)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_CustomMsg(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_CustomMsg)
+  }
+  
+  public interface CDOTAUserMsg_CoachHUDPingOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+    
+    // optional uint32 player_id = 1;
+    boolean hasPlayerId();
+    int getPlayerId();
+    
+    // optional .CDOTAMsg_CoachHUDPing hud_ping = 2;
+    boolean hasHudPing();
+    DotaCommonmessages.CDOTAMsg_CoachHUDPing getHudPing();
+    DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder getHudPingOrBuilder();
+  }
+  public static final class CDOTAUserMsg_CoachHUDPing extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_CoachHUDPingOrBuilder {
+    // Use CDOTAUserMsg_CoachHUDPing.newBuilder() to construct.
+    private CDOTAUserMsg_CoachHUDPing(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_CoachHUDPing(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_CoachHUDPing defaultInstance;
+    public static CDOTAUserMsg_CoachHUDPing getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_CoachHUDPing getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_CoachHUDPing_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_CoachHUDPing_fieldAccessorTable;
+    }
+    
+    private int bitField0_;
+    // optional uint32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    public int getPlayerId() {
+      return playerId_;
+    }
+    
+    // optional .CDOTAMsg_CoachHUDPing hud_ping = 2;
+    public static final int HUD_PING_FIELD_NUMBER = 2;
+    private DotaCommonmessages.CDOTAMsg_CoachHUDPing hudPing_;
+    public boolean hasHudPing() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    public DotaCommonmessages.CDOTAMsg_CoachHUDPing getHudPing() {
+      return hudPing_;
+    }
+    public DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder getHudPingOrBuilder() {
+      return hudPing_;
+    }
+    
+    private void initFields() {
+      playerId_ = 0;
+      hudPing_ = DotaCommonmessages.CDOTAMsg_CoachHUDPing.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeMessage(2, hudPing_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(2, hudPing_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_CoachHUDPing parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_CoachHUDPing prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_CoachHUDPingOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_CoachHUDPing_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_CoachHUDPing_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_CoachHUDPing.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getHudPingFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        if (hudPingBuilder_ == null) {
+          hudPing_ = DotaCommonmessages.CDOTAMsg_CoachHUDPing.getDefaultInstance();
+        } else {
+          hudPingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_CoachHUDPing.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CoachHUDPing getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_CoachHUDPing.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CoachHUDPing build() {
+        DotaUsermessages.CDOTAUserMsg_CoachHUDPing result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_CoachHUDPing buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_CoachHUDPing result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_CoachHUDPing buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_CoachHUDPing result = new DotaUsermessages.CDOTAUserMsg_CoachHUDPing(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        if (hudPingBuilder_ == null) {
+          result.hudPing_ = hudPing_;
+        } else {
+          result.hudPing_ = hudPingBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_CoachHUDPing) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_CoachHUDPing)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_CoachHUDPing other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_CoachHUDPing.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasHudPing()) {
+          mergeHudPing(other.getHudPing());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder subBuilder = DotaCommonmessages.CDOTAMsg_CoachHUDPing.newBuilder();
+              if (hasHudPing()) {
+                subBuilder.mergeFrom(getHudPing());
+              }
+              input.readMessage(subBuilder, extensionRegistry);
+              setHudPing(subBuilder.buildPartial());
+              break;
+            }
+          }
+        }
+      }
+      
+      private int bitField0_;
+      
+      // optional uint32 player_id = 1;
+      private int playerId_ ;
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      public int getPlayerId() {
+        return playerId_;
+      }
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+      
+      // optional .CDOTAMsg_CoachHUDPing hud_ping = 2;
+      private DotaCommonmessages.CDOTAMsg_CoachHUDPing hudPing_ = DotaCommonmessages.CDOTAMsg_CoachHUDPing.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_CoachHUDPing, DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder, DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder> hudPingBuilder_;
+      public boolean hasHudPing() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      public DotaCommonmessages.CDOTAMsg_CoachHUDPing getHudPing() {
+        if (hudPingBuilder_ == null) {
+          return hudPing_;
+        } else {
+          return hudPingBuilder_.getMessage();
+        }
+      }
+      public Builder setHudPing(DotaCommonmessages.CDOTAMsg_CoachHUDPing value) {
+        if (hudPingBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          hudPing_ = value;
+          onChanged();
+        } else {
+          hudPingBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder setHudPing(
+          DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder builderForValue) {
+        if (hudPingBuilder_ == null) {
+          hudPing_ = builderForValue.build();
+          onChanged();
+        } else {
+          hudPingBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder mergeHudPing(DotaCommonmessages.CDOTAMsg_CoachHUDPing value) {
+        if (hudPingBuilder_ == null) {
+          if (((bitField0_ & 0x00000002) == 0x00000002) &&
+              hudPing_ != DotaCommonmessages.CDOTAMsg_CoachHUDPing.getDefaultInstance()) {
+            hudPing_ =
+              DotaCommonmessages.CDOTAMsg_CoachHUDPing.newBuilder(hudPing_).mergeFrom(value).buildPartial();
+          } else {
+            hudPing_ = value;
+          }
+          onChanged();
+        } else {
+          hudPingBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000002;
+        return this;
+      }
+      public Builder clearHudPing() {
+        if (hudPingBuilder_ == null) {
+          hudPing_ = DotaCommonmessages.CDOTAMsg_CoachHUDPing.getDefaultInstance();
+          onChanged();
+        } else {
+          hudPingBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+      public DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder getHudPingBuilder() {
+        bitField0_ |= 0x00000002;
+        onChanged();
+        return getHudPingFieldBuilder().getBuilder();
+      }
+      public DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder getHudPingOrBuilder() {
+        if (hudPingBuilder_ != null) {
+          return hudPingBuilder_.getMessageOrBuilder();
+        } else {
+          return hudPing_;
+        }
+      }
+      private com.google.protobuf.SingleFieldBuilder<
+          DotaCommonmessages.CDOTAMsg_CoachHUDPing, DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder, DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder> 
+          getHudPingFieldBuilder() {
+        if (hudPingBuilder_ == null) {
+          hudPingBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              DotaCommonmessages.CDOTAMsg_CoachHUDPing, DotaCommonmessages.CDOTAMsg_CoachHUDPing.Builder, DotaCommonmessages.CDOTAMsg_CoachHUDPingOrBuilder>(
+                  hudPing_,
+                  getParentForChildren(),
+                  isClean());
+          hudPing_ = null;
+        }
+        return hudPingBuilder_;
+      }
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_CoachHUDPing)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_CoachHUDPing(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_CoachHUDPing)
+  }
+  
+  public interface CDOTAUserMsg_ClientLoadGridNavOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+  }
+  public static final class CDOTAUserMsg_ClientLoadGridNav extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAUserMsg_ClientLoadGridNavOrBuilder {
+    // Use CDOTAUserMsg_ClientLoadGridNav.newBuilder() to construct.
+    private CDOTAUserMsg_ClientLoadGridNav(Builder builder) {
+      super(builder);
+    }
+    private CDOTAUserMsg_ClientLoadGridNav(boolean noInit) {}
+    
+    private static final CDOTAUserMsg_ClientLoadGridNav defaultInstance;
+    public static CDOTAUserMsg_ClientLoadGridNav getDefaultInstance() {
+      return defaultInstance;
+    }
+    
+    public CDOTAUserMsg_ClientLoadGridNav getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+    
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ClientLoadGridNav_descriptor;
+    }
+    
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return DotaUsermessages.internal_static_CDOTAUserMsg_ClientLoadGridNav_fieldAccessorTable;
+    }
+    
+    private void initFields() {
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+      
+      memoizedIsInitialized = 1;
+      return true;
+    }
+    
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      getUnknownFields().writeTo(output);
+    }
+    
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+    
+      size = 0;
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+    
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+    
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return newBuilder().mergeFrom(data, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      Builder builder = newBuilder();
+      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+        return builder.buildParsed();
+      } else {
+        return null;
+      }
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input).buildParsed();
+    }
+    public static DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return newBuilder().mergeFrom(input, extensionRegistry)
+               .buildParsed();
+    }
+    
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+    
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements DotaUsermessages.CDOTAUserMsg_ClientLoadGridNavOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ClientLoadGridNav_descriptor;
+      }
+      
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return DotaUsermessages.internal_static_CDOTAUserMsg_ClientLoadGridNav_fieldAccessorTable;
+      }
+      
+      // Construct using DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+      
+      private Builder(BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+      
+      public Builder clear() {
+        super.clear();
+        return this;
+      }
+      
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+      
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.getDescriptor();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav getDefaultInstanceForType() {
+        return DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.getDefaultInstance();
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav build() {
+        DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+      
+      private DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav buildParsed()
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(
+            result).asInvalidProtocolBufferException();
+        }
+        return result;
+      }
+      
+      public DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav buildPartial() {
+        DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav result = new DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav(this);
+        onBuilt();
+        return result;
+      }
+      
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav) {
+          return mergeFrom((DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+      
+      public Builder mergeFrom(DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav other) {
+        if (other == DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.getDefaultInstance()) return this;
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+      
+      public final boolean isInitialized() {
+        return true;
+      }
+      
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder(
+            this.getUnknownFields());
+        while (true) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              this.setUnknownFields(unknownFields.build());
+              onChanged();
+              return this;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                this.setUnknownFields(unknownFields.build());
+                onChanged();
+                return this;
+              }
+              break;
+            }
+          }
+        }
+      }
+      
+      
+      // @@protoc_insertion_point(builder_scope:CDOTAUserMsg_ClientLoadGridNav)
+    }
+    
+    static {
+      defaultInstance = new CDOTAUserMsg_ClientLoadGridNav(true);
+      defaultInstance.initFields();
+    }
+    
+    // @@protoc_insertion_point(class_scope:CDOTAUserMsg_ClientLoadGridNav)
+  }
+  
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAUserMsg_AIDebugLine_descriptor;
   private static
@@ -26101,6 +38905,11 @@ public final class DotaUsermessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAUserMsg_Ping_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_SwapVerify_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_SwapVerify_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAUserMsg_ChatEvent_descriptor;
   private static
@@ -26156,6 +38965,11 @@ public final class DotaUsermessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAUserMsg_LocationPing_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ItemAlert_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ItemAlert_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAUserMsg_MinimapEvent_descriptor;
   private static
@@ -26216,6 +39030,26 @@ public final class DotaUsermessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAUserMsg_SetNextAutobuyItem_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_HalloweenDrops_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_HalloweenDrops_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAResponseQuerySerialized_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAResponseQuerySerialized_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAResponseQuerySerialized_Fact_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAResponseQuerySerialized_Fact_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTASpeechMatchOnClient_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTASpeechMatchOnClient_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAUserMsg_UnitEvent_descriptor;
   private static
@@ -26317,10 +39151,15 @@ public final class DotaUsermessages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleEnt_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_descriptor;
+    internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_fieldAccessorTable;
+      internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAUserMsg_OverheadEvent_descriptor;
   private static
@@ -26331,6 +39170,101 @@ public final class DotaUsermessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAUserMsg_TutorialTipInfo_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_TutorialFinish_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_TutorialFinish_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_SendGenericToolTip_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_SendGenericToolTip_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_WorldLine_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_WorldLine_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_TournamentDrop_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_TournamentDrop_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ChatWheel_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ChatWheel_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ReceivedXmasGift_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ReceivedXmasGift_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ShowSurvey_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ShowSurvey_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_UpdateSharedContent_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_UpdateSharedContent_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_TutorialRequestExp_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_TutorialRequestExp_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_TutorialFade_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_TutorialFade_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_TutorialPingMinimap_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_TutorialPingMinimap_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTA_UM_GamerulesStateChanged_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTA_UM_GamerulesStateChanged_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_AddQuestLogEntry_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_AddQuestLogEntry_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_SendStatPopup_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_SendStatPopup_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_SendRoshanPopup_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_SendRoshanPopup_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_SendFinalGold_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_SendFinalGold_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_CustomMsg_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_CustomMsg_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_CoachHUDPing_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_CoachHUDPing_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAUserMsg_ClientLoadGridNav_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAUserMsg_ClientLoadGridNav_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -26341,230 +39275,345 @@ public final class DotaUsermessages {
   static {
     java.lang.String[] descriptorData = {
       "\n\027dota_usermessages.proto\032 google/protob" +
-      "uf/descriptor.proto\032\021netmessages.proto\032\021" +
-      "ai_activity.proto\032\031dota_commonmessages.p" +
-      "roto\"+\n\030CDOTAUserMsg_AIDebugLine\022\017\n\007mess" +
-      "age\030\001 \001(\t\"$\n\021CDOTAUserMsg_Ping\022\017\n\007messag" +
-      "e\030\001 \001(\t\"\331\001\n\026CDOTAUserMsg_ChatEvent\022 \n\004ty" +
-      "pe\030\001 \002(\0162\022.DOTA_CHAT_MESSAGE\022\r\n\005value\030\002 " +
-      "\001(\r\022\026\n\nplayerid_1\030\003 \001(\021:\002-1\022\026\n\nplayerid_" +
-      "2\030\004 \001(\021:\002-1\022\026\n\nplayerid_3\030\005 \001(\021:\002-1\022\026\n\np" +
-      "layerid_4\030\006 \001(\021:\002-1\022\026\n\nplayerid_5\030\007 \001(\021:",
-      "\002-1\022\026\n\nplayerid_6\030\010 \001(\021:\002-1\"\317\001\n\032CDOTAUse" +
-      "rMsg_CombatLogData\022\014\n\004type\030\001 \001(\r\022\023\n\013targ" +
-      "et_name\030\002 \001(\r\022\025\n\rattacker_name\030\003 \001(\r\022\031\n\021" +
-      "attacker_illusion\030\004 \001(\010\022\027\n\017target_illusi" +
-      "on\030\005 \001(\010\022\026\n\016inflictor_name\030\006 \001(\r\022\r\n\005valu" +
-      "e\030\007 \001(\005\022\016\n\006health\030\010 \001(\005\022\014\n\004time\030\t \001(\002\"!\n" +
-      "\037CDOTAUserMsg_CombatLogShowDeath\"Z\n\024CDOT" +
-      "AUserMsg_BotChat\022\021\n\tplayer_id\030\001 \001(\r\022\016\n\006f" +
-      "ormat\030\002 \001(\t\022\017\n\007message\030\003 \001(\t\022\016\n\006target\030\004" +
-      " \001(\t\"q\n CDOTAUserMsg_CombatHeroPositions",
-      "\022\r\n\005index\030\001 \001(\r\022\014\n\004time\030\002 \001(\005\022 \n\tworld_p" +
-      "os\030\003 \001(\0132\r.CMsgVector2D\022\016\n\006health\030\004 \001(\005\"" +
-      "\375\001\n\034CDOTAUserMsg_MiniKillCamInfo\0229\n\tatta" +
-      "ckers\030\001 \003(\0132&.CDOTAUserMsg_MiniKillCamIn" +
-      "fo.Attacker\032\241\001\n\010Attacker\022\020\n\010attacker\030\001 \001" +
-      "(\r\022\024\n\014total_damage\030\002 \001(\005\022A\n\tabilities\030\003 " +
-      "\003(\0132..CDOTAUserMsg_MiniKillCamInfo.Attac" +
-      "ker.Ability\032*\n\007Ability\022\017\n\007ability\030\001 \001(\r\022" +
-      "\016\n\006damage\030\002 \001(\005\"@\n\035CDOTAUserMsg_GlobalLi" +
-      "ghtColor\022\r\n\005color\030\001 \001(\r\022\020\n\010duration\030\002 \001(",
-      "\002\"U\n!CDOTAUserMsg_GlobalLightDirection\022\036" +
-      "\n\tdirection\030\001 \001(\0132\013.CMsgVector\022\020\n\010durati" +
-      "on\030\002 \001(\002\"]\n\031CDOTAUserMsg_LocationPing\022\021\n" +
-      "\tplayer_id\030\001 \001(\r\022-\n\rlocation_ping\030\002 \001(\0132" +
-      "\026.CDOTAMsg_LocationPing\"n\n\031CDOTAUserMsg_" +
-      "MinimapEvent\022\022\n\nevent_type\030\001 \001(\005\022\025\n\renti" +
-      "ty_handle\030\002 \001(\005\022\t\n\001x\030\003 \001(\005\022\t\n\001y\030\004 \001(\005\022\020\n" +
-      "\010duration\030\005 \001(\005\"M\n\024CDOTAUserMsg_MapLine\022" +
-      "\021\n\tplayer_id\030\001 \001(\005\022\"\n\007mapline\030\002 \001(\0132\021.CD" +
-      "OTAMsg_MapLine\"n\n\036CDOTAUserMsg_MinimapDe",
-      "bugPoint\022\035\n\010location\030\001 \001(\0132\013.CMsgVector\022" +
-      "\r\n\005color\030\002 \001(\r\022\014\n\004size\030\003 \001(\005\022\020\n\010duration" +
-      "\030\004 \001(\002\"\256\001\n#CDOTAUserMsg_CreateLinearProj" +
-      "ectile\022\033\n\006origin\030\001 \001(\0132\013.CMsgVector\022\037\n\010v" +
-      "elocity\030\002 \001(\0132\r.CMsgVector2D\022\017\n\007latency\030" +
-      "\003 \001(\005\022\020\n\010entindex\030\004 \001(\005\022\026\n\016particle_inde" +
-      "x\030\005 \001(\005\022\016\n\006handle\030\006 \001(\005\"6\n$CDOTAUserMsg_" +
-      "DestroyLinearProjectile\022\016\n\006handle\030\001 \001(\005\"" +
-      "9\n%CDOTAUserMsg_DodgeTrackingProjectiles" +
-      "\022\020\n\010entindex\030\001 \002(\005\"_\n!CDOTAUserMsg_Spect",
-      "atorPlayerClick\022\020\n\010entindex\030\001 \002(\005\022\022\n\nord" +
-      "er_type\030\002 \001(\005\022\024\n\014target_index\030\003 \001(\005\"b\n\035C" +
-      "DOTAUserMsg_NevermoreRequiem\022\025\n\rentity_h" +
-      "andle\030\001 \001(\005\022\r\n\005lines\030\002 \001(\005\022\033\n\006origin\030\003 \001" +
-      "(\0132\013.CMsgVector\".\n\033CDOTAUserMsg_InvalidC" +
-      "ommand\022\017\n\007message\030\001 \001(\t\")\n\025CDOTAUserMsg_" +
-      "HudError\022\020\n\010order_id\030\001 \001(\005\"c\n\033CDOTAUserM" +
-      "sg_SharedCooldown\022\020\n\010entindex\030\001 \001(\005\022\014\n\004n" +
-      "ame\030\002 \001(\t\022\020\n\010cooldown\030\003 \001(\002\022\022\n\nname_inde" +
-      "x\030\004 \001(\005\"/\n\037CDOTAUserMsg_SetNextAutobuyIt",
-      "em\022\014\n\004name\030\001 \001(\t\"\243\006\n\026CDOTAUserMsg_UnitEv" +
-      "ent\022&\n\010msg_type\030\001 \002(\0162\024.EDotaEntityMessa" +
-      "ges\022\024\n\014entity_index\030\002 \002(\005\022.\n\006speech\030\003 \001(" +
-      "\0132\036.CDOTAUserMsg_UnitEvent.Speech\0227\n\013spe" +
-      "ech_mute\030\004 \001(\0132\".CDOTAUserMsg_UnitEvent." +
-      "SpeechMute\0227\n\013add_gesture\030\005 \001(\0132\".CDOTAU" +
-      "serMsg_UnitEvent.AddGesture\022=\n\016remove_ge" +
-      "sture\030\006 \001(\0132%.CDOTAUserMsg_UnitEvent.Rem" +
-      "oveGesture\0229\n\014blood_impact\030\007 \001(\0132#.CDOTA" +
-      "UserMsg_UnitEvent.BloodImpact\0229\n\014fade_ge",
-      "sture\030\010 \001(\0132#.CDOTAUserMsg_UnitEvent.Fad" +
-      "eGesture\032R\n\006Speech\022\017\n\007concept\030\001 \001(\005\022\020\n\010r" +
-      "esponse\030\002 \001(\t\022\026\n\016recipient_type\030\003 \001(\005\022\r\n" +
-      "\005level\030\004 \001(\005\032 \n\nSpeechMute\022\022\n\005delay\030\001 \001(" +
-      "\002:\0030.5\032b\n\nAddGesture\022\033\n\010activity\030\001 \001(\0162\t" +
-      ".Activity\022\014\n\004slot\030\002 \001(\005\022\022\n\007fade_in\030\003 \001(\002" +
-      ":\0010\022\025\n\010fade_out\030\004 \001(\002:\0030.1\032,\n\rRemoveGest" +
-      "ure\022\033\n\010activity\030\001 \001(\0162\t.Activity\032@\n\013Bloo" +
-      "dImpact\022\r\n\005scale\030\001 \001(\005\022\020\n\010x_normal\030\002 \001(\005" +
-      "\022\020\n\010y_normal\030\003 \001(\005\032*\n\013FadeGesture\022\033\n\010act",
-      "ivity\030\001 \001(\0162\t.Activity\"0\n\032CDOTAUserMsg_I" +
+      "uf/descriptor.proto\032\026networkbasetypes.pr" +
+      "oto\032\021ai_activity.proto\032\031dota_commonmessa" +
+      "ges.proto\"+\n\030CDOTAUserMsg_AIDebugLine\022\017\n" +
+      "\007message\030\001 \001(\t\"$\n\021CDOTAUserMsg_Ping\022\017\n\007m" +
+      "essage\030\001 \001(\t\",\n\027CDOTAUserMsg_SwapVerify\022" +
+      "\021\n\tplayer_id\030\001 \001(\r\"\357\001\n\026CDOTAUserMsg_Chat" +
+      "Event\0226\n\004type\030\001 \002(\0162\022.DOTA_CHAT_MESSAGE:" +
+      "\024CHAT_MESSAGE_INVALID\022\r\n\005value\030\002 \001(\r\022\026\n\n" +
+      "playerid_1\030\003 \001(\021:\002-1\022\026\n\nplayerid_2\030\004 \001(\021",
+      ":\002-1\022\026\n\nplayerid_3\030\005 \001(\021:\002-1\022\026\n\nplayerid" +
+      "_4\030\006 \001(\021:\002-1\022\026\n\nplayerid_5\030\007 \001(\021:\002-1\022\026\n\n" +
+      "playerid_6\030\010 \001(\021:\002-1\"\375\001\n\032CDOTAUserMsg_Co" +
+      "mbatLogData\022:\n\004type\030\001 \001(\0162\025.DOTA_COMBATL" +
+      "OG_TYPES:\025DOTA_COMBATLOG_DAMAGE\022\023\n\013targe" +
+      "t_name\030\002 \001(\r\022\025\n\rattacker_name\030\003 \001(\r\022\031\n\021a" +
+      "ttacker_illusion\030\004 \001(\010\022\027\n\017target_illusio" +
+      "n\030\005 \001(\010\022\026\n\016inflictor_name\030\006 \001(\r\022\r\n\005value" +
+      "\030\007 \001(\005\022\016\n\006health\030\010 \001(\005\022\014\n\004time\030\t \001(\002\"!\n\037" +
+      "CDOTAUserMsg_CombatLogShowDeath\"Z\n\024CDOTA",
+      "UserMsg_BotChat\022\021\n\tplayer_id\030\001 \001(\r\022\016\n\006fo" +
+      "rmat\030\002 \001(\t\022\017\n\007message\030\003 \001(\t\022\016\n\006target\030\004 " +
+      "\001(\t\"q\n CDOTAUserMsg_CombatHeroPositions\022" +
+      "\r\n\005index\030\001 \001(\r\022\014\n\004time\030\002 \001(\005\022 \n\tworld_po" +
+      "s\030\003 \001(\0132\r.CMsgVector2D\022\016\n\006health\030\004 \001(\005\"\375" +
+      "\001\n\034CDOTAUserMsg_MiniKillCamInfo\0229\n\tattac" +
+      "kers\030\001 \003(\0132&.CDOTAUserMsg_MiniKillCamInf" +
+      "o.Attacker\032\241\001\n\010Attacker\022\020\n\010attacker\030\001 \001(" +
+      "\r\022\024\n\014total_damage\030\002 \001(\005\022A\n\tabilities\030\003 \003" +
+      "(\0132..CDOTAUserMsg_MiniKillCamInfo.Attack",
+      "er.Ability\032*\n\007Ability\022\017\n\007ability\030\001 \001(\r\022\016" +
+      "\n\006damage\030\002 \001(\005\"@\n\035CDOTAUserMsg_GlobalLig" +
+      "htColor\022\r\n\005color\030\001 \001(\r\022\020\n\010duration\030\002 \001(\002" +
+      "\"U\n!CDOTAUserMsg_GlobalLightDirection\022\036\n" +
+      "\tdirection\030\001 \001(\0132\013.CMsgVector\022\020\n\010duratio" +
+      "n\030\002 \001(\002\"]\n\031CDOTAUserMsg_LocationPing\022\021\n\t" +
+      "player_id\030\001 \001(\r\022-\n\rlocation_ping\030\002 \001(\0132\026" +
+      ".CDOTAMsg_LocationPing\"T\n\026CDOTAUserMsg_I" +
+      "temAlert\022\021\n\tplayer_id\030\001 \001(\r\022\'\n\nitem_aler" +
+      "t\030\002 \001(\0132\023.CDOTAMsg_ItemAlert\"n\n\031CDOTAUse",
+      "rMsg_MinimapEvent\022\022\n\nevent_type\030\001 \001(\005\022\025\n" +
+      "\rentity_handle\030\002 \001(\005\022\t\n\001x\030\003 \001(\005\022\t\n\001y\030\004 \001" +
+      "(\005\022\020\n\010duration\030\005 \001(\005\"M\n\024CDOTAUserMsg_Map" +
+      "Line\022\021\n\tplayer_id\030\001 \001(\005\022\"\n\007mapline\030\002 \001(\013" +
+      "2\021.CDOTAMsg_MapLine\"n\n\036CDOTAUserMsg_Mini" +
+      "mapDebugPoint\022\035\n\010location\030\001 \001(\0132\013.CMsgVe" +
+      "ctor\022\r\n\005color\030\002 \001(\r\022\014\n\004size\030\003 \001(\005\022\020\n\010dur" +
+      "ation\030\004 \001(\002\"\256\001\n#CDOTAUserMsg_CreateLinea" +
+      "rProjectile\022\033\n\006origin\030\001 \001(\0132\013.CMsgVector" +
+      "\022\037\n\010velocity\030\002 \001(\0132\r.CMsgVector2D\022\017\n\007lat",
+      "ency\030\003 \001(\005\022\020\n\010entindex\030\004 \001(\005\022\026\n\016particle" +
+      "_index\030\005 \001(\005\022\016\n\006handle\030\006 \001(\005\"6\n$CDOTAUse" +
+      "rMsg_DestroyLinearProjectile\022\016\n\006handle\030\001" +
+      " \001(\005\"9\n%CDOTAUserMsg_DodgeTrackingProjec" +
+      "tiles\022\020\n\010entindex\030\001 \002(\005\"_\n!CDOTAUserMsg_" +
+      "SpectatorPlayerClick\022\020\n\010entindex\030\001 \002(\005\022\022" +
+      "\n\norder_type\030\002 \001(\005\022\024\n\014target_index\030\003 \001(\005" +
+      "\"b\n\035CDOTAUserMsg_NevermoreRequiem\022\025\n\rent" +
+      "ity_handle\030\001 \001(\005\022\r\n\005lines\030\002 \001(\005\022\033\n\006origi" +
+      "n\030\003 \001(\0132\013.CMsgVector\".\n\033CDOTAUserMsg_Inv",
+      "alidCommand\022\017\n\007message\030\001 \001(\t\")\n\025CDOTAUse" +
+      "rMsg_HudError\022\020\n\010order_id\030\001 \001(\005\"c\n\033CDOTA" +
+      "UserMsg_SharedCooldown\022\020\n\010entindex\030\001 \001(\005" +
+      "\022\014\n\004name\030\002 \001(\t\022\020\n\010cooldown\030\003 \001(\002\022\022\n\nname" +
+      "_index\030\004 \001(\005\"/\n\037CDOTAUserMsg_SetNextAuto" +
+      "buyItem\022\014\n\004name\030\001 \001(\t\"X\n\033CDOTAUserMsg_Ha" +
+      "lloweenDrops\022\021\n\titem_defs\030\001 \003(\r\022\022\n\nplaye" +
+      "r_ids\030\002 \003(\r\022\022\n\nprize_list\030\003 \001(\r\"\376\001\n\034CDOT" +
+      "AResponseQuerySerialized\0221\n\005facts\030\001 \003(\0132" +
+      "\".CDOTAResponseQuerySerialized.Fact\032\252\001\n\004",
+      "Fact\022\013\n\003key\030\001 \002(\005\022F\n\007valtype\030\002 \002(\0162,.CDO" +
+      "TAResponseQuerySerialized.Fact.ValueType" +
+      ":\007NUMERIC\022\023\n\013val_numeric\030\003 \001(\002\022\022\n\nval_st" +
+      "ring\030\004 \001(\t\"$\n\tValueType\022\013\n\007NUMERIC\020\001\022\n\n\006" +
+      "STRING\020\002\"\220\001\n\030CDOTASpeechMatchOnClient\022\017\n" +
+      "\007concept\030\001 \001(\005\022\026\n\016recipient_type\030\002 \001(\005\0224" +
+      "\n\rresponsequery\030\003 \001(\0132\035.CDOTAResponseQue" +
+      "rySerialized\022\025\n\nrandomseed\030\004 \001(\017:\0010\"\260\007\n\026" +
+      "CDOTAUserMsg_UnitEvent\0228\n\010msg_type\030\001 \002(\016" +
+      "2\024.EDotaEntityMessages:\020DOTA_UNIT_SPEECH",
+      "\022\024\n\014entity_index\030\002 \002(\005\022.\n\006speech\030\003 \001(\0132\036" +
+      ".CDOTAUserMsg_UnitEvent.Speech\0227\n\013speech" +
+      "_mute\030\004 \001(\0132\".CDOTAUserMsg_UnitEvent.Spe" +
+      "echMute\0227\n\013add_gesture\030\005 \001(\0132\".CDOTAUser" +
+      "Msg_UnitEvent.AddGesture\022=\n\016remove_gestu" +
+      "re\030\006 \001(\0132%.CDOTAUserMsg_UnitEvent.Remove" +
+      "Gesture\0229\n\014blood_impact\030\007 \001(\0132#.CDOTAUse" +
+      "rMsg_UnitEvent.BloodImpact\0229\n\014fade_gestu" +
+      "re\030\010 \001(\0132#.CDOTAUserMsg_UnitEvent.FadeGe" +
+      "sture\0229\n\026speech_match_on_client\030\t \001(\0132\031.",
+      "CDOTASpeechMatchOnClient\032k\n\006Speech\022\017\n\007co" +
+      "ncept\030\001 \001(\005\022\020\n\010response\030\002 \001(\t\022\026\n\016recipie" +
+      "nt_type\030\003 \001(\005\022\r\n\005level\030\004 \001(\005\022\027\n\010muteable" +
+      "\030\005 \001(\010:\005false\032 \n\nSpeechMute\022\022\n\005delay\030\001 \001" +
+      "(\002:\0030.5\032o\n\nAddGesture\022(\n\010activity\030\001 \001(\0162" +
+      "\t.Activity:\013ACT_INVALID\022\014\n\004slot\030\002 \001(\005\022\022\n" +
+      "\007fade_in\030\003 \001(\002:\0010\022\025\n\010fade_out\030\004 \001(\002:\0030.1" +
+      "\0329\n\rRemoveGesture\022(\n\010activity\030\001 \001(\0162\t.Ac" +
+      "tivity:\013ACT_INVALID\032@\n\013BloodImpact\022\r\n\005sc" +
+      "ale\030\001 \001(\005\022\020\n\010x_normal\030\002 \001(\005\022\020\n\010y_normal\030",
+      "\003 \001(\005\0327\n\013FadeGesture\022(\n\010activity\030\001 \001(\0162\t" +
+      ".Activity:\013ACT_INVALID\"0\n\032CDOTAUserMsg_I" +
       "temPurchased\022\022\n\nitem_index\030\001 \001(\005\"j\n\026CDOT" +
       "AUserMsg_ItemFound\022\016\n\006player\030\001 \001(\005\022\017\n\007qu" +
       "ality\030\002 \001(\005\022\016\n\006rarity\030\003 \001(\005\022\016\n\006method\030\004 " +
-      "\001(\005\022\017\n\007itemdef\030\005 \001(\005\"\313\016\n\034CDOTAUserMsg_Pa" +
-      "rticleManager\022$\n\004type\030\001 \002(\0162\026.DOTA_PARTI" +
-      "CLE_MESSAGE\022\r\n\005index\030\002 \002(\r\022R\n\026release_pa" +
-      "rticle_index\030\003 \001(\01322.CDOTAUserMsg_Partic" +
-      "leManager.ReleaseParticleIndex\022E\n\017create" +
-      "_particle\030\004 \001(\0132,.CDOTAUserMsg_ParticleM",
-      "anager.CreateParticle\022G\n\020destroy_particl" +
-      "e\030\005 \001(\0132-.CDOTAUserMsg_ParticleManager.D" +
-      "estroyParticle\022Z\n\032destroy_particle_invol" +
-      "ving\030\006 \001(\01326.CDOTAUserMsg_ParticleManage" +
-      "r.DestroyParticleInvolving\022E\n\017update_par" +
-      "ticle\030\007 \001(\0132,.CDOTAUserMsg_ParticleManag" +
-      "er.UpdateParticle\022L\n\023update_particle_fwd" +
-      "\030\010 \001(\0132/.CDOTAUserMsg_ParticleManager.Up" +
-      "dateParticleFwd\022R\n\026update_particle_orien" +
-      "t\030\t \001(\01322.CDOTAUserMsg_ParticleManager.U",
-      "pdateParticleOrient\022V\n\030update_particle_f" +
-      "allback\030\n \001(\01324.CDOTAUserMsg_ParticleMan" +
-      "ager.UpdateParticleFallback\022R\n\026update_pa" +
-      "rticle_offset\030\013 \001(\01322.CDOTAUserMsg_Parti" +
-      "cleManager.UpdateParticleOffset\022L\n\023updat" +
-      "e_particle_ent\030\014 \001(\0132/.CDOTAUserMsg_Part" +
-      "icleManager.UpdateParticleEnt\022T\n\027update_" +
-      "particle_latency\030\r \001(\01323.CDOTAUserMsg_Pa" +
-      "rticleManager.UpdateParticleLatency\032\026\n\024R" +
-      "eleaseParticleIndex\032Y\n\016CreateParticle\022\033\n",
-      "\023particle_name_index\030\001 \001(\005\022\023\n\013attach_typ" +
-      "e\030\002 \001(\005\022\025\n\rentity_handle\030\003 \001(\005\032.\n\017Destro" +
-      "yParticle\022\033\n\023destroy_immediately\030\001 \001(\010\032N" +
-      "\n\030DestroyParticleInvolving\022\033\n\023destroy_im" +
-      "mediately\030\001 \001(\010\022\025\n\rentity_handle\030\003 \001(\005\032F" +
-      "\n\016UpdateParticle\022\025\n\rcontrol_point\030\001 \001(\005\022" +
-      "\035\n\010position\030\002 \001(\0132\013.CMsgVector\032H\n\021Update" +
-      "ParticleFwd\022\025\n\rcontrol_point\030\001 \001(\005\022\034\n\007fo" +
-      "rward\030\002 \001(\0132\013.CMsgVector\032\200\001\n\024UpdateParti" +
-      "cleOrient\022\025\n\rcontrol_point\030\001 \001(\005\022\034\n\007forw",
-      "ard\030\002 \001(\0132\013.CMsgVector\022\032\n\005right\030\003 \001(\0132\013." +
-      "CMsgVector\022\027\n\002up\030\004 \001(\0132\013.CMsgVector\032N\n\026U" +
-      "pdateParticleFallback\022\025\n\rcontrol_point\030\001" +
-      " \001(\005\022\035\n\010position\030\002 \001(\0132\013.CMsgVector\032Q\n\024U" +
-      "pdateParticleOffset\022\025\n\rcontrol_point\030\001 \001" +
-      "(\005\022\"\n\rorigin_offset\030\002 \001(\0132\013.CMsgVector\032\222" +
-      "\001\n\021UpdateParticleEnt\022\025\n\rcontrol_point\030\001 " +
-      "\001(\005\022\025\n\rentity_handle\030\002 \001(\005\022\023\n\013attach_typ" +
-      "e\030\003 \001(\005\022\022\n\nattachment\030\004 \001(\005\022&\n\021fallback_" +
-      "position\030\005 \001(\0132\013.CMsgVector\032=\n\025UpdatePar",
-      "ticleLatency\022\026\n\016player_latency\030\001 \001(\005\022\014\n\004" +
-      "tick\030\002 \001(\005\"\260\001\n\032CDOTAUserMsg_OverheadEven" +
-      "t\022*\n\014message_type\030\001 \002(\0162\024.DOTA_OVERHEAD_" +
-      "ALERT\022\r\n\005value\030\002 \001(\005\022\036\n\026target_player_en" +
-      "tindex\030\003 \001(\005\022\027\n\017target_entindex\030\004 \001(\005\022\036\n" +
-      "\026source_player_entindex\030\005 \001(\005\">\n\034CDOTAUs" +
-      "erMsg_TutorialTipInfo\022\014\n\004name\030\001 \001(\t\022\020\n\010p" +
-      "rogress\030\002 \001(\005*\346\006\n\021EDotaUserMessages\022\036\n\032D" +
-      "OTA_UM_AddUnitToSelection\020@\022\027\n\023DOTA_UM_A" +
-      "IDebugLine\020A\022\025\n\021DOTA_UM_ChatEvent\020B\022\037\n\033D",
-      "OTA_UM_CombatHeroPositions\020C\022\031\n\025DOTA_UM_" +
-      "CombatLogData\020D\022\036\n\032DOTA_UM_CombatLogShow" +
-      "Death\020F\022\"\n\036DOTA_UM_CreateLinearProjectil" +
-      "e\020G\022#\n\037DOTA_UM_DestroyLinearProjectile\020H" +
-      "\022$\n DOTA_UM_DodgeTrackingProjectiles\020I\022\034" +
-      "\n\030DOTA_UM_GlobalLightColor\020J\022 \n\034DOTA_UM_" +
-      "GlobalLightDirection\020K\022\032\n\026DOTA_UM_Invali" +
-      "dCommand\020L\022\030\n\024DOTA_UM_LocationPing\020M\022\023\n\017" +
-      "DOTA_UM_MapLine\020N\022\033\n\027DOTA_UM_MiniKillCam" +
-      "Info\020O\022\035\n\031DOTA_UM_MinimapDebugPoint\020P\022\030\n",
-      "\024DOTA_UM_MinimapEvent\020Q\022\034\n\030DOTA_UM_Never" +
-      "moreRequiem\020R\022\031\n\025DOTA_UM_OverheadEvent\020S" +
-      "\022\036\n\032DOTA_UM_SetNextAutobuyItem\020T\022\032\n\026DOTA" +
-      "_UM_SharedCooldown\020U\022 \n\034DOTA_UM_Spectato" +
-      "rPlayerClick\020V\022\033\n\027DOTA_UM_TutorialTipInf" +
-      "o\020W\022\025\n\021DOTA_UM_UnitEvent\020X\022\033\n\027DOTA_UM_Pa" +
-      "rticleManager\020Y\022\023\n\017DOTA_UM_BotChat\020Z\022\024\n\020" +
-      "DOTA_UM_HudError\020[\022\031\n\025DOTA_UM_ItemPurcha" +
-      "sed\020\\\022\020\n\014DOTA_UM_Ping\020]\022\025\n\021DOTA_UM_ItemF" +
-      "ound\020^*\252\014\n\021DOTA_CHAT_MESSAGE\022!\n\024CHAT_MES",
-      "SAGE_INVALID\020\377\377\377\377\377\377\377\377\377\001\022\032\n\026CHAT_MESSAGE_" +
-      "HERO_KILL\020\000\022\032\n\026CHAT_MESSAGE_HERO_DENY\020\001\022" +
-      "\036\n\032CHAT_MESSAGE_BARRACKS_KILL\020\002\022\033\n\027CHAT_" +
-      "MESSAGE_TOWER_KILL\020\003\022\033\n\027CHAT_MESSAGE_TOW" +
-      "ER_DENY\020\004\022\033\n\027CHAT_MESSAGE_FIRSTBLOOD\020\005\022\034" +
-      "\n\030CHAT_MESSAGE_STREAK_KILL\020\006\022\030\n\024CHAT_MES" +
-      "SAGE_BUYBACK\020\007\022\026\n\022CHAT_MESSAGE_AEGIS\020\010\022\034" +
-      "\n\030CHAT_MESSAGE_ROSHAN_KILL\020\t\022\035\n\031CHAT_MES" +
-      "SAGE_COURIER_LOST\020\n\022\"\n\036CHAT_MESSAGE_COUR" +
-      "IER_RESPAWNED\020\013\022\033\n\027CHAT_MESSAGE_GLYPH_US",
-      "ED\020\014\022\036\n\032CHAT_MESSAGE_ITEM_PURCHASE\020\r\022\030\n\024" +
-      "CHAT_MESSAGE_CONNECT\020\016\022\033\n\027CHAT_MESSAGE_D" +
-      "ISCONNECT\020\017\022.\n*CHAT_MESSAGE_DISCONNECT_W" +
-      "AIT_FOR_RECONNECT\020\020\022*\n&CHAT_MESSAGE_DISC" +
-      "ONNECT_TIME_REMAINING\020\021\0221\n-CHAT_MESSAGE_" +
-      "DISCONNECT_TIME_REMAINING_PLURAL\020\022\022\032\n\026CH" +
-      "AT_MESSAGE_RECONNECT\020\023\022\030\n\024CHAT_MESSAGE_A" +
-      "BANDON\020\024\022\036\n\032CHAT_MESSAGE_SAFE_TO_LEAVE\020\025" +
-      "\022\034\n\030CHAT_MESSAGE_RUNE_PICKUP\020\026\022\034\n\030CHAT_M" +
-      "ESSAGE_RUNE_BOTTLE\020\027\022\031\n\025CHAT_MESSAGE_INT",
-      "HEBAG\020\030\022\033\n\027CHAT_MESSAGE_SECRETSHOP\020\031\022#\n\037" +
-      "CHAT_MESSAGE_ITEM_AUTOPURCHASED\020\032\022\037\n\033CHA" +
-      "T_MESSAGE_ITEMS_COMBINED\020\033\022\035\n\031CHAT_MESSA" +
-      "GE_SUPER_CREEPS\020\034\022%\n!CHAT_MESSAGE_CANT_U" +
-      "SE_ACTION_ITEM\020\035\022\"\n\036CHAT_MESSAGE_CHARGES" +
-      "_EXHAUSTED\020\036\022\032\n\026CHAT_MESSAGE_CANTPAUSE\020\037" +
-      "\022\035\n\031CHAT_MESSAGE_NOPAUSESLEFT\020 \022\035\n\031CHAT_" +
-      "MESSAGE_CANTPAUSEYET\020!\022\027\n\023CHAT_MESSAGE_P" +
-      "AUSED\020\"\022\"\n\036CHAT_MESSAGE_UNPAUSE_COUNTDOW" +
-      "N\020#\022\031\n\025CHAT_MESSAGE_UNPAUSED\020$\022\036\n\032CHAT_M",
-      "ESSAGE_AUTO_UNPAUSED\020%\022\032\n\026CHAT_MESSAGE_Y" +
-      "OUPAUSED\020&\022 \n\034CHAT_MESSAGE_CANTUNPAUSETE" +
-      "AM\020\'\022(\n$CHAT_MESSAGE_SAFE_TO_LEAVE_ABAND" +
-      "ONER\020(\022\"\n\036CHAT_MESSAGE_VOICE_TEXT_BANNED" +
-      "\020)\022.\n*CHAT_MESSAGE_SPECTATORS_WATCHING_T" +
-      "HIS_GAME\020*\022 \n\034CHAT_MESSAGE_REPORT_REMIND" +
-      "ER\020+\022\032\n\026CHAT_MESSAGE_ECON_ITEM\020,\022\026\n\022CHAT" +
-      "_MESSAGE_TAUNT\020-\022\027\n\023CHAT_MESSAGE_RANDOM\020" +
-      ".\022\030\n\024CHAT_MESSAGE_RD_TURN\020/*\276\001\n\023EDotaEnt" +
-      "ityMessages\022\024\n\020DOTA_UNIT_SPEECH\020\000\022\031\n\025DOT",
-      "A_UNIT_SPEECH_MUTE\020\001\022\031\n\025DOTA_UNIT_ADD_GE" +
-      "STURE\020\002\022\034\n\030DOTA_UNIT_REMOVE_GESTURE\020\003\022!\n" +
-      "\035DOTA_UNIT_REMOVE_ALL_GESTURES\020\004\022\032\n\026DOTA" +
-      "_UNIT_FADE_GESTURE\020\006*\205\004\n\025DOTA_PARTICLE_M" +
-      "ESSAGE\022&\n\"DOTA_PARTICLE_MANAGER_EVENT_CR" +
-      "EATE\020\000\022&\n\"DOTA_PARTICLE_MANAGER_EVENT_UP" +
-      "DATE\020\001\022.\n*DOTA_PARTICLE_MANAGER_EVENT_UP" +
-      "DATE_FORWARD\020\002\0222\n.DOTA_PARTICLE_MANAGER_" +
-      "EVENT_UPDATE_ORIENTATION\020\003\022/\n+DOTA_PARTI" +
-      "CLE_MANAGER_EVENT_UPDATE_FALLBACK\020\004\022*\n&D",
-      "OTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT\020\005\022" +
-      "-\n)DOTA_PARTICLE_MANAGER_EVENT_UPDATE_OF" +
-      "FSET\020\006\022\'\n#DOTA_PARTICLE_MANAGER_EVENT_DE" +
-      "STROY\020\007\0221\n-DOTA_PARTICLE_MANAGER_EVENT_D" +
-      "ESTROY_INVOLVING\020\010\022\'\n#DOTA_PARTICLE_MANA" +
-      "GER_EVENT_RELEASE\020\t\022\'\n#DOTA_PARTICLE_MAN" +
-      "AGER_EVENT_LATENCY\020\n*\262\002\n\023DOTA_OVERHEAD_A" +
-      "LERT\022\027\n\023OVERHEAD_ALERT_GOLD\020\000\022\027\n\023OVERHEA" +
-      "D_ALERT_DENY\020\001\022\033\n\027OVERHEAD_ALERT_CRITICA" +
-      "L\020\002\022\025\n\021OVERHEAD_ALERT_XP\020\003\022%\n!OVERHEAD_A",
-      "LERT_BONUS_SPELL_DAMAGE\020\004\022\027\n\023OVERHEAD_AL" +
-      "ERT_MISS\020\005\022\031\n\025OVERHEAD_ALERT_DAMAGE\020\006\022\030\n" +
-      "\024OVERHEAD_ALERT_EVADE\020\007\022\030\n\024OVERHEAD_ALER" +
-      "T_BLOCK\020\010\022&\n\"OVERHEAD_ALERT_BONUS_POISON" +
-      "_DAMAGE\020\tB\005H\001\200\001\000"
+      "\001(\005\022\017\n\007itemdef\030\005 \001(\005\"\215\020\n\034CDOTAUserMsg_Pa" +
+      "rticleManager\022H\n\004type\030\001 \002(\0162\026.DOTA_PARTI" +
+      "CLE_MESSAGE:\"DOTA_PARTICLE_MANAGER_EVENT" +
+      "_CREATE\022\r\n\005index\030\002 \002(\r\022R\n\026release_partic" +
+      "le_index\030\003 \001(\01322.CDOTAUserMsg_ParticleMa",
+      "nager.ReleaseParticleIndex\022E\n\017create_par" +
+      "ticle\030\004 \001(\0132,.CDOTAUserMsg_ParticleManag" +
+      "er.CreateParticle\022G\n\020destroy_particle\030\005 " +
+      "\001(\0132-.CDOTAUserMsg_ParticleManager.Destr" +
+      "oyParticle\022Z\n\032destroy_particle_involving" +
+      "\030\006 \001(\01326.CDOTAUserMsg_ParticleManager.De" +
+      "stroyParticleInvolving\022E\n\017update_particl" +
+      "e\030\007 \001(\0132,.CDOTAUserMsg_ParticleManager.U" +
+      "pdateParticle\022L\n\023update_particle_fwd\030\010 \001" +
+      "(\0132/.CDOTAUserMsg_ParticleManager.Update",
+      "ParticleFwd\022R\n\026update_particle_orient\030\t " +
+      "\001(\01322.CDOTAUserMsg_ParticleManager.Updat" +
+      "eParticleOrient\022V\n\030update_particle_fallb" +
+      "ack\030\n \001(\01324.CDOTAUserMsg_ParticleManager" +
+      ".UpdateParticleFallback\022R\n\026update_partic" +
+      "le_offset\030\013 \001(\01322.CDOTAUserMsg_ParticleM" +
+      "anager.UpdateParticleOffset\022L\n\023update_pa" +
+      "rticle_ent\030\014 \001(\0132/.CDOTAUserMsg_Particle" +
+      "Manager.UpdateParticleEnt\022[\n\033update_part" +
+      "icle_should_draw\030\016 \001(\01326.CDOTAUserMsg_Pa",
+      "rticleManager.UpdateParticleShouldDraw\022Y" +
+      "\n\032update_particle_set_frozen\030\017 \001(\01325.CDO" +
+      "TAUserMsg_ParticleManager.UpdateParticle" +
+      "SetFrozen\032\026\n\024ReleaseParticleIndex\032Y\n\016Cre" +
+      "ateParticle\022\033\n\023particle_name_index\030\001 \001(\005" +
+      "\022\023\n\013attach_type\030\002 \001(\005\022\025\n\rentity_handle\030\003" +
+      " \001(\005\032.\n\017DestroyParticle\022\033\n\023destroy_immed" +
+      "iately\030\001 \001(\010\032N\n\030DestroyParticleInvolving" +
+      "\022\033\n\023destroy_immediately\030\001 \001(\010\022\025\n\rentity_" +
+      "handle\030\003 \001(\005\032F\n\016UpdateParticle\022\025\n\rcontro",
+      "l_point\030\001 \001(\005\022\035\n\010position\030\002 \001(\0132\013.CMsgVe" +
+      "ctor\032H\n\021UpdateParticleFwd\022\025\n\rcontrol_poi" +
+      "nt\030\001 \001(\005\022\034\n\007forward\030\002 \001(\0132\013.CMsgVector\032\200" +
+      "\001\n\024UpdateParticleOrient\022\025\n\rcontrol_point" +
+      "\030\001 \001(\005\022\034\n\007forward\030\002 \001(\0132\013.CMsgVector\022\032\n\005" +
+      "right\030\003 \001(\0132\013.CMsgVector\022\027\n\002up\030\004 \001(\0132\013.C" +
+      "MsgVector\032N\n\026UpdateParticleFallback\022\025\n\rc" +
+      "ontrol_point\030\001 \001(\005\022\035\n\010position\030\002 \001(\0132\013.C" +
+      "MsgVector\032Q\n\024UpdateParticleOffset\022\025\n\rcon" +
+      "trol_point\030\001 \001(\005\022\"\n\rorigin_offset\030\002 \001(\0132",
+      "\013.CMsgVector\032\255\001\n\021UpdateParticleEnt\022\025\n\rco" +
+      "ntrol_point\030\001 \001(\005\022\025\n\rentity_handle\030\002 \001(\005" +
+      "\022\023\n\013attach_type\030\003 \001(\005\022\022\n\nattachment\030\004 \001(" +
+      "\005\022&\n\021fallback_position\030\005 \001(\0132\013.CMsgVecto" +
+      "r\022\031\n\021include_wearables\030\006 \001(\010\032-\n\027UpdatePa" +
+      "rticleSetFrozen\022\022\n\nset_frozen\030\001 \001(\010\032/\n\030U" +
+      "pdateParticleShouldDraw\022\023\n\013should_draw\030\001" +
+      " \001(\010\"\305\001\n\032CDOTAUserMsg_OverheadEvent\022?\n\014m" +
+      "essage_type\030\001 \002(\0162\024.DOTA_OVERHEAD_ALERT:" +
+      "\023OVERHEAD_ALERT_GOLD\022\r\n\005value\030\002 \001(\005\022\036\n\026t",
+      "arget_player_entindex\030\003 \001(\005\022\027\n\017target_en" +
+      "tindex\030\004 \001(\005\022\036\n\026source_player_entindex\030\005" +
+      " \001(\005\">\n\034CDOTAUserMsg_TutorialTipInfo\022\014\n\004" +
+      "name\030\001 \001(\t\022\020\n\010progress\030\002 \001(\005\"]\n\033CDOTAUse" +
+      "rMsg_TutorialFinish\022\017\n\007heading\030\001 \001(\t\022\016\n\006" +
+      "emblem\030\002 \001(\t\022\014\n\004body\030\003 \001(\t\022\017\n\007success\030\004 " +
+      "\001(\010\"_\n\037CDOTAUserMsg_SendGenericToolTip\022\r" +
+      "\n\005title\030\001 \001(\t\022\014\n\004text\030\002 \001(\t\022\020\n\010entindex\030" +
+      "\003 \001(\005\022\r\n\005close\030\004 \001(\010\"S\n\026CDOTAUserMsg_Wor" +
+      "ldLine\022\021\n\tplayer_id\030\001 \001(\005\022&\n\tworldline\030\002",
+      " \001(\0132\023.CDOTAMsg_WorldLine\"F\n\033CDOTAUserMs" +
+      "g_TournamentDrop\022\023\n\013winner_name\030\001 \001(\t\022\022\n" +
+      "\nevent_type\030\002 \001(\005\"\223\001\n\026CDOTAUserMsg_ChatW" +
+      "heel\022;\n\014chat_message\030\001 \001(\0162\026.EDOTAChatWh" +
+      "eelMessage:\rk_EDOTA_CW_Ok\022\021\n\tplayer_id\030\002" +
+      " \001(\r\022\022\n\naccount_id\030\003 \001(\r\022\025\n\rparam_hero_i" +
+      "d\030\004 \001(\r\"]\n\035CDOTAUserMsg_ReceivedXmasGift" +
+      "\022\021\n\tplayer_id\030\001 \001(\005\022\021\n\titem_name\030\002 \001(\t\022\026" +
+      "\n\016inventory_slot\030\003 \001(\005\"V\n\027CDOTAUserMsg_S" +
+      "howSurvey\022\021\n\tsurvey_id\030\001 \001(\005\022\020\n\010match_id",
+      "\030\002 \001(\r\022\026\n\016response_style\030\003 \001(\t\"5\n CDOTAU" +
+      "serMsg_UpdateSharedContent\022\021\n\tslot_type\030" +
+      "\001 \001(\005\"!\n\037CDOTAUserMsg_TutorialRequestExp" +
+      "\".\n\031CDOTAUserMsg_TutorialFade\022\021\n\ttgt_alp" +
+      "ha\030\001 \001(\005\"x\n CDOTAUserMsg_TutorialPingMin" +
+      "imap\022\021\n\tplayer_id\030\001 \001(\r\022\r\n\005pos_x\030\002 \001(\002\022\r" +
+      "\n\005pos_y\030\003 \001(\002\022\r\n\005pos_z\030\004 \001(\002\022\024\n\014entity_i" +
+      "ndex\030\005 \001(\005\"/\n\036CDOTA_UM_GamerulesStateCha" +
+      "nged\022\r\n\005state\030\001 \001(\r\"E\n\035CDOTAUserMsg_AddQ" +
+      "uestLogEntry\022\020\n\010npc_name\030\001 \001(\t\022\022\n\nnpc_di",
+      "alog\030\002 \001(\t\"[\n\032CDOTAUserMsg_SendStatPopup" +
+      "\022\021\n\tplayer_id\030\001 \001(\005\022*\n\tstatpopup\030\002 \001(\0132\027" +
+      ".CDOTAMsg_SendStatPopup\"C\n\034CDOTAUserMsg_" +
+      "SendRoshanPopup\022\021\n\treclaimed\030\001 \001(\010\022\020\n\010ga" +
+      "metime\030\002 \001(\005\"L\n\032CDOTAUserMsg_SendFinalGo" +
+      "ld\022\025\n\rreliable_gold\030\001 \003(\r\022\027\n\017unreliable_" +
+      "gold\030\002 \003(\r\"K\n\026CDOTAUserMsg_CustomMsg\022\017\n\007" +
+      "message\030\001 \001(\t\022\021\n\tplayer_id\030\002 \001(\005\022\r\n\005valu" +
+      "e\030\003 \001(\005\"X\n\031CDOTAUserMsg_CoachHUDPing\022\021\n\t" +
+      "player_id\030\001 \001(\r\022(\n\010hud_ping\030\002 \001(\0132\026.CDOT",
+      "AMsg_CoachHUDPing\" \n\036CDOTAUserMsg_Client" +
+      "LoadGridNav*\360\013\n\021EDotaUserMessages\022\036\n\032DOT" +
+      "A_UM_AddUnitToSelection\020@\022\027\n\023DOTA_UM_AID" +
+      "ebugLine\020A\022\025\n\021DOTA_UM_ChatEvent\020B\022\037\n\033DOT" +
+      "A_UM_CombatHeroPositions\020C\022\031\n\025DOTA_UM_Co" +
+      "mbatLogData\020D\022\036\n\032DOTA_UM_CombatLogShowDe" +
+      "ath\020F\022\"\n\036DOTA_UM_CreateLinearProjectile\020" +
+      "G\022#\n\037DOTA_UM_DestroyLinearProjectile\020H\022$" +
+      "\n DOTA_UM_DodgeTrackingProjectiles\020I\022\034\n\030" +
+      "DOTA_UM_GlobalLightColor\020J\022 \n\034DOTA_UM_Gl",
+      "obalLightDirection\020K\022\032\n\026DOTA_UM_InvalidC" +
+      "ommand\020L\022\030\n\024DOTA_UM_LocationPing\020M\022\023\n\017DO" +
+      "TA_UM_MapLine\020N\022\033\n\027DOTA_UM_MiniKillCamIn" +
+      "fo\020O\022\035\n\031DOTA_UM_MinimapDebugPoint\020P\022\030\n\024D" +
+      "OTA_UM_MinimapEvent\020Q\022\034\n\030DOTA_UM_Nevermo" +
+      "reRequiem\020R\022\031\n\025DOTA_UM_OverheadEvent\020S\022\036" +
+      "\n\032DOTA_UM_SetNextAutobuyItem\020T\022\032\n\026DOTA_U" +
+      "M_SharedCooldown\020U\022 \n\034DOTA_UM_SpectatorP" +
+      "layerClick\020V\022\033\n\027DOTA_UM_TutorialTipInfo\020" +
+      "W\022\025\n\021DOTA_UM_UnitEvent\020X\022\033\n\027DOTA_UM_Part",
+      "icleManager\020Y\022\023\n\017DOTA_UM_BotChat\020Z\022\024\n\020DO" +
+      "TA_UM_HudError\020[\022\031\n\025DOTA_UM_ItemPurchase" +
+      "d\020\\\022\020\n\014DOTA_UM_Ping\020]\022\025\n\021DOTA_UM_ItemFou" +
+      "nd\020^\022!\n\035DOTA_UM_CharacterSpeakConcept\020_\022" +
+      "\026\n\022DOTA_UM_SwapVerify\020`\022\025\n\021DOTA_UM_World" +
+      "Line\020a\022\032\n\026DOTA_UM_TournamentDrop\020b\022\025\n\021DO" +
+      "TA_UM_ItemAlert\020c\022\032\n\026DOTA_UM_HalloweenDr" +
+      "ops\020d\022\025\n\021DOTA_UM_ChatWheel\020e\022\034\n\030DOTA_UM_" +
+      "ReceivedXmasGift\020f\022\037\n\033DOTA_UM_UpdateShar" +
+      "edContent\020g\022\036\n\032DOTA_UM_TutorialRequestEx",
+      "p\020h\022\037\n\033DOTA_UM_TutorialPingMinimap\020i\022!\n\035" +
+      "DOTA_UM_GamerulesStateChanged\020j\022\026\n\022DOTA_" +
+      "UM_ShowSurvey\020k\022\030\n\024DOTA_UM_TutorialFade\020" +
+      "l\022\034\n\030DOTA_UM_AddQuestLogEntry\020m\022\031\n\025DOTA_" +
+      "UM_SendStatPopup\020n\022\032\n\026DOTA_UM_TutorialFi" +
+      "nish\020o\022\033\n\027DOTA_UM_SendRoshanPopup\020p\022\036\n\032D" +
+      "OTA_UM_SendGenericToolTip\020q\022\031\n\025DOTA_UM_S" +
+      "endFinalGold\020r\022\025\n\021DOTA_UM_CustomMsg\020s\022\030\n" +
+      "\024DOTA_UM_CoachHUDPing\020t\022\035\n\031DOTA_UM_Clien" +
+      "tLoadGridNav\020u*\304\021\n\021DOTA_CHAT_MESSAGE\022!\n\024",
+      "CHAT_MESSAGE_INVALID\020\377\377\377\377\377\377\377\377\377\001\022\032\n\026CHAT_" +
+      "MESSAGE_HERO_KILL\020\000\022\032\n\026CHAT_MESSAGE_HERO" +
+      "_DENY\020\001\022\036\n\032CHAT_MESSAGE_BARRACKS_KILL\020\002\022" +
+      "\033\n\027CHAT_MESSAGE_TOWER_KILL\020\003\022\033\n\027CHAT_MES" +
+      "SAGE_TOWER_DENY\020\004\022\033\n\027CHAT_MESSAGE_FIRSTB" +
+      "LOOD\020\005\022\034\n\030CHAT_MESSAGE_STREAK_KILL\020\006\022\030\n\024" +
+      "CHAT_MESSAGE_BUYBACK\020\007\022\026\n\022CHAT_MESSAGE_A" +
+      "EGIS\020\010\022\034\n\030CHAT_MESSAGE_ROSHAN_KILL\020\t\022\035\n\031" +
+      "CHAT_MESSAGE_COURIER_LOST\020\n\022\"\n\036CHAT_MESS" +
+      "AGE_COURIER_RESPAWNED\020\013\022\033\n\027CHAT_MESSAGE_",
+      "GLYPH_USED\020\014\022\036\n\032CHAT_MESSAGE_ITEM_PURCHA" +
+      "SE\020\r\022\030\n\024CHAT_MESSAGE_CONNECT\020\016\022\033\n\027CHAT_M" +
+      "ESSAGE_DISCONNECT\020\017\022.\n*CHAT_MESSAGE_DISC" +
+      "ONNECT_WAIT_FOR_RECONNECT\020\020\022*\n&CHAT_MESS" +
+      "AGE_DISCONNECT_TIME_REMAINING\020\021\0221\n-CHAT_" +
+      "MESSAGE_DISCONNECT_TIME_REMAINING_PLURAL" +
+      "\020\022\022\032\n\026CHAT_MESSAGE_RECONNECT\020\023\022\030\n\024CHAT_M" +
+      "ESSAGE_ABANDON\020\024\022\036\n\032CHAT_MESSAGE_SAFE_TO" +
+      "_LEAVE\020\025\022\034\n\030CHAT_MESSAGE_RUNE_PICKUP\020\026\022\034" +
+      "\n\030CHAT_MESSAGE_RUNE_BOTTLE\020\027\022\031\n\025CHAT_MES",
+      "SAGE_INTHEBAG\020\030\022\033\n\027CHAT_MESSAGE_SECRETSH" +
+      "OP\020\031\022#\n\037CHAT_MESSAGE_ITEM_AUTOPURCHASED\020" +
+      "\032\022\037\n\033CHAT_MESSAGE_ITEMS_COMBINED\020\033\022\035\n\031CH" +
+      "AT_MESSAGE_SUPER_CREEPS\020\034\022%\n!CHAT_MESSAG" +
+      "E_CANT_USE_ACTION_ITEM\020\035\022\"\n\036CHAT_MESSAGE" +
+      "_CHARGES_EXHAUSTED\020\036\022\032\n\026CHAT_MESSAGE_CAN" +
+      "TPAUSE\020\037\022\035\n\031CHAT_MESSAGE_NOPAUSESLEFT\020 \022" +
+      "\035\n\031CHAT_MESSAGE_CANTPAUSEYET\020!\022\027\n\023CHAT_M" +
+      "ESSAGE_PAUSED\020\"\022\"\n\036CHAT_MESSAGE_UNPAUSE_" +
+      "COUNTDOWN\020#\022\031\n\025CHAT_MESSAGE_UNPAUSED\020$\022\036",
+      "\n\032CHAT_MESSAGE_AUTO_UNPAUSED\020%\022\032\n\026CHAT_M" +
+      "ESSAGE_YOUPAUSED\020&\022 \n\034CHAT_MESSAGE_CANTU" +
+      "NPAUSETEAM\020\'\022(\n$CHAT_MESSAGE_SAFE_TO_LEA" +
+      "VE_ABANDONER\020(\022\"\n\036CHAT_MESSAGE_VOICE_TEX" +
+      "T_BANNED\020)\022.\n*CHAT_MESSAGE_SPECTATORS_WA" +
+      "TCHING_THIS_GAME\020*\022 \n\034CHAT_MESSAGE_REPOR" +
+      "T_REMINDER\020+\022\032\n\026CHAT_MESSAGE_ECON_ITEM\020," +
+      "\022\026\n\022CHAT_MESSAGE_TAUNT\020-\022\027\n\023CHAT_MESSAGE" +
+      "_RANDOM\020.\022\030\n\024CHAT_MESSAGE_RD_TURN\020/\022.\n*C" +
+      "HAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARL",
+      "Y\0200\022 \n\034CHAT_MESSAGE_DROP_RATE_BONUS\0201\022!\n" +
+      "\035CHAT_MESSAGE_NO_BATTLE_POINTS\0202\022\035\n\031CHAT" +
+      "_MESSAGE_DENIED_AEGIS\0203\022\036\n\032CHAT_MESSAGE_" +
+      "INFORMATIONAL\0204\022\035\n\031CHAT_MESSAGE_AEGIS_ST" +
+      "OLEN\0205\022\035\n\031CHAT_MESSAGE_ROSHAN_CANDY\0206\022\034\n" +
+      "\030CHAT_MESSAGE_ITEM_GIFTED\0207\022\'\n#CHAT_MESS" +
+      "AGE_HERO_KILL_WITH_GREEVIL\0208\022(\n$CHAT_MES" +
+      "SAGE_HOLDOUT_TOWER_DESTROYED\0209\022\'\n#CHAT_M" +
+      "ESSAGE_HOLDOUT_WALL_DESTROYED\020:\022&\n\"CHAT_" +
+      "MESSAGE_HOLDOUT_WALL_FINISHED\020;\022,\n(CHAT_",
+      "MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK\020<\0222\n" +
+      ".CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AF" +
+      "K_EARLY\020=\022%\n!CHAT_MESSAGE_ABANDON_LIMITE" +
+      "D_HERO\020>\0221\n-CHAT_MESSAGE_ABANDON_LIMITED" +
+      "_HERO_EXPLANATION\020?\022(\n$CHAT_MESSAGE_DISC" +
+      "ONNECT_LIMITED_HERO\020@*\262\001\n\035DOTA_NO_BATTLE" +
+      "_POINTS_REASONS\022%\n!NO_BATTLE_POINTS_WRON" +
+      "G_LOBBY_TYPE\020\001\022\"\n\036NO_BATTLE_POINTS_PRACT" +
+      "ICE_BOTS\020\002\022#\n\037NO_BATTLE_POINTS_CHEATS_EN" +
+      "ABLED\020\003\022!\n\035NO_BATTLE_POINTS_LOW_PRIORITY",
+      "\020\004*7\n\027DOTA_CHAT_INFORMATIONAL\022\034\n\030COOP_BA" +
+      "TTLE_POINTS_RULES\020\001*\251\001\n\024DOTA_COMBATLOG_T" +
+      "YPES\022\031\n\025DOTA_COMBATLOG_DAMAGE\020\000\022\027\n\023DOTA_" +
+      "COMBATLOG_HEAL\020\001\022\037\n\033DOTA_COMBATLOG_MODIF" +
+      "IER_ADD\020\002\022\"\n\036DOTA_COMBATLOG_MODIFIER_REM" +
+      "OVE\020\003\022\030\n\024DOTA_COMBATLOG_DEATH\020\004*\345\001\n\023EDot" +
+      "aEntityMessages\022\024\n\020DOTA_UNIT_SPEECH\020\000\022\031\n" +
+      "\025DOTA_UNIT_SPEECH_MUTE\020\001\022\031\n\025DOTA_UNIT_AD" +
+      "D_GESTURE\020\002\022\034\n\030DOTA_UNIT_REMOVE_GESTURE\020" +
+      "\003\022!\n\035DOTA_UNIT_REMOVE_ALL_GESTURES\020\004\022\032\n\026",
+      "DOTA_UNIT_FADE_GESTURE\020\006\022%\n!DOTA_UNIT_SP" +
+      "EECH_CLIENTSIDE_RULES\020\007*\332\004\n\025DOTA_PARTICL" +
+      "E_MESSAGE\022&\n\"DOTA_PARTICLE_MANAGER_EVENT" +
+      "_CREATE\020\000\022&\n\"DOTA_PARTICLE_MANAGER_EVENT" +
+      "_UPDATE\020\001\022.\n*DOTA_PARTICLE_MANAGER_EVENT" +
+      "_UPDATE_FORWARD\020\002\0222\n.DOTA_PARTICLE_MANAG" +
+      "ER_EVENT_UPDATE_ORIENTATION\020\003\022/\n+DOTA_PA" +
+      "RTICLE_MANAGER_EVENT_UPDATE_FALLBACK\020\004\022*" +
+      "\n&DOTA_PARTICLE_MANAGER_EVENT_UPDATE_ENT" +
+      "\020\005\022-\n)DOTA_PARTICLE_MANAGER_EVENT_UPDATE",
+      "_OFFSET\020\006\022\'\n#DOTA_PARTICLE_MANAGER_EVENT" +
+      "_DESTROY\020\007\0221\n-DOTA_PARTICLE_MANAGER_EVEN" +
+      "T_DESTROY_INVOLVING\020\010\022\'\n#DOTA_PARTICLE_M" +
+      "ANAGER_EVENT_RELEASE\020\t\022\'\n#DOTA_PARTICLE_" +
+      "MANAGER_EVENT_LATENCY\020\n\022+\n\'DOTA_PARTICLE" +
+      "_MANAGER_EVENT_SHOULD_DRAW\020\013\022&\n\"DOTA_PAR" +
+      "TICLE_MANAGER_EVENT_FROZEN\020\014*\356\003\n\023DOTA_OV" +
+      "ERHEAD_ALERT\022\027\n\023OVERHEAD_ALERT_GOLD\020\000\022\027\n" +
+      "\023OVERHEAD_ALERT_DENY\020\001\022\033\n\027OVERHEAD_ALERT" +
+      "_CRITICAL\020\002\022\025\n\021OVERHEAD_ALERT_XP\020\003\022%\n!OV",
+      "ERHEAD_ALERT_BONUS_SPELL_DAMAGE\020\004\022\027\n\023OVE" +
+      "RHEAD_ALERT_MISS\020\005\022\031\n\025OVERHEAD_ALERT_DAM" +
+      "AGE\020\006\022\030\n\024OVERHEAD_ALERT_EVADE\020\007\022\030\n\024OVERH" +
+      "EAD_ALERT_BLOCK\020\010\022&\n\"OVERHEAD_ALERT_BONU" +
+      "S_POISON_DAMAGE\020\t\022\027\n\023OVERHEAD_ALERT_HEAL" +
+      "\020\n\022\033\n\027OVERHEAD_ALERT_MANA_ADD\020\013\022\034\n\030OVERH" +
+      "EAD_ALERT_MANA_LOSS\020\014\022!\n\035OVERHEAD_ALERT_" +
+      "LAST_HIT_EARLY\020\r\022!\n\035OVERHEAD_ALERT_LAST_" +
+      "HIT_CLOSE\020\016\022 \n\034OVERHEAD_ALERT_LAST_HIT_M" +
+      "ISS\020\017"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -26587,8 +39636,16 @@ public final class DotaUsermessages {
               new java.lang.String[] { "Message", },
               DotaUsermessages.CDOTAUserMsg_Ping.class,
               DotaUsermessages.CDOTAUserMsg_Ping.Builder.class);
-          internal_static_CDOTAUserMsg_ChatEvent_descriptor =
+          internal_static_CDOTAUserMsg_SwapVerify_descriptor =
             getDescriptor().getMessageTypes().get(2);
+          internal_static_CDOTAUserMsg_SwapVerify_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_SwapVerify_descriptor,
+              new java.lang.String[] { "PlayerId", },
+              DotaUsermessages.CDOTAUserMsg_SwapVerify.class,
+              DotaUsermessages.CDOTAUserMsg_SwapVerify.Builder.class);
+          internal_static_CDOTAUserMsg_ChatEvent_descriptor =
+            getDescriptor().getMessageTypes().get(3);
           internal_static_CDOTAUserMsg_ChatEvent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_ChatEvent_descriptor,
@@ -26596,7 +39653,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_ChatEvent.class,
               DotaUsermessages.CDOTAUserMsg_ChatEvent.Builder.class);
           internal_static_CDOTAUserMsg_CombatLogData_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_CDOTAUserMsg_CombatLogData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_CombatLogData_descriptor,
@@ -26604,7 +39661,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_CombatLogData.class,
               DotaUsermessages.CDOTAUserMsg_CombatLogData.Builder.class);
           internal_static_CDOTAUserMsg_CombatLogShowDeath_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_CDOTAUserMsg_CombatLogShowDeath_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_CombatLogShowDeath_descriptor,
@@ -26612,7 +39669,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_CombatLogShowDeath.class,
               DotaUsermessages.CDOTAUserMsg_CombatLogShowDeath.Builder.class);
           internal_static_CDOTAUserMsg_BotChat_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_CDOTAUserMsg_BotChat_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_BotChat_descriptor,
@@ -26620,7 +39677,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_BotChat.class,
               DotaUsermessages.CDOTAUserMsg_BotChat.Builder.class);
           internal_static_CDOTAUserMsg_CombatHeroPositions_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_CDOTAUserMsg_CombatHeroPositions_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_CombatHeroPositions_descriptor,
@@ -26628,7 +39685,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_CombatHeroPositions.class,
               DotaUsermessages.CDOTAUserMsg_CombatHeroPositions.Builder.class);
           internal_static_CDOTAUserMsg_MiniKillCamInfo_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_CDOTAUserMsg_MiniKillCamInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_MiniKillCamInfo_descriptor,
@@ -26652,7 +39709,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_MiniKillCamInfo.Attacker.Ability.class,
               DotaUsermessages.CDOTAUserMsg_MiniKillCamInfo.Attacker.Ability.Builder.class);
           internal_static_CDOTAUserMsg_GlobalLightColor_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_CDOTAUserMsg_GlobalLightColor_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_GlobalLightColor_descriptor,
@@ -26660,7 +39717,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_GlobalLightColor.class,
               DotaUsermessages.CDOTAUserMsg_GlobalLightColor.Builder.class);
           internal_static_CDOTAUserMsg_GlobalLightDirection_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_CDOTAUserMsg_GlobalLightDirection_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_GlobalLightDirection_descriptor,
@@ -26668,15 +39725,23 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_GlobalLightDirection.class,
               DotaUsermessages.CDOTAUserMsg_GlobalLightDirection.Builder.class);
           internal_static_CDOTAUserMsg_LocationPing_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_CDOTAUserMsg_LocationPing_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_LocationPing_descriptor,
               new java.lang.String[] { "PlayerId", "LocationPing", },
               DotaUsermessages.CDOTAUserMsg_LocationPing.class,
               DotaUsermessages.CDOTAUserMsg_LocationPing.Builder.class);
+          internal_static_CDOTAUserMsg_ItemAlert_descriptor =
+            getDescriptor().getMessageTypes().get(12);
+          internal_static_CDOTAUserMsg_ItemAlert_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ItemAlert_descriptor,
+              new java.lang.String[] { "PlayerId", "ItemAlert", },
+              DotaUsermessages.CDOTAUserMsg_ItemAlert.class,
+              DotaUsermessages.CDOTAUserMsg_ItemAlert.Builder.class);
           internal_static_CDOTAUserMsg_MinimapEvent_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_CDOTAUserMsg_MinimapEvent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_MinimapEvent_descriptor,
@@ -26684,7 +39749,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_MinimapEvent.class,
               DotaUsermessages.CDOTAUserMsg_MinimapEvent.Builder.class);
           internal_static_CDOTAUserMsg_MapLine_descriptor =
-            getDescriptor().getMessageTypes().get(12);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_CDOTAUserMsg_MapLine_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_MapLine_descriptor,
@@ -26692,7 +39757,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_MapLine.class,
               DotaUsermessages.CDOTAUserMsg_MapLine.Builder.class);
           internal_static_CDOTAUserMsg_MinimapDebugPoint_descriptor =
-            getDescriptor().getMessageTypes().get(13);
+            getDescriptor().getMessageTypes().get(15);
           internal_static_CDOTAUserMsg_MinimapDebugPoint_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_MinimapDebugPoint_descriptor,
@@ -26700,7 +39765,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_MinimapDebugPoint.class,
               DotaUsermessages.CDOTAUserMsg_MinimapDebugPoint.Builder.class);
           internal_static_CDOTAUserMsg_CreateLinearProjectile_descriptor =
-            getDescriptor().getMessageTypes().get(14);
+            getDescriptor().getMessageTypes().get(16);
           internal_static_CDOTAUserMsg_CreateLinearProjectile_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_CreateLinearProjectile_descriptor,
@@ -26708,7 +39773,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile.class,
               DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile.Builder.class);
           internal_static_CDOTAUserMsg_DestroyLinearProjectile_descriptor =
-            getDescriptor().getMessageTypes().get(15);
+            getDescriptor().getMessageTypes().get(17);
           internal_static_CDOTAUserMsg_DestroyLinearProjectile_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_DestroyLinearProjectile_descriptor,
@@ -26716,7 +39781,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile.class,
               DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile.Builder.class);
           internal_static_CDOTAUserMsg_DodgeTrackingProjectiles_descriptor =
-            getDescriptor().getMessageTypes().get(16);
+            getDescriptor().getMessageTypes().get(18);
           internal_static_CDOTAUserMsg_DodgeTrackingProjectiles_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_DodgeTrackingProjectiles_descriptor,
@@ -26724,7 +39789,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles.class,
               DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles.Builder.class);
           internal_static_CDOTAUserMsg_SpectatorPlayerClick_descriptor =
-            getDescriptor().getMessageTypes().get(17);
+            getDescriptor().getMessageTypes().get(19);
           internal_static_CDOTAUserMsg_SpectatorPlayerClick_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_SpectatorPlayerClick_descriptor,
@@ -26732,7 +39797,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_SpectatorPlayerClick.class,
               DotaUsermessages.CDOTAUserMsg_SpectatorPlayerClick.Builder.class);
           internal_static_CDOTAUserMsg_NevermoreRequiem_descriptor =
-            getDescriptor().getMessageTypes().get(18);
+            getDescriptor().getMessageTypes().get(20);
           internal_static_CDOTAUserMsg_NevermoreRequiem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_NevermoreRequiem_descriptor,
@@ -26740,7 +39805,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_NevermoreRequiem.class,
               DotaUsermessages.CDOTAUserMsg_NevermoreRequiem.Builder.class);
           internal_static_CDOTAUserMsg_InvalidCommand_descriptor =
-            getDescriptor().getMessageTypes().get(19);
+            getDescriptor().getMessageTypes().get(21);
           internal_static_CDOTAUserMsg_InvalidCommand_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_InvalidCommand_descriptor,
@@ -26748,7 +39813,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_InvalidCommand.class,
               DotaUsermessages.CDOTAUserMsg_InvalidCommand.Builder.class);
           internal_static_CDOTAUserMsg_HudError_descriptor =
-            getDescriptor().getMessageTypes().get(20);
+            getDescriptor().getMessageTypes().get(22);
           internal_static_CDOTAUserMsg_HudError_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_HudError_descriptor,
@@ -26756,7 +39821,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_HudError.class,
               DotaUsermessages.CDOTAUserMsg_HudError.Builder.class);
           internal_static_CDOTAUserMsg_SharedCooldown_descriptor =
-            getDescriptor().getMessageTypes().get(21);
+            getDescriptor().getMessageTypes().get(23);
           internal_static_CDOTAUserMsg_SharedCooldown_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_SharedCooldown_descriptor,
@@ -26764,19 +39829,51 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_SharedCooldown.class,
               DotaUsermessages.CDOTAUserMsg_SharedCooldown.Builder.class);
           internal_static_CDOTAUserMsg_SetNextAutobuyItem_descriptor =
-            getDescriptor().getMessageTypes().get(22);
+            getDescriptor().getMessageTypes().get(24);
           internal_static_CDOTAUserMsg_SetNextAutobuyItem_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_SetNextAutobuyItem_descriptor,
               new java.lang.String[] { "Name", },
               DotaUsermessages.CDOTAUserMsg_SetNextAutobuyItem.class,
               DotaUsermessages.CDOTAUserMsg_SetNextAutobuyItem.Builder.class);
+          internal_static_CDOTAUserMsg_HalloweenDrops_descriptor =
+            getDescriptor().getMessageTypes().get(25);
+          internal_static_CDOTAUserMsg_HalloweenDrops_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_HalloweenDrops_descriptor,
+              new java.lang.String[] { "ItemDefs", "PlayerIds", "PrizeList", },
+              DotaUsermessages.CDOTAUserMsg_HalloweenDrops.class,
+              DotaUsermessages.CDOTAUserMsg_HalloweenDrops.Builder.class);
+          internal_static_CDOTAResponseQuerySerialized_descriptor =
+            getDescriptor().getMessageTypes().get(26);
+          internal_static_CDOTAResponseQuerySerialized_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAResponseQuerySerialized_descriptor,
+              new java.lang.String[] { "Facts", },
+              DotaUsermessages.CDOTAResponseQuerySerialized.class,
+              DotaUsermessages.CDOTAResponseQuerySerialized.Builder.class);
+          internal_static_CDOTAResponseQuerySerialized_Fact_descriptor =
+            internal_static_CDOTAResponseQuerySerialized_descriptor.getNestedTypes().get(0);
+          internal_static_CDOTAResponseQuerySerialized_Fact_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAResponseQuerySerialized_Fact_descriptor,
+              new java.lang.String[] { "Key", "Valtype", "ValNumeric", "ValString", },
+              DotaUsermessages.CDOTAResponseQuerySerialized.Fact.class,
+              DotaUsermessages.CDOTAResponseQuerySerialized.Fact.Builder.class);
+          internal_static_CDOTASpeechMatchOnClient_descriptor =
+            getDescriptor().getMessageTypes().get(27);
+          internal_static_CDOTASpeechMatchOnClient_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTASpeechMatchOnClient_descriptor,
+              new java.lang.String[] { "Concept", "RecipientType", "Responsequery", "Randomseed", },
+              DotaUsermessages.CDOTASpeechMatchOnClient.class,
+              DotaUsermessages.CDOTASpeechMatchOnClient.Builder.class);
           internal_static_CDOTAUserMsg_UnitEvent_descriptor =
-            getDescriptor().getMessageTypes().get(23);
+            getDescriptor().getMessageTypes().get(28);
           internal_static_CDOTAUserMsg_UnitEvent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_UnitEvent_descriptor,
-              new java.lang.String[] { "MsgType", "EntityIndex", "Speech", "SpeechMute", "AddGesture", "RemoveGesture", "BloodImpact", "FadeGesture", },
+              new java.lang.String[] { "MsgType", "EntityIndex", "Speech", "SpeechMute", "AddGesture", "RemoveGesture", "BloodImpact", "FadeGesture", "SpeechMatchOnClient", },
               DotaUsermessages.CDOTAUserMsg_UnitEvent.class,
               DotaUsermessages.CDOTAUserMsg_UnitEvent.Builder.class);
           internal_static_CDOTAUserMsg_UnitEvent_Speech_descriptor =
@@ -26784,7 +39881,7 @@ public final class DotaUsermessages {
           internal_static_CDOTAUserMsg_UnitEvent_Speech_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_UnitEvent_Speech_descriptor,
-              new java.lang.String[] { "Concept", "Response", "RecipientType", "Level", },
+              new java.lang.String[] { "Concept", "Response", "RecipientType", "Level", "Muteable", },
               DotaUsermessages.CDOTAUserMsg_UnitEvent.Speech.class,
               DotaUsermessages.CDOTAUserMsg_UnitEvent.Speech.Builder.class);
           internal_static_CDOTAUserMsg_UnitEvent_SpeechMute_descriptor =
@@ -26828,7 +39925,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_UnitEvent.FadeGesture.class,
               DotaUsermessages.CDOTAUserMsg_UnitEvent.FadeGesture.Builder.class);
           internal_static_CDOTAUserMsg_ItemPurchased_descriptor =
-            getDescriptor().getMessageTypes().get(24);
+            getDescriptor().getMessageTypes().get(29);
           internal_static_CDOTAUserMsg_ItemPurchased_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_ItemPurchased_descriptor,
@@ -26836,7 +39933,7 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_ItemPurchased.class,
               DotaUsermessages.CDOTAUserMsg_ItemPurchased.Builder.class);
           internal_static_CDOTAUserMsg_ItemFound_descriptor =
-            getDescriptor().getMessageTypes().get(25);
+            getDescriptor().getMessageTypes().get(30);
           internal_static_CDOTAUserMsg_ItemFound_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_ItemFound_descriptor,
@@ -26844,11 +39941,11 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_ItemFound.class,
               DotaUsermessages.CDOTAUserMsg_ItemFound.Builder.class);
           internal_static_CDOTAUserMsg_ParticleManager_descriptor =
-            getDescriptor().getMessageTypes().get(26);
+            getDescriptor().getMessageTypes().get(31);
           internal_static_CDOTAUserMsg_ParticleManager_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_ParticleManager_descriptor,
-              new java.lang.String[] { "Type", "Index", "ReleaseParticleIndex", "CreateParticle", "DestroyParticle", "DestroyParticleInvolving", "UpdateParticle", "UpdateParticleFwd", "UpdateParticleOrient", "UpdateParticleFallback", "UpdateParticleOffset", "UpdateParticleEnt", "UpdateParticleLatency", },
+              new java.lang.String[] { "Type", "Index", "ReleaseParticleIndex", "CreateParticle", "DestroyParticle", "DestroyParticleInvolving", "UpdateParticle", "UpdateParticleFwd", "UpdateParticleOrient", "UpdateParticleFallback", "UpdateParticleOffset", "UpdateParticleEnt", "UpdateParticleShouldDraw", "UpdateParticleSetFrozen", },
               DotaUsermessages.CDOTAUserMsg_ParticleManager.class,
               DotaUsermessages.CDOTAUserMsg_ParticleManager.Builder.class);
           internal_static_CDOTAUserMsg_ParticleManager_ReleaseParticleIndex_descriptor =
@@ -26928,19 +40025,27 @@ public final class DotaUsermessages {
           internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleEnt_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleEnt_descriptor,
-              new java.lang.String[] { "ControlPoint", "EntityHandle", "AttachType", "Attachment", "FallbackPosition", },
+              new java.lang.String[] { "ControlPoint", "EntityHandle", "AttachType", "Attachment", "FallbackPosition", "IncludeWearables", },
               DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleEnt.class,
               DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleEnt.Builder.class);
-          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_descriptor =
+          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_descriptor =
             internal_static_CDOTAUserMsg_ParticleManager_descriptor.getNestedTypes().get(10);
-          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_fieldAccessorTable = new
+          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleLatency_descriptor,
-              new java.lang.String[] { "PlayerLatency", "Tick", },
-              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.class,
-              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleLatency.Builder.class);
+              internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleSetFrozen_descriptor,
+              new java.lang.String[] { "SetFrozen", },
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.class,
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleSetFrozen.Builder.class);
+          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_descriptor =
+            internal_static_CDOTAUserMsg_ParticleManager_descriptor.getNestedTypes().get(11);
+          internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ParticleManager_UpdateParticleShouldDraw_descriptor,
+              new java.lang.String[] { "ShouldDraw", },
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.class,
+              DotaUsermessages.CDOTAUserMsg_ParticleManager.UpdateParticleShouldDraw.Builder.class);
           internal_static_CDOTAUserMsg_OverheadEvent_descriptor =
-            getDescriptor().getMessageTypes().get(27);
+            getDescriptor().getMessageTypes().get(32);
           internal_static_CDOTAUserMsg_OverheadEvent_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_OverheadEvent_descriptor,
@@ -26948,13 +40053,165 @@ public final class DotaUsermessages {
               DotaUsermessages.CDOTAUserMsg_OverheadEvent.class,
               DotaUsermessages.CDOTAUserMsg_OverheadEvent.Builder.class);
           internal_static_CDOTAUserMsg_TutorialTipInfo_descriptor =
-            getDescriptor().getMessageTypes().get(28);
+            getDescriptor().getMessageTypes().get(33);
           internal_static_CDOTAUserMsg_TutorialTipInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAUserMsg_TutorialTipInfo_descriptor,
               new java.lang.String[] { "Name", "Progress", },
               DotaUsermessages.CDOTAUserMsg_TutorialTipInfo.class,
               DotaUsermessages.CDOTAUserMsg_TutorialTipInfo.Builder.class);
+          internal_static_CDOTAUserMsg_TutorialFinish_descriptor =
+            getDescriptor().getMessageTypes().get(34);
+          internal_static_CDOTAUserMsg_TutorialFinish_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_TutorialFinish_descriptor,
+              new java.lang.String[] { "Heading", "Emblem", "Body", "Success", },
+              DotaUsermessages.CDOTAUserMsg_TutorialFinish.class,
+              DotaUsermessages.CDOTAUserMsg_TutorialFinish.Builder.class);
+          internal_static_CDOTAUserMsg_SendGenericToolTip_descriptor =
+            getDescriptor().getMessageTypes().get(35);
+          internal_static_CDOTAUserMsg_SendGenericToolTip_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_SendGenericToolTip_descriptor,
+              new java.lang.String[] { "Title", "Text", "Entindex", "Close", },
+              DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.class,
+              DotaUsermessages.CDOTAUserMsg_SendGenericToolTip.Builder.class);
+          internal_static_CDOTAUserMsg_WorldLine_descriptor =
+            getDescriptor().getMessageTypes().get(36);
+          internal_static_CDOTAUserMsg_WorldLine_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_WorldLine_descriptor,
+              new java.lang.String[] { "PlayerId", "Worldline", },
+              DotaUsermessages.CDOTAUserMsg_WorldLine.class,
+              DotaUsermessages.CDOTAUserMsg_WorldLine.Builder.class);
+          internal_static_CDOTAUserMsg_TournamentDrop_descriptor =
+            getDescriptor().getMessageTypes().get(37);
+          internal_static_CDOTAUserMsg_TournamentDrop_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_TournamentDrop_descriptor,
+              new java.lang.String[] { "WinnerName", "EventType", },
+              DotaUsermessages.CDOTAUserMsg_TournamentDrop.class,
+              DotaUsermessages.CDOTAUserMsg_TournamentDrop.Builder.class);
+          internal_static_CDOTAUserMsg_ChatWheel_descriptor =
+            getDescriptor().getMessageTypes().get(38);
+          internal_static_CDOTAUserMsg_ChatWheel_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ChatWheel_descriptor,
+              new java.lang.String[] { "ChatMessage", "PlayerId", "AccountId", "ParamHeroId", },
+              DotaUsermessages.CDOTAUserMsg_ChatWheel.class,
+              DotaUsermessages.CDOTAUserMsg_ChatWheel.Builder.class);
+          internal_static_CDOTAUserMsg_ReceivedXmasGift_descriptor =
+            getDescriptor().getMessageTypes().get(39);
+          internal_static_CDOTAUserMsg_ReceivedXmasGift_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ReceivedXmasGift_descriptor,
+              new java.lang.String[] { "PlayerId", "ItemName", "InventorySlot", },
+              DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.class,
+              DotaUsermessages.CDOTAUserMsg_ReceivedXmasGift.Builder.class);
+          internal_static_CDOTAUserMsg_ShowSurvey_descriptor =
+            getDescriptor().getMessageTypes().get(40);
+          internal_static_CDOTAUserMsg_ShowSurvey_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ShowSurvey_descriptor,
+              new java.lang.String[] { "SurveyId", "MatchId", "ResponseStyle", },
+              DotaUsermessages.CDOTAUserMsg_ShowSurvey.class,
+              DotaUsermessages.CDOTAUserMsg_ShowSurvey.Builder.class);
+          internal_static_CDOTAUserMsg_UpdateSharedContent_descriptor =
+            getDescriptor().getMessageTypes().get(41);
+          internal_static_CDOTAUserMsg_UpdateSharedContent_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_UpdateSharedContent_descriptor,
+              new java.lang.String[] { "SlotType", },
+              DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.class,
+              DotaUsermessages.CDOTAUserMsg_UpdateSharedContent.Builder.class);
+          internal_static_CDOTAUserMsg_TutorialRequestExp_descriptor =
+            getDescriptor().getMessageTypes().get(42);
+          internal_static_CDOTAUserMsg_TutorialRequestExp_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_TutorialRequestExp_descriptor,
+              new java.lang.String[] { },
+              DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.class,
+              DotaUsermessages.CDOTAUserMsg_TutorialRequestExp.Builder.class);
+          internal_static_CDOTAUserMsg_TutorialFade_descriptor =
+            getDescriptor().getMessageTypes().get(43);
+          internal_static_CDOTAUserMsg_TutorialFade_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_TutorialFade_descriptor,
+              new java.lang.String[] { "TgtAlpha", },
+              DotaUsermessages.CDOTAUserMsg_TutorialFade.class,
+              DotaUsermessages.CDOTAUserMsg_TutorialFade.Builder.class);
+          internal_static_CDOTAUserMsg_TutorialPingMinimap_descriptor =
+            getDescriptor().getMessageTypes().get(44);
+          internal_static_CDOTAUserMsg_TutorialPingMinimap_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_TutorialPingMinimap_descriptor,
+              new java.lang.String[] { "PlayerId", "PosX", "PosY", "PosZ", "EntityIndex", },
+              DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.class,
+              DotaUsermessages.CDOTAUserMsg_TutorialPingMinimap.Builder.class);
+          internal_static_CDOTA_UM_GamerulesStateChanged_descriptor =
+            getDescriptor().getMessageTypes().get(45);
+          internal_static_CDOTA_UM_GamerulesStateChanged_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTA_UM_GamerulesStateChanged_descriptor,
+              new java.lang.String[] { "State", },
+              DotaUsermessages.CDOTA_UM_GamerulesStateChanged.class,
+              DotaUsermessages.CDOTA_UM_GamerulesStateChanged.Builder.class);
+          internal_static_CDOTAUserMsg_AddQuestLogEntry_descriptor =
+            getDescriptor().getMessageTypes().get(46);
+          internal_static_CDOTAUserMsg_AddQuestLogEntry_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_AddQuestLogEntry_descriptor,
+              new java.lang.String[] { "NpcName", "NpcDialog", },
+              DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.class,
+              DotaUsermessages.CDOTAUserMsg_AddQuestLogEntry.Builder.class);
+          internal_static_CDOTAUserMsg_SendStatPopup_descriptor =
+            getDescriptor().getMessageTypes().get(47);
+          internal_static_CDOTAUserMsg_SendStatPopup_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_SendStatPopup_descriptor,
+              new java.lang.String[] { "PlayerId", "Statpopup", },
+              DotaUsermessages.CDOTAUserMsg_SendStatPopup.class,
+              DotaUsermessages.CDOTAUserMsg_SendStatPopup.Builder.class);
+          internal_static_CDOTAUserMsg_SendRoshanPopup_descriptor =
+            getDescriptor().getMessageTypes().get(48);
+          internal_static_CDOTAUserMsg_SendRoshanPopup_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_SendRoshanPopup_descriptor,
+              new java.lang.String[] { "Reclaimed", "Gametime", },
+              DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.class,
+              DotaUsermessages.CDOTAUserMsg_SendRoshanPopup.Builder.class);
+          internal_static_CDOTAUserMsg_SendFinalGold_descriptor =
+            getDescriptor().getMessageTypes().get(49);
+          internal_static_CDOTAUserMsg_SendFinalGold_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_SendFinalGold_descriptor,
+              new java.lang.String[] { "ReliableGold", "UnreliableGold", },
+              DotaUsermessages.CDOTAUserMsg_SendFinalGold.class,
+              DotaUsermessages.CDOTAUserMsg_SendFinalGold.Builder.class);
+          internal_static_CDOTAUserMsg_CustomMsg_descriptor =
+            getDescriptor().getMessageTypes().get(50);
+          internal_static_CDOTAUserMsg_CustomMsg_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_CustomMsg_descriptor,
+              new java.lang.String[] { "Message", "PlayerId", "Value", },
+              DotaUsermessages.CDOTAUserMsg_CustomMsg.class,
+              DotaUsermessages.CDOTAUserMsg_CustomMsg.Builder.class);
+          internal_static_CDOTAUserMsg_CoachHUDPing_descriptor =
+            getDescriptor().getMessageTypes().get(51);
+          internal_static_CDOTAUserMsg_CoachHUDPing_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_CoachHUDPing_descriptor,
+              new java.lang.String[] { "PlayerId", "HudPing", },
+              DotaUsermessages.CDOTAUserMsg_CoachHUDPing.class,
+              DotaUsermessages.CDOTAUserMsg_CoachHUDPing.Builder.class);
+          internal_static_CDOTAUserMsg_ClientLoadGridNav_descriptor =
+            getDescriptor().getMessageTypes().get(52);
+          internal_static_CDOTAUserMsg_ClientLoadGridNav_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAUserMsg_ClientLoadGridNav_descriptor,
+              new java.lang.String[] { },
+              DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.class,
+              DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.Builder.class);
           return null;
         }
       };
@@ -26962,7 +40219,7 @@ public final class DotaUsermessages {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.DescriptorProtos.getDescriptor(),
-          Netmessages.getDescriptor(),
+          Networkbasetypes.getDescriptor(),
           AiActivity.getDescriptor(),
           DotaCommonmessages.getDescriptor(),
         }, assigner);

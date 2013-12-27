@@ -95,93 +95,6 @@ public final class Netmessages {
     // @@protoc_insertion_point(enum_scope:NET_Messages)
   }
   
-  public enum SIGNONSTATE
-      implements com.google.protobuf.ProtocolMessageEnum {
-    SIGNONSTATE_NONE(0, 0),
-    SIGNONSTATE_CHALLENGE(1, 1),
-    SIGNONSTATE_CONNECTED(2, 2),
-    SIGNONSTATE_NEW(3, 3),
-    SIGNONSTATE_PRESPAWN(4, 4),
-    SIGNONSTATE_SPAWN(5, 5),
-    SIGNONSTATE_FULL(6, 6),
-    SIGNONSTATE_CHANGELEVEL(7, 7),
-    ;
-    
-    public static final int SIGNONSTATE_NONE_VALUE = 0;
-    public static final int SIGNONSTATE_CHALLENGE_VALUE = 1;
-    public static final int SIGNONSTATE_CONNECTED_VALUE = 2;
-    public static final int SIGNONSTATE_NEW_VALUE = 3;
-    public static final int SIGNONSTATE_PRESPAWN_VALUE = 4;
-    public static final int SIGNONSTATE_SPAWN_VALUE = 5;
-    public static final int SIGNONSTATE_FULL_VALUE = 6;
-    public static final int SIGNONSTATE_CHANGELEVEL_VALUE = 7;
-    
-    
-    public final int getNumber() { return value; }
-    
-    public static SIGNONSTATE valueOf(int value) {
-      switch (value) {
-        case 0: return SIGNONSTATE_NONE;
-        case 1: return SIGNONSTATE_CHALLENGE;
-        case 2: return SIGNONSTATE_CONNECTED;
-        case 3: return SIGNONSTATE_NEW;
-        case 4: return SIGNONSTATE_PRESPAWN;
-        case 5: return SIGNONSTATE_SPAWN;
-        case 6: return SIGNONSTATE_FULL;
-        case 7: return SIGNONSTATE_CHANGELEVEL;
-        default: return null;
-      }
-    }
-    
-    public static com.google.protobuf.Internal.EnumLiteMap<SIGNONSTATE>
-        internalGetValueMap() {
-      return internalValueMap;
-    }
-    private static com.google.protobuf.Internal.EnumLiteMap<SIGNONSTATE>
-        internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<SIGNONSTATE>() {
-            public SIGNONSTATE findValueByNumber(int number) {
-              return SIGNONSTATE.valueOf(number);
-            }
-          };
-    
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
-      return getDescriptor().getValues().get(index);
-    }
-    public final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
-      return getDescriptor();
-    }
-    public static final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
-      return Netmessages.getDescriptor().getEnumTypes().get(1);
-    }
-    
-    private static final SIGNONSTATE[] VALUES = {
-      SIGNONSTATE_NONE, SIGNONSTATE_CHALLENGE, SIGNONSTATE_CONNECTED, SIGNONSTATE_NEW, SIGNONSTATE_PRESPAWN, SIGNONSTATE_SPAWN, SIGNONSTATE_FULL, SIGNONSTATE_CHANGELEVEL, 
-    };
-    
-    public static SIGNONSTATE valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-      if (desc.getType() != getDescriptor()) {
-        throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
-      }
-      return VALUES[desc.getIndex()];
-    }
-    
-    private final int index;
-    private final int value;
-    
-    private SIGNONSTATE(int index, int value) {
-      this.index = index;
-      this.value = value;
-    }
-    
-    // @@protoc_insertion_point(enum_scope:SIGNONSTATE)
-  }
-  
   public enum CLC_Messages
       implements com.google.protobuf.ProtocolMessageEnum {
     clc_ClientInfo(0, 8),
@@ -248,7 +161,7 @@ public final class Netmessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return Netmessages.getDescriptor().getEnumTypes().get(2);
+      return Netmessages.getDescriptor().getEnumTypes().get(1);
     }
     
     private static final CLC_Messages[] VALUES = {
@@ -273,6 +186,75 @@ public final class Netmessages {
     }
     
     // @@protoc_insertion_point(enum_scope:CLC_Messages)
+  }
+  
+  public enum VoiceDataFormat_t
+      implements com.google.protobuf.ProtocolMessageEnum {
+    VOICEDATA_FORMAT_STEAM(0, 0),
+    VOICEDATA_FORMAT_ENGINE(1, 1),
+    ;
+    
+    public static final int VOICEDATA_FORMAT_STEAM_VALUE = 0;
+    public static final int VOICEDATA_FORMAT_ENGINE_VALUE = 1;
+    
+    
+    public final int getNumber() { return value; }
+    
+    public static VoiceDataFormat_t valueOf(int value) {
+      switch (value) {
+        case 0: return VOICEDATA_FORMAT_STEAM;
+        case 1: return VOICEDATA_FORMAT_ENGINE;
+        default: return null;
+      }
+    }
+    
+    public static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>() {
+            public VoiceDataFormat_t findValueByNumber(int number) {
+              return VoiceDataFormat_t.valueOf(number);
+            }
+          };
+    
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return Netmessages.getDescriptor().getEnumTypes().get(2);
+    }
+    
+    private static final VoiceDataFormat_t[] VALUES = {
+      VOICEDATA_FORMAT_STEAM, VOICEDATA_FORMAT_ENGINE, 
+    };
+    
+    public static VoiceDataFormat_t valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+    
+    private final int index;
+    private final int value;
+    
+    private VoiceDataFormat_t(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+    
+    // @@protoc_insertion_point(enum_scope:VoiceDataFormat_t)
   }
   
   public enum SVC_Messages
@@ -301,6 +283,7 @@ public final class Netmessages {
     svc_Menu(21, 29),
     svc_GameEventList(22, 30),
     svc_GetCvarValue(23, 31),
+    svc_PacketReliable(24, 32),
     ;
     
     public static final int svc_ServerInfo_VALUE = 8;
@@ -327,6 +310,7 @@ public final class Netmessages {
     public static final int svc_Menu_VALUE = 29;
     public static final int svc_GameEventList_VALUE = 30;
     public static final int svc_GetCvarValue_VALUE = 31;
+    public static final int svc_PacketReliable_VALUE = 32;
     
     
     public final int getNumber() { return value; }
@@ -357,6 +341,7 @@ public final class Netmessages {
         case 29: return svc_Menu;
         case 30: return svc_GameEventList;
         case 31: return svc_GetCvarValue;
+        case 32: return svc_PacketReliable;
         default: return null;
       }
     }
@@ -387,7 +372,7 @@ public final class Netmessages {
     }
     
     private static final SVC_Messages[] VALUES = {
-      svc_ServerInfo, svc_SendTable, svc_ClassInfo, svc_SetPause, svc_CreateStringTable, svc_UpdateStringTable, svc_VoiceInit, svc_VoiceData, svc_Print, svc_Sounds, svc_SetView, svc_FixAngle, svc_CrosshairAngle, svc_BSPDecal, svc_SplitScreen, svc_UserMessage, svc_EntityMessage, svc_GameEvent, svc_PacketEntities, svc_TempEntities, svc_Prefetch, svc_Menu, svc_GameEventList, svc_GetCvarValue, 
+      svc_ServerInfo, svc_SendTable, svc_ClassInfo, svc_SetPause, svc_CreateStringTable, svc_UpdateStringTable, svc_VoiceInit, svc_VoiceData, svc_Print, svc_Sounds, svc_SetView, svc_FixAngle, svc_CrosshairAngle, svc_BSPDecal, svc_SplitScreen, svc_UserMessage, svc_EntityMessage, svc_GameEvent, svc_PacketEntities, svc_TempEntities, svc_Prefetch, svc_Menu, svc_GameEventList, svc_GetCvarValue, svc_PacketReliable, 
     };
     
     public static SVC_Messages valueOf(
@@ -416,10 +401,8 @@ public final class Netmessages {
     MSG_SPLITSCREEN_REMOVEUSER(1, 1),
     ;
     
-    public static final ESplitScreenMessageType MSG_SPLITSCREEN_TYPE_BITS = MSG_SPLITSCREEN_REMOVEUSER;
     public static final int MSG_SPLITSCREEN_ADDUSER_VALUE = 0;
     public static final int MSG_SPLITSCREEN_REMOVEUSER_VALUE = 1;
-    public static final int MSG_SPLITSCREEN_TYPE_BITS_VALUE = 1;
     
     
     public final int getNumber() { return value; }
@@ -458,7 +441,7 @@ public final class Netmessages {
     }
     
     private static final ESplitScreenMessageType[] VALUES = {
-      MSG_SPLITSCREEN_ADDUSER, MSG_SPLITSCREEN_REMOVEUSER, MSG_SPLITSCREEN_TYPE_BITS, 
+      MSG_SPLITSCREEN_ADDUSER, MSG_SPLITSCREEN_REMOVEUSER, 
     };
     
     public static ESplitScreenMessageType valueOf(
@@ -479,1305 +462,6 @@ public final class Netmessages {
     }
     
     // @@protoc_insertion_point(enum_scope:ESplitScreenMessageType)
-  }
-  
-  public interface CMsgVectorOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // optional float x = 1;
-    boolean hasX();
-    float getX();
-    
-    // optional float y = 2;
-    boolean hasY();
-    float getY();
-    
-    // optional float z = 3;
-    boolean hasZ();
-    float getZ();
-  }
-  public static final class CMsgVector extends
-      com.google.protobuf.GeneratedMessage
-      implements CMsgVectorOrBuilder {
-    // Use CMsgVector.newBuilder() to construct.
-    private CMsgVector(Builder builder) {
-      super(builder);
-    }
-    private CMsgVector(boolean noInit) {}
-    
-    private static final CMsgVector defaultInstance;
-    public static CMsgVector getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CMsgVector getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CMsgVector_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CMsgVector_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // optional float x = 1;
-    public static final int X_FIELD_NUMBER = 1;
-    private float x_;
-    public boolean hasX() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public float getX() {
-      return x_;
-    }
-    
-    // optional float y = 2;
-    public static final int Y_FIELD_NUMBER = 2;
-    private float y_;
-    public boolean hasY() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public float getY() {
-      return y_;
-    }
-    
-    // optional float z = 3;
-    public static final int Z_FIELD_NUMBER = 3;
-    private float z_;
-    public boolean hasZ() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public float getZ() {
-      return z_;
-    }
-    
-    private void initFields() {
-      x_ = 0F;
-      y_ = 0F;
-      z_ = 0F;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeFloat(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, y_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFloat(3, z_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, y_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, z_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CMsgVector parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgVector parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgVector parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgVector parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CMsgVector prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CMsgVectorOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CMsgVector_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CMsgVector_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CMsgVector.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        x_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        y_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        z_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CMsgVector.getDescriptor();
-      }
-      
-      public Netmessages.CMsgVector getDefaultInstanceForType() {
-        return Netmessages.CMsgVector.getDefaultInstance();
-      }
-      
-      public Netmessages.CMsgVector build() {
-        Netmessages.CMsgVector result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CMsgVector buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CMsgVector result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CMsgVector buildPartial() {
-        Netmessages.CMsgVector result = new Netmessages.CMsgVector(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.x_ = x_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.y_ = y_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.z_ = z_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CMsgVector) {
-          return mergeFrom((Netmessages.CMsgVector)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CMsgVector other) {
-        if (other == Netmessages.CMsgVector.getDefaultInstance()) return this;
-        if (other.hasX()) {
-          setX(other.getX());
-        }
-        if (other.hasY()) {
-          setY(other.getY());
-        }
-        if (other.hasZ()) {
-          setZ(other.getZ());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 13: {
-              bitField0_ |= 0x00000001;
-              x_ = input.readFloat();
-              break;
-            }
-            case 21: {
-              bitField0_ |= 0x00000002;
-              y_ = input.readFloat();
-              break;
-            }
-            case 29: {
-              bitField0_ |= 0x00000004;
-              z_ = input.readFloat();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // optional float x = 1;
-      private float x_ ;
-      public boolean hasX() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public float getX() {
-        return x_;
-      }
-      public Builder setX(float value) {
-        bitField0_ |= 0x00000001;
-        x_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearX() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        x_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // optional float y = 2;
-      private float y_ ;
-      public boolean hasY() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public float getY() {
-        return y_;
-      }
-      public Builder setY(float value) {
-        bitField0_ |= 0x00000002;
-        y_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearY() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        y_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // optional float z = 3;
-      private float z_ ;
-      public boolean hasZ() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      public float getZ() {
-        return z_;
-      }
-      public Builder setZ(float value) {
-        bitField0_ |= 0x00000004;
-        z_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearZ() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        z_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CMsgVector)
-    }
-    
-    static {
-      defaultInstance = new CMsgVector(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CMsgVector)
-  }
-  
-  public interface CMsgVector2DOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // optional float x = 1;
-    boolean hasX();
-    float getX();
-    
-    // optional float y = 2;
-    boolean hasY();
-    float getY();
-  }
-  public static final class CMsgVector2D extends
-      com.google.protobuf.GeneratedMessage
-      implements CMsgVector2DOrBuilder {
-    // Use CMsgVector2D.newBuilder() to construct.
-    private CMsgVector2D(Builder builder) {
-      super(builder);
-    }
-    private CMsgVector2D(boolean noInit) {}
-    
-    private static final CMsgVector2D defaultInstance;
-    public static CMsgVector2D getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CMsgVector2D getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CMsgVector2D_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CMsgVector2D_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // optional float x = 1;
-    public static final int X_FIELD_NUMBER = 1;
-    private float x_;
-    public boolean hasX() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public float getX() {
-      return x_;
-    }
-    
-    // optional float y = 2;
-    public static final int Y_FIELD_NUMBER = 2;
-    private float y_;
-    public boolean hasY() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public float getY() {
-      return y_;
-    }
-    
-    private void initFields() {
-      x_ = 0F;
-      y_ = 0F;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeFloat(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, y_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, y_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CMsgVector2D parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgVector2D parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgVector2D parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgVector2D parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CMsgVector2D prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CMsgVector2DOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CMsgVector2D_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CMsgVector2D_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CMsgVector2D.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        x_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        y_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CMsgVector2D.getDescriptor();
-      }
-      
-      public Netmessages.CMsgVector2D getDefaultInstanceForType() {
-        return Netmessages.CMsgVector2D.getDefaultInstance();
-      }
-      
-      public Netmessages.CMsgVector2D build() {
-        Netmessages.CMsgVector2D result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CMsgVector2D buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CMsgVector2D result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CMsgVector2D buildPartial() {
-        Netmessages.CMsgVector2D result = new Netmessages.CMsgVector2D(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.x_ = x_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.y_ = y_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CMsgVector2D) {
-          return mergeFrom((Netmessages.CMsgVector2D)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CMsgVector2D other) {
-        if (other == Netmessages.CMsgVector2D.getDefaultInstance()) return this;
-        if (other.hasX()) {
-          setX(other.getX());
-        }
-        if (other.hasY()) {
-          setY(other.getY());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 13: {
-              bitField0_ |= 0x00000001;
-              x_ = input.readFloat();
-              break;
-            }
-            case 21: {
-              bitField0_ |= 0x00000002;
-              y_ = input.readFloat();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // optional float x = 1;
-      private float x_ ;
-      public boolean hasX() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public float getX() {
-        return x_;
-      }
-      public Builder setX(float value) {
-        bitField0_ |= 0x00000001;
-        x_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearX() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        x_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // optional float y = 2;
-      private float y_ ;
-      public boolean hasY() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public float getY() {
-        return y_;
-      }
-      public Builder setY(float value) {
-        bitField0_ |= 0x00000002;
-        y_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearY() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        y_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CMsgVector2D)
-    }
-    
-    static {
-      defaultInstance = new CMsgVector2D(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CMsgVector2D)
-  }
-  
-  public interface CMsgQAngleOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // optional float x = 1;
-    boolean hasX();
-    float getX();
-    
-    // optional float y = 2;
-    boolean hasY();
-    float getY();
-    
-    // optional float z = 3;
-    boolean hasZ();
-    float getZ();
-  }
-  public static final class CMsgQAngle extends
-      com.google.protobuf.GeneratedMessage
-      implements CMsgQAngleOrBuilder {
-    // Use CMsgQAngle.newBuilder() to construct.
-    private CMsgQAngle(Builder builder) {
-      super(builder);
-    }
-    private CMsgQAngle(boolean noInit) {}
-    
-    private static final CMsgQAngle defaultInstance;
-    public static CMsgQAngle getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CMsgQAngle getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CMsgQAngle_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CMsgQAngle_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // optional float x = 1;
-    public static final int X_FIELD_NUMBER = 1;
-    private float x_;
-    public boolean hasX() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public float getX() {
-      return x_;
-    }
-    
-    // optional float y = 2;
-    public static final int Y_FIELD_NUMBER = 2;
-    private float y_;
-    public boolean hasY() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public float getY() {
-      return y_;
-    }
-    
-    // optional float z = 3;
-    public static final int Z_FIELD_NUMBER = 3;
-    private float z_;
-    public boolean hasZ() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    public float getZ() {
-      return z_;
-    }
-    
-    private void initFields() {
-      x_ = 0F;
-      y_ = 0F;
-      z_ = 0F;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeFloat(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeFloat(2, y_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeFloat(3, z_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(1, x_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(2, y_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeFloatSize(3, z_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CMsgQAngle parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgQAngle parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CMsgQAngle parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CMsgQAngle parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CMsgQAngle prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CMsgQAngleOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CMsgQAngle_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CMsgQAngle_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CMsgQAngle.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        x_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        y_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        z_ = 0F;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CMsgQAngle.getDescriptor();
-      }
-      
-      public Netmessages.CMsgQAngle getDefaultInstanceForType() {
-        return Netmessages.CMsgQAngle.getDefaultInstance();
-      }
-      
-      public Netmessages.CMsgQAngle build() {
-        Netmessages.CMsgQAngle result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CMsgQAngle buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CMsgQAngle result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CMsgQAngle buildPartial() {
-        Netmessages.CMsgQAngle result = new Netmessages.CMsgQAngle(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.x_ = x_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.y_ = y_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.z_ = z_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CMsgQAngle) {
-          return mergeFrom((Netmessages.CMsgQAngle)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CMsgQAngle other) {
-        if (other == Netmessages.CMsgQAngle.getDefaultInstance()) return this;
-        if (other.hasX()) {
-          setX(other.getX());
-        }
-        if (other.hasY()) {
-          setY(other.getY());
-        }
-        if (other.hasZ()) {
-          setZ(other.getZ());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 13: {
-              bitField0_ |= 0x00000001;
-              x_ = input.readFloat();
-              break;
-            }
-            case 21: {
-              bitField0_ |= 0x00000002;
-              y_ = input.readFloat();
-              break;
-            }
-            case 29: {
-              bitField0_ |= 0x00000004;
-              z_ = input.readFloat();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // optional float x = 1;
-      private float x_ ;
-      public boolean hasX() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public float getX() {
-        return x_;
-      }
-      public Builder setX(float value) {
-        bitField0_ |= 0x00000001;
-        x_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearX() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        x_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // optional float y = 2;
-      private float y_ ;
-      public boolean hasY() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public float getY() {
-        return y_;
-      }
-      public Builder setY(float value) {
-        bitField0_ |= 0x00000002;
-        y_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearY() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        y_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // optional float z = 3;
-      private float z_ ;
-      public boolean hasZ() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      public float getZ() {
-        return z_;
-      }
-      public Builder setZ(float value) {
-        bitField0_ |= 0x00000004;
-        z_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearZ() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        z_ = 0F;
-        onChanged();
-        return this;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CMsgQAngle)
-    }
-    
-    static {
-      defaultInstance = new CMsgQAngle(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CMsgQAngle)
   }
   
   public interface CMsg_CVarsOrBuilder
@@ -7473,6 +6157,10 @@ public final class Netmessages {
     // optional fixed64 xuid = 2;
     boolean hasXuid();
     long getXuid();
+    
+    // optional .VoiceDataFormat_t format = 3 [default = VOICEDATA_FORMAT_STEAM];
+    boolean hasFormat();
+    Netmessages.VoiceDataFormat_t getFormat();
   }
   public static final class CCLCMsg_VoiceData extends
       com.google.protobuf.GeneratedMessage
@@ -7523,9 +6211,20 @@ public final class Netmessages {
       return xuid_;
     }
     
+    // optional .VoiceDataFormat_t format = 3 [default = VOICEDATA_FORMAT_STEAM];
+    public static final int FORMAT_FIELD_NUMBER = 3;
+    private Netmessages.VoiceDataFormat_t format_;
+    public boolean hasFormat() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public Netmessages.VoiceDataFormat_t getFormat() {
+      return format_;
+    }
+    
     private void initFields() {
       data_ = com.google.protobuf.ByteString.EMPTY;
       xuid_ = 0L;
+      format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -7545,6 +6244,9 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeFixed64(2, xuid_);
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeEnum(3, format_.getNumber());
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -7561,6 +6263,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeFixed64Size(2, xuid_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(3, format_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -7690,6 +6396,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         xuid_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000002);
+        format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -7736,6 +6444,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000002;
         }
         result.xuid_ = xuid_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.format_ = format_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -7757,6 +6469,9 @@ public final class Netmessages {
         }
         if (other.hasXuid()) {
           setXuid(other.getXuid());
+        }
+        if (other.hasFormat()) {
+          setFormat(other.getFormat());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -7797,6 +6512,17 @@ public final class Netmessages {
             case 17: {
               bitField0_ |= 0x00000002;
               xuid_ = input.readFixed64();
+              break;
+            }
+            case 24: {
+              int rawValue = input.readEnum();
+              Netmessages.VoiceDataFormat_t value = Netmessages.VoiceDataFormat_t.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(3, rawValue);
+              } else {
+                bitField0_ |= 0x00000004;
+                format_ = value;
+              }
               break;
             }
           }
@@ -7846,6 +6572,30 @@ public final class Netmessages {
       public Builder clearXuid() {
         bitField0_ = (bitField0_ & ~0x00000002);
         xuid_ = 0L;
+        onChanged();
+        return this;
+      }
+      
+      // optional .VoiceDataFormat_t format = 3 [default = VOICEDATA_FORMAT_STEAM];
+      private Netmessages.VoiceDataFormat_t format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+      public boolean hasFormat() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public Netmessages.VoiceDataFormat_t getFormat() {
+        return format_;
+      }
+      public Builder setFormat(Netmessages.VoiceDataFormat_t value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000004;
+        format_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearFormat() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
         onChanged();
         return this;
       }
@@ -13905,6 +12655,10 @@ public final class Netmessages {
     // optional string codec = 2;
     boolean hasCodec();
     String getCodec();
+    
+    // optional int32 version = 3 [default = 0];
+    boolean hasVersion();
+    int getVersion();
   }
   public static final class CSVCMsg_VoiceInit extends
       com.google.protobuf.GeneratedMessage
@@ -13977,9 +12731,20 @@ public final class Netmessages {
       }
     }
     
+    // optional int32 version = 3 [default = 0];
+    public static final int VERSION_FIELD_NUMBER = 3;
+    private int version_;
+    public boolean hasVersion() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    public int getVersion() {
+      return version_;
+    }
+    
     private void initFields() {
       quality_ = 0;
       codec_ = "";
+      version_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -13999,6 +12764,9 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getCodecBytes());
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, version_);
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -14015,6 +12783,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getCodecBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, version_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -14144,6 +12916,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         codec_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        version_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
       
@@ -14190,6 +12964,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000002;
         }
         result.codec_ = codec_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.version_ = version_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -14211,6 +12989,9 @@ public final class Netmessages {
         }
         if (other.hasCodec()) {
           setCodec(other.getCodec());
+        }
+        if (other.hasVersion()) {
+          setVersion(other.getVersion());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -14251,6 +13032,11 @@ public final class Netmessages {
             case 18: {
               bitField0_ |= 0x00000002;
               codec_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              version_ = input.readInt32();
               break;
             }
           }
@@ -14314,6 +13100,27 @@ public final class Netmessages {
         bitField0_ |= 0x00000002;
         codec_ = value;
         onChanged();
+      }
+      
+      // optional int32 version = 3 [default = 0];
+      private int version_ ;
+      public boolean hasVersion() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      public int getVersion() {
+        return version_;
+      }
+      public Builder setVersion(int value) {
+        bitField0_ |= 0x00000004;
+        version_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearVersion() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        version_ = 0;
+        onChanged();
+        return this;
       }
       
       // @@protoc_insertion_point(builder_scope:CSVCMsg_VoiceInit)
@@ -17248,8 +16055,8 @@ public final class Netmessages {
     
     // optional .CMsgQAngle angle = 2;
     boolean hasAngle();
-    Netmessages.CMsgQAngle getAngle();
-    Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder();
+    Networkbasetypes.CMsgQAngle getAngle();
+    Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder();
   }
   public static final class CSVCMsg_FixAngle extends
       com.google.protobuf.GeneratedMessage
@@ -17292,20 +16099,20 @@ public final class Netmessages {
     
     // optional .CMsgQAngle angle = 2;
     public static final int ANGLE_FIELD_NUMBER = 2;
-    private Netmessages.CMsgQAngle angle_;
+    private Networkbasetypes.CMsgQAngle angle_;
     public boolean hasAngle() {
       return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public Netmessages.CMsgQAngle getAngle() {
+    public Networkbasetypes.CMsgQAngle getAngle() {
       return angle_;
     }
-    public Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder() {
+    public Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder() {
       return angle_;
     }
     
     private void initFields() {
       relative_ = false;
-      angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+      angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -17470,7 +16277,7 @@ public final class Netmessages {
         relative_ = false;
         bitField0_ = (bitField0_ & ~0x00000001);
         if (angleBuilder_ == null) {
-          angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+          angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
         } else {
           angleBuilder_.clear();
         }
@@ -17584,7 +16391,7 @@ public final class Netmessages {
               break;
             }
             case 18: {
-              Netmessages.CMsgQAngle.Builder subBuilder = Netmessages.CMsgQAngle.newBuilder();
+              Networkbasetypes.CMsgQAngle.Builder subBuilder = Networkbasetypes.CMsgQAngle.newBuilder();
               if (hasAngle()) {
                 subBuilder.mergeFrom(getAngle());
               }
@@ -17620,20 +16427,20 @@ public final class Netmessages {
       }
       
       // optional .CMsgQAngle angle = 2;
-      private Netmessages.CMsgQAngle angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+      private Networkbasetypes.CMsgQAngle angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder> angleBuilder_;
+          Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder> angleBuilder_;
       public boolean hasAngle() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CMsgQAngle getAngle() {
+      public Networkbasetypes.CMsgQAngle getAngle() {
         if (angleBuilder_ == null) {
           return angle_;
         } else {
           return angleBuilder_.getMessage();
         }
       }
-      public Builder setAngle(Netmessages.CMsgQAngle value) {
+      public Builder setAngle(Networkbasetypes.CMsgQAngle value) {
         if (angleBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -17647,7 +16454,7 @@ public final class Netmessages {
         return this;
       }
       public Builder setAngle(
-          Netmessages.CMsgQAngle.Builder builderForValue) {
+          Networkbasetypes.CMsgQAngle.Builder builderForValue) {
         if (angleBuilder_ == null) {
           angle_ = builderForValue.build();
           onChanged();
@@ -17657,12 +16464,12 @@ public final class Netmessages {
         bitField0_ |= 0x00000002;
         return this;
       }
-      public Builder mergeAngle(Netmessages.CMsgQAngle value) {
+      public Builder mergeAngle(Networkbasetypes.CMsgQAngle value) {
         if (angleBuilder_ == null) {
           if (((bitField0_ & 0x00000002) == 0x00000002) &&
-              angle_ != Netmessages.CMsgQAngle.getDefaultInstance()) {
+              angle_ != Networkbasetypes.CMsgQAngle.getDefaultInstance()) {
             angle_ =
-              Netmessages.CMsgQAngle.newBuilder(angle_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgQAngle.newBuilder(angle_).mergeFrom(value).buildPartial();
           } else {
             angle_ = value;
           }
@@ -17675,7 +16482,7 @@ public final class Netmessages {
       }
       public Builder clearAngle() {
         if (angleBuilder_ == null) {
-          angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+          angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
           onChanged();
         } else {
           angleBuilder_.clear();
@@ -17683,12 +16490,12 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
-      public Netmessages.CMsgQAngle.Builder getAngleBuilder() {
+      public Networkbasetypes.CMsgQAngle.Builder getAngleBuilder() {
         bitField0_ |= 0x00000002;
         onChanged();
         return getAngleFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder() {
+      public Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder() {
         if (angleBuilder_ != null) {
           return angleBuilder_.getMessageOrBuilder();
         } else {
@@ -17696,11 +16503,11 @@ public final class Netmessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder> 
+          Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder> 
           getAngleFieldBuilder() {
         if (angleBuilder_ == null) {
           angleBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder>(
+              Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder>(
                   angle_,
                   getParentForChildren(),
                   isClean());
@@ -17725,8 +16532,8 @@ public final class Netmessages {
     
     // optional .CMsgQAngle angle = 1;
     boolean hasAngle();
-    Netmessages.CMsgQAngle getAngle();
-    Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder();
+    Networkbasetypes.CMsgQAngle getAngle();
+    Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder();
   }
   public static final class CSVCMsg_CrosshairAngle extends
       com.google.protobuf.GeneratedMessage
@@ -17759,19 +16566,19 @@ public final class Netmessages {
     private int bitField0_;
     // optional .CMsgQAngle angle = 1;
     public static final int ANGLE_FIELD_NUMBER = 1;
-    private Netmessages.CMsgQAngle angle_;
+    private Networkbasetypes.CMsgQAngle angle_;
     public boolean hasAngle() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public Netmessages.CMsgQAngle getAngle() {
+    public Networkbasetypes.CMsgQAngle getAngle() {
       return angle_;
     }
-    public Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder() {
+    public Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder() {
       return angle_;
     }
     
     private void initFields() {
-      angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+      angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -17927,7 +16734,7 @@ public final class Netmessages {
       public Builder clear() {
         super.clear();
         if (angleBuilder_ == null) {
-          angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+          angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
         } else {
           angleBuilder_.clear();
         }
@@ -18029,7 +16836,7 @@ public final class Netmessages {
               break;
             }
             case 10: {
-              Netmessages.CMsgQAngle.Builder subBuilder = Netmessages.CMsgQAngle.newBuilder();
+              Networkbasetypes.CMsgQAngle.Builder subBuilder = Networkbasetypes.CMsgQAngle.newBuilder();
               if (hasAngle()) {
                 subBuilder.mergeFrom(getAngle());
               }
@@ -18044,20 +16851,20 @@ public final class Netmessages {
       private int bitField0_;
       
       // optional .CMsgQAngle angle = 1;
-      private Netmessages.CMsgQAngle angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+      private Networkbasetypes.CMsgQAngle angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder> angleBuilder_;
+          Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder> angleBuilder_;
       public boolean hasAngle() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public Netmessages.CMsgQAngle getAngle() {
+      public Networkbasetypes.CMsgQAngle getAngle() {
         if (angleBuilder_ == null) {
           return angle_;
         } else {
           return angleBuilder_.getMessage();
         }
       }
-      public Builder setAngle(Netmessages.CMsgQAngle value) {
+      public Builder setAngle(Networkbasetypes.CMsgQAngle value) {
         if (angleBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -18071,7 +16878,7 @@ public final class Netmessages {
         return this;
       }
       public Builder setAngle(
-          Netmessages.CMsgQAngle.Builder builderForValue) {
+          Networkbasetypes.CMsgQAngle.Builder builderForValue) {
         if (angleBuilder_ == null) {
           angle_ = builderForValue.build();
           onChanged();
@@ -18081,12 +16888,12 @@ public final class Netmessages {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergeAngle(Netmessages.CMsgQAngle value) {
+      public Builder mergeAngle(Networkbasetypes.CMsgQAngle value) {
         if (angleBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              angle_ != Netmessages.CMsgQAngle.getDefaultInstance()) {
+              angle_ != Networkbasetypes.CMsgQAngle.getDefaultInstance()) {
             angle_ =
-              Netmessages.CMsgQAngle.newBuilder(angle_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgQAngle.newBuilder(angle_).mergeFrom(value).buildPartial();
           } else {
             angle_ = value;
           }
@@ -18099,7 +16906,7 @@ public final class Netmessages {
       }
       public Builder clearAngle() {
         if (angleBuilder_ == null) {
-          angle_ = Netmessages.CMsgQAngle.getDefaultInstance();
+          angle_ = Networkbasetypes.CMsgQAngle.getDefaultInstance();
           onChanged();
         } else {
           angleBuilder_.clear();
@@ -18107,12 +16914,12 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Netmessages.CMsgQAngle.Builder getAngleBuilder() {
+      public Networkbasetypes.CMsgQAngle.Builder getAngleBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getAngleFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgQAngleOrBuilder getAngleOrBuilder() {
+      public Networkbasetypes.CMsgQAngleOrBuilder getAngleOrBuilder() {
         if (angleBuilder_ != null) {
           return angleBuilder_.getMessageOrBuilder();
         } else {
@@ -18120,11 +16927,11 @@ public final class Netmessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder> 
+          Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder> 
           getAngleFieldBuilder() {
         if (angleBuilder_ == null) {
           angleBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgQAngle, Netmessages.CMsgQAngle.Builder, Netmessages.CMsgQAngleOrBuilder>(
+              Networkbasetypes.CMsgQAngle, Networkbasetypes.CMsgQAngle.Builder, Networkbasetypes.CMsgQAngleOrBuilder>(
                   angle_,
                   getParentForChildren(),
                   isClean());
@@ -18149,8 +16956,8 @@ public final class Netmessages {
     
     // optional .CMsgVector pos = 1;
     boolean hasPos();
-    Netmessages.CMsgVector getPos();
-    Netmessages.CMsgVectorOrBuilder getPosOrBuilder();
+    Networkbasetypes.CMsgVector getPos();
+    Networkbasetypes.CMsgVectorOrBuilder getPosOrBuilder();
     
     // optional int32 decal_texture_index = 2;
     boolean hasDecalTextureIndex();
@@ -18199,14 +17006,14 @@ public final class Netmessages {
     private int bitField0_;
     // optional .CMsgVector pos = 1;
     public static final int POS_FIELD_NUMBER = 1;
-    private Netmessages.CMsgVector pos_;
+    private Networkbasetypes.CMsgVector pos_;
     public boolean hasPos() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public Netmessages.CMsgVector getPos() {
+    public Networkbasetypes.CMsgVector getPos() {
       return pos_;
     }
-    public Netmessages.CMsgVectorOrBuilder getPosOrBuilder() {
+    public Networkbasetypes.CMsgVectorOrBuilder getPosOrBuilder() {
       return pos_;
     }
     
@@ -18251,7 +17058,7 @@ public final class Netmessages {
     }
     
     private void initFields() {
-      pos_ = Netmessages.CMsgVector.getDefaultInstance();
+      pos_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       decalTextureIndex_ = 0;
       entityIndex_ = 0;
       modelIndex_ = 0;
@@ -18439,7 +17246,7 @@ public final class Netmessages {
       public Builder clear() {
         super.clear();
         if (posBuilder_ == null) {
-          pos_ = Netmessages.CMsgVector.getDefaultInstance();
+          pos_ = Networkbasetypes.CMsgVector.getDefaultInstance();
         } else {
           posBuilder_.clear();
         }
@@ -18577,7 +17384,7 @@ public final class Netmessages {
               break;
             }
             case 10: {
-              Netmessages.CMsgVector.Builder subBuilder = Netmessages.CMsgVector.newBuilder();
+              Networkbasetypes.CMsgVector.Builder subBuilder = Networkbasetypes.CMsgVector.newBuilder();
               if (hasPos()) {
                 subBuilder.mergeFrom(getPos());
               }
@@ -18612,20 +17419,20 @@ public final class Netmessages {
       private int bitField0_;
       
       // optional .CMsgVector pos = 1;
-      private Netmessages.CMsgVector pos_ = Netmessages.CMsgVector.getDefaultInstance();
+      private Networkbasetypes.CMsgVector pos_ = Networkbasetypes.CMsgVector.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> posBuilder_;
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> posBuilder_;
       public boolean hasPos() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
-      public Netmessages.CMsgVector getPos() {
+      public Networkbasetypes.CMsgVector getPos() {
         if (posBuilder_ == null) {
           return pos_;
         } else {
           return posBuilder_.getMessage();
         }
       }
-      public Builder setPos(Netmessages.CMsgVector value) {
+      public Builder setPos(Networkbasetypes.CMsgVector value) {
         if (posBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -18639,7 +17446,7 @@ public final class Netmessages {
         return this;
       }
       public Builder setPos(
-          Netmessages.CMsgVector.Builder builderForValue) {
+          Networkbasetypes.CMsgVector.Builder builderForValue) {
         if (posBuilder_ == null) {
           pos_ = builderForValue.build();
           onChanged();
@@ -18649,12 +17456,12 @@ public final class Netmessages {
         bitField0_ |= 0x00000001;
         return this;
       }
-      public Builder mergePos(Netmessages.CMsgVector value) {
+      public Builder mergePos(Networkbasetypes.CMsgVector value) {
         if (posBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              pos_ != Netmessages.CMsgVector.getDefaultInstance()) {
+              pos_ != Networkbasetypes.CMsgVector.getDefaultInstance()) {
             pos_ =
-              Netmessages.CMsgVector.newBuilder(pos_).mergeFrom(value).buildPartial();
+              Networkbasetypes.CMsgVector.newBuilder(pos_).mergeFrom(value).buildPartial();
           } else {
             pos_ = value;
           }
@@ -18667,7 +17474,7 @@ public final class Netmessages {
       }
       public Builder clearPos() {
         if (posBuilder_ == null) {
-          pos_ = Netmessages.CMsgVector.getDefaultInstance();
+          pos_ = Networkbasetypes.CMsgVector.getDefaultInstance();
           onChanged();
         } else {
           posBuilder_.clear();
@@ -18675,12 +17482,12 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
-      public Netmessages.CMsgVector.Builder getPosBuilder() {
+      public Networkbasetypes.CMsgVector.Builder getPosBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getPosFieldBuilder().getBuilder();
       }
-      public Netmessages.CMsgVectorOrBuilder getPosOrBuilder() {
+      public Networkbasetypes.CMsgVectorOrBuilder getPosOrBuilder() {
         if (posBuilder_ != null) {
           return posBuilder_.getMessageOrBuilder();
         } else {
@@ -18688,11 +17495,11 @@ public final class Netmessages {
         }
       }
       private com.google.protobuf.SingleFieldBuilder<
-          Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder> 
+          Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder> 
           getPosFieldBuilder() {
         if (posBuilder_ == null) {
           posBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              Netmessages.CMsgVector, Netmessages.CMsgVector.Builder, Netmessages.CMsgVectorOrBuilder>(
+              Networkbasetypes.CMsgVector, Networkbasetypes.CMsgVector.Builder, Networkbasetypes.CMsgVectorOrBuilder>(
                   pos_,
                   getParentForChildren(),
                   isClean());
@@ -18799,7 +17606,7 @@ public final class Netmessages {
   public interface CSVCMsg_SplitScreenOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // optional .ESplitScreenMessageType type = 1;
+    // optional .ESplitScreenMessageType type = 1 [default = MSG_SPLITSCREEN_ADDUSER];
     boolean hasType();
     Netmessages.ESplitScreenMessageType getType();
     
@@ -18840,7 +17647,7 @@ public final class Netmessages {
     }
     
     private int bitField0_;
-    // optional .ESplitScreenMessageType type = 1;
+    // optional .ESplitScreenMessageType type = 1 [default = MSG_SPLITSCREEN_ADDUSER];
     public static final int TYPE_FIELD_NUMBER = 1;
     private Netmessages.ESplitScreenMessageType type_;
     public boolean hasType() {
@@ -19180,7 +17987,7 @@ public final class Netmessages {
       
       private int bitField0_;
       
-      // optional .ESplitScreenMessageType type = 1;
+      // optional .ESplitScreenMessageType type = 1 [default = MSG_SPLITSCREEN_ADDUSER];
       private Netmessages.ESplitScreenMessageType type_ = Netmessages.ESplitScreenMessageType.MSG_SPLITSCREEN_ADDUSER;
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
@@ -21715,1485 +20522,6 @@ public final class Netmessages {
     }
     
     // @@protoc_insertion_point(class_scope:CSVCMsg_SendTable)
-  }
-  
-  public interface CSVCMsg_GameEventOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // optional string event_name = 1;
-    boolean hasEventName();
-    String getEventName();
-    
-    // optional int32 eventid = 2;
-    boolean hasEventid();
-    int getEventid();
-    
-    // repeated .CSVCMsg_GameEvent.key_t keys = 3;
-    java.util.List<Netmessages.CSVCMsg_GameEvent.key_t> 
-        getKeysList();
-    Netmessages.CSVCMsg_GameEvent.key_t getKeys(int index);
-    int getKeysCount();
-    java.util.List<? extends Netmessages.CSVCMsg_GameEvent.key_tOrBuilder> 
-        getKeysOrBuilderList();
-    Netmessages.CSVCMsg_GameEvent.key_tOrBuilder getKeysOrBuilder(
-        int index);
-  }
-  public static final class CSVCMsg_GameEvent extends
-      com.google.protobuf.GeneratedMessage
-      implements CSVCMsg_GameEventOrBuilder {
-    // Use CSVCMsg_GameEvent.newBuilder() to construct.
-    private CSVCMsg_GameEvent(Builder builder) {
-      super(builder);
-    }
-    private CSVCMsg_GameEvent(boolean noInit) {}
-    
-    private static final CSVCMsg_GameEvent defaultInstance;
-    public static CSVCMsg_GameEvent getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CSVCMsg_GameEvent getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CSVCMsg_GameEvent_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CSVCMsg_GameEvent_fieldAccessorTable;
-    }
-    
-    public interface key_tOrBuilder
-        extends com.google.protobuf.MessageOrBuilder {
-      
-      // optional int32 type = 1;
-      boolean hasType();
-      int getType();
-      
-      // optional string val_string = 2;
-      boolean hasValString();
-      String getValString();
-      
-      // optional float val_float = 3;
-      boolean hasValFloat();
-      float getValFloat();
-      
-      // optional int32 val_long = 4;
-      boolean hasValLong();
-      int getValLong();
-      
-      // optional int32 val_short = 5;
-      boolean hasValShort();
-      int getValShort();
-      
-      // optional int32 val_byte = 6;
-      boolean hasValByte();
-      int getValByte();
-      
-      // optional bool val_bool = 7;
-      boolean hasValBool();
-      boolean getValBool();
-      
-      // optional uint64 val_uint64 = 8;
-      boolean hasValUint64();
-      long getValUint64();
-    }
-    public static final class key_t extends
-        com.google.protobuf.GeneratedMessage
-        implements key_tOrBuilder {
-      // Use key_t.newBuilder() to construct.
-      private key_t(Builder builder) {
-        super(builder);
-      }
-      private key_t(boolean noInit) {}
-      
-      private static final key_t defaultInstance;
-      public static key_t getDefaultInstance() {
-        return defaultInstance;
-      }
-      
-      public key_t getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-      
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsg_GameEvent_key_t_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsg_GameEvent_key_t_fieldAccessorTable;
-      }
-      
-      private int bitField0_;
-      // optional int32 type = 1;
-      public static final int TYPE_FIELD_NUMBER = 1;
-      private int type_;
-      public boolean hasType() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public int getType() {
-        return type_;
-      }
-      
-      // optional string val_string = 2;
-      public static final int VAL_STRING_FIELD_NUMBER = 2;
-      private java.lang.Object valString_;
-      public boolean hasValString() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public String getValString() {
-        java.lang.Object ref = valString_;
-        if (ref instanceof String) {
-          return (String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          String s = bs.toStringUtf8();
-          if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-            valString_ = s;
-          }
-          return s;
-        }
-      }
-      private com.google.protobuf.ByteString getValStringBytes() {
-        java.lang.Object ref = valString_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-          valString_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      
-      // optional float val_float = 3;
-      public static final int VAL_FLOAT_FIELD_NUMBER = 3;
-      private float valFloat_;
-      public boolean hasValFloat() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      public float getValFloat() {
-        return valFloat_;
-      }
-      
-      // optional int32 val_long = 4;
-      public static final int VAL_LONG_FIELD_NUMBER = 4;
-      private int valLong_;
-      public boolean hasValLong() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      public int getValLong() {
-        return valLong_;
-      }
-      
-      // optional int32 val_short = 5;
-      public static final int VAL_SHORT_FIELD_NUMBER = 5;
-      private int valShort_;
-      public boolean hasValShort() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      public int getValShort() {
-        return valShort_;
-      }
-      
-      // optional int32 val_byte = 6;
-      public static final int VAL_BYTE_FIELD_NUMBER = 6;
-      private int valByte_;
-      public boolean hasValByte() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
-      }
-      public int getValByte() {
-        return valByte_;
-      }
-      
-      // optional bool val_bool = 7;
-      public static final int VAL_BOOL_FIELD_NUMBER = 7;
-      private boolean valBool_;
-      public boolean hasValBool() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
-      }
-      public boolean getValBool() {
-        return valBool_;
-      }
-      
-      // optional uint64 val_uint64 = 8;
-      public static final int VAL_UINT64_FIELD_NUMBER = 8;
-      private long valUint64_;
-      public boolean hasValUint64() {
-        return ((bitField0_ & 0x00000080) == 0x00000080);
-      }
-      public long getValUint64() {
-        return valUint64_;
-      }
-      
-      private void initFields() {
-        type_ = 0;
-        valString_ = "";
-        valFloat_ = 0F;
-        valLong_ = 0;
-        valShort_ = 0;
-        valByte_ = 0;
-        valBool_ = false;
-        valUint64_ = 0L;
-      }
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized != -1) return isInitialized == 1;
-        
-        memoizedIsInitialized = 1;
-        return true;
-      }
-      
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeInt32(1, type_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeBytes(2, getValStringBytes());
-        }
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          output.writeFloat(3, valFloat_);
-        }
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          output.writeInt32(4, valLong_);
-        }
-        if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          output.writeInt32(5, valShort_);
-        }
-        if (((bitField0_ & 0x00000020) == 0x00000020)) {
-          output.writeInt32(6, valByte_);
-        }
-        if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          output.writeBool(7, valBool_);
-        }
-        if (((bitField0_ & 0x00000080) == 0x00000080)) {
-          output.writeUInt64(8, valUint64_);
-        }
-        getUnknownFields().writeTo(output);
-      }
-      
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-      
-        size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(1, type_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(2, getValStringBytes());
-        }
-        if (((bitField0_ & 0x00000004) == 0x00000004)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeFloatSize(3, valFloat_);
-        }
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(4, valLong_);
-        }
-        if (((bitField0_ & 0x00000010) == 0x00000010)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(5, valShort_);
-        }
-        if (((bitField0_ & 0x00000020) == 0x00000020)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(6, valByte_);
-        }
-        if (((bitField0_ & 0x00000040) == 0x00000040)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBoolSize(7, valBool_);
-        }
-        if (((bitField0_ & 0x00000080) == 0x00000080)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeUInt64Size(8, valUint64_);
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-      
-      private static final long serialVersionUID = 0L;
-      @java.lang.Override
-      protected java.lang.Object writeReplace()
-          throws java.io.ObjectStreamException {
-        return super.writeReplace();
-      }
-      
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsg_GameEvent.key_t parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(Netmessages.CSVCMsg_GameEvent.key_t prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-      
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements Netmessages.CSVCMsg_GameEvent.key_tOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return Netmessages.internal_static_CSVCMsg_GameEvent_key_t_descriptor;
-        }
-        
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return Netmessages.internal_static_CSVCMsg_GameEvent_key_t_fieldAccessorTable;
-        }
-        
-        // Construct using Netmessages.CSVCMsg_GameEvent.key_t.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-        
-        private Builder(BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          }
-        }
-        private static Builder create() {
-          return new Builder();
-        }
-        
-        public Builder clear() {
-          super.clear();
-          type_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000001);
-          valString_ = "";
-          bitField0_ = (bitField0_ & ~0x00000002);
-          valFloat_ = 0F;
-          bitField0_ = (bitField0_ & ~0x00000004);
-          valLong_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000008);
-          valShort_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000010);
-          valByte_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000020);
-          valBool_ = false;
-          bitField0_ = (bitField0_ & ~0x00000040);
-          valUint64_ = 0L;
-          bitField0_ = (bitField0_ & ~0x00000080);
-          return this;
-        }
-        
-        public Builder clone() {
-          return create().mergeFrom(buildPartial());
-        }
-        
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return Netmessages.CSVCMsg_GameEvent.key_t.getDescriptor();
-        }
-        
-        public Netmessages.CSVCMsg_GameEvent.key_t getDefaultInstanceForType() {
-          return Netmessages.CSVCMsg_GameEvent.key_t.getDefaultInstance();
-        }
-        
-        public Netmessages.CSVCMsg_GameEvent.key_t build() {
-          Netmessages.CSVCMsg_GameEvent.key_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-        
-        private Netmessages.CSVCMsg_GameEvent.key_t buildParsed()
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          Netmessages.CSVCMsg_GameEvent.key_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(
-              result).asInvalidProtocolBufferException();
-          }
-          return result;
-        }
-        
-        public Netmessages.CSVCMsg_GameEvent.key_t buildPartial() {
-          Netmessages.CSVCMsg_GameEvent.key_t result = new Netmessages.CSVCMsg_GameEvent.key_t(this);
-          int from_bitField0_ = bitField0_;
-          int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
-          }
-          result.type_ = type_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          result.valString_ = valString_;
-          if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-            to_bitField0_ |= 0x00000004;
-          }
-          result.valFloat_ = valFloat_;
-          if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-            to_bitField0_ |= 0x00000008;
-          }
-          result.valLong_ = valLong_;
-          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-            to_bitField0_ |= 0x00000010;
-          }
-          result.valShort_ = valShort_;
-          if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-            to_bitField0_ |= 0x00000020;
-          }
-          result.valByte_ = valByte_;
-          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
-            to_bitField0_ |= 0x00000040;
-          }
-          result.valBool_ = valBool_;
-          if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
-            to_bitField0_ |= 0x00000080;
-          }
-          result.valUint64_ = valUint64_;
-          result.bitField0_ = to_bitField0_;
-          onBuilt();
-          return result;
-        }
-        
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof Netmessages.CSVCMsg_GameEvent.key_t) {
-            return mergeFrom((Netmessages.CSVCMsg_GameEvent.key_t)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-        
-        public Builder mergeFrom(Netmessages.CSVCMsg_GameEvent.key_t other) {
-          if (other == Netmessages.CSVCMsg_GameEvent.key_t.getDefaultInstance()) return this;
-          if (other.hasType()) {
-            setType(other.getType());
-          }
-          if (other.hasValString()) {
-            setValString(other.getValString());
-          }
-          if (other.hasValFloat()) {
-            setValFloat(other.getValFloat());
-          }
-          if (other.hasValLong()) {
-            setValLong(other.getValLong());
-          }
-          if (other.hasValShort()) {
-            setValShort(other.getValShort());
-          }
-          if (other.hasValByte()) {
-            setValByte(other.getValByte());
-          }
-          if (other.hasValBool()) {
-            setValBool(other.getValBool());
-          }
-          if (other.hasValUint64()) {
-            setValUint64(other.getValUint64());
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-        
-        public final boolean isInitialized() {
-          return true;
-        }
-        
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder(
-              this.getUnknownFields());
-          while (true) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  onChanged();
-                  return this;
-                }
-                break;
-              }
-              case 8: {
-                bitField0_ |= 0x00000001;
-                type_ = input.readInt32();
-                break;
-              }
-              case 18: {
-                bitField0_ |= 0x00000002;
-                valString_ = input.readBytes();
-                break;
-              }
-              case 29: {
-                bitField0_ |= 0x00000004;
-                valFloat_ = input.readFloat();
-                break;
-              }
-              case 32: {
-                bitField0_ |= 0x00000008;
-                valLong_ = input.readInt32();
-                break;
-              }
-              case 40: {
-                bitField0_ |= 0x00000010;
-                valShort_ = input.readInt32();
-                break;
-              }
-              case 48: {
-                bitField0_ |= 0x00000020;
-                valByte_ = input.readInt32();
-                break;
-              }
-              case 56: {
-                bitField0_ |= 0x00000040;
-                valBool_ = input.readBool();
-                break;
-              }
-              case 64: {
-                bitField0_ |= 0x00000080;
-                valUint64_ = input.readUInt64();
-                break;
-              }
-            }
-          }
-        }
-        
-        private int bitField0_;
-        
-        // optional int32 type = 1;
-        private int type_ ;
-        public boolean hasType() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-        public int getType() {
-          return type_;
-        }
-        public Builder setType(int value) {
-          bitField0_ |= 0x00000001;
-          type_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearType() {
-          bitField0_ = (bitField0_ & ~0x00000001);
-          type_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional string val_string = 2;
-        private java.lang.Object valString_ = "";
-        public boolean hasValString() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        public String getValString() {
-          java.lang.Object ref = valString_;
-          if (!(ref instanceof String)) {
-            String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-            valString_ = s;
-            return s;
-          } else {
-            return (String) ref;
-          }
-        }
-        public Builder setValString(String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-          valString_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValString() {
-          bitField0_ = (bitField0_ & ~0x00000002);
-          valString_ = getDefaultInstance().getValString();
-          onChanged();
-          return this;
-        }
-        void setValString(com.google.protobuf.ByteString value) {
-          bitField0_ |= 0x00000002;
-          valString_ = value;
-          onChanged();
-        }
-        
-        // optional float val_float = 3;
-        private float valFloat_ ;
-        public boolean hasValFloat() {
-          return ((bitField0_ & 0x00000004) == 0x00000004);
-        }
-        public float getValFloat() {
-          return valFloat_;
-        }
-        public Builder setValFloat(float value) {
-          bitField0_ |= 0x00000004;
-          valFloat_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValFloat() {
-          bitField0_ = (bitField0_ & ~0x00000004);
-          valFloat_ = 0F;
-          onChanged();
-          return this;
-        }
-        
-        // optional int32 val_long = 4;
-        private int valLong_ ;
-        public boolean hasValLong() {
-          return ((bitField0_ & 0x00000008) == 0x00000008);
-        }
-        public int getValLong() {
-          return valLong_;
-        }
-        public Builder setValLong(int value) {
-          bitField0_ |= 0x00000008;
-          valLong_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValLong() {
-          bitField0_ = (bitField0_ & ~0x00000008);
-          valLong_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional int32 val_short = 5;
-        private int valShort_ ;
-        public boolean hasValShort() {
-          return ((bitField0_ & 0x00000010) == 0x00000010);
-        }
-        public int getValShort() {
-          return valShort_;
-        }
-        public Builder setValShort(int value) {
-          bitField0_ |= 0x00000010;
-          valShort_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValShort() {
-          bitField0_ = (bitField0_ & ~0x00000010);
-          valShort_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional int32 val_byte = 6;
-        private int valByte_ ;
-        public boolean hasValByte() {
-          return ((bitField0_ & 0x00000020) == 0x00000020);
-        }
-        public int getValByte() {
-          return valByte_;
-        }
-        public Builder setValByte(int value) {
-          bitField0_ |= 0x00000020;
-          valByte_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValByte() {
-          bitField0_ = (bitField0_ & ~0x00000020);
-          valByte_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional bool val_bool = 7;
-        private boolean valBool_ ;
-        public boolean hasValBool() {
-          return ((bitField0_ & 0x00000040) == 0x00000040);
-        }
-        public boolean getValBool() {
-          return valBool_;
-        }
-        public Builder setValBool(boolean value) {
-          bitField0_ |= 0x00000040;
-          valBool_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValBool() {
-          bitField0_ = (bitField0_ & ~0x00000040);
-          valBool_ = false;
-          onChanged();
-          return this;
-        }
-        
-        // optional uint64 val_uint64 = 8;
-        private long valUint64_ ;
-        public boolean hasValUint64() {
-          return ((bitField0_ & 0x00000080) == 0x00000080);
-        }
-        public long getValUint64() {
-          return valUint64_;
-        }
-        public Builder setValUint64(long value) {
-          bitField0_ |= 0x00000080;
-          valUint64_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearValUint64() {
-          bitField0_ = (bitField0_ & ~0x00000080);
-          valUint64_ = 0L;
-          onChanged();
-          return this;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:CSVCMsg_GameEvent.key_t)
-      }
-      
-      static {
-        defaultInstance = new key_t(true);
-        defaultInstance.initFields();
-      }
-      
-      // @@protoc_insertion_point(class_scope:CSVCMsg_GameEvent.key_t)
-    }
-    
-    private int bitField0_;
-    // optional string event_name = 1;
-    public static final int EVENT_NAME_FIELD_NUMBER = 1;
-    private java.lang.Object eventName_;
-    public boolean hasEventName() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public String getEventName() {
-      java.lang.Object ref = eventName_;
-      if (ref instanceof String) {
-        return (String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        String s = bs.toStringUtf8();
-        if (com.google.protobuf.Internal.isValidUtf8(bs)) {
-          eventName_ = s;
-        }
-        return s;
-      }
-    }
-    private com.google.protobuf.ByteString getEventNameBytes() {
-      java.lang.Object ref = eventName_;
-      if (ref instanceof String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8((String) ref);
-        eventName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-    
-    // optional int32 eventid = 2;
-    public static final int EVENTID_FIELD_NUMBER = 2;
-    private int eventid_;
-    public boolean hasEventid() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public int getEventid() {
-      return eventid_;
-    }
-    
-    // repeated .CSVCMsg_GameEvent.key_t keys = 3;
-    public static final int KEYS_FIELD_NUMBER = 3;
-    private java.util.List<Netmessages.CSVCMsg_GameEvent.key_t> keys_;
-    public java.util.List<Netmessages.CSVCMsg_GameEvent.key_t> getKeysList() {
-      return keys_;
-    }
-    public java.util.List<? extends Netmessages.CSVCMsg_GameEvent.key_tOrBuilder> 
-        getKeysOrBuilderList() {
-      return keys_;
-    }
-    public int getKeysCount() {
-      return keys_.size();
-    }
-    public Netmessages.CSVCMsg_GameEvent.key_t getKeys(int index) {
-      return keys_.get(index);
-    }
-    public Netmessages.CSVCMsg_GameEvent.key_tOrBuilder getKeysOrBuilder(
-        int index) {
-      return keys_.get(index);
-    }
-    
-    private void initFields() {
-      eventName_ = "";
-      eventid_ = 0;
-      keys_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getEventNameBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeInt32(2, eventid_);
-      }
-      for (int i = 0; i < keys_.size(); i++) {
-        output.writeMessage(3, keys_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getEventNameBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(2, eventid_);
-      }
-      for (int i = 0; i < keys_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(3, keys_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_GameEvent parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CSVCMsg_GameEvent prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CSVCMsg_GameEventOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsg_GameEvent_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsg_GameEvent_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CSVCMsg_GameEvent.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getKeysFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        eventName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        eventid_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        if (keysBuilder_ == null) {
-          keys_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-        } else {
-          keysBuilder_.clear();
-        }
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CSVCMsg_GameEvent.getDescriptor();
-      }
-      
-      public Netmessages.CSVCMsg_GameEvent getDefaultInstanceForType() {
-        return Netmessages.CSVCMsg_GameEvent.getDefaultInstance();
-      }
-      
-      public Netmessages.CSVCMsg_GameEvent build() {
-        Netmessages.CSVCMsg_GameEvent result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CSVCMsg_GameEvent buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CSVCMsg_GameEvent result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CSVCMsg_GameEvent buildPartial() {
-        Netmessages.CSVCMsg_GameEvent result = new Netmessages.CSVCMsg_GameEvent(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.eventName_ = eventName_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.eventid_ = eventid_;
-        if (keysBuilder_ == null) {
-          if (((bitField0_ & 0x00000004) == 0x00000004)) {
-            keys_ = java.util.Collections.unmodifiableList(keys_);
-            bitField0_ = (bitField0_ & ~0x00000004);
-          }
-          result.keys_ = keys_;
-        } else {
-          result.keys_ = keysBuilder_.build();
-        }
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CSVCMsg_GameEvent) {
-          return mergeFrom((Netmessages.CSVCMsg_GameEvent)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CSVCMsg_GameEvent other) {
-        if (other == Netmessages.CSVCMsg_GameEvent.getDefaultInstance()) return this;
-        if (other.hasEventName()) {
-          setEventName(other.getEventName());
-        }
-        if (other.hasEventid()) {
-          setEventid(other.getEventid());
-        }
-        if (keysBuilder_ == null) {
-          if (!other.keys_.isEmpty()) {
-            if (keys_.isEmpty()) {
-              keys_ = other.keys_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-            } else {
-              ensureKeysIsMutable();
-              keys_.addAll(other.keys_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.keys_.isEmpty()) {
-            if (keysBuilder_.isEmpty()) {
-              keysBuilder_.dispose();
-              keysBuilder_ = null;
-              keys_ = other.keys_;
-              bitField0_ = (bitField0_ & ~0x00000004);
-              keysBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getKeysFieldBuilder() : null;
-            } else {
-              keysBuilder_.addAllMessages(other.keys_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              eventName_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              eventid_ = input.readInt32();
-              break;
-            }
-            case 26: {
-              Netmessages.CSVCMsg_GameEvent.key_t.Builder subBuilder = Netmessages.CSVCMsg_GameEvent.key_t.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addKeys(subBuilder.buildPartial());
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // optional string event_name = 1;
-      private java.lang.Object eventName_ = "";
-      public boolean hasEventName() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public String getEventName() {
-        java.lang.Object ref = eventName_;
-        if (!(ref instanceof String)) {
-          String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
-          eventName_ = s;
-          return s;
-        } else {
-          return (String) ref;
-        }
-      }
-      public Builder setEventName(String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        eventName_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearEventName() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        eventName_ = getDefaultInstance().getEventName();
-        onChanged();
-        return this;
-      }
-      void setEventName(com.google.protobuf.ByteString value) {
-        bitField0_ |= 0x00000001;
-        eventName_ = value;
-        onChanged();
-      }
-      
-      // optional int32 eventid = 2;
-      private int eventid_ ;
-      public boolean hasEventid() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public int getEventid() {
-        return eventid_;
-      }
-      public Builder setEventid(int value) {
-        bitField0_ |= 0x00000002;
-        eventid_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearEventid() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        eventid_ = 0;
-        onChanged();
-        return this;
-      }
-      
-      // repeated .CSVCMsg_GameEvent.key_t keys = 3;
-      private java.util.List<Netmessages.CSVCMsg_GameEvent.key_t> keys_ =
-        java.util.Collections.emptyList();
-      private void ensureKeysIsMutable() {
-        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
-          keys_ = new java.util.ArrayList<Netmessages.CSVCMsg_GameEvent.key_t>(keys_);
-          bitField0_ |= 0x00000004;
-         }
-      }
-      
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsg_GameEvent.key_t, Netmessages.CSVCMsg_GameEvent.key_t.Builder, Netmessages.CSVCMsg_GameEvent.key_tOrBuilder> keysBuilder_;
-      
-      public java.util.List<Netmessages.CSVCMsg_GameEvent.key_t> getKeysList() {
-        if (keysBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(keys_);
-        } else {
-          return keysBuilder_.getMessageList();
-        }
-      }
-      public int getKeysCount() {
-        if (keysBuilder_ == null) {
-          return keys_.size();
-        } else {
-          return keysBuilder_.getCount();
-        }
-      }
-      public Netmessages.CSVCMsg_GameEvent.key_t getKeys(int index) {
-        if (keysBuilder_ == null) {
-          return keys_.get(index);
-        } else {
-          return keysBuilder_.getMessage(index);
-        }
-      }
-      public Builder setKeys(
-          int index, Netmessages.CSVCMsg_GameEvent.key_t value) {
-        if (keysBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureKeysIsMutable();
-          keys_.set(index, value);
-          onChanged();
-        } else {
-          keysBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      public Builder setKeys(
-          int index, Netmessages.CSVCMsg_GameEvent.key_t.Builder builderForValue) {
-        if (keysBuilder_ == null) {
-          ensureKeysIsMutable();
-          keys_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          keysBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addKeys(Netmessages.CSVCMsg_GameEvent.key_t value) {
-        if (keysBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureKeysIsMutable();
-          keys_.add(value);
-          onChanged();
-        } else {
-          keysBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      public Builder addKeys(
-          int index, Netmessages.CSVCMsg_GameEvent.key_t value) {
-        if (keysBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureKeysIsMutable();
-          keys_.add(index, value);
-          onChanged();
-        } else {
-          keysBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      public Builder addKeys(
-          Netmessages.CSVCMsg_GameEvent.key_t.Builder builderForValue) {
-        if (keysBuilder_ == null) {
-          ensureKeysIsMutable();
-          keys_.add(builderForValue.build());
-          onChanged();
-        } else {
-          keysBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addKeys(
-          int index, Netmessages.CSVCMsg_GameEvent.key_t.Builder builderForValue) {
-        if (keysBuilder_ == null) {
-          ensureKeysIsMutable();
-          keys_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          keysBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAllKeys(
-          java.lang.Iterable<? extends Netmessages.CSVCMsg_GameEvent.key_t> values) {
-        if (keysBuilder_ == null) {
-          ensureKeysIsMutable();
-          super.addAll(values, keys_);
-          onChanged();
-        } else {
-          keysBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      public Builder clearKeys() {
-        if (keysBuilder_ == null) {
-          keys_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000004);
-          onChanged();
-        } else {
-          keysBuilder_.clear();
-        }
-        return this;
-      }
-      public Builder removeKeys(int index) {
-        if (keysBuilder_ == null) {
-          ensureKeysIsMutable();
-          keys_.remove(index);
-          onChanged();
-        } else {
-          keysBuilder_.remove(index);
-        }
-        return this;
-      }
-      public Netmessages.CSVCMsg_GameEvent.key_t.Builder getKeysBuilder(
-          int index) {
-        return getKeysFieldBuilder().getBuilder(index);
-      }
-      public Netmessages.CSVCMsg_GameEvent.key_tOrBuilder getKeysOrBuilder(
-          int index) {
-        if (keysBuilder_ == null) {
-          return keys_.get(index);  } else {
-          return keysBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      public java.util.List<? extends Netmessages.CSVCMsg_GameEvent.key_tOrBuilder> 
-           getKeysOrBuilderList() {
-        if (keysBuilder_ != null) {
-          return keysBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(keys_);
-        }
-      }
-      public Netmessages.CSVCMsg_GameEvent.key_t.Builder addKeysBuilder() {
-        return getKeysFieldBuilder().addBuilder(
-            Netmessages.CSVCMsg_GameEvent.key_t.getDefaultInstance());
-      }
-      public Netmessages.CSVCMsg_GameEvent.key_t.Builder addKeysBuilder(
-          int index) {
-        return getKeysFieldBuilder().addBuilder(
-            index, Netmessages.CSVCMsg_GameEvent.key_t.getDefaultInstance());
-      }
-      public java.util.List<Netmessages.CSVCMsg_GameEvent.key_t.Builder> 
-           getKeysBuilderList() {
-        return getKeysFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsg_GameEvent.key_t, Netmessages.CSVCMsg_GameEvent.key_t.Builder, Netmessages.CSVCMsg_GameEvent.key_tOrBuilder> 
-          getKeysFieldBuilder() {
-        if (keysBuilder_ == null) {
-          keysBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              Netmessages.CSVCMsg_GameEvent.key_t, Netmessages.CSVCMsg_GameEvent.key_t.Builder, Netmessages.CSVCMsg_GameEvent.key_tOrBuilder>(
-                  keys_,
-                  ((bitField0_ & 0x00000004) == 0x00000004),
-                  getParentForChildren(),
-                  isClean());
-          keys_ = null;
-        }
-        return keysBuilder_;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CSVCMsg_GameEvent)
-    }
-    
-    static {
-      defaultInstance = new CSVCMsg_GameEvent(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CSVCMsg_GameEvent)
   }
   
   public interface CSVCMsg_GameEventListOrBuilder
@@ -27254,404 +24582,6 @@ public final class Netmessages {
     // @@protoc_insertion_point(class_scope:CSVCMsg_UpdateStringTable)
   }
   
-  public interface CSVCMsg_UserMessageOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // optional int32 msg_type = 1;
-    boolean hasMsgType();
-    int getMsgType();
-    
-    // optional bytes msg_data = 2;
-    boolean hasMsgData();
-    com.google.protobuf.ByteString getMsgData();
-  }
-  public static final class CSVCMsg_UserMessage extends
-      com.google.protobuf.GeneratedMessage
-      implements CSVCMsg_UserMessageOrBuilder {
-    // Use CSVCMsg_UserMessage.newBuilder() to construct.
-    private CSVCMsg_UserMessage(Builder builder) {
-      super(builder);
-    }
-    private CSVCMsg_UserMessage(boolean noInit) {}
-    
-    private static final CSVCMsg_UserMessage defaultInstance;
-    public static CSVCMsg_UserMessage getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CSVCMsg_UserMessage getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CSVCMsg_UserMessage_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CSVCMsg_UserMessage_fieldAccessorTable;
-    }
-    
-    private int bitField0_;
-    // optional int32 msg_type = 1;
-    public static final int MSG_TYPE_FIELD_NUMBER = 1;
-    private int msgType_;
-    public boolean hasMsgType() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    public int getMsgType() {
-      return msgType_;
-    }
-    
-    // optional bytes msg_data = 2;
-    public static final int MSG_DATA_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString msgData_;
-    public boolean hasMsgData() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    public com.google.protobuf.ByteString getMsgData() {
-      return msgData_;
-    }
-    
-    private void initFields() {
-      msgType_ = 0;
-      msgData_ = com.google.protobuf.ByteString.EMPTY;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, msgType_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, msgData_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, msgType_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, msgData_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsg_UserMessage parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CSVCMsg_UserMessage prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CSVCMsg_UserMessageOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsg_UserMessage_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsg_UserMessage_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CSVCMsg_UserMessage.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        msgType_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        msgData_ = com.google.protobuf.ByteString.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-      
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CSVCMsg_UserMessage.getDescriptor();
-      }
-      
-      public Netmessages.CSVCMsg_UserMessage getDefaultInstanceForType() {
-        return Netmessages.CSVCMsg_UserMessage.getDefaultInstance();
-      }
-      
-      public Netmessages.CSVCMsg_UserMessage build() {
-        Netmessages.CSVCMsg_UserMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CSVCMsg_UserMessage buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CSVCMsg_UserMessage result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CSVCMsg_UserMessage buildPartial() {
-        Netmessages.CSVCMsg_UserMessage result = new Netmessages.CSVCMsg_UserMessage(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.msgType_ = msgType_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.msgData_ = msgData_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CSVCMsg_UserMessage) {
-          return mergeFrom((Netmessages.CSVCMsg_UserMessage)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CSVCMsg_UserMessage other) {
-        if (other == Netmessages.CSVCMsg_UserMessage.getDefaultInstance()) return this;
-        if (other.hasMsgType()) {
-          setMsgType(other.getMsgType());
-        }
-        if (other.hasMsgData()) {
-          setMsgData(other.getMsgData());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              msgType_ = input.readInt32();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              msgData_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // optional int32 msg_type = 1;
-      private int msgType_ ;
-      public boolean hasMsgType() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public int getMsgType() {
-        return msgType_;
-      }
-      public Builder setMsgType(int value) {
-        bitField0_ |= 0x00000001;
-        msgType_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearMsgType() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        msgType_ = 0;
-        onChanged();
-        return this;
-      }
-      
-      // optional bytes msg_data = 2;
-      private com.google.protobuf.ByteString msgData_ = com.google.protobuf.ByteString.EMPTY;
-      public boolean hasMsgData() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public com.google.protobuf.ByteString getMsgData() {
-        return msgData_;
-      }
-      public Builder setMsgData(com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        msgData_ = value;
-        onChanged();
-        return this;
-      }
-      public Builder clearMsgData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        msgData_ = getDefaultInstance().getMsgData();
-        onChanged();
-        return this;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CSVCMsg_UserMessage)
-    }
-    
-    static {
-      defaultInstance = new CSVCMsg_UserMessage(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CSVCMsg_UserMessage)
-  }
-  
   public interface CSVCMsg_VoiceDataOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
@@ -27674,6 +24604,10 @@ public final class Netmessages {
     // optional bytes voice_data = 5;
     boolean hasVoiceData();
     com.google.protobuf.ByteString getVoiceData();
+    
+    // optional .VoiceDataFormat_t format = 6 [default = VOICEDATA_FORMAT_STEAM];
+    boolean hasFormat();
+    Netmessages.VoiceDataFormat_t getFormat();
   }
   public static final class CSVCMsg_VoiceData extends
       com.google.protobuf.GeneratedMessage
@@ -27754,12 +24688,23 @@ public final class Netmessages {
       return voiceData_;
     }
     
+    // optional .VoiceDataFormat_t format = 6 [default = VOICEDATA_FORMAT_STEAM];
+    public static final int FORMAT_FIELD_NUMBER = 6;
+    private Netmessages.VoiceDataFormat_t format_;
+    public boolean hasFormat() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    public Netmessages.VoiceDataFormat_t getFormat() {
+      return format_;
+    }
+    
     private void initFields() {
       client_ = 0;
       proximity_ = false;
       xuid_ = 0L;
       audibleMask_ = 0;
       voiceData_ = com.google.protobuf.ByteString.EMPTY;
+      format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -27787,6 +24732,9 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         output.writeBytes(5, voiceData_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeEnum(6, format_.getNumber());
       }
       getUnknownFields().writeTo(output);
     }
@@ -27816,6 +24764,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, voiceData_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeEnumSize(6, format_.getNumber());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -27951,6 +24903,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000008);
         voiceData_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
+        format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
       
@@ -28009,6 +24963,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000010;
         }
         result.voiceData_ = voiceData_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.format_ = format_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -28039,6 +24997,9 @@ public final class Netmessages {
         }
         if (other.hasVoiceData()) {
           setVoiceData(other.getVoiceData());
+        }
+        if (other.hasFormat()) {
+          setFormat(other.getFormat());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -28094,6 +25055,17 @@ public final class Netmessages {
             case 42: {
               bitField0_ |= 0x00000010;
               voiceData_ = input.readBytes();
+              break;
+            }
+            case 48: {
+              int rawValue = input.readEnum();
+              Netmessages.VoiceDataFormat_t value = Netmessages.VoiceDataFormat_t.valueOf(rawValue);
+              if (value == null) {
+                unknownFields.mergeVarintField(6, rawValue);
+              } else {
+                bitField0_ |= 0x00000020;
+                format_ = value;
+              }
               break;
             }
           }
@@ -28210,6 +25182,30 @@ public final class Netmessages {
         return this;
       }
       
+      // optional .VoiceDataFormat_t format = 6 [default = VOICEDATA_FORMAT_STEAM];
+      private Netmessages.VoiceDataFormat_t format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+      public boolean hasFormat() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      public Netmessages.VoiceDataFormat_t getFormat() {
+        return format_;
+      }
+      public Builder setFormat(Netmessages.VoiceDataFormat_t value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        bitField0_ |= 0x00000020;
+        format_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearFormat() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        format_ = Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+        onChanged();
+        return this;
+      }
+      
       // @@protoc_insertion_point(builder_scope:CSVCMsg_VoiceData)
     }
     
@@ -28221,551 +25217,69 @@ public final class Netmessages {
     // @@protoc_insertion_point(class_scope:CSVCMsg_VoiceData)
   }
   
-  public interface CSVCMsgList_GameEventsOrBuilder
+  public interface CSVCMsg_PacketReliableOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
     
-    // repeated .CSVCMsgList_GameEvents.event_t events = 1;
-    java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t> 
-        getEventsList();
-    Netmessages.CSVCMsgList_GameEvents.event_t getEvents(int index);
-    int getEventsCount();
-    java.util.List<? extends Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder> 
-        getEventsOrBuilderList();
-    Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder getEventsOrBuilder(
-        int index);
+    // optional int32 tick = 1;
+    boolean hasTick();
+    int getTick();
+    
+    // optional int32 messagessize = 2;
+    boolean hasMessagessize();
+    int getMessagessize();
   }
-  public static final class CSVCMsgList_GameEvents extends
+  public static final class CSVCMsg_PacketReliable extends
       com.google.protobuf.GeneratedMessage
-      implements CSVCMsgList_GameEventsOrBuilder {
-    // Use CSVCMsgList_GameEvents.newBuilder() to construct.
-    private CSVCMsgList_GameEvents(Builder builder) {
+      implements CSVCMsg_PacketReliableOrBuilder {
+    // Use CSVCMsg_PacketReliable.newBuilder() to construct.
+    private CSVCMsg_PacketReliable(Builder builder) {
       super(builder);
     }
-    private CSVCMsgList_GameEvents(boolean noInit) {}
+    private CSVCMsg_PacketReliable(boolean noInit) {}
     
-    private static final CSVCMsgList_GameEvents defaultInstance;
-    public static CSVCMsgList_GameEvents getDefaultInstance() {
+    private static final CSVCMsg_PacketReliable defaultInstance;
+    public static CSVCMsg_PacketReliable getDefaultInstance() {
       return defaultInstance;
     }
     
-    public CSVCMsgList_GameEvents getDefaultInstanceForType() {
+    public CSVCMsg_PacketReliable getDefaultInstanceForType() {
       return defaultInstance;
     }
     
     public static final com.google.protobuf.Descriptors.Descriptor
         getDescriptor() {
-      return Netmessages.internal_static_CSVCMsgList_GameEvents_descriptor;
+      return Netmessages.internal_static_CSVCMsg_PacketReliable_descriptor;
     }
     
     protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
         internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CSVCMsgList_GameEvents_fieldAccessorTable;
+      return Netmessages.internal_static_CSVCMsg_PacketReliable_fieldAccessorTable;
     }
     
-    public interface event_tOrBuilder
-        extends com.google.protobuf.MessageOrBuilder {
-      
-      // optional int32 tick = 1;
-      boolean hasTick();
-      int getTick();
-      
-      // optional .CSVCMsg_GameEvent event = 2;
-      boolean hasEvent();
-      Netmessages.CSVCMsg_GameEvent getEvent();
-      Netmessages.CSVCMsg_GameEventOrBuilder getEventOrBuilder();
+    private int bitField0_;
+    // optional int32 tick = 1;
+    public static final int TICK_FIELD_NUMBER = 1;
+    private int tick_;
+    public boolean hasTick() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
     }
-    public static final class event_t extends
-        com.google.protobuf.GeneratedMessage
-        implements event_tOrBuilder {
-      // Use event_t.newBuilder() to construct.
-      private event_t(Builder builder) {
-        super(builder);
-      }
-      private event_t(boolean noInit) {}
-      
-      private static final event_t defaultInstance;
-      public static event_t getDefaultInstance() {
-        return defaultInstance;
-      }
-      
-      public event_t getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-      
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsgList_GameEvents_event_t_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsgList_GameEvents_event_t_fieldAccessorTable;
-      }
-      
-      private int bitField0_;
-      // optional int32 tick = 1;
-      public static final int TICK_FIELD_NUMBER = 1;
-      private int tick_;
-      public boolean hasTick() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      public int getTick() {
-        return tick_;
-      }
-      
-      // optional .CSVCMsg_GameEvent event = 2;
-      public static final int EVENT_FIELD_NUMBER = 2;
-      private Netmessages.CSVCMsg_GameEvent event_;
-      public boolean hasEvent() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      public Netmessages.CSVCMsg_GameEvent getEvent() {
-        return event_;
-      }
-      public Netmessages.CSVCMsg_GameEventOrBuilder getEventOrBuilder() {
-        return event_;
-      }
-      
-      private void initFields() {
-        tick_ = 0;
-        event_ = Netmessages.CSVCMsg_GameEvent.getDefaultInstance();
-      }
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized != -1) return isInitialized == 1;
-        
-        memoizedIsInitialized = 1;
-        return true;
-      }
-      
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeInt32(1, tick_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeMessage(2, event_);
-        }
-        getUnknownFields().writeTo(output);
-      }
-      
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-      
-        size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(1, tick_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, event_);
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-      
-      private static final long serialVersionUID = 0L;
-      @java.lang.Override
-      protected java.lang.Object writeReplace()
-          throws java.io.ObjectStreamException {
-        return super.writeReplace();
-      }
-      
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_GameEvents.event_t parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(Netmessages.CSVCMsgList_GameEvents.event_t prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-      
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return Netmessages.internal_static_CSVCMsgList_GameEvents_event_t_descriptor;
-        }
-        
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return Netmessages.internal_static_CSVCMsgList_GameEvents_event_t_fieldAccessorTable;
-        }
-        
-        // Construct using Netmessages.CSVCMsgList_GameEvents.event_t.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-        
-        private Builder(BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-            getEventFieldBuilder();
-          }
-        }
-        private static Builder create() {
-          return new Builder();
-        }
-        
-        public Builder clear() {
-          super.clear();
-          tick_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000001);
-          if (eventBuilder_ == null) {
-            event_ = Netmessages.CSVCMsg_GameEvent.getDefaultInstance();
-          } else {
-            eventBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-        
-        public Builder clone() {
-          return create().mergeFrom(buildPartial());
-        }
-        
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return Netmessages.CSVCMsgList_GameEvents.event_t.getDescriptor();
-        }
-        
-        public Netmessages.CSVCMsgList_GameEvents.event_t getDefaultInstanceForType() {
-          return Netmessages.CSVCMsgList_GameEvents.event_t.getDefaultInstance();
-        }
-        
-        public Netmessages.CSVCMsgList_GameEvents.event_t build() {
-          Netmessages.CSVCMsgList_GameEvents.event_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-        
-        private Netmessages.CSVCMsgList_GameEvents.event_t buildParsed()
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          Netmessages.CSVCMsgList_GameEvents.event_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(
-              result).asInvalidProtocolBufferException();
-          }
-          return result;
-        }
-        
-        public Netmessages.CSVCMsgList_GameEvents.event_t buildPartial() {
-          Netmessages.CSVCMsgList_GameEvents.event_t result = new Netmessages.CSVCMsgList_GameEvents.event_t(this);
-          int from_bitField0_ = bitField0_;
-          int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
-          }
-          result.tick_ = tick_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          if (eventBuilder_ == null) {
-            result.event_ = event_;
-          } else {
-            result.event_ = eventBuilder_.build();
-          }
-          result.bitField0_ = to_bitField0_;
-          onBuilt();
-          return result;
-        }
-        
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof Netmessages.CSVCMsgList_GameEvents.event_t) {
-            return mergeFrom((Netmessages.CSVCMsgList_GameEvents.event_t)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-        
-        public Builder mergeFrom(Netmessages.CSVCMsgList_GameEvents.event_t other) {
-          if (other == Netmessages.CSVCMsgList_GameEvents.event_t.getDefaultInstance()) return this;
-          if (other.hasTick()) {
-            setTick(other.getTick());
-          }
-          if (other.hasEvent()) {
-            mergeEvent(other.getEvent());
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-        
-        public final boolean isInitialized() {
-          return true;
-        }
-        
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder(
-              this.getUnknownFields());
-          while (true) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  onChanged();
-                  return this;
-                }
-                break;
-              }
-              case 8: {
-                bitField0_ |= 0x00000001;
-                tick_ = input.readInt32();
-                break;
-              }
-              case 18: {
-                Netmessages.CSVCMsg_GameEvent.Builder subBuilder = Netmessages.CSVCMsg_GameEvent.newBuilder();
-                if (hasEvent()) {
-                  subBuilder.mergeFrom(getEvent());
-                }
-                input.readMessage(subBuilder, extensionRegistry);
-                setEvent(subBuilder.buildPartial());
-                break;
-              }
-            }
-          }
-        }
-        
-        private int bitField0_;
-        
-        // optional int32 tick = 1;
-        private int tick_ ;
-        public boolean hasTick() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-        public int getTick() {
-          return tick_;
-        }
-        public Builder setTick(int value) {
-          bitField0_ |= 0x00000001;
-          tick_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearTick() {
-          bitField0_ = (bitField0_ & ~0x00000001);
-          tick_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional .CSVCMsg_GameEvent event = 2;
-        private Netmessages.CSVCMsg_GameEvent event_ = Netmessages.CSVCMsg_GameEvent.getDefaultInstance();
-        private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CSVCMsg_GameEvent, Netmessages.CSVCMsg_GameEvent.Builder, Netmessages.CSVCMsg_GameEventOrBuilder> eventBuilder_;
-        public boolean hasEvent() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        public Netmessages.CSVCMsg_GameEvent getEvent() {
-          if (eventBuilder_ == null) {
-            return event_;
-          } else {
-            return eventBuilder_.getMessage();
-          }
-        }
-        public Builder setEvent(Netmessages.CSVCMsg_GameEvent value) {
-          if (eventBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
-            }
-            event_ = value;
-            onChanged();
-          } else {
-            eventBuilder_.setMessage(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder setEvent(
-            Netmessages.CSVCMsg_GameEvent.Builder builderForValue) {
-          if (eventBuilder_ == null) {
-            event_ = builderForValue.build();
-            onChanged();
-          } else {
-            eventBuilder_.setMessage(builderForValue.build());
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder mergeEvent(Netmessages.CSVCMsg_GameEvent value) {
-          if (eventBuilder_ == null) {
-            if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                event_ != Netmessages.CSVCMsg_GameEvent.getDefaultInstance()) {
-              event_ =
-                Netmessages.CSVCMsg_GameEvent.newBuilder(event_).mergeFrom(value).buildPartial();
-            } else {
-              event_ = value;
-            }
-            onChanged();
-          } else {
-            eventBuilder_.mergeFrom(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder clearEvent() {
-          if (eventBuilder_ == null) {
-            event_ = Netmessages.CSVCMsg_GameEvent.getDefaultInstance();
-            onChanged();
-          } else {
-            eventBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-        public Netmessages.CSVCMsg_GameEvent.Builder getEventBuilder() {
-          bitField0_ |= 0x00000002;
-          onChanged();
-          return getEventFieldBuilder().getBuilder();
-        }
-        public Netmessages.CSVCMsg_GameEventOrBuilder getEventOrBuilder() {
-          if (eventBuilder_ != null) {
-            return eventBuilder_.getMessageOrBuilder();
-          } else {
-            return event_;
-          }
-        }
-        private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CSVCMsg_GameEvent, Netmessages.CSVCMsg_GameEvent.Builder, Netmessages.CSVCMsg_GameEventOrBuilder> 
-            getEventFieldBuilder() {
-          if (eventBuilder_ == null) {
-            eventBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CSVCMsg_GameEvent, Netmessages.CSVCMsg_GameEvent.Builder, Netmessages.CSVCMsg_GameEventOrBuilder>(
-                    event_,
-                    getParentForChildren(),
-                    isClean());
-            event_ = null;
-          }
-          return eventBuilder_;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:CSVCMsgList_GameEvents.event_t)
-      }
-      
-      static {
-        defaultInstance = new event_t(true);
-        defaultInstance.initFields();
-      }
-      
-      // @@protoc_insertion_point(class_scope:CSVCMsgList_GameEvents.event_t)
+    public int getTick() {
+      return tick_;
     }
     
-    // repeated .CSVCMsgList_GameEvents.event_t events = 1;
-    public static final int EVENTS_FIELD_NUMBER = 1;
-    private java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t> events_;
-    public java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t> getEventsList() {
-      return events_;
+    // optional int32 messagessize = 2;
+    public static final int MESSAGESSIZE_FIELD_NUMBER = 2;
+    private int messagessize_;
+    public boolean hasMessagessize() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
-    public java.util.List<? extends Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder> 
-        getEventsOrBuilderList() {
-      return events_;
-    }
-    public int getEventsCount() {
-      return events_.size();
-    }
-    public Netmessages.CSVCMsgList_GameEvents.event_t getEvents(int index) {
-      return events_.get(index);
-    }
-    public Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder getEventsOrBuilder(
-        int index) {
-      return events_.get(index);
+    public int getMessagessize() {
+      return messagessize_;
     }
     
     private void initFields() {
-      events_ = java.util.Collections.emptyList();
+      tick_ = 0;
+      messagessize_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -28779,8 +25293,11 @@ public final class Netmessages {
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
       getSerializedSize();
-      for (int i = 0; i < events_.size(); i++) {
-        output.writeMessage(1, events_.get(i));
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, tick_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, messagessize_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -28791,9 +25308,13 @@ public final class Netmessages {
       if (size != -1) return size;
     
       size = 0;
-      for (int i = 0; i < events_.size(); i++) {
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, events_.get(i));
+          .computeInt32Size(1, tick_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, messagessize_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -28807,41 +25328,41 @@ public final class Netmessages {
       return super.writeReplace();
     }
     
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(byte[] data)
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data).buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return newBuilder().mergeFrom(data, extensionRegistry)
                .buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(java.io.InputStream input)
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input, extensionRegistry)
                .buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseDelimitedFrom(java.io.InputStream input)
+    public static Netmessages.CSVCMsg_PacketReliable parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       Builder builder = newBuilder();
       if (builder.mergeDelimitedFrom(input)) {
@@ -28850,7 +25371,7 @@ public final class Netmessages {
         return null;
       }
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseDelimitedFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -28861,12 +25382,12 @@ public final class Netmessages {
         return null;
       }
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return newBuilder().mergeFrom(input).buildParsed();
     }
-    public static Netmessages.CSVCMsgList_GameEvents parseFrom(
+    public static Netmessages.CSVCMsg_PacketReliable parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -28876,7 +25397,7 @@ public final class Netmessages {
     
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CSVCMsgList_GameEvents prototype) {
+    public static Builder newBuilder(Netmessages.CSVCMsg_PacketReliable prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -28889,18 +25410,18 @@ public final class Netmessages {
     }
     public static final class Builder extends
         com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CSVCMsgList_GameEventsOrBuilder {
+       implements Netmessages.CSVCMsg_PacketReliableOrBuilder {
       public static final com.google.protobuf.Descriptors.Descriptor
           getDescriptor() {
-        return Netmessages.internal_static_CSVCMsgList_GameEvents_descriptor;
+        return Netmessages.internal_static_CSVCMsg_PacketReliable_descriptor;
       }
       
       protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
           internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsgList_GameEvents_fieldAccessorTable;
+        return Netmessages.internal_static_CSVCMsg_PacketReliable_fieldAccessorTable;
       }
       
-      // Construct using Netmessages.CSVCMsgList_GameEvents.newBuilder()
+      // Construct using Netmessages.CSVCMsg_PacketReliable.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -28911,7 +25432,6 @@ public final class Netmessages {
       }
       private void maybeForceBuilderInitialization() {
         if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getEventsFieldBuilder();
         }
       }
       private static Builder create() {
@@ -28920,12 +25440,10 @@ public final class Netmessages {
       
       public Builder clear() {
         super.clear();
-        if (eventsBuilder_ == null) {
-          events_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          eventsBuilder_.clear();
-        }
+        tick_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        messagessize_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
       
@@ -28935,24 +25453,24 @@ public final class Netmessages {
       
       public com.google.protobuf.Descriptors.Descriptor
           getDescriptorForType() {
-        return Netmessages.CSVCMsgList_GameEvents.getDescriptor();
+        return Netmessages.CSVCMsg_PacketReliable.getDescriptor();
       }
       
-      public Netmessages.CSVCMsgList_GameEvents getDefaultInstanceForType() {
-        return Netmessages.CSVCMsgList_GameEvents.getDefaultInstance();
+      public Netmessages.CSVCMsg_PacketReliable getDefaultInstanceForType() {
+        return Netmessages.CSVCMsg_PacketReliable.getDefaultInstance();
       }
       
-      public Netmessages.CSVCMsgList_GameEvents build() {
-        Netmessages.CSVCMsgList_GameEvents result = buildPartial();
+      public Netmessages.CSVCMsg_PacketReliable build() {
+        Netmessages.CSVCMsg_PacketReliable result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
       
-      private Netmessages.CSVCMsgList_GameEvents buildParsed()
+      private Netmessages.CSVCMsg_PacketReliable buildParsed()
           throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CSVCMsgList_GameEvents result = buildPartial();
+        Netmessages.CSVCMsg_PacketReliable result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(
             result).asInvalidProtocolBufferException();
@@ -28960,58 +25478,39 @@ public final class Netmessages {
         return result;
       }
       
-      public Netmessages.CSVCMsgList_GameEvents buildPartial() {
-        Netmessages.CSVCMsgList_GameEvents result = new Netmessages.CSVCMsgList_GameEvents(this);
+      public Netmessages.CSVCMsg_PacketReliable buildPartial() {
+        Netmessages.CSVCMsg_PacketReliable result = new Netmessages.CSVCMsg_PacketReliable(this);
         int from_bitField0_ = bitField0_;
-        if (eventsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            events_ = java.util.Collections.unmodifiableList(events_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.events_ = events_;
-        } else {
-          result.events_ = eventsBuilder_.build();
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
         }
+        result.tick_ = tick_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.messagessize_ = messagessize_;
+        result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
       }
       
       public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CSVCMsgList_GameEvents) {
-          return mergeFrom((Netmessages.CSVCMsgList_GameEvents)other);
+        if (other instanceof Netmessages.CSVCMsg_PacketReliable) {
+          return mergeFrom((Netmessages.CSVCMsg_PacketReliable)other);
         } else {
           super.mergeFrom(other);
           return this;
         }
       }
       
-      public Builder mergeFrom(Netmessages.CSVCMsgList_GameEvents other) {
-        if (other == Netmessages.CSVCMsgList_GameEvents.getDefaultInstance()) return this;
-        if (eventsBuilder_ == null) {
-          if (!other.events_.isEmpty()) {
-            if (events_.isEmpty()) {
-              events_ = other.events_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureEventsIsMutable();
-              events_.addAll(other.events_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.events_.isEmpty()) {
-            if (eventsBuilder_.isEmpty()) {
-              eventsBuilder_.dispose();
-              eventsBuilder_ = null;
-              events_ = other.events_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              eventsBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getEventsFieldBuilder() : null;
-            } else {
-              eventsBuilder_.addAllMessages(other.events_);
-            }
-          }
+      public Builder mergeFrom(Netmessages.CSVCMsg_PacketReliable other) {
+        if (other == Netmessages.CSVCMsg_PacketReliable.getDefaultInstance()) return this;
+        if (other.hasTick()) {
+          setTick(other.getTick());
+        }
+        if (other.hasMessagessize()) {
+          setMessagessize(other.getMessagessize());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -29044,10 +25543,14 @@ public final class Netmessages {
               }
               break;
             }
-            case 10: {
-              Netmessages.CSVCMsgList_GameEvents.event_t.Builder subBuilder = Netmessages.CSVCMsgList_GameEvents.event_t.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addEvents(subBuilder.buildPartial());
+            case 8: {
+              bitField0_ |= 0x00000001;
+              tick_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              messagessize_ = input.readInt32();
               break;
             }
           }
@@ -29056,1250 +25559,59 @@ public final class Netmessages {
       
       private int bitField0_;
       
-      // repeated .CSVCMsgList_GameEvents.event_t events = 1;
-      private java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t> events_ =
-        java.util.Collections.emptyList();
-      private void ensureEventsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          events_ = new java.util.ArrayList<Netmessages.CSVCMsgList_GameEvents.event_t>(events_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-      
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsgList_GameEvents.event_t, Netmessages.CSVCMsgList_GameEvents.event_t.Builder, Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder> eventsBuilder_;
-      
-      public java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t> getEventsList() {
-        if (eventsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(events_);
-        } else {
-          return eventsBuilder_.getMessageList();
-        }
-      }
-      public int getEventsCount() {
-        if (eventsBuilder_ == null) {
-          return events_.size();
-        } else {
-          return eventsBuilder_.getCount();
-        }
-      }
-      public Netmessages.CSVCMsgList_GameEvents.event_t getEvents(int index) {
-        if (eventsBuilder_ == null) {
-          return events_.get(index);
-        } else {
-          return eventsBuilder_.getMessage(index);
-        }
-      }
-      public Builder setEvents(
-          int index, Netmessages.CSVCMsgList_GameEvents.event_t value) {
-        if (eventsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureEventsIsMutable();
-          events_.set(index, value);
-          onChanged();
-        } else {
-          eventsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      public Builder setEvents(
-          int index, Netmessages.CSVCMsgList_GameEvents.event_t.Builder builderForValue) {
-        if (eventsBuilder_ == null) {
-          ensureEventsIsMutable();
-          events_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          eventsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addEvents(Netmessages.CSVCMsgList_GameEvents.event_t value) {
-        if (eventsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureEventsIsMutable();
-          events_.add(value);
-          onChanged();
-        } else {
-          eventsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      public Builder addEvents(
-          int index, Netmessages.CSVCMsgList_GameEvents.event_t value) {
-        if (eventsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureEventsIsMutable();
-          events_.add(index, value);
-          onChanged();
-        } else {
-          eventsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      public Builder addEvents(
-          Netmessages.CSVCMsgList_GameEvents.event_t.Builder builderForValue) {
-        if (eventsBuilder_ == null) {
-          ensureEventsIsMutable();
-          events_.add(builderForValue.build());
-          onChanged();
-        } else {
-          eventsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addEvents(
-          int index, Netmessages.CSVCMsgList_GameEvents.event_t.Builder builderForValue) {
-        if (eventsBuilder_ == null) {
-          ensureEventsIsMutable();
-          events_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          eventsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAllEvents(
-          java.lang.Iterable<? extends Netmessages.CSVCMsgList_GameEvents.event_t> values) {
-        if (eventsBuilder_ == null) {
-          ensureEventsIsMutable();
-          super.addAll(values, events_);
-          onChanged();
-        } else {
-          eventsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      public Builder clearEvents() {
-        if (eventsBuilder_ == null) {
-          events_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          eventsBuilder_.clear();
-        }
-        return this;
-      }
-      public Builder removeEvents(int index) {
-        if (eventsBuilder_ == null) {
-          ensureEventsIsMutable();
-          events_.remove(index);
-          onChanged();
-        } else {
-          eventsBuilder_.remove(index);
-        }
-        return this;
-      }
-      public Netmessages.CSVCMsgList_GameEvents.event_t.Builder getEventsBuilder(
-          int index) {
-        return getEventsFieldBuilder().getBuilder(index);
-      }
-      public Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder getEventsOrBuilder(
-          int index) {
-        if (eventsBuilder_ == null) {
-          return events_.get(index);  } else {
-          return eventsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      public java.util.List<? extends Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder> 
-           getEventsOrBuilderList() {
-        if (eventsBuilder_ != null) {
-          return eventsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(events_);
-        }
-      }
-      public Netmessages.CSVCMsgList_GameEvents.event_t.Builder addEventsBuilder() {
-        return getEventsFieldBuilder().addBuilder(
-            Netmessages.CSVCMsgList_GameEvents.event_t.getDefaultInstance());
-      }
-      public Netmessages.CSVCMsgList_GameEvents.event_t.Builder addEventsBuilder(
-          int index) {
-        return getEventsFieldBuilder().addBuilder(
-            index, Netmessages.CSVCMsgList_GameEvents.event_t.getDefaultInstance());
-      }
-      public java.util.List<Netmessages.CSVCMsgList_GameEvents.event_t.Builder> 
-           getEventsBuilderList() {
-        return getEventsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsgList_GameEvents.event_t, Netmessages.CSVCMsgList_GameEvents.event_t.Builder, Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder> 
-          getEventsFieldBuilder() {
-        if (eventsBuilder_ == null) {
-          eventsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              Netmessages.CSVCMsgList_GameEvents.event_t, Netmessages.CSVCMsgList_GameEvents.event_t.Builder, Netmessages.CSVCMsgList_GameEvents.event_tOrBuilder>(
-                  events_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          events_ = null;
-        }
-        return eventsBuilder_;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CSVCMsgList_GameEvents)
-    }
-    
-    static {
-      defaultInstance = new CSVCMsgList_GameEvents(true);
-      defaultInstance.initFields();
-    }
-    
-    // @@protoc_insertion_point(class_scope:CSVCMsgList_GameEvents)
-  }
-  
-  public interface CSVCMsgList_UserMessagesOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-    
-    // repeated .CSVCMsgList_UserMessages.usermsg_t usermsgs = 1;
-    java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t> 
-        getUsermsgsList();
-    Netmessages.CSVCMsgList_UserMessages.usermsg_t getUsermsgs(int index);
-    int getUsermsgsCount();
-    java.util.List<? extends Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder> 
-        getUsermsgsOrBuilderList();
-    Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder getUsermsgsOrBuilder(
-        int index);
-  }
-  public static final class CSVCMsgList_UserMessages extends
-      com.google.protobuf.GeneratedMessage
-      implements CSVCMsgList_UserMessagesOrBuilder {
-    // Use CSVCMsgList_UserMessages.newBuilder() to construct.
-    private CSVCMsgList_UserMessages(Builder builder) {
-      super(builder);
-    }
-    private CSVCMsgList_UserMessages(boolean noInit) {}
-    
-    private static final CSVCMsgList_UserMessages defaultInstance;
-    public static CSVCMsgList_UserMessages getDefaultInstance() {
-      return defaultInstance;
-    }
-    
-    public CSVCMsgList_UserMessages getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-    
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return Netmessages.internal_static_CSVCMsgList_UserMessages_descriptor;
-    }
-    
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return Netmessages.internal_static_CSVCMsgList_UserMessages_fieldAccessorTable;
-    }
-    
-    public interface usermsg_tOrBuilder
-        extends com.google.protobuf.MessageOrBuilder {
-      
       // optional int32 tick = 1;
-      boolean hasTick();
-      int getTick();
-      
-      // optional .CSVCMsg_UserMessage msg = 2;
-      boolean hasMsg();
-      Netmessages.CSVCMsg_UserMessage getMsg();
-      Netmessages.CSVCMsg_UserMessageOrBuilder getMsgOrBuilder();
-    }
-    public static final class usermsg_t extends
-        com.google.protobuf.GeneratedMessage
-        implements usermsg_tOrBuilder {
-      // Use usermsg_t.newBuilder() to construct.
-      private usermsg_t(Builder builder) {
-        super(builder);
-      }
-      private usermsg_t(boolean noInit) {}
-      
-      private static final usermsg_t defaultInstance;
-      public static usermsg_t getDefaultInstance() {
-        return defaultInstance;
-      }
-      
-      public usermsg_t getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-      
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsgList_UserMessages_usermsg_t_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsgList_UserMessages_usermsg_t_fieldAccessorTable;
-      }
-      
-      private int bitField0_;
-      // optional int32 tick = 1;
-      public static final int TICK_FIELD_NUMBER = 1;
-      private int tick_;
+      private int tick_ ;
       public boolean hasTick() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       public int getTick() {
         return tick_;
       }
+      public Builder setTick(int value) {
+        bitField0_ |= 0x00000001;
+        tick_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearTick() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tick_ = 0;
+        onChanged();
+        return this;
+      }
       
-      // optional .CSVCMsg_UserMessage msg = 2;
-      public static final int MSG_FIELD_NUMBER = 2;
-      private Netmessages.CSVCMsg_UserMessage msg_;
-      public boolean hasMsg() {
+      // optional int32 messagessize = 2;
+      private int messagessize_ ;
+      public boolean hasMessagessize() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
-      public Netmessages.CSVCMsg_UserMessage getMsg() {
-        return msg_;
+      public int getMessagessize() {
+        return messagessize_;
       }
-      public Netmessages.CSVCMsg_UserMessageOrBuilder getMsgOrBuilder() {
-        return msg_;
+      public Builder setMessagessize(int value) {
+        bitField0_ |= 0x00000002;
+        messagessize_ = value;
+        onChanged();
+        return this;
       }
-      
-      private void initFields() {
-        tick_ = 0;
-        msg_ = Netmessages.CSVCMsg_UserMessage.getDefaultInstance();
-      }
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized != -1) return isInitialized == 1;
-        
-        memoizedIsInitialized = 1;
-        return true;
-      }
-      
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeInt32(1, tick_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeMessage(2, msg_);
-        }
-        getUnknownFields().writeTo(output);
-      }
-      
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-      
-        size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeInt32Size(1, tick_);
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeMessageSize(2, msg_);
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-      
-      private static final long serialVersionUID = 0L;
-      @java.lang.Override
-      protected java.lang.Object writeReplace()
-          throws java.io.ObjectStreamException {
-        return super.writeReplace();
-      }
-      
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return newBuilder().mergeFrom(data, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        Builder builder = newBuilder();
-        if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-          return builder.buildParsed();
-        } else {
-          return null;
-        }
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input).buildParsed();
-      }
-      public static Netmessages.CSVCMsgList_UserMessages.usermsg_t parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return newBuilder().mergeFrom(input, extensionRegistry)
-                 .buildParsed();
-      }
-      
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(Netmessages.CSVCMsgList_UserMessages.usermsg_t prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-      
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return Netmessages.internal_static_CSVCMsgList_UserMessages_usermsg_t_descriptor;
-        }
-        
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return Netmessages.internal_static_CSVCMsgList_UserMessages_usermsg_t_fieldAccessorTable;
-        }
-        
-        // Construct using Netmessages.CSVCMsgList_UserMessages.usermsg_t.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-        
-        private Builder(BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-            getMsgFieldBuilder();
-          }
-        }
-        private static Builder create() {
-          return new Builder();
-        }
-        
-        public Builder clear() {
-          super.clear();
-          tick_ = 0;
-          bitField0_ = (bitField0_ & ~0x00000001);
-          if (msgBuilder_ == null) {
-            msg_ = Netmessages.CSVCMsg_UserMessage.getDefaultInstance();
-          } else {
-            msgBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-        
-        public Builder clone() {
-          return create().mergeFrom(buildPartial());
-        }
-        
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return Netmessages.CSVCMsgList_UserMessages.usermsg_t.getDescriptor();
-        }
-        
-        public Netmessages.CSVCMsgList_UserMessages.usermsg_t getDefaultInstanceForType() {
-          return Netmessages.CSVCMsgList_UserMessages.usermsg_t.getDefaultInstance();
-        }
-        
-        public Netmessages.CSVCMsgList_UserMessages.usermsg_t build() {
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-        
-        private Netmessages.CSVCMsgList_UserMessages.usermsg_t buildParsed()
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(
-              result).asInvalidProtocolBufferException();
-          }
-          return result;
-        }
-        
-        public Netmessages.CSVCMsgList_UserMessages.usermsg_t buildPartial() {
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t result = new Netmessages.CSVCMsgList_UserMessages.usermsg_t(this);
-          int from_bitField0_ = bitField0_;
-          int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
-          }
-          result.tick_ = tick_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          if (msgBuilder_ == null) {
-            result.msg_ = msg_;
-          } else {
-            result.msg_ = msgBuilder_.build();
-          }
-          result.bitField0_ = to_bitField0_;
-          onBuilt();
-          return result;
-        }
-        
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof Netmessages.CSVCMsgList_UserMessages.usermsg_t) {
-            return mergeFrom((Netmessages.CSVCMsgList_UserMessages.usermsg_t)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-        
-        public Builder mergeFrom(Netmessages.CSVCMsgList_UserMessages.usermsg_t other) {
-          if (other == Netmessages.CSVCMsgList_UserMessages.usermsg_t.getDefaultInstance()) return this;
-          if (other.hasTick()) {
-            setTick(other.getTick());
-          }
-          if (other.hasMsg()) {
-            mergeMsg(other.getMsg());
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-        
-        public final boolean isInitialized() {
-          return true;
-        }
-        
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder(
-              this.getUnknownFields());
-          while (true) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  this.setUnknownFields(unknownFields.build());
-                  onChanged();
-                  return this;
-                }
-                break;
-              }
-              case 8: {
-                bitField0_ |= 0x00000001;
-                tick_ = input.readInt32();
-                break;
-              }
-              case 18: {
-                Netmessages.CSVCMsg_UserMessage.Builder subBuilder = Netmessages.CSVCMsg_UserMessage.newBuilder();
-                if (hasMsg()) {
-                  subBuilder.mergeFrom(getMsg());
-                }
-                input.readMessage(subBuilder, extensionRegistry);
-                setMsg(subBuilder.buildPartial());
-                break;
-              }
-            }
-          }
-        }
-        
-        private int bitField0_;
-        
-        // optional int32 tick = 1;
-        private int tick_ ;
-        public boolean hasTick() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-        public int getTick() {
-          return tick_;
-        }
-        public Builder setTick(int value) {
-          bitField0_ |= 0x00000001;
-          tick_ = value;
-          onChanged();
-          return this;
-        }
-        public Builder clearTick() {
-          bitField0_ = (bitField0_ & ~0x00000001);
-          tick_ = 0;
-          onChanged();
-          return this;
-        }
-        
-        // optional .CSVCMsg_UserMessage msg = 2;
-        private Netmessages.CSVCMsg_UserMessage msg_ = Netmessages.CSVCMsg_UserMessage.getDefaultInstance();
-        private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CSVCMsg_UserMessage, Netmessages.CSVCMsg_UserMessage.Builder, Netmessages.CSVCMsg_UserMessageOrBuilder> msgBuilder_;
-        public boolean hasMsg() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        public Netmessages.CSVCMsg_UserMessage getMsg() {
-          if (msgBuilder_ == null) {
-            return msg_;
-          } else {
-            return msgBuilder_.getMessage();
-          }
-        }
-        public Builder setMsg(Netmessages.CSVCMsg_UserMessage value) {
-          if (msgBuilder_ == null) {
-            if (value == null) {
-              throw new NullPointerException();
-            }
-            msg_ = value;
-            onChanged();
-          } else {
-            msgBuilder_.setMessage(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder setMsg(
-            Netmessages.CSVCMsg_UserMessage.Builder builderForValue) {
-          if (msgBuilder_ == null) {
-            msg_ = builderForValue.build();
-            onChanged();
-          } else {
-            msgBuilder_.setMessage(builderForValue.build());
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder mergeMsg(Netmessages.CSVCMsg_UserMessage value) {
-          if (msgBuilder_ == null) {
-            if (((bitField0_ & 0x00000002) == 0x00000002) &&
-                msg_ != Netmessages.CSVCMsg_UserMessage.getDefaultInstance()) {
-              msg_ =
-                Netmessages.CSVCMsg_UserMessage.newBuilder(msg_).mergeFrom(value).buildPartial();
-            } else {
-              msg_ = value;
-            }
-            onChanged();
-          } else {
-            msgBuilder_.mergeFrom(value);
-          }
-          bitField0_ |= 0x00000002;
-          return this;
-        }
-        public Builder clearMsg() {
-          if (msgBuilder_ == null) {
-            msg_ = Netmessages.CSVCMsg_UserMessage.getDefaultInstance();
-            onChanged();
-          } else {
-            msgBuilder_.clear();
-          }
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-        public Netmessages.CSVCMsg_UserMessage.Builder getMsgBuilder() {
-          bitField0_ |= 0x00000002;
-          onChanged();
-          return getMsgFieldBuilder().getBuilder();
-        }
-        public Netmessages.CSVCMsg_UserMessageOrBuilder getMsgOrBuilder() {
-          if (msgBuilder_ != null) {
-            return msgBuilder_.getMessageOrBuilder();
-          } else {
-            return msg_;
-          }
-        }
-        private com.google.protobuf.SingleFieldBuilder<
-            Netmessages.CSVCMsg_UserMessage, Netmessages.CSVCMsg_UserMessage.Builder, Netmessages.CSVCMsg_UserMessageOrBuilder> 
-            getMsgFieldBuilder() {
-          if (msgBuilder_ == null) {
-            msgBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-                Netmessages.CSVCMsg_UserMessage, Netmessages.CSVCMsg_UserMessage.Builder, Netmessages.CSVCMsg_UserMessageOrBuilder>(
-                    msg_,
-                    getParentForChildren(),
-                    isClean());
-            msg_ = null;
-          }
-          return msgBuilder_;
-        }
-        
-        // @@protoc_insertion_point(builder_scope:CSVCMsgList_UserMessages.usermsg_t)
-      }
-      
-      static {
-        defaultInstance = new usermsg_t(true);
-        defaultInstance.initFields();
-      }
-      
-      // @@protoc_insertion_point(class_scope:CSVCMsgList_UserMessages.usermsg_t)
-    }
-    
-    // repeated .CSVCMsgList_UserMessages.usermsg_t usermsgs = 1;
-    public static final int USERMSGS_FIELD_NUMBER = 1;
-    private java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t> usermsgs_;
-    public java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t> getUsermsgsList() {
-      return usermsgs_;
-    }
-    public java.util.List<? extends Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder> 
-        getUsermsgsOrBuilderList() {
-      return usermsgs_;
-    }
-    public int getUsermsgsCount() {
-      return usermsgs_.size();
-    }
-    public Netmessages.CSVCMsgList_UserMessages.usermsg_t getUsermsgs(int index) {
-      return usermsgs_.get(index);
-    }
-    public Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder getUsermsgsOrBuilder(
-        int index) {
-      return usermsgs_.get(index);
-    }
-    
-    private void initFields() {
-      usermsgs_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-      
-      memoizedIsInitialized = 1;
-      return true;
-    }
-    
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      for (int i = 0; i < usermsgs_.size(); i++) {
-        output.writeMessage(1, usermsgs_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-    
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-    
-      size = 0;
-      for (int i = 0; i < usermsgs_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, usermsgs_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-    
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-    
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data).buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return newBuilder().mergeFrom(data, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      Builder builder = newBuilder();
-      if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
-        return builder.buildParsed();
-      } else {
-        return null;
-      }
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input).buildParsed();
-    }
-    public static Netmessages.CSVCMsgList_UserMessages parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return newBuilder().mergeFrom(input, extensionRegistry)
-               .buildParsed();
-    }
-    
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(Netmessages.CSVCMsgList_UserMessages prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-    
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements Netmessages.CSVCMsgList_UserMessagesOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return Netmessages.internal_static_CSVCMsgList_UserMessages_descriptor;
-      }
-      
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return Netmessages.internal_static_CSVCMsgList_UserMessages_fieldAccessorTable;
-      }
-      
-      // Construct using Netmessages.CSVCMsgList_UserMessages.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-      
-      private Builder(BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getUsermsgsFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-      
-      public Builder clear() {
-        super.clear();
-        if (usermsgsBuilder_ == null) {
-          usermsgs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          usermsgsBuilder_.clear();
-        }
+      public Builder clearMessagessize() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        messagessize_ = 0;
+        onChanged();
         return this;
       }
       
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-      
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return Netmessages.CSVCMsgList_UserMessages.getDescriptor();
-      }
-      
-      public Netmessages.CSVCMsgList_UserMessages getDefaultInstanceForType() {
-        return Netmessages.CSVCMsgList_UserMessages.getDefaultInstance();
-      }
-      
-      public Netmessages.CSVCMsgList_UserMessages build() {
-        Netmessages.CSVCMsgList_UserMessages result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-      
-      private Netmessages.CSVCMsgList_UserMessages buildParsed()
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        Netmessages.CSVCMsgList_UserMessages result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(
-            result).asInvalidProtocolBufferException();
-        }
-        return result;
-      }
-      
-      public Netmessages.CSVCMsgList_UserMessages buildPartial() {
-        Netmessages.CSVCMsgList_UserMessages result = new Netmessages.CSVCMsgList_UserMessages(this);
-        int from_bitField0_ = bitField0_;
-        if (usermsgsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            usermsgs_ = java.util.Collections.unmodifiableList(usermsgs_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.usermsgs_ = usermsgs_;
-        } else {
-          result.usermsgs_ = usermsgsBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-      
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof Netmessages.CSVCMsgList_UserMessages) {
-          return mergeFrom((Netmessages.CSVCMsgList_UserMessages)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-      
-      public Builder mergeFrom(Netmessages.CSVCMsgList_UserMessages other) {
-        if (other == Netmessages.CSVCMsgList_UserMessages.getDefaultInstance()) return this;
-        if (usermsgsBuilder_ == null) {
-          if (!other.usermsgs_.isEmpty()) {
-            if (usermsgs_.isEmpty()) {
-              usermsgs_ = other.usermsgs_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureUsermsgsIsMutable();
-              usermsgs_.addAll(other.usermsgs_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.usermsgs_.isEmpty()) {
-            if (usermsgsBuilder_.isEmpty()) {
-              usermsgsBuilder_.dispose();
-              usermsgsBuilder_ = null;
-              usermsgs_ = other.usermsgs_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              usermsgsBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getUsermsgsFieldBuilder() : null;
-            } else {
-              usermsgsBuilder_.addAllMessages(other.usermsgs_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-      
-      public final boolean isInitialized() {
-        return true;
-      }
-      
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder(
-            this.getUnknownFields());
-        while (true) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              this.setUnknownFields(unknownFields.build());
-              onChanged();
-              return this;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                this.setUnknownFields(unknownFields.build());
-                onChanged();
-                return this;
-              }
-              break;
-            }
-            case 10: {
-              Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder subBuilder = Netmessages.CSVCMsgList_UserMessages.usermsg_t.newBuilder();
-              input.readMessage(subBuilder, extensionRegistry);
-              addUsermsgs(subBuilder.buildPartial());
-              break;
-            }
-          }
-        }
-      }
-      
-      private int bitField0_;
-      
-      // repeated .CSVCMsgList_UserMessages.usermsg_t usermsgs = 1;
-      private java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t> usermsgs_ =
-        java.util.Collections.emptyList();
-      private void ensureUsermsgsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          usermsgs_ = new java.util.ArrayList<Netmessages.CSVCMsgList_UserMessages.usermsg_t>(usermsgs_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-      
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t, Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder, Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder> usermsgsBuilder_;
-      
-      public java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t> getUsermsgsList() {
-        if (usermsgsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(usermsgs_);
-        } else {
-          return usermsgsBuilder_.getMessageList();
-        }
-      }
-      public int getUsermsgsCount() {
-        if (usermsgsBuilder_ == null) {
-          return usermsgs_.size();
-        } else {
-          return usermsgsBuilder_.getCount();
-        }
-      }
-      public Netmessages.CSVCMsgList_UserMessages.usermsg_t getUsermsgs(int index) {
-        if (usermsgsBuilder_ == null) {
-          return usermsgs_.get(index);
-        } else {
-          return usermsgsBuilder_.getMessage(index);
-        }
-      }
-      public Builder setUsermsgs(
-          int index, Netmessages.CSVCMsgList_UserMessages.usermsg_t value) {
-        if (usermsgsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUsermsgsIsMutable();
-          usermsgs_.set(index, value);
-          onChanged();
-        } else {
-          usermsgsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      public Builder setUsermsgs(
-          int index, Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder builderForValue) {
-        if (usermsgsBuilder_ == null) {
-          ensureUsermsgsIsMutable();
-          usermsgs_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          usermsgsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addUsermsgs(Netmessages.CSVCMsgList_UserMessages.usermsg_t value) {
-        if (usermsgsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUsermsgsIsMutable();
-          usermsgs_.add(value);
-          onChanged();
-        } else {
-          usermsgsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      public Builder addUsermsgs(
-          int index, Netmessages.CSVCMsgList_UserMessages.usermsg_t value) {
-        if (usermsgsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureUsermsgsIsMutable();
-          usermsgs_.add(index, value);
-          onChanged();
-        } else {
-          usermsgsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      public Builder addUsermsgs(
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder builderForValue) {
-        if (usermsgsBuilder_ == null) {
-          ensureUsermsgsIsMutable();
-          usermsgs_.add(builderForValue.build());
-          onChanged();
-        } else {
-          usermsgsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addUsermsgs(
-          int index, Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder builderForValue) {
-        if (usermsgsBuilder_ == null) {
-          ensureUsermsgsIsMutable();
-          usermsgs_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          usermsgsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      public Builder addAllUsermsgs(
-          java.lang.Iterable<? extends Netmessages.CSVCMsgList_UserMessages.usermsg_t> values) {
-        if (usermsgsBuilder_ == null) {
-          ensureUsermsgsIsMutable();
-          super.addAll(values, usermsgs_);
-          onChanged();
-        } else {
-          usermsgsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      public Builder clearUsermsgs() {
-        if (usermsgsBuilder_ == null) {
-          usermsgs_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          usermsgsBuilder_.clear();
-        }
-        return this;
-      }
-      public Builder removeUsermsgs(int index) {
-        if (usermsgsBuilder_ == null) {
-          ensureUsermsgsIsMutable();
-          usermsgs_.remove(index);
-          onChanged();
-        } else {
-          usermsgsBuilder_.remove(index);
-        }
-        return this;
-      }
-      public Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder getUsermsgsBuilder(
-          int index) {
-        return getUsermsgsFieldBuilder().getBuilder(index);
-      }
-      public Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder getUsermsgsOrBuilder(
-          int index) {
-        if (usermsgsBuilder_ == null) {
-          return usermsgs_.get(index);  } else {
-          return usermsgsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      public java.util.List<? extends Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder> 
-           getUsermsgsOrBuilderList() {
-        if (usermsgsBuilder_ != null) {
-          return usermsgsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(usermsgs_);
-        }
-      }
-      public Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder addUsermsgsBuilder() {
-        return getUsermsgsFieldBuilder().addBuilder(
-            Netmessages.CSVCMsgList_UserMessages.usermsg_t.getDefaultInstance());
-      }
-      public Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder addUsermsgsBuilder(
-          int index) {
-        return getUsermsgsFieldBuilder().addBuilder(
-            index, Netmessages.CSVCMsgList_UserMessages.usermsg_t.getDefaultInstance());
-      }
-      public java.util.List<Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder> 
-           getUsermsgsBuilderList() {
-        return getUsermsgsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          Netmessages.CSVCMsgList_UserMessages.usermsg_t, Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder, Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder> 
-          getUsermsgsFieldBuilder() {
-        if (usermsgsBuilder_ == null) {
-          usermsgsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              Netmessages.CSVCMsgList_UserMessages.usermsg_t, Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder, Netmessages.CSVCMsgList_UserMessages.usermsg_tOrBuilder>(
-                  usermsgs_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          usermsgs_ = null;
-        }
-        return usermsgsBuilder_;
-      }
-      
-      // @@protoc_insertion_point(builder_scope:CSVCMsgList_UserMessages)
+      // @@protoc_insertion_point(builder_scope:CSVCMsg_PacketReliable)
     }
     
     static {
-      defaultInstance = new CSVCMsgList_UserMessages(true);
+      defaultInstance = new CSVCMsg_PacketReliable(true);
       defaultInstance.initFields();
     }
     
-    // @@protoc_insertion_point(class_scope:CSVCMsgList_UserMessages)
+    // @@protoc_insertion_point(class_scope:CSVCMsg_PacketReliable)
   }
   
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CMsgVector_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CMsgVector_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CMsgVector2D_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CMsgVector2D_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CMsgQAngle_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CMsgQAngle_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CMsg_CVars_descriptor;
   private static
@@ -30491,16 +25803,6 @@ public final class Netmessages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CSVCMsg_SendTable_sendprop_t_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsg_GameEvent_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsg_GameEvent_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsg_GameEvent_key_t_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsg_GameEvent_key_t_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CSVCMsg_GameEventList_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -30536,35 +25838,15 @@ public final class Netmessages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CSVCMsg_UpdateStringTable_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsg_UserMessage_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsg_UserMessage_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CSVCMsg_VoiceData_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CSVCMsg_VoiceData_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsgList_GameEvents_descriptor;
+    internal_static_CSVCMsg_PacketReliable_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsgList_GameEvents_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsgList_GameEvents_event_t_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsgList_GameEvents_event_t_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsgList_UserMessages_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsgList_UserMessages_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CSVCMsgList_UserMessages_usermsg_t_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CSVCMsgList_UserMessages_usermsg_t_fieldAccessorTable;
+      internal_static_CSVCMsg_PacketReliable_fieldAccessorTable;
   
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -30575,193 +25857,154 @@ public final class Netmessages {
   static {
     java.lang.String[] descriptorData = {
       "\n\021netmessages.proto\032 google/protobuf/des" +
-      "criptor.proto\"-\n\nCMsgVector\022\t\n\001x\030\001 \001(\002\022\t" +
-      "\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"$\n\014CMsgVector2D\022\t\n\001" +
-      "x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\"-\n\nCMsgQAngle\022\t\n\001x\030\001 " +
-      "\001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\"R\n\nCMsg_CVars\022" +
-      "\037\n\005cvars\030\001 \003(\0132\020.CMsg_CVars.CVar\032#\n\004CVar" +
-      "\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\r\n\013CNETMsg" +
-      "_NOP\"\"\n\022CNETMsg_Disconnect\022\014\n\004text\030\001 \001(\t" +
-      "\"a\n\014CNETMsg_File\022\023\n\013transfer_id\030\001 \001(\005\022\021\n" +
-      "\tfile_name\030\002 \001(\t\022\033\n\023is_replay_demo_file\030",
-      "\003 \001(\010\022\014\n\004deny\030\004 \001(\010\"\'\n\027CNETMsg_SplitScre" +
-      "enUser\022\014\n\004slot\030\001 \001(\005\"Z\n\014CNETMsg_Tick\022\014\n\004" +
-      "tick\030\001 \001(\r\022\026\n\016host_frametime\030\002 \001(\r\022$\n\034ho" +
-      "st_frametime_std_deviation\030\003 \001(\r\"$\n\021CNET" +
-      "Msg_StringCmd\022\017\n\007command\030\001 \001(\t\"1\n\021CNETMs" +
-      "g_SetConVar\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVar" +
-      "s\"\212\001\n\023CNETMsg_SignonState\022\024\n\014signon_stat" +
-      "e\030\001 \001(\r\022\023\n\013spawn_count\030\002 \001(\r\022\032\n\022num_serv" +
-      "er_players\030\003 \001(\r\022\032\n\022players_networkids\030\004" +
-      " \003(\t\022\020\n\010map_name\030\005 \001(\t\"\246\001\n\022CCLCMsg_Clien",
-      "tInfo\022\026\n\016send_table_crc\030\001 \001(\007\022\024\n\014server_" +
-      "count\030\002 \001(\r\022\017\n\007is_hltv\030\003 \001(\010\022\021\n\tis_repla" +
-      "y\030\004 \001(\010\022\022\n\nfriends_id\030\005 \001(\r\022\024\n\014friends_n" +
-      "ame\030\006 \001(\t\022\024\n\014custom_files\030\007 \003(\007\"S\n\014CCLCM" +
-      "sg_Move\022\033\n\023num_backup_commands\030\001 \001(\r\022\030\n\020" +
-      "num_new_commands\030\002 \001(\r\022\014\n\004data\030\003 \001(\014\"/\n\021" +
-      "CCLCMsg_VoiceData\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030" +
-      "\002 \001(\006\"A\n\023CCLCMsg_BaselineAck\022\025\n\rbaseline" +
-      "_tick\030\001 \001(\005\022\023\n\013baseline_nr\030\002 \001(\005\"*\n\024CCLC" +
-      "Msg_ListenEvents\022\022\n\nevent_mask\030\001 \003(\007\"\\\n\030",
-      "CCLCMsg_RespondCvarValue\022\016\n\006cookie\030\001 \001(\005" +
-      "\022\023\n\013status_code\030\002 \001(\005\022\014\n\004name\030\003 \001(\t\022\r\n\005v" +
-      "alue\030\004 \001(\t\"m\n\024CCLCMsg_FileCRCCheck\022\021\n\tco" +
-      "de_path\030\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rcode_file" +
-      "name\030\003 \001(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003crc\030\005 \001(" +
-      "\007\"+\n\027CCLCMsg_LoadingProgress\022\020\n\010progress" +
-      "\030\001 \001(\005\":\n\032CCLCMsg_SplitPlayerConnect\022\034\n\007" +
-      "convars\030\001 \001(\0132\013.CMsg_CVars\"7\n\025CCLCMsg_Cl" +
-      "ientMessage\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data\030\002 " +
-      "\001(\014\"\342\002\n\022CSVCMsg_ServerInfo\022\020\n\010protocol\030\001",
-      " \001(\005\022\024\n\014server_count\030\002 \001(\005\022\024\n\014is_dedicat" +
-      "ed\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_replay\030\005" +
-      " \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 \001(\007\022\022\n\nc" +
-      "lient_crc\030\010 \001(\007\022\030\n\020string_table_crc\030\t \001(" +
-      "\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013max_classes\030\013 " +
-      "\001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025\n\rtick_interva" +
-      "l\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022\020\n\010map_name\030\017 " +
-      "\001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\thost_name\030\021 \001(\t" +
-      "\"\244\001\n\021CSVCMsg_ClassInfo\022\030\n\020create_on_clie" +
-      "nt\030\001 \001(\010\022+\n\007classes\030\002 \003(\0132\032.CSVCMsg_Clas",
-      "sInfo.class_t\032H\n\007class_t\022\020\n\010class_id\030\001 \001" +
-      "(\005\022\027\n\017data_table_name\030\002 \001(\t\022\022\n\nclass_nam" +
-      "e\030\003 \001(\t\"\"\n\020CSVCMsg_SetPause\022\016\n\006paused\030\001 " +
-      "\001(\010\"3\n\021CSVCMsg_VoiceInit\022\017\n\007quality\030\001 \001(" +
-      "\005\022\r\n\005codec\030\002 \001(\t\"\035\n\rCSVCMsg_Print\022\014\n\004tex" +
-      "t\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026\n\016reliable_s" +
-      "ound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033.CSVCMsg_Sou" +
-      "nds.sounddata_t\032\336\002\n\013sounddata_t\022\020\n\010origi" +
-      "n_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010origin_z\030" +
-      "\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013delay_value\030\005 \001",
-      "(\002\022\027\n\017sequence_number\030\006 \001(\005\022\024\n\014entity_in" +
-      "dex\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pitch\030\t \001(" +
-      "\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_num\030\013 \001(\r\022\030\n\020s" +
-      "ound_num_handle\030\014 \001(\007\022\026\n\016speaker_entity\030" +
-      "\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023\n\013sound_leve" +
-      "l\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010\022\022\n\nis_ambie" +
-      "nt\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch\022\023\n\013sound_in" +
-      "dex\030\001 \001(\005\"\'\n\017CSVCMsg_SetView\022\024\n\014entity_i" +
-      "ndex\030\001 \001(\005\"@\n\020CSVCMsg_FixAngle\022\020\n\010relati" +
-      "ve\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CMsgQAngle\"4\n\026",
-      "CSVCMsg_CrosshairAngle\022\032\n\005angle\030\001 \001(\0132\013." +
-      "CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDecal\022\030\n\003pos\030\001" +
-      " \001(\0132\013.CMsgVector\022\033\n\023decal_texture_index" +
-      "\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005\022\023\n\013model_in" +
-      "dex\030\004 \001(\005\022\024\n\014low_priority\030\005 \001(\010\"a\n\023CSVCM" +
-      "sg_SplitScreen\022&\n\004type\030\001 \001(\0162\030.ESplitScr" +
-      "eenMessageType\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_i" +
-      "ndex\030\003 \001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006co" +
-      "okie\030\001 \001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg" +
-      "_Menu\022\023\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_v",
-      "alues\030\002 \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_" +
-      "end\030\001 \001(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rnee" +
-      "ds_decoder\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMs" +
-      "g_SendTable.sendprop_t\032\255\001\n\nsendprop_t\022\014\n" +
-      "\004type\030\001 \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003" +
-      " \001(\005\022\020\n\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022" +
-      "\024\n\014num_elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002" +
-      "\022\022\n\nhigh_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\374" +
-      "\001\n\021CSVCMsg_GameEvent\022\022\n\nevent_name\030\001 \001(\t" +
-      "\022\017\n\007eventid\030\002 \001(\005\022&\n\004keys\030\003 \003(\0132\030.CSVCMs",
-      "g_GameEvent.key_t\032\231\001\n\005key_t\022\014\n\004type\030\001 \001(" +
-      "\005\022\022\n\nval_string\030\002 \001(\t\022\021\n\tval_float\030\003 \001(\002" +
-      "\022\020\n\010val_long\030\004 \001(\005\022\021\n\tval_short\030\005 \001(\005\022\020\n" +
-      "\010val_byte\030\006 \001(\005\022\020\n\010val_bool\030\007 \001(\010\022\022\n\nval" +
-      "_uint64\030\010 \001(\004\"\321\001\n\025CSVCMsg_GameEventList\022" +
-      "8\n\013descriptors\030\001 \003(\0132#.CSVCMsg_GameEvent" +
-      "List.descriptor_t\032#\n\005key_t\022\014\n\004type\030\001 \001(\005" +
-      "\022\014\n\004name\030\002 \001(\t\032Y\n\014descriptor_t\022\017\n\007eventi" +
-      "d\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022*\n\004keys\030\003 \003(\0132\034.CS" +
-      "VCMsg_GameEventList.key_t\"\254\001\n\026CSVCMsg_Pa",
-      "cketEntities\022\023\n\013max_entries\030\001 \001(\005\022\027\n\017upd" +
-      "ated_entries\030\002 \001(\005\022\020\n\010is_delta\030\003 \001(\010\022\027\n\017" +
-      "update_baseline\030\004 \001(\010\022\020\n\010baseline\030\005 \001(\005\022" +
-      "\022\n\ndelta_from\030\006 \001(\005\022\023\n\013entity_data\030\007 \001(\014" +
-      "\"R\n\024CSVCMsg_TempEntities\022\020\n\010reliable\030\001 \001" +
-      "(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013entity_data\030\003" +
-      " \001(\014\"\312\001\n\031CSVCMsg_CreateStringTable\022\014\n\004na" +
-      "me\030\001 \001(\t\022\023\n\013max_entries\030\002 \001(\005\022\023\n\013num_ent" +
-      "ries\030\003 \001(\005\022\034\n\024user_data_fixed_size\030\004 \001(\010" +
-      "\022\026\n\016user_data_size\030\005 \001(\005\022\033\n\023user_data_si",
-      "ze_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(\005\022\023\n\013string_d" +
-      "ata\030\010 \001(\014\"_\n\031CSVCMsg_UpdateStringTable\022\020" +
-      "\n\010table_id\030\001 \001(\005\022\033\n\023num_changed_entries\030" +
-      "\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"9\n\023CSVCMsg_Us" +
-      "erMessage\022\020\n\010msg_type\030\001 \001(\005\022\020\n\010msg_data\030" +
-      "\002 \001(\014\"n\n\021CSVCMsg_VoiceData\022\016\n\006client\030\001 \001" +
-      "(\005\022\021\n\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014a" +
-      "udible_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\"\205\001" +
-      "\n\026CSVCMsgList_GameEvents\022/\n\006events\030\001 \003(\013" +
-      "2\037.CSVCMsgList_GameEvents.event_t\032:\n\007eve",
-      "nt_t\022\014\n\004tick\030\001 \001(\005\022!\n\005event\030\002 \001(\0132\022.CSVC" +
-      "Msg_GameEvent\"\217\001\n\030CSVCMsgList_UserMessag" +
-      "es\0225\n\010usermsgs\030\001 \003(\0132#.CSVCMsgList_UserM" +
-      "essages.usermsg_t\032<\n\tusermsg_t\022\014\n\004tick\030\001" +
-      " \001(\005\022!\n\003msg\030\002 \001(\0132\024.CSVCMsg_UserMessage*" +
-      "\237\001\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net_Dis" +
-      "connect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_SplitScre" +
-      "enUser\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_StringCmd\020" +
-      "\005\022\021\n\rnet_SetConVar\020\006\022\023\n\017net_SignonState\020" +
-      "\007*\322\001\n\013SIGNONSTATE\022\024\n\020SIGNONSTATE_NONE\020\000\022",
-      "\031\n\025SIGNONSTATE_CHALLENGE\020\001\022\031\n\025SIGNONSTAT" +
-      "E_CONNECTED\020\002\022\023\n\017SIGNONSTATE_NEW\020\003\022\030\n\024SI" +
-      "GNONSTATE_PRESPAWN\020\004\022\025\n\021SIGNONSTATE_SPAW" +
-      "N\020\005\022\024\n\020SIGNONSTATE_FULL\020\006\022\033\n\027SIGNONSTATE" +
-      "_CHANGELEVEL\020\007*\352\001\n\014CLC_Messages\022\022\n\016clc_C" +
-      "lientInfo\020\010\022\014\n\010clc_Move\020\t\022\021\n\rclc_VoiceDa" +
-      "ta\020\n\022\023\n\017clc_BaselineAck\020\013\022\024\n\020clc_ListenE" +
-      "vents\020\014\022\030\n\024clc_RespondCvarValue\020\r\022\024\n\020clc" +
-      "_FileCRCCheck\020\016\022\027\n\023clc_LoadingProgress\020\017" +
-      "\022\032\n\026clc_SplitPlayerConnect\020\020\022\025\n\021clc_Clie",
-      "ntMessage\020\021*\361\003\n\014SVC_Messages\022\022\n\016svc_Serv" +
-      "erInfo\020\010\022\021\n\rsvc_SendTable\020\t\022\021\n\rsvc_Class" +
-      "Info\020\n\022\020\n\014svc_SetPause\020\013\022\031\n\025svc_CreateSt" +
-      "ringTable\020\014\022\031\n\025svc_UpdateStringTable\020\r\022\021" +
-      "\n\rsvc_VoiceInit\020\016\022\021\n\rsvc_VoiceData\020\017\022\r\n\t" +
-      "svc_Print\020\020\022\016\n\nsvc_Sounds\020\021\022\017\n\013svc_SetVi" +
-      "ew\020\022\022\020\n\014svc_FixAngle\020\023\022\026\n\022svc_CrosshairA" +
-      "ngle\020\024\022\020\n\014svc_BSPDecal\020\025\022\023\n\017svc_SplitScr" +
-      "een\020\026\022\023\n\017svc_UserMessage\020\027\022\025\n\021svc_Entity" +
-      "Message\020\030\022\021\n\rsvc_GameEvent\020\031\022\026\n\022svc_Pack",
-      "etEntities\020\032\022\024\n\020svc_TempEntities\020\033\022\020\n\014sv" +
-      "c_Prefetch\020\034\022\014\n\010svc_Menu\020\035\022\025\n\021svc_GameEv" +
-      "entList\020\036\022\024\n\020svc_GetCvarValue\020\037*u\n\027ESpli" +
-      "tScreenMessageType\022\033\n\027MSG_SPLITSCREEN_AD" +
-      "DUSER\020\000\022\036\n\032MSG_SPLITSCREEN_REMOVEUSER\020\001\022" +
-      "\035\n\031MSG_SPLITSCREEN_TYPE_BITS\020\001B\003\200\001\000"
+      "criptor.proto\032\026networkbasetypes.proto\"R\n" +
+      "\nCMsg_CVars\022\037\n\005cvars\030\001 \003(\0132\020.CMsg_CVars." +
+      "CVar\032#\n\004CVar\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(" +
+      "\t\"\r\n\013CNETMsg_NOP\"\"\n\022CNETMsg_Disconnect\022\014" +
+      "\n\004text\030\001 \001(\t\"a\n\014CNETMsg_File\022\023\n\013transfer" +
+      "_id\030\001 \001(\005\022\021\n\tfile_name\030\002 \001(\t\022\033\n\023is_repla" +
+      "y_demo_file\030\003 \001(\010\022\014\n\004deny\030\004 \001(\010\"\'\n\027CNETM" +
+      "sg_SplitScreenUser\022\014\n\004slot\030\001 \001(\005\"Z\n\014CNET" +
+      "Msg_Tick\022\014\n\004tick\030\001 \001(\r\022\026\n\016host_frametime",
+      "\030\002 \001(\r\022$\n\034host_frametime_std_deviation\030\003" +
+      " \001(\r\"$\n\021CNETMsg_StringCmd\022\017\n\007command\030\001 \001" +
+      "(\t\"1\n\021CNETMsg_SetConVar\022\034\n\007convars\030\001 \001(\013" +
+      "2\013.CMsg_CVars\"\212\001\n\023CNETMsg_SignonState\022\024\n" +
+      "\014signon_state\030\001 \001(\r\022\023\n\013spawn_count\030\002 \001(\r" +
+      "\022\032\n\022num_server_players\030\003 \001(\r\022\032\n\022players_" +
+      "networkids\030\004 \003(\t\022\020\n\010map_name\030\005 \001(\t\"\246\001\n\022C" +
+      "CLCMsg_ClientInfo\022\026\n\016send_table_crc\030\001 \001(" +
+      "\007\022\024\n\014server_count\030\002 \001(\r\022\017\n\007is_hltv\030\003 \001(\010" +
+      "\022\021\n\tis_replay\030\004 \001(\010\022\022\n\nfriends_id\030\005 \001(\r\022",
+      "\024\n\014friends_name\030\006 \001(\t\022\024\n\014custom_files\030\007 " +
+      "\003(\007\"S\n\014CCLCMsg_Move\022\033\n\023num_backup_comman" +
+      "ds\030\001 \001(\r\022\030\n\020num_new_commands\030\002 \001(\r\022\014\n\004da" +
+      "ta\030\003 \001(\014\"k\n\021CCLCMsg_VoiceData\022\014\n\004data\030\001 " +
+      "\001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030\003 \001(\0162\022.Voic" +
+      "eDataFormat_t:\026VOICEDATA_FORMAT_STEAM\"A\n" +
+      "\023CCLCMsg_BaselineAck\022\025\n\rbaseline_tick\030\001 " +
+      "\001(\005\022\023\n\013baseline_nr\030\002 \001(\005\"*\n\024CCLCMsg_List" +
+      "enEvents\022\022\n\nevent_mask\030\001 \003(\007\"\\\n\030CCLCMsg_" +
+      "RespondCvarValue\022\016\n\006cookie\030\001 \001(\005\022\023\n\013stat",
+      "us_code\030\002 \001(\005\022\014\n\004name\030\003 \001(\t\022\r\n\005value\030\004 \001" +
+      "(\t\"m\n\024CCLCMsg_FileCRCCheck\022\021\n\tcode_path\030" +
+      "\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rcode_filename\030\003 \001" +
+      "(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003crc\030\005 \001(\007\"+\n\027CCL" +
+      "CMsg_LoadingProgress\022\020\n\010progress\030\001 \001(\005\":" +
+      "\n\032CCLCMsg_SplitPlayerConnect\022\034\n\007convars\030" +
+      "\001 \001(\0132\013.CMsg_CVars\"7\n\025CCLCMsg_ClientMess" +
+      "age\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data\030\002 \001(\014\"\342\002\n\022" +
+      "CSVCMsg_ServerInfo\022\020\n\010protocol\030\001 \001(\005\022\024\n\014" +
+      "server_count\030\002 \001(\005\022\024\n\014is_dedicated\030\003 \001(\010",
+      "\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_replay\030\005 \001(\010\022\014\n\004" +
+      "c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 \001(\007\022\022\n\nclient_cr" +
+      "c\030\010 \001(\007\022\030\n\020string_table_crc\030\t \001(\007\022\023\n\013max" +
+      "_clients\030\n \001(\005\022\023\n\013max_classes\030\013 \001(\005\022\023\n\013p" +
+      "layer_slot\030\014 \001(\005\022\025\n\rtick_interval\030\r \001(\002\022" +
+      "\020\n\010game_dir\030\016 \001(\t\022\020\n\010map_name\030\017 \001(\t\022\020\n\010s" +
+      "ky_name\030\020 \001(\t\022\021\n\thost_name\030\021 \001(\t\"\244\001\n\021CSV" +
+      "CMsg_ClassInfo\022\030\n\020create_on_client\030\001 \001(\010" +
+      "\022+\n\007classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo.cl" +
+      "ass_t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017da",
+      "ta_table_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"" +
+      "\"\n\020CSVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021C" +
+      "SVCMsg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005cod" +
+      "ec\030\002 \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_" +
+      "Print\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026" +
+      "\n\016reliable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033" +
+      ".CSVCMsg_Sounds.sounddata_t\032\336\002\n\013sounddat" +
+      "a_t\022\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022" +
+      "\020\n\010origin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013del" +
+      "ay_value\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022",
+      "\024\n\014entity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r" +
+      "\n\005pitch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_nu" +
+      "m\030\013 \001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016spe" +
+      "aker_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023" +
+      "\n\013sound_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010" +
+      "\022\022\n\nis_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch" +
+      "\022\023\n\013sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView" +
+      "\022\024\n\014entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAng" +
+      "le\022\020\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CM" +
+      "sgQAngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005an",
+      "gle\030\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDe" +
+      "cal\022\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_t" +
+      "exture_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005" +
+      "\022\023\n\013model_index\030\004 \001(\005\022\024\n\014low_priority\030\005 " +
+      "\001(\010\"z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001(\016" +
+      "2\030.ESplitScreenMessageType:\027MSG_SPLITSCR" +
+      "EEN_ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_inde" +
+      "x\030\003 \001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006cooki" +
+      "e\030\001 \001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Me" +
+      "nu\022\023\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_valu",
+      "es\030\002 \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end" +
+      "\030\001 \001(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneeds_" +
+      "decoder\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_S" +
+      "endTable.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004ty" +
+      "pe\030\001 \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(" +
+      "\005\022\020\n\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014" +
+      "num_elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n" +
+      "\nhigh_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025" +
+      "CSVCMsg_GameEventList\0228\n\013descriptors\030\001 \003" +
+      "(\0132#.CSVCMsg_GameEventList.descriptor_t\032",
+      "#\n\005key_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014" +
+      "descriptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 " +
+      "\001(\t\022*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventLis" +
+      "t.key_t\"\254\001\n\026CSVCMsg_PacketEntities\022\023\n\013ma" +
+      "x_entries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005" +
+      "\022\020\n\010is_delta\030\003 \001(\010\022\027\n\017update_baseline\030\004 " +
+      "\001(\010\022\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(" +
+      "\005\022\023\n\013entity_data\030\007 \001(\014\"R\n\024CSVCMsg_TempEn" +
+      "tities\022\020\n\010reliable\030\001 \001(\010\022\023\n\013num_entries\030" +
+      "\002 \001(\005\022\023\n\013entity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg_C",
+      "reateStringTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_en" +
+      "tries\030\002 \001(\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024user" +
+      "_data_fixed_size\030\004 \001(\010\022\026\n\016user_data_size" +
+      "\030\005 \001(\005\022\033\n\023user_data_size_bits\030\006 \001(\005\022\r\n\005f" +
+      "lags\030\007 \001(\005\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSVCM" +
+      "sg_UpdateStringTable\022\020\n\010table_id\030\001 \001(\005\022\033" +
+      "\n\023num_changed_entries\030\002 \001(\005\022\023\n\013string_da" +
+      "ta\030\003 \001(\014\"\252\001\n\021CSVCMsg_VoiceData\022\016\n\006client" +
+      "\030\001 \001(\005\022\021\n\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022" +
+      "\024\n\014audible_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(",
+      "\014\022:\n\006format\030\006 \001(\0162\022.VoiceDataFormat_t:\026V" +
+      "OICEDATA_FORMAT_STEAM\"<\n\026CSVCMsg_PacketR" +
+      "eliable\022\014\n\004tick\030\001 \001(\005\022\024\n\014messagessize\030\002 " +
+      "\001(\005*\237\001\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net" +
+      "_Disconnect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_Split" +
+      "ScreenUser\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_String" +
+      "Cmd\020\005\022\021\n\rnet_SetConVar\020\006\022\023\n\017net_SignonSt" +
+      "ate\020\007*\352\001\n\014CLC_Messages\022\022\n\016clc_ClientInfo" +
+      "\020\010\022\014\n\010clc_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017c" +
+      "lc_BaselineAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030",
+      "\n\024clc_RespondCvarValue\020\r\022\024\n\020clc_FileCRCC" +
+      "heck\020\016\022\027\n\023clc_LoadingProgress\020\017\022\032\n\026clc_S" +
+      "plitPlayerConnect\020\020\022\025\n\021clc_ClientMessage" +
+      "\020\021*L\n\021VoiceDataFormat_t\022\032\n\026VOICEDATA_FOR" +
+      "MAT_STEAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001" +
+      "*\211\004\n\014SVC_Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n" +
+      "\rsvc_SendTable\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014s" +
+      "vc_SetPause\020\013\022\031\n\025svc_CreateStringTable\020\014" +
+      "\022\031\n\025svc_UpdateStringTable\020\r\022\021\n\rsvc_Voice" +
+      "Init\020\016\022\021\n\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020",
+      "\022\016\n\nsvc_Sounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc" +
+      "_FixAngle\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014s" +
+      "vc_BSPDecal\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017sv" +
+      "c_UserMessage\020\027\022\025\n\021svc_EntityMessage\020\030\022\021" +
+      "\n\rsvc_GameEvent\020\031\022\026\n\022svc_PacketEntities\020" +
+      "\032\022\024\n\020svc_TempEntities\020\033\022\020\n\014svc_Prefetch\020" +
+      "\034\022\014\n\010svc_Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024" +
+      "\n\020svc_GetCvarValue\020\037\022\026\n\022svc_PacketReliab" +
+      "le\020 *V\n\027ESplitScreenMessageType\022\033\n\027MSG_S" +
+      "PLITSCREEN_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREEN_",
+      "REMOVEUSER\020\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_CMsgVector_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_CMsgVector_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CMsgVector_descriptor,
-              new java.lang.String[] { "X", "Y", "Z", },
-              Netmessages.CMsgVector.class,
-              Netmessages.CMsgVector.Builder.class);
-          internal_static_CMsgVector2D_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_CMsgVector2D_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CMsgVector2D_descriptor,
-              new java.lang.String[] { "X", "Y", },
-              Netmessages.CMsgVector2D.class,
-              Netmessages.CMsgVector2D.Builder.class);
-          internal_static_CMsgQAngle_descriptor =
-            getDescriptor().getMessageTypes().get(2);
-          internal_static_CMsgQAngle_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CMsgQAngle_descriptor,
-              new java.lang.String[] { "X", "Y", "Z", },
-              Netmessages.CMsgQAngle.class,
-              Netmessages.CMsgQAngle.Builder.class);
           internal_static_CMsg_CVars_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(0);
           internal_static_CMsg_CVars_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CMsg_CVars_descriptor,
@@ -30777,7 +26020,7 @@ public final class Netmessages {
               Netmessages.CMsg_CVars.CVar.class,
               Netmessages.CMsg_CVars.CVar.Builder.class);
           internal_static_CNETMsg_NOP_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(1);
           internal_static_CNETMsg_NOP_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_NOP_descriptor,
@@ -30785,7 +26028,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_NOP.class,
               Netmessages.CNETMsg_NOP.Builder.class);
           internal_static_CNETMsg_Disconnect_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(2);
           internal_static_CNETMsg_Disconnect_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_Disconnect_descriptor,
@@ -30793,7 +26036,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_Disconnect.class,
               Netmessages.CNETMsg_Disconnect.Builder.class);
           internal_static_CNETMsg_File_descriptor =
-            getDescriptor().getMessageTypes().get(6);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_CNETMsg_File_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_File_descriptor,
@@ -30801,7 +26044,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_File.class,
               Netmessages.CNETMsg_File.Builder.class);
           internal_static_CNETMsg_SplitScreenUser_descriptor =
-            getDescriptor().getMessageTypes().get(7);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_CNETMsg_SplitScreenUser_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_SplitScreenUser_descriptor,
@@ -30809,7 +26052,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_SplitScreenUser.class,
               Netmessages.CNETMsg_SplitScreenUser.Builder.class);
           internal_static_CNETMsg_Tick_descriptor =
-            getDescriptor().getMessageTypes().get(8);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_CNETMsg_Tick_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_Tick_descriptor,
@@ -30817,7 +26060,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_Tick.class,
               Netmessages.CNETMsg_Tick.Builder.class);
           internal_static_CNETMsg_StringCmd_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_CNETMsg_StringCmd_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_StringCmd_descriptor,
@@ -30825,7 +26068,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_StringCmd.class,
               Netmessages.CNETMsg_StringCmd.Builder.class);
           internal_static_CNETMsg_SetConVar_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_CNETMsg_SetConVar_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_SetConVar_descriptor,
@@ -30833,7 +26076,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_SetConVar.class,
               Netmessages.CNETMsg_SetConVar.Builder.class);
           internal_static_CNETMsg_SignonState_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_CNETMsg_SignonState_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_SignonState_descriptor,
@@ -30841,7 +26084,7 @@ public final class Netmessages {
               Netmessages.CNETMsg_SignonState.class,
               Netmessages.CNETMsg_SignonState.Builder.class);
           internal_static_CCLCMsg_ClientInfo_descriptor =
-            getDescriptor().getMessageTypes().get(12);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_CCLCMsg_ClientInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ClientInfo_descriptor,
@@ -30849,7 +26092,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_ClientInfo.class,
               Netmessages.CCLCMsg_ClientInfo.Builder.class);
           internal_static_CCLCMsg_Move_descriptor =
-            getDescriptor().getMessageTypes().get(13);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_CCLCMsg_Move_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_Move_descriptor,
@@ -30857,15 +26100,15 @@ public final class Netmessages {
               Netmessages.CCLCMsg_Move.class,
               Netmessages.CCLCMsg_Move.Builder.class);
           internal_static_CCLCMsg_VoiceData_descriptor =
-            getDescriptor().getMessageTypes().get(14);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_CCLCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Data", "Xuid", },
+              new java.lang.String[] { "Data", "Xuid", "Format", },
               Netmessages.CCLCMsg_VoiceData.class,
               Netmessages.CCLCMsg_VoiceData.Builder.class);
           internal_static_CCLCMsg_BaselineAck_descriptor =
-            getDescriptor().getMessageTypes().get(15);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_CCLCMsg_BaselineAck_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_BaselineAck_descriptor,
@@ -30873,7 +26116,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_BaselineAck.class,
               Netmessages.CCLCMsg_BaselineAck.Builder.class);
           internal_static_CCLCMsg_ListenEvents_descriptor =
-            getDescriptor().getMessageTypes().get(16);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_CCLCMsg_ListenEvents_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ListenEvents_descriptor,
@@ -30881,7 +26124,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_ListenEvents.class,
               Netmessages.CCLCMsg_ListenEvents.Builder.class);
           internal_static_CCLCMsg_RespondCvarValue_descriptor =
-            getDescriptor().getMessageTypes().get(17);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_CCLCMsg_RespondCvarValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_RespondCvarValue_descriptor,
@@ -30889,7 +26132,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_RespondCvarValue.class,
               Netmessages.CCLCMsg_RespondCvarValue.Builder.class);
           internal_static_CCLCMsg_FileCRCCheck_descriptor =
-            getDescriptor().getMessageTypes().get(18);
+            getDescriptor().getMessageTypes().get(15);
           internal_static_CCLCMsg_FileCRCCheck_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_FileCRCCheck_descriptor,
@@ -30897,7 +26140,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_FileCRCCheck.class,
               Netmessages.CCLCMsg_FileCRCCheck.Builder.class);
           internal_static_CCLCMsg_LoadingProgress_descriptor =
-            getDescriptor().getMessageTypes().get(19);
+            getDescriptor().getMessageTypes().get(16);
           internal_static_CCLCMsg_LoadingProgress_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_LoadingProgress_descriptor,
@@ -30905,7 +26148,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_LoadingProgress.class,
               Netmessages.CCLCMsg_LoadingProgress.Builder.class);
           internal_static_CCLCMsg_SplitPlayerConnect_descriptor =
-            getDescriptor().getMessageTypes().get(20);
+            getDescriptor().getMessageTypes().get(17);
           internal_static_CCLCMsg_SplitPlayerConnect_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_SplitPlayerConnect_descriptor,
@@ -30913,7 +26156,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_SplitPlayerConnect.class,
               Netmessages.CCLCMsg_SplitPlayerConnect.Builder.class);
           internal_static_CCLCMsg_ClientMessage_descriptor =
-            getDescriptor().getMessageTypes().get(21);
+            getDescriptor().getMessageTypes().get(18);
           internal_static_CCLCMsg_ClientMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ClientMessage_descriptor,
@@ -30921,7 +26164,7 @@ public final class Netmessages {
               Netmessages.CCLCMsg_ClientMessage.class,
               Netmessages.CCLCMsg_ClientMessage.Builder.class);
           internal_static_CSVCMsg_ServerInfo_descriptor =
-            getDescriptor().getMessageTypes().get(22);
+            getDescriptor().getMessageTypes().get(19);
           internal_static_CSVCMsg_ServerInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_ServerInfo_descriptor,
@@ -30929,7 +26172,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_ServerInfo.class,
               Netmessages.CSVCMsg_ServerInfo.Builder.class);
           internal_static_CSVCMsg_ClassInfo_descriptor =
-            getDescriptor().getMessageTypes().get(23);
+            getDescriptor().getMessageTypes().get(20);
           internal_static_CSVCMsg_ClassInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_ClassInfo_descriptor,
@@ -30945,7 +26188,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_ClassInfo.class_t.class,
               Netmessages.CSVCMsg_ClassInfo.class_t.Builder.class);
           internal_static_CSVCMsg_SetPause_descriptor =
-            getDescriptor().getMessageTypes().get(24);
+            getDescriptor().getMessageTypes().get(21);
           internal_static_CSVCMsg_SetPause_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SetPause_descriptor,
@@ -30953,15 +26196,15 @@ public final class Netmessages {
               Netmessages.CSVCMsg_SetPause.class,
               Netmessages.CSVCMsg_SetPause.Builder.class);
           internal_static_CSVCMsg_VoiceInit_descriptor =
-            getDescriptor().getMessageTypes().get(25);
+            getDescriptor().getMessageTypes().get(22);
           internal_static_CSVCMsg_VoiceInit_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_VoiceInit_descriptor,
-              new java.lang.String[] { "Quality", "Codec", },
+              new java.lang.String[] { "Quality", "Codec", "Version", },
               Netmessages.CSVCMsg_VoiceInit.class,
               Netmessages.CSVCMsg_VoiceInit.Builder.class);
           internal_static_CSVCMsg_Print_descriptor =
-            getDescriptor().getMessageTypes().get(26);
+            getDescriptor().getMessageTypes().get(23);
           internal_static_CSVCMsg_Print_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Print_descriptor,
@@ -30969,7 +26212,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_Print.class,
               Netmessages.CSVCMsg_Print.Builder.class);
           internal_static_CSVCMsg_Sounds_descriptor =
-            getDescriptor().getMessageTypes().get(27);
+            getDescriptor().getMessageTypes().get(24);
           internal_static_CSVCMsg_Sounds_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Sounds_descriptor,
@@ -30985,7 +26228,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_Sounds.sounddata_t.class,
               Netmessages.CSVCMsg_Sounds.sounddata_t.Builder.class);
           internal_static_CSVCMsg_Prefetch_descriptor =
-            getDescriptor().getMessageTypes().get(28);
+            getDescriptor().getMessageTypes().get(25);
           internal_static_CSVCMsg_Prefetch_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Prefetch_descriptor,
@@ -30993,7 +26236,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_Prefetch.class,
               Netmessages.CSVCMsg_Prefetch.Builder.class);
           internal_static_CSVCMsg_SetView_descriptor =
-            getDescriptor().getMessageTypes().get(29);
+            getDescriptor().getMessageTypes().get(26);
           internal_static_CSVCMsg_SetView_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SetView_descriptor,
@@ -31001,7 +26244,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_SetView.class,
               Netmessages.CSVCMsg_SetView.Builder.class);
           internal_static_CSVCMsg_FixAngle_descriptor =
-            getDescriptor().getMessageTypes().get(30);
+            getDescriptor().getMessageTypes().get(27);
           internal_static_CSVCMsg_FixAngle_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_FixAngle_descriptor,
@@ -31009,7 +26252,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_FixAngle.class,
               Netmessages.CSVCMsg_FixAngle.Builder.class);
           internal_static_CSVCMsg_CrosshairAngle_descriptor =
-            getDescriptor().getMessageTypes().get(31);
+            getDescriptor().getMessageTypes().get(28);
           internal_static_CSVCMsg_CrosshairAngle_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_CrosshairAngle_descriptor,
@@ -31017,7 +26260,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_CrosshairAngle.class,
               Netmessages.CSVCMsg_CrosshairAngle.Builder.class);
           internal_static_CSVCMsg_BSPDecal_descriptor =
-            getDescriptor().getMessageTypes().get(32);
+            getDescriptor().getMessageTypes().get(29);
           internal_static_CSVCMsg_BSPDecal_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_BSPDecal_descriptor,
@@ -31025,7 +26268,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_BSPDecal.class,
               Netmessages.CSVCMsg_BSPDecal.Builder.class);
           internal_static_CSVCMsg_SplitScreen_descriptor =
-            getDescriptor().getMessageTypes().get(33);
+            getDescriptor().getMessageTypes().get(30);
           internal_static_CSVCMsg_SplitScreen_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SplitScreen_descriptor,
@@ -31033,7 +26276,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_SplitScreen.class,
               Netmessages.CSVCMsg_SplitScreen.Builder.class);
           internal_static_CSVCMsg_GetCvarValue_descriptor =
-            getDescriptor().getMessageTypes().get(34);
+            getDescriptor().getMessageTypes().get(31);
           internal_static_CSVCMsg_GetCvarValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_GetCvarValue_descriptor,
@@ -31041,7 +26284,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_GetCvarValue.class,
               Netmessages.CSVCMsg_GetCvarValue.Builder.class);
           internal_static_CSVCMsg_Menu_descriptor =
-            getDescriptor().getMessageTypes().get(35);
+            getDescriptor().getMessageTypes().get(32);
           internal_static_CSVCMsg_Menu_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Menu_descriptor,
@@ -31049,7 +26292,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_Menu.class,
               Netmessages.CSVCMsg_Menu.Builder.class);
           internal_static_CSVCMsg_SendTable_descriptor =
-            getDescriptor().getMessageTypes().get(36);
+            getDescriptor().getMessageTypes().get(33);
           internal_static_CSVCMsg_SendTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SendTable_descriptor,
@@ -31064,24 +26307,8 @@ public final class Netmessages {
               new java.lang.String[] { "Type", "VarName", "Flags", "Priority", "DtName", "NumElements", "LowValue", "HighValue", "NumBits", },
               Netmessages.CSVCMsg_SendTable.sendprop_t.class,
               Netmessages.CSVCMsg_SendTable.sendprop_t.Builder.class);
-          internal_static_CSVCMsg_GameEvent_descriptor =
-            getDescriptor().getMessageTypes().get(37);
-          internal_static_CSVCMsg_GameEvent_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsg_GameEvent_descriptor,
-              new java.lang.String[] { "EventName", "Eventid", "Keys", },
-              Netmessages.CSVCMsg_GameEvent.class,
-              Netmessages.CSVCMsg_GameEvent.Builder.class);
-          internal_static_CSVCMsg_GameEvent_key_t_descriptor =
-            internal_static_CSVCMsg_GameEvent_descriptor.getNestedTypes().get(0);
-          internal_static_CSVCMsg_GameEvent_key_t_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsg_GameEvent_key_t_descriptor,
-              new java.lang.String[] { "Type", "ValString", "ValFloat", "ValLong", "ValShort", "ValByte", "ValBool", "ValUint64", },
-              Netmessages.CSVCMsg_GameEvent.key_t.class,
-              Netmessages.CSVCMsg_GameEvent.key_t.Builder.class);
           internal_static_CSVCMsg_GameEventList_descriptor =
-            getDescriptor().getMessageTypes().get(38);
+            getDescriptor().getMessageTypes().get(34);
           internal_static_CSVCMsg_GameEventList_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_GameEventList_descriptor,
@@ -31105,7 +26332,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_GameEventList.descriptor_t.class,
               Netmessages.CSVCMsg_GameEventList.descriptor_t.Builder.class);
           internal_static_CSVCMsg_PacketEntities_descriptor =
-            getDescriptor().getMessageTypes().get(39);
+            getDescriptor().getMessageTypes().get(35);
           internal_static_CSVCMsg_PacketEntities_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_PacketEntities_descriptor,
@@ -31113,7 +26340,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_PacketEntities.class,
               Netmessages.CSVCMsg_PacketEntities.Builder.class);
           internal_static_CSVCMsg_TempEntities_descriptor =
-            getDescriptor().getMessageTypes().get(40);
+            getDescriptor().getMessageTypes().get(36);
           internal_static_CSVCMsg_TempEntities_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_TempEntities_descriptor,
@@ -31121,7 +26348,7 @@ public final class Netmessages {
               Netmessages.CSVCMsg_TempEntities.class,
               Netmessages.CSVCMsg_TempEntities.Builder.class);
           internal_static_CSVCMsg_CreateStringTable_descriptor =
-            getDescriptor().getMessageTypes().get(41);
+            getDescriptor().getMessageTypes().get(37);
           internal_static_CSVCMsg_CreateStringTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_CreateStringTable_descriptor,
@@ -31129,61 +26356,29 @@ public final class Netmessages {
               Netmessages.CSVCMsg_CreateStringTable.class,
               Netmessages.CSVCMsg_CreateStringTable.Builder.class);
           internal_static_CSVCMsg_UpdateStringTable_descriptor =
-            getDescriptor().getMessageTypes().get(42);
+            getDescriptor().getMessageTypes().get(38);
           internal_static_CSVCMsg_UpdateStringTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_UpdateStringTable_descriptor,
               new java.lang.String[] { "TableId", "NumChangedEntries", "StringData", },
               Netmessages.CSVCMsg_UpdateStringTable.class,
               Netmessages.CSVCMsg_UpdateStringTable.Builder.class);
-          internal_static_CSVCMsg_UserMessage_descriptor =
-            getDescriptor().getMessageTypes().get(43);
-          internal_static_CSVCMsg_UserMessage_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsg_UserMessage_descriptor,
-              new java.lang.String[] { "MsgType", "MsgData", },
-              Netmessages.CSVCMsg_UserMessage.class,
-              Netmessages.CSVCMsg_UserMessage.Builder.class);
           internal_static_CSVCMsg_VoiceData_descriptor =
-            getDescriptor().getMessageTypes().get(44);
+            getDescriptor().getMessageTypes().get(39);
           internal_static_CSVCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", },
+              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", "Format", },
               Netmessages.CSVCMsg_VoiceData.class,
               Netmessages.CSVCMsg_VoiceData.Builder.class);
-          internal_static_CSVCMsgList_GameEvents_descriptor =
-            getDescriptor().getMessageTypes().get(45);
-          internal_static_CSVCMsgList_GameEvents_fieldAccessorTable = new
+          internal_static_CSVCMsg_PacketReliable_descriptor =
+            getDescriptor().getMessageTypes().get(40);
+          internal_static_CSVCMsg_PacketReliable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsgList_GameEvents_descriptor,
-              new java.lang.String[] { "Events", },
-              Netmessages.CSVCMsgList_GameEvents.class,
-              Netmessages.CSVCMsgList_GameEvents.Builder.class);
-          internal_static_CSVCMsgList_GameEvents_event_t_descriptor =
-            internal_static_CSVCMsgList_GameEvents_descriptor.getNestedTypes().get(0);
-          internal_static_CSVCMsgList_GameEvents_event_t_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsgList_GameEvents_event_t_descriptor,
-              new java.lang.String[] { "Tick", "Event", },
-              Netmessages.CSVCMsgList_GameEvents.event_t.class,
-              Netmessages.CSVCMsgList_GameEvents.event_t.Builder.class);
-          internal_static_CSVCMsgList_UserMessages_descriptor =
-            getDescriptor().getMessageTypes().get(46);
-          internal_static_CSVCMsgList_UserMessages_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsgList_UserMessages_descriptor,
-              new java.lang.String[] { "Usermsgs", },
-              Netmessages.CSVCMsgList_UserMessages.class,
-              Netmessages.CSVCMsgList_UserMessages.Builder.class);
-          internal_static_CSVCMsgList_UserMessages_usermsg_t_descriptor =
-            internal_static_CSVCMsgList_UserMessages_descriptor.getNestedTypes().get(0);
-          internal_static_CSVCMsgList_UserMessages_usermsg_t_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CSVCMsgList_UserMessages_usermsg_t_descriptor,
-              new java.lang.String[] { "Tick", "Msg", },
-              Netmessages.CSVCMsgList_UserMessages.usermsg_t.class,
-              Netmessages.CSVCMsgList_UserMessages.usermsg_t.Builder.class);
+              internal_static_CSVCMsg_PacketReliable_descriptor,
+              new java.lang.String[] { "Tick", "Messagessize", },
+              Netmessages.CSVCMsg_PacketReliable.class,
+              Netmessages.CSVCMsg_PacketReliable.Builder.class);
           return null;
         }
       };
@@ -31191,6 +26386,7 @@ public final class Netmessages {
       .internalBuildGeneratedFileFrom(descriptorData,
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.DescriptorProtos.getDescriptor(),
+          Networkbasetypes.getDescriptor(),
         }, assigner);
   }
   

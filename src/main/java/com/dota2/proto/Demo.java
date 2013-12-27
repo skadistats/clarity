@@ -156,6 +156,10 @@ public final class Demo {
     // optional bool allow_clientside_entities = 8;
     boolean hasAllowClientsideEntities();
     boolean getAllowClientsideEntities();
+    
+    // optional bool allow_clientside_particles = 9;
+    boolean hasAllowClientsideParticles();
+    boolean getAllowClientsideParticles();
   }
   public static final class CDemoFileHeader extends
       com.google.protobuf.GeneratedMessage
@@ -376,6 +380,16 @@ public final class Demo {
       return allowClientsideEntities_;
     }
     
+    // optional bool allow_clientside_particles = 9;
+    public static final int ALLOW_CLIENTSIDE_PARTICLES_FIELD_NUMBER = 9;
+    private boolean allowClientsideParticles_;
+    public boolean hasAllowClientsideParticles() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    public boolean getAllowClientsideParticles() {
+      return allowClientsideParticles_;
+    }
+    
     private void initFields() {
       demoFileStamp_ = "";
       networkProtocol_ = 0;
@@ -385,6 +399,7 @@ public final class Demo {
       gameDirectory_ = "";
       fullpacketsVersion_ = 0;
       allowClientsideEntities_ = false;
+      allowClientsideParticles_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -426,6 +441,9 @@ public final class Demo {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         output.writeBool(8, allowClientsideEntities_);
       }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeBool(9, allowClientsideParticles_);
+      }
       getUnknownFields().writeTo(output);
     }
     
@@ -466,6 +484,10 @@ public final class Demo {
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(8, allowClientsideEntities_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(9, allowClientsideParticles_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -607,6 +629,8 @@ public final class Demo {
         bitField0_ = (bitField0_ & ~0x00000040);
         allowClientsideEntities_ = false;
         bitField0_ = (bitField0_ & ~0x00000080);
+        allowClientsideParticles_ = false;
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
       
@@ -677,6 +701,10 @@ public final class Demo {
           to_bitField0_ |= 0x00000080;
         }
         result.allowClientsideEntities_ = allowClientsideEntities_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.allowClientsideParticles_ = allowClientsideParticles_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -716,6 +744,9 @@ public final class Demo {
         }
         if (other.hasAllowClientsideEntities()) {
           setAllowClientsideEntities(other.getAllowClientsideEntities());
+        }
+        if (other.hasAllowClientsideParticles()) {
+          setAllowClientsideParticles(other.getAllowClientsideParticles());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -790,6 +821,11 @@ public final class Demo {
             case 64: {
               bitField0_ |= 0x00000080;
               allowClientsideEntities_ = input.readBool();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000100;
+              allowClientsideParticles_ = input.readBool();
               break;
             }
           }
@@ -1041,6 +1077,27 @@ public final class Demo {
         return this;
       }
       
+      // optional bool allow_clientside_particles = 9;
+      private boolean allowClientsideParticles_ ;
+      public boolean hasAllowClientsideParticles() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      public boolean getAllowClientsideParticles() {
+        return allowClientsideParticles_;
+      }
+      public Builder setAllowClientsideParticles(boolean value) {
+        bitField0_ |= 0x00000100;
+        allowClientsideParticles_ = value;
+        onChanged();
+        return this;
+      }
+      public Builder clearAllowClientsideParticles() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        allowClientsideParticles_ = false;
+        onChanged();
+        return this;
+      }
+      
       // @@protoc_insertion_point(builder_scope:CDemoFileHeader)
     }
     
@@ -1112,6 +1169,40 @@ public final class Demo {
           getPlayerInfoOrBuilderList();
       Demo.CGameInfo.CDotaGameInfo.CPlayerInfoOrBuilder getPlayerInfoOrBuilder(
           int index);
+      
+      // optional uint32 leagueid = 5;
+      boolean hasLeagueid();
+      int getLeagueid();
+      
+      // repeated .CGameInfo.CDotaGameInfo.CHeroSelectEvent picks_bans = 6;
+      java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> 
+          getPicksBansList();
+      Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent getPicksBans(int index);
+      int getPicksBansCount();
+      java.util.List<? extends Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder> 
+          getPicksBansOrBuilderList();
+      Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder getPicksBansOrBuilder(
+          int index);
+      
+      // optional uint32 radiant_team_id = 7;
+      boolean hasRadiantTeamId();
+      int getRadiantTeamId();
+      
+      // optional uint32 dire_team_id = 8;
+      boolean hasDireTeamId();
+      int getDireTeamId();
+      
+      // optional string radiant_team_tag = 9;
+      boolean hasRadiantTeamTag();
+      String getRadiantTeamTag();
+      
+      // optional string dire_team_tag = 10;
+      boolean hasDireTeamTag();
+      String getDireTeamTag();
+      
+      // optional uint32 end_time = 11;
+      boolean hasEndTime();
+      int getEndTime();
     }
     public static final class CDotaGameInfo extends
         com.google.protobuf.GeneratedMessage
@@ -1155,6 +1246,14 @@ public final class Demo {
         // optional bool is_fake_client = 3;
         boolean hasIsFakeClient();
         boolean getIsFakeClient();
+        
+        // optional uint64 steamid = 4;
+        boolean hasSteamid();
+        long getSteamid();
+        
+        // optional int32 game_team = 5;
+        boolean hasGameTeam();
+        int getGameTeam();
       }
       public static final class CPlayerInfo extends
           com.google.protobuf.GeneratedMessage
@@ -1259,10 +1358,32 @@ public final class Demo {
           return isFakeClient_;
         }
         
+        // optional uint64 steamid = 4;
+        public static final int STEAMID_FIELD_NUMBER = 4;
+        private long steamid_;
+        public boolean hasSteamid() {
+          return ((bitField0_ & 0x00000008) == 0x00000008);
+        }
+        public long getSteamid() {
+          return steamid_;
+        }
+        
+        // optional int32 game_team = 5;
+        public static final int GAME_TEAM_FIELD_NUMBER = 5;
+        private int gameTeam_;
+        public boolean hasGameTeam() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        public int getGameTeam() {
+          return gameTeam_;
+        }
+        
         private void initFields() {
           heroName_ = "";
           playerName_ = "";
           isFakeClient_ = false;
+          steamid_ = 0L;
+          gameTeam_ = 0;
         }
         private byte memoizedIsInitialized = -1;
         public final boolean isInitialized() {
@@ -1285,6 +1406,12 @@ public final class Demo {
           if (((bitField0_ & 0x00000004) == 0x00000004)) {
             output.writeBool(3, isFakeClient_);
           }
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            output.writeUInt64(4, steamid_);
+          }
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            output.writeInt32(5, gameTeam_);
+          }
           getUnknownFields().writeTo(output);
         }
         
@@ -1305,6 +1432,14 @@ public final class Demo {
           if (((bitField0_ & 0x00000004) == 0x00000004)) {
             size += com.google.protobuf.CodedOutputStream
               .computeBoolSize(3, isFakeClient_);
+          }
+          if (((bitField0_ & 0x00000008) == 0x00000008)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeUInt64Size(4, steamid_);
+          }
+          if (((bitField0_ & 0x00000010) == 0x00000010)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeInt32Size(5, gameTeam_);
           }
           size += getUnknownFields().getSerializedSize();
           memoizedSerializedSize = size;
@@ -1436,6 +1571,10 @@ public final class Demo {
             bitField0_ = (bitField0_ & ~0x00000002);
             isFakeClient_ = false;
             bitField0_ = (bitField0_ & ~0x00000004);
+            steamid_ = 0L;
+            bitField0_ = (bitField0_ & ~0x00000008);
+            gameTeam_ = 0;
+            bitField0_ = (bitField0_ & ~0x00000010);
             return this;
           }
           
@@ -1486,6 +1625,14 @@ public final class Demo {
               to_bitField0_ |= 0x00000004;
             }
             result.isFakeClient_ = isFakeClient_;
+            if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+              to_bitField0_ |= 0x00000008;
+            }
+            result.steamid_ = steamid_;
+            if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+              to_bitField0_ |= 0x00000010;
+            }
+            result.gameTeam_ = gameTeam_;
             result.bitField0_ = to_bitField0_;
             onBuilt();
             return result;
@@ -1510,6 +1657,12 @@ public final class Demo {
             }
             if (other.hasIsFakeClient()) {
               setIsFakeClient(other.getIsFakeClient());
+            }
+            if (other.hasSteamid()) {
+              setSteamid(other.getSteamid());
+            }
+            if (other.hasGameTeam()) {
+              setGameTeam(other.getGameTeam());
             }
             this.mergeUnknownFields(other.getUnknownFields());
             return this;
@@ -1555,6 +1708,16 @@ public final class Demo {
                 case 24: {
                   bitField0_ |= 0x00000004;
                   isFakeClient_ = input.readBool();
+                  break;
+                }
+                case 32: {
+                  bitField0_ |= 0x00000008;
+                  steamid_ = input.readUInt64();
+                  break;
+                }
+                case 40: {
+                  bitField0_ |= 0x00000010;
+                  gameTeam_ = input.readInt32();
                   break;
                 }
               }
@@ -1656,6 +1819,48 @@ public final class Demo {
             return this;
           }
           
+          // optional uint64 steamid = 4;
+          private long steamid_ ;
+          public boolean hasSteamid() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+          }
+          public long getSteamid() {
+            return steamid_;
+          }
+          public Builder setSteamid(long value) {
+            bitField0_ |= 0x00000008;
+            steamid_ = value;
+            onChanged();
+            return this;
+          }
+          public Builder clearSteamid() {
+            bitField0_ = (bitField0_ & ~0x00000008);
+            steamid_ = 0L;
+            onChanged();
+            return this;
+          }
+          
+          // optional int32 game_team = 5;
+          private int gameTeam_ ;
+          public boolean hasGameTeam() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+          }
+          public int getGameTeam() {
+            return gameTeam_;
+          }
+          public Builder setGameTeam(int value) {
+            bitField0_ |= 0x00000010;
+            gameTeam_ = value;
+            onChanged();
+            return this;
+          }
+          public Builder clearGameTeam() {
+            bitField0_ = (bitField0_ & ~0x00000010);
+            gameTeam_ = 0;
+            onChanged();
+            return this;
+          }
+          
           // @@protoc_insertion_point(builder_scope:CGameInfo.CDotaGameInfo.CPlayerInfo)
         }
         
@@ -1665,6 +1870,458 @@ public final class Demo {
         }
         
         // @@protoc_insertion_point(class_scope:CGameInfo.CDotaGameInfo.CPlayerInfo)
+      }
+      
+      public interface CHeroSelectEventOrBuilder
+          extends com.google.protobuf.MessageOrBuilder {
+        
+        // optional bool is_pick = 1;
+        boolean hasIsPick();
+        boolean getIsPick();
+        
+        // optional uint32 team = 2;
+        boolean hasTeam();
+        int getTeam();
+        
+        // optional uint32 hero_id = 3;
+        boolean hasHeroId();
+        int getHeroId();
+      }
+      public static final class CHeroSelectEvent extends
+          com.google.protobuf.GeneratedMessage
+          implements CHeroSelectEventOrBuilder {
+        // Use CHeroSelectEvent.newBuilder() to construct.
+        private CHeroSelectEvent(Builder builder) {
+          super(builder);
+        }
+        private CHeroSelectEvent(boolean noInit) {}
+        
+        private static final CHeroSelectEvent defaultInstance;
+        public static CHeroSelectEvent getDefaultInstance() {
+          return defaultInstance;
+        }
+        
+        public CHeroSelectEvent getDefaultInstanceForType() {
+          return defaultInstance;
+        }
+        
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return Demo.internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_descriptor;
+        }
+        
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return Demo.internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_fieldAccessorTable;
+        }
+        
+        private int bitField0_;
+        // optional bool is_pick = 1;
+        public static final int IS_PICK_FIELD_NUMBER = 1;
+        private boolean isPick_;
+        public boolean hasIsPick() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        public boolean getIsPick() {
+          return isPick_;
+        }
+        
+        // optional uint32 team = 2;
+        public static final int TEAM_FIELD_NUMBER = 2;
+        private int team_;
+        public boolean hasTeam() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        public int getTeam() {
+          return team_;
+        }
+        
+        // optional uint32 hero_id = 3;
+        public static final int HERO_ID_FIELD_NUMBER = 3;
+        private int heroId_;
+        public boolean hasHeroId() {
+          return ((bitField0_ & 0x00000004) == 0x00000004);
+        }
+        public int getHeroId() {
+          return heroId_;
+        }
+        
+        private void initFields() {
+          isPick_ = false;
+          team_ = 0;
+          heroId_ = 0;
+        }
+        private byte memoizedIsInitialized = -1;
+        public final boolean isInitialized() {
+          byte isInitialized = memoizedIsInitialized;
+          if (isInitialized != -1) return isInitialized == 1;
+          
+          memoizedIsInitialized = 1;
+          return true;
+        }
+        
+        public void writeTo(com.google.protobuf.CodedOutputStream output)
+                            throws java.io.IOException {
+          getSerializedSize();
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            output.writeBool(1, isPick_);
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            output.writeUInt32(2, team_);
+          }
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            output.writeUInt32(3, heroId_);
+          }
+          getUnknownFields().writeTo(output);
+        }
+        
+        private int memoizedSerializedSize = -1;
+        public int getSerializedSize() {
+          int size = memoizedSerializedSize;
+          if (size != -1) return size;
+        
+          size = 0;
+          if (((bitField0_ & 0x00000001) == 0x00000001)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeBoolSize(1, isPick_);
+          }
+          if (((bitField0_ & 0x00000002) == 0x00000002)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeUInt32Size(2, team_);
+          }
+          if (((bitField0_ & 0x00000004) == 0x00000004)) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeUInt32Size(3, heroId_);
+          }
+          size += getUnknownFields().getSerializedSize();
+          memoizedSerializedSize = size;
+          return size;
+        }
+        
+        private static final long serialVersionUID = 0L;
+        @java.lang.Override
+        protected java.lang.Object writeReplace()
+            throws java.io.ObjectStreamException {
+          return super.writeReplace();
+        }
+        
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            com.google.protobuf.ByteString data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return newBuilder().mergeFrom(data).buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            com.google.protobuf.ByteString data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return newBuilder().mergeFrom(data, extensionRegistry)
+                   .buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(byte[] data)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return newBuilder().mergeFrom(data).buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            byte[] data,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return newBuilder().mergeFrom(data, extensionRegistry)
+                   .buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          return newBuilder().mergeFrom(input).buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return newBuilder().mergeFrom(input, extensionRegistry)
+                   .buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseDelimitedFrom(java.io.InputStream input)
+            throws java.io.IOException {
+          Builder builder = newBuilder();
+          if (builder.mergeDelimitedFrom(input)) {
+            return builder.buildParsed();
+          } else {
+            return null;
+          }
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseDelimitedFrom(
+            java.io.InputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          Builder builder = newBuilder();
+          if (builder.mergeDelimitedFrom(input, extensionRegistry)) {
+            return builder.buildParsed();
+          } else {
+            return null;
+          }
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            com.google.protobuf.CodedInputStream input)
+            throws java.io.IOException {
+          return newBuilder().mergeFrom(input).buildParsed();
+        }
+        public static Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent parseFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          return newBuilder().mergeFrom(input, extensionRegistry)
+                   .buildParsed();
+        }
+        
+        public static Builder newBuilder() { return Builder.create(); }
+        public Builder newBuilderForType() { return newBuilder(); }
+        public static Builder newBuilder(Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent prototype) {
+          return newBuilder().mergeFrom(prototype);
+        }
+        public Builder toBuilder() { return newBuilder(this); }
+        
+        @java.lang.Override
+        protected Builder newBuilderForType(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          Builder builder = new Builder(parent);
+          return builder;
+        }
+        public static final class Builder extends
+            com.google.protobuf.GeneratedMessage.Builder<Builder>
+           implements Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder {
+          public static final com.google.protobuf.Descriptors.Descriptor
+              getDescriptor() {
+            return Demo.internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_descriptor;
+          }
+          
+          protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+              internalGetFieldAccessorTable() {
+            return Demo.internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_fieldAccessorTable;
+          }
+          
+          // Construct using Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.newBuilder()
+          private Builder() {
+            maybeForceBuilderInitialization();
+          }
+          
+          private Builder(BuilderParent parent) {
+            super(parent);
+            maybeForceBuilderInitialization();
+          }
+          private void maybeForceBuilderInitialization() {
+            if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+            }
+          }
+          private static Builder create() {
+            return new Builder();
+          }
+          
+          public Builder clear() {
+            super.clear();
+            isPick_ = false;
+            bitField0_ = (bitField0_ & ~0x00000001);
+            team_ = 0;
+            bitField0_ = (bitField0_ & ~0x00000002);
+            heroId_ = 0;
+            bitField0_ = (bitField0_ & ~0x00000004);
+            return this;
+          }
+          
+          public Builder clone() {
+            return create().mergeFrom(buildPartial());
+          }
+          
+          public com.google.protobuf.Descriptors.Descriptor
+              getDescriptorForType() {
+            return Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.getDescriptor();
+          }
+          
+          public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent getDefaultInstanceForType() {
+            return Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.getDefaultInstance();
+          }
+          
+          public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent build() {
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent result = buildPartial();
+            if (!result.isInitialized()) {
+              throw newUninitializedMessageException(result);
+            }
+            return result;
+          }
+          
+          private Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent buildParsed()
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent result = buildPartial();
+            if (!result.isInitialized()) {
+              throw newUninitializedMessageException(
+                result).asInvalidProtocolBufferException();
+            }
+            return result;
+          }
+          
+          public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent buildPartial() {
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent result = new Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent(this);
+            int from_bitField0_ = bitField0_;
+            int to_bitField0_ = 0;
+            if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+              to_bitField0_ |= 0x00000001;
+            }
+            result.isPick_ = isPick_;
+            if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+              to_bitField0_ |= 0x00000002;
+            }
+            result.team_ = team_;
+            if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+              to_bitField0_ |= 0x00000004;
+            }
+            result.heroId_ = heroId_;
+            result.bitField0_ = to_bitField0_;
+            onBuilt();
+            return result;
+          }
+          
+          public Builder mergeFrom(com.google.protobuf.Message other) {
+            if (other instanceof Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent) {
+              return mergeFrom((Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent)other);
+            } else {
+              super.mergeFrom(other);
+              return this;
+            }
+          }
+          
+          public Builder mergeFrom(Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent other) {
+            if (other == Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.getDefaultInstance()) return this;
+            if (other.hasIsPick()) {
+              setIsPick(other.getIsPick());
+            }
+            if (other.hasTeam()) {
+              setTeam(other.getTeam());
+            }
+            if (other.hasHeroId()) {
+              setHeroId(other.getHeroId());
+            }
+            this.mergeUnknownFields(other.getUnknownFields());
+            return this;
+          }
+          
+          public final boolean isInitialized() {
+            return true;
+          }
+          
+          public Builder mergeFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+              com.google.protobuf.UnknownFieldSet.newBuilder(
+                this.getUnknownFields());
+            while (true) {
+              int tag = input.readTag();
+              switch (tag) {
+                case 0:
+                  this.setUnknownFields(unknownFields.build());
+                  onChanged();
+                  return this;
+                default: {
+                  if (!parseUnknownField(input, unknownFields,
+                                         extensionRegistry, tag)) {
+                    this.setUnknownFields(unknownFields.build());
+                    onChanged();
+                    return this;
+                  }
+                  break;
+                }
+                case 8: {
+                  bitField0_ |= 0x00000001;
+                  isPick_ = input.readBool();
+                  break;
+                }
+                case 16: {
+                  bitField0_ |= 0x00000002;
+                  team_ = input.readUInt32();
+                  break;
+                }
+                case 24: {
+                  bitField0_ |= 0x00000004;
+                  heroId_ = input.readUInt32();
+                  break;
+                }
+              }
+            }
+          }
+          
+          private int bitField0_;
+          
+          // optional bool is_pick = 1;
+          private boolean isPick_ ;
+          public boolean hasIsPick() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+          }
+          public boolean getIsPick() {
+            return isPick_;
+          }
+          public Builder setIsPick(boolean value) {
+            bitField0_ |= 0x00000001;
+            isPick_ = value;
+            onChanged();
+            return this;
+          }
+          public Builder clearIsPick() {
+            bitField0_ = (bitField0_ & ~0x00000001);
+            isPick_ = false;
+            onChanged();
+            return this;
+          }
+          
+          // optional uint32 team = 2;
+          private int team_ ;
+          public boolean hasTeam() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+          }
+          public int getTeam() {
+            return team_;
+          }
+          public Builder setTeam(int value) {
+            bitField0_ |= 0x00000002;
+            team_ = value;
+            onChanged();
+            return this;
+          }
+          public Builder clearTeam() {
+            bitField0_ = (bitField0_ & ~0x00000002);
+            team_ = 0;
+            onChanged();
+            return this;
+          }
+          
+          // optional uint32 hero_id = 3;
+          private int heroId_ ;
+          public boolean hasHeroId() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+          }
+          public int getHeroId() {
+            return heroId_;
+          }
+          public Builder setHeroId(int value) {
+            bitField0_ |= 0x00000004;
+            heroId_ = value;
+            onChanged();
+            return this;
+          }
+          public Builder clearHeroId() {
+            bitField0_ = (bitField0_ & ~0x00000004);
+            heroId_ = 0;
+            onChanged();
+            return this;
+          }
+          
+          // @@protoc_insertion_point(builder_scope:CGameInfo.CDotaGameInfo.CHeroSelectEvent)
+        }
+        
+        static {
+          defaultInstance = new CHeroSelectEvent(true);
+          defaultInstance.initFields();
+        }
+        
+        // @@protoc_insertion_point(class_scope:CGameInfo.CDotaGameInfo.CHeroSelectEvent)
       }
       
       private int bitField0_;
@@ -1719,11 +2376,143 @@ public final class Demo {
         return playerInfo_.get(index);
       }
       
+      // optional uint32 leagueid = 5;
+      public static final int LEAGUEID_FIELD_NUMBER = 5;
+      private int leagueid_;
+      public boolean hasLeagueid() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      public int getLeagueid() {
+        return leagueid_;
+      }
+      
+      // repeated .CGameInfo.CDotaGameInfo.CHeroSelectEvent picks_bans = 6;
+      public static final int PICKS_BANS_FIELD_NUMBER = 6;
+      private java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> picksBans_;
+      public java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> getPicksBansList() {
+        return picksBans_;
+      }
+      public java.util.List<? extends Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder> 
+          getPicksBansOrBuilderList() {
+        return picksBans_;
+      }
+      public int getPicksBansCount() {
+        return picksBans_.size();
+      }
+      public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent getPicksBans(int index) {
+        return picksBans_.get(index);
+      }
+      public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder getPicksBansOrBuilder(
+          int index) {
+        return picksBans_.get(index);
+      }
+      
+      // optional uint32 radiant_team_id = 7;
+      public static final int RADIANT_TEAM_ID_FIELD_NUMBER = 7;
+      private int radiantTeamId_;
+      public boolean hasRadiantTeamId() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      public int getRadiantTeamId() {
+        return radiantTeamId_;
+      }
+      
+      // optional uint32 dire_team_id = 8;
+      public static final int DIRE_TEAM_ID_FIELD_NUMBER = 8;
+      private int direTeamId_;
+      public boolean hasDireTeamId() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      public int getDireTeamId() {
+        return direTeamId_;
+      }
+      
+      // optional string radiant_team_tag = 9;
+      public static final int RADIANT_TEAM_TAG_FIELD_NUMBER = 9;
+      private java.lang.Object radiantTeamTag_;
+      public boolean hasRadiantTeamTag() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      public String getRadiantTeamTag() {
+        java.lang.Object ref = radiantTeamTag_;
+        if (ref instanceof String) {
+          return (String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+            radiantTeamTag_ = s;
+          }
+          return s;
+        }
+      }
+      private com.google.protobuf.ByteString getRadiantTeamTagBytes() {
+        java.lang.Object ref = radiantTeamTag_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+          radiantTeamTag_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      // optional string dire_team_tag = 10;
+      public static final int DIRE_TEAM_TAG_FIELD_NUMBER = 10;
+      private java.lang.Object direTeamTag_;
+      public boolean hasDireTeamTag() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      public String getDireTeamTag() {
+        java.lang.Object ref = direTeamTag_;
+        if (ref instanceof String) {
+          return (String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          String s = bs.toStringUtf8();
+          if (com.google.protobuf.Internal.isValidUtf8(bs)) {
+            direTeamTag_ = s;
+          }
+          return s;
+        }
+      }
+      private com.google.protobuf.ByteString getDireTeamTagBytes() {
+        java.lang.Object ref = direTeamTag_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8((String) ref);
+          direTeamTag_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      
+      // optional uint32 end_time = 11;
+      public static final int END_TIME_FIELD_NUMBER = 11;
+      private int endTime_;
+      public boolean hasEndTime() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      public int getEndTime() {
+        return endTime_;
+      }
+      
       private void initFields() {
         matchId_ = 0;
         gameMode_ = 0;
         gameWinner_ = 0;
         playerInfo_ = java.util.Collections.emptyList();
+        leagueid_ = 0;
+        picksBans_ = java.util.Collections.emptyList();
+        radiantTeamId_ = 0;
+        direTeamId_ = 0;
+        radiantTeamTag_ = "";
+        direTeamTag_ = "";
+        endTime_ = 0;
       }
       private byte memoizedIsInitialized = -1;
       public final boolean isInitialized() {
@@ -1749,6 +2538,27 @@ public final class Demo {
         for (int i = 0; i < playerInfo_.size(); i++) {
           output.writeMessage(4, playerInfo_.get(i));
         }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          output.writeUInt32(5, leagueid_);
+        }
+        for (int i = 0; i < picksBans_.size(); i++) {
+          output.writeMessage(6, picksBans_.get(i));
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          output.writeUInt32(7, radiantTeamId_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          output.writeUInt32(8, direTeamId_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          output.writeBytes(9, getRadiantTeamTagBytes());
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          output.writeBytes(10, getDireTeamTagBytes());
+        }
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          output.writeUInt32(11, endTime_);
+        }
         getUnknownFields().writeTo(output);
       }
       
@@ -1773,6 +2583,34 @@ public final class Demo {
         for (int i = 0; i < playerInfo_.size(); i++) {
           size += com.google.protobuf.CodedOutputStream
             .computeMessageSize(4, playerInfo_.get(i));
+        }
+        if (((bitField0_ & 0x00000008) == 0x00000008)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(5, leagueid_);
+        }
+        for (int i = 0; i < picksBans_.size(); i++) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeMessageSize(6, picksBans_.get(i));
+        }
+        if (((bitField0_ & 0x00000010) == 0x00000010)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(7, radiantTeamId_);
+        }
+        if (((bitField0_ & 0x00000020) == 0x00000020)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(8, direTeamId_);
+        }
+        if (((bitField0_ & 0x00000040) == 0x00000040)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(9, getRadiantTeamTagBytes());
+        }
+        if (((bitField0_ & 0x00000080) == 0x00000080)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(10, getDireTeamTagBytes());
+        }
+        if (((bitField0_ & 0x00000100) == 0x00000100)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeUInt32Size(11, endTime_);
         }
         size += getUnknownFields().getSerializedSize();
         memoizedSerializedSize = size;
@@ -1891,6 +2729,7 @@ public final class Demo {
         private void maybeForceBuilderInitialization() {
           if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
             getPlayerInfoFieldBuilder();
+            getPicksBansFieldBuilder();
           }
         }
         private static Builder create() {
@@ -1911,6 +2750,24 @@ public final class Demo {
           } else {
             playerInfoBuilder_.clear();
           }
+          leagueid_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000010);
+          if (picksBansBuilder_ == null) {
+            picksBans_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000020);
+          } else {
+            picksBansBuilder_.clear();
+          }
+          radiantTeamId_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000040);
+          direTeamId_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000080);
+          radiantTeamTag_ = "";
+          bitField0_ = (bitField0_ & ~0x00000100);
+          direTeamTag_ = "";
+          bitField0_ = (bitField0_ & ~0x00000200);
+          endTime_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000400);
           return this;
         }
         
@@ -1970,6 +2827,39 @@ public final class Demo {
           } else {
             result.playerInfo_ = playerInfoBuilder_.build();
           }
+          if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+            to_bitField0_ |= 0x00000008;
+          }
+          result.leagueid_ = leagueid_;
+          if (picksBansBuilder_ == null) {
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+              picksBans_ = java.util.Collections.unmodifiableList(picksBans_);
+              bitField0_ = (bitField0_ & ~0x00000020);
+            }
+            result.picksBans_ = picksBans_;
+          } else {
+            result.picksBans_ = picksBansBuilder_.build();
+          }
+          if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+            to_bitField0_ |= 0x00000010;
+          }
+          result.radiantTeamId_ = radiantTeamId_;
+          if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+            to_bitField0_ |= 0x00000020;
+          }
+          result.direTeamId_ = direTeamId_;
+          if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+            to_bitField0_ |= 0x00000040;
+          }
+          result.radiantTeamTag_ = radiantTeamTag_;
+          if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+            to_bitField0_ |= 0x00000080;
+          }
+          result.direTeamTag_ = direTeamTag_;
+          if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+            to_bitField0_ |= 0x00000100;
+          }
+          result.endTime_ = endTime_;
           result.bitField0_ = to_bitField0_;
           onBuilt();
           return result;
@@ -2021,6 +2911,50 @@ public final class Demo {
               }
             }
           }
+          if (other.hasLeagueid()) {
+            setLeagueid(other.getLeagueid());
+          }
+          if (picksBansBuilder_ == null) {
+            if (!other.picksBans_.isEmpty()) {
+              if (picksBans_.isEmpty()) {
+                picksBans_ = other.picksBans_;
+                bitField0_ = (bitField0_ & ~0x00000020);
+              } else {
+                ensurePicksBansIsMutable();
+                picksBans_.addAll(other.picksBans_);
+              }
+              onChanged();
+            }
+          } else {
+            if (!other.picksBans_.isEmpty()) {
+              if (picksBansBuilder_.isEmpty()) {
+                picksBansBuilder_.dispose();
+                picksBansBuilder_ = null;
+                picksBans_ = other.picksBans_;
+                bitField0_ = (bitField0_ & ~0x00000020);
+                picksBansBuilder_ = 
+                  com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                     getPicksBansFieldBuilder() : null;
+              } else {
+                picksBansBuilder_.addAllMessages(other.picksBans_);
+              }
+            }
+          }
+          if (other.hasRadiantTeamId()) {
+            setRadiantTeamId(other.getRadiantTeamId());
+          }
+          if (other.hasDireTeamId()) {
+            setDireTeamId(other.getDireTeamId());
+          }
+          if (other.hasRadiantTeamTag()) {
+            setRadiantTeamTag(other.getRadiantTeamTag());
+          }
+          if (other.hasDireTeamTag()) {
+            setDireTeamTag(other.getDireTeamTag());
+          }
+          if (other.hasEndTime()) {
+            setEndTime(other.getEndTime());
+          }
           this.mergeUnknownFields(other.getUnknownFields());
           return this;
         }
@@ -2071,6 +3005,42 @@ public final class Demo {
                 Demo.CGameInfo.CDotaGameInfo.CPlayerInfo.Builder subBuilder = Demo.CGameInfo.CDotaGameInfo.CPlayerInfo.newBuilder();
                 input.readMessage(subBuilder, extensionRegistry);
                 addPlayerInfo(subBuilder.buildPartial());
+                break;
+              }
+              case 40: {
+                bitField0_ |= 0x00000010;
+                leagueid_ = input.readUInt32();
+                break;
+              }
+              case 50: {
+                Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder subBuilder = Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.newBuilder();
+                input.readMessage(subBuilder, extensionRegistry);
+                addPicksBans(subBuilder.buildPartial());
+                break;
+              }
+              case 56: {
+                bitField0_ |= 0x00000040;
+                radiantTeamId_ = input.readUInt32();
+                break;
+              }
+              case 64: {
+                bitField0_ |= 0x00000080;
+                direTeamId_ = input.readUInt32();
+                break;
+              }
+              case 74: {
+                bitField0_ |= 0x00000100;
+                radiantTeamTag_ = input.readBytes();
+                break;
+              }
+              case 82: {
+                bitField0_ |= 0x00000200;
+                direTeamTag_ = input.readBytes();
+                break;
+              }
+              case 88: {
+                bitField0_ |= 0x00000400;
+                endTime_ = input.readUInt32();
                 break;
               }
             }
@@ -2326,6 +3296,348 @@ public final class Demo {
             playerInfo_ = null;
           }
           return playerInfoBuilder_;
+        }
+        
+        // optional uint32 leagueid = 5;
+        private int leagueid_ ;
+        public boolean hasLeagueid() {
+          return ((bitField0_ & 0x00000010) == 0x00000010);
+        }
+        public int getLeagueid() {
+          return leagueid_;
+        }
+        public Builder setLeagueid(int value) {
+          bitField0_ |= 0x00000010;
+          leagueid_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearLeagueid() {
+          bitField0_ = (bitField0_ & ~0x00000010);
+          leagueid_ = 0;
+          onChanged();
+          return this;
+        }
+        
+        // repeated .CGameInfo.CDotaGameInfo.CHeroSelectEvent picks_bans = 6;
+        private java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> picksBans_ =
+          java.util.Collections.emptyList();
+        private void ensurePicksBansIsMutable() {
+          if (!((bitField0_ & 0x00000020) == 0x00000020)) {
+            picksBans_ = new java.util.ArrayList<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent>(picksBans_);
+            bitField0_ |= 0x00000020;
+           }
+        }
+        
+        private com.google.protobuf.RepeatedFieldBuilder<
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder> picksBansBuilder_;
+        
+        public java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> getPicksBansList() {
+          if (picksBansBuilder_ == null) {
+            return java.util.Collections.unmodifiableList(picksBans_);
+          } else {
+            return picksBansBuilder_.getMessageList();
+          }
+        }
+        public int getPicksBansCount() {
+          if (picksBansBuilder_ == null) {
+            return picksBans_.size();
+          } else {
+            return picksBansBuilder_.getCount();
+          }
+        }
+        public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent getPicksBans(int index) {
+          if (picksBansBuilder_ == null) {
+            return picksBans_.get(index);
+          } else {
+            return picksBansBuilder_.getMessage(index);
+          }
+        }
+        public Builder setPicksBans(
+            int index, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent value) {
+          if (picksBansBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensurePicksBansIsMutable();
+            picksBans_.set(index, value);
+            onChanged();
+          } else {
+            picksBansBuilder_.setMessage(index, value);
+          }
+          return this;
+        }
+        public Builder setPicksBans(
+            int index, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder builderForValue) {
+          if (picksBansBuilder_ == null) {
+            ensurePicksBansIsMutable();
+            picksBans_.set(index, builderForValue.build());
+            onChanged();
+          } else {
+            picksBansBuilder_.setMessage(index, builderForValue.build());
+          }
+          return this;
+        }
+        public Builder addPicksBans(Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent value) {
+          if (picksBansBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensurePicksBansIsMutable();
+            picksBans_.add(value);
+            onChanged();
+          } else {
+            picksBansBuilder_.addMessage(value);
+          }
+          return this;
+        }
+        public Builder addPicksBans(
+            int index, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent value) {
+          if (picksBansBuilder_ == null) {
+            if (value == null) {
+              throw new NullPointerException();
+            }
+            ensurePicksBansIsMutable();
+            picksBans_.add(index, value);
+            onChanged();
+          } else {
+            picksBansBuilder_.addMessage(index, value);
+          }
+          return this;
+        }
+        public Builder addPicksBans(
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder builderForValue) {
+          if (picksBansBuilder_ == null) {
+            ensurePicksBansIsMutable();
+            picksBans_.add(builderForValue.build());
+            onChanged();
+          } else {
+            picksBansBuilder_.addMessage(builderForValue.build());
+          }
+          return this;
+        }
+        public Builder addPicksBans(
+            int index, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder builderForValue) {
+          if (picksBansBuilder_ == null) {
+            ensurePicksBansIsMutable();
+            picksBans_.add(index, builderForValue.build());
+            onChanged();
+          } else {
+            picksBansBuilder_.addMessage(index, builderForValue.build());
+          }
+          return this;
+        }
+        public Builder addAllPicksBans(
+            java.lang.Iterable<? extends Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent> values) {
+          if (picksBansBuilder_ == null) {
+            ensurePicksBansIsMutable();
+            super.addAll(values, picksBans_);
+            onChanged();
+          } else {
+            picksBansBuilder_.addAllMessages(values);
+          }
+          return this;
+        }
+        public Builder clearPicksBans() {
+          if (picksBansBuilder_ == null) {
+            picksBans_ = java.util.Collections.emptyList();
+            bitField0_ = (bitField0_ & ~0x00000020);
+            onChanged();
+          } else {
+            picksBansBuilder_.clear();
+          }
+          return this;
+        }
+        public Builder removePicksBans(int index) {
+          if (picksBansBuilder_ == null) {
+            ensurePicksBansIsMutable();
+            picksBans_.remove(index);
+            onChanged();
+          } else {
+            picksBansBuilder_.remove(index);
+          }
+          return this;
+        }
+        public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder getPicksBansBuilder(
+            int index) {
+          return getPicksBansFieldBuilder().getBuilder(index);
+        }
+        public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder getPicksBansOrBuilder(
+            int index) {
+          if (picksBansBuilder_ == null) {
+            return picksBans_.get(index);  } else {
+            return picksBansBuilder_.getMessageOrBuilder(index);
+          }
+        }
+        public java.util.List<? extends Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder> 
+             getPicksBansOrBuilderList() {
+          if (picksBansBuilder_ != null) {
+            return picksBansBuilder_.getMessageOrBuilderList();
+          } else {
+            return java.util.Collections.unmodifiableList(picksBans_);
+          }
+        }
+        public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder addPicksBansBuilder() {
+          return getPicksBansFieldBuilder().addBuilder(
+              Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.getDefaultInstance());
+        }
+        public Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder addPicksBansBuilder(
+            int index) {
+          return getPicksBansFieldBuilder().addBuilder(
+              index, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.getDefaultInstance());
+        }
+        public java.util.List<Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder> 
+             getPicksBansBuilderList() {
+          return getPicksBansFieldBuilder().getBuilderList();
+        }
+        private com.google.protobuf.RepeatedFieldBuilder<
+            Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder> 
+            getPicksBansFieldBuilder() {
+          if (picksBansBuilder_ == null) {
+            picksBansBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder, Demo.CGameInfo.CDotaGameInfo.CHeroSelectEventOrBuilder>(
+                    picksBans_,
+                    ((bitField0_ & 0x00000020) == 0x00000020),
+                    getParentForChildren(),
+                    isClean());
+            picksBans_ = null;
+          }
+          return picksBansBuilder_;
+        }
+        
+        // optional uint32 radiant_team_id = 7;
+        private int radiantTeamId_ ;
+        public boolean hasRadiantTeamId() {
+          return ((bitField0_ & 0x00000040) == 0x00000040);
+        }
+        public int getRadiantTeamId() {
+          return radiantTeamId_;
+        }
+        public Builder setRadiantTeamId(int value) {
+          bitField0_ |= 0x00000040;
+          radiantTeamId_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearRadiantTeamId() {
+          bitField0_ = (bitField0_ & ~0x00000040);
+          radiantTeamId_ = 0;
+          onChanged();
+          return this;
+        }
+        
+        // optional uint32 dire_team_id = 8;
+        private int direTeamId_ ;
+        public boolean hasDireTeamId() {
+          return ((bitField0_ & 0x00000080) == 0x00000080);
+        }
+        public int getDireTeamId() {
+          return direTeamId_;
+        }
+        public Builder setDireTeamId(int value) {
+          bitField0_ |= 0x00000080;
+          direTeamId_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearDireTeamId() {
+          bitField0_ = (bitField0_ & ~0x00000080);
+          direTeamId_ = 0;
+          onChanged();
+          return this;
+        }
+        
+        // optional string radiant_team_tag = 9;
+        private java.lang.Object radiantTeamTag_ = "";
+        public boolean hasRadiantTeamTag() {
+          return ((bitField0_ & 0x00000100) == 0x00000100);
+        }
+        public String getRadiantTeamTag() {
+          java.lang.Object ref = radiantTeamTag_;
+          if (!(ref instanceof String)) {
+            String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+            radiantTeamTag_ = s;
+            return s;
+          } else {
+            return (String) ref;
+          }
+        }
+        public Builder setRadiantTeamTag(String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000100;
+          radiantTeamTag_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearRadiantTeamTag() {
+          bitField0_ = (bitField0_ & ~0x00000100);
+          radiantTeamTag_ = getDefaultInstance().getRadiantTeamTag();
+          onChanged();
+          return this;
+        }
+        void setRadiantTeamTag(com.google.protobuf.ByteString value) {
+          bitField0_ |= 0x00000100;
+          radiantTeamTag_ = value;
+          onChanged();
+        }
+        
+        // optional string dire_team_tag = 10;
+        private java.lang.Object direTeamTag_ = "";
+        public boolean hasDireTeamTag() {
+          return ((bitField0_ & 0x00000200) == 0x00000200);
+        }
+        public String getDireTeamTag() {
+          java.lang.Object ref = direTeamTag_;
+          if (!(ref instanceof String)) {
+            String s = ((com.google.protobuf.ByteString) ref).toStringUtf8();
+            direTeamTag_ = s;
+            return s;
+          } else {
+            return (String) ref;
+          }
+        }
+        public Builder setDireTeamTag(String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000200;
+          direTeamTag_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearDireTeamTag() {
+          bitField0_ = (bitField0_ & ~0x00000200);
+          direTeamTag_ = getDefaultInstance().getDireTeamTag();
+          onChanged();
+          return this;
+        }
+        void setDireTeamTag(com.google.protobuf.ByteString value) {
+          bitField0_ |= 0x00000200;
+          direTeamTag_ = value;
+          onChanged();
+        }
+        
+        // optional uint32 end_time = 11;
+        private int endTime_ ;
+        public boolean hasEndTime() {
+          return ((bitField0_ & 0x00000400) == 0x00000400);
+        }
+        public int getEndTime() {
+          return endTime_;
+        }
+        public Builder setEndTime(int value) {
+          bitField0_ |= 0x00000400;
+          endTime_ = value;
+          onChanged();
+          return this;
+        }
+        public Builder clearEndTime() {
+          bitField0_ = (bitField0_ & ~0x00000400);
+          endTime_ = 0;
+          onChanged();
+          return this;
         }
         
         // @@protoc_insertion_point(builder_scope:CGameInfo.CDotaGameInfo)
@@ -9859,6 +11171,11 @@ public final class Demo {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CGameInfo_CDotaGameInfo_CPlayerInfo_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDemoFileInfo_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -9943,51 +11260,59 @@ public final class Demo {
   static {
     java.lang.String[] descriptorData = {
       "\n\ndemo.proto\032 google/protobuf/descriptor" +
-      ".proto\"\330\001\n\017CDemoFileHeader\022\027\n\017demo_file_" +
+      ".proto\"\374\001\n\017CDemoFileHeader\022\027\n\017demo_file_" +
       "stamp\030\001 \002(\t\022\030\n\020network_protocol\030\002 \001(\005\022\023\n" +
       "\013server_name\030\003 \001(\t\022\023\n\013client_name\030\004 \001(\t\022" +
       "\020\n\010map_name\030\005 \001(\t\022\026\n\016game_directory\030\006 \001(" +
       "\t\022\033\n\023fullpackets_version\030\007 \001(\005\022!\n\031allow_" +
-      "clientside_entities\030\010 \001(\010\"\211\002\n\tCGameInfo\022" +
-      "&\n\004dota\030\004 \001(\0132\030.CGameInfo.CDotaGameInfo\032" +
-      "\323\001\n\rCDotaGameInfo\022\020\n\010match_id\030\001 \001(\r\022\021\n\tg" +
-      "ame_mode\030\002 \001(\005\022\023\n\013game_winner\030\003 \001(\005\0229\n\013p",
-      "layer_info\030\004 \003(\0132$.CGameInfo.CDotaGameIn" +
-      "fo.CPlayerInfo\032M\n\013CPlayerInfo\022\021\n\thero_na" +
-      "me\030\001 \001(\t\022\023\n\013player_name\030\002 \001(\t\022\026\n\016is_fake" +
-      "_client\030\003 \001(\010\"v\n\rCDemoFileInfo\022\025\n\rplayba" +
-      "ck_time\030\001 \001(\002\022\026\n\016playback_ticks\030\002 \001(\005\022\027\n" +
-      "\017playback_frames\030\003 \001(\005\022\035\n\tgame_info\030\004 \001(" +
-      "\0132\n.CGameInfo\"J\n\013CDemoPacket\022\023\n\013sequence" +
-      "_in\030\001 \001(\005\022\030\n\020sequence_out_ack\030\002 \001(\005\022\014\n\004d" +
-      "ata\030\003 \001(\014\"Y\n\017CDemoFullPacket\022(\n\014string_t" +
-      "able\030\001 \001(\0132\022.CDemoStringTables\022\034\n\006packet",
-      "\030\002 \001(\0132\014.CDemoPacket\"\017\n\rCDemoSyncTick\"$\n" +
-      "\017CDemoConsoleCmd\022\021\n\tcmdstring\030\001 \001(\t\"\037\n\017C" +
-      "DemoSendTables\022\014\n\004data\030\001 \001(\014\"\201\001\n\016CDemoCl" +
-      "assInfo\022(\n\007classes\030\001 \003(\0132\027.CDemoClassInf" +
-      "o.class_t\032E\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\024" +
-      "\n\014network_name\030\002 \001(\t\022\022\n\ntable_name\030\003 \001(\t" +
-      "\"7\n\017CDemoCustomData\022\026\n\016callback_index\030\001 " +
-      "\001(\005\022\014\n\004data\030\002 \001(\014\"+\n\030CDemoCustomDataCall" +
-      "backs\022\017\n\007save_id\030\001 \003(\t\"\373\001\n\021CDemoStringTa" +
-      "bles\022*\n\006tables\030\001 \003(\0132\032.CDemoStringTables",
-      ".table_t\032$\n\007items_t\022\013\n\003str\030\001 \001(\t\022\014\n\004data" +
-      "\030\002 \001(\014\032\223\001\n\007table_t\022\022\n\ntable_name\030\001 \001(\t\022)" +
-      "\n\005items\030\002 \003(\0132\032.CDemoStringTables.items_" +
-      "t\0224\n\020items_clientside\030\003 \003(\0132\032.CDemoStrin" +
-      "gTables.items_t\022\023\n\013table_flags\030\004 \001(\005\"\013\n\t" +
-      "CDemoStop\"0\n\014CDemoUserCmd\022\022\n\ncmd_number\030" +
-      "\001 \001(\005\022\014\n\004data\030\002 \001(\014*\335\002\n\rEDemoCommands\022\026\n" +
-      "\tDEM_Error\020\377\377\377\377\377\377\377\377\377\001\022\014\n\010DEM_Stop\020\000\022\022\n\016D" +
-      "EM_FileHeader\020\001\022\020\n\014DEM_FileInfo\020\002\022\020\n\014DEM" +
-      "_SyncTick\020\003\022\022\n\016DEM_SendTables\020\004\022\021\n\rDEM_C",
-      "lassInfo\020\005\022\024\n\020DEM_StringTables\020\006\022\016\n\nDEM_" +
-      "Packet\020\007\022\024\n\020DEM_SignonPacket\020\010\022\022\n\016DEM_Co" +
-      "nsoleCmd\020\t\022\022\n\016DEM_CustomData\020\n\022\033\n\027DEM_Cu" +
-      "stomDataCallbacks\020\013\022\017\n\013DEM_UserCmd\020\014\022\022\n\016" +
-      "DEM_FullPacket\020\r\022\013\n\007DEM_Max\020\016\022\024\n\020DEM_IsC" +
-      "ompressed\020pB\003\200\001\000"
+      "clientside_entities\030\010 \001(\010\022\"\n\032allow_clien" +
+      "tside_particles\030\t \001(\010\"\264\004\n\tCGameInfo\022&\n\004d" +
+      "ota\030\004 \001(\0132\030.CGameInfo.CDotaGameInfo\032\376\003\n\r" +
+      "CDotaGameInfo\022\020\n\010match_id\030\001 \001(\r\022\021\n\tgame_",
+      "mode\030\002 \001(\005\022\023\n\013game_winner\030\003 \001(\005\0229\n\013playe" +
+      "r_info\030\004 \003(\0132$.CGameInfo.CDotaGameInfo.C" +
+      "PlayerInfo\022\020\n\010leagueid\030\005 \001(\r\022=\n\npicks_ba" +
+      "ns\030\006 \003(\0132).CGameInfo.CDotaGameInfo.CHero" +
+      "SelectEvent\022\027\n\017radiant_team_id\030\007 \001(\r\022\024\n\014" +
+      "dire_team_id\030\010 \001(\r\022\030\n\020radiant_team_tag\030\t" +
+      " \001(\t\022\025\n\rdire_team_tag\030\n \001(\t\022\020\n\010end_time\030" +
+      "\013 \001(\r\032q\n\013CPlayerInfo\022\021\n\thero_name\030\001 \001(\t\022" +
+      "\023\n\013player_name\030\002 \001(\t\022\026\n\016is_fake_client\030\003" +
+      " \001(\010\022\017\n\007steamid\030\004 \001(\004\022\021\n\tgame_team\030\005 \001(\005",
+      "\032B\n\020CHeroSelectEvent\022\017\n\007is_pick\030\001 \001(\010\022\014\n" +
+      "\004team\030\002 \001(\r\022\017\n\007hero_id\030\003 \001(\r\"v\n\rCDemoFil" +
+      "eInfo\022\025\n\rplayback_time\030\001 \001(\002\022\026\n\016playback" +
+      "_ticks\030\002 \001(\005\022\027\n\017playback_frames\030\003 \001(\005\022\035\n" +
+      "\tgame_info\030\004 \001(\0132\n.CGameInfo\"J\n\013CDemoPac" +
+      "ket\022\023\n\013sequence_in\030\001 \001(\005\022\030\n\020sequence_out" +
+      "_ack\030\002 \001(\005\022\014\n\004data\030\003 \001(\014\"Y\n\017CDemoFullPac" +
+      "ket\022(\n\014string_table\030\001 \001(\0132\022.CDemoStringT" +
+      "ables\022\034\n\006packet\030\002 \001(\0132\014.CDemoPacket\"\017\n\rC" +
+      "DemoSyncTick\"$\n\017CDemoConsoleCmd\022\021\n\tcmdst",
+      "ring\030\001 \001(\t\"\037\n\017CDemoSendTables\022\014\n\004data\030\001 " +
+      "\001(\014\"\201\001\n\016CDemoClassInfo\022(\n\007classes\030\001 \003(\0132" +
+      "\027.CDemoClassInfo.class_t\032E\n\007class_t\022\020\n\010c" +
+      "lass_id\030\001 \001(\005\022\024\n\014network_name\030\002 \001(\t\022\022\n\nt" +
+      "able_name\030\003 \001(\t\"7\n\017CDemoCustomData\022\026\n\016ca" +
+      "llback_index\030\001 \001(\005\022\014\n\004data\030\002 \001(\014\"+\n\030CDem" +
+      "oCustomDataCallbacks\022\017\n\007save_id\030\001 \003(\t\"\373\001" +
+      "\n\021CDemoStringTables\022*\n\006tables\030\001 \003(\0132\032.CD" +
+      "emoStringTables.table_t\032$\n\007items_t\022\013\n\003st" +
+      "r\030\001 \001(\t\022\014\n\004data\030\002 \001(\014\032\223\001\n\007table_t\022\022\n\ntab",
+      "le_name\030\001 \001(\t\022)\n\005items\030\002 \003(\0132\032.CDemoStri" +
+      "ngTables.items_t\0224\n\020items_clientside\030\003 \003" +
+      "(\0132\032.CDemoStringTables.items_t\022\023\n\013table_" +
+      "flags\030\004 \001(\005\"\013\n\tCDemoStop\"0\n\014CDemoUserCmd" +
+      "\022\022\n\ncmd_number\030\001 \001(\005\022\014\n\004data\030\002 \001(\014*\335\002\n\rE" +
+      "DemoCommands\022\026\n\tDEM_Error\020\377\377\377\377\377\377\377\377\377\001\022\014\n\010" +
+      "DEM_Stop\020\000\022\022\n\016DEM_FileHeader\020\001\022\020\n\014DEM_Fi" +
+      "leInfo\020\002\022\020\n\014DEM_SyncTick\020\003\022\022\n\016DEM_SendTa" +
+      "bles\020\004\022\021\n\rDEM_ClassInfo\020\005\022\024\n\020DEM_StringT" +
+      "ables\020\006\022\016\n\nDEM_Packet\020\007\022\024\n\020DEM_SignonPac",
+      "ket\020\010\022\022\n\016DEM_ConsoleCmd\020\t\022\022\n\016DEM_CustomD" +
+      "ata\020\n\022\033\n\027DEM_CustomDataCallbacks\020\013\022\017\n\013DE" +
+      "M_UserCmd\020\014\022\022\n\016DEM_FullPacket\020\r\022\013\n\007DEM_M" +
+      "ax\020\016\022\024\n\020DEM_IsCompressed\020p"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -9999,7 +11324,7 @@ public final class Demo {
           internal_static_CDemoFileHeader_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDemoFileHeader_descriptor,
-              new java.lang.String[] { "DemoFileStamp", "NetworkProtocol", "ServerName", "ClientName", "MapName", "GameDirectory", "FullpacketsVersion", "AllowClientsideEntities", },
+              new java.lang.String[] { "DemoFileStamp", "NetworkProtocol", "ServerName", "ClientName", "MapName", "GameDirectory", "FullpacketsVersion", "AllowClientsideEntities", "AllowClientsideParticles", },
               Demo.CDemoFileHeader.class,
               Demo.CDemoFileHeader.Builder.class);
           internal_static_CGameInfo_descriptor =
@@ -10015,7 +11340,7 @@ public final class Demo {
           internal_static_CGameInfo_CDotaGameInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CGameInfo_CDotaGameInfo_descriptor,
-              new java.lang.String[] { "MatchId", "GameMode", "GameWinner", "PlayerInfo", },
+              new java.lang.String[] { "MatchId", "GameMode", "GameWinner", "PlayerInfo", "Leagueid", "PicksBans", "RadiantTeamId", "DireTeamId", "RadiantTeamTag", "DireTeamTag", "EndTime", },
               Demo.CGameInfo.CDotaGameInfo.class,
               Demo.CGameInfo.CDotaGameInfo.Builder.class);
           internal_static_CGameInfo_CDotaGameInfo_CPlayerInfo_descriptor =
@@ -10023,9 +11348,17 @@ public final class Demo {
           internal_static_CGameInfo_CDotaGameInfo_CPlayerInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CGameInfo_CDotaGameInfo_CPlayerInfo_descriptor,
-              new java.lang.String[] { "HeroName", "PlayerName", "IsFakeClient", },
+              new java.lang.String[] { "HeroName", "PlayerName", "IsFakeClient", "Steamid", "GameTeam", },
               Demo.CGameInfo.CDotaGameInfo.CPlayerInfo.class,
               Demo.CGameInfo.CDotaGameInfo.CPlayerInfo.Builder.class);
+          internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_descriptor =
+            internal_static_CGameInfo_CDotaGameInfo_descriptor.getNestedTypes().get(1);
+          internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CGameInfo_CDotaGameInfo_CHeroSelectEvent_descriptor,
+              new java.lang.String[] { "IsPick", "Team", "HeroId", },
+              Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.class,
+              Demo.CGameInfo.CDotaGameInfo.CHeroSelectEvent.Builder.class);
           internal_static_CDemoFileInfo_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_CDemoFileInfo_fieldAccessorTable = new

@@ -5,8 +5,8 @@ import clarity.model.GameEvent;
 import clarity.model.GameEventDescriptor;
 import clarity.parser.Handler;
 
-import com.dota2.proto.Netmessages.CSVCMsg_GameEvent;
-import com.dota2.proto.Netmessages.CSVCMsg_GameEvent.key_t;
+import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
+import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
 
 public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
 
@@ -44,7 +44,7 @@ public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
             }
             e.set(i, value);
         }
-        System.out.println(e);
+        //System.out.println(e);
         match.getGameEvents().add(e);
     }
 
