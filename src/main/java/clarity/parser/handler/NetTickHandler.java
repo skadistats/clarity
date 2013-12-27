@@ -10,7 +10,7 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     @Override
     public void apply(CNETMsg_Tick message, Match match) {
         match.getGameEvents().clear();
-        
+        match.getUserMessages().clear();
     }
 
 }

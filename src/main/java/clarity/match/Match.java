@@ -11,6 +11,7 @@ public class Match {
     private final EntityCollection entities = new EntityCollection();
     private final GameEventDescriptorCollection gameEventDescriptors = new GameEventDescriptorCollection();
     private final GameEventCollection gameEvents = new GameEventCollection();
+    private final UserMessageCollection userMessages = new UserMessageCollection();
     
     public Match(ReplayIndex idx) {
         for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
@@ -38,6 +39,12 @@ public class Match {
     public GameEventCollection getGameEvents() {
         return gameEvents;
     }
+
+    public UserMessageCollection getUserMessages() {
+        return userMessages;
+    }
+    
+    
     
     
 
