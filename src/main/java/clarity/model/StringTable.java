@@ -38,13 +38,17 @@ public class StringTable {
         }
     }
 
-    public ByteString get(int index) {
+    public ByteString getValueByIndex(int index) {
         return values[index];
     }
 
-    public ByteString getByName(String name) {
+    public String getNameByIndex(int index) {
+        return names[index];
+    }
+
+    public ByteString getValueByName(String key) {
         for (int i = 0; i < names.length; i++) {
-            if (name.equals(names[i])) {
+            if (key.equals(names[i])) {
                 return values[i];
             }
         }

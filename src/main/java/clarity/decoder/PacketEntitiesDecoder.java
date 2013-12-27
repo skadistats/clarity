@@ -91,7 +91,7 @@ public class PacketEntitiesDecoder {
     }
 
     private Object[] decodeBaseProperties(DTClass cls) {
-        ByteString s = baseline.getByName(String.valueOf(cls.getClassId()));
+        ByteString s = baseline.getValueByName(String.valueOf(cls.getClassId()));
         return BaseInstanceDecoder.decode(
             s.toByteArray(),
             cls.getReceiveProps()
