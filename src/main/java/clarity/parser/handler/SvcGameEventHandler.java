@@ -44,6 +44,7 @@ public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
             }
             e.set(i, value);
         }
+        System.out.println(e);
         match.getGameEvents().add(e);
     }
 
