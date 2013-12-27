@@ -8,6 +8,7 @@ import org.xerial.snappy.Snappy;
 
 import clarity.iterator.BidiIterator;
 import clarity.iterator.ReplayIndexIterator;
+import clarity.model.UserMessageType;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoConsoleCmd;
@@ -82,7 +83,20 @@ public class ReplayIndex {
                         System.out.println("unknown embedded message of kind " + subKind);
                         continue;
                     }
-                    index.add(new Peek(tick, subMessage));
+                    if (subMessage instanceof CSVCMsg_UserMessage) {
+                        CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
+                        UserMessageType umt = UserMessageType.forId(userMessage.getMsgType());
+                        if (umt == null) {
+                            System.out.println("unknown usermessage of type " + userMessage.getMsgType());
+                        }
+                        if (umt.getClazz() == null) {
+                            System.out.println("no protobuf class for usermessage of type " + umt);
+                        }
+                        GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
+                        index.add(new Peek(tick, decodedUserMessage));
+                    } else {
+                        index.add(new Peek(tick, subMessage));
+                    }
                 }
 
             } else {

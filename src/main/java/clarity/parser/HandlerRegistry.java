@@ -14,11 +14,18 @@ import clarity.parser.handler.SvcGameEventListHandler;
 import clarity.parser.handler.SvcPacketEntitiesHandler;
 import clarity.parser.handler.SvcSendTableHandler;
 import clarity.parser.handler.SvcUpdateStringTableHandler;
-import clarity.parser.handler.SvcUserMessageHandler;
+import clarity.parser.handler.UserMsgCreateLinearProjectileHandler;
+import clarity.parser.handler.UserMsgDestroyLinearProjectileHandler;
+import clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler;
+import clarity.parser.handler.UserMsgGamerulesStateChangedHandler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoSyncTick;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles;
+import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
 import com.dota2.proto.Netmessages.CSVCMsg_GameEventList;
@@ -26,7 +33,6 @@ import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
-import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
 
 public class HandlerRegistry {
 
@@ -47,7 +53,10 @@ public class HandlerRegistry {
         H.put(CSVCMsg_PacketEntities.class, new SvcPacketEntitiesHandler());
         H.put(CSVCMsg_UpdateStringTable.class, new SvcUpdateStringTableHandler());
         H.put(CSVCMsg_GameEvent.class, new SvcGameEventHandler());
-        H.put(CSVCMsg_UserMessage.class, new SvcUserMessageHandler());
+        H.put(CDOTAUserMsg_CreateLinearProjectile.class, new UserMsgCreateLinearProjectileHandler());
+        H.put(CDOTAUserMsg_DestroyLinearProjectile.class, new UserMsgDestroyLinearProjectileHandler());
+        H.put(CDOTAUserMsg_DodgeTrackingProjectiles.class, new UserMsgDodgeTrackingProjectilesHandler());
+        H.put(CDOTA_UM_GamerulesStateChanged.class, new UserMsgGamerulesStateChangedHandler());
 
     }
 
