@@ -23,6 +23,7 @@ public class Peek {
     }
     
     public void apply(Match match) {
+        match.setPeekTick(tick);
         HandlerRegistry.apply(message, match);
     }
 

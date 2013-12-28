@@ -5,6 +5,7 @@ import java.util.Map;
 
 import clarity.match.Match;
 import clarity.parser.handler.DemClassInfoHandler;
+import clarity.parser.handler.DemFileHeaderHandler;
 import clarity.parser.handler.DemStringTablesHandler;
 import clarity.parser.handler.DemSyncTickHandler;
 import clarity.parser.handler.NetTickHandler;
@@ -13,24 +14,21 @@ import clarity.parser.handler.SvcGameEventHandler;
 import clarity.parser.handler.SvcGameEventListHandler;
 import clarity.parser.handler.SvcPacketEntitiesHandler;
 import clarity.parser.handler.SvcSendTableHandler;
+import clarity.parser.handler.SvcServerInfoHandler;
 import clarity.parser.handler.SvcUpdateStringTableHandler;
-import clarity.parser.handler.UserMsgCreateLinearProjectileHandler;
-import clarity.parser.handler.UserMsgDestroyLinearProjectileHandler;
-import clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler;
 import clarity.parser.handler.UserMsgGamerulesStateChangedHandler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
+import com.dota2.proto.Demo.CDemoFileHeader;
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoSyncTick;
-import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile;
-import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile;
-import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles;
 import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
 import com.dota2.proto.Netmessages.CSVCMsg_GameEventList;
 import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
+import com.dota2.proto.Netmessages.CSVCMsg_ServerInfo;
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
 
@@ -41,6 +39,8 @@ public class HandlerRegistry {
         H = new HashMap<Class<?>, Handler<?>>();
 
         // for prologue
+        H.put(CDemoFileHeader.class, new DemFileHeaderHandler());
+        H.put(CSVCMsg_ServerInfo.class, new SvcServerInfoHandler());
         H.put(CDemoClassInfo.class, new DemClassInfoHandler());
         H.put(CDemoStringTables.class, new DemStringTablesHandler());
         H.put(CSVCMsg_CreateStringTable.class, new SvcCreateStringTableHandler());

@@ -30,8 +30,8 @@ public enum StringTableApplier {
                 if (msg.getEntryType() == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE) {
                     match.getModifiers().set(entityIndex, modifierIndex, msg);
                     mName = match.getStringTables().forName("ModifierNames").getNameByIndex(msg.getModifierClass());
-                    System.out.println(String.format("tick %s: %s [entityIdx=%s, index=%s, class=%s, parent=%s, caster=%s]",
-                        match.getTick(),
+                    System.out.println(String.format("%s %s [entityIdx=%s, index=%s, class=%s, parent=%s, caster=%s]",
+                        match.getReplayTimeAsString(),
                         msg.getEntryType(),
                         entityIndex,
                         modifierIndex,
@@ -42,8 +42,8 @@ public enum StringTableApplier {
                 } else if (prev != null) {
                     match.getModifiers().remove(entityIndex, modifierIndex);
                     mName = match.getStringTables().forName("ModifierNames").getNameByIndex(prev.getModifierClass()); 
-                    System.out.println(String.format("tick %s: %s [entityIdx=%s, index=%s, class=%s, parent=%s]",
-                        match.getTick(),
+                    System.out.println(String.format("%s %s [entityIdx=%s, index=%s, class=%s, parent=%s]",
+                        match.getReplayTimeAsString(),
                         msg.getEntryType(),
                         entityIndex,
                         modifierIndex,
@@ -51,8 +51,8 @@ public enum StringTableApplier {
                         parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName()
                     ));
                 } else {
-                    System.out.println(String.format("tick %s: DOTA_MODIFIER_ENTRY_TYPE_REMOVED_NOT_EXISTING [entityIdx=%s, index=%s, class=%s]",
-                        match.getTick(),
+                    System.out.println(String.format("%s DOTA_MODIFIER_ENTRY_TYPE_REMOVED_NOT_EXISTING [entityIdx=%s, index=%s, class=%s]",
+                        match.getReplayTimeAsString(),
                         entityIndex,
                         modifierIndex,
                         "NOT_FOUND"

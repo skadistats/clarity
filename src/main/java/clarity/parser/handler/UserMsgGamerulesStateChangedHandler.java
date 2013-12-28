@@ -10,8 +10,8 @@ public class UserMsgGamerulesStateChangedHandler implements Handler<CDOTA_UM_Gam
 
     @Override
     public void apply(CDOTA_UM_GamerulesStateChanged message, Match match) {
-        System.out.println(String.format("tick %s: GAMERULES_STATE_CHANGED [state=%s]",
-            match.getTick(),
+        System.out.println(String.format("%s GAMERULES_STATE_CHANGED [state=%s]",
+            match.getReplayTimeAsString(),
             GameRulesStateType.forId(message.getState())
         ));
     }
