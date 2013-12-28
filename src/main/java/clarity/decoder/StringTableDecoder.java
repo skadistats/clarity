@@ -1,6 +1,9 @@
 package clarity.decoder;
 
 import java.util.LinkedList;
+import java.util.List;
+
+import org.javatuples.Triplet;
 
 import clarity.model.StringTable;
 
@@ -11,16 +14,16 @@ public class StringTableDecoder {
     private static final int MAX_NAME_LENGTH = 0x400;
     private static final int KEY_HISTORY_SIZE = 32;
 
-    public static void decode(StringTable table, byte[] data, int numEntries) {
+    public static List<Triplet<Integer, String, ByteString>> decode(StringTable table, byte[] data, int numEntries) {
         BitStream stream = new BitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<String>();
-
+        List<Triplet<Integer, String, ByteString>> result = new LinkedList<Triplet<Integer, String, ByteString>>();
+        
         boolean mysteryFlag = stream.readBit();
         int index = -1;
-        int c = 0;
         StringBuffer nameBuf = new StringBuffer();
-        while (c < numEntries) {
+        while (result.size() < numEntries) {
             // read index
             if (stream.readBit()) {
                 index++;
@@ -58,11 +61,8 @@ public class StringTableDecoder {
 
                 value = ByteString.copyFrom(stream.readBits(bitLength));
             }
-            if (table.getName().equals("ActiveModifiers")) {
-                System.out.println(String.format("modifier changed at %s, value has len %s", index, value == null ? 0 : value.size()));
-            }
-            table.set(index, nameBuf.toString(), value);
-            c++;
+            result.add(new Triplet<Integer, String, ByteString>(index, nameBuf.toString(), value));
         }
+        return result;
     }
 }

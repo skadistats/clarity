@@ -11,7 +11,6 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     public void apply(CNETMsg_Tick message, Match match) {
         match.setTick(message.getTick());
         match.getGameEvents().clear();
-        match.getUserMessages().clear();
     }
 
 }

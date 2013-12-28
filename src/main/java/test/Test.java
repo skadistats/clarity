@@ -26,7 +26,7 @@ public class Test {
             tStart = System.currentTimeMillis();
             for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
                 Peek p = i.next();
-                System.out.println(p);
+                //System.out.println(p);
                 p.apply(match);
             }
             long tMatch = System.currentTimeMillis() - tStart;

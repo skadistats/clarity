@@ -2,10 +2,8 @@ package clarity.model;
 
 import clarity.decoder.Util;
 
-import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 
 public class StringTable {
 
@@ -20,16 +18,6 @@ public class StringTable {
     }
 
     public void set(int index, String name, ByteString value) {
-        if ("ActiveModifiers".equals(createMessage.getName())) {
-            try {
-                CDOTAModifierBuffTableEntry entry = CDOTAModifierBuffTableEntry.parseFrom(value);
-//                System.out.println(entry);
-//                System.out.println("---------------------------");
-            } catch (InvalidProtocolBufferException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        
         if (index < names.length) {
             this.names[index] = name;
             this.values[index] = value;
