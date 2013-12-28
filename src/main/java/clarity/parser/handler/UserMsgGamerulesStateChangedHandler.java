@@ -14,7 +14,7 @@ public class UserMsgGamerulesStateChangedHandler implements Handler<CDOTA_UM_Gam
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CDOTA_UM_GamerulesStateChanged message, Match match) {
+    public void apply(int peekTick, CDOTA_UM_GamerulesStateChanged message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         log.debug("{} GAMERULES_STATE_CHANGED [state={}]",
             match.getReplayTimeAsString(),

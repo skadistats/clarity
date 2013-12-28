@@ -18,7 +18,7 @@ public class DemStringTablesHandler implements Handler<CDemoStringTables> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CDemoStringTables message, Match match) {
+    public void apply(int peekTick, CDemoStringTables message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         for (table_t t : message.getTablesList()) {
             StringTable st = match.getStringTables().forName(t.getTableName());

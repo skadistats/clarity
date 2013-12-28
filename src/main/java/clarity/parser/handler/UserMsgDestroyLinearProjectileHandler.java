@@ -13,7 +13,7 @@ public class UserMsgDestroyLinearProjectileHandler implements Handler<CDOTAUserM
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CDOTAUserMsg_DestroyLinearProjectile message, Match match) {
+    public void apply(int peekTick, CDOTAUserMsg_DestroyLinearProjectile message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         log.debug("{} DESTROY_LINEAR_PROJECTILE [handle={}]",
             match.getReplayTimeAsString(),

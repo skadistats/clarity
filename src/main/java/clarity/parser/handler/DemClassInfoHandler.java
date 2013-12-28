@@ -14,7 +14,7 @@ public class DemClassInfoHandler implements Handler<CDemoClassInfo> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void apply(CDemoClassInfo message, Match match) {
+    public void apply(int peekTick, CDemoClassInfo message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         for (class_t ct : message.getClassesList()) {
             match.getDtClasses().setClassIdForDtName(ct.getTableName(), ct.getClassId());

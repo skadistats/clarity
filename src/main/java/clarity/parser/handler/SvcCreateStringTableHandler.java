@@ -20,7 +20,7 @@ public class SvcCreateStringTableHandler implements Handler<CSVCMsg_CreateString
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_CreateStringTable message, Match match) {
+    public void apply(int peekTick, CSVCMsg_CreateStringTable message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         StringTable table = new StringTable(message);
         match.getStringTables().add(table);

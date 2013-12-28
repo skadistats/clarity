@@ -20,7 +20,7 @@ public class SvcUpdateStringTableHandler implements Handler<CSVCMsg_UpdateString
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_UpdateStringTable message, Match match) {
+    public void apply(int peekTick, CSVCMsg_UpdateStringTable message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         StringTable table = match.getStringTables().forId(message.getTableId());
         List<Triplet<Integer, String, ByteString>> changes = StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumChangedEntries());

@@ -16,7 +16,7 @@ public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_GameEvent message, Match match) {
+    public void apply(int peekTick, CSVCMsg_GameEvent message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         GameEventDescriptor desc = match.getGameEventDescriptors().forId(message.getEventid());
         GameEvent e = new GameEvent(desc);

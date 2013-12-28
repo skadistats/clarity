@@ -66,11 +66,11 @@ public class HandlerRegistry {
 
     }
 
-    public static <T> void apply(T message, Match match) {
+    public static <T> void apply(int peekTick, T message, Match match) {
         @SuppressWarnings("unchecked")
         Handler<T> h = (Handler<T>) H.get(message.getClass());
         if (h != null) {
-            h.apply(message, match);
+            h.apply(peekTick, message, match);
         }
     }
 

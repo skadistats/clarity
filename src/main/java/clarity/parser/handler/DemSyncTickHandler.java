@@ -19,7 +19,7 @@ public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public void apply(CDemoSyncTick message, Match match) {
+    public void apply(int peekTick, CDemoSyncTick message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         
         // last packet of the prologue: compile receive tables!

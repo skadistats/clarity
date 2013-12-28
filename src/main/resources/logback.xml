@@ -8,8 +8,8 @@
 	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />
 	<logger name="clarity.parser.handler.DemStringTablesHandler" level="info" />
-	<logger name="clarity.parser.handler.DemSyncTickHandler" level="info" />
-	<logger name="clarity.parser.handler.NetTickHandler" level="info" />
+	<logger name="clarity.parser.handler.DemSyncTickHandler" level="trace" />
+	<logger name="clarity.parser.handler.NetTickHandler" level="trace" />
 	<logger name="clarity.parser.handler.SvcCreateStringTableHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcGameEventHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcGameEventListHandler" level="info" />
@@ -20,7 +20,7 @@
 	<logger name="clarity.parser.handler.UserMsgCreateLinearProjectileHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgDestroyLinearProjectileHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler" level="info" />
-	<logger name="clarity.parser.handler.UserMsgGamerulesStateChangedHandler" level="trace" />
+	<logger name="clarity.parser.handler.UserMsgGamerulesStateChangedHandler" level="info" />
 		
 	<root level="info">
 		<appender-ref ref="stdout" />

@@ -13,7 +13,7 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CNETMsg_Tick message, Match match) {
+    public void apply(int peekTick, CNETMsg_Tick message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         //match.setTick(message.getTick());
         match.getGameEvents().clear();

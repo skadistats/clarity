@@ -13,7 +13,7 @@ public class DemFileHeaderHandler implements Handler<CDemoFileHeader> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CDemoFileHeader message, Match match) {
+    public void apply(int peekTick, CDemoFileHeader message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
     }
 

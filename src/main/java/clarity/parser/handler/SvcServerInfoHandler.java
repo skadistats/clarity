@@ -13,7 +13,7 @@ public class SvcServerInfoHandler implements Handler<CSVCMsg_ServerInfo> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_ServerInfo message, Match match) {
+    public void apply(int peekTick, CSVCMsg_ServerInfo message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         match.setTickInterval(message.getTickInterval());
     }

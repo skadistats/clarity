@@ -15,7 +15,7 @@ public class SvcSendTableHandler implements Handler<CSVCMsg_SendTable> {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_SendTable message, Match match) {
+    public void apply(int peekTick, CSVCMsg_SendTable message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         SendTable st = new SendTable(message);
         match.getDtClasses().add(new DTClass(st.getMessage().getNetTableName(), st));

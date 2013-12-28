@@ -13,7 +13,7 @@ public class UserMsgDodgeTrackingProjectilesHandler implements Handler<CDOTAUser
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CDOTAUserMsg_DodgeTrackingProjectiles message, Match match) {
+    public void apply(int peekTick, CDOTAUserMsg_DodgeTrackingProjectiles message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         log.debug("{} DODGE_TRACKING_PROJECTILES [target={}]",
             match.getReplayTimeAsString(),

@@ -14,7 +14,7 @@ public class SvcPacketEntitiesHandler implements Handler<CSVCMsg_PacketEntities>
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     @Override
-    public void apply(CSVCMsg_PacketEntities message, Match match) {
+    public void apply(int peekTick, CSVCMsg_PacketEntities message, Match match) {
         log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         new PacketEntitiesDecoder(
             message.getEntityData().toByteArray(),
