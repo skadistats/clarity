@@ -32,7 +32,6 @@ public class PacketEntitiesDecoder {
 
     public void decodeAndApply(EntityCollection world) {
         int index = -1;
-        //System.out.println("------ decoding packet entities, num " + numEntries);
         int count = 0;
         while (count < numEntries) {
             index = decodeDiff(index, world);

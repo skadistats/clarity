@@ -1,5 +1,8 @@
 package clarity.parser.handler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import clarity.match.Match;
 import clarity.model.GameEvent;
 import clarity.model.GameEventDescriptor;
@@ -10,8 +13,11 @@ import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
 
 public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    
     @Override
     public void apply(CSVCMsg_GameEvent message, Match match) {
+        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
         GameEventDescriptor desc = match.getGameEventDescriptors().forId(message.getEventid());
         GameEvent e = new GameEvent(desc);
         for (int i = 0; i < message.getKeysCount(); i++) {
@@ -44,7 +50,6 @@ public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
             }
             e.set(i, value);
         }
-        //System.out.println(e);
         match.getGameEvents().add(e);
     }
 

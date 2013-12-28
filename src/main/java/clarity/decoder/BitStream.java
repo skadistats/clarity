@@ -26,16 +26,11 @@ public class BitStream {
     }
 
     public int peekNumericBits(int num) {
-        try {
-            int l = words[pos >> 5];
-            int r = words[(pos + num - 1) >> 5];
-            int shift = pos & 31;
-            int rebuild = (r << (32 - shift)) | (l >>> shift);
-            return (rebuild & ((1 << num) - 1));
-        } catch (IndexOutOfBoundsException e) {
-            System.out.println("ooops");
-            throw e;
-        }
+        int l = words[pos >> 5];
+        int r = words[(pos + num - 1) >> 5];
+        int shift = pos & 31;
+        int rebuild = (r << (32 - shift)) | (l >>> shift);
+        return (rebuild & ((1 << num) - 1));
     }
 
     public int readNumericBits(int num) {

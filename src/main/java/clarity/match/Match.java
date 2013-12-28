@@ -39,7 +39,6 @@ public class Match {
         this.idx = idx;
         for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
             Peek p = i.next();
-            //System.out.println(p);
             p.apply(this);
         }
         startTick = idx.get(GameRulesStateType.PLAYING.findOnIndex(idx)).getTick();

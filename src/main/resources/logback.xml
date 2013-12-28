@@ -1,0 +1,32 @@
+<configuration>
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%msg%n</pattern>
+		</encoder>
+	</appender>
+	
+	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
+	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />
+	<logger name="clarity.parser.handler.DemStringTablesHandler" level="info" />
+	<logger name="clarity.parser.handler.DemSyncTickHandler" level="info" />
+	<logger name="clarity.parser.handler.NetTickHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcCreateStringTableHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcGameEventHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcGameEventListHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcPacketEntitiesHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcSendTableHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcServerInfoHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcUpdateStringTableHandler" level="info" />
+	<logger name="clarity.parser.handler.UserMsgCreateLinearProjectileHandler" level="info" />
+	<logger name="clarity.parser.handler.UserMsgDestroyLinearProjectileHandler" level="info" />
+	<logger name="clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler" level="info" />
+	<logger name="clarity.parser.handler.UserMsgGamerulesStateChangedHandler" level="trace" />
+		
+	<root level="info">
+		<appender-ref ref="stdout" />
+	</root>
+	
+</configuration>
+
+
+

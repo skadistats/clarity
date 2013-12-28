@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
 import clarity.iterator.BidiIterator;
@@ -51,6 +53,8 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 public class ReplayIndex {
 
+    private final Logger log = LoggerFactory.getLogger(getClass());
+    
     private final List<Peek> index = new ArrayList<Peek>();
 
     public ReplayIndex(CodedInputStream s) throws IOException {
@@ -68,7 +72,7 @@ public class ReplayIndex {
             }
             GeneratedMessage message = parseTopLevel(kind, data);
             if (message == null) {
-                System.out.println("unknown top level message of kind " + kind);
+                log.warn("unknown top level message of kind {}", kind);
                 continue;
             }
             ByteString embeddedData = getEmbeddedData(message);
@@ -80,17 +84,17 @@ public class ReplayIndex {
                     byte[] subData = ss.readRawBytes(subSize);
                     GeneratedMessage subMessage = parseEmbedded(subKind, subData);
                     if (subMessage == null) {
-                        System.out.println("unknown embedded message of kind " + subKind);
+                        log.warn("unknown embedded message of kind {}", subKind);
                         continue;
                     }
                     if (subMessage instanceof CSVCMsg_UserMessage) {
                         CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
                         UserMessageType umt = UserMessageType.forId(userMessage.getMsgType());
                         if (umt == null) {
-                            System.out.println("unknown usermessage of type " + userMessage.getMsgType());
+                            log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                         }
                         if (umt.getClazz() == null) {
-                            System.out.println("no protobuf class for usermessage of type " + umt);
+                            log.warn("no protobuf class for usermessage of type {}", umt);
                         }
                         GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
                         index.add(new Peek(tick, decodedUserMessage));

@@ -1,5 +1,8 @@
 package clarity.decoder;
 
+
+import org.slf4j.LoggerFactory;
+
 import clarity.match.Match;
 import clarity.model.Entity;
 
@@ -30,7 +33,7 @@ public enum StringTableApplier {
                 if (msg.getEntryType() == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE) {
                     match.getModifiers().set(entityIndex, modifierIndex, msg);
                     mName = match.getStringTables().forName("ModifierNames").getNameByIndex(msg.getModifierClass());
-                    System.out.println(String.format("%s %s [entityIdx=%s, index=%s, class=%s, parent=%s, caster=%s]",
+                    log.debug("{} {} [entityIdx={}, index={}, class={}, parent={}, caster={}]",
                         match.getReplayTimeAsString(),
                         msg.getEntryType(),
                         entityIndex,
@@ -38,31 +41,34 @@ public enum StringTableApplier {
                         mName,
                         parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName(),
                         caster == null ? "NOT_FOUND" : caster.getDtClass().getDtName()
-                    ));
+                    );
                 } else if (prev != null) {
                     match.getModifiers().remove(entityIndex, modifierIndex);
                     mName = match.getStringTables().forName("ModifierNames").getNameByIndex(prev.getModifierClass()); 
-                    System.out.println(String.format("%s %s [entityIdx=%s, index=%s, class=%s, parent=%s]",
+                    log.debug("{} {} [entityIdx={}, index={}, class={}, parent={}]",
                         match.getReplayTimeAsString(),
                         msg.getEntryType(),
                         entityIndex,
                         modifierIndex,
                         mName,
                         parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName()
-                    ));
+                    );
                 } else {
-                    System.out.println(String.format("%s DOTA_MODIFIER_ENTRY_TYPE_REMOVED_NOT_EXISTING [entityIdx=%s, index=%s, class=%s]",
+                    log.debug("{} DOTA_MODIFIER_ENTRY_TYPE_REMOVED_NOT_EXISTING [entityIdx={}, index={}, class={}]",
                         match.getReplayTimeAsString(),
                         entityIndex,
                         modifierIndex,
                         "NOT_FOUND"
-                    ));
+                    );
                 }
+                log.trace(msg.toString());
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException("can't parse modifier update");
             }
         }
     };
+    
+    private static final org.slf4j.Logger log = LoggerFactory.getLogger(StringTableApplier.class);
     
     public static StringTableApplier forName(String name) {
         if ("ActiveModifiers".equals(name)) {
