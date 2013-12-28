@@ -58,6 +58,9 @@ public class StringTableDecoder {
 
                 value = ByteString.copyFrom(stream.readBits(bitLength));
             }
+            if (table.getName().equals("ActiveModifiers")) {
+                System.out.println(String.format("modifier changed at %s, value has len %s", index, value == null ? 0 : value.size()));
+            }
             table.set(index, nameBuf.toString(), value);
             c++;
         }

@@ -17,6 +17,7 @@ public class Match {
     public Match(ReplayIndex idx) {
         for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
             Peek p = i.next();
+            System.out.println(p);
             p.apply(this);
         }
     }
