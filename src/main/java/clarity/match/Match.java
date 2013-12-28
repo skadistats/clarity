@@ -81,8 +81,16 @@ public class Match {
         return Duration.millis((long)(1000L * (peekTick) * tickInterval));
     }
     
+    public Duration getGameTime() {
+        return Duration.millis((long)(1000L * (peekTick -startTick) * tickInterval));
+    }
+
     public String getReplayTimeAsString() {
         return GAMETIME_FORMATTER.print(getReplayTime().toPeriod());
+    }
+
+    public String getGameTimeAsString() {
+        return GAMETIME_FORMATTER.print(getGameTime().toPeriod());
     }
 
     public float getTickInterval() {

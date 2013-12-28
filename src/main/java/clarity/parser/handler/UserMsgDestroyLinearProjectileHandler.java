@@ -9,8 +9,8 @@ public class UserMsgDestroyLinearProjectileHandler implements Handler<CDOTAUserM
 
     @Override
     public void apply(CDOTAUserMsg_DestroyLinearProjectile message, Match match) {
-        System.out.println(String.format("tick %s: DESTROY_LINEAR_PROJECTILE [handle=%s]",
-            match.getPeekTick(),
+        System.out.println(String.format("%s DESTROY_LINEAR_PROJECTILE [handle=%s]",
+            match.getReplayTimeAsString(),
             message.getHandle()
         ));
     }

@@ -9,8 +9,8 @@ public class UserMsgCreateLinearProjectileHandler implements Handler<CDOTAUserMs
 
     @Override
     public void apply(CDOTAUserMsg_CreateLinearProjectile message, Match match) {
-        System.out.println(String.format("tick %s: CREATE_LINEAR_PROJECTILE [handle=%s, origin=%s, type=%s]",
-            match.getPeekTick(),
+        System.out.println(String.format("%s CREATE_LINEAR_PROJECTILE [handle=%s, origin=%s, type=%s]",
+            match.getReplayTimeAsString(),
             message.getHandle(),
             match.getEntities().getByIndex(message.getEntindex()).getDtClass().getDtName(), 
             match.getStringTables().forName("ParticleEffectNames").getNameByIndex(message.getParticleIndex())
