@@ -12,7 +12,7 @@ public class UserMsgCreateLinearProjectileHandler implements Handler<CDOTAUserMs
         System.out.println(String.format("tick %s: CREATE_LINEAR_PROJECTILE [handle=%s, origin=%s, type=%s]",
             match.getTick(),
             message.getHandle(),
-            match.getEntities().get(message.getEntindex()).getDtClass().getDtName(), 
+            match.getEntities().getByIndex(message.getEntindex()).getDtClass().getDtName(), 
             match.getStringTables().forName("ParticleEffectNames").getNameByIndex(message.getParticleIndex())
         ));
     }

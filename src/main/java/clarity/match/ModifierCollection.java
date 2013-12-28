@@ -2,22 +2,40 @@ package clarity.match;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 public class ModifierCollection {
     
-    private final List<CDOTAModifierBuffTableEntry> modifiers = new ArrayList<CDOTAModifierBuffTableEntry>();
+    private final List<Map<Integer, CDOTAModifierBuffTableEntry>> modifiers = new ArrayList<Map<Integer, CDOTAModifierBuffTableEntry>>(2048);
 
-    public void set(int index, CDOTAModifierBuffTableEntry modifier) {
-        if (index == modifiers.size()) {
-            modifiers.add(modifier);
-        } else if (index < modifiers.size()) {
-            modifiers.set(index, modifier);
-        } else {
-            throw new RuntimeException("index too high for modifier");
+    public ModifierCollection() {
+        for (int i = 0; i < 2048; i++) {
+            modifiers.add(null);
         }
     }
     
+    public void set(int entityIndex, int modifierIndex, CDOTAModifierBuffTableEntry modifier) {
+        Map<Integer, CDOTAModifierBuffTableEntry> modsForEntity = modifiers.get(entityIndex);
+        if (modsForEntity == null) {
+            modsForEntity = new TreeMap<Integer, CDOTAModifierBuffTableEntry>();
+            modifiers.set(entityIndex, modsForEntity);
+        }
+        modsForEntity.put(modifierIndex, modifier);
+    }
     
+    public void remove(int entityIndex, int modifierIndex) {
+        modifiers.get(entityIndex).remove(modifierIndex);
+    }
+    
+    public CDOTAModifierBuffTableEntry get(int entityIndex, int modifierIndex) {
+        try {
+            return modifiers.get(entityIndex).get(modifierIndex);
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
 }

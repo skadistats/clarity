@@ -18,6 +18,7 @@ public class SvcCreateStringTableHandler implements Handler<CSVCMsg_CreateString
     @Override
     public void apply(CSVCMsg_CreateStringTable message, Match match) {
         StringTable table = new StringTable(message);
+        System.out.println("create StringTable with name " + message.getName());
         match.getStringTables().add(table);
         List<Triplet<Integer, String, ByteString>> changes = StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumEntries());
         StringTableApplier a = StringTableApplier.forName(table.getName());

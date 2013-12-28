@@ -57,10 +57,10 @@ public class PacketEntitiesDecoder {
             propList = stream.readEntityPropList();
             state = decodeBaseProperties(cls);
             decodeProperties(state, cls, propList);
-            entities.put(index, new Entity(index, serial, cls, state));
+            entities.add(index, serial, cls, state);
             break;
         case PRESERVE:
-            Entity entity = entities.get(index);
+            Entity entity = entities.getByIndex(index);
             cls = entity.getDtClass();
             serial = entity.getSerial();
             propList = stream.readEntityPropList();
@@ -69,7 +69,7 @@ public class PacketEntitiesDecoder {
         case LEAVE:
             break;
         case LEAVE_AND_DELETE:
-            entities.put(index, null);
+            entities.remove(index);
             break;
         }
         return index;
@@ -78,7 +78,7 @@ public class PacketEntitiesDecoder {
     private void decodeDeletionDiffs(EntityCollection entities) {
         while (stream.readBit()) {
             int index = stream.readNumericBits(11); // max is 2^11-1, or 2047
-            entities.put(index, null);
+            entities.remove(index);
         }
     }
 

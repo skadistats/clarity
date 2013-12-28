@@ -3,24 +3,24 @@ package clarity.model;
 
 
 public class Entity {
-
-    private final Integer index;
-    private final Integer serial;
+    
+    private final int index;
+    private final int serial;
     private final DTClass dtClass;
     private final Object[] state;
 
-    public Entity(Integer index, Integer serial, DTClass dtClass, Object[] state) {
+    public Entity(int index, int serial, DTClass dtClass, Object[] state) {
         this.index = index;
         this.serial = serial;
         this.dtClass = dtClass;
         this.state = state;
     }
-
-    public Integer getIndex() {
+    
+    public int getIndex() {
         return index;
     }
 
-    public Integer getSerial() {
+    public int getSerial() {
         return serial;
     }
 

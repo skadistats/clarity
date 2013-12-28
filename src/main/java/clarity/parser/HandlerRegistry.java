@@ -14,11 +14,17 @@ import clarity.parser.handler.SvcGameEventListHandler;
 import clarity.parser.handler.SvcPacketEntitiesHandler;
 import clarity.parser.handler.SvcSendTableHandler;
 import clarity.parser.handler.SvcUpdateStringTableHandler;
+import clarity.parser.handler.UserMsgCreateLinearProjectileHandler;
+import clarity.parser.handler.UserMsgDestroyLinearProjectileHandler;
+import clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler;
 import clarity.parser.handler.UserMsgGamerulesStateChangedHandler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoSyncTick;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles;
 import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
