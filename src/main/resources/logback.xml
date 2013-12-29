@@ -29,8 +29,6 @@
 	<logger name="clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgGamerulesStateChangedHandler" level="info" />
 		
-		SvcClassInfoHandler
-		
 	<root level="info">
 		<appender-ref ref="stdout" />
 	</root>

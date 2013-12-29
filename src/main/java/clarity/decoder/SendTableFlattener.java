@@ -84,9 +84,8 @@ public class SendTableFlattener {
             int cursor = offset;
             while (cursor < sorted.size()) {
                 ReceiveProp rp = sorted.get(cursor);
-                boolean flagged_changes_often = rp.isFlagSet(PropFlag.CHANGES_OFTEN);
-                boolean changes_often = flagged_changes_often && priority == 64;
-                if (changes_often || rp.getPriority() == priority) {
+                boolean changesOften = rp.isFlagSet(PropFlag.CHANGES_OFTEN) && priority == 64;
+                if (changesOften || rp.getPriority() == priority) {
                     Collections.swap(sorted, cursor, hole);
                     hole++;
                     offset++;
