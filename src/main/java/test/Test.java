@@ -1,9 +1,10 @@
 package test;
 
+import java.util.Iterator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import clarity.iterator.BidiIterator;
 import clarity.match.Match;
 import clarity.parser.Peek;
 import clarity.parser.ReplayFile;
@@ -31,7 +32,7 @@ public class Test {
         log.info("prologue applied in {}s", tPrologue / 1000.0);
         
         tStart = System.currentTimeMillis();
-        for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
+        for (Iterator<Peek> i = idx.matchIterator(); i.hasNext();) {
             Peek p = i.next();
             p.apply(match);
         }

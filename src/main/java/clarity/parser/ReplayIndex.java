@@ -2,14 +2,13 @@ package clarity.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
-import clarity.iterator.BidiIterator;
-import clarity.iterator.ReplayIndexIterator;
 import clarity.model.UserMessageType;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
@@ -134,14 +133,14 @@ public class ReplayIndex {
         return -1;
     }
 
-    public BidiIterator<Peek> prologueIterator() {
-        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0);
-        return new ReplayIndexIterator(this, 0, syncIdx);
+    public Iterator<Peek> prologueIterator() {
+        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0) + 1;
+        return index.subList(0, syncIdx).iterator();
     }
 
-    public BidiIterator<Peek> matchIterator() {
-        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0);
-        return new ReplayIndexIterator(this, syncIdx + 1, index.size() - 1);
+    public Iterator<Peek> matchIterator() {
+        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0) + 1;
+        return index.subList(syncIdx, index.size()).iterator();
     }
 
     private GeneratedMessage parseTopLevel(int kind, byte[] data) throws InvalidProtocolBufferException {

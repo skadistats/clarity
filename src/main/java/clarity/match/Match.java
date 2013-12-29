@@ -1,10 +1,11 @@
 package clarity.match;
 
+import java.util.Iterator;
+
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
-import clarity.iterator.BidiIterator;
 import clarity.model.GameRulesStateType;
 import clarity.parser.Peek;
 import clarity.parser.ReplayIndex;
@@ -38,7 +39,7 @@ public class Match {
     
     public Match(ReplayIndex idx) {
         this.idx = idx;
-        for (BidiIterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
+        for (Iterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
             Peek p = i.next();
             p.apply(this);
         }
