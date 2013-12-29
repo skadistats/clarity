@@ -45,6 +45,8 @@ import com.dota2.proto.Netmessages.NET_Messages;
 import com.dota2.proto.Netmessages.SVC_Messages;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
@@ -55,15 +57,18 @@ public class ReplayIndex {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     private final List<Peek> index = new ArrayList<Peek>();
-
+    private int skew = 0;
+    private int tick = 0;
+    
     public ReplayIndex(CodedInputStream s) throws IOException {
-        int tick = 0;
+        boolean sync = false;
+        int peekTick = 0;
         int kind = 0;
         do {
             kind = s.readRawVarint32();
             boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) != 0;
             kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
-            tick = s.readRawVarint32();
+            peekTick = s.readRawVarint32();
             int size = s.readRawVarint32();
             byte[] data = s.readRawBytes(size);
             if (isCompressed) {
@@ -75,20 +80,21 @@ public class ReplayIndex {
                 continue;
             }
             if (message instanceof CDemoPacket) {
-                processEmbeddedMessage(((CDemoPacket) message).getData(), tick, false);
+                processEmbeddedMessage(((CDemoPacket) message).getData(), false, peekTick, sync);
             } else if (message instanceof CDemoSendTables) {
-                processEmbeddedMessage(((CDemoSendTables) message).getData(), tick, false);
+                processEmbeddedMessage(((CDemoSendTables) message).getData(), false, peekTick, sync);
             } else if (message instanceof CDemoFullPacket) {
                 CDemoFullPacket fullMessage = (CDemoFullPacket)message;
-                index.add(new Peek(tick, true, ((CDemoFullPacket) message).getStringTable()));
-                processEmbeddedMessage(fullMessage.getPacket().getData(), tick, true);
+                index.add(new Peek(index.size(), tick, peekTick, true, ((CDemoFullPacket) message).getStringTable()));
+                processEmbeddedMessage(fullMessage.getPacket().getData(), true, peekTick, sync);
             } else {
-                index.add(new Peek(tick, false, message));
+                index.add(new Peek(index.size(), tick, peekTick, false, message));
             }
+            sync = message instanceof CDemoSyncTick; 
         } while (kind != 0);
     }
     
-    private void processEmbeddedMessage(ByteString embeddedData, int tick, boolean full) throws IOException {
+    private void processEmbeddedMessage(ByteString embeddedData, boolean full, int peekTick, boolean sync) throws IOException {
         CodedInputStream ss = CodedInputStream.newInstance(embeddedData.toByteArray());
         while (!ss.isAtEnd()) {
             int subKind = ss.readRawVarint32();
@@ -109,9 +115,16 @@ public class ReplayIndex {
                     log.warn("no protobuf class for usermessage of type {}", umt);
                 }
                 GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
-                index.add(new Peek(tick, full, decodedUserMessage));
+                index.add(new Peek(index.size(), tick, peekTick, full, decodedUserMessage));
             } else {
-                index.add(new Peek(tick, full, subMessage));
+                if (subMessage instanceof CNETMsg_Tick) {
+                    int netTick = ((CNETMsg_Tick) subMessage).getTick(); 
+                    if (sync) {
+                        skew = ((CNETMsg_Tick) subMessage).getTick();
+                    }
+                    tick = netTick - skew;
+                }
+                index.add(new Peek(index.size(), tick, peekTick, full, subMessage));
             }
         }
     }
@@ -142,6 +155,35 @@ public class ReplayIndex {
         int syncIdx = nextIndexOf(CDemoSyncTick.class, 0) + 1;
         return index.subList(syncIdx, index.size()).iterator();
     }
+    
+    public Iterator<Peek> fullPacketStringTablesUntilTickIterator(final Integer tick) {
+        return Iterators.filter(
+            matchIterator(),
+            new Predicate<Peek>() {
+                @Override
+                public boolean apply(Peek p) {
+                    return p.isFull() && (p.getMessage() instanceof CDemoStringTables) && (tick == null || p.getTick() <= tick.intValue());
+                }
+            }
+        );
+    }
+    
+    public Iterator<Peek> skipToIterator(final int tick) {
+        int lastStIndex = 0;
+        lastStIndex = Iterators.getLast(fullPacketStringTablesUntilTickIterator(tick)).getId();
+        return Iterators.concat(
+            fullPacketStringTablesUntilTickIterator(tick),
+            Iterators.filter(
+                index.subList(lastStIndex, tick).iterator(),
+                new Predicate<Peek>() {
+                @Override
+                public boolean apply(Peek p) {
+                    return !p.isFull();
+                }
+            }
+       ));
+    }
+    
 
     private GeneratedMessage parseTopLevel(int kind, byte[] data) throws InvalidProtocolBufferException {
         switch (EDemoCommands.valueOf(kind)) {

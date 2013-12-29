@@ -73,7 +73,7 @@ public enum StringTableApplier {
                         log.debug("{}", message);
                     }
                 }
-                HandlerHelper.traceMessage(log, match.getPeekTick(), message);;
+                HandlerHelper.traceMessage(log, match.getTick(), message);;
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException("can't parse modifier update");
             }
