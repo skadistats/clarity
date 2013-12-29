@@ -6,7 +6,9 @@
 	</appender>
 
 
-	<logger name="clarity.parser.Peek" level="info" />
+	<logger name="clarity.parser.Peek" level="trace" />
+
+	<logger name="clarity.decoder.StringTableApplier" level="debug" />
 	
 	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />

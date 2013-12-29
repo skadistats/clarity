@@ -5,6 +5,8 @@ import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
 import clarity.model.Entity;
+import clarity.model.Handle;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 import com.dota2.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE;
@@ -23,45 +25,55 @@ public enum StringTableApplier {
         @Override
         public void apply(Match match, String tableName, int index, String key, ByteString value) {
             try {
-                CDOTAModifierBuffTableEntry msg = CDOTAModifierBuffTableEntry.parseFrom(value); 
-                int entityIndex = msg.getParent() & 0x7FF;
-                int modifierIndex = msg.getIndex();
+                CDOTAModifierBuffTableEntry message = CDOTAModifierBuffTableEntry.parseFrom(value);
+                int entityIndex = message.getParent() & 0x7FF;
+                int modifierIndex = message.getIndex();
                 CDOTAModifierBuffTableEntry prev = match.getModifiers().get(entityIndex, modifierIndex);
-                Entity parent = match.getEntities().getByIndex(entityIndex);
-                Entity caster = match.getEntities().getByEHandle(msg.getCaster());
+                Entity parent = match.getEntities().getByHandle(message.getParent());
+                Entity caster = match.getEntities().getByHandle(message.getCaster());
+                Entity ability = match.getEntities().getByHandle(message.getAbility());
                 String mName = "NULL";
-                if (msg.getEntryType() == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE) {
-                    match.getModifiers().set(entityIndex, modifierIndex, msg);
-                    mName = match.getStringTables().forName("ModifierNames").getNameByIndex(msg.getModifierClass());
-                    log.debug("{} {} [entityIdx={}, index={}, class={}, parent={}, caster={}]",
+                if (message.getEntryType() == DOTA_MODIFIER_ENTRY_TYPE.DOTA_MODIFIER_ENTRY_TYPE_ACTIVE) {
+                    match.getModifiers().set(entityIndex, modifierIndex, message);
+                    mName = match.getStringTables().forName("ModifierNames").getNameByIndex(message.getModifierClass());
+                    log.debug("{} {} [serial={}, handle={}, entityIdx={}, index={}, class={}, parent={}({}), caster={}({}), ability={}({})]",
                         match.getReplayTimeAsString(),
-                        msg.getEntryType(),
+                        "MODIFIER_ADD",
+                        message.getSerialNum(),
+                        Handle.forIndexAndSerial(modifierIndex, message.getSerialNum()),
                         entityIndex,
                         modifierIndex,
                         mName,
+                        message.getParent(),
                         parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName(),
-                        caster == null ? "NOT_FOUND" : caster.getDtClass().getDtName()
-                    );
-                } else if (prev != null) {
-                    match.getModifiers().remove(entityIndex, modifierIndex);
-                    mName = match.getStringTables().forName("ModifierNames").getNameByIndex(prev.getModifierClass()); 
-                    log.debug("{} {} [entityIdx={}, index={}, class={}, parent={}]",
-                        match.getReplayTimeAsString(),
-                        msg.getEntryType(),
-                        entityIndex,
-                        modifierIndex,
-                        mName,
-                        parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName()
+                        message.getCaster(),
+                        caster == null ? "NOT_FOUND" : caster.getDtClass().getDtName(),
+                        message.getAbility(),
+                        !message.hasAbility() ? "NONE" : (ability == null ? "NOT_FOUND" : ability.getDtClass().getDtName()) 
                     );
                 } else {
-                    log.debug("{} DOTA_MODIFIER_ENTRY_TYPE_REMOVED_NOT_EXISTING [entityIdx={}, index={}, class={}]",
+                    if (prev != null) {
+                        match.getModifiers().remove(entityIndex, modifierIndex);
+                        mName = match.getStringTables().forName("ModifierNames").getNameByIndex(prev.getModifierClass()); 
+                    } else {
+                        mName = "NOT_FOUND";
+                    }
+                    log.debug("{} {} [serial={}, handle={}, entityIdx={}, index={}, class={}, parent={}({})]",
                         match.getReplayTimeAsString(),
+                        prev == null ? "MODIFIER_DEL_UNABLE" : "MODIFIER_DEL",
+                        message.getSerialNum(),
+                        Handle.forIndexAndSerial(modifierIndex, message.getSerialNum()),
                         entityIndex,
                         modifierIndex,
-                        "NOT_FOUND"
+                        mName,
+                        message.getParent(),
+                        parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName()
                     );
+                    if (prev == null && !log.isTraceEnabled()) {
+                        log.debug("{}", message);
+                    }
                 }
-                log.trace(msg.toString());
+                HandlerHelper.traceMessage(log, match.getPeekTick(), message);;
             } catch (InvalidProtocolBufferException e) {
                 throw new RuntimeException("can't parse modifier update");
             }
