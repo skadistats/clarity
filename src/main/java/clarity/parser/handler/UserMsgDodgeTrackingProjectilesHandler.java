@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles;
 
@@ -14,7 +15,7 @@ public class UserMsgDodgeTrackingProjectilesHandler implements Handler<CDOTAUser
     
     @Override
     public void apply(int peekTick, CDOTAUserMsg_DodgeTrackingProjectiles message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
+        HandlerHelper.traceMessage(log, peekTick, message);
         log.debug("{} DODGE_TRACKING_PROJECTILES [target={}]",
             match.getReplayTimeAsString(),
             match.getEntities().getByIndex(message.getEntindex()).getDtClass().getDtName() 

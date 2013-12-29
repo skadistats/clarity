@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 
@@ -14,8 +15,8 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     
     @Override
     public void apply(int peekTick, CNETMsg_Tick message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
-        //match.setTick(message.getTick());
+        HandlerHelper.traceMessage(log, peekTick, message);
+        match.setServerTick(message.getTick());
         match.getGameEvents().clear();
     }
 

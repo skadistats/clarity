@@ -32,6 +32,7 @@ public class Match {
     
     private GameRulesStateType state = GameRulesStateType.WAITING_FOR_LOADERS; 
     private int peekTick = 0;
+    private int serverTick = 0;
     private int startTick = 0;
     private float tickInterval = 1.0f/30.0f;
     
@@ -72,10 +73,18 @@ public class Match {
         return peekTick;
     }
 
-    public void setPeekTick(int tick) {
-        this.peekTick = tick;
+    public void setPeekTick(int replayTick) {
+        this.peekTick = replayTick;
     }
     
+    public int getServerTick() {
+        return serverTick;
+    }
+
+    public void setServerTick(int serverTick) {
+        this.serverTick = serverTick;
+    }
+
     public Duration getReplayTime() {
         return Duration.millis((long)(1000L * (peekTick) * tickInterval));
     }

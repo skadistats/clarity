@@ -4,12 +4,15 @@
 			<pattern>%msg%n</pattern>
 		</encoder>
 	</appender>
+
+
+	<logger name="clarity.parser.Peek" level="info" />
 	
 	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />
 	<logger name="clarity.parser.handler.DemStringTablesHandler" level="info" />
-	<logger name="clarity.parser.handler.DemSyncTickHandler" level="trace" />
-	<logger name="clarity.parser.handler.NetTickHandler" level="trace" />
+	<logger name="clarity.parser.handler.DemSyncTickHandler" level="info" />
+	<logger name="clarity.parser.handler.NetTickHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcCreateStringTableHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcGameEventHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcGameEventListHandler" level="info" />

@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import clarity.match.Match;
 import clarity.model.StringTable;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoStringTables.items_t;
@@ -19,7 +20,7 @@ public class DemStringTablesHandler implements Handler<CDemoStringTables> {
     
     @Override
     public void apply(int peekTick, CDemoStringTables message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
+        HandlerHelper.traceMessage(log, peekTick, message);
         for (table_t t : message.getTablesList()) {
             StringTable st = match.getStringTables().forName(t.getTableName());
             List<items_t> l = t.getItemsList();

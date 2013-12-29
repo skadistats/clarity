@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.Demo.CDemoFileHeader;
 
@@ -14,7 +15,7 @@ public class DemFileHeaderHandler implements Handler<CDemoFileHeader> {
     
     @Override
     public void apply(int peekTick, CDemoFileHeader message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
+        HandlerHelper.traceMessage(log, peekTick, message);
     }
 
 }

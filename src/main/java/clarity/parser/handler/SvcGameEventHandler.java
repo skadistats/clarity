@@ -7,6 +7,7 @@ import clarity.match.Match;
 import clarity.model.GameEvent;
 import clarity.model.GameEventDescriptor;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
@@ -17,7 +18,7 @@ public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
     
     @Override
     public void apply(int peekTick, CSVCMsg_GameEvent message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
+        HandlerHelper.traceMessage(log, peekTick, message);
         GameEventDescriptor desc = match.getGameEventDescriptors().forId(message.getEventid());
         GameEvent e = new GameEvent(desc);
         for (int i = 0; i < message.getKeysCount(); i++) {

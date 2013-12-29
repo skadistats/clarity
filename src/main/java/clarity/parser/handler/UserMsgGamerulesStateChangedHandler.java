@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import clarity.match.Match;
 import clarity.model.GameRulesStateType;
 import clarity.parser.Handler;
+import clarity.parser.HandlerHelper;
 
 import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 
@@ -15,7 +16,7 @@ public class UserMsgGamerulesStateChangedHandler implements Handler<CDOTA_UM_Gam
     
     @Override
     public void apply(int peekTick, CDOTA_UM_GamerulesStateChanged message, Match match) {
-        log.trace("{}\n{}", message.getClass().getSimpleName(), message);
+        HandlerHelper.traceMessage(log, peekTick, message);
         log.debug("{} GAMERULES_STATE_CHANGED [state={}]",
             match.getReplayTimeAsString(),
             GameRulesStateType.forId(message.getState())
