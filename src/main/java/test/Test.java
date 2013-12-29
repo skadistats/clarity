@@ -22,10 +22,13 @@ public class Test {
 
         // TI3 final
         //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\271145478.dem");
-        
+        long tIndex = System.currentTimeMillis() - tStart;
+        log.info("index built in {}s", tIndex / 1000.0);
+
+        tStart = System.currentTimeMillis();
         Match match = new Match(idx);
-        long tInit = System.currentTimeMillis() - tStart;
-        log.info("prologue applied in {}s", tInit / 1000.0);
+        long tPrologue = System.currentTimeMillis() - tStart;
+        log.info("prologue applied in {}s", tPrologue / 1000.0);
         
         tStart = System.currentTimeMillis();
         for (BidiIterator<Peek> i = idx.matchIterator(); i.hasNext();) {
@@ -34,7 +37,7 @@ public class Test {
         }
         long tMatch = System.currentTimeMillis() - tStart;
         log.info("match applied in {}s", tMatch / 1000.0);
-        log.info("total time taken: {}s", (tInit + tMatch) / 1000.0);
+        log.info("total time taken: {}s", (tIndex + tPrologue + tMatch) / 1000.0);
 
     }
 

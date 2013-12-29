@@ -3,6 +3,9 @@ package clarity.parser;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import clarity.match.Match;
 import clarity.parser.handler.DemClassInfoHandler;
 import clarity.parser.handler.DemFileHeaderHandler;
@@ -37,9 +40,12 @@ import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_ServerInfo;
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
+import com.google.protobuf.GeneratedMessage;
 
 public class HandlerRegistry {
 
+    private static final Logger log = LoggerFactory.getLogger(HandlerRegistry.class);
+    
     private static final Map<Class<?>, Handler<?>> H;
     static {
         H = new HashMap<Class<?>, Handler<?>>();
@@ -71,6 +77,9 @@ public class HandlerRegistry {
         Handler<T> h = (Handler<T>) H.get(message.getClass());
         if (h != null) {
             h.apply(peekTick, message, match);
+        } else {
+            GeneratedMessage gm = (GeneratedMessage)message;
+            log.trace("unable to apply message of type {}", gm.getDescriptorForType().getName());
         }
     }
 
