@@ -32,10 +32,19 @@ public class Test {
         log.info("prologue applied in {}s", tPrologue / 1000.0);
         
         tStart = System.currentTimeMillis();
-        for (Iterator<Peek> i = idx.matchIterator(); i.hasNext();) {
-            Peek p = i.next();
-            p.apply(match);
+        
+        for (int c = 0; c < 5; c++) {
+            long tSkip = System.currentTimeMillis();
+            int t = (int)(Math.random() * 90000);
+            int v = 0;
+            for (Iterator<Peek> i = idx.skipToIterator(t); i.hasNext();) {
+                Peek p = i.next();
+                p.apply(match);
+                v++;
+            }
+            log.info("restored to peek {} in {}s, visited {} packets", t, (System.currentTimeMillis() - tSkip) / 1000.0, v);
         }
+
         long tMatch = System.currentTimeMillis() - tStart;
         log.info("match applied in {}s", tMatch / 1000.0);
         log.info("total time taken: {}s", (tIndex + tPrologue + tMatch) / 1000.0);

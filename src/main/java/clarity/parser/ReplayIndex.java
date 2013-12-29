@@ -156,6 +156,18 @@ public class ReplayIndex {
         return index.subList(syncIdx, index.size()).iterator();
     }
     
+    public Iterator<Peek> matchIterator(final int startPeek, final int endPeek, final boolean full) {
+        return Iterators.filter(
+            matchIterator(),
+            new Predicate<Peek>() {
+                @Override
+                public boolean apply(Peek p) {
+                    return p.isFull() == full && p.getTick() >= startPeek && p.getTick() <= endPeek;
+                }
+            }
+        );
+    }
+    
     public Iterator<Peek> fullPacketStringTablesUntilTickIterator(final Integer tick) {
         return Iterators.filter(
             matchIterator(),
@@ -169,19 +181,13 @@ public class ReplayIndex {
     }
     
     public Iterator<Peek> skipToIterator(final int tick) {
-        int lastStIndex = 0;
-        lastStIndex = Iterators.getLast(fullPacketStringTablesUntilTickIterator(tick)).getId();
+        final Peek p = Iterators.getLast(fullPacketStringTablesUntilTickIterator(tick)); 
         return Iterators.concat(
-            fullPacketStringTablesUntilTickIterator(tick),
-            Iterators.filter(
-                index.subList(lastStIndex, tick).iterator(),
-                new Predicate<Peek>() {
-                @Override
-                public boolean apply(Peek p) {
-                    return !p.isFull();
-                }
-            }
-       ));
+            fullPacketStringTablesUntilTickIterator(p.getTick() - 1),
+            matchIterator(p.getTick(), p.getTick(), true),
+            matchIterator(p.getTick() +1 , tick, false)
+            //index.subList(p.getId(), index.size()).iterator()
+        );
     }
     
 
