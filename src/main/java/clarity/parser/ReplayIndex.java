@@ -75,38 +75,46 @@ public class ReplayIndex {
                 log.warn("unknown top level message of kind {}", kind);
                 continue;
             }
-            ByteString embeddedData = getEmbeddedData(message);
-            if (embeddedData != null) {
-                CodedInputStream ss = CodedInputStream.newInstance(embeddedData.toByteArray());
-                while (!ss.isAtEnd()) {
-                    int subKind = ss.readRawVarint32();
-                    int subSize = ss.readRawVarint32();
-                    byte[] subData = ss.readRawBytes(subSize);
-                    GeneratedMessage subMessage = parseEmbedded(subKind, subData);
-                    if (subMessage == null) {
-                        log.warn("unknown embedded message of kind {}", subKind);
-                        continue;
-                    }
-                    if (subMessage instanceof CSVCMsg_UserMessage) {
-                        CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
-                        UserMessageType umt = UserMessageType.forId(userMessage.getMsgType());
-                        if (umt == null) {
-                            log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
-                        }
-                        if (umt.getClazz() == null) {
-                            log.warn("no protobuf class for usermessage of type {}", umt);
-                        }
-                        GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
-                        index.add(new Peek(tick, decodedUserMessage));
-                    } else {
-                        index.add(new Peek(tick, subMessage));
-                    }
-                }
-
+            if (message instanceof CDemoPacket) {
+                processEmbeddedMessage(((CDemoPacket) message).getData(), tick, false);
+            } else if (message instanceof CDemoSendTables) {
+                processEmbeddedMessage(((CDemoSendTables) message).getData(), tick, false);
+            } else if (message instanceof CDemoFullPacket) {
+                CDemoFullPacket fullMessage = (CDemoFullPacket)message;
+                index.add(new Peek(tick, true, ((CDemoFullPacket) message).getStringTable()));
+                processEmbeddedMessage(fullMessage.getPacket().getData(), tick, true);
             } else {
-                index.add(new Peek(tick, message));
+                index.add(new Peek(tick, false, message));
             }
         } while (kind != 0);
+    }
+    
+    private void processEmbeddedMessage(ByteString embeddedData, int tick, boolean full) throws IOException {
+        CodedInputStream ss = CodedInputStream.newInstance(embeddedData.toByteArray());
+        while (!ss.isAtEnd()) {
+            int subKind = ss.readRawVarint32();
+            int subSize = ss.readRawVarint32();
+            byte[] subData = ss.readRawBytes(subSize);
+            GeneratedMessage subMessage = parseEmbedded(subKind, subData);
+            if (subMessage == null) {
+                log.warn("unknown embedded message of kind {}", subKind);
+                continue;
+            }
+            if (subMessage instanceof CSVCMsg_UserMessage) {
+                CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
+                UserMessageType umt = UserMessageType.forId(userMessage.getMsgType());
+                if (umt == null) {
+                    log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
+                }
+                if (umt.getClazz() == null) {
+                    log.warn("no protobuf class for usermessage of type {}", umt);
+                }
+                GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
+                index.add(new Peek(tick, full, decodedUserMessage));
+            } else {
+                index.add(new Peek(tick, full, subMessage));
+            }
+        }
     }
 
     public Peek get(int i) {
@@ -134,15 +142,6 @@ public class ReplayIndex {
     public BidiIterator<Peek> matchIterator() {
         int syncIdx = nextIndexOf(CDemoSyncTick.class, 0);
         return new ReplayIndexIterator(this, syncIdx + 1, index.size() - 1);
-    }
-
-    private ByteString getEmbeddedData(GeneratedMessage message) throws InvalidProtocolBufferException {
-        if (message instanceof CDemoPacket) {
-            return ((CDemoPacket) message).getData();
-        } else if (message instanceof CDemoSendTables) {
-            return ((CDemoSendTables) message).getData();
-        }
-        return null;
     }
 
     private GeneratedMessage parseTopLevel(int kind, byte[] data) throws InvalidProtocolBufferException {

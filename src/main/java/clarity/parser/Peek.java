@@ -12,15 +12,21 @@ public class Peek {
     private static final Logger log = LoggerFactory.getLogger(Peek.class);
     
     private final int tick;
+    private final boolean full;
     private final GeneratedMessage message;
 
-    public Peek(int tick, GeneratedMessage message) {
+    public Peek(int tick, boolean full, GeneratedMessage message) {
         this.tick = tick;
+        this.full = full;
         this.message = message;
     }
 
     public int getTick() {
         return tick;
+    }
+    
+    public boolean isFull() {
+        return full;
     }
 
     public GeneratedMessage getMessage() {
@@ -29,7 +35,7 @@ public class Peek {
     
     public void apply(Match match) {
         match.setPeekTick(tick);
-        log.trace("peekTick: {}, netTick: {}, mesageType: {}", match.getPeekTick(), match.getServerTick(), message.getDescriptorForType().getName());
+        log.trace("peekTick: {}, netTick: {}, full: {}, mesageType: {}", match.getPeekTick(), match.getServerTick(), full, message.getDescriptorForType().getName());
         HandlerRegistry.apply(tick, message, match);
     }
 
