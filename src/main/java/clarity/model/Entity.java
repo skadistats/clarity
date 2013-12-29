@@ -7,12 +7,14 @@ public class Entity {
     private final int index;
     private final int serial;
     private final DTClass dtClass;
+    private PVS pvs;
     private final Object[] state;
 
-    public Entity(int index, int serial, DTClass dtClass, Object[] state) {
+    public Entity(int index, int serial, DTClass dtClass, PVS pvs, Object[] state) {
         this.index = index;
         this.serial = serial;
         this.dtClass = dtClass;
+        this.pvs = pvs;
         this.state = state;
     }
     
@@ -26,6 +28,14 @@ public class Entity {
 
     public DTClass getDtClass() {
         return dtClass;
+    }
+    
+    public PVS getPvs() {
+        return pvs;
+    }
+
+    public void setPvs(PVS pvs) {
+        this.pvs = pvs;
     }
 
     public Object[] getState() {

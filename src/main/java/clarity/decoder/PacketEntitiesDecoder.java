@@ -49,6 +49,7 @@ public class PacketEntitiesDecoder {
         Integer serial = null;
         Object[] state = null;
         List<Integer> propList = null;
+        Entity entity = null;
         switch (pvs) {
         case ENTER:
             cls = dtClasses.forClassId(stream.readNumericBits(classBits));
@@ -56,16 +57,19 @@ public class PacketEntitiesDecoder {
             propList = stream.readEntityPropList();
             state = decodeBaseProperties(cls);
             decodeProperties(state, cls, propList);
-            entities.add(index, serial, cls, state);
+            entities.add(index, serial, cls, pvs, state);
             break;
         case PRESERVE:
-            Entity entity = entities.getByIndex(index);
+            entity = entities.getByIndex(index);
+            entity.setPvs(pvs);
             cls = entity.getDtClass();
             serial = entity.getSerial();
             propList = stream.readEntityPropList();
             decodeProperties(entity.getState(), cls, propList);
             break;
         case LEAVE:
+            entity = entities.getByIndex(index);
+            entity.setPvs(pvs);
             break;
         case LEAVE_AND_DELETE:
             entities.remove(index);
