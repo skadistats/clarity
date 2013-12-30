@@ -39,7 +39,7 @@ public class DTClassCollection {
     }
 
     public int size() {
-        return byDtName.size();
+        return byClassId.size();
     }
     
 }
