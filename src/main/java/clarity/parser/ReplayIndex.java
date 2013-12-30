@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
+import clarity.model.PacketType;
 import clarity.model.UserMessageType;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
@@ -57,8 +58,9 @@ public class ReplayIndex {
     private final Logger log = LoggerFactory.getLogger(getClass());
     
     private final List<Peek> index = new ArrayList<Peek>();
-    private int skew = 0;
-    private int tick = 0;
+    private int skew = 0; // the skew between peek tick and net tick
+    private int tick = 0; // the number of ticks in this replay
+    private int syncIdx = 0; // the index of the sync packet
     
     public ReplayIndex(CodedInputStream s) throws IOException {
         boolean sync = false;
@@ -90,7 +92,10 @@ public class ReplayIndex {
             } else {
                 index.add(new Peek(index.size(), tick, peekTick, false, message));
             }
-            sync = message instanceof CDemoSyncTick; 
+            sync = message instanceof CDemoSyncTick;
+            if (sync) {
+               syncIdx = index.size() - 1; 
+            }
         } while (kind != 0);
     }
     
@@ -136,6 +141,20 @@ public class ReplayIndex {
     public int size() {
         return index.size();
     }
+    
+    private int indexForTick(List<Peek> list, int tick) {
+        int a = -1; // lower bound 
+        int b = list.size(); // upper bound
+        while (a + 1 != b) {
+            int  m = (a + b) >>> 1;
+            if (list.get(m).getTick() < tick) {
+                a = m;
+            } else {
+                b = m;
+            }
+        }
+        return b;
+    }
 
     public int nextIndexOf(Class<? extends GeneratedMessage> clazz, int pos) {
         for (int i = pos; i < index.size(); i++) {
@@ -145,51 +164,52 @@ public class ReplayIndex {
         }
         return -1;
     }
+    
+    private List<Peek> prologueList() {
+        return index.subList(0, syncIdx + 1);
+    }
 
+    private List<Peek> matchList() {
+        return index.subList(syncIdx + 1, index.size());
+    }
+    
     public Iterator<Peek> prologueIterator() {
-        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0) + 1;
-        return index.subList(0, syncIdx).iterator();
+        return prologueList().iterator();
     }
 
     public Iterator<Peek> matchIterator() {
-        int syncIdx = nextIndexOf(CDemoSyncTick.class, 0) + 1;
-        return index.subList(syncIdx, index.size()).iterator();
+        return matchList().iterator();
     }
     
-    public Iterator<Peek> matchIterator(final int startPeek, final int endPeek, final boolean full) {
+    public Iterator<Peek> matchIteratorForTicks(final int startTick, final int endTick, final PacketType packetType) {
+        List<Peek> match = matchList();
+        return 
+            Iterators.filter(
+                match.subList(indexForTick(match, startTick), indexForTick(match, endTick + 1)).iterator(), 
+                packetType.getPredicate()
+            );
+    }
+    
+    public Iterator<Peek> filteringIteratorForTicks(final int startTick, final int endTick, final PacketType packetType, final Class<? extends GeneratedMessage> clazz) {
         return Iterators.filter(
-            matchIterator(),
+            matchIteratorForTicks(startTick, endTick, packetType),
             new Predicate<Peek>() {
                 @Override
                 public boolean apply(Peek p) {
-                    return p.isFull() == full && p.getTick() >= startPeek && p.getTick() <= endPeek;
-                }
-            }
-        );
-    }
-    
-    public Iterator<Peek> fullPacketStringTablesUntilTickIterator(final Integer tick) {
-        return Iterators.filter(
-            matchIterator(),
-            new Predicate<Peek>() {
-                @Override
-                public boolean apply(Peek p) {
-                    return p.isFull() && (p.getMessage() instanceof CDemoStringTables) && (tick == null || p.getTick() <= tick.intValue());
+                    return clazz.isAssignableFrom(p.getMessage().getClass());
                 }
             }
         );
     }
     
     public Iterator<Peek> skipToIterator(final int tick) {
-        final Peek p = Iterators.getLast(fullPacketStringTablesUntilTickIterator(tick)); 
+        final Peek p = Iterators.getLast(filteringIteratorForTicks(0, tick, PacketType.FULL, CDemoStringTables.class)); 
         return Iterators.concat(
-            fullPacketStringTablesUntilTickIterator(p.getTick() - 1),
-            matchIterator(p.getTick(), p.getTick(), true),
-            matchIterator(p.getTick() +1 , tick, false)
-            //index.subList(p.getId(), index.size()).iterator()
+            filteringIteratorForTicks(0, p.getTick() - 1, PacketType.FULL, CDemoStringTables.class),
+            matchIteratorForTicks(p.getTick(), p.getTick(), PacketType.FULL),
+            matchIteratorForTicks(p.getTick() + 1, tick, PacketType.DELTA)
         );
     }
-    
 
     private GeneratedMessage parseTopLevel(int kind, byte[] data) throws InvalidProtocolBufferException {
         switch (EDemoCommands.valueOf(kind)) {
