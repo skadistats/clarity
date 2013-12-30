@@ -25,6 +25,9 @@ public enum StringTableApplier {
         @Override
         public void apply(Match match, String tableName, int index, String key, ByteString value) {
             try {
+                if (value == null) {
+                    return;   
+                }
                 CDOTAModifierBuffTableEntry message = CDOTAModifierBuffTableEntry.parseFrom(value);
                 int entityIndex = message.getParent() & 0x7FF;
                 int modifierIndex = message.getIndex();
@@ -76,6 +79,7 @@ public enum StringTableApplier {
                 HandlerHelper.traceMessage(log, match.getTick(), message);;
             } catch (Exception e) {
                 log.error("can't parse modifier update");
+                throw new RuntimeException(e);
             }
         }
     };
