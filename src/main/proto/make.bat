@@ -1,1 +1,1 @@
-protoc --java_out=..\java\com\dota2\proto *.proto
+protoc --java_out=..\java *.proto

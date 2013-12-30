@@ -74,8 +74,8 @@ public enum StringTableApplier {
                     }
                 }
                 HandlerHelper.traceMessage(log, match.getTick(), message);;
-            } catch (InvalidProtocolBufferException e) {
-                throw new RuntimeException("can't parse modifier update");
+            } catch (Exception e) {
+                log.error("can't parse modifier update");
             }
         }
     };

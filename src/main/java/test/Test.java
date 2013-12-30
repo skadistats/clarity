@@ -19,10 +19,13 @@ public class Test {
         Logger log = LoggerFactory.getLogger("TEST");
 
         // last
-        ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
+        //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
 
         // TI3 final
         //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\271145478.dem");
+        
+        ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\37633163.dem");
+        
         long tIndex = System.currentTimeMillis() - tStart;
         log.info("index built in {}s", tIndex / 1000.0);
 

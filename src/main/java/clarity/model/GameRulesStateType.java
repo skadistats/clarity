@@ -26,7 +26,7 @@ public enum GameRulesStateType {
             i = idx.nextIndexOf(CDOTA_UM_GamerulesStateChanged.class, i + 1);
             c--;
         }
-        return i;
+        return i == -1 ? 0 : i;
     }
     
     public static GameRulesStateType forId(int id) {

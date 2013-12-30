@@ -1,3 +1,5 @@
+option java_package = "com.dota2.proto";
+
 import "google/protobuf/descriptor.proto";
 import "networkbasetypes.proto";
 import "ai_activity.proto";
