@@ -12715,6 +12715,21 @@ public final class Netmessages {
      */
     com.google.protobuf.ByteString
         getHostNameBytes();
+
+    // optional string addon_name = 18;
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    boolean hasAddonName();
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    java.lang.String getAddonName();
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    com.google.protobuf.ByteString
+        getAddonNameBytes();
   }
   /**
    * Protobuf type {@code CSVCMsg_ServerInfo}
@@ -12850,6 +12865,11 @@ public final class Netmessages {
             case 138: {
               bitField0_ |= 0x00010000;
               hostName_ = input.readBytes();
+              break;
+            }
+            case 146: {
+              bitField0_ |= 0x00020000;
+              addonName_ = input.readBytes();
               break;
             }
           }
@@ -13272,6 +13292,49 @@ public final class Netmessages {
       }
     }
 
+    // optional string addon_name = 18;
+    public static final int ADDON_NAME_FIELD_NUMBER = 18;
+    private java.lang.Object addonName_;
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    public boolean hasAddonName() {
+      return ((bitField0_ & 0x00020000) == 0x00020000);
+    }
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    public java.lang.String getAddonName() {
+      java.lang.Object ref = addonName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          addonName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string addon_name = 18;</code>
+     */
+    public com.google.protobuf.ByteString
+        getAddonNameBytes() {
+      java.lang.Object ref = addonName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        addonName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       protocol_ = 0;
       serverCount_ = 0;
@@ -13290,6 +13353,7 @@ public final class Netmessages {
       mapName_ = "";
       skyName_ = "";
       hostName_ = "";
+      addonName_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -13353,6 +13417,9 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00010000) == 0x00010000)) {
         output.writeBytes(17, getHostNameBytes());
+      }
+      if (((bitField0_ & 0x00020000) == 0x00020000)) {
+        output.writeBytes(18, getAddonNameBytes());
       }
       getUnknownFields().writeTo(output);
     }
@@ -13430,6 +13497,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00010000) == 0x00010000)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(17, getHostNameBytes());
+      }
+      if (((bitField0_ & 0x00020000) == 0x00020000)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(18, getAddonNameBytes());
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -13581,6 +13652,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00008000);
         hostName_ = "";
         bitField0_ = (bitField0_ & ~0x00010000);
+        addonName_ = "";
+        bitField0_ = (bitField0_ & ~0x00020000);
         return this;
       }
 
@@ -13677,6 +13750,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00010000;
         }
         result.hostName_ = hostName_;
+        if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
+          to_bitField0_ |= 0x00020000;
+        }
+        result.addonName_ = addonName_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -13750,6 +13827,11 @@ public final class Netmessages {
         if (other.hasHostName()) {
           bitField0_ |= 0x00010000;
           hostName_ = other.hostName_;
+          onChanged();
+        }
+        if (other.hasAddonName()) {
+          bitField0_ |= 0x00020000;
+          addonName_ = other.addonName_;
           onChanged();
         }
         this.mergeUnknownFields(other.getUnknownFields());
@@ -14500,6 +14582,80 @@ public final class Netmessages {
   }
   bitField0_ |= 0x00010000;
         hostName_ = value;
+        onChanged();
+        return this;
+      }
+
+      // optional string addon_name = 18;
+      private java.lang.Object addonName_ = "";
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public boolean hasAddonName() {
+        return ((bitField0_ & 0x00020000) == 0x00020000);
+      }
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public java.lang.String getAddonName() {
+        java.lang.Object ref = addonName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          addonName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public com.google.protobuf.ByteString
+          getAddonNameBytes() {
+        java.lang.Object ref = addonName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          addonName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public Builder setAddonName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00020000;
+        addonName_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public Builder clearAddonName() {
+        bitField0_ = (bitField0_ & ~0x00020000);
+        addonName_ = getDefaultInstance().getAddonName();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string addon_name = 18;</code>
+       */
+      public Builder setAddonNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00020000;
+        addonName_ = value;
         onChanged();
         return this;
       }
@@ -33196,7 +33352,7 @@ public final class Netmessages {
       "CMsg_LoadingProgress\022\020\n\010progress\030\001 \001(\005\":" +
       "\n\032CCLCMsg_SplitPlayerConnect\022\034\n\007convars\030" +
       "\001 \001(\0132\013.CMsg_CVars\"7\n\025CCLCMsg_ClientMess" +
-      "age\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data\030\002 \001(\014\"\342\002\n\022" +
+      "age\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data\030\002 \001(\014\"\366\002\n\022" +
       "CSVCMsg_ServerInfo\022\020\n\010protocol\030\001 \001(\005\022\024\n\014" +
       "server_count\030\002 \001(\005\022\024\n\014is_dedicated\030\003 \001(\010",
       "\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_replay\030\005 \001(\010\022\014\n\004" +
@@ -33205,101 +33361,102 @@ public final class Netmessages {
       "_clients\030\n \001(\005\022\023\n\013max_classes\030\013 \001(\005\022\023\n\013p" +
       "layer_slot\030\014 \001(\005\022\025\n\rtick_interval\030\r \001(\002\022" +
       "\020\n\010game_dir\030\016 \001(\t\022\020\n\010map_name\030\017 \001(\t\022\020\n\010s" +
-      "ky_name\030\020 \001(\t\022\021\n\thost_name\030\021 \001(\t\"\244\001\n\021CSV" +
-      "CMsg_ClassInfo\022\030\n\020create_on_client\030\001 \001(\010" +
-      "\022+\n\007classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo.cl" +
-      "ass_t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017da",
-      "ta_table_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"" +
-      "\"\n\020CSVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021C" +
-      "SVCMsg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005cod" +
-      "ec\030\002 \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_" +
-      "Print\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026" +
-      "\n\016reliable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033" +
-      ".CSVCMsg_Sounds.sounddata_t\032\336\002\n\013sounddat" +
-      "a_t\022\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022" +
-      "\020\n\010origin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013del" +
-      "ay_value\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022",
-      "\024\n\014entity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r" +
-      "\n\005pitch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_nu" +
-      "m\030\013 \001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016spe" +
-      "aker_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023" +
-      "\n\013sound_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010" +
-      "\022\022\n\nis_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch" +
-      "\022\023\n\013sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView" +
-      "\022\024\n\014entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAng" +
-      "le\022\020\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CM" +
-      "sgQAngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005an",
-      "gle\030\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDe" +
-      "cal\022\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_t" +
-      "exture_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005" +
-      "\022\023\n\013model_index\030\004 \001(\005\022\024\n\014low_priority\030\005 " +
-      "\001(\010\"z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001(\016" +
-      "2\030.ESplitScreenMessageType:\027MSG_SPLITSCR" +
-      "EEN_ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_inde" +
-      "x\030\003 \001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006cooki" +
-      "e\030\001 \001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Me" +
-      "nu\022\023\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_valu",
-      "es\030\002 \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end" +
-      "\030\001 \001(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneeds_" +
-      "decoder\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_S" +
-      "endTable.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004ty" +
-      "pe\030\001 \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(" +
-      "\005\022\020\n\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014" +
-      "num_elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n" +
-      "\nhigh_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025" +
-      "CSVCMsg_GameEventList\0228\n\013descriptors\030\001 \003" +
-      "(\0132#.CSVCMsg_GameEventList.descriptor_t\032",
-      "#\n\005key_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014" +
-      "descriptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 " +
-      "\001(\t\022*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventLis" +
-      "t.key_t\"\254\001\n\026CSVCMsg_PacketEntities\022\023\n\013ma" +
-      "x_entries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005" +
-      "\022\020\n\010is_delta\030\003 \001(\010\022\027\n\017update_baseline\030\004 " +
-      "\001(\010\022\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(" +
-      "\005\022\023\n\013entity_data\030\007 \001(\014\"R\n\024CSVCMsg_TempEn" +
-      "tities\022\020\n\010reliable\030\001 \001(\010\022\023\n\013num_entries\030" +
-      "\002 \001(\005\022\023\n\013entity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg_C",
-      "reateStringTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_en" +
-      "tries\030\002 \001(\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024user" +
-      "_data_fixed_size\030\004 \001(\010\022\026\n\016user_data_size" +
-      "\030\005 \001(\005\022\033\n\023user_data_size_bits\030\006 \001(\005\022\r\n\005f" +
-      "lags\030\007 \001(\005\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSVCM" +
-      "sg_UpdateStringTable\022\020\n\010table_id\030\001 \001(\005\022\033" +
-      "\n\023num_changed_entries\030\002 \001(\005\022\023\n\013string_da" +
-      "ta\030\003 \001(\014\"\252\001\n\021CSVCMsg_VoiceData\022\016\n\006client" +
-      "\030\001 \001(\005\022\021\n\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022" +
-      "\024\n\014audible_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(",
-      "\014\022:\n\006format\030\006 \001(\0162\022.VoiceDataFormat_t:\026V" +
-      "OICEDATA_FORMAT_STEAM\"<\n\026CSVCMsg_PacketR" +
-      "eliable\022\014\n\004tick\030\001 \001(\005\022\024\n\014messagessize\030\002 " +
-      "\001(\005*\237\001\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net" +
-      "_Disconnect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_Split" +
-      "ScreenUser\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_String" +
-      "Cmd\020\005\022\021\n\rnet_SetConVar\020\006\022\023\n\017net_SignonSt" +
-      "ate\020\007*\352\001\n\014CLC_Messages\022\022\n\016clc_ClientInfo" +
-      "\020\010\022\014\n\010clc_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017c" +
-      "lc_BaselineAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030",
-      "\n\024clc_RespondCvarValue\020\r\022\024\n\020clc_FileCRCC" +
-      "heck\020\016\022\027\n\023clc_LoadingProgress\020\017\022\032\n\026clc_S" +
-      "plitPlayerConnect\020\020\022\025\n\021clc_ClientMessage" +
-      "\020\021*L\n\021VoiceDataFormat_t\022\032\n\026VOICEDATA_FOR" +
-      "MAT_STEAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001" +
-      "*\211\004\n\014SVC_Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n" +
-      "\rsvc_SendTable\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014s" +
-      "vc_SetPause\020\013\022\031\n\025svc_CreateStringTable\020\014" +
-      "\022\031\n\025svc_UpdateStringTable\020\r\022\021\n\rsvc_Voice" +
-      "Init\020\016\022\021\n\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020",
-      "\022\016\n\nsvc_Sounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc" +
-      "_FixAngle\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014s" +
-      "vc_BSPDecal\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017sv" +
-      "c_UserMessage\020\027\022\025\n\021svc_EntityMessage\020\030\022\021" +
-      "\n\rsvc_GameEvent\020\031\022\026\n\022svc_PacketEntities\020" +
-      "\032\022\024\n\020svc_TempEntities\020\033\022\020\n\014svc_Prefetch\020" +
-      "\034\022\014\n\010svc_Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024" +
-      "\n\020svc_GetCvarValue\020\037\022\026\n\022svc_PacketReliab" +
-      "le\020 *V\n\027ESplitScreenMessageType\022\033\n\027MSG_S" +
-      "PLITSCREEN_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREEN_",
-      "REMOVEUSER\020\001B\021\n\017com.dota2.proto"
+      "ky_name\030\020 \001(\t\022\021\n\thost_name\030\021 \001(\t\022\022\n\naddo" +
+      "n_name\030\022 \001(\t\"\244\001\n\021CSVCMsg_ClassInfo\022\030\n\020cr" +
+      "eate_on_client\030\001 \001(\010\022+\n\007classes\030\002 \003(\0132\032." +
+      "CSVCMsg_ClassInfo.class_t\032H\n\007class_t\022\020\n\010",
+      "class_id\030\001 \001(\005\022\027\n\017data_table_name\030\002 \001(\t\022" +
+      "\022\n\nclass_name\030\003 \001(\t\"\"\n\020CSVCMsg_SetPause\022" +
+      "\016\n\006paused\030\001 \001(\010\"G\n\021CSVCMsg_VoiceInit\022\017\n\007" +
+      "quality\030\001 \001(\005\022\r\n\005codec\030\002 \001(\t\022\022\n\007version\030" +
+      "\003 \001(\005:\0010\"\035\n\rCSVCMsg_Print\022\014\n\004text\030\001 \001(\t\"" +
+      "\266\003\n\016CSVCMsg_Sounds\022\026\n\016reliable_sound\030\001 \001" +
+      "(\010\022+\n\006sounds\030\002 \003(\0132\033.CSVCMsg_Sounds.soun" +
+      "ddata_t\032\336\002\n\013sounddata_t\022\020\n\010origin_x\030\001 \001(" +
+      "\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010origin_z\030\003 \001(\021\022\016\n" +
+      "\006volume\030\004 \001(\r\022\023\n\013delay_value\030\005 \001(\002\022\027\n\017se",
+      "quence_number\030\006 \001(\005\022\024\n\014entity_index\030\007 \001(" +
+      "\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pitch\030\t \001(\005\022\r\n\005fla" +
+      "gs\030\n \001(\005\022\021\n\tsound_num\030\013 \001(\r\022\030\n\020sound_num" +
+      "_handle\030\014 \001(\007\022\026\n\016speaker_entity\030\r \001(\005\022\023\n" +
+      "\013random_seed\030\016 \001(\005\022\023\n\013sound_level\030\017 \001(\005\022" +
+      "\023\n\013is_sentence\030\020 \001(\010\022\022\n\nis_ambient\030\021 \001(\010" +
+      "\"\'\n\020CSVCMsg_Prefetch\022\023\n\013sound_index\030\001 \001(" +
+      "\005\"\'\n\017CSVCMsg_SetView\022\024\n\014entity_index\030\001 \001" +
+      "(\005\"@\n\020CSVCMsg_FixAngle\022\020\n\010relative\030\001 \001(\010" +
+      "\022\032\n\005angle\030\002 \001(\0132\013.CMsgQAngle\"4\n\026CSVCMsg_",
+      "CrosshairAngle\022\032\n\005angle\030\001 \001(\0132\013.CMsgQAng" +
+      "le\"\212\001\n\020CSVCMsg_BSPDecal\022\030\n\003pos\030\001 \001(\0132\013.C" +
+      "MsgVector\022\033\n\023decal_texture_index\030\002 \001(\005\022\024" +
+      "\n\014entity_index\030\003 \001(\005\022\023\n\013model_index\030\004 \001(" +
+      "\005\022\024\n\014low_priority\030\005 \001(\010\"z\n\023CSVCMsg_Split" +
+      "Screen\022?\n\004type\030\001 \001(\0162\030.ESplitScreenMessa" +
+      "geType:\027MSG_SPLITSCREEN_ADDUSER\022\014\n\004slot\030" +
+      "\002 \001(\005\022\024\n\014player_index\030\003 \001(\005\"9\n\024CSVCMsg_G" +
+      "etCvarValue\022\016\n\006cookie\030\001 \001(\005\022\021\n\tcvar_name" +
+      "\030\002 \001(\t\"<\n\014CSVCMsg_Menu\022\023\n\013dialog_type\030\001 ",
+      "\001(\005\022\027\n\017menu_key_values\030\002 \001(\014\"\260\002\n\021CSVCMsg" +
+      "_SendTable\022\016\n\006is_end\030\001 \001(\010\022\026\n\016net_table_" +
+      "name\030\002 \001(\t\022\025\n\rneeds_decoder\030\003 \001(\010\022,\n\005pro" +
+      "ps\030\004 \003(\0132\035.CSVCMsg_SendTable.sendprop_t\032" +
+      "\255\001\n\nsendprop_t\022\014\n\004type\030\001 \001(\005\022\020\n\010var_name" +
+      "\030\002 \001(\t\022\r\n\005flags\030\003 \001(\005\022\020\n\010priority\030\004 \001(\005\022" +
+      "\017\n\007dt_name\030\005 \001(\t\022\024\n\014num_elements\030\006 \001(\005\022\021" +
+      "\n\tlow_value\030\007 \001(\002\022\022\n\nhigh_value\030\010 \001(\002\022\020\n" +
+      "\010num_bits\030\t \001(\005\"\321\001\n\025CSVCMsg_GameEventLis" +
+      "t\0228\n\013descriptors\030\001 \003(\0132#.CSVCMsg_GameEve",
+      "ntList.descriptor_t\032#\n\005key_t\022\014\n\004type\030\001 \001" +
+      "(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014descriptor_t\022\017\n\007even" +
+      "tid\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022*\n\004keys\030\003 \003(\0132\034." +
+      "CSVCMsg_GameEventList.key_t\"\254\001\n\026CSVCMsg_" +
+      "PacketEntities\022\023\n\013max_entries\030\001 \001(\005\022\027\n\017u" +
+      "pdated_entries\030\002 \001(\005\022\020\n\010is_delta\030\003 \001(\010\022\027" +
+      "\n\017update_baseline\030\004 \001(\010\022\020\n\010baseline\030\005 \001(" +
+      "\005\022\022\n\ndelta_from\030\006 \001(\005\022\023\n\013entity_data\030\007 \001" +
+      "(\014\"R\n\024CSVCMsg_TempEntities\022\020\n\010reliable\030\001" +
+      " \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013entity_data",
+      "\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStringTable\022\014\n\004" +
+      "name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001(\005\022\023\n\013num_e" +
+      "ntries\030\003 \001(\005\022\034\n\024user_data_fixed_size\030\004 \001" +
+      "(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n\023user_data_" +
+      "size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(\005\022\023\n\013string" +
+      "_data\030\010 \001(\014\"_\n\031CSVCMsg_UpdateStringTable" +
+      "\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_changed_entrie" +
+      "s\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"\252\001\n\021CSVCMsg" +
+      "_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n\tproximity\030" +
+      "\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audible_mask\030\004 \001(",
+      "\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006format\030\006 \001(\0162\022." +
+      "VoiceDataFormat_t:\026VOICEDATA_FORMAT_STEA" +
+      "M\"<\n\026CSVCMsg_PacketReliable\022\014\n\004tick\030\001 \001(" +
+      "\005\022\024\n\014messagessize\030\002 \001(\005*\237\001\n\014NET_Messages" +
+      "\022\013\n\007net_NOP\020\000\022\022\n\016net_Disconnect\020\001\022\014\n\010net" +
+      "_File\020\002\022\027\n\023net_SplitScreenUser\020\003\022\014\n\010net_" +
+      "Tick\020\004\022\021\n\rnet_StringCmd\020\005\022\021\n\rnet_SetConV" +
+      "ar\020\006\022\023\n\017net_SignonState\020\007*\352\001\n\014CLC_Messag" +
+      "es\022\022\n\016clc_ClientInfo\020\010\022\014\n\010clc_Move\020\t\022\021\n\r" +
+      "clc_VoiceData\020\n\022\023\n\017clc_BaselineAck\020\013\022\024\n\020",
+      "clc_ListenEvents\020\014\022\030\n\024clc_RespondCvarVal" +
+      "ue\020\r\022\024\n\020clc_FileCRCCheck\020\016\022\027\n\023clc_Loadin" +
+      "gProgress\020\017\022\032\n\026clc_SplitPlayerConnect\020\020\022" +
+      "\025\n\021clc_ClientMessage\020\021*L\n\021VoiceDataForma" +
+      "t_t\022\032\n\026VOICEDATA_FORMAT_STEAM\020\000\022\033\n\027VOICE" +
+      "DATA_FORMAT_ENGINE\020\001*\211\004\n\014SVC_Messages\022\022\n" +
+      "\016svc_ServerInfo\020\010\022\021\n\rsvc_SendTable\020\t\022\021\n\r" +
+      "svc_ClassInfo\020\n\022\020\n\014svc_SetPause\020\013\022\031\n\025svc" +
+      "_CreateStringTable\020\014\022\031\n\025svc_UpdateString" +
+      "Table\020\r\022\021\n\rsvc_VoiceInit\020\016\022\021\n\rsvc_VoiceD",
+      "ata\020\017\022\r\n\tsvc_Print\020\020\022\016\n\nsvc_Sounds\020\021\022\017\n\013" +
+      "svc_SetView\020\022\022\020\n\014svc_FixAngle\020\023\022\026\n\022svc_C" +
+      "rosshairAngle\020\024\022\020\n\014svc_BSPDecal\020\025\022\023\n\017svc" +
+      "_SplitScreen\020\026\022\023\n\017svc_UserMessage\020\027\022\025\n\021s" +
+      "vc_EntityMessage\020\030\022\021\n\rsvc_GameEvent\020\031\022\026\n" +
+      "\022svc_PacketEntities\020\032\022\024\n\020svc_TempEntitie" +
+      "s\020\033\022\020\n\014svc_Prefetch\020\034\022\014\n\010svc_Menu\020\035\022\025\n\021s" +
+      "vc_GameEventList\020\036\022\024\n\020svc_GetCvarValue\020\037" +
+      "\022\026\n\022svc_PacketReliable\020 *V\n\027ESplitScreen" +
+      "MessageType\022\033\n\027MSG_SPLITSCREEN_ADDUSER\020\000",
+      "\022\036\n\032MSG_SPLITSCREEN_REMOVEUSER\020\001B\021\n\017com." +
+      "dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -33431,7 +33588,7 @@ public final class Netmessages {
           internal_static_CSVCMsg_ServerInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_ServerInfo_descriptor,
-              new java.lang.String[] { "Protocol", "ServerCount", "IsDedicated", "IsHltv", "IsReplay", "COs", "MapCrc", "ClientCrc", "StringTableCrc", "MaxClients", "MaxClasses", "PlayerSlot", "TickInterval", "GameDir", "MapName", "SkyName", "HostName", });
+              new java.lang.String[] { "Protocol", "ServerCount", "IsDedicated", "IsHltv", "IsReplay", "COs", "MapCrc", "ClientCrc", "StringTableCrc", "MaxClients", "MaxClasses", "PlayerSlot", "TickInterval", "GameDir", "MapName", "SkyName", "HostName", "AddonName", });
           internal_static_CSVCMsg_ClassInfo_descriptor =
             getDescriptor().getMessageTypes().get(20);
           internal_static_CSVCMsg_ClassInfo_fieldAccessorTable = new
