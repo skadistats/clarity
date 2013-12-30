@@ -35,8 +35,8 @@ public class Test {
         log.info("prologue applied in {}s", tPrologue / 1000.0);
         
         tStart = System.currentTimeMillis();
-        
-        for (int c = 0; c < 5; c++) {
+
+        for (int c = 0; c < 20; c++) {
             long tSkip = System.currentTimeMillis();
             int t = (int)(Math.random() * 90000);
             int v = 0;

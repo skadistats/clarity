@@ -11,7 +11,6 @@ import clarity.parser.HandlerHelper;
 import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 import com.dota2.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
 
 public enum StringTableApplier {
 
