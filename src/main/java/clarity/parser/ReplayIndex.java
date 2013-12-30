@@ -142,6 +142,10 @@ public class ReplayIndex {
         return index.size();
     }
     
+    public int getLastTick() {
+        return tick;
+    }
+    
     private int indexForTick(List<Peek> list, int tick) {
         int a = -1; // lower bound 
         int b = list.size(); // upper bound

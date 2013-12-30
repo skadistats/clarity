@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
+import clarity.model.PacketType;
 import clarity.parser.Peek;
 import clarity.parser.ReplayFile;
 import clarity.parser.ReplayIndex;
@@ -36,15 +37,14 @@ public class Test {
         
         tStart = System.currentTimeMillis();
 
-//        for (Iterator<Peek> i = idx.matchIteratorForTicks(0, 0, PacketType.DELTA); i.hasNext();) {
+//        for (Iterator<Peek> i = idx.matchIteratorForTicks(0, idx.getLastTick(), PacketType.DELTA); i.hasNext();) {
 //            Peek p = i.next();
 //            p.apply(match);
 //        }        
-//        
 
         for (int c = 0; c < 100; c++) {
             long tSkip = System.currentTimeMillis();
-            int t = (int)(Math.random() * 90000);
+            int t = (int)(Math.random() * idx.getLastTick());
             int v = 0;
             for (Iterator<Peek> i = idx.skipToIterator(t); i.hasNext();) {
                 Peek p = i.next();
