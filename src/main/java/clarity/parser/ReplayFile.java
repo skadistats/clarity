@@ -12,7 +12,11 @@ public class ReplayFile {
         s.setSizeLimit(Integer.MAX_VALUE);
         ensureHeader(s);
         s.skipRawBytes(4); // offset of epilogue
-        return new ReplayIndex(s);
+        return new ReplayIndex(
+            new DemoInputStreamIterator(
+                new DemoInputStream(s)
+            )
+        );
     }
 
     private static void ensureHeader(CodedInputStream s) throws IOException {

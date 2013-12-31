@@ -31,7 +31,7 @@ public class Test {
         log.info("index built in {}s", tIndex / 1000.0);
 
         tStart = System.currentTimeMillis();
-        Match match = new Match(idx);
+        Match match = new Match(idx.prologueIterator());
         long tPrologue = System.currentTimeMillis() - tStart;
         log.info("prologue applied in {}s", tPrologue / 1000.0);
         

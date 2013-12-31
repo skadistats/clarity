@@ -8,7 +8,6 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import clarity.model.GameRulesStateType;
 import clarity.parser.Peek;
-import clarity.parser.ReplayIndex;
 
 public class Match {
 
@@ -22,8 +21,6 @@ public class Match {
         .appendMillis3Digit()
         .toFormatter();
     
-    private final ReplayIndex idx;
-    
     private final DTClassCollection dtClasses = new DTClassCollection();
     private final StringTableCollection stringTables = new StringTableCollection();
     private final EntityCollection entities = new EntityCollection();
@@ -33,16 +30,13 @@ public class Match {
     
     private GameRulesStateType state = GameRulesStateType.WAITING_FOR_LOADERS; 
     private int tick = 0;
-    private int startTick = 0;
     private float tickInterval = 1.0f/30.0f;
     
-    public Match(ReplayIndex idx) {
-        this.idx = idx;
-        for (Iterator<Peek> i = idx.prologueIterator(); i.hasNext();) {
-            Peek p = i.next();
+    public Match(Iterator<Peek> prologueIterator) {
+        for (; prologueIterator.hasNext();) {
+            Peek p = prologueIterator.next();
             p.apply(this);
         }
-        startTick = idx.get(GameRulesStateType.PLAYING.findOnIndex(idx)).getTick();
     }
 
     public DTClassCollection getDtClasses() {
@@ -81,16 +75,8 @@ public class Match {
         return Duration.millis((long)(1000L * (tick) * tickInterval));
     }
     
-    public Duration getGameTime() {
-        return Duration.millis((long)(1000L * (tick -startTick) * tickInterval));
-    }
-
     public String getReplayTimeAsString() {
         return GAMETIME_FORMATTER.print(getReplayTime().toPeriod());
-    }
-
-    public String getGameTimeAsString() {
-        return GAMETIME_FORMATTER.print(getGameTime().toPeriod());
     }
 
     public float getTickInterval() {

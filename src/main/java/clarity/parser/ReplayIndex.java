@@ -16,7 +16,6 @@ import com.dota2.proto.Demo.CDemoSyncTick;
 import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 
 public class ReplayIndex {
@@ -27,12 +26,11 @@ public class ReplayIndex {
     private int lastTick = 0; // the number of ticks in this replay
     private int syncIdx = 0; // the index of the sync packet
     
-    public ReplayIndex(CodedInputStream s) throws IOException {
-        DemoInputStream ds = new DemoInputStream(s);
+    public ReplayIndex(DemoInputStreamIterator iter) throws IOException {
         int skew = 0;
         boolean sync = false;
-        Peek p;
-        while ((p = ds.read()) != null) {
+        while (iter.hasNext()) {
+            Peek p = iter.next();
             if (sync) {
                 skew = p.getTick() - p.getPeekTick();
                 if (p.getMessage() instanceof CSVCMsg_PacketEntities) {
