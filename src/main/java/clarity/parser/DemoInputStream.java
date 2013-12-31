@@ -47,9 +47,7 @@ public class DemoInputStream {
     private int n = -1;
     private int tick = 0;
     private int peekTick = 0;
-    private int kind = 0;
     private boolean full = false;
-    private GeneratedMessage message;
     private State state = State.TOP;
 
     public DemoInputStream(CodedInputStream s) {
@@ -60,7 +58,7 @@ public class DemoInputStream {
         while (!s.isAtEnd()) {
             switch (state) {
                 case TOP:
-                    kind = s.readRawVarint32();
+                    int kind = s.readRawVarint32();
                     boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) != 0;
                     kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
                     peekTick = s.readRawVarint32();
@@ -69,7 +67,7 @@ public class DemoInputStream {
                     if (isCompressed) {
                         data = Snappy.uncompress(data);
                     }
-                    message = parseTopLevel(kind, data);
+                    GeneratedMessage message = parseTopLevel(kind, data);
                     if (message == null) {
                         log.warn("unknown top level message of kind {}", kind);
                         continue;
