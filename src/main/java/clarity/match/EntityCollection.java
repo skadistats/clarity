@@ -5,7 +5,11 @@ import clarity.model.Entity;
 import clarity.model.Handle;
 import clarity.model.PVS;
 
-public class EntityCollection {
+import com.rits.cloning.Cloner;
+
+public class EntityCollection implements Cloneable {
+
+    private static final Cloner CLONER = new Cloner();
 
     private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
 
@@ -24,6 +28,11 @@ public class EntityCollection {
     
     public void remove(int index) {
         entities[index] = null;
+    }
+    
+    @Override
+    public EntityCollection clone() {
+       return CLONER.deepClone(this);
     }
 
 }

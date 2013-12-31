@@ -5,7 +5,11 @@ import java.util.List;
 
 import clarity.model.GameEvent;
 
-public class GameEventCollection {
+import com.rits.cloning.Cloner;
+
+public class GameEventCollection implements Cloneable {
+    
+    private static final Cloner CLONER = new Cloner();
     
     private final List<GameEvent> gameEvents = new ArrayList<GameEvent>();
 
@@ -15,6 +19,11 @@ public class GameEventCollection {
     
     public void clear() {
         gameEvents.clear();
+    }
+    
+    @Override
+    public GameEventCollection clone() {
+       return CLONER.deepClone(this);
     }
     
 }

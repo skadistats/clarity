@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+import com.rits.cloning.Cloner;
 
-public class ModifierCollection {
+public class ModifierCollection implements Cloneable {
+    
+    private static final Cloner CLONER = new Cloner();
     
     private final List<Map<Integer, CDOTAModifierBuffTableEntry>> modifiers = new ArrayList<Map<Integer, CDOTAModifierBuffTableEntry>>(2048);
 
@@ -37,5 +40,11 @@ public class ModifierCollection {
             return null;
         }
     }
+    
+    @Override
+    public ModifierCollection clone() {
+       return CLONER.deepClone(this);
+    }
+    
 
 }

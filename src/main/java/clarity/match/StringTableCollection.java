@@ -7,8 +7,12 @@ import java.util.TreeMap;
 
 import clarity.model.StringTable;
 
-public class StringTableCollection {
+import com.rits.cloning.Cloner;
 
+public class StringTableCollection implements Cloneable {
+
+    private static final Cloner CLONER = new Cloner();
+    
     private final List<StringTable> byId = new ArrayList<StringTable>();
     private final Map<String, StringTable> byName = new TreeMap<String, StringTable>();
 
@@ -24,5 +28,10 @@ public class StringTableCollection {
     public StringTable forId(int id) {
         return byId.get(id);
     }
-
+    
+    @Override
+    public StringTableCollection clone() {
+       return CLONER.deepClone(this);
+    }
+    
 }

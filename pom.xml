@@ -42,5 +42,10 @@
 			<artifactId>guava-collections</artifactId>
 			<version>r03</version>
 		</dependency>
+		<dependency>
+			<groupId>uk.com.robust-it</groupId>
+			<artifactId>cloning</artifactId>
+			<version>1.9.0</version>
+		</dependency>
 	</dependencies>
 </project>

@@ -1,3 +1,4 @@
+
 package clarity.match;
 
 import java.util.Iterator;
@@ -21,46 +22,63 @@ public class Match {
         .appendMillis3Digit()
         .toFormatter();
     
+    // info from the prologue
     private final DTClassCollection dtClasses = new DTClassCollection();
-    private final StringTableCollection stringTables = new StringTableCollection();
-    private final EntityCollection entities = new EntityCollection();
     private final GameEventDescriptorCollection gameEventDescriptors = new GameEventDescriptorCollection();
-    private final GameEventCollection gameEvents = new GameEventCollection();
-    private final ModifierCollection modifiers = new ModifierCollection();
-    
+    private final StringTableCollection prologueStringTables;
+    private float tickInterval = 1.0f/30.0f;
+
+    // current information
+    private Snapshot current = new Snapshot();
     private GameRulesStateType state = GameRulesStateType.WAITING_FOR_LOADERS; 
     private int tick = 0;
-    private float tickInterval = 1.0f/30.0f;
     
     public Match(Iterator<Peek> prologueIterator) {
-        for (; prologueIterator.hasNext();) {
-            Peek p = prologueIterator.next();
+        apply(prologueIterator);
+        prologueStringTables = current.getStringTables().clone();
+    }
+    
+    public int apply(Iterator<Peek> peekIterator) {
+        int v = -1;
+        for (; peekIterator.hasNext(); v++) {
+            Peek p = peekIterator.next();
             p.apply(this);
         }
+        return v + 1;
     }
-
+    
+    public void reset() {
+        current = new Snapshot(prologueStringTables);
+        tick = 0;
+        state = GameRulesStateType.WAITING_FOR_LOADERS;        
+    }
+    
+    public Snapshot getSnapshot() {
+        return current.clone();
+    }
+    
     public DTClassCollection getDtClasses() {
         return dtClasses;
     }
-
-    public StringTableCollection getStringTables() {
-        return stringTables;
-    }
-
-    public EntityCollection getEntities() {
-        return entities;
-    }
-
+    
     public GameEventDescriptorCollection getGameEventDescriptors() {
         return gameEventDescriptors;
     }
 
+    public StringTableCollection getStringTables() {
+        return current.getStringTables();
+    }
+
+    public EntityCollection getEntities() {
+        return current.getEntities();
+    }
+
     public GameEventCollection getGameEvents() {
-        return gameEvents;
+        return current.getGameEvents();
     }
     
     public ModifierCollection getModifiers() {
-        return modifiers;
+        return current.getModifiers();
     }
 
     public int getTick() {
@@ -72,7 +90,7 @@ public class Match {
     }
     
     public Duration getReplayTime() {
-        return Duration.millis((long)(1000L * (tick) * tickInterval));
+        return Duration.millis((long)(1000L * tick * tickInterval));
     }
     
     public String getReplayTimeAsString() {

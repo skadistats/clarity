@@ -1,8 +1,12 @@
 package clarity.model;
 
+import com.rits.cloning.Cloner;
 
 
-public class Entity {
+
+public class Entity implements Cloneable {
+    
+    private static final Cloner CLONER = new Cloner();
     
     private final int index;
     private final int serial;
@@ -40,6 +44,11 @@ public class Entity {
 
     public Object[] getState() {
         return state;
+    }
+    
+    @Override
+    public Entity clone() {
+       return CLONER.deepClone(this);
     }
 
     @Override
