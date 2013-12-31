@@ -12,7 +12,7 @@ public class Peek {
     private static final Logger log = LoggerFactory.getLogger(Peek.class);
     
     private final int id;
-    private final int tick;
+    private int tick;
     private final int peekTick;
     private final boolean full;
     private final GeneratedMessage message;
@@ -40,9 +40,13 @@ public class Peek {
     public boolean isFull() {
         return full;
     }
-
+    
     public GeneratedMessage getMessage() {
         return message;
+    }
+
+    public void applySkew(int skew) {
+        tick -= skew;
     }
     
     public void apply(Match match) {
