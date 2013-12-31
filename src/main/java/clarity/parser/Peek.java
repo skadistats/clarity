@@ -47,8 +47,12 @@ public class Peek {
     
     public void apply(Match match) {
         match.setTick(tick);
-        log.trace("id: {}, peekTick: {}, tick: {}, full: {}, mesageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
+        trace();
         HandlerRegistry.apply(tick, message, match);
+    }
+    
+    public void trace() {
+        log.trace("id: {}, peekTick: {}, tick: {}, full: {}, mesageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
     }
 
     @Override
