@@ -23,6 +23,7 @@ import clarity.parser.handler.UserMsgCreateLinearProjectileHandler;
 import clarity.parser.handler.UserMsgDestroyLinearProjectileHandler;
 import clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler;
 import clarity.parser.handler.UserMsgGamerulesStateChangedHandler;
+import clarity.parser.handler.UserMsgParticleManagerHandler;
 
 import com.dota2.proto.Demo.CDemoClassInfo;
 import com.dota2.proto.Demo.CDemoFileHeader;
@@ -31,6 +32,7 @@ import com.dota2.proto.Demo.CDemoSyncTick;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile;
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles;
+import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_ParticleManager;
 import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
@@ -65,10 +67,12 @@ public class HandlerRegistry {
         H.put(CSVCMsg_PacketEntities.class, new SvcPacketEntitiesHandler());
         H.put(CSVCMsg_UpdateStringTable.class, new SvcUpdateStringTableHandler());
         H.put(CSVCMsg_GameEvent.class, new SvcGameEventHandler());
+
+        H.put(CDOTA_UM_GamerulesStateChanged.class, new UserMsgGamerulesStateChangedHandler());
         H.put(CDOTAUserMsg_CreateLinearProjectile.class, new UserMsgCreateLinearProjectileHandler());
         H.put(CDOTAUserMsg_DestroyLinearProjectile.class, new UserMsgDestroyLinearProjectileHandler());
         H.put(CDOTAUserMsg_DodgeTrackingProjectiles.class, new UserMsgDodgeTrackingProjectilesHandler());
-        H.put(CDOTA_UM_GamerulesStateChanged.class, new UserMsgGamerulesStateChangedHandler());
+        H.put(CDOTAUserMsg_ParticleManager.class, new UserMsgParticleManagerHandler());
 
     }
 
