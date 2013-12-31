@@ -10,8 +10,10 @@ import org.slf4j.LoggerFactory;
 
 import clarity.model.PacketType;
 
+import com.dota2.proto.Demo.CDemoStop;
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoSyncTick;
+import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.CodedInputStream;
@@ -33,7 +35,9 @@ public class ReplayIndex {
         while ((p = ds.read()) != null) {
             if (sync) {
                 skew = p.getTick() - p.getPeekTick();
-                sync = false;
+                if (p.getMessage() instanceof CSVCMsg_PacketEntities) {
+                    sync = false;
+                }
             }
             p.applySkew(skew);
             lastTick = p.getTick();
@@ -41,8 +45,10 @@ public class ReplayIndex {
             if (p.getMessage() instanceof CDemoSyncTick) {
                 syncIdx = p.getId();
                 sync = true;
+            } else if (p.getMessage() instanceof CDemoStop) {
+                break;
             }
-        } 
+        }
     }
         
     public Peek get(int i) {
