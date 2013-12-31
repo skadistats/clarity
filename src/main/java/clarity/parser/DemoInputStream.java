@@ -1,6 +1,7 @@
 package clarity.parser;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,6 +50,10 @@ public class DemoInputStream {
     private int peekTick = 0;
     private boolean full = false;
     private State state = State.TOP;
+
+    public DemoInputStream(InputStream s) {
+        this(CodedInputStream.newInstance(s));
+    }
 
     public DemoInputStream(CodedInputStream s) {
         this.s = s;
