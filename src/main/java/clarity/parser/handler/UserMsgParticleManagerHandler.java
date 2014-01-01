@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import clarity.match.Match;
 import clarity.model.Entity;
+import clarity.model.ParticleAttachmentType;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
 
@@ -121,7 +122,7 @@ public class UserMsgParticleManagerHandler implements Handler<CDOTAUserMsg_Parti
             entityHandle,
             parent == null ? "NOT_FOUND" : parent.getDtClass().getDtName(),
             message.getUpdateParticleEnt().getControlPoint(),
-            message.getUpdateParticleEnt().getAttachType(),
+            ParticleAttachmentType.forId(message.getUpdateParticleEnt().getAttachType()),
             message.getUpdateParticleEnt().getAttachment(),
             message.getUpdateParticleEnt().getIncludeWearables()
         );

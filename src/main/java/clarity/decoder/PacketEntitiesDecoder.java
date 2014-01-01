@@ -2,10 +2,14 @@ package clarity.decoder;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import clarity.match.DTClassCollection;
 import clarity.match.EntityCollection;
 import clarity.model.DTClass;
 import clarity.model.Entity;
+import clarity.model.Handle;
 import clarity.model.PVS;
 import clarity.model.ReceiveProp;
 import clarity.model.StringTable;
@@ -13,6 +17,8 @@ import clarity.model.StringTable;
 import com.google.protobuf.ByteString;
 
 public class PacketEntitiesDecoder {
+    
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final DTClassCollection dtClasses;
     private final StringTable baseline;
@@ -58,6 +64,13 @@ public class PacketEntitiesDecoder {
             state = decodeBaseProperties(cls);
             decodeProperties(state, cls, propList);
             entities.add(index, serial, cls, pvs, state);
+            log.debug("          {} [index={}, serial={}, handle={}, type={}]",
+                pvs,
+                index,
+                serial,
+                Handle.forIndexAndSerial(index, serial),
+                cls.getDtName()
+            );
             break;
         case PRESERVE:
             entity = entities.getByIndex(index);
@@ -70,6 +83,13 @@ public class PacketEntitiesDecoder {
         case LEAVE:
             entity = entities.getByIndex(index);
             entity.setPvs(pvs);
+            log.debug("          {} [index={}, serial={}, handle={}, type={}]",
+                pvs,
+                index,
+                entity.getSerial(),
+                Handle.forIndexAndSerial(index, entity.getSerial()),
+                entity.getDtClass().getDtName()
+            );
             break;
         case LEAVE_AND_DELETE:
             entities.remove(index);
