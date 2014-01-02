@@ -65,6 +65,10 @@ public class SendProp implements Prop {
     public int getNumElements() {
         return sp.getNumElements();
     }
+    
+    public int getFlags() {
+        return sp.getFlags();
+    }
 
     @Override
     public String toString() {

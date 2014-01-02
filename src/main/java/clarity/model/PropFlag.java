@@ -32,5 +32,21 @@ public enum PropFlag {
     public int getFlag() {
         return flag;
     }
+    
+    public static String dump(int flag) {
+        StringBuffer buf = new StringBuffer();
+        for (PropFlag f : values()) {
+            if ((flag & f.getFlag()) == 0) {
+                continue;
+            }
+            if (buf.length() != 0) {
+                buf.append(" | ");
+            }
+            buf.append(f);
+        }
+        return buf.toString();
+        
+        
+    }
 
 }

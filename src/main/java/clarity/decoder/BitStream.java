@@ -92,7 +92,7 @@ public class BitStream {
 
         int min = Math.max(0, (pos - 32) / 32);
         int max = Math.min(words.length - 1, (pos + 63) / 32);
-        for (int i = min; i < max; i++) {
+        for (int i = min; i <= max; i++) {
             buf.append(new StringBuffer(String.format("%32s", Integer.toBinaryString(words[i])).replace(' ', '0')).reverse());
         }
         buf.insert(pos - min * 32, '*');

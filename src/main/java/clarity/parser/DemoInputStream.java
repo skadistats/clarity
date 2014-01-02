@@ -26,6 +26,7 @@ import com.dota2.proto.Netmessages.CSVCMsg_GameEventList;
 import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_ServerInfo;
+import com.dota2.proto.Netmessages.CSVCMsg_TempEntities;
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
 import com.dota2.proto.Netmessages.NET_Messages;
 import com.dota2.proto.Netmessages.SVC_Messages;
@@ -199,8 +200,8 @@ public class DemoInputStream {
 //            return CSVCMsg_SetView.parseFrom(data);
 //        case SVC_Messages.svc_Sounds_VALUE:
 //            return CSVCMsg_Sounds.parseFrom(data);
-//        case SVC_Messages.svc_TempEntities_VALUE:
-//            return CSVCMsg_TempEntities.parseFrom(data);
+        case SVC_Messages.svc_TempEntities_VALUE:
+            return CSVCMsg_TempEntities.parseFrom(data);
         case SVC_Messages.svc_UpdateStringTable_VALUE:
             return CSVCMsg_UpdateStringTable.parseFrom(data);
         case SVC_Messages.svc_UserMessage_VALUE:

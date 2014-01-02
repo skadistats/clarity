@@ -27,5 +27,7 @@ public interface Prop {
     int getNumElements();
 
     SendProp getTemplate();
+    
+    int getFlags();
 
 }

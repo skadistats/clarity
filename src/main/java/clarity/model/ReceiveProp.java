@@ -61,6 +61,10 @@ public class ReceiveProp implements Prop {
     public int getNumElements() {
         return sendProp.getNumElements();
     }
+    
+    public int getFlags() {
+        return sendProp.getFlags();
+    }
 
     @Override
     public String toString() {

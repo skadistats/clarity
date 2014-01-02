@@ -9,10 +9,22 @@ import clarity.model.PropFlag;
 
 public class FloatDecoder implements PropDecoder<Float> {
 
+    enum FloatType {
+        MP_NONE,
+        MP_LOW_PRECISION,
+        MP_INTEGRAL
+    };
+    
     @Override
     public Float decode(EntityBitStream stream, Prop prop) {
         if (prop.isFlagSet(PropFlag.COORD)) {
             return decodeCoord(stream);
+        } else if (prop.isFlagSet(PropFlag.COORD_MP)) {
+            return decodeFloatCoordMp(stream, FloatType.MP_NONE);
+        } else if (prop.isFlagSet(PropFlag.COORD_MP_LOW_PRECISION)) {
+            return decodeFloatCoordMp(stream, FloatType.MP_LOW_PRECISION);
+        } else if (prop.isFlagSet(PropFlag.COORD_MP_INTEGRAL)) {
+            return decodeFloatCoordMp(stream, FloatType.MP_INTEGRAL);
         } else if (prop.isFlagSet(PropFlag.NO_SCALE)) {
             return decodeNoScale(stream);
         } else if (prop.isFlagSet(PropFlag.NORMAL)) {
@@ -44,6 +56,36 @@ public class FloatDecoder implements PropDecoder<Float> {
         }
         float v = i + 0.03125f * f;
         return isNegative ? -v : v;
+    }
+    
+    public Float decodeFloatCoordMp(EntityBitStream stream, FloatType type) {
+        int value;
+        if (type == FloatType.MP_LOW_PRECISION || type == FloatType.MP_NONE) {
+            value = stream.readNumericBits(1) + 2 * stream.readNumericBits(1) + 4 * stream.readNumericBits(1);
+            throw new RuntimeException("edith says 'PLEASE NO!'");
+        } else if (type == FloatType.MP_INTEGRAL) {
+            int a = stream.readNumericBits(1);
+            int b = stream.readNumericBits(1);
+            a = a + 2 * b;
+
+            if (b == 0) {
+                return 0.0f;
+            } else {
+                if (a != 0) {
+                    value = stream.readNumericBits(12);
+                } else {
+                    value = stream.readNumericBits(15);
+                }
+                if ((value & 1) == 1) {
+                    value = -((value >>> 1) + 1);
+                } else {
+                    value = (value >>> 1) + 1;
+                }
+                return (float) value;
+            }
+        } else {
+            throw new RuntimeException("unable to decode float of type " + type);
+        }
     }
 
     public Float decodeNoScale(EntityBitStream stream) {

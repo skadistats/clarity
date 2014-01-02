@@ -11,6 +11,7 @@
 
 	<logger name="clarity.decoder.StringTableApplier" level="info" />
 	<logger name="clarity.decoder.PacketEntitiesDecoder" level="info" />
+	<logger name="clarity.decoder.TempEntitiesDecoder" level="debug" />
 	
 	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />
@@ -22,6 +23,7 @@
 	<logger name="clarity.parser.handler.SvcGameEventHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcGameEventListHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcPacketEntitiesHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcTempEntitiesHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcSendTableHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcServerInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcUpdateStringTableHandler" level="info" />
