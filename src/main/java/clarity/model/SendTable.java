@@ -61,13 +61,4 @@ public class SendTable {
         return result;
     }
 
-    public SendProp getBaseClass() {
-        for (SendProp sp : props) {
-            if ("baseclass".equals(sp.getVarName())) {
-                return sp;
-            }
-        }
-        return null;
-    }
-
 }
