@@ -1,4 +1,4 @@
-package clarity.decoder;
+package clarity.parser.handler;
 
 
 import org.slf4j.LoggerFactory;

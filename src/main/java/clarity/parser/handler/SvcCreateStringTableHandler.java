@@ -5,7 +5,6 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import clarity.decoder.StringTableApplier;
 import clarity.decoder.StringTableDecoder;
 import clarity.match.Match;
 import clarity.model.StringTable;
