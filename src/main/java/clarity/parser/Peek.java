@@ -56,7 +56,7 @@ public class Peek {
     }
     
     public void trace() {
-        log.trace("id: {}, peekTick: {}, tick: {}, full: {}, mesageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
+        log.trace("id: {}, peekTick: {}, tick: {}, full: {}, messageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
     }
 
     @Override
