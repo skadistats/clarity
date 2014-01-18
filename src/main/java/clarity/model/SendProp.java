@@ -1,84 +1,100 @@
 package clarity.model;
 
-import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
 public class SendProp implements Prop {
 
     private final SendTable table;
-    private final sendprop_t sp;
     private final SendProp template;
-    private final SendTableExclusion excludeIdentifier;
+    
+    private final int type;
+    private final String varName;
+    private final int flags;
+    private final int priority;
+    private final String dtName;
+    private final int numElements;
+    private final float lowValue;
+    private final float highValue;
+    private final int numBits;
 
-    public SendProp(SendTable table, sendprop_t sp, SendProp template) {
+    public SendProp(SendTable table, SendProp template, int type, String varName, int flags, int priority, String dtName, int numElements, float lowValue, float highValue, int numBits) {
         this.table = table;
-        this.sp = sp;
         this.template = template;
-        this.excludeIdentifier = new SendTableExclusion(sp.getDtName(), sp.getVarName());
+        this.type = type;
+        this.varName = varName;
+        this.flags = flags;
+        this.priority = priority;
+        this.dtName = dtName;
+        this.numElements = numElements;
+        this.lowValue = lowValue;
+        this.highValue = highValue;
+        this.numBits = numBits;
     }
 
     public boolean isFlagSet(PropFlag flag) {
-        return (sp.getFlags() & flag.getFlag()) != 0;
+        return (flags & flag.getFlag()) != 0;
     }
 
     public SendTableExclusion getExcludeIdentifier() {
-        return excludeIdentifier;
+        return new SendTableExclusion(dtName, varName);
     }
 
     public PropType getType() {
-        return PropType.values()[sp.getType()];
+        return PropType.values()[type];
     }
 
     public String getSrc() {
-        return table.getMessage().getNetTableName();
-    }
-
-    public String getDtName() {
-        return sp.getDtName();
-    }
-
-    public String getVarName() {
-        return sp.getVarName();
-    }
-
-    public int getPriority() {
-        return sp.getPriority();
-    }
-
-    public float getLowValue() {
-        return sp.getLowValue();
-    }
-
-    public float getHighValue() {
-        return sp.getHighValue();
-    }
-
-    public int getNumBits() {
-        return sp.getNumBits();
+        return table.getNetTableName();
     }
 
     public SendProp getTemplate() {
         return template;
     }
 
-    public int getNumElements() {
-        return sp.getNumElements();
+    public String getVarName() {
+        return varName;
     }
-    
-    public int getFlags() {
-        return sp.getFlags();
+
+    public int getPriority() {
+        return priority;
+    }
+
+    public String getDtName() {
+        return dtName;
+    }
+
+    public int getNumElements() {
+        return numElements;
+    }
+
+    public float getLowValue() {
+        return lowValue;
+    }
+
+    public float getHighValue() {
+        return highValue;
+    }
+
+    public int getNumBits() {
+        return numBits;
     }
 
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("SendProp [name=");
-        builder.append(sp.getVarName());
+        builder.append(getVarName());
         builder.append(", type=");
         builder.append(getType());
         builder.append(", prio=");
         builder.append(getPriority());
         builder.append("]");
         return builder.toString();
+    }
+
+    @Override
+    public int getFlags() {
+        // TODO Auto-generated method stub
+        return 0;
     }
 
 }

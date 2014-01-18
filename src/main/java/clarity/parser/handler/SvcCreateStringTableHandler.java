@@ -22,7 +22,14 @@ public class SvcCreateStringTableHandler implements Handler<CSVCMsg_CreateString
     @Override
     public void apply(int peekTick, CSVCMsg_CreateStringTable message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
-        StringTable table = new StringTable(message);
+        StringTable table = new StringTable(
+            message.getName(),
+            message.getMaxEntries(),
+            message.getUserDataFixedSize(),
+            message.getUserDataSize(),
+            message.getUserDataSizeBits(),
+            message.getFlags()
+        );
         match.getStringTables().add(table);
         List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumEntries());
         StringTableApplier a = StringTableApplier.forName(table.getName());

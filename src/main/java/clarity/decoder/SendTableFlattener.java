@@ -52,7 +52,7 @@ public class SendTableFlattener {
 
     private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator) {
         for (SendProp sp : ancestor.getAllNonExclusions()) {
-            boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getMessage().getNetTableName(), sp.getVarName()));
+            boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getNetTableName(), sp.getVarName()));
             boolean ineligible = (sp.isFlagSet(PropFlag.INSIDE_ARRAY));
             if (excluded || ineligible) {
                 continue;
@@ -61,7 +61,7 @@ public class SendTableFlattener {
                 if (sp.isFlagSet(PropFlag.COLLAPSIBLE)) {
                     _flattenCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator);
                 } else {
-                    _flatten(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), ancestor.getMessage().getNetTableName());
+                    _flatten(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), ancestor.getNetTableName());
                 }
             } else {
                 accumulator.add(sp);

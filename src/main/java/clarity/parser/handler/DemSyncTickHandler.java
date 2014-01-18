@@ -27,7 +27,7 @@ public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
 
         for (Iterator<DTClass> i = match.getDtClasses().iterator(); i.hasNext();) {
             DTClass dtc = i.next();
-            if (!dtc.getSendTable().getMessage().getNeedsDecoder()) {
+            if (!dtc.getSendTable().isDecoderNeeded()) {
                 continue;
             }
             List<ReceiveProp> rps = new SendTableFlattener(match.getDtClasses(), dtc.getSendTable()).flatten();

@@ -2,19 +2,29 @@ package clarity.model;
 
 import clarity.decoder.Util;
 
-import com.dota2.proto.Netmessages.CSVCMsg_CreateStringTable;
 import com.google.protobuf.ByteString;
 
 public class StringTable {
-
-    private final CSVCMsg_CreateStringTable createMessage;
+    
+    private final String name;
+    private final int maxEntries;
+    private final boolean userDataFixedSize;
+    private final int userDataSize;
+    private final int userDataSizeBits;
+    private final int flags;
+    
     private final String[] names;
     private final ByteString[] values;
 
-    public StringTable(CSVCMsg_CreateStringTable createMessage) {
-        this.createMessage = createMessage;
-        this.names = new String[createMessage.getMaxEntries()];
-        this.values = new ByteString[createMessage.getMaxEntries()];
+    public StringTable(String name, int maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags) {
+        this.name = name;
+        this.maxEntries = maxEntries;
+        this.userDataFixedSize = userDataFixedSize;
+        this.userDataSize = userDataSize;
+        this.userDataSizeBits = userDataSizeBits;
+        this.flags = flags;
+        this.names = new String[maxEntries];
+        this.values = new ByteString[maxEntries];
     }
 
     public void set(int index, String name, ByteString value) {
@@ -44,23 +54,27 @@ public class StringTable {
     }
 
     public int getMaxEntries() {
-        return createMessage.getMaxEntries();
+        return maxEntries;
     }
 
     public boolean getUserDataFixedSize() {
-        return createMessage.getUserDataFixedSize();
+        return userDataFixedSize;
     }
 
     public int getUserDataSize() {
-        return createMessage.getUserDataSize();
+        return userDataSize;
     }
 
     public int getUserDataSizeBits() {
-        return createMessage.getUserDataSizeBits();
+        return userDataSizeBits;
     }
 
     public String getName() {
-        return createMessage.getName();
+        return name;
+    }
+    
+    public int getFlags() {
+        return flags;
     }
 
     public String toString() {

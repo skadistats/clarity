@@ -6,26 +6,24 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
-import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
-
 public class SendTable {
 
-    private final CSVCMsg_SendTable message;
-    private final LinkedList<SendProp> props;
+    private final String netTableName;
+    private final boolean decoderNeeded;
+    private final List<SendProp> props;
 
-    public SendTable(CSVCMsg_SendTable message) {
-        this.message = message;
-        this.props = new LinkedList<SendProp>();
-
-        for (sendprop_t sp : message.getPropsList()) {
-            SendProp tpl = sp.getType() == PropType.ARRAY.ordinal() ? props.peekLast() : null;
-            props.add(new SendProp(this, sp, tpl));
-        }
+    public SendTable(String netTableName, boolean decoderNeeded, List<SendProp> props) {
+        this.netTableName = netTableName;
+        this.decoderNeeded = decoderNeeded;
+        this.props = props;
+    }
+    
+    public String getNetTableName() {
+        return netTableName;
     }
 
-    public CSVCMsg_SendTable getMessage() {
-        return message;
+    public boolean isDecoderNeeded() {
+        return decoderNeeded;
     }
 
     public Set<SendTableExclusion> getAllExclusions() {
