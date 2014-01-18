@@ -11,7 +11,7 @@ public class GameEventDescriptorCollection {
     private final Map<String, GameEventDescriptor> byName = new TreeMap<String, GameEventDescriptor>();
 
     public void add(GameEventDescriptor descriptor) {
-        byId.put(descriptor.getId(), descriptor);
+        byId.put(descriptor.getEventId(), descriptor);
         byName.put(descriptor.getName(), descriptor);
     }
 

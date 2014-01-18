@@ -1,8 +1,5 @@
 package clarity.model;
 
-import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
-
-import clarity.parser.ReplayIndex;
 
 public enum GameRulesStateType {
 
@@ -17,16 +14,6 @@ public enum GameRulesStateType {
 
     private GameRulesStateType(int id) {
         this.id = id;
-    }
-    
-    public int findOnIndex(ReplayIndex idx) {
-        int i = -1;
-        int c = id - 1;
-        while (c > 0) {
-            i = idx.nextIndexOf(CDOTA_UM_GamerulesStateChanged.class, i + 1);
-            c--;
-        }
-        return i == -1 ? 0 : i;
     }
     
     public static GameRulesStateType forId(int id) {

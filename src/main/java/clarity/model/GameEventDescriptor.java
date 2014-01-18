@@ -1,35 +1,28 @@
 package clarity.model;
 
-import com.dota2.proto.Netmessages.CSVCMsg_GameEventList.descriptor_t;
-import com.dota2.proto.Netmessages.CSVCMsg_GameEventList.key_t;
 
 public class GameEventDescriptor {
 
-    private final descriptor_t descriptor;
+    private final int eventId;
+    private final String name;
+    private final String[] keys;
     
-    public GameEventDescriptor(descriptor_t descriptor) {
-        this.descriptor = descriptor;
+    public GameEventDescriptor(int eventId, String name, String[] keys) {
+        this.eventId = eventId;
+        this.name = name;
+        this.keys = keys;
     }
-    
-    public int getId() {
-        return descriptor.getEventid();
+
+    public int getEventId() {
+        return eventId;
     }
-    
+
     public String getName() {
-        return descriptor.getName();
-    }
-    
-    public int getKeyCount() {
-        return descriptor.getKeysCount();
+        return name;
     }
 
-    public key_t getKeys(int index) {
-        return descriptor.getKeys(index);
+    public String[] getKeys() {
+        return keys;
     }
-
-    
-    
-    
-    
     
 }
