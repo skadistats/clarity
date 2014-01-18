@@ -1,16 +1,16 @@
 package clarity.decoder.prop;
 
-import org.javatuples.Triplet;
+import javax.vecmath.Vector3f;
 
 import clarity.decoder.EntityBitStream;
 import clarity.model.Prop;
 import clarity.model.PropFlag;
 import clarity.model.PropType;
 
-public class VectorDecoder implements PropDecoder<Triplet<Float, Float, Float>> {
+public class VectorDecoder implements PropDecoder<Vector3f> {
 
     @Override
-    public Triplet<Float, Float, Float> decode(EntityBitStream stream, Prop prop) {
+    public Vector3f decode(EntityBitStream stream, Prop prop) {
         FloatDecoder fd = (FloatDecoder) PropType.FLOAT.getDecoder();
         float x = fd.decode(stream, prop);
         float y = fd.decode(stream, prop);
@@ -22,7 +22,7 @@ public class VectorDecoder implements PropDecoder<Triplet<Float, Float, Float>> 
         } else {
             z = fd.decode(stream, prop);
         }
-        return new Triplet<Float, Float, Float>(x, y, z);
+        return new Vector3f(x, y, z);
     }
 
 }

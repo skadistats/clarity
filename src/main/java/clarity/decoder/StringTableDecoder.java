@@ -3,9 +3,8 @@ package clarity.decoder;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.javatuples.Triplet;
-
 import clarity.model.StringTable;
+import clarity.model.StringTableEntry;
 
 import com.google.protobuf.ByteString;
 
@@ -14,11 +13,11 @@ public class StringTableDecoder {
     private static final int MAX_NAME_LENGTH = 0x400;
     private static final int KEY_HISTORY_SIZE = 32;
 
-    public static List<Triplet<Integer, String, ByteString>> decode(StringTable table, byte[] data, int numEntries) {
+    public static List<StringTableEntry> decode(StringTable table, byte[] data, int numEntries) {
         BitStream stream = new BitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<String>();
-        List<Triplet<Integer, String, ByteString>> result = new LinkedList<Triplet<Integer, String, ByteString>>();
+        List<StringTableEntry> result = new LinkedList<StringTableEntry>();
         
         boolean mysteryFlag = stream.readBit();
         int index = -1;
@@ -61,7 +60,7 @@ public class StringTableDecoder {
 
                 value = ByteString.copyFrom(stream.readBits(bitLength));
             }
-            result.add(new Triplet<Integer, String, ByteString>(index, nameBuf.toString(), value));
+            result.add(new StringTableEntry(index, nameBuf.toString(), value));
         }
         return result;
     }
