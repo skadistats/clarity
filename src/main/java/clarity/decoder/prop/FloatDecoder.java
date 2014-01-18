@@ -9,22 +9,30 @@ import clarity.model.PropFlag;
 
 public class FloatDecoder implements PropDecoder<Float> {
 
-    enum FloatType {
-        MP_NONE,
-        MP_LOW_PRECISION,
-        MP_INTEGRAL
-    };
+    private static final int COORD_INTEGER_BITS = 14;
+    private static final int COORD_FRACTIONAL_BITS = 5;
+    private static final int COORD_DENOMINATOR = (1 << COORD_FRACTIONAL_BITS);
+    private static final float COORD_RESOLUTION = (1.0f / COORD_DENOMINATOR);
+
+    private static final int COORD_INTEGER_BITS_MP = 11;
+    private static final int COORD_FRACTIONAL_BITS_MP_LOWPRECISION = 3;
+    private static final int COORD_DENOMINATOR_LOWPRECISION = (1 << COORD_FRACTIONAL_BITS_MP_LOWPRECISION);
+    private static final float COORD_RESOLUTION_LOWPRECISION = (1.0f / COORD_DENOMINATOR_LOWPRECISION);
+
+    private static final int NORMAL_FRACTIONAL_BITS = 11;
+    private static final int NORMAL_DENOMINATOR = ((1 << NORMAL_FRACTIONAL_BITS) - 1);
+    private static final float NORMAL_RESOLUTION = (1.0f / NORMAL_DENOMINATOR);
     
     @Override
     public Float decode(EntityBitStream stream, Prop prop) {
         if (prop.isFlagSet(PropFlag.COORD)) {
             return decodeCoord(stream);
         } else if (prop.isFlagSet(PropFlag.COORD_MP)) {
-            return decodeFloatCoordMp(stream, FloatType.MP_NONE);
+            return decodeFloatCoordMp(stream, false, false);
         } else if (prop.isFlagSet(PropFlag.COORD_MP_LOW_PRECISION)) {
-            return decodeFloatCoordMp(stream, FloatType.MP_LOW_PRECISION);
+            return decodeFloatCoordMp(stream, false, true);
         } else if (prop.isFlagSet(PropFlag.COORD_MP_INTEGRAL)) {
-            return decodeFloatCoordMp(stream, FloatType.MP_INTEGRAL);
+            return decodeFloatCoordMp(stream, true, false);
         } else if (prop.isFlagSet(PropFlag.NO_SCALE)) {
             return decodeNoScale(stream);
         } else if (prop.isFlagSet(PropFlag.NORMAL)) {
@@ -39,53 +47,48 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public Float decodeCoord(EntityBitStream stream) {
-        boolean _i = stream.readBit(); // integer component present?
-        boolean _f = stream.readBit(); // fractional component present?
+        boolean hasInt = stream.readBit(); // integer component present?
+        boolean hasFrac = stream.readBit(); // fractional component present?
 
-        if (!(_i || _f)) {
+        if (!(hasInt || hasFrac)) {
             return 0.0f;
         }
-        boolean isNegative = stream.readBit();
+        boolean sign = stream.readBit();
         int i = 0;
         int f = 0;
-        if (_i) {
-            i = stream.readNumericBits(14) + 1;
+        if (hasInt) {
+            i = stream.readNumericBits(COORD_INTEGER_BITS) + 1;
         }
-        if (_f) {
-            f = stream.readNumericBits(5);
+        if (hasFrac) {
+            f = stream.readNumericBits(COORD_FRACTIONAL_BITS);
         }
-        float v = i + 0.03125f * f;
-        return isNegative ? -v : v;
+        float v = i + ((float) f * COORD_RESOLUTION);
+        return sign ? -v : v;
     }
     
-    public Float decodeFloatCoordMp(EntityBitStream stream, FloatType type) {
-        int value;
-        if (type == FloatType.MP_LOW_PRECISION || type == FloatType.MP_NONE) {
-            value = stream.readNumericBits(1) + 2 * stream.readNumericBits(1) + 4 * stream.readNumericBits(1);
-            throw new RuntimeException("edith says 'PLEASE NO!'");
-        } else if (type == FloatType.MP_INTEGRAL) {
-            int a = stream.readNumericBits(1);
-            int b = stream.readNumericBits(1);
-            a = a + 2 * b;
+    public Float decodeFloatCoordMp(EntityBitStream stream, boolean integral, boolean lowPrecision) {
+        int i = 0;
+        int f = 0;
+        boolean sign = false;
+        float value = 0.0f;
 
-            if (b == 0) {
-                return 0.0f;
-            } else {
-                if (a != 0) {
-                    value = stream.readNumericBits(12);
-                } else {
-                    value = stream.readNumericBits(15);
-                }
-                if ((value & 1) == 1) {
-                    value = -((value >>> 1) + 1);
-                } else {
-                    value = (value >>> 1) + 1;
-                }
-                return (float) value;
+        boolean inBounds = stream.readBit();
+        if (integral) {
+            i = stream.readNumericBits(1);
+            if (i != 0) {
+                sign = stream.readBit();
+                value = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
-            throw new RuntimeException("unable to decode float of type " + type);
+            i = stream.readNumericBits(1);
+            sign = stream.readBit();
+            if (i != 0) {
+                i = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+            }
+            f = stream.readNumericBits(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
+            value = i + ((float) f * (lowPrecision ? COORD_RESOLUTION_LOWPRECISION : COORD_RESOLUTION));
         }
+        return sign ? -value : value;
     }
 
     public Float decodeNoScale(EntityBitStream stream) {
@@ -94,16 +97,14 @@ public class FloatDecoder implements PropDecoder<Float> {
 
     public Float decodeNormal(EntityBitStream stream) {
         boolean isNegative = stream.readBit();
-        int l = stream.readNumericBits(11);
-        byte[] b = new byte[] { 0, 0, (byte) ((l & 0x0000ff00) >> 8), (byte) (l & 0x000000ff) };
-        float v = ByteBuffer.wrap(b).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-        v *= 4.885197850512946e-4f;
+        int l = stream.readNumericBits(NORMAL_FRACTIONAL_BITS);
+        float v = (float) l * NORMAL_RESOLUTION;
         return isNegative ? -v : v;
     }
 
     public Float decodeCellCoord(EntityBitStream stream, int numBits) {
         int v = stream.readNumericBits(numBits);
-        return v + 0.01325f * stream.readNumericBits(5);
+        return v + COORD_RESOLUTION * stream.readNumericBits(COORD_FRACTIONAL_BITS);
     }
 
     public Float decodeCellCoordIntegral(EntityBitStream stream, int numBits) {
@@ -113,7 +114,7 @@ public class FloatDecoder implements PropDecoder<Float> {
 
     public Float decodeDefault(EntityBitStream stream, int numBits, float high, float low) {
         int t = stream.readNumericBits(numBits);
-        float f = (float) t / (1 << numBits - 1);
+        float f = (float) t / ((1 << numBits) - 1);
         return f * (high - low) + low;
     }
 
