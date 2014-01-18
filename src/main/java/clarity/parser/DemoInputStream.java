@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
-import clarity.model.UserMessageType;
-
 import com.dota2.proto.Demo.CDemoFullPacket;
 import com.dota2.proto.Demo.CDemoPacket;
 import com.dota2.proto.Demo.CDemoSendTables;
@@ -98,23 +96,19 @@ public class DemoInputStream {
                     GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
                     if (subMessage instanceof CNETMsg_Tick) {
                         tick = ((CNETMsg_Tick) subMessage).getTick();
+                        return new Peek(++n, tick, peekTick, full, subMessage);
                     } else if (subMessage instanceof CSVCMsg_UserMessage) {
                         CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
-                        UserMessageType umt = UserMessageType.forId(userMessage.getMsgType());
-                        if (umt == null) {
+                        Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
+                        if (umClazz == null) {
                             log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                             continue;
-                        } else if (umt.getClazz() == null) {
-                            log.warn("no protobuf class for usermessage of type {}", umt);
-                            continue;
                         } else { 
-                            GeneratedMessage decodedUserMessage = umt.parseFrom(userMessage.getMsgData());
-                            return new Peek(++n, tick, peekTick, full, decodedUserMessage);
+                            return new Peek(++n, tick, peekTick, full, PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
                         }
                     } else {
                         return new Peek(++n, tick, peekTick, full, subMessage);
                     }
-                    continue;
             }
         }
         return null;
