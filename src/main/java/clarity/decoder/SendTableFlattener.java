@@ -7,20 +7,19 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.javatuples.Pair;
-
 import clarity.match.DTClassCollection;
 import clarity.model.PropFlag;
 import clarity.model.PropType;
 import clarity.model.ReceiveProp;
 import clarity.model.SendProp;
 import clarity.model.SendTable;
+import clarity.model.SendTableExclusion;
 
 public class SendTableFlattener {
 
     private final DTClassCollection lookup;
     private final SendTable descendant;
-    private final Set<Pair<String, String>> exclusions;
+    private final Set<SendTableExclusion> exclusions;
     private final List<ReceiveProp> receiveProps;
 
     public SendTableFlattener(DTClassCollection lookup, SendTable descendant) {
@@ -30,8 +29,8 @@ public class SendTableFlattener {
         this.receiveProps = new LinkedList<ReceiveProp>();
     }
 
-    private Set<Pair<String, String>> aggregateExclusions(SendTable table) {
-        Set<Pair<String, String>> result = table.getAllExclusions();
+    private Set<SendTableExclusion> aggregateExclusions(SendTable table) {
+        Set<SendTableExclusion> result = table.getAllExclusions();
         for (SendProp sp : table.getAllRelations()) {
             result.addAll(aggregateExclusions(lookup.sendTableForDtName(sp.getDtName())));
         }
@@ -53,7 +52,7 @@ public class SendTableFlattener {
 
     private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator) {
         for (SendProp sp : ancestor.getAllNonExclusions()) {
-            boolean excluded = exclusions.contains(new Pair<String, String>(ancestor.getMessage().getNetTableName(), sp.getVarName()));
+            boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getMessage().getNetTableName(), sp.getVarName()));
             boolean ineligible = (sp.isFlagSet(PropFlag.INSIDE_ARRAY));
             if (excluded || ineligible) {
                 continue;

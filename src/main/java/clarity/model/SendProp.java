@@ -1,7 +1,5 @@
 package clarity.model;
 
-import org.javatuples.Pair;
-
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
 public class SendProp implements Prop {
@@ -9,20 +7,20 @@ public class SendProp implements Prop {
     private final SendTable table;
     private final sendprop_t sp;
     private final SendProp template;
-    private final Pair<String, String> excludeIdentifier;
+    private final SendTableExclusion excludeIdentifier;
 
     public SendProp(SendTable table, sendprop_t sp, SendProp template) {
         this.table = table;
         this.sp = sp;
         this.template = template;
-        this.excludeIdentifier = new Pair<String, String>(sp.getDtName(), sp.getVarName());
+        this.excludeIdentifier = new SendTableExclusion(sp.getDtName(), sp.getVarName());
     }
 
     public boolean isFlagSet(PropFlag flag) {
         return (sp.getFlags() & flag.getFlag()) != 0;
     }
 
-    public Pair<String, String> getExcludeIdentifier() {
+    public SendTableExclusion getExcludeIdentifier() {
         return excludeIdentifier;
     }
 

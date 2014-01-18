@@ -6,8 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.javatuples.Pair;
-
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
@@ -30,8 +28,8 @@ public class SendTable {
         return message;
     }
 
-    public Set<Pair<String, String>> getAllExclusions() {
-        Set<Pair<String, String>> result = new HashSet<Pair<String, String>>();
+    public Set<SendTableExclusion> getAllExclusions() {
+        Set<SendTableExclusion> result = new HashSet<SendTableExclusion>();
         for (SendProp sp : props) {
             if (sp.isFlagSet(PropFlag.EXCLUDE)) {
                 result.add(sp.getExcludeIdentifier());

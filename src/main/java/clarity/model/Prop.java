@@ -1,12 +1,11 @@
 package clarity.model;
 
-import org.javatuples.Pair;
 
 public interface Prop {
 
     boolean isFlagSet(PropFlag flag);
 
-    Pair<String, String> getExcludeIdentifier();
+    SendTableExclusion getExcludeIdentifier();
 
     PropType getType();
 

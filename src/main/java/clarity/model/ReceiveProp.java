@@ -1,6 +1,5 @@
 package clarity.model;
 
-import org.javatuples.Pair;
 
 public class ReceiveProp implements Prop {
 
@@ -18,7 +17,7 @@ public class ReceiveProp implements Prop {
         return sendProp.isFlagSet(flag);
     }
 
-    public Pair<String, String> getExcludeIdentifier() {
+    public SendTableExclusion getExcludeIdentifier() {
         return sendProp.getExcludeIdentifier();
     }
 
