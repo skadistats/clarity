@@ -20,9 +20,8 @@ public class SvcTempEntitiesHandler implements Handler<CSVCMsg_TempEntities> {
         new TempEntitiesDecoder(
             message.getEntityData().toByteArray(),
             message.getNumEntries(),
-            match.getDtClasses(),
-            match.getStringTables().forName("instancebaseline")
-            ).decodeAndApply(match.getEntities());
+            match.getDtClasses()
+        ).decodeAndApply(match.getTempEntities());
     }
 
 }

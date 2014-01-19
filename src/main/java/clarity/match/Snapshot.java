@@ -10,6 +10,7 @@ public class Snapshot implements Cloneable {
     private final EntityCollection entities = new EntityCollection();
     private final GameEventCollection gameEvents = new GameEventCollection();
     private final ModifierCollection modifiers = new ModifierCollection();
+    private final TempEntityCollection tempEntities = new TempEntityCollection();
 
     public Snapshot() {
         this(new StringTableCollection());
@@ -35,6 +36,10 @@ public class Snapshot implements Cloneable {
         return modifiers;
     }
     
+    public TempEntityCollection getTempEntities() {
+        return tempEntities;
+    }
+
     @Override
     public Snapshot clone() {
        return CLONER.deepClone(this);

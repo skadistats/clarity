@@ -80,6 +80,10 @@ public class Match {
     public ModifierCollection getModifiers() {
         return current.getModifiers();
     }
+    
+    public TempEntityCollection getTempEntities() {
+        return current.getTempEntities();
+    }
 
     public int getTick() {
         return tick;

@@ -17,6 +17,7 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     public void apply(int peekTick, CNETMsg_Tick message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
         match.getGameEvents().clear();
+        match.getTempEntities().clear();
     }
 
 }

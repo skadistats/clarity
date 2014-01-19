@@ -11,7 +11,7 @@
 
 	<logger name="clarity.decoder.StringTableApplier" level="info" />
 	<logger name="clarity.decoder.PacketEntitiesDecoder" level="info" />
-	<logger name="clarity.decoder.TempEntitiesDecoder" level="debug" />
+	<logger name="clarity.decoder.TempEntitiesDecoder" level="info" />
 	
 	<logger name="clarity.parser.handler.DemClassInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.DemFileHeaderHandler" level="info" />
