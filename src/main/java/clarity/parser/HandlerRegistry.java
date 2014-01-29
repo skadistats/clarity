@@ -20,6 +20,8 @@ import clarity.parser.handler.SvcSendTableHandler;
 import clarity.parser.handler.SvcServerInfoHandler;
 import clarity.parser.handler.SvcTempEntitiesHandler;
 import clarity.parser.handler.SvcUpdateStringTableHandler;
+import clarity.parser.handler.SvcVoiceDataHandler;
+import clarity.parser.handler.SvcVoiceInitHandler;
 import clarity.parser.handler.UserMsgCreateLinearProjectileHandler;
 import clarity.parser.handler.UserMsgDestroyLinearProjectileHandler;
 import clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler;
@@ -43,6 +45,8 @@ import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_ServerInfo;
 import com.dota2.proto.Netmessages.CSVCMsg_TempEntities;
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
+import com.dota2.proto.Netmessages.CSVCMsg_VoiceData;
+import com.dota2.proto.Netmessages.CSVCMsg_VoiceInit;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
 import com.google.protobuf.GeneratedMessage;
 
@@ -77,6 +81,8 @@ public class HandlerRegistry {
         H.put(CDOTAUserMsg_DodgeTrackingProjectiles.class, new UserMsgDodgeTrackingProjectilesHandler());
         H.put(CDOTAUserMsg_ParticleManager.class, new UserMsgParticleManagerHandler());
 
+        H.put(CSVCMsg_VoiceData.class, new SvcVoiceDataHandler());
+        H.put(CSVCMsg_VoiceInit.class, new SvcVoiceInitHandler());
         
     }
 
