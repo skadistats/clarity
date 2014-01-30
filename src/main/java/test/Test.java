@@ -16,14 +16,7 @@ public class Test {
 
         Logger log = LoggerFactory.getLogger("TEST");
 
-        // last ranked
-        ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\432850581.dem");
-        // TI3 final
-        //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\271145478.dem");
-        // big and old, has NAGA in it, maybe TI2?
-        //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\37633163.dem");
-        // pudge
-        //ReplayIndex idx = ReplayFile.indexForFile("C:\\Program Files (x86)\\Steam\\steamapps\\common\\dota 2 beta\\dota\\replays\\448793524.dem");
+        ReplayIndex idx = ReplayFile.indexForFile(args[0]);
         
         long tIndex = System.currentTimeMillis() - tStart;
         log.info("index built in {}s", tIndex / 1000.0);
