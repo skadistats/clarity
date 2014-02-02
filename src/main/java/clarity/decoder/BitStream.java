@@ -30,7 +30,7 @@ public class BitStream {
         int r = words[(pos + num - 1) >> 5];
         int shift = pos & 31;
         int rebuild = (r << (32 - shift)) | (l >>> shift);
-        return (rebuild & ((1 << num) - 1));
+        return (rebuild & ((int)((long)1 << num) - 1));        
     }
 
     public int readNumericBits(int num) {
