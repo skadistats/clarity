@@ -35,12 +35,12 @@ around 127MB.
 How fast you get to your results will depend on the amount of data you need. If you choose
 to only retrieve a subset of all the data, it will get quicker:
 
-| data retrieved | time taken |
-| -------------- | ---------- |
-| full parse | 5.12s |
-| entities + modifiers | 3.29s |
-| voice data only | 1.63 s |
-| game events only | 1.64 s |
+| data retrieved       | time taken |
+| -------------------- | ---------- |
+| full parse           | 5.12s      |
+| entities + modifiers | 3.29s      |
+| voice data only      | 1.63 s     |
+| game events only     | 1.64 s     |
 
 # Memory consumption
 
@@ -48,21 +48,15 @@ There are two modes you can run clarity in. The first one is a streaming type of
 with which you will see each data object once, and will not be able to seek on replay data.
 This saves memory, since only part of the processed replay data is in memory.
 
-See
+See `clarity/examples/simple/Main.java` for an example on this. 
 
-    clarity/examples/simple/Main.java
-
-for an example on this. I've been able to run this with a maximum memory setting of 20MB (-Xmx20m),
+I've been able to run this with a maximum memory setting of 20MB (-Xmx20m),
 although giving it a little bit more will not hurt (garbage collection will run less often).
 
 Another possibility is to read the complete replay onto an index, which will cost significantly more 
 memory, but will allow you to seek on the replay data easily:
 
-See
-
-    clarity/examples/seek/Main.java
- 	
- for an example of this.
+See `clarity/examples/seek/Main.java` for an example of this.
 
 # Installation
 
@@ -88,9 +82,11 @@ If you just want to try it out quickly, you can run:
 This will build a JAR containing clarity with all its dependencies.
 This can be run with something like:
 
-    java -jar target/clarity-0.1-SNAPSHOT.jar clarity.examples.Simple.Main replay.dem
+    java -cp target/clarity-0.1-SNAPSHOT.jar clarity.examples.Simple.Main replay.dem
 
 I recommend using a decent IDE though, were you import the project and start playing from there.
+Clarity should build out of the box in Netbeans, and Eclipse should be equally fine 
+(if you have Maven support installed).
 
 
 # Parsing Replay Data
