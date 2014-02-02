@@ -1,10 +1,15 @@
 package clarity.match;
 
+import java.util.Iterator;
+
 import clarity.model.DTClass;
 import clarity.model.Entity;
 import clarity.model.Handle;
 import clarity.model.PVS;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
 import com.rits.cloning.Cloner;
 
 public class EntityCollection implements Cloneable {
@@ -20,19 +25,38 @@ public class EntityCollection implements Cloneable {
     public Entity getByIndex(int index) {
         return entities[index];
     }
-    
+
     public Entity getByHandle(int handle) {
         Entity e = entities[Handle.indexForHandle(handle)];
         return e == null || e.getSerial() != Handle.serialForHandle(handle) ? null : e;
     }
-    
+
     public void remove(int index) {
         entities[index] = null;
     }
-    
+
+    public Iterator<Entity> getAllByPredicate(Predicate<Entity> predicate) {
+        return Iterators.filter(
+            Iterators.forArray(entities),
+            Predicates.and(
+                Predicates.notNull(),
+                predicate
+            ));
+    }
+
+    public Iterator<Entity> getAllByDtName(final String dtClassName) {
+        return getAllByPredicate(
+            new Predicate<Entity>() {
+                @Override
+                public boolean apply(Entity e) {
+                    return dtClassName.equals(e.getDtClass().getDtName());
+                }
+            });
+    }
+
     @Override
     public EntityCollection clone() {
-       return CLONER.deepClone(this);
+        return CLONER.deepClone(this);
     }
 
 }

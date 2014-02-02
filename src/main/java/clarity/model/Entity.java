@@ -1,13 +1,15 @@
 package clarity.model;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.rits.cloning.Cloner;
 
-
-
 public class Entity implements Cloneable {
-    
+
     private static final Cloner CLONER = new Cloner();
-    
+
     private final int index;
     private final int serial;
     private final DTClass dtClass;
@@ -21,7 +23,7 @@ public class Entity implements Cloneable {
         this.pvs = pvs;
         this.state = state;
     }
-    
+
     public int getIndex() {
         return index;
     }
@@ -33,7 +35,7 @@ public class Entity implements Cloneable {
     public DTClass getDtClass() {
         return dtClass;
     }
-    
+
     public PVS getPvs() {
         return pvs;
     }
@@ -45,10 +47,30 @@ public class Entity implements Cloneable {
     public Object[] getState() {
         return state;
     }
-    
+
+    @SuppressWarnings("unchecked")
+    public <T> T getProperty(String property) {
+        return (T) state[dtClass.getPropertyIndex(property)];
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T[] getArrayProperty(Class<T> clazz, String property) {
+        List<T> result = new ArrayList<T>();
+        int i = 0;
+        while (true) {
+            Integer idx = dtClass.getPropertyIndex(property + String.format(".%04d", i));
+            if (idx == null) {
+                break;
+            }
+            result.add((T) state[idx.intValue()]);
+            i++;
+        }
+        return (T[]) result.toArray((T[]) Array.newInstance(clazz, 0));
+    }
+
     @Override
     public Entity clone() {
-       return CLONER.deepClone(this);
+        return CLONER.deepClone(this);
     }
 
     @Override
@@ -67,9 +89,8 @@ public class Entity implements Cloneable {
             builder.append(" = ");
             builder.append(state[i]);
         }
-        
+
         return builder.toString();
     }
-    
 
 }

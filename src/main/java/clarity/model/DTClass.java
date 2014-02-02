@@ -1,6 +1,8 @@
 package clarity.model;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DTClass {
 
@@ -8,7 +10,8 @@ public class DTClass {
     private final SendTable sendTable;
     private int classId = -1;
     private List<ReceiveProp> receiveProps;
-
+    private Map<String, Integer> propsByName;
+    
     public DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
         this.sendTable = sendTable;
@@ -36,6 +39,13 @@ public class DTClass {
 
     public void setReceiveProps(List<ReceiveProp> receiveProps) {
         this.receiveProps = receiveProps;
+        this.propsByName = new HashMap<String, Integer>();
+        for(int i = 0; i < this.receiveProps.size(); ++i)
+            this.propsByName.put(this.receiveProps.get(i).getVarName(), i);
+        
     }
-
+    
+    public Integer getPropertyIndex(String name){
+        return this.propsByName.get(name);
+    }
 }
