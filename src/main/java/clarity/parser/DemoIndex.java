@@ -18,7 +18,7 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.GeneratedMessage;
 
-public class ReplayIndex {
+public class DemoIndex {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
     
@@ -26,7 +26,7 @@ public class ReplayIndex {
     private int lastTick = 0; // the number of ticks in this replay
     private int syncIdx = 0; // the index of the sync packet
     
-    public ReplayIndex(DemoInputStreamIterator iter) throws IOException {
+    public DemoIndex(DemoInputStreamIterator iter) throws IOException {
         int skew = 0;
         boolean sync = false;
         while (iter.hasNext()) {

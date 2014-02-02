@@ -7,9 +7,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
+import clarity.parser.Profiles.Profile;
+
 import com.dota2.proto.Demo.CDemoFullPacket;
 import com.dota2.proto.Demo.CDemoPacket;
 import com.dota2.proto.Demo.CDemoSendTables;
+import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.EDemoCommands;
 import com.dota2.proto.Netmessages.CNETMsg_Tick;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
@@ -24,6 +27,7 @@ public class DemoInputStream {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
+    private final Profile[] profile;
     private final CodedInputStream s; // main stream
     private CodedInputStream ss = null; // stream for embedded packet
     private int n = -1;
@@ -36,8 +40,29 @@ public class DemoInputStream {
         this(CodedInputStream.newInstance(s));
     }
 
+    public DemoInputStream(InputStream s, Profile... profile) {
+        this(CodedInputStream.newInstance(s), profile);
+    }
+
     public DemoInputStream(CodedInputStream s) {
+        this(s, (Profile[]) null);
+    }
+
+    public DemoInputStream(CodedInputStream s, Profile... profile) {
         this.s = s;
+        this.profile = profile;
+    }
+    
+    private boolean isFiltered(Class<?> clazz) {
+        if (profile == null) {
+            return false;
+        }
+        for (Profile p : profile) {
+            if (p.contains(clazz)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Peek read() throws IOException {
@@ -73,11 +98,13 @@ public class DemoInputStream {
                         ss = CodedInputStream.newInstance(fullMessage.getPacket().getData().toByteArray());
                         state = State.EMBED;
                         full = true;
-                        return new Peek(++n, tick, peekTick, true, fullMessage.getStringTable());
-                    } else {
+                        if (!isFiltered(CDemoStringTables.class)) {
+                            return new Peek(++n, tick, peekTick, true, fullMessage.getStringTable());
+                        }
+                    } else if (!isFiltered(message.getClass())) {
                         return new Peek(++n, tick, peekTick, false, message);
                     }
-                    
+                    continue;
 
                 case EMBED:
                     if (ss.isAtEnd()) {
@@ -96,19 +123,24 @@ public class DemoInputStream {
                     GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
                     if (subMessage instanceof CNETMsg_Tick) {
                         tick = ((CNETMsg_Tick) subMessage).getTick();
-                        return new Peek(++n, tick, peekTick, full, subMessage);
-                    } else if (subMessage instanceof CSVCMsg_UserMessage) {
-                        CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
-                        Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
-                        if (umClazz == null) {
-                            log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
-                            continue;
-                        } else { 
-                            return new Peek(++n, tick, peekTick, full, PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                        if (!isFiltered(CNETMsg_Tick.class)) {
+                            return new Peek(++n, tick, peekTick, full, subMessage);
                         }
-                    } else {
+                    } else if (subMessage instanceof CSVCMsg_UserMessage) {
+                        if (!isFiltered(CSVCMsg_UserMessage.class)) {
+                            CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
+                            Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
+                            if (umClazz == null) {
+                                log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
+                                continue;
+                            } else if (!isFiltered(umClazz)) {
+                                return new Peek(++n, tick, peekTick, full, PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                            }
+                        }
+                    } else if (!isFiltered(subMessage.getClass())) {
                         return new Peek(++n, tick, peekTick, full, subMessage);
                     }
+                    continue;
             }
         }
         return null;

@@ -27,6 +27,8 @@
 	<logger name="clarity.parser.handler.SvcSendTableHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcServerInfoHandler" level="info" />
 	<logger name="clarity.parser.handler.SvcUpdateStringTableHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcVoiceDataHandler" level="info" />
+	<logger name="clarity.parser.handler.SvcVoiceInitHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgCreateLinearProjectileHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgDestroyLinearProjectileHandler" level="info" />
 	<logger name="clarity.parser.handler.UserMsgDodgeTrackingProjectilesHandler" level="info" />

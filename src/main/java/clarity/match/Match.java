@@ -25,13 +25,16 @@ public class Match {
     // info from the prologue
     private final DTClassCollection dtClasses = new DTClassCollection();
     private final GameEventDescriptorCollection gameEventDescriptors = new GameEventDescriptorCollection();
-    private final StringTableCollection prologueStringTables;
+    private StringTableCollection prologueStringTables;
     private float tickInterval = 1.0f/30.0f;
 
     // current information
     private Snapshot current = new Snapshot();
     private GameRulesStateType state = GameRulesStateType.WAITING_FOR_LOADERS; 
     private int tick = 0;
+
+    public Match() {
+    }
     
     public Match(Iterator<Peek> prologueIterator) {
         apply(prologueIterator);
