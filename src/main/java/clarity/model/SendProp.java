@@ -78,6 +78,10 @@ public class SendProp implements Prop {
         return numBits;
     }
 
+    public int getFlags() {
+        return flags;
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
@@ -91,10 +95,5 @@ public class SendProp implements Prop {
         return builder.toString();
     }
 
-    @Override
-    public int getFlags() {
-        // TODO Auto-generated method stub
-        return 0;
-    }
 
 }
