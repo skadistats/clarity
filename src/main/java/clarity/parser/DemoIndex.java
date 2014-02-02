@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,12 +93,12 @@ public class DemoIndex {
         return index.subList(syncIdx + 1, index.size());
     }
     
-    public Iterator<Peek> prologueIterator() {
-        return prologueList().iterator();
+    public ListIterator<Peek> prologueIterator() {
+        return prologueList().listIterator();
     }
 
-    public Iterator<Peek> matchIterator() {
-        return matchList().iterator();
+    public ListIterator<Peek> matchIterator() {
+        return matchList().listIterator();
     }
     
     public Iterator<Peek> matchIteratorForTicks(final int startTick, final int endTick, final PacketType packetType) {
