@@ -779,6 +779,16 @@ public final class Usermessages {
      * <code>optional bool from_player = 3;</code>
      */
     boolean getFromPlayer();
+
+    // optional int32 ent_index = 4;
+    /**
+     * <code>optional int32 ent_index = 4;</code>
+     */
+    boolean hasEntIndex();
+    /**
+     * <code>optional int32 ent_index = 4;</code>
+     */
+    int getEntIndex();
   }
   /**
    * Protobuf type {@code CUserMsg_CloseCaption}
@@ -844,6 +854,11 @@ public final class Usermessages {
             case 24: {
               bitField0_ |= 0x00000004;
               fromPlayer_ = input.readBool();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              entIndex_ = input.readInt32();
               break;
             }
           }
@@ -934,10 +949,27 @@ public final class Usermessages {
       return fromPlayer_;
     }
 
+    // optional int32 ent_index = 4;
+    public static final int ENT_INDEX_FIELD_NUMBER = 4;
+    private int entIndex_;
+    /**
+     * <code>optional int32 ent_index = 4;</code>
+     */
+    public boolean hasEntIndex() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 ent_index = 4;</code>
+     */
+    public int getEntIndex() {
+      return entIndex_;
+    }
+
     private void initFields() {
       hash_ = 0;
       duration_ = 0F;
       fromPlayer_ = false;
+      entIndex_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -960,6 +992,9 @@ public final class Usermessages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeBool(3, fromPlayer_);
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, entIndex_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -980,6 +1015,10 @@ public final class Usermessages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(3, fromPlayer_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, entIndex_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -1103,6 +1142,8 @@ public final class Usermessages {
         bitField0_ = (bitField0_ & ~0x00000002);
         fromPlayer_ = false;
         bitField0_ = (bitField0_ & ~0x00000004);
+        entIndex_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -1143,6 +1184,10 @@ public final class Usermessages {
           to_bitField0_ |= 0x00000004;
         }
         result.fromPlayer_ = fromPlayer_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.entIndex_ = entIndex_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -1167,6 +1212,9 @@ public final class Usermessages {
         }
         if (other.hasFromPlayer()) {
           setFromPlayer(other.getFromPlayer());
+        }
+        if (other.hasEntIndex()) {
+          setEntIndex(other.getEntIndex());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -1290,6 +1338,39 @@ public final class Usermessages {
       public Builder clearFromPlayer() {
         bitField0_ = (bitField0_ & ~0x00000004);
         fromPlayer_ = false;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 ent_index = 4;
+      private int entIndex_ ;
+      /**
+       * <code>optional int32 ent_index = 4;</code>
+       */
+      public boolean hasEntIndex() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 ent_index = 4;</code>
+       */
+      public int getEntIndex() {
+        return entIndex_;
+      }
+      /**
+       * <code>optional int32 ent_index = 4;</code>
+       */
+      public Builder setEntIndex(int value) {
+        bitField0_ |= 0x00000008;
+        entIndex_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 ent_index = 4;</code>
+       */
+      public Builder clearEntIndex() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        entIndex_ = 0;
         onChanged();
         return this;
       }
@@ -17797,70 +17878,70 @@ public final class Usermessages {
       "\n\022usermessages.proto\032 google/protobuf/de" +
       "scriptor.proto\032\026networkbasetypes.proto\"0" +
       "\n\031CUserMsg_AchievementEvent\022\023\n\013achieveme" +
-      "nt\030\001 \001(\r\"L\n\025CUserMsg_CloseCaption\022\014\n\004has" +
+      "nt\030\001 \001(\r\"_\n\025CUserMsg_CloseCaption\022\014\n\004has" +
       "h\030\001 \001(\007\022\020\n\010duration\030\002 \001(\002\022\023\n\013from_player" +
-      "\030\003 \001(\010\",\n\031CUserMsg_CurrentTimescale\022\017\n\007c" +
-      "urrent\030\001 \001(\002\"n\n\031CUserMsg_DesiredTimescal" +
-      "e\022\017\n\007desired\030\001 \001(\002\022\020\n\010duration\030\002 \001(\002\022\024\n\014" +
-      "interpolator\030\003 \001(\r\022\030\n\020start_blend_time\030\004" +
-      " \001(\002\"R\n\rCUserMsg_Fade\022\020\n\010duration\030\001 \001(\r\022",
-      "\021\n\thold_time\030\002 \001(\r\022\r\n\005flags\030\003 \001(\r\022\r\n\005col" +
-      "or\030\004 \001(\007\"Y\n\016CUserMsg_Shake\022\017\n\007command\030\001 " +
-      "\001(\r\022\021\n\tamplitude\030\002 \001(\002\022\021\n\tfrequency\030\003 \001(" +
-      "\002\022\020\n\010duration\030\004 \001(\002\"S\n\021CUserMsg_ShakeDir" +
-      "\022\036\n\005shake\030\001 \001(\0132\017.CUserMsg_Shake\022\036\n\tdire" +
-      "ction\030\002 \001(\0132\013.CMsgVector\"q\n\rCUserMsg_Til" +
-      "t\022\017\n\007command\030\001 \001(\r\022\023\n\013ease_in_out\030\002 \001(\010\022" +
-      "\032\n\005angle\030\003 \001(\0132\013.CMsgVector\022\020\n\010duration\030" +
-      "\004 \001(\002\022\014\n\004time\030\005 \001(\002\">\n\020CUserMsg_SayText\022" +
-      "\016\n\006client\030\001 \001(\r\022\014\n\004text\030\002 \001(\t\022\014\n\004chat\030\003 ",
-      "\001(\010\"q\n\021CUserMsg_SayText2\022\016\n\006client\030\001 \001(\r" +
-      "\022\014\n\004chat\030\002 \001(\010\022\016\n\006format\030\003 \001(\t\022\016\n\006prefix" +
-      "\030\004 \001(\t\022\014\n\004text\030\005 \001(\t\022\020\n\010location\030\006 \001(\t\"\312" +
-      "\001\n\017CUserMsg_HudMsg\022\017\n\007channel\030\001 \001(\r\022\t\n\001x" +
-      "\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\016\n\006color1\030\004 \001(\r\022\016\n\006col" +
-      "or2\030\005 \001(\r\022\016\n\006effect\030\006 \001(\r\022\024\n\014fade_in_tim" +
-      "e\030\007 \001(\002\022\025\n\rfade_out_time\030\010 \001(\002\022\021\n\thold_t" +
-      "ime\030\t \001(\002\022\017\n\007fx_time\030\n \001(\002\022\017\n\007message\030\013 " +
-      "\001(\t\"#\n\020CUserMsg_HudText\022\017\n\007message\030\001 \001(\t" +
-      "\"/\n\020CUserMsg_TextMsg\022\014\n\004dest\030\001 \001(\r\022\r\n\005pa",
-      "ram\030\002 \003(\t\"\024\n\022CUserMsg_GameTitle\"\023\n\021CUser" +
-      "Msg_ResetHUD\"0\n\022CUserMsg_SendAudio\022\014\n\004st" +
-      "op\030\002 \001(\010\022\014\n\004name\030\003 \001(\t\"N\n\022CUserMsg_Voice" +
-      "Mask\022\034\n\024audible_players_mask\030\001 \003(\005\022\032\n\022pl" +
-      "ayer_mod_enabled\030\002 \001(\010\"\027\n\025CUserMsg_Reque" +
-      "stState\"$\n\021CUserMsg_HintText\022\017\n\007message\030" +
-      "\001 \001(\t\"(\n\024CUserMsg_KeyHintText\022\020\n\010message" +
-      "s\030\001 \003(\t\"\030\n\026CUserMsg_StatsCrawlMsg\"A\n\027CUs" +
-      "erMsg_StatsSkipState\022\021\n\tnum_skips\030\001 \001(\005\022" +
-      "\023\n\013num_players\030\002 \001(\005\"G\n\026CUserMsg_VoiceSu",
-      "btitle\022\021\n\tent_index\030\001 \001(\005\022\014\n\004menu\030\002 \001(\005\022" +
-      "\014\n\004item\030\003 \001(\005\"{\n\021CUserMsg_VGUIMenu\022\014\n\004na" +
-      "me\030\001 \001(\t\022\014\n\004show\030\002 \001(\010\022%\n\004keys\030\003 \003(\0132\027.C" +
-      "UserMsg_VGUIMenu.Keys\032#\n\004Keys\022\014\n\004name\030\001 " +
-      "\001(\t\022\r\n\005value\030\002 \001(\t\" \n\017CUserMsg_Geiger\022\r\n" +
-      "\005range\030\001 \001(\005\"=\n\017CUserMsg_Rumble\022\r\n\005index" +
-      "\030\001 \001(\005\022\014\n\004data\030\002 \001(\005\022\r\n\005flags\030\003 \001(\005\"\037\n\016C" +
-      "UserMsg_Train\022\r\n\005train\030\001 \001(\005\"H\n\027CUserMsg" +
-      "_SayTextChannel\022\016\n\006player\030\001 \001(\005\022\017\n\007chann" +
-      "el\030\002 \001(\005\022\014\n\004text\030\003 \001(\t\"3\n\024CUserMsg_Messa",
-      "geText\022\r\n\005color\030\001 \001(\r\022\014\n\004text\030\002 \001(\t*\324\004\n\021" +
-      "EBaseUserMessages\022\027\n\023UM_AchievementEvent" +
-      "\020\001\022\023\n\017UM_CloseCaption\020\002\022\031\n\025UM_CloseCapti" +
-      "onDirect\020\003\022\027\n\023UM_CurrentTimescale\020\004\022\027\n\023U" +
-      "M_DesiredTimescale\020\005\022\013\n\007UM_Fade\020\006\022\020\n\014UM_" +
-      "GameTitle\020\007\022\r\n\tUM_Geiger\020\010\022\017\n\013UM_HintTex" +
-      "t\020\t\022\r\n\tUM_HudMsg\020\n\022\016\n\nUM_HudText\020\013\022\022\n\016UM" +
-      "_KeyHintText\020\014\022\022\n\016UM_MessageText\020\r\022\023\n\017UM" +
-      "_RequestState\020\016\022\017\n\013UM_ResetHUD\020\017\022\r\n\tUM_R" +
-      "umble\020\020\022\016\n\nUM_SayText\020\021\022\017\n\013UM_SayText2\020\022",
-      "\022\025\n\021UM_SayTextChannel\020\023\022\014\n\010UM_Shake\020\024\022\017\n" +
-      "\013UM_ShakeDir\020\025\022\024\n\020UM_StatsCrawlMsg\020\026\022\025\n\021" +
-      "UM_StatsSkipState\020\027\022\016\n\nUM_TextMsg\020\030\022\013\n\007U" +
-      "M_Tilt\020\031\022\014\n\010UM_Train\020\032\022\017\n\013UM_VGUIMenu\020\033\022" +
-      "\020\n\014UM_VoiceMask\020\034\022\024\n\020UM_VoiceSubtitle\020\035\022" +
-      "\020\n\014UM_SendAudio\020\036\022\017\n\013UM_MAX_BASE\020?B\021\n\017co" +
-      "m.dota2.proto"
+      "\030\003 \001(\010\022\021\n\tent_index\030\004 \001(\005\",\n\031CUserMsg_Cu" +
+      "rrentTimescale\022\017\n\007current\030\001 \001(\002\"n\n\031CUser" +
+      "Msg_DesiredTimescale\022\017\n\007desired\030\001 \001(\002\022\020\n" +
+      "\010duration\030\002 \001(\002\022\024\n\014interpolator\030\003 \001(\r\022\030\n" +
+      "\020start_blend_time\030\004 \001(\002\"R\n\rCUserMsg_Fade",
+      "\022\020\n\010duration\030\001 \001(\r\022\021\n\thold_time\030\002 \001(\r\022\r\n" +
+      "\005flags\030\003 \001(\r\022\r\n\005color\030\004 \001(\007\"Y\n\016CUserMsg_" +
+      "Shake\022\017\n\007command\030\001 \001(\r\022\021\n\tamplitude\030\002 \001(" +
+      "\002\022\021\n\tfrequency\030\003 \001(\002\022\020\n\010duration\030\004 \001(\002\"S" +
+      "\n\021CUserMsg_ShakeDir\022\036\n\005shake\030\001 \001(\0132\017.CUs" +
+      "erMsg_Shake\022\036\n\tdirection\030\002 \001(\0132\013.CMsgVec" +
+      "tor\"q\n\rCUserMsg_Tilt\022\017\n\007command\030\001 \001(\r\022\023\n" +
+      "\013ease_in_out\030\002 \001(\010\022\032\n\005angle\030\003 \001(\0132\013.CMsg" +
+      "Vector\022\020\n\010duration\030\004 \001(\002\022\014\n\004time\030\005 \001(\002\">" +
+      "\n\020CUserMsg_SayText\022\016\n\006client\030\001 \001(\r\022\014\n\004te",
+      "xt\030\002 \001(\t\022\014\n\004chat\030\003 \001(\010\"q\n\021CUserMsg_SayTe" +
+      "xt2\022\016\n\006client\030\001 \001(\r\022\014\n\004chat\030\002 \001(\010\022\016\n\006for" +
+      "mat\030\003 \001(\t\022\016\n\006prefix\030\004 \001(\t\022\014\n\004text\030\005 \001(\t\022" +
+      "\020\n\010location\030\006 \001(\t\"\312\001\n\017CUserMsg_HudMsg\022\017\n" +
+      "\007channel\030\001 \001(\r\022\t\n\001x\030\002 \001(\002\022\t\n\001y\030\003 \001(\002\022\016\n\006" +
+      "color1\030\004 \001(\r\022\016\n\006color2\030\005 \001(\r\022\016\n\006effect\030\006" +
+      " \001(\r\022\024\n\014fade_in_time\030\007 \001(\002\022\025\n\rfade_out_t" +
+      "ime\030\010 \001(\002\022\021\n\thold_time\030\t \001(\002\022\017\n\007fx_time\030" +
+      "\n \001(\002\022\017\n\007message\030\013 \001(\t\"#\n\020CUserMsg_HudTe" +
+      "xt\022\017\n\007message\030\001 \001(\t\"/\n\020CUserMsg_TextMsg\022",
+      "\014\n\004dest\030\001 \001(\r\022\r\n\005param\030\002 \003(\t\"\024\n\022CUserMsg" +
+      "_GameTitle\"\023\n\021CUserMsg_ResetHUD\"0\n\022CUser" +
+      "Msg_SendAudio\022\014\n\004stop\030\002 \001(\010\022\014\n\004name\030\003 \001(" +
+      "\t\"N\n\022CUserMsg_VoiceMask\022\034\n\024audible_playe" +
+      "rs_mask\030\001 \003(\005\022\032\n\022player_mod_enabled\030\002 \001(" +
+      "\010\"\027\n\025CUserMsg_RequestState\"$\n\021CUserMsg_H" +
+      "intText\022\017\n\007message\030\001 \001(\t\"(\n\024CUserMsg_Key" +
+      "HintText\022\020\n\010messages\030\001 \003(\t\"\030\n\026CUserMsg_S" +
+      "tatsCrawlMsg\"A\n\027CUserMsg_StatsSkipState\022" +
+      "\021\n\tnum_skips\030\001 \001(\005\022\023\n\013num_players\030\002 \001(\005\"",
+      "G\n\026CUserMsg_VoiceSubtitle\022\021\n\tent_index\030\001" +
+      " \001(\005\022\014\n\004menu\030\002 \001(\005\022\014\n\004item\030\003 \001(\005\"{\n\021CUse" +
+      "rMsg_VGUIMenu\022\014\n\004name\030\001 \001(\t\022\014\n\004show\030\002 \001(" +
+      "\010\022%\n\004keys\030\003 \003(\0132\027.CUserMsg_VGUIMenu.Keys" +
+      "\032#\n\004Keys\022\014\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\" \n" +
+      "\017CUserMsg_Geiger\022\r\n\005range\030\001 \001(\005\"=\n\017CUser" +
+      "Msg_Rumble\022\r\n\005index\030\001 \001(\005\022\014\n\004data\030\002 \001(\005\022" +
+      "\r\n\005flags\030\003 \001(\005\"\037\n\016CUserMsg_Train\022\r\n\005trai" +
+      "n\030\001 \001(\005\"H\n\027CUserMsg_SayTextChannel\022\016\n\006pl" +
+      "ayer\030\001 \001(\005\022\017\n\007channel\030\002 \001(\005\022\014\n\004text\030\003 \001(",
+      "\t\"3\n\024CUserMsg_MessageText\022\r\n\005color\030\001 \001(\r" +
+      "\022\014\n\004text\030\002 \001(\t*\324\004\n\021EBaseUserMessages\022\027\n\023" +
+      "UM_AchievementEvent\020\001\022\023\n\017UM_CloseCaption" +
+      "\020\002\022\031\n\025UM_CloseCaptionDirect\020\003\022\027\n\023UM_Curr" +
+      "entTimescale\020\004\022\027\n\023UM_DesiredTimescale\020\005\022" +
+      "\013\n\007UM_Fade\020\006\022\020\n\014UM_GameTitle\020\007\022\r\n\tUM_Gei" +
+      "ger\020\010\022\017\n\013UM_HintText\020\t\022\r\n\tUM_HudMsg\020\n\022\016\n" +
+      "\nUM_HudText\020\013\022\022\n\016UM_KeyHintText\020\014\022\022\n\016UM_" +
+      "MessageText\020\r\022\023\n\017UM_RequestState\020\016\022\017\n\013UM" +
+      "_ResetHUD\020\017\022\r\n\tUM_Rumble\020\020\022\016\n\nUM_SayText",
+      "\020\021\022\017\n\013UM_SayText2\020\022\022\025\n\021UM_SayTextChannel" +
+      "\020\023\022\014\n\010UM_Shake\020\024\022\017\n\013UM_ShakeDir\020\025\022\024\n\020UM_" +
+      "StatsCrawlMsg\020\026\022\025\n\021UM_StatsSkipState\020\027\022\016" +
+      "\n\nUM_TextMsg\020\030\022\013\n\007UM_Tilt\020\031\022\014\n\010UM_Train\020" +
+      "\032\022\017\n\013UM_VGUIMenu\020\033\022\020\n\014UM_VoiceMask\020\034\022\024\n\020" +
+      "UM_VoiceSubtitle\020\035\022\020\n\014UM_SendAudio\020\036\022\017\n\013" +
+      "UM_MAX_BASE\020?B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -17878,7 +17959,7 @@ public final class Usermessages {
           internal_static_CUserMsg_CloseCaption_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CUserMsg_CloseCaption_descriptor,
-              new java.lang.String[] { "Hash", "Duration", "FromPlayer", });
+              new java.lang.String[] { "Hash", "Duration", "FromPlayer", "EntIndex", });
           internal_static_CUserMsg_CurrentTimescale_descriptor =
             getDescriptor().getMessageTypes().get(2);
           internal_static_CUserMsg_CurrentTimescale_fieldAccessorTable = new

@@ -2313,6 +2313,38 @@ public final class AiActivity {
      * <code>ACT_DOTA_CAST_ABILITY_2_ES_ROLL_END = 575;</code>
      */
     ACT_DOTA_CAST_ABILITY_2_ES_ROLL_END(574, 575),
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_START = 576;</code>
+     */
+    ACT_DOTA_NIAN_PIN_START(575, 576),
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_LOOP = 577;</code>
+     */
+    ACT_DOTA_NIAN_PIN_LOOP(576, 577),
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_END = 578;</code>
+     */
+    ACT_DOTA_NIAN_PIN_END(577, 578),
+    /**
+     * <code>ACT_DOTA_LEAP_STUN = 579;</code>
+     */
+    ACT_DOTA_LEAP_STUN(578, 579),
+    /**
+     * <code>ACT_DOTA_LEAP_SWIPE = 580;</code>
+     */
+    ACT_DOTA_LEAP_SWIPE(579, 580),
+    /**
+     * <code>ACT_DOTA_NIAN_INTRO_LEAP = 581;</code>
+     */
+    ACT_DOTA_NIAN_INTRO_LEAP(580, 581),
+    /**
+     * <code>ACT_DOTA_AREA_DENY = 582;</code>
+     */
+    ACT_DOTA_AREA_DENY(581, 582),
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_TO_STUN = 583;</code>
+     */
+    ACT_DOTA_NIAN_PIN_TO_STUN(582, 583),
     ;
 
     /**
@@ -4615,6 +4647,38 @@ public final class AiActivity {
      * <code>ACT_DOTA_CAST_ABILITY_2_ES_ROLL_END = 575;</code>
      */
     public static final int ACT_DOTA_CAST_ABILITY_2_ES_ROLL_END_VALUE = 575;
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_START = 576;</code>
+     */
+    public static final int ACT_DOTA_NIAN_PIN_START_VALUE = 576;
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_LOOP = 577;</code>
+     */
+    public static final int ACT_DOTA_NIAN_PIN_LOOP_VALUE = 577;
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_END = 578;</code>
+     */
+    public static final int ACT_DOTA_NIAN_PIN_END_VALUE = 578;
+    /**
+     * <code>ACT_DOTA_LEAP_STUN = 579;</code>
+     */
+    public static final int ACT_DOTA_LEAP_STUN_VALUE = 579;
+    /**
+     * <code>ACT_DOTA_LEAP_SWIPE = 580;</code>
+     */
+    public static final int ACT_DOTA_LEAP_SWIPE_VALUE = 580;
+    /**
+     * <code>ACT_DOTA_NIAN_INTRO_LEAP = 581;</code>
+     */
+    public static final int ACT_DOTA_NIAN_INTRO_LEAP_VALUE = 581;
+    /**
+     * <code>ACT_DOTA_AREA_DENY = 582;</code>
+     */
+    public static final int ACT_DOTA_AREA_DENY_VALUE = 582;
+    /**
+     * <code>ACT_DOTA_NIAN_PIN_TO_STUN = 583;</code>
+     */
+    public static final int ACT_DOTA_NIAN_PIN_TO_STUN_VALUE = 583;
 
 
     public final int getNumber() { return value; }
@@ -5196,6 +5260,14 @@ public final class AiActivity {
         case 573: return ACT_DOTA_CAST_ABILITY_2_ES_ROLL_START;
         case 574: return ACT_DOTA_CAST_ABILITY_2_ES_ROLL;
         case 575: return ACT_DOTA_CAST_ABILITY_2_ES_ROLL_END;
+        case 576: return ACT_DOTA_NIAN_PIN_START;
+        case 577: return ACT_DOTA_NIAN_PIN_LOOP;
+        case 578: return ACT_DOTA_NIAN_PIN_END;
+        case 579: return ACT_DOTA_LEAP_STUN;
+        case 580: return ACT_DOTA_LEAP_SWIPE;
+        case 581: return ACT_DOTA_NIAN_INTRO_LEAP;
+        case 582: return ACT_DOTA_AREA_DENY;
+        case 583: return ACT_DOTA_NIAN_PIN_TO_STUN;
         default: return null;
       }
     }
@@ -5256,7 +5328,7 @@ public final class AiActivity {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021ai_activity.proto*\232}\n\010Activity\022\030\n\013ACT_" +
+      "\n\021ai_activity.proto*\374~\n\010Activity\022\030\n\013ACT_" +
       "INVALID\020\377\377\377\377\377\377\377\377\377\001\022\r\n\tACT_RESET\020\000\022\014\n\010ACT" +
       "_IDLE\020\001\022\022\n\016ACT_TRANSITION\020\002\022\r\n\tACT_COVER" +
       "\020\003\022\021\n\rACT_COVER_MED\020\004\022\021\n\rACT_COVER_LOW\020\005" +
@@ -5657,7 +5729,13 @@ public final class AiActivity {
       "N\020\274\004\022*\n%ACT_DOTA_CAST_ABILITY_2_ES_ROLL_" +
       "START\020\275\004\022$\n\037ACT_DOTA_CAST_ABILITY_2_ES_R",
       "OLL\020\276\004\022(\n#ACT_DOTA_CAST_ABILITY_2_ES_ROL" +
-      "L_END\020\277\004B\021\n\017com.dota2.proto"
+      "L_END\020\277\004\022\034\n\027ACT_DOTA_NIAN_PIN_START\020\300\004\022\033" +
+      "\n\026ACT_DOTA_NIAN_PIN_LOOP\020\301\004\022\032\n\025ACT_DOTA_" +
+      "NIAN_PIN_END\020\302\004\022\027\n\022ACT_DOTA_LEAP_STUN\020\303\004" +
+      "\022\030\n\023ACT_DOTA_LEAP_SWIPE\020\304\004\022\035\n\030ACT_DOTA_N" +
+      "IAN_INTRO_LEAP\020\305\004\022\027\n\022ACT_DOTA_AREA_DENY\020" +
+      "\306\004\022\036\n\031ACT_DOTA_NIAN_PIN_TO_STUN\020\307\004B\021\n\017co" +
+      "m.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

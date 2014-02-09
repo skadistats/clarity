@@ -301,6 +301,10 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_CW_MissingHero = 71;</code>
      */
     k_EDOTA_CW_MissingHero(71, 71),
+    /**
+     * <code>k_EDOTA_CW_ReturnedHero = 72;</code>
+     */
+    k_EDOTA_CW_ReturnedHero(72, 72),
     ;
 
     /**
@@ -591,6 +595,10 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_CW_MissingHero = 71;</code>
      */
     public static final int k_EDOTA_CW_MissingHero_VALUE = 71;
+    /**
+     * <code>k_EDOTA_CW_ReturnedHero = 72;</code>
+     */
+    public static final int k_EDOTA_CW_ReturnedHero_VALUE = 72;
 
 
     public final int getNumber() { return value; }
@@ -669,6 +677,7 @@ public final class DotaCommonmessages {
         case 69: return k_EDOTA_CW_Regret;
         case 70: return k_EDOTA_CW_Relax;
         case 71: return k_EDOTA_CW_MissingHero;
+        case 72: return k_EDOTA_CW_ReturnedHero;
         default: return null;
       }
     }
@@ -4800,7 +4809,7 @@ public final class DotaCommonmessages {
       "PopupTypes:\024k_EDOTA_SPT_Textline\022\024\n\014stat" +
       "_strings\030\002 \003(\t\022\023\n\013stat_images\030\003 \003(\005\">\n\025C" +
       "DOTAMsg_CoachHUDPing\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001" +
-      "(\r\022\017\n\007tgtpath\030\003 \001(\t*\306\016\n\025EDOTAChatWheelMe" +
+      "(\r\022\017\n\007tgtpath\030\003 \001(\t*\343\016\n\025EDOTAChatWheelMe" +
       "ssage\022\021\n\rk_EDOTA_CW_Ok\020\000\022\023\n\017k_EDOTA_CW_C" +
       "are\020\001\022\026\n\022k_EDOTA_CW_GetBack\020\002\022\030\n\024k_EDOTA" +
       "_CW_NeedWards\020\003\022\023\n\017k_EDOTA_CW_Stun\020\004\022\023\n\017" +
@@ -4847,9 +4856,10 @@ public final class DotaCommonmessages {
       "d\020B\022\027\n\023k_EDOTA_CW_New_Meta\020C\022\025\n\021k_EDOTA_" +
       "CW_My_Bad\020D\022\025\n\021k_EDOTA_CW_Regret\020E\022\024\n\020k_",
       "EDOTA_CW_Relax\020F\022\032\n\026k_EDOTA_CW_MissingHe" +
-      "ro\020G*\\\n\023EDOTAStatPopupTypes\022\030\n\024k_EDOTA_S" +
-      "PT_Textline\020\000\022\025\n\021k_EDOTA_SPT_Basic\020\001\022\024\n\020" +
-      "k_EDOTA_SPT_Poll\020\002B\021\n\017com.dota2.proto"
+      "ro\020G\022\033\n\027k_EDOTA_CW_ReturnedHero\020H*\\\n\023EDO" +
+      "TAStatPopupTypes\022\030\n\024k_EDOTA_SPT_Textline" +
+      "\020\000\022\025\n\021k_EDOTA_SPT_Basic\020\001\022\024\n\020k_EDOTA_SPT" +
+      "_Poll\020\002B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

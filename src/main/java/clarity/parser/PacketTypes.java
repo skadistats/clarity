@@ -31,6 +31,7 @@ public class PacketTypes {
         DEMO.put(Demo.EDemoCommands.DEM_Stop_VALUE, Demo.CDemoStop.class);
         DEMO.put(Demo.EDemoCommands.DEM_SyncTick_VALUE, Demo.CDemoSyncTick.class);
         DEMO.put(Demo.EDemoCommands.DEM_UserCmd_VALUE, Demo.CDemoUserCmd.class);
+        DEMO.put(Demo.EDemoCommands.DEM_SaveGame_VALUE, Demo.CDemoSaveGame.class);
     }
     
     public static final Map<Integer, Class<? extends GeneratedMessage>> EMBED;
