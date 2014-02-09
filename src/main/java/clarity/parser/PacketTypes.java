@@ -144,6 +144,12 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CustomMsg_VALUE, DotaUsermessages.CDOTAUserMsg_CustomMsg.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CoachHUDPing_VALUE, DotaUsermessages.CDOTAUserMsg_CoachHUDPing.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_ClientLoadGridNav_VALUE, DotaUsermessages.CDOTAUserMsg_ClientLoadGridNav.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_AbilityPing_VALUE, DotaUsermessages.CDOTAUserMsg_AbilityPing.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_ShowGenericPopup_VALUE, DotaUsermessages.CDOTAUserMsg_ShowGenericPopup.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_VoteStart_VALUE, DotaUsermessages.CDOTAUserMsg_VoteStart.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_VoteUpdate_VALUE, DotaUsermessages.CDOTAUserMsg_VoteUpdate.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_VoteEnd_VALUE, DotaUsermessages.CDOTAUserMsg_VoteEnd.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_BoosterState_VALUE, DotaUsermessages.CDOTAUserMsg_BoosterState.class);
     }    
     
     private static final Map<Class<? extends GeneratedMessage>, Method> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, Method>() {
