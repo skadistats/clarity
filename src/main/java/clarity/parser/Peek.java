@@ -56,7 +56,9 @@ public class Peek {
     }
     
     public void trace() {
-        log.trace("id: {}, peekTick: {}, tick: {}, full: {}, messageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
+        if (log.isTraceEnabled()) {
+            log.trace("id: {}, peekTick: {}, tick: {}, full: {}, messageType: {}", id, peekTick, tick, full, message.getDescriptorForType().getName());
+        }
     }
 
     @Override
