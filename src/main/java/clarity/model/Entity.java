@@ -31,6 +31,10 @@ public class Entity implements Cloneable {
     public int getSerial() {
         return serial;
     }
+    
+    public int getHandle() {
+        return Handle.forIndexAndSerial(index, serial);
+    }
 
     public DTClass getDtClass() {
         return dtClass;

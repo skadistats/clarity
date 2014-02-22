@@ -1,5 +1,7 @@
 package clarity.match;
 
+import clarity.model.Entity;
+
 import com.rits.cloning.Cloner;
 
 public class Snapshot implements Cloneable {
@@ -11,6 +13,9 @@ public class Snapshot implements Cloneable {
     private final GameEventCollection gameEvents = new GameEventCollection();
     private final ModifierCollection modifiers = new ModifierCollection();
     private final TempEntityCollection tempEntities = new TempEntityCollection();
+    
+    private Entity gameRulesProxy;
+    private Entity playerResource;
 
     public Snapshot() {
         this(new StringTableCollection());
@@ -44,5 +49,26 @@ public class Snapshot implements Cloneable {
     public Snapshot clone() {
        return CLONER.deepClone(this);
     }
-
+    
+    public void clearTransientData() {
+        gameEvents.clear();
+        tempEntities.clear();
+        gameRulesProxy = null;
+        playerResource = null;
+    }
+    
+    public Entity getGameRulesProxy() {
+        if (gameRulesProxy == null) {
+            gameRulesProxy = entities.getByDtName("DT_DOTAGamerulesProxy");
+        }
+        return gameRulesProxy; 
+    }
+    
+    public Entity getPlayerResource() {
+        if (playerResource == null) {
+            playerResource = entities.getByDtName("DT_DOTA_PlayerResource");
+        }
+        return playerResource; 
+    }
+    
 }

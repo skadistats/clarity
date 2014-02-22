@@ -43,6 +43,11 @@ public class EntityCollection implements Cloneable {
                 predicate
             ));
     }
+    
+    public Entity getByPredicate(Predicate<Entity> predicate) {
+        Iterator<Entity> iter = getAllByPredicate(predicate);
+        return iter.hasNext() ? iter.next() : null;
+    }
 
     public Iterator<Entity> getAllByDtName(final String dtClassName) {
         return getAllByPredicate(
@@ -53,6 +58,11 @@ public class EntityCollection implements Cloneable {
                 }
             });
     }
+    
+    public Entity getByDtName(final String dtClassName) {
+        Iterator<Entity> iter = getAllByDtName(dtClassName);
+        return iter.hasNext() ? iter.next() : null;
+    }    
 
     @Override
     public EntityCollection clone() {
