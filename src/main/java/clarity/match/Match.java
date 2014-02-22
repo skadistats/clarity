@@ -3,10 +3,11 @@ package clarity.match;
 
 import java.util.Iterator;
 
-import org.joda.time.Duration;
+import org.joda.time.Period;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
+import clarity.model.Entity;
 import clarity.model.GameRulesStateType;
 import clarity.parser.Peek;
 
@@ -56,6 +57,10 @@ public class Match {
         state = GameRulesStateType.WAITING_FOR_LOADERS;        
     }
     
+    public void tick() {
+        current.clearTransientData();
+    }
+    
     public Snapshot getSnapshot() {
         return current.clone();
     }
@@ -87,6 +92,14 @@ public class Match {
     public TempEntityCollection getTempEntities() {
         return current.getTempEntities();
     }
+    
+    public Entity getGameRulesProxy() {
+        return current.getGameRulesProxy();
+    }
+
+    public Entity getPlayerResource() {
+        return current.getPlayerResource();
+    }
 
     public int getTick() {
         return tick;
@@ -96,14 +109,6 @@ public class Match {
         this.tick = tick;
     }
     
-    public Duration getReplayTime() {
-        return Duration.millis((long)(1000L * tick * tickInterval));
-    }
-    
-    public String getReplayTimeAsString() {
-        return GAMETIME_FORMATTER.print(getReplayTime().toPeriod());
-    }
-
     public float getTickInterval() {
         return tickInterval;
     }
@@ -111,5 +116,18 @@ public class Match {
     public void setTickInterval(float tickInterval) {
         this.tickInterval = tickInterval;
     }
-
+    
+    public float getReplayTime() {
+        return tick * tickInterval;
+    }
+    
+    public String getReplayTimeAsString() {
+        return GAMETIME_FORMATTER.print(Period.millis((int)(1000.0f * getReplayTime())));
+    }
+    
+    public float getGameTime() {
+        Entity e = getGameRulesProxy();
+        return e != null ? (float)e.getProperty("DT_DOTAGamerules.m_fGameTime") : 0.0f; 
+    }
+    
 }
