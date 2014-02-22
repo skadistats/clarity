@@ -18,7 +18,7 @@ commands, for example), combat log messages, etc.*
 strung into voice--only really relevant to commentated pro matches*✝
 * **sounds**: sounds that occur in the game*✝
 * **overview**: end-of-game summary, including players, game winner, match id,
-duration, and often picks/bans (not implemented in clarity yet)
+duration, and often picks/bans (see `clarity/examples/info/Main.java` for example)
 
 \* **transient**: new dataset (i.e. List or Map) for each tick of the parse
 
