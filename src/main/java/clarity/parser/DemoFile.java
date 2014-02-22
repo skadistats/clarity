@@ -3,8 +3,12 @@ package clarity.parser;
 import java.io.FileInputStream;
 import java.io.IOException;
 
+import org.xerial.snappy.Snappy;
+
 import clarity.parser.Profiles.Profile;
 
+import com.dota2.proto.Demo.CDemoFileInfo;
+import com.dota2.proto.Demo.EDemoCommands;
 import com.google.protobuf.CodedInputStream;
 
 public class DemoFile {
@@ -26,6 +30,25 @@ public class DemoFile {
             new DemoInputStream(s, profile)
         );
     }
+    
+    public static CDemoFileInfo infoForFile(String fileName) throws IOException {
+        CodedInputStream s = CodedInputStream.newInstance(new FileInputStream(fileName));
+        s.setSizeLimit(Integer.MAX_VALUE);
+        ensureHeader(s);
+        int offset = s.readFixed32();
+        s.skipRawBytes(offset - 12);
+        int kind = s.readRawVarint32();
+        boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) != 0;
+        kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
+        int peekTick = s.readRawVarint32();
+        int size = s.readRawVarint32();
+        byte[] data = s.readRawBytes(size);
+        if (isCompressed) {
+            data = Snappy.uncompress(data);
+        }
+        return CDemoFileInfo.parseFrom(data);
+    }
+    
     
     private static void ensureHeader(CodedInputStream s) throws IOException {
         String header = new String(s.readRawBytes(8));
