@@ -56,5 +56,15 @@ public class SendTable {
         }
         return result;
     }
+    
+    public String getBaseClass() {
+        for (SendProp sp : props) {
+            if ("baseclass".equals(sp.getVarName())) {
+                return sp.getDtName();
+            }
+        }
+        return null;
+    }
+    
 
 }

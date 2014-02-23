@@ -11,6 +11,7 @@ public class DTClass {
     private int classId = -1;
     private List<ReceiveProp> receiveProps;
     private Map<String, Integer> propsByName;
+    private DTClass superClass;
     
     public DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
@@ -24,11 +25,30 @@ public class DTClass {
     public void setClassId(int classId) {
         this.classId = classId;
     }
+    
+    public DTClass getSuperClass() {
+        return superClass;
+    }
+
+    public void setSuperClass(DTClass superClass) {
+        this.superClass = superClass;
+    }
 
     public String getDtName() {
         return dtName;
     }
-
+    
+    public boolean instanceOf(String dtName) {
+        DTClass s = this;
+        while (s != null) {
+            if (s.getDtName().equals(dtName)) {
+                return true;
+            }
+            s = s.superClass;
+        }
+        return false;
+    }
+    
     public SendTable getSendTable() {
         return sendTable;
     }

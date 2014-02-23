@@ -33,6 +33,17 @@ public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
             List<ReceiveProp> rps = new SendTableFlattener(match.getDtClasses(), dtc.getSendTable()).flatten();
             dtc.setReceiveProps(rps);
         }
+
+        // last packet of the prologue: set super classes
+        
+        for (Iterator<DTClass> i = match.getDtClasses().iterator(); i.hasNext();) {
+            DTClass dtc = i.next();
+            String superClassName = dtc.getSendTable().getBaseClass();
+            if (superClassName != null) {
+                dtc.setSuperClass(match.getDtClasses().forDtName(superClassName));
+            }
+        }
+        
     }
 
 }
