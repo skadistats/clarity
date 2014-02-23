@@ -11,6 +11,8 @@ import clarity.model.Entity;
 import clarity.model.GameRulesStateType;
 import clarity.parser.Peek;
 
+import com.dota2.proto.Demo.CDemoFileInfo;
+
 public class Match {
 
     private static final PeriodFormatter GAMETIME_FORMATTER = new PeriodFormatterBuilder()
@@ -29,6 +31,9 @@ public class Match {
     private StringTableCollection prologueStringTables;
     private float tickInterval = 1.0f/30.0f;
 
+    // info from the epilogue
+    private CDemoFileInfo fileInfo;
+    
     // current information
     private Snapshot current = new Snapshot();
     private GameRulesStateType state = GameRulesStateType.WAITING_FOR_LOADERS; 
@@ -117,6 +122,14 @@ public class Match {
         this.tickInterval = tickInterval;
     }
     
+    public CDemoFileInfo getFileInfo() {
+        return fileInfo;
+    }
+
+    public void setFileInfo(CDemoFileInfo fileInfo) {
+        this.fileInfo = fileInfo;
+    }
+
     public float getReplayTime() {
         return tick * tickInterval;
     }
