@@ -2,6 +2,7 @@ package clarity.parser;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.xerial.snappy.Snappy;
 
@@ -13,22 +14,22 @@ import com.google.protobuf.CodedInputStream;
 
 public class DemoFile {
 
-    public static DemoIndex indexForFile(String fileName) throws IOException {
-        return indexForFile(fileName, (Profile[]) null);
-    }
-    
     public static DemoIndex indexForFile(String fileName, Profile... profile) throws IOException {
         return new DemoIndex(iteratorForFile(fileName, profile));
     }
 
-    public static DemoInputStreamIterator iteratorForFile(String fileName, Profile... profile) throws IOException {
-        CodedInputStream s = CodedInputStream.newInstance(new FileInputStream(fileName));
+    public static DemoInputStreamIterator iteratorForStream(InputStream stream, Profile... profile) throws IOException {
+        CodedInputStream s = CodedInputStream.newInstance(stream);
         s.setSizeLimit(Integer.MAX_VALUE);
         ensureHeader(s);
         s.skipRawBytes(4); // offset of epilogue
         return new DemoInputStreamIterator(
             new DemoInputStream(s, profile)
         );
+    }
+
+    public static DemoInputStreamIterator iteratorForFile(String fileName, Profile... profile) throws IOException {
+        return iteratorForStream(new FileInputStream(fileName), profile);
     }
     
     public static CDemoFileInfo infoForFile(String fileName) throws IOException {
