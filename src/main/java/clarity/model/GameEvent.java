@@ -27,7 +27,7 @@ public class GameEvent {
         return (T) state[index.intValue()];
     }
 
-    public getName() {
+    public String getName() {
         return this.descriptor.getName();
     }
 	
