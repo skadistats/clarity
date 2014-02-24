@@ -3,8 +3,8 @@ package clarity.examples.seek;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import clarity.Clarity;
 import clarity.match.Match;
-import clarity.parser.DemoFile;
 import clarity.parser.DemoIndex;
 
 public class Main {
@@ -17,7 +17,7 @@ public class Main {
 
         Logger log = LoggerFactory.getLogger("TEST");
 
-        DemoIndex idx = DemoFile.indexForFile(args[0]);
+        DemoIndex idx = Clarity.indexForFile(args[0]);
 
         long tIndex = System.currentTimeMillis() - tStart;
         log.info("index built in {}s", tIndex / 1000.0);
