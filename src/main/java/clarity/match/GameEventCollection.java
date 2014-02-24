@@ -1,6 +1,7 @@
 package clarity.match;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import clarity.model.GameEvent;
@@ -19,6 +20,10 @@ public class GameEventCollection implements Cloneable {
     
     public void clear() {
         gameEvents.clear();
+    }
+    
+    public List<GameEvent> getAll() {
+        return Collections.unmodifiableList(gameEvents);
     }
     
     @Override
