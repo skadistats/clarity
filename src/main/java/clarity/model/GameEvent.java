@@ -14,6 +14,18 @@ public class GameEvent {
     public void set(int index, Object value) {
         this.state[index] = value;
     }
+    
+    public <T> T getProperty(int index) {
+        return (T) state[index];
+    }
+
+    public <T> T getProperty(String key) {
+        Integer index = descriptor.getIndexForKey(key);
+        if (index == null) {
+            throw new IllegalArgumentException("key not found for this GameEvent");
+        }
+        return (T) state[index.intValue()];
+    }
 
     @Override
     public String toString() {
