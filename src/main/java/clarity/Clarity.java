@@ -9,7 +9,7 @@ import org.xerial.snappy.Snappy;
 import clarity.parser.DemoIndex;
 import clarity.parser.DemoInputStream;
 import clarity.parser.DemoInputStreamIterator;
-import clarity.parser.Profiles.Profile;
+import clarity.parser.Profile;
 
 import com.dota2.proto.Demo.CDemoFileInfo;
 import com.dota2.proto.Demo.EDemoCommands;

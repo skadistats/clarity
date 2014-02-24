@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import clarity.Clarity;
 import clarity.match.Match;
 import clarity.parser.DemoInputStreamIterator;
-import clarity.parser.Profiles;
+import clarity.parser.Profile;
 
 public class Main {
 
@@ -17,7 +17,7 @@ public class Main {
         Logger log = LoggerFactory.getLogger("simple");
 
         Match match = new Match();
-        DemoInputStreamIterator iter = Clarity.iteratorForFile(args[0], Profiles.ENTITIES);
+        DemoInputStreamIterator iter = Clarity.iteratorForFile(args[0], Profile.ENTITIES);
         
         while(iter.hasNext()) {
             iter.next().apply(match);
