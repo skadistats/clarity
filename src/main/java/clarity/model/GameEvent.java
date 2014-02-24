@@ -27,6 +27,10 @@ public class GameEvent {
         return (T) state[index.intValue()];
     }
 
+    public getName() {
+        return this.descriptor.getName();
+    }
+	
     @Override
     public String toString() {
         StringBuffer buf = new StringBuffer();
