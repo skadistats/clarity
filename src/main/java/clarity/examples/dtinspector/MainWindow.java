@@ -3,16 +3,13 @@ package clarity.examples.dtinspector;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTree;
-import javax.swing.TransferHandler;
+import javax.swing.ListSelectionModel;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -63,16 +60,9 @@ public class MainWindow {
         splitPane.setRightComponent(scrollPaneRight);
         
         table = new JTable();
+        table.setColumnSelectionAllowed(true);
+        table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         table.setAutoCreateRowSorter(true);
-        table.setTransferHandler(new TransferHandler() {
-            private static final long serialVersionUID = 1782317426672175292L;
-            @Override
-            public void exportToClipboard(JComponent comp, Clipboard clip, int action) throws IllegalStateException {
-                JTable t = (JTable) comp;
-                Object value = t.getModel().getValueAt(t.getSelectedRow(), t.getSelectedColumn());
-                clip.setContents(new StringSelection(value.toString()), null);
-            }
-        });
         scrollPaneRight.setViewportView(table);
         splitPane.setDividerLocation(200);
     }
