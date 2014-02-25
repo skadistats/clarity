@@ -140,7 +140,7 @@ public class Match {
     
     public float getGameTime() {
         Entity e = getGameRulesProxy();
-        return e != null ? (float)e.getProperty("DT_DOTAGamerules.m_fGameTime") : 0.0f; 
+        return e != null ? (float)e.getProperty("dota_gamerules_data.m_fGameTime") : 0.0f; 
     }
     
 }
