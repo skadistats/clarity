@@ -2,6 +2,7 @@ package clarity.decoder;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -21,12 +22,14 @@ public class SendTableFlattener {
     private final SendTable descendant;
     private final Set<SendTableExclusion> exclusions;
     private final List<ReceiveProp> receiveProps;
+    private final StringBuffer nameBuf;
 
     public SendTableFlattener(DTClassCollection lookup, SendTable descendant) {
         this.lookup = lookup;
         this.descendant = descendant;
         this.exclusions = aggregateExclusions(descendant);
         this.receiveProps = new LinkedList<ReceiveProp>();
+        this.nameBuf = new StringBuffer();
     }
 
     private Set<SendTableExclusion> aggregateExclusions(SendTable table) {
@@ -37,20 +40,22 @@ public class SendTableFlattener {
         return result;
     }
 
-    private void _flatten(SendTable ancestor, List<SendProp> accumulator, String proxy) {
-        _flattenCollapsible(ancestor, accumulator);
+    private void _flatten(SendTable ancestor, List<SendProp> accumulator, Deque<String> path, String src) {
+        _flattenCollapsible(ancestor, accumulator, path, src);
+        nameBuf.setLength(0);
+        for (String part : path) {
+            nameBuf.append(part);
+            nameBuf.append('.');
+        }
+        int l = nameBuf.length();
         for (SendProp sp : accumulator) {
-            String n = sp.getVarName();
-            String s = sp.getSrc();
-            if (proxy != null) {
-                n = s + "." + n;
-                s = proxy;
-            }
-            receiveProps.add(new ReceiveProp(sp, s, n));
+            nameBuf.append(sp.getVarName());
+            receiveProps.add(new ReceiveProp(sp, src == null ? sp.getSrc() : src, nameBuf.toString()));
+            nameBuf.setLength(l);
         }
     }
 
-    private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator) {
+    private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator, Deque<String> path, String src) {
         for (SendProp sp : ancestor.getAllNonExclusions()) {
             boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getNetTableName(), sp.getVarName()));
             boolean ineligible = (sp.isFlagSet(PropFlag.INSIDE_ARRAY));
@@ -59,9 +64,11 @@ public class SendTableFlattener {
             }
             if (sp.getType() == PropType.DATATABLE) {
                 if (sp.isFlagSet(PropFlag.COLLAPSIBLE)) {
-                    _flattenCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator);
+                    _flattenCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator, path, src);
                 } else {
-                    _flatten(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), ancestor.getNetTableName());
+                    path.offerLast(sp.getVarName());
+                    _flatten(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), path, src == null ? ancestor.getNetTableName() : src);
+                    path.removeLast();
                 }
             } else {
                 accumulator.add(sp);
@@ -96,7 +103,7 @@ public class SendTableFlattener {
     }
 
     public List<ReceiveProp> flatten() {
-        _flatten(descendant, new LinkedList<SendProp>(), null);
+        _flatten(descendant, new LinkedList<SendProp>(), new LinkedList<String>(), null);
         return sort();
     }
 }
