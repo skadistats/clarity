@@ -83,6 +83,12 @@ public class Profile {
             DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles.class
         );
     
+    public static Profile CHAT_MESSAGES = new Profile()
+    .dependsOn(USERMESSAGE_CONTAINER)
+    .append(
+        DotaUsermessages.CDOTAUserMsg_ChatEvent.class
+    );
+    
     public static Profile ALL = new Profile() {
         @Override
         public boolean contains(Class<?> clazz) {
