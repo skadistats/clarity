@@ -7,9 +7,11 @@ import clarity.match.Match;
 import clarity.model.GameRulesStateType;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.DotaUsermessages.CDOTA_UM_GamerulesStateChanged;
 
+@RegisterHandler(CDOTA_UM_GamerulesStateChanged.class)
 public class UserMsgGamerulesStateChangedHandler implements Handler<CDOTA_UM_GamerulesStateChanged> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

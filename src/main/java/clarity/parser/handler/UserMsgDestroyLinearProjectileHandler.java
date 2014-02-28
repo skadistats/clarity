@@ -6,9 +6,11 @@ import org.slf4j.LoggerFactory;
 import clarity.match.Match;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile;
 
+@RegisterHandler(CDOTAUserMsg_DestroyLinearProjectile.class)
 public class UserMsgDestroyLinearProjectileHandler implements Handler<CDOTAUserMsg_DestroyLinearProjectile> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

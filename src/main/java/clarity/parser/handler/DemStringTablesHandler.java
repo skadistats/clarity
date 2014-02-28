@@ -8,11 +8,13 @@ import org.slf4j.LoggerFactory;
 import clarity.match.Match;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.CDemoStringTables.items_t;
 import com.dota2.proto.Demo.CDemoStringTables.table_t;
 
+@RegisterHandler(CDemoStringTables.class)
 public class DemStringTablesHandler implements Handler<CDemoStringTables> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

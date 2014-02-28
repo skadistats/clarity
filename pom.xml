@@ -48,6 +48,11 @@
 			<artifactId>cloning</artifactId>
 			<version>1.9.0</version>
 		</dependency>
+		<dependency>
+			<groupId>org.reflections</groupId>
+			<artifactId>reflections</artifactId>
+			<version>0.9.9-RC1</version>
+		</dependency>
 	</dependencies>
 	<profiles>
 		<profile>

@@ -12,10 +12,12 @@ import clarity.model.SendProp;
 import clarity.model.SendTable;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
 import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
+@RegisterHandler(CSVCMsg_SendTable.class)
 public class SvcSendTableHandler implements Handler<CSVCMsg_SendTable> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

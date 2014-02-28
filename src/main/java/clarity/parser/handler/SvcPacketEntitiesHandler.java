@@ -7,9 +7,11 @@ import clarity.decoder.PacketEntitiesDecoder;
 import clarity.match.Match;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
 
+@RegisterHandler(CSVCMsg_PacketEntities.class)
 public class SvcPacketEntitiesHandler implements Handler<CSVCMsg_PacketEntities> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

@@ -11,9 +11,11 @@ import clarity.model.StringTable;
 import clarity.model.StringTableEntry;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
 
+@RegisterHandler(CSVCMsg_UpdateStringTable.class)
 public class SvcUpdateStringTableHandler implements Handler<CSVCMsg_UpdateStringTable> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

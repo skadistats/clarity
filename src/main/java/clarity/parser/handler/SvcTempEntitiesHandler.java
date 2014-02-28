@@ -7,9 +7,11 @@ import clarity.decoder.TempEntitiesDecoder;
 import clarity.match.Match;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Netmessages.CSVCMsg_TempEntities;
 
+@RegisterHandler(CSVCMsg_TempEntities.class)
 public class SvcTempEntitiesHandler implements Handler<CSVCMsg_TempEntities> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

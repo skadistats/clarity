@@ -8,10 +8,12 @@ import clarity.model.GameEvent;
 import clarity.model.GameEventDescriptor;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
 
+@RegisterHandler(CSVCMsg_GameEvent.class)
 public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

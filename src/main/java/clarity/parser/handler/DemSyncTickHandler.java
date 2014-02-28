@@ -12,9 +12,11 @@ import clarity.model.DTClass;
 import clarity.model.ReceiveProp;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.Demo.CDemoSyncTick;
 
+@RegisterHandler(CDemoSyncTick.class)
 public class DemSyncTickHandler implements Handler<CDemoSyncTick> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());

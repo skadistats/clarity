@@ -8,9 +8,11 @@ import clarity.model.Entity;
 import clarity.model.ParticleAttachmentType;
 import clarity.parser.Handler;
 import clarity.parser.HandlerHelper;
+import clarity.parser.RegisterHandler;
 
 import com.dota2.proto.DotaUsermessages.CDOTAUserMsg_ParticleManager;
 
+@RegisterHandler(CDOTAUserMsg_ParticleManager.class)
 public class UserMsgParticleManagerHandler implements Handler<CDOTAUserMsg_ParticleManager> {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
