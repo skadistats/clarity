@@ -58,8 +58,8 @@ public class Profile {
         );
 
     public static Profile TEMP_ENTITIES = new Profile()
-        .dependsOn(SEND_TABLES)
         .dependsOn(TRANSIENT_DATA)
+        .dependsOn(SEND_TABLES)
         .append(
             Netmessages.CSVCMsg_TempEntities.class
         );
@@ -84,6 +84,7 @@ public class Profile {
         );
     
     public static Profile CHAT_MESSAGES = new Profile()
+    .dependsOn(TRANSIENT_DATA)
     .dependsOn(USERMESSAGE_CONTAINER)
     .append(
         DotaUsermessages.CDOTAUserMsg_ChatEvent.class

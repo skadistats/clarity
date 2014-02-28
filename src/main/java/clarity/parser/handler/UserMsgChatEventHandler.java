@@ -18,10 +18,11 @@ public class UserMsgChatEventHandler implements Handler<CDOTAUserMsg_ChatEvent> 
     @Override
     public void apply(int peekTick, CDOTAUserMsg_ChatEvent message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
-        log.debug("{} CHAT_EVENT [state={}]",
+        log.debug("{} CHAT_EVENT [type={}]",
             match.getReplayTimeAsString(),
             message.getType()
         );
+        match.getChatEvents().add(message);
     }
 
 }

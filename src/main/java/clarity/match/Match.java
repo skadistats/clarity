@@ -3,7 +3,7 @@ package clarity.match;
 
 import java.util.Iterator;
 
-import org.joda.time.Period;
+import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 
@@ -98,6 +98,10 @@ public class Match {
         return current.getTempEntities();
     }
     
+    public ChatEventCollection getChatEvents() {
+        return current.getChatEvents();
+    }
+
     public Entity getGameRulesProxy() {
         return current.getGameRulesProxy();
     }
@@ -135,7 +139,7 @@ public class Match {
     }
     
     public String getReplayTimeAsString() {
-        return GAMETIME_FORMATTER.print(Period.millis((int)(1000.0f * getReplayTime())));
+        return GAMETIME_FORMATTER.print(Duration.millis((int)(1000.0f * getReplayTime())).toPeriod());
     }
     
     public float getGameTime() {
