@@ -82,7 +82,7 @@ If you just want to try it out quickly, you can run:
 This will build a JAR containing clarity with all its dependencies.
 This can be run with something like:
 
-    java -cp target/clarity-0.1-SNAPSHOT.jar clarity.examples.Simple.Main replay.dem
+    java -cp target/clarity-0.1-SNAPSHOT.jar clarity.examples.dtinspector.Main replay.dem
 
 I recommend using a decent IDE though, were you import the project and start playing from there.
 Clarity should build out of the box in Netbeans, and Eclipse should be equally fine 
@@ -91,7 +91,7 @@ Clarity should build out of the box in Netbeans, and Eclipse should be equally f
 
 # Parsing Replay Data
 
-See `clarity/examples/Simple/Main.java` for a rough example on how to invoke it.
+See `clarity/examples/simple/Main.java` for a rough example on how to invoke it.
 
 # License
 
