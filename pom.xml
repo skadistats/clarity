@@ -30,7 +30,7 @@
 	</licenses>
 
 	<scm>
-		<url>git@github.com:skadistats/clarity.git</url>
+		<url>https://github.com/skadistats/clarity</url>
 		<connection>scm:git:git@github.com:skadistats/clarity.git</connection>
 		<developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
 	</scm>
