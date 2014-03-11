@@ -8,6 +8,19 @@
 	<name>clarity</name>
 	<description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
 	<url>https://github.com/skadistats/clarity</url>
+
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
+
+	<properties>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+	
 	<licenses>
 		<license>
 			<name>BSD style license</name>
@@ -15,10 +28,13 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
+	
 	<scm>
-		<url>https://github.com/skadistats</url>
-		<connection>https://github.com/skadistats</connection>
+		<url>git@github.com:skadistats/clarity.git</url>
+		<connection>scm:git:git@github.com:skadistats/clarity.git</connection>
+		<developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
 	</scm>
+	
 	<developers>
 		<developer>
 			<id>spheenik</id>
@@ -26,12 +42,6 @@
 			<email>clarity@martin.schrodt.org</email>
 		</developer>
 	</developers>
-
-	<properties>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencies>
 		<dependency>
