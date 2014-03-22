@@ -12,14 +12,14 @@ public class Profile {
 
     public static Profile NET_TICK = new Profile()
         .append(
-            Netmessages.CNETMsg_Tick.class
+        Netmessages.CNETMsg_Tick.class
         );
 
     public static Profile REPLAY_TIME = new Profile()
         .append(
-            Netmessages.CSVCMsg_ServerInfo.class
+        Netmessages.CSVCMsg_ServerInfo.class
         );
-    
+
     public static Profile STRING_TABLES = new Profile()
         .append(
             Netmessages.CSVCMsg_CreateStringTable.class,
@@ -32,7 +32,7 @@ public class Profile {
             Demo.CDemoSyncTick.class,
             Netmessages.CSVCMsg_SendTable.class
         );
-    
+
     public static Profile VOICE_DATA = new Profile()
         .append(
             Netmessages.CSVCMsg_VoiceInit.class,
@@ -44,10 +44,10 @@ public class Profile {
 
     public static Profile TRANSIENT_DATA = new Profile()
         .dependsOn(NET_TICK);
-    
+
     public static Profile USERMESSAGE_CONTAINER = new Profile()
         .append(
-            Networkbasetypes.CSVCMsg_UserMessage.class
+        Networkbasetypes.CSVCMsg_UserMessage.class
         );
 
     public static Profile ENTITIES = new Profile()
@@ -67,13 +67,14 @@ public class Profile {
     public static Profile MODIFIERS = new Profile()
         .dependsOn(ENTITIES)
         .dependsOn(STRING_TABLES);
-    
+
     public static Profile GAME_EVENTS = new Profile()
+        .dependsOn(TRANSIENT_DATA)
         .append(
             Netmessages.CSVCMsg_GameEventList.class,
             Networkbasetypes.CSVCMsg_GameEvent.class
         );
-    
+
     public static Profile PROJECTILES = new Profile()
         .dependsOn(ENTITIES)
         .dependsOn(USERMESSAGE_CONTAINER)
@@ -82,21 +83,21 @@ public class Profile {
             DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile.class,
             DotaUsermessages.CDOTAUserMsg_DodgeTrackingProjectiles.class
         );
-    
+
     public static Profile CHAT_MESSAGES = new Profile()
-    .dependsOn(TRANSIENT_DATA)
-    .dependsOn(USERMESSAGE_CONTAINER)
-    .append(
-        DotaUsermessages.CDOTAUserMsg_ChatEvent.class
-    );
-    
+        .dependsOn(TRANSIENT_DATA)
+        .dependsOn(USERMESSAGE_CONTAINER)
+        .append(
+            DotaUsermessages.CDOTAUserMsg_ChatEvent.class
+        );
+
     public static Profile ALL = new Profile() {
         @Override
         public boolean contains(Class<?> clazz) {
             return true;
         }
     };
-    
+
     private final Set<Class<?>> protoClasses = new HashSet<Class<?>>();
 
     public Profile append(Class<?>... classes) {
