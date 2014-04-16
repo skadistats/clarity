@@ -30,7 +30,7 @@ public class Int64Decoder implements PropDecoder<Long> {
         }
         long l = stream.readNumericBits(32);
         long r = stream.readNumericBits(remainder);
-        long v = (l << 32) | r;
+        long v = (r << 32) | l;
         return negate ? -v : v;
     }
 
