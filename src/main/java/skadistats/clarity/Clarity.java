@@ -45,7 +45,7 @@ public class Clarity {
         ensureHeader(s);
         int offset = s.readFixed32();
         s.skipRawBytes(offset - 12);
-        boolean isCompressed = (s.readRawVarint32() & EDemoCommands.DEM_IsCompressed_VALUE) != 0;
+        boolean isCompressed = (s.readRawVarint32() & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
         s.readRawVarint32(); // skip peek tick
         int size = s.readRawVarint32();
         byte[] data = s.readRawBytes(size);
