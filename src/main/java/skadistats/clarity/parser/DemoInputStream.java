@@ -55,7 +55,7 @@ public class DemoInputStream {
             switch (state) {
                 case TOP:
                     int kind = s.readRawVarint32();
-                    boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) != 0;
+                    boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
                     kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
                     peekTick = s.readRawVarint32();
                     int size = s.readRawVarint32();
