@@ -2,6 +2,7 @@ option java_package = "com.dota2.proto";
 
 import "google/protobuf/descriptor.proto";
 import "networkbasetypes.proto";
+import "network_connection.proto";
 
 enum NET_Messages {
 	net_NOP = 0;
@@ -78,7 +79,7 @@ message CNETMsg_NOP {
 }
 
 message CNETMsg_Disconnect {
-	optional string text = 1;
+	optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
 }
 
 message CNETMsg_File {
@@ -94,8 +95,9 @@ message CNETMsg_SplitScreenUser {
 
 message CNETMsg_Tick {
 	optional uint32 tick = 1;
-	optional uint32 host_frametime = 2;
-	optional uint32 host_frametime_std_deviation = 3;
+	optional uint32 host_computationtime = 4;
+	optional uint32 host_computationtime_std_deviation = 5;
+	optional uint32 host_framestarttime_std_deviation = 6;
 }
 
 message CNETMsg_StringCmd {
