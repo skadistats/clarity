@@ -18,7 +18,6 @@ public class NetTickHandler implements Handler<CNETMsg_Tick> {
     @Override
     public void apply(int peekTick, CNETMsg_Tick message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
-        match.tick();
     }
 
 }

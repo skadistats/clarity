@@ -62,7 +62,7 @@ public class Match {
         state = GameRulesStateType.WAITING_FOR_LOADERS;        
     }
     
-    public void tick() {
+    public void startNewNetTick() {
         current.clearTransientData();
     }
     

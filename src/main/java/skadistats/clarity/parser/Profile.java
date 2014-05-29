@@ -42,8 +42,8 @@ public class Profile {
     public static Profile BASELINES = new Profile()
         .dependsOn(STRING_TABLES);
 
-    public static Profile TRANSIENT_DATA = new Profile()
-        .dependsOn(NET_TICK);
+    @Deprecated
+    public static Profile TRANSIENT_DATA = new Profile();
 
     public static Profile USERMESSAGE_CONTAINER = new Profile()
         .append(
@@ -58,7 +58,6 @@ public class Profile {
         );
 
     public static Profile TEMP_ENTITIES = new Profile()
-        .dependsOn(TRANSIENT_DATA)
         .dependsOn(SEND_TABLES)
         .append(
             Netmessages.CSVCMsg_TempEntities.class
@@ -69,7 +68,6 @@ public class Profile {
         .dependsOn(STRING_TABLES);
 
     public static Profile GAME_EVENTS = new Profile()
-        .dependsOn(TRANSIENT_DATA)
         .append(
             Netmessages.CSVCMsg_GameEventList.class,
             Networkbasetypes.CSVCMsg_GameEvent.class
@@ -85,7 +83,6 @@ public class Profile {
         );
 
     public static Profile CHAT_MESSAGES = new Profile()
-        .dependsOn(TRANSIENT_DATA)
         .dependsOn(USERMESSAGE_CONTAINER)
         .append(
             DotaUsermessages.CDOTAUserMsg_ChatEvent.class
@@ -99,6 +96,7 @@ public class Profile {
     };
 
     private final Set<Class<?>> protoClasses = new HashSet<Class<?>>();
+    private boolean tickwiseData;
 
     public Profile append(Class<?>... classes) {
         for (Class<?> clazz : classes) {
@@ -116,6 +114,10 @@ public class Profile {
 
     public boolean contains(Class<?> clazz) {
         return protoClasses.contains(clazz);
+    }
+
+    public boolean containsTickwiseData() {
+        return tickwiseData;
     }
 
 }

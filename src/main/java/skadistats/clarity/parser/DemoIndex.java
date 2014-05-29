@@ -27,7 +27,7 @@ public class DemoIndex {
     private int lastTick = 0; // the number of ticks in this replay
     private int syncIdx = 0; // the index of the sync packet
     
-    public DemoIndex(DemoInputStreamIterator iter) throws IOException {
+    public DemoIndex(PeekIterator iter) throws IOException {
         int skew = 0;
         boolean sync = false;
         while (iter.hasNext()) {

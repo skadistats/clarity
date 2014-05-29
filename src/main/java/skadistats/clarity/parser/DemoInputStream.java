@@ -31,6 +31,7 @@ public class DemoInputStream {
     private int tick = 0;
     private int peekTick = 0;
     private boolean full = false;
+    private boolean nextIsTickBorder = false;
     private State state = State.TOP;
 
     public DemoInputStream(CodedInputStream s, Profile... profile) {
@@ -48,6 +49,12 @@ public class DemoInputStream {
             }
         }
         return true;
+    }
+    
+    private Peek genPeek(GeneratedMessage message) {
+        Peek result = new Peek(++n, tick, peekTick, full, nextIsTickBorder, message);
+        nextIsTickBorder = false;
+        return result;
     }
 
     public Peek read() throws IOException {
@@ -84,10 +91,10 @@ public class DemoInputStream {
                         state = State.EMBED;
                         full = true;
                         if (!isFiltered(CDemoStringTables.class)) {
-                            return new Peek(++n, tick, peekTick, true, fullMessage.getStringTable());
+                            return genPeek(fullMessage.getStringTable());
                         }
                     } else if (!isFiltered(message.getClass())) {
-                        return new Peek(++n, tick, peekTick, false, message);
+                        return genPeek(message);
                     }
                     continue;
 
@@ -108,8 +115,9 @@ public class DemoInputStream {
                     GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
                     if (subMessage instanceof CNETMsg_Tick) {
                         tick = ((CNETMsg_Tick) subMessage).getTick();
+                        nextIsTickBorder = true;
                         if (!isFiltered(CNETMsg_Tick.class)) {
-                            return new Peek(++n, tick, peekTick, full, subMessage);
+                            return genPeek(subMessage);
                         }
                     } else if (subMessage instanceof CSVCMsg_UserMessage) {
                         if (!isFiltered(CSVCMsg_UserMessage.class)) {
@@ -119,11 +127,11 @@ public class DemoInputStream {
                                 log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                                 continue;
                             } else if (!isFiltered(umClazz)) {
-                                return new Peek(++n, tick, peekTick, full, PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                                return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
                             }
                         }
                     } else if (!isFiltered(subMessage.getClass())) {
-                        return new Peek(++n, tick, peekTick, full, subMessage);
+                        return genPeek(subMessage);
                     }
                     continue;
             }

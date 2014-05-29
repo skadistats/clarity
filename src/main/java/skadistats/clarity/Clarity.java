@@ -9,7 +9,9 @@ import org.xerial.snappy.Snappy;
 import skadistats.clarity.parser.DemoIndex;
 import skadistats.clarity.parser.DemoInputStream;
 import skadistats.clarity.parser.DemoInputStreamIterator;
+import skadistats.clarity.parser.PeekIterator;
 import skadistats.clarity.parser.Profile;
+import skadistats.clarity.parser.TickIterator;
 
 import com.dota2.proto.Demo.CDemoFileInfo;
 import com.dota2.proto.Demo.EDemoCommands;
@@ -17,22 +19,29 @@ import com.google.protobuf.CodedInputStream;
 
 public class Clarity {
 
-    public static DemoInputStreamIterator iteratorForStream(InputStream stream, Profile... profile) throws IOException {
+    private static DemoInputStream demoInputStreamForStream(InputStream stream, Profile... profile) throws IOException {
         CodedInputStream s = CodedInputStream.newInstance(stream);
         s.setSizeLimit(Integer.MAX_VALUE);
         ensureHeader(s);
         s.skipRawBytes(4); // offset of epilogue
-        return new DemoInputStreamIterator(
-            new DemoInputStream(s, profile)
-        );
+        return new DemoInputStream(s, profile);
     }
 
+    @Deprecated
     public static DemoInputStreamIterator iteratorForFile(String fileName, Profile... profile) throws IOException {
-        return iteratorForStream(new FileInputStream(fileName), profile);
+        return new DemoInputStreamIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
+    }
+    
+    public static PeekIterator peekIteratorForFile(String fileName, Profile... profile) throws IOException {
+        return new PeekIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
+    }
+    
+    public static TickIterator tickIteratorForFile(String fileName, Profile... profile) throws IOException {
+        return new TickIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
     }
 
     public static DemoIndex indexForStream(InputStream stream, Profile... profile) throws IOException {
-        return new DemoIndex(iteratorForStream(stream, profile));
+        return new DemoIndex(new PeekIterator(demoInputStreamForStream(stream, profile)));
     }
 
     public static DemoIndex indexForFile(String fileName, Profile... profile) throws IOException {
