@@ -2364,6 +2364,21 @@ public final class Netmessages {
   public interface CNETMsg_DisconnectOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
+    // optional string text_deprecated = 1;
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    boolean hasTextDeprecated();
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    java.lang.String getTextDeprecated();
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTextDeprecatedBytes();
+
     // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
     /**
      * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
@@ -2425,13 +2440,18 @@ public final class Netmessages {
               }
               break;
             }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              textDeprecated_ = input.readBytes();
+              break;
+            }
             case 16: {
               int rawValue = input.readEnum();
               com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason value = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.valueOf(rawValue);
               if (value == null) {
                 unknownFields.mergeVarintField(2, rawValue);
               } else {
-                bitField0_ |= 0x00000001;
+                bitField0_ |= 0x00000002;
                 reason_ = value;
               }
               break;
@@ -2476,6 +2496,49 @@ public final class Netmessages {
     }
 
     private int bitField0_;
+    // optional string text_deprecated = 1;
+    public static final int TEXT_DEPRECATED_FIELD_NUMBER = 1;
+    private java.lang.Object textDeprecated_;
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    public boolean hasTextDeprecated() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    public java.lang.String getTextDeprecated() {
+      java.lang.Object ref = textDeprecated_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          textDeprecated_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string text_deprecated = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTextDeprecatedBytes() {
+      java.lang.Object ref = textDeprecated_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        textDeprecated_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
     public static final int REASON_FIELD_NUMBER = 2;
     private com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason reason_;
@@ -2483,7 +2546,7 @@ public final class Netmessages {
      * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
      */
     public boolean hasReason() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
      * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
@@ -2493,6 +2556,7 @@ public final class Netmessages {
     }
 
     private void initFields() {
+      textDeprecated_ = "";
       reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
     }
     private byte memoizedIsInitialized = -1;
@@ -2508,6 +2572,9 @@ public final class Netmessages {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getTextDeprecatedBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeEnum(2, reason_.getNumber());
       }
       getUnknownFields().writeTo(output);
@@ -2520,6 +2587,10 @@ public final class Netmessages {
 
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getTextDeprecatedBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(2, reason_.getNumber());
       }
@@ -2639,8 +2710,10 @@ public final class Netmessages {
 
       public Builder clear() {
         super.clear();
-        reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
+        textDeprecated_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
+        reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
+        bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
 
@@ -2672,6 +2745,10 @@ public final class Netmessages {
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
+        result.textDeprecated_ = textDeprecated_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
         result.reason_ = reason_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
@@ -2689,6 +2766,11 @@ public final class Netmessages {
 
       public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_Disconnect other) {
         if (other == com.dota2.proto.Netmessages.CNETMsg_Disconnect.getDefaultInstance()) return this;
+        if (other.hasTextDeprecated()) {
+          bitField0_ |= 0x00000001;
+          textDeprecated_ = other.textDeprecated_;
+          onChanged();
+        }
         if (other.hasReason()) {
           setReason(other.getReason());
         }
@@ -2719,13 +2801,87 @@ public final class Netmessages {
       }
       private int bitField0_;
 
+      // optional string text_deprecated = 1;
+      private java.lang.Object textDeprecated_ = "";
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public boolean hasTextDeprecated() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public java.lang.String getTextDeprecated() {
+        java.lang.Object ref = textDeprecated_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          textDeprecated_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTextDeprecatedBytes() {
+        java.lang.Object ref = textDeprecated_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          textDeprecated_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public Builder setTextDeprecated(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        textDeprecated_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public Builder clearTextDeprecated() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        textDeprecated_ = getDefaultInstance().getTextDeprecated();
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional string text_deprecated = 1;</code>
+       */
+      public Builder setTextDeprecatedBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        textDeprecated_ = value;
+        onChanged();
+        return this;
+      }
+
       // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
       private com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
       /**
        * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
        */
       public boolean hasReason() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
        * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
@@ -2740,7 +2896,7 @@ public final class Netmessages {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000001;
+        bitField0_ |= 0x00000002;
         reason_ = value;
         onChanged();
         return this;
@@ -2749,7 +2905,7 @@ public final class Netmessages {
        * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
        */
       public Builder clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000001);
+        bitField0_ = (bitField0_ & ~0x00000002);
         reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
         onChanged();
         return this;
@@ -3889,6 +4045,26 @@ public final class Netmessages {
      */
     int getTick();
 
+    // optional uint32 host_frametime_deprecated = 2;
+    /**
+     * <code>optional uint32 host_frametime_deprecated = 2;</code>
+     */
+    boolean hasHostFrametimeDeprecated();
+    /**
+     * <code>optional uint32 host_frametime_deprecated = 2;</code>
+     */
+    int getHostFrametimeDeprecated();
+
+    // optional uint32 host_frametime_std_deviation_deprecated = 3;
+    /**
+     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+     */
+    boolean hasHostFrametimeStdDeviationDeprecated();
+    /**
+     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+     */
+    int getHostFrametimeStdDeviationDeprecated();
+
     // optional uint32 host_computationtime = 4;
     /**
      * <code>optional uint32 host_computationtime = 4;</code>
@@ -3975,18 +4151,28 @@ public final class Netmessages {
               tick_ = input.readUInt32();
               break;
             }
-            case 32: {
+            case 16: {
               bitField0_ |= 0x00000002;
+              hostFrametimeDeprecated_ = input.readUInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              hostFrametimeStdDeviationDeprecated_ = input.readUInt32();
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
               hostComputationtime_ = input.readUInt32();
               break;
             }
             case 40: {
-              bitField0_ |= 0x00000004;
+              bitField0_ |= 0x00000010;
               hostComputationtimeStdDeviation_ = input.readUInt32();
               break;
             }
             case 48: {
-              bitField0_ |= 0x00000008;
+              bitField0_ |= 0x00000020;
               hostFramestarttimeStdDeviation_ = input.readUInt32();
               break;
             }
@@ -4046,6 +4232,38 @@ public final class Netmessages {
       return tick_;
     }
 
+    // optional uint32 host_frametime_deprecated = 2;
+    public static final int HOST_FRAMETIME_DEPRECATED_FIELD_NUMBER = 2;
+    private int hostFrametimeDeprecated_;
+    /**
+     * <code>optional uint32 host_frametime_deprecated = 2;</code>
+     */
+    public boolean hasHostFrametimeDeprecated() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional uint32 host_frametime_deprecated = 2;</code>
+     */
+    public int getHostFrametimeDeprecated() {
+      return hostFrametimeDeprecated_;
+    }
+
+    // optional uint32 host_frametime_std_deviation_deprecated = 3;
+    public static final int HOST_FRAMETIME_STD_DEVIATION_DEPRECATED_FIELD_NUMBER = 3;
+    private int hostFrametimeStdDeviationDeprecated_;
+    /**
+     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+     */
+    public boolean hasHostFrametimeStdDeviationDeprecated() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+     */
+    public int getHostFrametimeStdDeviationDeprecated() {
+      return hostFrametimeStdDeviationDeprecated_;
+    }
+
     // optional uint32 host_computationtime = 4;
     public static final int HOST_COMPUTATIONTIME_FIELD_NUMBER = 4;
     private int hostComputationtime_;
@@ -4053,7 +4271,7 @@ public final class Netmessages {
      * <code>optional uint32 host_computationtime = 4;</code>
      */
     public boolean hasHostComputationtime() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional uint32 host_computationtime = 4;</code>
@@ -4069,7 +4287,7 @@ public final class Netmessages {
      * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
      */
     public boolean hasHostComputationtimeStdDeviation() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
      * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
@@ -4085,7 +4303,7 @@ public final class Netmessages {
      * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
      */
     public boolean hasHostFramestarttimeStdDeviation() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
      * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
@@ -4096,6 +4314,8 @@ public final class Netmessages {
 
     private void initFields() {
       tick_ = 0;
+      hostFrametimeDeprecated_ = 0;
+      hostFrametimeStdDeviationDeprecated_ = 0;
       hostComputationtime_ = 0;
       hostComputationtimeStdDeviation_ = 0;
       hostFramestarttimeStdDeviation_ = 0;
@@ -4116,12 +4336,18 @@ public final class Netmessages {
         output.writeUInt32(1, tick_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt32(4, hostComputationtime_);
+        output.writeUInt32(2, hostFrametimeDeprecated_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt32(5, hostComputationtimeStdDeviation_);
+        output.writeUInt32(3, hostFrametimeStdDeviationDeprecated_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeUInt32(4, hostComputationtime_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeUInt32(5, hostComputationtimeStdDeviation_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeUInt32(6, hostFramestarttimeStdDeviation_);
       }
       getUnknownFields().writeTo(output);
@@ -4139,13 +4365,21 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(4, hostComputationtime_);
+          .computeUInt32Size(2, hostFrametimeDeprecated_);
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(5, hostComputationtimeStdDeviation_);
+          .computeUInt32Size(3, hostFrametimeStdDeviationDeprecated_);
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(4, hostComputationtime_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(5, hostComputationtimeStdDeviation_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(6, hostFramestarttimeStdDeviation_);
       }
@@ -4267,12 +4501,16 @@ public final class Netmessages {
         super.clear();
         tick_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        hostComputationtime_ = 0;
+        hostFrametimeDeprecated_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
-        hostComputationtimeStdDeviation_ = 0;
+        hostFrametimeStdDeviationDeprecated_ = 0;
         bitField0_ = (bitField0_ & ~0x00000004);
-        hostFramestarttimeStdDeviation_ = 0;
+        hostComputationtime_ = 0;
         bitField0_ = (bitField0_ & ~0x00000008);
+        hostComputationtimeStdDeviation_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        hostFramestarttimeStdDeviation_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -4308,13 +4546,21 @@ public final class Netmessages {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.hostComputationtime_ = hostComputationtime_;
+        result.hostFrametimeDeprecated_ = hostFrametimeDeprecated_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.hostComputationtimeStdDeviation_ = hostComputationtimeStdDeviation_;
+        result.hostFrametimeStdDeviationDeprecated_ = hostFrametimeStdDeviationDeprecated_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
+        }
+        result.hostComputationtime_ = hostComputationtime_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.hostComputationtimeStdDeviation_ = hostComputationtimeStdDeviation_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
         }
         result.hostFramestarttimeStdDeviation_ = hostFramestarttimeStdDeviation_;
         result.bitField0_ = to_bitField0_;
@@ -4335,6 +4581,12 @@ public final class Netmessages {
         if (other == com.dota2.proto.Netmessages.CNETMsg_Tick.getDefaultInstance()) return this;
         if (other.hasTick()) {
           setTick(other.getTick());
+        }
+        if (other.hasHostFrametimeDeprecated()) {
+          setHostFrametimeDeprecated(other.getHostFrametimeDeprecated());
+        }
+        if (other.hasHostFrametimeStdDeviationDeprecated()) {
+          setHostFrametimeStdDeviationDeprecated(other.getHostFrametimeStdDeviationDeprecated());
         }
         if (other.hasHostComputationtime()) {
           setHostComputationtime(other.getHostComputationtime());
@@ -4405,13 +4657,79 @@ public final class Netmessages {
         return this;
       }
 
+      // optional uint32 host_frametime_deprecated = 2;
+      private int hostFrametimeDeprecated_ ;
+      /**
+       * <code>optional uint32 host_frametime_deprecated = 2;</code>
+       */
+      public boolean hasHostFrametimeDeprecated() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional uint32 host_frametime_deprecated = 2;</code>
+       */
+      public int getHostFrametimeDeprecated() {
+        return hostFrametimeDeprecated_;
+      }
+      /**
+       * <code>optional uint32 host_frametime_deprecated = 2;</code>
+       */
+      public Builder setHostFrametimeDeprecated(int value) {
+        bitField0_ |= 0x00000002;
+        hostFrametimeDeprecated_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 host_frametime_deprecated = 2;</code>
+       */
+      public Builder clearHostFrametimeDeprecated() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        hostFrametimeDeprecated_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 host_frametime_std_deviation_deprecated = 3;
+      private int hostFrametimeStdDeviationDeprecated_ ;
+      /**
+       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+       */
+      public boolean hasHostFrametimeStdDeviationDeprecated() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+       */
+      public int getHostFrametimeStdDeviationDeprecated() {
+        return hostFrametimeStdDeviationDeprecated_;
+      }
+      /**
+       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+       */
+      public Builder setHostFrametimeStdDeviationDeprecated(int value) {
+        bitField0_ |= 0x00000004;
+        hostFrametimeStdDeviationDeprecated_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
+       */
+      public Builder clearHostFrametimeStdDeviationDeprecated() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        hostFrametimeStdDeviationDeprecated_ = 0;
+        onChanged();
+        return this;
+      }
+
       // optional uint32 host_computationtime = 4;
       private int hostComputationtime_ ;
       /**
        * <code>optional uint32 host_computationtime = 4;</code>
        */
       public boolean hasHostComputationtime() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
        * <code>optional uint32 host_computationtime = 4;</code>
@@ -4423,7 +4741,7 @@ public final class Netmessages {
        * <code>optional uint32 host_computationtime = 4;</code>
        */
       public Builder setHostComputationtime(int value) {
-        bitField0_ |= 0x00000002;
+        bitField0_ |= 0x00000008;
         hostComputationtime_ = value;
         onChanged();
         return this;
@@ -4432,7 +4750,7 @@ public final class Netmessages {
        * <code>optional uint32 host_computationtime = 4;</code>
        */
       public Builder clearHostComputationtime() {
-        bitField0_ = (bitField0_ & ~0x00000002);
+        bitField0_ = (bitField0_ & ~0x00000008);
         hostComputationtime_ = 0;
         onChanged();
         return this;
@@ -4444,7 +4762,7 @@ public final class Netmessages {
        * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
        */
       public boolean hasHostComputationtimeStdDeviation() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
@@ -4456,7 +4774,7 @@ public final class Netmessages {
        * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
        */
       public Builder setHostComputationtimeStdDeviation(int value) {
-        bitField0_ |= 0x00000004;
+        bitField0_ |= 0x00000010;
         hostComputationtimeStdDeviation_ = value;
         onChanged();
         return this;
@@ -4465,7 +4783,7 @@ public final class Netmessages {
        * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
        */
       public Builder clearHostComputationtimeStdDeviation() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000010);
         hostComputationtimeStdDeviation_ = 0;
         onChanged();
         return this;
@@ -4477,7 +4795,7 @@ public final class Netmessages {
        * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
        */
       public boolean hasHostFramestarttimeStdDeviation() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
        * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
@@ -4489,7 +4807,7 @@ public final class Netmessages {
        * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
        */
       public Builder setHostFramestarttimeStdDeviation(int value) {
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000020;
         hostFramestarttimeStdDeviation_ = value;
         onChanged();
         return this;
@@ -4498,7 +4816,7 @@ public final class Netmessages {
        * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
        */
       public Builder clearHostFramestarttimeStdDeviation() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000020);
         hostFramestarttimeStdDeviation_ = 0;
         onChanged();
         return this;
@@ -33335,146 +33653,149 @@ public final class Netmessages {
       "etwork_connection.proto\"R\n\nCMsg_CVars\022\037\n" +
       "\005cvars\030\001 \003(\0132\020.CMsg_CVars.CVar\032#\n\004CVar\022\014" +
       "\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\r\n\013CNETMsg_N" +
-      "OP\"^\n\022CNETMsg_Disconnect\022H\n\006reason\030\002 \001(\016" +
-      "2\034.ENetworkDisconnectionReason:\032NETWORK_" +
-      "DISCONNECT_INVALID\"a\n\014CNETMsg_File\022\023\n\013tr" +
-      "ansfer_id\030\001 \001(\005\022\021\n\tfile_name\030\002 \001(\t\022\033\n\023is" +
-      "_replay_demo_file\030\003 \001(\010\022\014\n\004deny\030\004 \001(\010\"\'\n",
-      "\027CNETMsg_SplitScreenUser\022\014\n\004slot\030\001 \001(\005\"\221" +
-      "\001\n\014CNETMsg_Tick\022\014\n\004tick\030\001 \001(\r\022\034\n\024host_co" +
-      "mputationtime\030\004 \001(\r\022*\n\"host_computationt" +
-      "ime_std_deviation\030\005 \001(\r\022)\n!host_framesta" +
-      "rttime_std_deviation\030\006 \001(\r\"$\n\021CNETMsg_St" +
-      "ringCmd\022\017\n\007command\030\001 \001(\t\"1\n\021CNETMsg_SetC" +
-      "onVar\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars\"\212\001\n\023" +
-      "CNETMsg_SignonState\022\024\n\014signon_state\030\001 \001(" +
-      "\r\022\023\n\013spawn_count\030\002 \001(\r\022\032\n\022num_server_pla" +
-      "yers\030\003 \001(\r\022\032\n\022players_networkids\030\004 \003(\t\022\020",
-      "\n\010map_name\030\005 \001(\t\"\246\001\n\022CCLCMsg_ClientInfo\022" +
-      "\026\n\016send_table_crc\030\001 \001(\007\022\024\n\014server_count\030" +
-      "\002 \001(\r\022\017\n\007is_hltv\030\003 \001(\010\022\021\n\tis_replay\030\004 \001(" +
-      "\010\022\022\n\nfriends_id\030\005 \001(\r\022\024\n\014friends_name\030\006 " +
-      "\001(\t\022\024\n\014custom_files\030\007 \003(\007\"S\n\014CCLCMsg_Mov" +
-      "e\022\033\n\023num_backup_commands\030\001 \001(\r\022\030\n\020num_ne" +
-      "w_commands\030\002 \001(\r\022\014\n\004data\030\003 \001(\014\"k\n\021CCLCMs" +
-      "g_VoiceData\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022" +
-      ":\n\006format\030\003 \001(\0162\022.VoiceDataFormat_t:\026VOI" +
-      "CEDATA_FORMAT_STEAM\"A\n\023CCLCMsg_BaselineA",
-      "ck\022\025\n\rbaseline_tick\030\001 \001(\005\022\023\n\013baseline_nr" +
-      "\030\002 \001(\005\"*\n\024CCLCMsg_ListenEvents\022\022\n\nevent_" +
-      "mask\030\001 \003(\007\"\\\n\030CCLCMsg_RespondCvarValue\022\016" +
-      "\n\006cookie\030\001 \001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004n" +
-      "ame\030\003 \001(\t\022\r\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_File" +
-      "CRCCheck\022\021\n\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(" +
-      "\t\022\025\n\rcode_filename\030\003 \001(\005\022\020\n\010filename\030\004 \001" +
-      "(\t\022\013\n\003crc\030\005 \001(\007\"+\n\027CCLCMsg_LoadingProgre" +
-      "ss\022\020\n\010progress\030\001 \001(\005\":\n\032CCLCMsg_SplitPla" +
-      "yerConnect\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars",
-      "\"7\n\025CCLCMsg_ClientMessage\022\020\n\010msg_type\030\001 " +
-      "\001(\005\022\014\n\004data\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo" +
-      "\022\020\n\010protocol\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005" +
-      "\022\024\n\014is_dedicated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022" +
-      "\021\n\tis_replay\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_" +
-      "crc\030\007 \001(\007\022\022\n\nclient_crc\030\010 \001(\007\022\030\n\020string_" +
-      "table_crc\030\t \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013" +
-      "max_classes\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025" +
-      "\n\rtick_interval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022" +
-      "\020\n\010map_name\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\th",
-      "ost_name\030\021 \001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021C" +
-      "SVCMsg_ClassInfo\022\030\n\020create_on_client\030\001 \001" +
-      "(\010\022+\n\007classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo." +
-      "class_t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017" +
-      "data_table_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(" +
-      "\t\"\"\n\020CSVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n" +
-      "\021CSVCMsg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005c" +
-      "odec\030\002 \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMs" +
-      "g_Print\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds" +
-      "\022\026\n\016reliable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\013",
-      "2\033.CSVCMsg_Sounds.sounddata_t\032\336\002\n\013soundd" +
-      "ata_t\022\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(" +
-      "\021\022\020\n\010origin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013d" +
-      "elay_value\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(" +
-      "\005\022\024\n\014entity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005" +
-      "\022\r\n\005pitch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_" +
-      "num\030\013 \001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016s" +
-      "peaker_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005" +
-      "\022\023\n\013sound_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001" +
-      "(\010\022\022\n\nis_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefet",
-      "ch\022\023\n\013sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetVi" +
-      "ew\022\024\n\014entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixA" +
-      "ngle\022\020\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013." +
-      "CMsgQAngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005" +
-      "angle\030\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSP" +
-      "Decal\022\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal" +
-      "_texture_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001" +
-      "(\005\022\023\n\013model_index\030\004 \001(\005\022\024\n\014low_priority\030" +
-      "\005 \001(\010\"z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001" +
-      "(\0162\030.ESplitScreenMessageType:\027MSG_SPLITS",
-      "CREEN_ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_in" +
-      "dex\030\003 \001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006coo" +
-      "kie\030\001 \001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_" +
-      "Menu\022\023\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_va" +
-      "lues\030\002 \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_e" +
-      "nd\030\001 \001(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneed" +
-      "s_decoder\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg" +
-      "_SendTable.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004" +
-      "type\030\001 \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 " +
-      "\001(\005\022\020\n\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024",
-      "\n\014num_elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022" +
-      "\022\n\nhigh_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001" +
-      "\n\025CSVCMsg_GameEventList\0228\n\013descriptors\030\001" +
-      " \003(\0132#.CSVCMsg_GameEventList.descriptor_" +
-      "t\032#\n\005key_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y" +
-      "\n\014descriptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030" +
-      "\002 \001(\t\022*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventL" +
-      "ist.key_t\"\254\001\n\026CSVCMsg_PacketEntities\022\023\n\013" +
-      "max_entries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001" +
-      "(\005\022\020\n\010is_delta\030\003 \001(\010\022\027\n\017update_baseline\030",
-      "\004 \001(\010\022\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 " +
-      "\001(\005\022\023\n\013entity_data\030\007 \001(\014\"R\n\024CSVCMsg_Temp" +
-      "Entities\022\020\n\010reliable\030\001 \001(\010\022\023\n\013num_entrie" +
-      "s\030\002 \001(\005\022\023\n\013entity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg" +
-      "_CreateStringTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_" +
-      "entries\030\002 \001(\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024us" +
-      "er_data_fixed_size\030\004 \001(\010\022\026\n\016user_data_si" +
-      "ze\030\005 \001(\005\022\033\n\023user_data_size_bits\030\006 \001(\005\022\r\n" +
-      "\005flags\030\007 \001(\005\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSV" +
-      "CMsg_UpdateStringTable\022\020\n\010table_id\030\001 \001(\005",
-      "\022\033\n\023num_changed_entries\030\002 \001(\005\022\023\n\013string_" +
-      "data\030\003 \001(\014\"\252\001\n\021CSVCMsg_VoiceData\022\016\n\006clie" +
-      "nt\030\001 \001(\005\022\021\n\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(" +
-      "\006\022\024\n\014audible_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 " +
-      "\001(\014\022:\n\006format\030\006 \001(\0162\022.VoiceDataFormat_t:" +
-      "\026VOICEDATA_FORMAT_STEAM\"<\n\026CSVCMsg_Packe" +
-      "tReliable\022\014\n\004tick\030\001 \001(\005\022\024\n\014messagessize\030" +
-      "\002 \001(\005*\237\001\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016n" +
-      "et_Disconnect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_Spl" +
-      "itScreenUser\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_Stri",
-      "ngCmd\020\005\022\021\n\rnet_SetConVar\020\006\022\023\n\017net_Signon" +
-      "State\020\007*\352\001\n\014CLC_Messages\022\022\n\016clc_ClientIn" +
-      "fo\020\010\022\014\n\010clc_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n" +
-      "\017clc_BaselineAck\020\013\022\024\n\020clc_ListenEvents\020\014" +
-      "\022\030\n\024clc_RespondCvarValue\020\r\022\024\n\020clc_FileCR" +
-      "CCheck\020\016\022\027\n\023clc_LoadingProgress\020\017\022\032\n\026clc" +
-      "_SplitPlayerConnect\020\020\022\025\n\021clc_ClientMessa" +
-      "ge\020\021*L\n\021VoiceDataFormat_t\022\032\n\026VOICEDATA_F" +
-      "ORMAT_STEAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE" +
-      "\020\001*\211\004\n\014SVC_Messages\022\022\n\016svc_ServerInfo\020\010\022",
-      "\021\n\rsvc_SendTable\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n" +
-      "\014svc_SetPause\020\013\022\031\n\025svc_CreateStringTable" +
-      "\020\014\022\031\n\025svc_UpdateStringTable\020\r\022\021\n\rsvc_Voi" +
-      "ceInit\020\016\022\021\n\rsvc_VoiceData\020\017\022\r\n\tsvc_Print" +
-      "\020\020\022\016\n\nsvc_Sounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014s" +
-      "vc_FixAngle\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n" +
-      "\014svc_BSPDecal\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017" +
-      "svc_UserMessage\020\027\022\025\n\021svc_EntityMessage\020\030" +
-      "\022\021\n\rsvc_GameEvent\020\031\022\026\n\022svc_PacketEntitie" +
-      "s\020\032\022\024\n\020svc_TempEntities\020\033\022\020\n\014svc_Prefetc",
-      "h\020\034\022\014\n\010svc_Menu\020\035\022\025\n\021svc_GameEventList\020\036" +
-      "\022\024\n\020svc_GetCvarValue\020\037\022\026\n\022svc_PacketReli" +
-      "able\020 *V\n\027ESplitScreenMessageType\022\033\n\027MSG" +
-      "_SPLITSCREEN_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREE" +
-      "N_REMOVEUSER\020\001B\021\n\017com.dota2.proto"
+      "OP\"w\n\022CNETMsg_Disconnect\022\027\n\017text_depreca" +
+      "ted\030\001 \001(\t\022H\n\006reason\030\002 \001(\0162\034.ENetworkDisc" +
+      "onnectionReason:\032NETWORK_DISCONNECT_INVA" +
+      "LID\"a\n\014CNETMsg_File\022\023\n\013transfer_id\030\001 \001(\005" +
+      "\022\021\n\tfile_name\030\002 \001(\t\022\033\n\023is_replay_demo_fi",
+      "le\030\003 \001(\010\022\014\n\004deny\030\004 \001(\010\"\'\n\027CNETMsg_SplitS" +
+      "creenUser\022\014\n\004slot\030\001 \001(\005\"\345\001\n\014CNETMsg_Tick" +
+      "\022\014\n\004tick\030\001 \001(\r\022!\n\031host_frametime_depreca" +
+      "ted\030\002 \001(\r\022/\n\'host_frametime_std_deviatio" +
+      "n_deprecated\030\003 \001(\r\022\034\n\024host_computationti" +
+      "me\030\004 \001(\r\022*\n\"host_computationtime_std_dev" +
+      "iation\030\005 \001(\r\022)\n!host_framestarttime_std_" +
+      "deviation\030\006 \001(\r\"$\n\021CNETMsg_StringCmd\022\017\n\007" +
+      "command\030\001 \001(\t\"1\n\021CNETMsg_SetConVar\022\034\n\007co" +
+      "nvars\030\001 \001(\0132\013.CMsg_CVars\"\212\001\n\023CNETMsg_Sig",
+      "nonState\022\024\n\014signon_state\030\001 \001(\r\022\023\n\013spawn_" +
+      "count\030\002 \001(\r\022\032\n\022num_server_players\030\003 \001(\r\022" +
+      "\032\n\022players_networkids\030\004 \003(\t\022\020\n\010map_name\030" +
+      "\005 \001(\t\"\246\001\n\022CCLCMsg_ClientInfo\022\026\n\016send_tab" +
+      "le_crc\030\001 \001(\007\022\024\n\014server_count\030\002 \001(\r\022\017\n\007is" +
+      "_hltv\030\003 \001(\010\022\021\n\tis_replay\030\004 \001(\010\022\022\n\nfriend" +
+      "s_id\030\005 \001(\r\022\024\n\014friends_name\030\006 \001(\t\022\024\n\014cust" +
+      "om_files\030\007 \003(\007\"S\n\014CCLCMsg_Move\022\033\n\023num_ba" +
+      "ckup_commands\030\001 \001(\r\022\030\n\020num_new_commands\030" +
+      "\002 \001(\r\022\014\n\004data\030\003 \001(\014\"k\n\021CCLCMsg_VoiceData",
+      "\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030\003" +
+      " \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_FORM" +
+      "AT_STEAM\"A\n\023CCLCMsg_BaselineAck\022\025\n\rbasel" +
+      "ine_tick\030\001 \001(\005\022\023\n\013baseline_nr\030\002 \001(\005\"*\n\024C" +
+      "CLCMsg_ListenEvents\022\022\n\nevent_mask\030\001 \003(\007\"" +
+      "\\\n\030CCLCMsg_RespondCvarValue\022\016\n\006cookie\030\001 " +
+      "\001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004name\030\003 \001(\t\022\r" +
+      "\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_FileCRCCheck\022\021\n" +
+      "\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rcode_f" +
+      "ilename\030\003 \001(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003crc\030\005",
+      " \001(\007\"+\n\027CCLCMsg_LoadingProgress\022\020\n\010progr" +
+      "ess\030\001 \001(\005\":\n\032CCLCMsg_SplitPlayerConnect\022" +
+      "\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars\"7\n\025CCLCMsg" +
+      "_ClientMessage\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data" +
+      "\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo\022\020\n\010protoco" +
+      "l\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005\022\024\n\014is_dedi" +
+      "cated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_repla" +
+      "y\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 \001(\007\022\022" +
+      "\n\nclient_crc\030\010 \001(\007\022\030\n\020string_table_crc\030\t" +
+      " \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013max_classes",
+      "\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025\n\rtick_inte" +
+      "rval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022\020\n\010map_name" +
+      "\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\thost_name\030\021 " +
+      "\001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021CSVCMsg_Clas" +
+      "sInfo\022\030\n\020create_on_client\030\001 \001(\010\022+\n\007class" +
+      "es\030\002 \003(\0132\032.CSVCMsg_ClassInfo.class_t\032H\n\007" +
+      "class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017data_table_" +
+      "name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"\"\n\020CSVCMs" +
+      "g_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021CSVCMsg_Vo" +
+      "iceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005codec\030\002 \001(\t\022",
+      "\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_Print\022\014\n\004" +
+      "text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026\n\016reliabl" +
+      "e_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033.CSVCMsg_" +
+      "Sounds.sounddata_t\032\336\002\n\013sounddata_t\022\020\n\010or" +
+      "igin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010origin" +
+      "_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013delay_value\030" +
+      "\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022\024\n\014entity" +
+      "_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pitch\030\t" +
+      " \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_num\030\013 \001(\r\022\030" +
+      "\n\020sound_num_handle\030\014 \001(\007\022\026\n\016speaker_enti",
+      "ty\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023\n\013sound_l" +
+      "evel\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010\022\022\n\nis_am" +
+      "bient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch\022\023\n\013sound" +
+      "_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView\022\024\n\014entit" +
+      "y_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAngle\022\020\n\010rel" +
+      "ative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CMsgQAngle\"" +
+      "4\n\026CSVCMsg_CrosshairAngle\022\032\n\005angle\030\001 \001(\013" +
+      "2\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDecal\022\030\n\003po" +
+      "s\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_texture_in" +
+      "dex\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005\022\023\n\013model",
+      "_index\030\004 \001(\005\022\024\n\014low_priority\030\005 \001(\010\"z\n\023CS" +
+      "VCMsg_SplitScreen\022?\n\004type\030\001 \001(\0162\030.ESplit" +
+      "ScreenMessageType:\027MSG_SPLITSCREEN_ADDUS" +
+      "ER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_index\030\003 \001(\005\"9" +
+      "\n\024CSVCMsg_GetCvarValue\022\016\n\006cookie\030\001 \001(\005\022\021" +
+      "\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Menu\022\023\n\013dia" +
+      "log_type\030\001 \001(\005\022\027\n\017menu_key_values\030\002 \001(\014\"" +
+      "\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end\030\001 \001(\010\022\026\n" +
+      "\016net_table_name\030\002 \001(\t\022\025\n\rneeds_decoder\030\003" +
+      " \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_SendTable.",
+      "sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004type\030\001 \001(\005\022" +
+      "\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(\005\022\020\n\010prio" +
+      "rity\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014num_eleme" +
+      "nts\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n\nhigh_val" +
+      "ue\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025CSVCMsg_G" +
+      "ameEventList\0228\n\013descriptors\030\001 \003(\0132#.CSVC" +
+      "Msg_GameEventList.descriptor_t\032#\n\005key_t\022" +
+      "\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014descripto" +
+      "r_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022*\n\004ke" +
+      "ys\030\003 \003(\0132\034.CSVCMsg_GameEventList.key_t\"\254",
+      "\001\n\026CSVCMsg_PacketEntities\022\023\n\013max_entries" +
+      "\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005\022\020\n\010is_de" +
+      "lta\030\003 \001(\010\022\027\n\017update_baseline\030\004 \001(\010\022\020\n\010ba" +
+      "seline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(\005\022\023\n\013enti" +
+      "ty_data\030\007 \001(\014\"R\n\024CSVCMsg_TempEntities\022\020\n" +
+      "\010reliable\030\001 \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013" +
+      "entity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStri" +
+      "ngTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001" +
+      "(\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024user_data_fix" +
+      "ed_size\030\004 \001(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n",
+      "\023user_data_size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(" +
+      "\005\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSVCMsg_Update" +
+      "StringTable\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_cha" +
+      "nged_entries\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"" +
+      "\252\001\n\021CSVCMsg_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n" +
+      "\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audibl" +
+      "e_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006form" +
+      "at\030\006 \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_" +
+      "FORMAT_STEAM\"<\n\026CSVCMsg_PacketReliable\022\014" +
+      "\n\004tick\030\001 \001(\005\022\024\n\014messagessize\030\002 \001(\005*\237\001\n\014N",
+      "ET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net_Disconne" +
+      "ct\020\001\022\014\n\010net_File\020\002\022\027\n\023net_SplitScreenUse" +
+      "r\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_StringCmd\020\005\022\021\n\r" +
+      "net_SetConVar\020\006\022\023\n\017net_SignonState\020\007*\352\001\n" +
+      "\014CLC_Messages\022\022\n\016clc_ClientInfo\020\010\022\014\n\010clc" +
+      "_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017clc_Baseli" +
+      "neAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030\n\024clc_Res" +
+      "pondCvarValue\020\r\022\024\n\020clc_FileCRCCheck\020\016\022\027\n" +
+      "\023clc_LoadingProgress\020\017\022\032\n\026clc_SplitPlaye" +
+      "rConnect\020\020\022\025\n\021clc_ClientMessage\020\021*L\n\021Voi",
+      "ceDataFormat_t\022\032\n\026VOICEDATA_FORMAT_STEAM" +
+      "\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001*\211\004\n\014SVC_" +
+      "Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n\rsvc_Send" +
+      "Table\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014svc_SetPau" +
+      "se\020\013\022\031\n\025svc_CreateStringTable\020\014\022\031\n\025svc_U" +
+      "pdateStringTable\020\r\022\021\n\rsvc_VoiceInit\020\016\022\021\n" +
+      "\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020\022\016\n\nsvc_S" +
+      "ounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc_FixAngle" +
+      "\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014svc_BSPDec" +
+      "al\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017svc_UserMes",
+      "sage\020\027\022\025\n\021svc_EntityMessage\020\030\022\021\n\rsvc_Gam" +
+      "eEvent\020\031\022\026\n\022svc_PacketEntities\020\032\022\024\n\020svc_" +
+      "TempEntities\020\033\022\020\n\014svc_Prefetch\020\034\022\014\n\010svc_" +
+      "Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024\n\020svc_Get" +
+      "CvarValue\020\037\022\026\n\022svc_PacketReliable\020 *V\n\027E" +
+      "SplitScreenMessageType\022\033\n\027MSG_SPLITSCREE" +
+      "N_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREEN_REMOVEUSE" +
+      "R\020\001B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -33504,7 +33825,7 @@ public final class Netmessages {
           internal_static_CNETMsg_Disconnect_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_Disconnect_descriptor,
-              new java.lang.String[] { "Reason", });
+              new java.lang.String[] { "TextDeprecated", "Reason", });
           internal_static_CNETMsg_File_descriptor =
             getDescriptor().getMessageTypes().get(3);
           internal_static_CNETMsg_File_fieldAccessorTable = new
@@ -33522,7 +33843,7 @@ public final class Netmessages {
           internal_static_CNETMsg_Tick_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CNETMsg_Tick_descriptor,
-              new java.lang.String[] { "Tick", "HostComputationtime", "HostComputationtimeStdDeviation", "HostFramestarttimeStdDeviation", });
+              new java.lang.String[] { "Tick", "HostFrametimeDeprecated", "HostFrametimeStdDeviationDeprecated", "HostComputationtime", "HostComputationtimeStdDeviation", "HostFramestarttimeStdDeviation", });
           internal_static_CNETMsg_StringCmd_descriptor =
             getDescriptor().getMessageTypes().get(6);
           internal_static_CNETMsg_StringCmd_fieldAccessorTable = new
