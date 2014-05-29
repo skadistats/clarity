@@ -6,6 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
+import skadistats.clarity.parser.Peek.BorderType;
+
 import com.dota2.proto.Demo.CDemoFullPacket;
 import com.dota2.proto.Demo.CDemoPacket;
 import com.dota2.proto.Demo.CDemoSendTables;
@@ -31,7 +33,7 @@ public class DemoInputStream {
     private int tick = 0;
     private int peekTick = 0;
     private boolean full = false;
-    private boolean nextIsTickBorder = false;
+    private BorderType border = BorderType.NONE;
     private State state = State.TOP;
 
     public DemoInputStream(CodedInputStream s, Profile... profile) {
@@ -52,8 +54,8 @@ public class DemoInputStream {
     }
     
     private Peek genPeek(GeneratedMessage message) {
-        Peek result = new Peek(++n, tick, peekTick, full, nextIsTickBorder, message);
-        nextIsTickBorder = false;
+        Peek result = new Peek(++n, tick, peekTick, full, border, message);
+        border = BorderType.NONE;
         return result;
     }
 
@@ -64,7 +66,11 @@ public class DemoInputStream {
                     int kind = s.readRawVarint32();
                     boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
                     kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
-                    peekTick = s.readRawVarint32();
+                    int nextPeekTick = s.readRawVarint32();
+                    if (nextPeekTick != peekTick) {
+                        border = border.addPeekTickBorder();
+                    }
+                    peekTick = nextPeekTick;
                     int size = s.readRawVarint32();
                     byte[] data = s.readRawBytes(size);
                     if (isCompressed) {
@@ -115,7 +121,7 @@ public class DemoInputStream {
                     GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
                     if (subMessage instanceof CNETMsg_Tick) {
                         tick = ((CNETMsg_Tick) subMessage).getTick();
-                        nextIsTickBorder = true;
+                        border = border.addNetTickBorder();
                         if (!isFiltered(CNETMsg_Tick.class)) {
                             return genPeek(subMessage);
                         }

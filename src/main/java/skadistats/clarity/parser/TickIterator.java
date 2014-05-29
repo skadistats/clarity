@@ -48,7 +48,7 @@ public class TickIterator implements Iterator<Tick> {
             if (p == null) {
                 break;
             }
-            if (!peeks.isEmpty() && p.isTickBorder()) {
+            if (!peeks.isEmpty() && p.getBorder().isPeekTickBorder()) {
                 break;
             }
             consumeNextPeek();

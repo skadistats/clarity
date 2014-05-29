@@ -72,6 +72,10 @@ public class Profile {
             Netmessages.CSVCMsg_GameEventList.class,
             Networkbasetypes.CSVCMsg_GameEvent.class
         );
+    
+    public static Profile COMBAT_LOG = new Profile()
+        .dependsOn(GAME_EVENTS)
+        .dependsOn(STRING_TABLES);
 
     public static Profile PROJECTILES = new Profile()
         .dependsOn(ENTITIES)
