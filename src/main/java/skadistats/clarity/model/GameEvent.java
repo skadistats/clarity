@@ -30,6 +30,10 @@ public class GameEvent {
     public String getName() {
         return this.descriptor.getName();
     }
+    
+    public int getEventId() {
+        return this.descriptor.getEventId();
+    }
 	
     @Override
     public String toString() {
