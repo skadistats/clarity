@@ -12,14 +12,27 @@ public class EntityBitStream extends BitStream {
     }
 
     public int readEntityIndex(int baseIndex) {
-        int encodedIndex = readNumericBits(6);
-        if ((encodedIndex & 0x30) != 0) {
-            int a = (encodedIndex >> 4) & 3;
-            int b = a == 3 ? 16 : 0;
-            int i = readNumericBits(4 * a + b) << 4;
-            encodedIndex = i | (encodedIndex & 0x0f);
+        // Thanks to Robin Dietrich for providing a clean version of this code :-)
+
+        // The header looks like this: [XY00001111222233333333333333333333] where everything > 0 is optional.
+        // The first 2 bits (X and Y) tell us how much (if any) to read other than the 6 initial bits:
+        // Y set -> read 4
+        // X set -> read 8
+        // X + Y set -> read 28
+
+        int offset = readNumericBits(6);
+        switch (offset & 48) {
+            case 16:
+                offset = (offset & 15) | (readNumericBits(4) << 4);
+                break;
+            case 32:
+                offset = (offset & 15) | (readNumericBits(8) << 4);
+                break;
+            case 48:
+                offset = (offset & 15) | (readNumericBits(28) << 4);
+                break;
         }
-        return baseIndex + encodedIndex + 1;
+        return baseIndex + offset + 1;
     }
 
     public PVS readEntityPVS() {
