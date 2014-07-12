@@ -69,6 +69,7 @@ enum EDotaUserMessages {
 	DOTA_UM_TutorialMinimapPosition = 125;
 	DOTA_UM_PlayerMMR = 126;
 	DOTA_UM_AbilitySteal = 127;
+	DOTA_UM_CourierKilledAlert = 128;
 }
 
 enum DOTA_CHAT_MESSAGE {
@@ -731,3 +732,9 @@ message CDOTAUserMsg_AbilitySteal {
 	optional uint32 ability_level = 3;
 }
 
+message CDOTAUserMsg_CourierKilledAlert {
+       optional uint32 team = 1;
+       optional uint32 gold_value = 2;
+       optional int32 entity_handle = 3;
+       optional int32 timestamp = 4;
+}

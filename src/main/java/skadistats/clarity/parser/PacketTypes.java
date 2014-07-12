@@ -154,6 +154,7 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_TutorialMinimapPosition_VALUE, DotaUsermessages.CDOTAUserMsg_TutorialMinimapPosition.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_PlayerMMR_VALUE, DotaUsermessages.CDOTAUserMsg_PlayerMMR.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_AbilitySteal_VALUE, DotaUsermessages.CDOTAUserMsg_AbilitySteal.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CourierKilledAlert_VALUE, DotaUsermessages.CDOTAUserMsg_CourierKilledAlert.class);
     }    
     
     private static final Map<Class<? extends GeneratedMessage>, Method> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, Method>() {
