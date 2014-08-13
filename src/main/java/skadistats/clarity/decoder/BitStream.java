@@ -7,7 +7,10 @@ public class BitStream {
 
     public BitStream(byte[] data) {
 
-        this.words = new int[(data.length + 3) / 4];
+        // it seems valve started not sending trailing zero bits in a stream under certain circumstances?
+        // example match id 714979634
+        // append a zero word at the end, which seems to fix it for now
+        this.words = new int[(data.length + 7) / 4];
         this.pos = 0;
 
         int akku = 0;
@@ -23,6 +26,7 @@ public class BitStream {
         if ((data.length & 3) != 0) {
             words[data.length / 4] = akku;
         }
+        words[words.length - 1] = 0;
     }
 
     public int peekNumericBits(int num) {

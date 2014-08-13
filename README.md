@@ -57,7 +57,7 @@ memory, but will allow you to seek on the replay data easily.
 # Usage
 
 Clarity is compiled for a 1.7 JVM. It is available via Maven Central. 
-Put the following snippet into your pom.xml, and you should be good to go:
+To use the stable version, add the following dependency in your pom.xml, and you should be good to go:
 
 ```XML
 <dependency>
@@ -66,6 +66,38 @@ Put the following snippet into your pom.xml, and you should be good to go:
 	<version>1.0</version>
 </dependency>
 ```
+
+There is also the possibility to use the bleeding edge, which I try to keep in sync with the Git-Repo.
+However, this latest snapshot is not available in Maven Central, so you got to add a pointer to the 
+repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
+
+To add the snapshot repository, add the following:
+```XML
+<repositories>
+	<repository>
+		<id>sonatype.oss.snapshots</id>
+		<name>Sonatype OSS Snapshot Repository</name>
+		<url>http://oss.sonatype.org/content/repositories/snapshots</url>
+		<releases>
+			<enabled>false</enabled>
+		</releases>
+		<snapshots>
+			<enabled>true</enabled>
+		</snapshots>
+	</repository>
+</repositories>
+```
+
+and then fetch the dependency with:
+```XML
+<dependency>
+	<groupId>com.skadistats</groupId>
+	<artifactId>clarity</artifactId>
+	<version>1.1-SNAPSHOT</version>
+</dependency>
+```
+
+# Example Code
 
 For example code, please see the the separate project [clarity-examples](https://github.com/skadistats/clarity-examples).
 
