@@ -1,6 +1,8 @@
 package skadistats.clarity.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,7 @@ import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 
-public class DemoInputStream {
+public class DemoInputStream implements Closeable {
 
     private enum State {
         TOP, EMBED
@@ -28,6 +30,7 @@ public class DemoInputStream {
 
     private final Profile[] profile;
     private final CodedInputStream s; // main stream
+    private final InputStream is; // stream being wrapped
     private CodedInputStream ss = null; // stream for embedded packet
     private int n = -1;
     private int tick = 0;
@@ -36,8 +39,9 @@ public class DemoInputStream {
     private BorderType border = BorderType.NONE;
     private State state = State.TOP;
 
-    public DemoInputStream(CodedInputStream s, Profile... profile) {
+    public DemoInputStream(CodedInputStream s, InputStream is, Profile... profile) {
         this.s = s;
+        this.is = is;
         this.profile = profile;
     }
     
@@ -144,5 +148,8 @@ public class DemoInputStream {
         }
         return null;
     }    
-
+    
+    public void close() throws IOException {
+      is.close();
+    }
 }

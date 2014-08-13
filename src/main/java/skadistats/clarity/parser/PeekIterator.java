@@ -1,10 +1,11 @@
 package skadistats.clarity.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class PeekIterator implements Iterator<Peek> {
+public class PeekIterator implements Iterator<Peek>, Closeable {
 
     private final DemoInputStream s;
     private Peek p = null;
@@ -39,6 +40,10 @@ public class PeekIterator implements Iterator<Peek> {
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+    
+    public void close() throws IOException {
+      s.close();
     }
 
 }
