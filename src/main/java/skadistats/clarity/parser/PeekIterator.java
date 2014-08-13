@@ -1,17 +1,15 @@
 package skadistats.clarity.parser;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class PeekIterator implements Iterator<Peek> {
+public class PeekIterator extends AbstractDemoInputStreamIterator<Peek> {
 
-    private final DemoInputStream s;
     private Peek p = null;
     private Boolean next = null;
     
     public PeekIterator(DemoInputStream s) {
-        this.s = s;
+        super(s);
     }
 
     @Override
