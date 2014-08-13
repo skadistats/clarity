@@ -24,7 +24,7 @@ public class Clarity {
         s.setSizeLimit(Integer.MAX_VALUE);
         ensureHeader(s);
         s.skipRawBytes(4); // offset of epilogue
-        return new DemoInputStream(s, profile);
+        return new DemoInputStream(s, stream, profile);
     }
 
     @Deprecated

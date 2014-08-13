@@ -1,12 +1,13 @@
 package skadistats.clarity.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class TickIterator implements Iterator<Tick> {
+public class TickIterator implements Iterator<Tick>, Closeable {
 
     private final DemoInputStream s;
     private Peek peek = null;
@@ -60,6 +61,10 @@ public class TickIterator implements Iterator<Tick> {
     @Override
     public void remove() {
         throw new UnsupportedOperationException();
+    }
+    
+    public void close() throws IOException {
+      s.close();
     }
 
 }
