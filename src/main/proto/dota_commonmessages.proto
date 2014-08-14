@@ -1,5 +1,3 @@
-option java_package = "com.dota2.proto";
-
 import "google/protobuf/descriptor.proto";
 import "networkbasetypes.proto";
 
@@ -83,6 +81,7 @@ enum EDOTAStatPopupTypes {
 	k_EDOTA_SPT_Textline = 0;
 	k_EDOTA_SPT_Basic = 1;
 	k_EDOTA_SPT_Poll = 2;
+	k_EDOTA_SPT_Grid = 3;
 }
 
 message CDOTAMsg_LocationPing {

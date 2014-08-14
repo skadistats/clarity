@@ -1,5 +1,3 @@
-option java_package = "com.dota2.proto";
-
 enum Activity {
 	ACT_INVALID = -1;
 	ACT_RESET = 0;

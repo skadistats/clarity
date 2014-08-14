@@ -1,5 +1,3 @@
-option java_package = "com.dota2.proto";
-
 import "google/protobuf/descriptor.proto";
 
 enum SIGNONSTATE {
