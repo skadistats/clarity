@@ -351,8 +351,8 @@ message CDOTAUserMsg_MinimapEvent {
 }
 
 message CDOTAUserMsg_TournamentDrop {
-  optional string deprecated_winner_name = 1;
-  optional int32 deprecated event_type = 2;
+  optional string winner_name = 1;
+  optional int32 event_type = 2;
 }
 
 message CDOTAUserMsg_MapLine {
