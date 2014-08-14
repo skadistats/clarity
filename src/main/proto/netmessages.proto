@@ -80,6 +80,7 @@ message CNETMsg_NOP {
 }
 
 message CNETMsg_Disconnect {
+  optional string text_deprecated = 1;
 	optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
 }
 
@@ -96,6 +97,8 @@ message CNETMsg_SplitScreenUser {
 
 message CNETMsg_Tick {
 	optional uint32 tick = 1;
+  optional uint32 host_frametime_deprecated = 2;
+  optional uint32 host_frametime_std_deviation_deprecated = 3;
 	optional uint32 host_computationtime = 4;
 	optional uint32 host_computationtime_std_deviation = 5;
 	optional uint32 host_framestarttime_std_deviation = 6;
