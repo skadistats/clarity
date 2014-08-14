@@ -134,9 +134,13 @@ public final class Usermessages {
      */
     UM_SendAudio(29, 30),
     /**
+     * <code>UM_CameraTransition = 31;</code>
+     */
+    UM_CameraTransition(30, 31),
+    /**
      * <code>UM_MAX_BASE = 63;</code>
      */
-    UM_MAX_BASE(30, 63),
+    UM_MAX_BASE(31, 63),
     ;
 
     /**
@@ -260,6 +264,10 @@ public final class Usermessages {
      */
     public static final int UM_SendAudio_VALUE = 30;
     /**
+     * <code>UM_CameraTransition = 31;</code>
+     */
+    public static final int UM_CameraTransition_VALUE = 31;
+    /**
      * <code>UM_MAX_BASE = 63;</code>
      */
     public static final int UM_MAX_BASE_VALUE = 63;
@@ -299,6 +307,7 @@ public final class Usermessages {
         case 28: return UM_VoiceMask;
         case 29: return UM_VoiceSubtitle;
         case 30: return UM_SendAudio;
+        case 31: return UM_CameraTransition;
         case 63: return UM_MAX_BASE;
         default: return null;
       }
@@ -17716,6 +17725,1227 @@ public final class Usermessages {
     // @@protoc_insertion_point(class_scope:CUserMsg_MessageText)
   }
 
+  public interface CUserMsg_CameraTransitionOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional uint32 camera_type = 1;
+    /**
+     * <code>optional uint32 camera_type = 1;</code>
+     */
+    boolean hasCameraType();
+    /**
+     * <code>optional uint32 camera_type = 1;</code>
+     */
+    int getCameraType();
+
+    // optional float duration = 2;
+    /**
+     * <code>optional float duration = 2;</code>
+     */
+    boolean hasDuration();
+    /**
+     * <code>optional float duration = 2;</code>
+     */
+    float getDuration();
+
+    // optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    boolean hasParamsDataDriven();
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven getParamsDataDriven();
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder getParamsDataDrivenOrBuilder();
+  }
+  /**
+   * Protobuf type {@code CUserMsg_CameraTransition}
+   */
+  public static final class CUserMsg_CameraTransition extends
+      com.google.protobuf.GeneratedMessage
+      implements CUserMsg_CameraTransitionOrBuilder {
+    // Use CUserMsg_CameraTransition.newBuilder() to construct.
+    private CUserMsg_CameraTransition(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private CUserMsg_CameraTransition(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final CUserMsg_CameraTransition defaultInstance;
+    public static CUserMsg_CameraTransition getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public CUserMsg_CameraTransition getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CUserMsg_CameraTransition(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              cameraType_ = input.readUInt32();
+              break;
+            }
+            case 21: {
+              bitField0_ |= 0x00000002;
+              duration_ = input.readFloat();
+              break;
+            }
+            case 26: {
+              com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder subBuilder = null;
+              if (((bitField0_ & 0x00000004) == 0x00000004)) {
+                subBuilder = paramsDataDriven_.toBuilder();
+              }
+              paramsDataDriven_ = input.readMessage(com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.PARSER, extensionRegistry);
+              if (subBuilder != null) {
+                subBuilder.mergeFrom(paramsDataDriven_);
+                paramsDataDriven_ = subBuilder.buildPartial();
+              }
+              bitField0_ |= 0x00000004;
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.dota2.proto.Usermessages.CUserMsg_CameraTransition.class, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<CUserMsg_CameraTransition> PARSER =
+        new com.google.protobuf.AbstractParser<CUserMsg_CameraTransition>() {
+      public CUserMsg_CameraTransition parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CUserMsg_CameraTransition(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CUserMsg_CameraTransition> getParserForType() {
+      return PARSER;
+    }
+
+    public interface Transition_DataDrivenOrBuilder
+        extends com.google.protobuf.MessageOrBuilder {
+
+      // optional string filename = 1;
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      boolean hasFilename();
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      java.lang.String getFilename();
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getFilenameBytes();
+
+      // optional int32 attach_ent_index = 2;
+      /**
+       * <code>optional int32 attach_ent_index = 2;</code>
+       */
+      boolean hasAttachEntIndex();
+      /**
+       * <code>optional int32 attach_ent_index = 2;</code>
+       */
+      int getAttachEntIndex();
+    }
+    /**
+     * Protobuf type {@code CUserMsg_CameraTransition.Transition_DataDriven}
+     */
+    public static final class Transition_DataDriven extends
+        com.google.protobuf.GeneratedMessage
+        implements Transition_DataDrivenOrBuilder {
+      // Use Transition_DataDriven.newBuilder() to construct.
+      private Transition_DataDriven(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+        super(builder);
+        this.unknownFields = builder.getUnknownFields();
+      }
+      private Transition_DataDriven(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+      private static final Transition_DataDriven defaultInstance;
+      public static Transition_DataDriven getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Transition_DataDriven getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private final com.google.protobuf.UnknownFieldSet unknownFields;
+      @java.lang.Override
+      public final com.google.protobuf.UnknownFieldSet
+          getUnknownFields() {
+        return this.unknownFields;
+      }
+      private Transition_DataDriven(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+            com.google.protobuf.UnknownFieldSet.newBuilder();
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input, unknownFields,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                filename_ = input.readBytes();
+                break;
+              }
+              case 16: {
+                bitField0_ |= 0x00000002;
+                attachEntIndex_ = input.readInt32();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          this.unknownFields = unknownFields.build();
+          makeExtensionsImmutable();
+        }
+      }
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_Transition_DataDriven_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.class, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder.class);
+      }
+
+      public static com.google.protobuf.Parser<Transition_DataDriven> PARSER =
+          new com.google.protobuf.AbstractParser<Transition_DataDriven>() {
+        public Transition_DataDriven parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Transition_DataDriven(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Transition_DataDriven> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // optional string filename = 1;
+      public static final int FILENAME_FIELD_NUMBER = 1;
+      private java.lang.Object filename_;
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      public boolean hasFilename() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      public java.lang.String getFilename() {
+        java.lang.Object ref = filename_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            filename_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string filename = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getFilenameBytes() {
+        java.lang.Object ref = filename_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          filename_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // optional int32 attach_ent_index = 2;
+      public static final int ATTACH_ENT_INDEX_FIELD_NUMBER = 2;
+      private int attachEntIndex_;
+      /**
+       * <code>optional int32 attach_ent_index = 2;</code>
+       */
+      public boolean hasAttachEntIndex() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 attach_ent_index = 2;</code>
+       */
+      public int getAttachEntIndex() {
+        return attachEntIndex_;
+      }
+
+      private void initFields() {
+        filename_ = "";
+        attachEntIndex_ = 0;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getFilenameBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeInt32(2, attachEntIndex_);
+        }
+        getUnknownFields().writeTo(output);
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getFilenameBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeInt32Size(2, attachEntIndex_);
+        }
+        size += getUnknownFields().getSerializedSize();
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      @java.lang.Override
+      protected Builder newBuilderForType(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        Builder builder = new Builder(parent);
+        return builder;
+      }
+      /**
+       * Protobuf type {@code CUserMsg_CameraTransition.Transition_DataDriven}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessage.Builder<Builder>
+         implements com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder {
+        public static final com.google.protobuf.Descriptors.Descriptor
+            getDescriptor() {
+          return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor;
+        }
+
+        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+            internalGetFieldAccessorTable() {
+          return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_Transition_DataDriven_fieldAccessorTable
+              .ensureFieldAccessorsInitialized(
+                  com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.class, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder.class);
+        }
+
+        // Construct using com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private Builder(
+            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+          super(parent);
+          maybeForceBuilderInitialization();
+        }
+        private void maybeForceBuilderInitialization() {
+          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          }
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          filename_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          attachEntIndex_ = 0;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.google.protobuf.Descriptors.Descriptor
+            getDescriptorForType() {
+          return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor;
+        }
+
+        public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven getDefaultInstanceForType() {
+          return com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance();
+        }
+
+        public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven build() {
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven buildPartial() {
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven result = new com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.filename_ = filename_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.attachEntIndex_ = attachEntIndex_;
+          result.bitField0_ = to_bitField0_;
+          onBuilt();
+          return result;
+        }
+
+        public Builder mergeFrom(com.google.protobuf.Message other) {
+          if (other instanceof com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven) {
+            return mergeFrom((com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven)other);
+          } else {
+            super.mergeFrom(other);
+            return this;
+          }
+        }
+
+        public Builder mergeFrom(com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven other) {
+          if (other == com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance()) return this;
+          if (other.hasFilename()) {
+            bitField0_ |= 0x00000001;
+            filename_ = other.filename_;
+            onChanged();
+          }
+          if (other.hasAttachEntIndex()) {
+            setAttachEntIndex(other.getAttachEntIndex());
+          }
+          this.mergeUnknownFields(other.getUnknownFields());
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // optional string filename = 1;
+        private java.lang.Object filename_ = "";
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public boolean hasFilename() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public java.lang.String getFilename() {
+          java.lang.Object ref = filename_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            filename_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getFilenameBytes() {
+          java.lang.Object ref = filename_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            filename_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public Builder setFilename(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          filename_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public Builder clearFilename() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          filename_ = getDefaultInstance().getFilename();
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional string filename = 1;</code>
+         */
+        public Builder setFilenameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          filename_ = value;
+          onChanged();
+          return this;
+        }
+
+        // optional int32 attach_ent_index = 2;
+        private int attachEntIndex_ ;
+        /**
+         * <code>optional int32 attach_ent_index = 2;</code>
+         */
+        public boolean hasAttachEntIndex() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional int32 attach_ent_index = 2;</code>
+         */
+        public int getAttachEntIndex() {
+          return attachEntIndex_;
+        }
+        /**
+         * <code>optional int32 attach_ent_index = 2;</code>
+         */
+        public Builder setAttachEntIndex(int value) {
+          bitField0_ |= 0x00000002;
+          attachEntIndex_ = value;
+          onChanged();
+          return this;
+        }
+        /**
+         * <code>optional int32 attach_ent_index = 2;</code>
+         */
+        public Builder clearAttachEntIndex() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          attachEntIndex_ = 0;
+          onChanged();
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:CUserMsg_CameraTransition.Transition_DataDriven)
+      }
+
+      static {
+        defaultInstance = new Transition_DataDriven(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:CUserMsg_CameraTransition.Transition_DataDriven)
+    }
+
+    private int bitField0_;
+    // optional uint32 camera_type = 1;
+    public static final int CAMERA_TYPE_FIELD_NUMBER = 1;
+    private int cameraType_;
+    /**
+     * <code>optional uint32 camera_type = 1;</code>
+     */
+    public boolean hasCameraType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional uint32 camera_type = 1;</code>
+     */
+    public int getCameraType() {
+      return cameraType_;
+    }
+
+    // optional float duration = 2;
+    public static final int DURATION_FIELD_NUMBER = 2;
+    private float duration_;
+    /**
+     * <code>optional float duration = 2;</code>
+     */
+    public boolean hasDuration() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional float duration = 2;</code>
+     */
+    public float getDuration() {
+      return duration_;
+    }
+
+    // optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;
+    public static final int PARAMS_DATA_DRIVEN_FIELD_NUMBER = 3;
+    private com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven paramsDataDriven_;
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    public boolean hasParamsDataDriven() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven getParamsDataDriven() {
+      return paramsDataDriven_;
+    }
+    /**
+     * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+     */
+    public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder getParamsDataDrivenOrBuilder() {
+      return paramsDataDriven_;
+    }
+
+    private void initFields() {
+      cameraType_ = 0;
+      duration_ = 0F;
+      paramsDataDriven_ = com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, cameraType_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeFloat(2, duration_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeMessage(3, paramsDataDriven_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, cameraType_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeFloatSize(2, duration_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, paramsDataDriven_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.Usermessages.CUserMsg_CameraTransition parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.dota2.proto.Usermessages.CUserMsg_CameraTransition prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CUserMsg_CameraTransition}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.dota2.proto.Usermessages.CUserMsg_CameraTransitionOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.dota2.proto.Usermessages.CUserMsg_CameraTransition.class, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Builder.class);
+      }
+
+      // Construct using com.dota2.proto.Usermessages.CUserMsg_CameraTransition.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+          getParamsDataDrivenFieldBuilder();
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        cameraType_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        duration_ = 0F;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        if (paramsDataDrivenBuilder_ == null) {
+          paramsDataDriven_ = com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance();
+        } else {
+          paramsDataDrivenBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.dota2.proto.Usermessages.internal_static_CUserMsg_CameraTransition_descriptor;
+      }
+
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition getDefaultInstanceForType() {
+        return com.dota2.proto.Usermessages.CUserMsg_CameraTransition.getDefaultInstance();
+      }
+
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition build() {
+        com.dota2.proto.Usermessages.CUserMsg_CameraTransition result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition buildPartial() {
+        com.dota2.proto.Usermessages.CUserMsg_CameraTransition result = new com.dota2.proto.Usermessages.CUserMsg_CameraTransition(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.cameraType_ = cameraType_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.duration_ = duration_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        if (paramsDataDrivenBuilder_ == null) {
+          result.paramsDataDriven_ = paramsDataDriven_;
+        } else {
+          result.paramsDataDriven_ = paramsDataDrivenBuilder_.build();
+        }
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.dota2.proto.Usermessages.CUserMsg_CameraTransition) {
+          return mergeFrom((com.dota2.proto.Usermessages.CUserMsg_CameraTransition)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.dota2.proto.Usermessages.CUserMsg_CameraTransition other) {
+        if (other == com.dota2.proto.Usermessages.CUserMsg_CameraTransition.getDefaultInstance()) return this;
+        if (other.hasCameraType()) {
+          setCameraType(other.getCameraType());
+        }
+        if (other.hasDuration()) {
+          setDuration(other.getDuration());
+        }
+        if (other.hasParamsDataDriven()) {
+          mergeParamsDataDriven(other.getParamsDataDriven());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.dota2.proto.Usermessages.CUserMsg_CameraTransition parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.dota2.proto.Usermessages.CUserMsg_CameraTransition) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional uint32 camera_type = 1;
+      private int cameraType_ ;
+      /**
+       * <code>optional uint32 camera_type = 1;</code>
+       */
+      public boolean hasCameraType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional uint32 camera_type = 1;</code>
+       */
+      public int getCameraType() {
+        return cameraType_;
+      }
+      /**
+       * <code>optional uint32 camera_type = 1;</code>
+       */
+      public Builder setCameraType(int value) {
+        bitField0_ |= 0x00000001;
+        cameraType_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 camera_type = 1;</code>
+       */
+      public Builder clearCameraType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        cameraType_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional float duration = 2;
+      private float duration_ ;
+      /**
+       * <code>optional float duration = 2;</code>
+       */
+      public boolean hasDuration() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional float duration = 2;</code>
+       */
+      public float getDuration() {
+        return duration_;
+      }
+      /**
+       * <code>optional float duration = 2;</code>
+       */
+      public Builder setDuration(float value) {
+        bitField0_ |= 0x00000002;
+        duration_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional float duration = 2;</code>
+       */
+      public Builder clearDuration() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        duration_ = 0F;
+        onChanged();
+        return this;
+      }
+
+      // optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;
+      private com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven paramsDataDriven_ = com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance();
+      private com.google.protobuf.SingleFieldBuilder<
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder> paramsDataDrivenBuilder_;
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public boolean hasParamsDataDriven() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven getParamsDataDriven() {
+        if (paramsDataDrivenBuilder_ == null) {
+          return paramsDataDriven_;
+        } else {
+          return paramsDataDrivenBuilder_.getMessage();
+        }
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public Builder setParamsDataDriven(com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven value) {
+        if (paramsDataDrivenBuilder_ == null) {
+          if (value == null) {
+            throw new NullPointerException();
+          }
+          paramsDataDriven_ = value;
+          onChanged();
+        } else {
+          paramsDataDrivenBuilder_.setMessage(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public Builder setParamsDataDriven(
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder builderForValue) {
+        if (paramsDataDrivenBuilder_ == null) {
+          paramsDataDriven_ = builderForValue.build();
+          onChanged();
+        } else {
+          paramsDataDrivenBuilder_.setMessage(builderForValue.build());
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public Builder mergeParamsDataDriven(com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven value) {
+        if (paramsDataDrivenBuilder_ == null) {
+          if (((bitField0_ & 0x00000004) == 0x00000004) &&
+              paramsDataDriven_ != com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance()) {
+            paramsDataDriven_ =
+              com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.newBuilder(paramsDataDriven_).mergeFrom(value).buildPartial();
+          } else {
+            paramsDataDriven_ = value;
+          }
+          onChanged();
+        } else {
+          paramsDataDrivenBuilder_.mergeFrom(value);
+        }
+        bitField0_ |= 0x00000004;
+        return this;
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public Builder clearParamsDataDriven() {
+        if (paramsDataDrivenBuilder_ == null) {
+          paramsDataDriven_ = com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.getDefaultInstance();
+          onChanged();
+        } else {
+          paramsDataDrivenBuilder_.clear();
+        }
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder getParamsDataDrivenBuilder() {
+        bitField0_ |= 0x00000004;
+        onChanged();
+        return getParamsDataDrivenFieldBuilder().getBuilder();
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      public com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder getParamsDataDrivenOrBuilder() {
+        if (paramsDataDrivenBuilder_ != null) {
+          return paramsDataDrivenBuilder_.getMessageOrBuilder();
+        } else {
+          return paramsDataDriven_;
+        }
+      }
+      /**
+       * <code>optional .CUserMsg_CameraTransition.Transition_DataDriven params_data_driven = 3;</code>
+       */
+      private com.google.protobuf.SingleFieldBuilder<
+          com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder> 
+          getParamsDataDrivenFieldBuilder() {
+        if (paramsDataDrivenBuilder_ == null) {
+          paramsDataDrivenBuilder_ = new com.google.protobuf.SingleFieldBuilder<
+              com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDriven.Builder, com.dota2.proto.Usermessages.CUserMsg_CameraTransition.Transition_DataDrivenOrBuilder>(
+                  paramsDataDriven_,
+                  getParentForChildren(),
+                  isClean());
+          paramsDataDriven_ = null;
+        }
+        return paramsDataDrivenBuilder_;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CUserMsg_CameraTransition)
+    }
+
+    static {
+      defaultInstance = new CUserMsg_CameraTransition(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:CUserMsg_CameraTransition)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CUserMsg_AchievementEvent_descriptor;
   private static
@@ -17866,6 +19096,16 @@ public final class Usermessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CUserMsg_MessageText_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CUserMsg_CameraTransition_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CUserMsg_CameraTransition_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CUserMsg_CameraTransition_Transition_DataDriven_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -17926,22 +19166,28 @@ public final class Usermessages {
       "n\030\001 \001(\005\"H\n\027CUserMsg_SayTextChannel\022\016\n\006pl" +
       "ayer\030\001 \001(\005\022\017\n\007channel\030\002 \001(\005\022\014\n\004text\030\003 \001(",
       "\t\"3\n\024CUserMsg_MessageText\022\r\n\005color\030\001 \001(\r" +
-      "\022\014\n\004text\030\002 \001(\t*\324\004\n\021EBaseUserMessages\022\027\n\023" +
-      "UM_AchievementEvent\020\001\022\023\n\017UM_CloseCaption" +
-      "\020\002\022\031\n\025UM_CloseCaptionDirect\020\003\022\027\n\023UM_Curr" +
-      "entTimescale\020\004\022\027\n\023UM_DesiredTimescale\020\005\022" +
-      "\013\n\007UM_Fade\020\006\022\020\n\014UM_GameTitle\020\007\022\r\n\tUM_Gei" +
-      "ger\020\010\022\017\n\013UM_HintText\020\t\022\r\n\tUM_HudMsg\020\n\022\016\n" +
-      "\nUM_HudText\020\013\022\022\n\016UM_KeyHintText\020\014\022\022\n\016UM_" +
-      "MessageText\020\r\022\023\n\017UM_RequestState\020\016\022\017\n\013UM" +
-      "_ResetHUD\020\017\022\r\n\tUM_Rumble\020\020\022\016\n\nUM_SayText",
-      "\020\021\022\017\n\013UM_SayText2\020\022\022\025\n\021UM_SayTextChannel" +
-      "\020\023\022\014\n\010UM_Shake\020\024\022\017\n\013UM_ShakeDir\020\025\022\024\n\020UM_" +
-      "StatsCrawlMsg\020\026\022\025\n\021UM_StatsSkipState\020\027\022\016" +
-      "\n\nUM_TextMsg\020\030\022\013\n\007UM_Tilt\020\031\022\014\n\010UM_Train\020" +
-      "\032\022\017\n\013UM_VGUIMenu\020\033\022\020\n\014UM_VoiceMask\020\034\022\024\n\020" +
-      "UM_VoiceSubtitle\020\035\022\020\n\014UM_SendAudio\020\036\022\017\n\013" +
-      "UM_MAX_BASE\020?B\021\n\017com.dota2.proto"
+      "\022\014\n\004text\030\002 \001(\t\"\325\001\n\031CUserMsg_CameraTransi" +
+      "tion\022\023\n\013camera_type\030\001 \001(\r\022\020\n\010duration\030\002 " +
+      "\001(\002\022L\n\022params_data_driven\030\003 \001(\01320.CUserM" +
+      "sg_CameraTransition.Transition_DataDrive" +
+      "n\032C\n\025Transition_DataDriven\022\020\n\010filename\030\001" +
+      " \001(\t\022\030\n\020attach_ent_index\030\002 \001(\005*\355\004\n\021EBase" +
+      "UserMessages\022\027\n\023UM_AchievementEvent\020\001\022\023\n" +
+      "\017UM_CloseCaption\020\002\022\031\n\025UM_CloseCaptionDir" +
+      "ect\020\003\022\027\n\023UM_CurrentTimescale\020\004\022\027\n\023UM_Des",
+      "iredTimescale\020\005\022\013\n\007UM_Fade\020\006\022\020\n\014UM_GameT" +
+      "itle\020\007\022\r\n\tUM_Geiger\020\010\022\017\n\013UM_HintText\020\t\022\r" +
+      "\n\tUM_HudMsg\020\n\022\016\n\nUM_HudText\020\013\022\022\n\016UM_KeyH" +
+      "intText\020\014\022\022\n\016UM_MessageText\020\r\022\023\n\017UM_Requ" +
+      "estState\020\016\022\017\n\013UM_ResetHUD\020\017\022\r\n\tUM_Rumble" +
+      "\020\020\022\016\n\nUM_SayText\020\021\022\017\n\013UM_SayText2\020\022\022\025\n\021U" +
+      "M_SayTextChannel\020\023\022\014\n\010UM_Shake\020\024\022\017\n\013UM_S" +
+      "hakeDir\020\025\022\024\n\020UM_StatsCrawlMsg\020\026\022\025\n\021UM_St" +
+      "atsSkipState\020\027\022\016\n\nUM_TextMsg\020\030\022\013\n\007UM_Til" +
+      "t\020\031\022\014\n\010UM_Train\020\032\022\017\n\013UM_VGUIMenu\020\033\022\020\n\014UM",
+      "_VoiceMask\020\034\022\024\n\020UM_VoiceSubtitle\020\035\022\020\n\014UM" +
+      "_SendAudio\020\036\022\027\n\023UM_CameraTransition\020\037\022\017\n" +
+      "\013UM_MAX_BASE\020?B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -18128,6 +19374,18 @@ public final class Usermessages {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CUserMsg_MessageText_descriptor,
               new java.lang.String[] { "Color", "Text", });
+          internal_static_CUserMsg_CameraTransition_descriptor =
+            getDescriptor().getMessageTypes().get(29);
+          internal_static_CUserMsg_CameraTransition_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CUserMsg_CameraTransition_descriptor,
+              new java.lang.String[] { "CameraType", "Duration", "ParamsDataDriven", });
+          internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor =
+            internal_static_CUserMsg_CameraTransition_descriptor.getNestedTypes().get(0);
+          internal_static_CUserMsg_CameraTransition_Transition_DataDriven_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CUserMsg_CameraTransition_Transition_DataDriven_descriptor,
+              new java.lang.String[] { "Filename", "AttachEntIndex", });
           return null;
         }
       };
