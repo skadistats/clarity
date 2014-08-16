@@ -1,6 +1,8 @@
 package skadistats.clarity.parser;
 
+import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +20,7 @@ import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 
-public class DemoInputStream {
+public class DemoInputStream implements Closeable {
 
     private enum State {
         TOP, EMBED
@@ -27,8 +29,10 @@ public class DemoInputStream {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Profile[] profile;
-    private final CodedInputStream s; // main stream
-    private CodedInputStream ss = null; // stream for embedded packet
+    private final InputStream is; // source stream
+    private final CodedInputStream ms; // main stream
+    private CodedInputStream es = null; // stream for embedded packet
+    private int fileInfoOffset;
     private int n = -1;
     private int tick = 0;
     private int peekTick = 0;
@@ -36,9 +40,23 @@ public class DemoInputStream {
     private BorderType border = BorderType.NONE;
     private State state = State.TOP;
 
-    public DemoInputStream(CodedInputStream s, Profile... profile) {
-        this.s = s;
+    public DemoInputStream(InputStream is, Profile... profile) {
+    	this.is = is;
+    	this.ms = CodedInputStream.newInstance(is);
         this.profile = profile;
+    }
+    
+    public void bootstrap() throws IOException {
+        ms.setSizeLimit(Integer.MAX_VALUE);
+        String header = new String(ms.readRawBytes(8));
+        if (!"PBUFDEM\0".equals(header)) {
+            throw new IOException("replay does not have the proper header");
+        }
+        fileInfoOffset = ms.readFixed32();
+    }
+    
+    public void skipToFileInfo() throws IOException {
+    	ms.skipRawBytes(fileInfoOffset - 12);
     }
     
     private boolean isFiltered(Class<?> clazz) {
@@ -60,19 +78,19 @@ public class DemoInputStream {
     }
 
     public Peek read() throws IOException {
-        while (!s.isAtEnd()) {
+        while (!ms.isAtEnd()) {
             switch (state) {
                 case TOP:
-                    int kind = s.readRawVarint32();
+                    int kind = ms.readRawVarint32();
                     boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
                     kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
-                    int nextPeekTick = s.readRawVarint32();
+                    int nextPeekTick = ms.readRawVarint32();
                     if (nextPeekTick != peekTick) {
                         border = border.addPeekTickBorder();
                     }
                     peekTick = nextPeekTick;
-                    int size = s.readRawVarint32();
-                    byte[] data = s.readRawBytes(size);
+                    int size = ms.readRawVarint32();
+                    byte[] data = ms.readRawBytes(size);
                     if (isCompressed) {
                         data = Snappy.uncompress(data);
                     }
@@ -84,16 +102,16 @@ public class DemoInputStream {
                     GeneratedMessage message = PacketTypes.parse(topClazz, data);
                     full = false;
                     if (message instanceof CDemoPacket) {
-                        ss = CodedInputStream.newInstance(((CDemoPacket) message).getData().toByteArray());
+                        es = CodedInputStream.newInstance(((CDemoPacket) message).getData().toByteArray());
                         state = State.EMBED;
                         continue;
                     } else if (message instanceof CDemoSendTables) {
-                        ss = CodedInputStream.newInstance(((CDemoSendTables) message).getData().toByteArray());
+                        es = CodedInputStream.newInstance(((CDemoSendTables) message).getData().toByteArray());
                         state = State.EMBED;
                         continue;
                     } else if (message instanceof CDemoFullPacket) {
                         CDemoFullPacket fullMessage = (CDemoFullPacket)message;
-                        ss = CodedInputStream.newInstance(fullMessage.getPacket().getData().toByteArray());
+                        es = CodedInputStream.newInstance(fullMessage.getPacket().getData().toByteArray());
                         state = State.EMBED;
                         full = true;
                         if (!isFiltered(CDemoStringTables.class)) {
@@ -105,14 +123,14 @@ public class DemoInputStream {
                     continue;
 
                 case EMBED:
-                    if (ss.isAtEnd()) {
-                        ss = null;
+                    if (es.isAtEnd()) {
+                        es = null;
                         state = State.TOP;
                         continue;
                     }
-                    int subKind = ss.readRawVarint32();
-                    int subSize = ss.readRawVarint32();
-                    byte[] subData = ss.readRawBytes(subSize);
+                    int subKind = es.readRawVarint32();
+                    int subSize = es.readRawVarint32();
+                    byte[] subData = es.readRawBytes(subSize);
                     Class<? extends GeneratedMessage> subClazz = PacketTypes.EMBED.get(subKind);
                     if (subClazz == null) {
                         log.warn("unknown embedded message of kind {}", subKind);
@@ -143,6 +161,11 @@ public class DemoInputStream {
             }
         }
         return null;
-    }    
+    }
+
+	@Override
+	public void close() throws IOException {
+		is.close();
+	}
 
 }

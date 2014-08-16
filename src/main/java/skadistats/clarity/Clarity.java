@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.xerial.snappy.Snappy;
-
 import skadistats.clarity.parser.DemoIndex;
 import skadistats.clarity.parser.DemoInputStream;
 import skadistats.clarity.parser.DemoInputStreamIterator;
@@ -14,17 +12,13 @@ import skadistats.clarity.parser.Profile;
 import skadistats.clarity.parser.TickIterator;
 
 import com.dota2.proto.Demo.CDemoFileInfo;
-import com.dota2.proto.Demo.EDemoCommands;
-import com.google.protobuf.CodedInputStream;
 
 public class Clarity {
 
     private static DemoInputStream demoInputStreamForStream(InputStream stream, Profile... profile) throws IOException {
-        CodedInputStream s = CodedInputStream.newInstance(stream);
-        s.setSizeLimit(Integer.MAX_VALUE);
-        ensureHeader(s);
-        s.skipRawBytes(4); // offset of epilogue
-        return new DemoInputStream(s, profile);
+    	DemoInputStream d = new DemoInputStream(stream, profile);
+    	d.bootstrap();
+    	return d;
     }
 
     @Deprecated
@@ -49,27 +43,16 @@ public class Clarity {
     }
     
     public static CDemoFileInfo infoForFile(String fileName) throws IOException {
-        CodedInputStream s = CodedInputStream.newInstance(new FileInputStream(fileName));
-        s.setSizeLimit(Integer.MAX_VALUE);
-        ensureHeader(s);
-        int offset = s.readFixed32();
-        s.skipRawBytes(offset - 12);
-        boolean isCompressed = (s.readRawVarint32() & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
-        s.readRawVarint32(); // skip peek tick
-        int size = s.readRawVarint32();
-        byte[] data = s.readRawBytes(size);
-        if (isCompressed) {
-            data = Snappy.uncompress(data);
-        }
-        return CDemoFileInfo.parseFrom(data);
+    	DemoInputStream s = null;
+    	try {
+	        s = demoInputStreamForStream(new FileInputStream(fileName), Profile.FILE_INFO);
+	        s.skipToFileInfo();
+	        return (CDemoFileInfo) s.read().getMessage();
+    	} finally {
+    		if (s != null) {
+    			s.close();
+    		}
+    	}
     }
     
-    
-    private static void ensureHeader(CodedInputStream s) throws IOException {
-        String header = new String(s.readRawBytes(8));
-        if (!"PBUFDEM\0".equals(header)) {
-            throw new IOException("replay does not have the proper header");
-        }
-    }
-
 }

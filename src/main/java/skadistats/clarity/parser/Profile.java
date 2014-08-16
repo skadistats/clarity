@@ -98,6 +98,12 @@ public class Profile {
             return true;
         }
     };
+    
+    public static Profile FILE_INFO = new Profile()
+    .append(
+    	Demo.CDemoFileInfo.class
+    );
+    
 
     private final Set<Class<?>> protoClasses = new HashSet<Class<?>>();
     private boolean tickwiseData;

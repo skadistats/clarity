@@ -2,18 +2,16 @@ package skadistats.clarity.parser;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-public class TickIterator implements Iterator<Tick> {
+public class TickIterator extends AbstractDemoInputStreamIterator<Tick> {
 
-    private final DemoInputStream s;
     private Peek peek = null;
     private Boolean haveNextPeek = null;
     
     public TickIterator(DemoInputStream s) {
-        this.s = s;
+        super(s);
     }
     
     private Peek getNextPeek() {
