@@ -14,6 +14,8 @@ public class Snapshot implements Cloneable {
     private final ModifierCollection modifiers = new ModifierCollection();
     private final TempEntityCollection tempEntities = new TempEntityCollection();
     private final ChatEventCollection chatEvents = new ChatEventCollection();
+    private final UserMessageCollection userMessages = new UserMessageCollection();
+    
     
     
     private Entity gameRulesProxy;
@@ -50,6 +52,10 @@ public class Snapshot implements Cloneable {
     public ChatEventCollection getChatEvents() {
         return chatEvents;
     }
+    
+    public UserMessageCollection getUserMessages() {
+        return userMessages;
+    }
 
     @Override
     public Snapshot clone() {
@@ -60,6 +66,7 @@ public class Snapshot implements Cloneable {
         gameEvents.clear();
         tempEntities.clear();
         chatEvents.clear();
+        userMessages.clear();
         gameRulesProxy = null;
         playerResource = null;
     }

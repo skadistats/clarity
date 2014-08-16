@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import skadistats.clarity.match.Match;
+import skadistats.clarity.model.UserMessage;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
@@ -23,6 +24,7 @@ public class UserMsgChatEventHandler implements Handler<CDOTAUserMsg_ChatEvent> 
             message.getType()
         );
         match.getChatEvents().add(message);
+        match.getUserMessages().add(UserMessage.build(message, match));
     }
 
 }

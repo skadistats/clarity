@@ -22,6 +22,10 @@ public class TempEntityCollection implements Cloneable {
         tempEntities.clear();
     }
     
+    public List<Entity> getAll(){
+    	return tempEntities;
+    }
+    
     @Override
     public TempEntityCollection clone() {
        return CLONER.deepClone(this);

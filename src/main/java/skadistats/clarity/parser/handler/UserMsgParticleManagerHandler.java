@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.ParticleAttachmentType;
+import skadistats.clarity.model.UserMessage;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
@@ -61,7 +62,8 @@ public class UserMsgParticleManagerHandler implements Handler<CDOTAUserMsg_Parti
                 logUnhanded(message, match);
                 break;
         }
-        
+        UserMessage msg = UserMessage.build(message, match);
+        match.getUserMessages().add(msg);
     }
     
     private void logCreate(CDOTAUserMsg_ParticleManager message, Match match) {

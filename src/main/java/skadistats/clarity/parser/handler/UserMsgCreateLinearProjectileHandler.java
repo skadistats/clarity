@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import skadistats.clarity.match.Match;
+import skadistats.clarity.model.UserMessage;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
@@ -24,6 +25,7 @@ public class UserMsgCreateLinearProjectileHandler implements Handler<CDOTAUserMs
             match.getEntities().getByIndex(message.getEntindex()).getDtClass().getDtName(), 
             match.getStringTables().forName("ParticleEffectNames").getNameByIndex(message.getParticleIndex())
         );
+        match.getUserMessages().add(UserMessage.build(message, match));
     }
 
 }

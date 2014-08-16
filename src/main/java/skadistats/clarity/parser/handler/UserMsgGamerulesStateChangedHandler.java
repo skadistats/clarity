@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.GameRulesStateType;
+import skadistats.clarity.model.UserMessage;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
@@ -23,6 +24,7 @@ public class UserMsgGamerulesStateChangedHandler implements Handler<CDOTA_UM_Gam
             match.getReplayTimeAsString(),
             GameRulesStateType.forId(message.getState())
         );
+        match.getUserMessages().add(UserMessage.build(message, match));
     }
 
 }
