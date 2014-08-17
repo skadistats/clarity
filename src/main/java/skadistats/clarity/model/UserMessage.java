@@ -1,6 +1,8 @@
 package skadistats.clarity.model;
 
+import com.google.protobuf.Descriptors.EnumValueDescriptor;
 import com.google.protobuf.Descriptors.FieldDescriptor;
+import com.google.protobuf.GeneratedMessage;
 
 import skadistats.clarity.match.Match;
 
@@ -22,7 +24,27 @@ public class UserMessage {
     	}
     	UserMessage result = new UserMessage(desc);
     	for (FieldDescriptor d :message.getDescriptorForType().getFields()) {
-			result.set(d.getIndex(), message.getField(d));
+    		if(d.isRepeated()){
+    			Object[] field = new Object[message.getRepeatedFieldCount(d)];
+    			for(int i = 0; i< message.getRepeatedFieldCount(d); ++i){
+    				if(d.getType().name().equals("MESSAGE")){
+    					field[i] = build((GeneratedMessage) message.getRepeatedField(d, i), match);
+    				}
+    				else{
+    					field[i] = message.getRepeatedField(d, i);
+    				}
+    			}
+    			result.set(d.getIndex(), field);
+    		}
+    		else if(d.getType().name().equals("MESSAGE")){
+				result.set(d.getIndex(), build((GeneratedMessage) message.getField(d), match));
+			}
+    		else if(d.getType().name().equals("ENUM")){
+				result.set(d.getIndex(),((EnumValueDescriptor)message.getField(d)).getName());
+			}
+			else{
+				result.set(d.getIndex(), message.getField(d));
+			}
         }
     	return result;
     }
@@ -65,7 +87,7 @@ public class UserMessage {
             buf.append("=");
             buf.append(state[i]);
         }
-        return String.format("GameEvent [name=%s, %s]", descriptor.getName(), buf.toString());
+        return String.format("UserMessage [name=%s, %s]", descriptor.getName(), buf.toString());
     }
     
 }
