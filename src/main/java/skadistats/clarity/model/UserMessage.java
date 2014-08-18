@@ -24,11 +24,16 @@ public class UserMessage {
     	}
     	UserMessage result = new UserMessage(desc);
     	for (FieldDescriptor d :message.getDescriptorForType().getFields()) {
+    		if(d.isOptional() && !message.hasField(d))
+    			continue;
     		if(d.isRepeated()){
     			Object[] field = new Object[message.getRepeatedFieldCount(d)];
     			for(int i = 0; i< message.getRepeatedFieldCount(d); ++i){
     				if(d.getType().name().equals("MESSAGE")){
     					field[i] = build((GeneratedMessage) message.getRepeatedField(d, i), match);
+    				}
+    				else if(d.getType().name().equals("ENUM")){
+    					result.set(d.getIndex(),((EnumValueDescriptor)message.getRepeatedField(d, i)).getName());
     				}
     				else{
     					field[i] = message.getRepeatedField(d, i);
@@ -67,7 +72,7 @@ public class UserMessage {
 	public <T> T getProperty(String key) {
         Integer index = descriptor.getIndexForKey(key);
         if (index == null) {
-            throw new IllegalArgumentException("key not found for this GameEvent");
+            return null;
         }
         return (T) state[index.intValue()];
     }
