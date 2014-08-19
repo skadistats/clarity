@@ -485,6 +485,10 @@ public final class Netmessages {
      * <code>svc_PacketReliable = 32;</code>
      */
     svc_PacketReliable(24, 32),
+    /**
+     * <code>svc_FullFrameSplit = 33;</code>
+     */
+    svc_FullFrameSplit(25, 33),
     ;
 
     /**
@@ -587,6 +591,10 @@ public final class Netmessages {
      * <code>svc_PacketReliable = 32;</code>
      */
     public static final int svc_PacketReliable_VALUE = 32;
+    /**
+     * <code>svc_FullFrameSplit = 33;</code>
+     */
+    public static final int svc_FullFrameSplit_VALUE = 33;
 
 
     public final int getNumber() { return value; }
@@ -618,6 +626,7 @@ public final class Netmessages {
         case 30: return svc_GameEventList;
         case 31: return svc_GetCvarValue;
         case 32: return svc_PacketReliable;
+        case 33: return svc_FullFrameSplit;
         default: return null;
       }
     }
@@ -8333,6 +8342,36 @@ public final class Netmessages {
      * <code>optional .VoiceDataFormat_t format = 3 [default = VOICEDATA_FORMAT_STEAM];</code>
      */
     com.dota2.proto.Netmessages.VoiceDataFormat_t getFormat();
+
+    // optional int32 sequence_bytes = 4;
+    /**
+     * <code>optional int32 sequence_bytes = 4;</code>
+     */
+    boolean hasSequenceBytes();
+    /**
+     * <code>optional int32 sequence_bytes = 4;</code>
+     */
+    int getSequenceBytes();
+
+    // optional uint32 section_number = 5;
+    /**
+     * <code>optional uint32 section_number = 5;</code>
+     */
+    boolean hasSectionNumber();
+    /**
+     * <code>optional uint32 section_number = 5;</code>
+     */
+    int getSectionNumber();
+
+    // optional uint32 uncompressed_sample_offset = 6;
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+     */
+    boolean hasUncompressedSampleOffset();
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+     */
+    int getUncompressedSampleOffset();
   }
   /**
    * Protobuf type {@code CCLCMsg_VoiceData}
@@ -8404,6 +8443,21 @@ public final class Netmessages {
                 bitField0_ |= 0x00000004;
                 format_ = value;
               }
+              break;
+            }
+            case 32: {
+              bitField0_ |= 0x00000008;
+              sequenceBytes_ = input.readInt32();
+              break;
+            }
+            case 40: {
+              bitField0_ |= 0x00000010;
+              sectionNumber_ = input.readUInt32();
+              break;
+            }
+            case 48: {
+              bitField0_ |= 0x00000020;
+              uncompressedSampleOffset_ = input.readUInt32();
               break;
             }
           }
@@ -8494,10 +8548,61 @@ public final class Netmessages {
       return format_;
     }
 
+    // optional int32 sequence_bytes = 4;
+    public static final int SEQUENCE_BYTES_FIELD_NUMBER = 4;
+    private int sequenceBytes_;
+    /**
+     * <code>optional int32 sequence_bytes = 4;</code>
+     */
+    public boolean hasSequenceBytes() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional int32 sequence_bytes = 4;</code>
+     */
+    public int getSequenceBytes() {
+      return sequenceBytes_;
+    }
+
+    // optional uint32 section_number = 5;
+    public static final int SECTION_NUMBER_FIELD_NUMBER = 5;
+    private int sectionNumber_;
+    /**
+     * <code>optional uint32 section_number = 5;</code>
+     */
+    public boolean hasSectionNumber() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional uint32 section_number = 5;</code>
+     */
+    public int getSectionNumber() {
+      return sectionNumber_;
+    }
+
+    // optional uint32 uncompressed_sample_offset = 6;
+    public static final int UNCOMPRESSED_SAMPLE_OFFSET_FIELD_NUMBER = 6;
+    private int uncompressedSampleOffset_;
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+     */
+    public boolean hasUncompressedSampleOffset() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+     */
+    public int getUncompressedSampleOffset() {
+      return uncompressedSampleOffset_;
+    }
+
     private void initFields() {
       data_ = com.google.protobuf.ByteString.EMPTY;
       xuid_ = 0L;
       format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+      sequenceBytes_ = 0;
+      sectionNumber_ = 0;
+      uncompressedSampleOffset_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8520,6 +8625,15 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeEnum(3, format_.getNumber());
       }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeInt32(4, sequenceBytes_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeUInt32(5, sectionNumber_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeUInt32(6, uncompressedSampleOffset_);
+      }
       getUnknownFields().writeTo(output);
     }
 
@@ -8540,6 +8654,18 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(3, format_.getNumber());
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(4, sequenceBytes_);
+      }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(5, sectionNumber_);
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(6, uncompressedSampleOffset_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8663,6 +8789,12 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000002);
         format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
         bitField0_ = (bitField0_ & ~0x00000004);
+        sequenceBytes_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        sectionNumber_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000010);
+        uncompressedSampleOffset_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
@@ -8703,6 +8835,18 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000004;
         }
         result.format_ = format_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.sequenceBytes_ = sequenceBytes_;
+        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.sectionNumber_ = sectionNumber_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.uncompressedSampleOffset_ = uncompressedSampleOffset_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8727,6 +8871,15 @@ public final class Netmessages {
         }
         if (other.hasFormat()) {
           setFormat(other.getFormat());
+        }
+        if (other.hasSequenceBytes()) {
+          setSequenceBytes(other.getSequenceBytes());
+        }
+        if (other.hasSectionNumber()) {
+          setSectionNumber(other.getSectionNumber());
+        }
+        if (other.hasUncompressedSampleOffset()) {
+          setUncompressedSampleOffset(other.getUncompressedSampleOffset());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -8856,6 +9009,105 @@ public final class Netmessages {
       public Builder clearFormat() {
         bitField0_ = (bitField0_ & ~0x00000004);
         format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 sequence_bytes = 4;
+      private int sequenceBytes_ ;
+      /**
+       * <code>optional int32 sequence_bytes = 4;</code>
+       */
+      public boolean hasSequenceBytes() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 4;</code>
+       */
+      public int getSequenceBytes() {
+        return sequenceBytes_;
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 4;</code>
+       */
+      public Builder setSequenceBytes(int value) {
+        bitField0_ |= 0x00000008;
+        sequenceBytes_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 4;</code>
+       */
+      public Builder clearSequenceBytes() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        sequenceBytes_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 section_number = 5;
+      private int sectionNumber_ ;
+      /**
+       * <code>optional uint32 section_number = 5;</code>
+       */
+      public boolean hasSectionNumber() {
+        return ((bitField0_ & 0x00000010) == 0x00000010);
+      }
+      /**
+       * <code>optional uint32 section_number = 5;</code>
+       */
+      public int getSectionNumber() {
+        return sectionNumber_;
+      }
+      /**
+       * <code>optional uint32 section_number = 5;</code>
+       */
+      public Builder setSectionNumber(int value) {
+        bitField0_ |= 0x00000010;
+        sectionNumber_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 section_number = 5;</code>
+       */
+      public Builder clearSectionNumber() {
+        bitField0_ = (bitField0_ & ~0x00000010);
+        sectionNumber_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 uncompressed_sample_offset = 6;
+      private int uncompressedSampleOffset_ ;
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+       */
+      public boolean hasUncompressedSampleOffset() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+       */
+      public int getUncompressedSampleOffset() {
+        return uncompressedSampleOffset_;
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+       */
+      public Builder setUncompressedSampleOffset(int value) {
+        bitField0_ |= 0x00000020;
+        uncompressedSampleOffset_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 6;</code>
+       */
+      public Builder clearUncompressedSampleOffset() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        uncompressedSampleOffset_ = 0;
         onChanged();
         return this;
       }
@@ -29138,6 +29390,16 @@ public final class Netmessages {
      * <code>optional bytes entity_data = 7;</code>
      */
     com.google.protobuf.ByteString getEntityData();
+
+    // optional bool pending_full_frame = 8;
+    /**
+     * <code>optional bool pending_full_frame = 8;</code>
+     */
+    boolean hasPendingFullFrame();
+    /**
+     * <code>optional bool pending_full_frame = 8;</code>
+     */
+    boolean getPendingFullFrame();
   }
   /**
    * Protobuf type {@code CSVCMsg_PacketEntities}
@@ -29223,6 +29485,11 @@ public final class Netmessages {
             case 58: {
               bitField0_ |= 0x00000040;
               entityData_ = input.readBytes();
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000080;
+              pendingFullFrame_ = input.readBool();
               break;
             }
           }
@@ -29377,6 +29644,22 @@ public final class Netmessages {
       return entityData_;
     }
 
+    // optional bool pending_full_frame = 8;
+    public static final int PENDING_FULL_FRAME_FIELD_NUMBER = 8;
+    private boolean pendingFullFrame_;
+    /**
+     * <code>optional bool pending_full_frame = 8;</code>
+     */
+    public boolean hasPendingFullFrame() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional bool pending_full_frame = 8;</code>
+     */
+    public boolean getPendingFullFrame() {
+      return pendingFullFrame_;
+    }
+
     private void initFields() {
       maxEntries_ = 0;
       updatedEntries_ = 0;
@@ -29385,6 +29668,7 @@ public final class Netmessages {
       baseline_ = 0;
       deltaFrom_ = 0;
       entityData_ = com.google.protobuf.ByteString.EMPTY;
+      pendingFullFrame_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -29418,6 +29702,9 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         output.writeBytes(7, entityData_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeBool(8, pendingFullFrame_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -29455,6 +29742,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(7, entityData_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(8, pendingFullFrame_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -29586,6 +29877,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000020);
         entityData_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000040);
+        pendingFullFrame_ = false;
+        bitField0_ = (bitField0_ & ~0x00000080);
         return this;
       }
 
@@ -29642,6 +29935,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000040;
         }
         result.entityData_ = entityData_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.pendingFullFrame_ = pendingFullFrame_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -29678,6 +29975,9 @@ public final class Netmessages {
         }
         if (other.hasEntityData()) {
           setEntityData(other.getEntityData());
+        }
+        if (other.hasPendingFullFrame()) {
+          setPendingFullFrame(other.getPendingFullFrame());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -29936,6 +30236,39 @@ public final class Netmessages {
       public Builder clearEntityData() {
         bitField0_ = (bitField0_ & ~0x00000040);
         entityData_ = getDefaultInstance().getEntityData();
+        onChanged();
+        return this;
+      }
+
+      // optional bool pending_full_frame = 8;
+      private boolean pendingFullFrame_ ;
+      /**
+       * <code>optional bool pending_full_frame = 8;</code>
+       */
+      public boolean hasPendingFullFrame() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional bool pending_full_frame = 8;</code>
+       */
+      public boolean getPendingFullFrame() {
+        return pendingFullFrame_;
+      }
+      /**
+       * <code>optional bool pending_full_frame = 8;</code>
+       */
+      public Builder setPendingFullFrame(boolean value) {
+        bitField0_ |= 0x00000080;
+        pendingFullFrame_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bool pending_full_frame = 8;</code>
+       */
+      public Builder clearPendingFullFrame() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        pendingFullFrame_ = false;
         onChanged();
         return this;
       }
@@ -32176,6 +32509,36 @@ public final class Netmessages {
      * <code>optional .VoiceDataFormat_t format = 6 [default = VOICEDATA_FORMAT_STEAM];</code>
      */
     com.dota2.proto.Netmessages.VoiceDataFormat_t getFormat();
+
+    // optional int32 sequence_bytes = 7;
+    /**
+     * <code>optional int32 sequence_bytes = 7;</code>
+     */
+    boolean hasSequenceBytes();
+    /**
+     * <code>optional int32 sequence_bytes = 7;</code>
+     */
+    int getSequenceBytes();
+
+    // optional uint32 section_number = 8;
+    /**
+     * <code>optional uint32 section_number = 8;</code>
+     */
+    boolean hasSectionNumber();
+    /**
+     * <code>optional uint32 section_number = 8;</code>
+     */
+    int getSectionNumber();
+
+    // optional uint32 uncompressed_sample_offset = 9;
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+     */
+    boolean hasUncompressedSampleOffset();
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+     */
+    int getUncompressedSampleOffset();
   }
   /**
    * Protobuf type {@code CSVCMsg_VoiceData}
@@ -32262,6 +32625,21 @@ public final class Netmessages {
                 bitField0_ |= 0x00000020;
                 format_ = value;
               }
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
+              sequenceBytes_ = input.readInt32();
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000080;
+              sectionNumber_ = input.readUInt32();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000100;
+              uncompressedSampleOffset_ = input.readUInt32();
               break;
             }
           }
@@ -32400,6 +32778,54 @@ public final class Netmessages {
       return format_;
     }
 
+    // optional int32 sequence_bytes = 7;
+    public static final int SEQUENCE_BYTES_FIELD_NUMBER = 7;
+    private int sequenceBytes_;
+    /**
+     * <code>optional int32 sequence_bytes = 7;</code>
+     */
+    public boolean hasSequenceBytes() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional int32 sequence_bytes = 7;</code>
+     */
+    public int getSequenceBytes() {
+      return sequenceBytes_;
+    }
+
+    // optional uint32 section_number = 8;
+    public static final int SECTION_NUMBER_FIELD_NUMBER = 8;
+    private int sectionNumber_;
+    /**
+     * <code>optional uint32 section_number = 8;</code>
+     */
+    public boolean hasSectionNumber() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional uint32 section_number = 8;</code>
+     */
+    public int getSectionNumber() {
+      return sectionNumber_;
+    }
+
+    // optional uint32 uncompressed_sample_offset = 9;
+    public static final int UNCOMPRESSED_SAMPLE_OFFSET_FIELD_NUMBER = 9;
+    private int uncompressedSampleOffset_;
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+     */
+    public boolean hasUncompressedSampleOffset() {
+      return ((bitField0_ & 0x00000100) == 0x00000100);
+    }
+    /**
+     * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+     */
+    public int getUncompressedSampleOffset() {
+      return uncompressedSampleOffset_;
+    }
+
     private void initFields() {
       client_ = 0;
       proximity_ = false;
@@ -32407,6 +32833,9 @@ public final class Netmessages {
       audibleMask_ = 0;
       voiceData_ = com.google.protobuf.ByteString.EMPTY;
       format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+      sequenceBytes_ = 0;
+      sectionNumber_ = 0;
+      uncompressedSampleOffset_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -32437,6 +32866,15 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeEnum(6, format_.getNumber());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeInt32(7, sequenceBytes_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeUInt32(8, sectionNumber_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        output.writeUInt32(9, uncompressedSampleOffset_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -32470,6 +32908,18 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeEnumSize(6, format_.getNumber());
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(7, sequenceBytes_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(8, sectionNumber_);
+      }
+      if (((bitField0_ & 0x00000100) == 0x00000100)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(9, uncompressedSampleOffset_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -32599,6 +33049,12 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000010);
         format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
         bitField0_ = (bitField0_ & ~0x00000020);
+        sequenceBytes_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        sectionNumber_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000080);
+        uncompressedSampleOffset_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -32651,6 +33107,18 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000020;
         }
         result.format_ = format_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.sequenceBytes_ = sequenceBytes_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.sectionNumber_ = sectionNumber_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000100;
+        }
+        result.uncompressedSampleOffset_ = uncompressedSampleOffset_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -32684,6 +33152,15 @@ public final class Netmessages {
         }
         if (other.hasFormat()) {
           setFormat(other.getFormat());
+        }
+        if (other.hasSequenceBytes()) {
+          setSequenceBytes(other.getSequenceBytes());
+        }
+        if (other.hasSectionNumber()) {
+          setSectionNumber(other.getSectionNumber());
+        }
+        if (other.hasUncompressedSampleOffset()) {
+          setUncompressedSampleOffset(other.getUncompressedSampleOffset());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -32912,6 +33389,105 @@ public final class Netmessages {
       public Builder clearFormat() {
         bitField0_ = (bitField0_ & ~0x00000020);
         format_ = com.dota2.proto.Netmessages.VoiceDataFormat_t.VOICEDATA_FORMAT_STEAM;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 sequence_bytes = 7;
+      private int sequenceBytes_ ;
+      /**
+       * <code>optional int32 sequence_bytes = 7;</code>
+       */
+      public boolean hasSequenceBytes() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 7;</code>
+       */
+      public int getSequenceBytes() {
+        return sequenceBytes_;
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 7;</code>
+       */
+      public Builder setSequenceBytes(int value) {
+        bitField0_ |= 0x00000040;
+        sequenceBytes_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 sequence_bytes = 7;</code>
+       */
+      public Builder clearSequenceBytes() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        sequenceBytes_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 section_number = 8;
+      private int sectionNumber_ ;
+      /**
+       * <code>optional uint32 section_number = 8;</code>
+       */
+      public boolean hasSectionNumber() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional uint32 section_number = 8;</code>
+       */
+      public int getSectionNumber() {
+        return sectionNumber_;
+      }
+      /**
+       * <code>optional uint32 section_number = 8;</code>
+       */
+      public Builder setSectionNumber(int value) {
+        bitField0_ |= 0x00000080;
+        sectionNumber_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 section_number = 8;</code>
+       */
+      public Builder clearSectionNumber() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        sectionNumber_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 uncompressed_sample_offset = 9;
+      private int uncompressedSampleOffset_ ;
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+       */
+      public boolean hasUncompressedSampleOffset() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+       */
+      public int getUncompressedSampleOffset() {
+        return uncompressedSampleOffset_;
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+       */
+      public Builder setUncompressedSampleOffset(int value) {
+        bitField0_ |= 0x00000100;
+        uncompressedSampleOffset_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 uncompressed_sample_offset = 9;</code>
+       */
+      public Builder clearUncompressedSampleOffset() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        uncompressedSampleOffset_ = 0;
         onChanged();
         return this;
       }
@@ -33404,6 +33980,648 @@ public final class Netmessages {
     // @@protoc_insertion_point(class_scope:CSVCMsg_PacketReliable)
   }
 
+  public interface CSVCMsg_FullFrameSplitOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional int32 tick = 1;
+    /**
+     * <code>optional int32 tick = 1;</code>
+     */
+    boolean hasTick();
+    /**
+     * <code>optional int32 tick = 1;</code>
+     */
+    int getTick();
+
+    // optional int32 section = 2;
+    /**
+     * <code>optional int32 section = 2;</code>
+     */
+    boolean hasSection();
+    /**
+     * <code>optional int32 section = 2;</code>
+     */
+    int getSection();
+
+    // optional int32 total = 3;
+    /**
+     * <code>optional int32 total = 3;</code>
+     */
+    boolean hasTotal();
+    /**
+     * <code>optional int32 total = 3;</code>
+     */
+    int getTotal();
+
+    // optional bytes data = 4;
+    /**
+     * <code>optional bytes data = 4;</code>
+     */
+    boolean hasData();
+    /**
+     * <code>optional bytes data = 4;</code>
+     */
+    com.google.protobuf.ByteString getData();
+  }
+  /**
+   * Protobuf type {@code CSVCMsg_FullFrameSplit}
+   */
+  public static final class CSVCMsg_FullFrameSplit extends
+      com.google.protobuf.GeneratedMessage
+      implements CSVCMsg_FullFrameSplitOrBuilder {
+    // Use CSVCMsg_FullFrameSplit.newBuilder() to construct.
+    private CSVCMsg_FullFrameSplit(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private CSVCMsg_FullFrameSplit(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final CSVCMsg_FullFrameSplit defaultInstance;
+    public static CSVCMsg_FullFrameSplit getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public CSVCMsg_FullFrameSplit getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CSVCMsg_FullFrameSplit(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              tick_ = input.readInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              section_ = input.readInt32();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              total_ = input.readInt32();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
+              data_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.dota2.proto.Netmessages.internal_static_CSVCMsg_FullFrameSplit_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.dota2.proto.Netmessages.internal_static_CSVCMsg_FullFrameSplit_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.class, com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<CSVCMsg_FullFrameSplit> PARSER =
+        new com.google.protobuf.AbstractParser<CSVCMsg_FullFrameSplit>() {
+      public CSVCMsg_FullFrameSplit parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CSVCMsg_FullFrameSplit(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CSVCMsg_FullFrameSplit> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional int32 tick = 1;
+    public static final int TICK_FIELD_NUMBER = 1;
+    private int tick_;
+    /**
+     * <code>optional int32 tick = 1;</code>
+     */
+    public boolean hasTick() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional int32 tick = 1;</code>
+     */
+    public int getTick() {
+      return tick_;
+    }
+
+    // optional int32 section = 2;
+    public static final int SECTION_FIELD_NUMBER = 2;
+    private int section_;
+    /**
+     * <code>optional int32 section = 2;</code>
+     */
+    public boolean hasSection() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 section = 2;</code>
+     */
+    public int getSection() {
+      return section_;
+    }
+
+    // optional int32 total = 3;
+    public static final int TOTAL_FIELD_NUMBER = 3;
+    private int total_;
+    /**
+     * <code>optional int32 total = 3;</code>
+     */
+    public boolean hasTotal() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional int32 total = 3;</code>
+     */
+    public int getTotal() {
+      return total_;
+    }
+
+    // optional bytes data = 4;
+    public static final int DATA_FIELD_NUMBER = 4;
+    private com.google.protobuf.ByteString data_;
+    /**
+     * <code>optional bytes data = 4;</code>
+     */
+    public boolean hasData() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional bytes data = 4;</code>
+     */
+    public com.google.protobuf.ByteString getData() {
+      return data_;
+    }
+
+    private void initFields() {
+      tick_ = 0;
+      section_ = 0;
+      total_ = 0;
+      data_ = com.google.protobuf.ByteString.EMPTY;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeInt32(1, tick_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, section_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeInt32(3, total_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, data_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(1, tick_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, section_);
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(3, total_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, data_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CSVCMsg_FullFrameSplit}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplitOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.dota2.proto.Netmessages.internal_static_CSVCMsg_FullFrameSplit_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.dota2.proto.Netmessages.internal_static_CSVCMsg_FullFrameSplit_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.class, com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.Builder.class);
+      }
+
+      // Construct using com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        tick_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        section_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        total_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        data_ = com.google.protobuf.ByteString.EMPTY;
+        bitField0_ = (bitField0_ & ~0x00000008);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.dota2.proto.Netmessages.internal_static_CSVCMsg_FullFrameSplit_descriptor;
+      }
+
+      public com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit getDefaultInstanceForType() {
+        return com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.getDefaultInstance();
+      }
+
+      public com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit build() {
+        com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit buildPartial() {
+        com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit result = new com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.tick_ = tick_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.section_ = section_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.total_ = total_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.data_ = data_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit) {
+          return mergeFrom((com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit other) {
+        if (other == com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit.getDefaultInstance()) return this;
+        if (other.hasTick()) {
+          setTick(other.getTick());
+        }
+        if (other.hasSection()) {
+          setSection(other.getSection());
+        }
+        if (other.hasTotal()) {
+          setTotal(other.getTotal());
+        }
+        if (other.hasData()) {
+          setData(other.getData());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.dota2.proto.Netmessages.CSVCMsg_FullFrameSplit) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional int32 tick = 1;
+      private int tick_ ;
+      /**
+       * <code>optional int32 tick = 1;</code>
+       */
+      public boolean hasTick() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional int32 tick = 1;</code>
+       */
+      public int getTick() {
+        return tick_;
+      }
+      /**
+       * <code>optional int32 tick = 1;</code>
+       */
+      public Builder setTick(int value) {
+        bitField0_ |= 0x00000001;
+        tick_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 tick = 1;</code>
+       */
+      public Builder clearTick() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        tick_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 section = 2;
+      private int section_ ;
+      /**
+       * <code>optional int32 section = 2;</code>
+       */
+      public boolean hasSection() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 section = 2;</code>
+       */
+      public int getSection() {
+        return section_;
+      }
+      /**
+       * <code>optional int32 section = 2;</code>
+       */
+      public Builder setSection(int value) {
+        bitField0_ |= 0x00000002;
+        section_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 section = 2;</code>
+       */
+      public Builder clearSection() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        section_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 total = 3;
+      private int total_ ;
+      /**
+       * <code>optional int32 total = 3;</code>
+       */
+      public boolean hasTotal() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional int32 total = 3;</code>
+       */
+      public int getTotal() {
+        return total_;
+      }
+      /**
+       * <code>optional int32 total = 3;</code>
+       */
+      public Builder setTotal(int value) {
+        bitField0_ |= 0x00000004;
+        total_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 total = 3;</code>
+       */
+      public Builder clearTotal() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        total_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional bytes data = 4;
+      private com.google.protobuf.ByteString data_ = com.google.protobuf.ByteString.EMPTY;
+      /**
+       * <code>optional bytes data = 4;</code>
+       */
+      public boolean hasData() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional bytes data = 4;</code>
+       */
+      public com.google.protobuf.ByteString getData() {
+        return data_;
+      }
+      /**
+       * <code>optional bytes data = 4;</code>
+       */
+      public Builder setData(com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        data_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional bytes data = 4;</code>
+       */
+      public Builder clearData() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        data_ = getDefaultInstance().getData();
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CSVCMsg_FullFrameSplit)
+    }
+
+    static {
+      defaultInstance = new CSVCMsg_FullFrameSplit(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:CSVCMsg_FullFrameSplit)
+  }
+
   private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CMsg_CVars_descriptor;
   private static
@@ -33639,6 +34857,11 @@ public final class Netmessages {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CSVCMsg_PacketReliable_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CSVCMsg_FullFrameSplit_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CSVCMsg_FullFrameSplit_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -33677,125 +34900,133 @@ public final class Netmessages {
       "s_id\030\005 \001(\r\022\024\n\014friends_name\030\006 \001(\t\022\024\n\014cust" +
       "om_files\030\007 \003(\007\"S\n\014CCLCMsg_Move\022\033\n\023num_ba" +
       "ckup_commands\030\001 \001(\r\022\030\n\020num_new_commands\030" +
-      "\002 \001(\r\022\014\n\004data\030\003 \001(\014\"k\n\021CCLCMsg_VoiceData",
-      "\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030\003" +
-      " \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_FORM" +
-      "AT_STEAM\"A\n\023CCLCMsg_BaselineAck\022\025\n\rbasel" +
-      "ine_tick\030\001 \001(\005\022\023\n\013baseline_nr\030\002 \001(\005\"*\n\024C" +
-      "CLCMsg_ListenEvents\022\022\n\nevent_mask\030\001 \003(\007\"" +
-      "\\\n\030CCLCMsg_RespondCvarValue\022\016\n\006cookie\030\001 " +
-      "\001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004name\030\003 \001(\t\022\r" +
-      "\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_FileCRCCheck\022\021\n" +
-      "\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rcode_f" +
-      "ilename\030\003 \001(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003crc\030\005",
-      " \001(\007\"+\n\027CCLCMsg_LoadingProgress\022\020\n\010progr" +
-      "ess\030\001 \001(\005\":\n\032CCLCMsg_SplitPlayerConnect\022" +
-      "\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars\"7\n\025CCLCMsg" +
-      "_ClientMessage\022\020\n\010msg_type\030\001 \001(\005\022\014\n\004data" +
-      "\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo\022\020\n\010protoco" +
-      "l\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005\022\024\n\014is_dedi" +
-      "cated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_repla" +
-      "y\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 \001(\007\022\022" +
-      "\n\nclient_crc\030\010 \001(\007\022\030\n\020string_table_crc\030\t" +
-      " \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013max_classes",
-      "\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025\n\rtick_inte" +
-      "rval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022\020\n\010map_name" +
-      "\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\thost_name\030\021 " +
-      "\001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021CSVCMsg_Clas" +
-      "sInfo\022\030\n\020create_on_client\030\001 \001(\010\022+\n\007class" +
-      "es\030\002 \003(\0132\032.CSVCMsg_ClassInfo.class_t\032H\n\007" +
-      "class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017data_table_" +
-      "name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"\"\n\020CSVCMs" +
-      "g_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021CSVCMsg_Vo" +
-      "iceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005codec\030\002 \001(\t\022",
-      "\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_Print\022\014\n\004" +
-      "text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026\n\016reliabl" +
-      "e_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033.CSVCMsg_" +
-      "Sounds.sounddata_t\032\336\002\n\013sounddata_t\022\020\n\010or" +
-      "igin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010origin" +
-      "_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013delay_value\030" +
-      "\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022\024\n\014entity" +
-      "_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pitch\030\t" +
-      " \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_num\030\013 \001(\r\022\030" +
-      "\n\020sound_num_handle\030\014 \001(\007\022\026\n\016speaker_enti",
-      "ty\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023\n\013sound_l" +
-      "evel\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010\022\022\n\nis_am" +
-      "bient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch\022\023\n\013sound" +
-      "_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView\022\024\n\014entit" +
-      "y_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAngle\022\020\n\010rel" +
-      "ative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CMsgQAngle\"" +
-      "4\n\026CSVCMsg_CrosshairAngle\022\032\n\005angle\030\001 \001(\013" +
-      "2\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDecal\022\030\n\003po" +
-      "s\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_texture_in" +
-      "dex\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005\022\023\n\013model",
-      "_index\030\004 \001(\005\022\024\n\014low_priority\030\005 \001(\010\"z\n\023CS" +
-      "VCMsg_SplitScreen\022?\n\004type\030\001 \001(\0162\030.ESplit" +
-      "ScreenMessageType:\027MSG_SPLITSCREEN_ADDUS" +
-      "ER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_index\030\003 \001(\005\"9" +
-      "\n\024CSVCMsg_GetCvarValue\022\016\n\006cookie\030\001 \001(\005\022\021" +
-      "\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Menu\022\023\n\013dia" +
-      "log_type\030\001 \001(\005\022\027\n\017menu_key_values\030\002 \001(\014\"" +
-      "\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end\030\001 \001(\010\022\026\n" +
-      "\016net_table_name\030\002 \001(\t\022\025\n\rneeds_decoder\030\003" +
-      " \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_SendTable.",
-      "sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004type\030\001 \001(\005\022" +
-      "\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(\005\022\020\n\010prio" +
-      "rity\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014num_eleme" +
-      "nts\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n\nhigh_val" +
-      "ue\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025CSVCMsg_G" +
-      "ameEventList\0228\n\013descriptors\030\001 \003(\0132#.CSVC" +
-      "Msg_GameEventList.descriptor_t\032#\n\005key_t\022" +
-      "\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014descripto" +
-      "r_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022*\n\004ke" +
-      "ys\030\003 \003(\0132\034.CSVCMsg_GameEventList.key_t\"\254",
-      "\001\n\026CSVCMsg_PacketEntities\022\023\n\013max_entries" +
-      "\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005\022\020\n\010is_de" +
-      "lta\030\003 \001(\010\022\027\n\017update_baseline\030\004 \001(\010\022\020\n\010ba" +
-      "seline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(\005\022\023\n\013enti" +
-      "ty_data\030\007 \001(\014\"R\n\024CSVCMsg_TempEntities\022\020\n" +
-      "\010reliable\030\001 \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013" +
-      "entity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStri" +
-      "ngTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001" +
-      "(\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024user_data_fix" +
-      "ed_size\030\004 \001(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n",
-      "\023user_data_size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(" +
-      "\005\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSVCMsg_Update" +
-      "StringTable\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_cha" +
-      "nged_entries\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"" +
-      "\252\001\n\021CSVCMsg_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n" +
-      "\tproximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audibl" +
-      "e_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006form" +
-      "at\030\006 \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_" +
-      "FORMAT_STEAM\"<\n\026CSVCMsg_PacketReliable\022\014" +
-      "\n\004tick\030\001 \001(\005\022\024\n\014messagessize\030\002 \001(\005*\237\001\n\014N",
-      "ET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net_Disconne" +
-      "ct\020\001\022\014\n\010net_File\020\002\022\027\n\023net_SplitScreenUse" +
-      "r\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_StringCmd\020\005\022\021\n\r" +
-      "net_SetConVar\020\006\022\023\n\017net_SignonState\020\007*\352\001\n" +
-      "\014CLC_Messages\022\022\n\016clc_ClientInfo\020\010\022\014\n\010clc" +
-      "_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017clc_Baseli" +
-      "neAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030\n\024clc_Res" +
-      "pondCvarValue\020\r\022\024\n\020clc_FileCRCCheck\020\016\022\027\n" +
-      "\023clc_LoadingProgress\020\017\022\032\n\026clc_SplitPlaye" +
-      "rConnect\020\020\022\025\n\021clc_ClientMessage\020\021*L\n\021Voi",
-      "ceDataFormat_t\022\032\n\026VOICEDATA_FORMAT_STEAM" +
-      "\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001*\211\004\n\014SVC_" +
-      "Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n\rsvc_Send" +
-      "Table\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014svc_SetPau" +
-      "se\020\013\022\031\n\025svc_CreateStringTable\020\014\022\031\n\025svc_U" +
-      "pdateStringTable\020\r\022\021\n\rsvc_VoiceInit\020\016\022\021\n" +
-      "\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020\022\016\n\nsvc_S" +
-      "ounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc_FixAngle" +
-      "\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014svc_BSPDec" +
-      "al\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017svc_UserMes",
-      "sage\020\027\022\025\n\021svc_EntityMessage\020\030\022\021\n\rsvc_Gam" +
-      "eEvent\020\031\022\026\n\022svc_PacketEntities\020\032\022\024\n\020svc_" +
-      "TempEntities\020\033\022\020\n\014svc_Prefetch\020\034\022\014\n\010svc_" +
-      "Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024\n\020svc_Get" +
-      "CvarValue\020\037\022\026\n\022svc_PacketReliable\020 *V\n\027E" +
-      "SplitScreenMessageType\022\033\n\027MSG_SPLITSCREE" +
-      "N_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREEN_REMOVEUSE" +
-      "R\020\001B\021\n\017com.dota2.proto"
+      "\002 \001(\r\022\014\n\004data\030\003 \001(\014\"\277\001\n\021CCLCMsg_VoiceDat",
+      "a\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030" +
+      "\003 \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_FOR" +
+      "MAT_STEAM\022\026\n\016sequence_bytes\030\004 \001(\005\022\026\n\016sec" +
+      "tion_number\030\005 \001(\r\022\"\n\032uncompressed_sample" +
+      "_offset\030\006 \001(\r\"A\n\023CCLCMsg_BaselineAck\022\025\n\r" +
+      "baseline_tick\030\001 \001(\005\022\023\n\013baseline_nr\030\002 \001(\005" +
+      "\"*\n\024CCLCMsg_ListenEvents\022\022\n\nevent_mask\030\001" +
+      " \003(\007\"\\\n\030CCLCMsg_RespondCvarValue\022\016\n\006cook" +
+      "ie\030\001 \001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004name\030\003 " +
+      "\001(\t\022\r\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_FileCRCChe",
+      "ck\022\021\n\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rc" +
+      "ode_filename\030\003 \001(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003" +
+      "crc\030\005 \001(\007\"+\n\027CCLCMsg_LoadingProgress\022\020\n\010" +
+      "progress\030\001 \001(\005\":\n\032CCLCMsg_SplitPlayerCon" +
+      "nect\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars\"7\n\025CC" +
+      "LCMsg_ClientMessage\022\020\n\010msg_type\030\001 \001(\005\022\014\n" +
+      "\004data\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo\022\020\n\010pr" +
+      "otocol\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005\022\024\n\014is" +
+      "_dedicated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_" +
+      "replay\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 ",
+      "\001(\007\022\022\n\nclient_crc\030\010 \001(\007\022\030\n\020string_table_" +
+      "crc\030\t \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013max_cl" +
+      "asses\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025\n\rtick" +
+      "_interval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022\020\n\010map" +
+      "_name\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\thost_na" +
+      "me\030\021 \001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021CSVCMsg" +
+      "_ClassInfo\022\030\n\020create_on_client\030\001 \001(\010\022+\n\007" +
+      "classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo.class_" +
+      "t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017data_t" +
+      "able_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"\"\n\020C",
+      "SVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021CSVCM" +
+      "sg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005codec\030\002" +
+      " \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_Prin" +
+      "t\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026\n\016re" +
+      "liable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033.CSV" +
+      "CMsg_Sounds.sounddata_t\032\336\002\n\013sounddata_t\022" +
+      "\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010o" +
+      "rigin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013delay_v" +
+      "alue\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022\024\n\014e" +
+      "ntity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pi",
+      "tch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_num\030\013 " +
+      "\001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016speaker" +
+      "_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023\n\013so" +
+      "und_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010\022\022\n\n" +
+      "is_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch\022\023\n\013" +
+      "sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView\022\024\n\014" +
+      "entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAngle\022\020" +
+      "\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CMsgQA" +
+      "ngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005angle\030" +
+      "\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDecal\022",
+      "\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_textu" +
+      "re_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005\022\023\n\013" +
+      "model_index\030\004 \001(\005\022\024\n\014low_priority\030\005 \001(\010\"" +
+      "z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001(\0162\030.E" +
+      "SplitScreenMessageType:\027MSG_SPLITSCREEN_" +
+      "ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_index\030\003 " +
+      "\001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006cookie\030\001 " +
+      "\001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Menu\022\023" +
+      "\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_values\030\002" +
+      " \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end\030\001 \001",
+      "(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneeds_deco" +
+      "der\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_SendT" +
+      "able.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004type\030\001" +
+      " \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(\005\022\020\n" +
+      "\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014num_" +
+      "elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n\nhig" +
+      "h_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025CSVC" +
+      "Msg_GameEventList\0228\n\013descriptors\030\001 \003(\0132#" +
+      ".CSVCMsg_GameEventList.descriptor_t\032#\n\005k" +
+      "ey_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014desc",
+      "riptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022" +
+      "*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventList.ke" +
+      "y_t\"\310\001\n\026CSVCMsg_PacketEntities\022\023\n\013max_en" +
+      "tries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005\022\020\n\010" +
+      "is_delta\030\003 \001(\010\022\027\n\017update_baseline\030\004 \001(\010\022" +
+      "\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(\005\022\023\n" +
+      "\013entity_data\030\007 \001(\014\022\032\n\022pending_full_frame" +
+      "\030\010 \001(\010\"R\n\024CSVCMsg_TempEntities\022\020\n\010reliab" +
+      "le\030\001 \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013entity_" +
+      "data\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStringTable",
+      "\022\014\n\004name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001(\005\022\023\n\013n" +
+      "um_entries\030\003 \001(\005\022\034\n\024user_data_fixed_size" +
+      "\030\004 \001(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n\023user_d" +
+      "ata_size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(\005\022\023\n\013st" +
+      "ring_data\030\010 \001(\014\"_\n\031CSVCMsg_UpdateStringT" +
+      "able\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_changed_en" +
+      "tries\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"\376\001\n\021CSV" +
+      "CMsg_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n\tproxim" +
+      "ity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audible_mask\030" +
+      "\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006format\030\006 \001(",
+      "\0162\022.VoiceDataFormat_t:\026VOICEDATA_FORMAT_" +
+      "STEAM\022\026\n\016sequence_bytes\030\007 \001(\005\022\026\n\016section" +
+      "_number\030\010 \001(\r\022\"\n\032uncompressed_sample_off" +
+      "set\030\t \001(\r\"<\n\026CSVCMsg_PacketReliable\022\014\n\004t" +
+      "ick\030\001 \001(\005\022\024\n\014messagessize\030\002 \001(\005\"T\n\026CSVCM" +
+      "sg_FullFrameSplit\022\014\n\004tick\030\001 \001(\005\022\017\n\007secti" +
+      "on\030\002 \001(\005\022\r\n\005total\030\003 \001(\005\022\014\n\004data\030\004 \001(\014*\237\001" +
+      "\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net_Disco" +
+      "nnect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_SplitScreen" +
+      "User\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_StringCmd\020\005\022",
+      "\021\n\rnet_SetConVar\020\006\022\023\n\017net_SignonState\020\007*" +
+      "\352\001\n\014CLC_Messages\022\022\n\016clc_ClientInfo\020\010\022\014\n\010" +
+      "clc_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017clc_Bas" +
+      "elineAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030\n\024clc_" +
+      "RespondCvarValue\020\r\022\024\n\020clc_FileCRCCheck\020\016" +
+      "\022\027\n\023clc_LoadingProgress\020\017\022\032\n\026clc_SplitPl" +
+      "ayerConnect\020\020\022\025\n\021clc_ClientMessage\020\021*L\n\021" +
+      "VoiceDataFormat_t\022\032\n\026VOICEDATA_FORMAT_ST" +
+      "EAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001*\241\004\n\014S" +
+      "VC_Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n\rsvc_S",
+      "endTable\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014svc_Set" +
+      "Pause\020\013\022\031\n\025svc_CreateStringTable\020\014\022\031\n\025sv" +
+      "c_UpdateStringTable\020\r\022\021\n\rsvc_VoiceInit\020\016" +
+      "\022\021\n\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020\022\016\n\nsv" +
+      "c_Sounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc_FixAn" +
+      "gle\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014svc_BSP" +
+      "Decal\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017svc_User" +
+      "Message\020\027\022\025\n\021svc_EntityMessage\020\030\022\021\n\rsvc_" +
+      "GameEvent\020\031\022\026\n\022svc_PacketEntities\020\032\022\024\n\020s" +
+      "vc_TempEntities\020\033\022\020\n\014svc_Prefetch\020\034\022\014\n\010s",
+      "vc_Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024\n\020svc_" +
+      "GetCvarValue\020\037\022\026\n\022svc_PacketReliable\020 \022\026" +
+      "\n\022svc_FullFrameSplit\020!*V\n\027ESplitScreenMe" +
+      "ssageType\022\033\n\027MSG_SPLITSCREEN_ADDUSER\020\000\022\036" +
+      "\n\032MSG_SPLITSCREEN_REMOVEUSER\020\001B\021\n\017com.do" +
+      "ta2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -33879,7 +35110,7 @@ public final class Netmessages {
           internal_static_CCLCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Data", "Xuid", "Format", });
+              new java.lang.String[] { "Data", "Xuid", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", });
           internal_static_CCLCMsg_BaselineAck_descriptor =
             getDescriptor().getMessageTypes().get(12);
           internal_static_CCLCMsg_BaselineAck_fieldAccessorTable = new
@@ -34053,7 +35284,7 @@ public final class Netmessages {
           internal_static_CSVCMsg_PacketEntities_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_PacketEntities_descriptor,
-              new java.lang.String[] { "MaxEntries", "UpdatedEntries", "IsDelta", "UpdateBaseline", "Baseline", "DeltaFrom", "EntityData", });
+              new java.lang.String[] { "MaxEntries", "UpdatedEntries", "IsDelta", "UpdateBaseline", "Baseline", "DeltaFrom", "EntityData", "PendingFullFrame", });
           internal_static_CSVCMsg_TempEntities_descriptor =
             getDescriptor().getMessageTypes().get(36);
           internal_static_CSVCMsg_TempEntities_fieldAccessorTable = new
@@ -34077,13 +35308,19 @@ public final class Netmessages {
           internal_static_CSVCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", "Format", });
+              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", });
           internal_static_CSVCMsg_PacketReliable_descriptor =
             getDescriptor().getMessageTypes().get(40);
           internal_static_CSVCMsg_PacketReliable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_PacketReliable_descriptor,
               new java.lang.String[] { "Tick", "Messagessize", });
+          internal_static_CSVCMsg_FullFrameSplit_descriptor =
+            getDescriptor().getMessageTypes().get(41);
+          internal_static_CSVCMsg_FullFrameSplit_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CSVCMsg_FullFrameSplit_descriptor,
+              new java.lang.String[] { "Tick", "Section", "Total", "Data", });
           return null;
         }
       };

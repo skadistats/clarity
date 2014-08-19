@@ -746,6 +746,10 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_SPT_Poll = 2;</code>
      */
     k_EDOTA_SPT_Poll(2, 2),
+    /**
+     * <code>k_EDOTA_SPT_Grid = 3;</code>
+     */
+    k_EDOTA_SPT_Grid(3, 3),
     ;
 
     /**
@@ -760,6 +764,10 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_SPT_Poll = 2;</code>
      */
     public static final int k_EDOTA_SPT_Poll_VALUE = 2;
+    /**
+     * <code>k_EDOTA_SPT_Grid = 3;</code>
+     */
+    public static final int k_EDOTA_SPT_Grid_VALUE = 3;
 
 
     public final int getNumber() { return value; }
@@ -769,6 +777,7 @@ public final class DotaCommonmessages {
         case 0: return k_EDOTA_SPT_Textline;
         case 1: return k_EDOTA_SPT_Basic;
         case 2: return k_EDOTA_SPT_Poll;
+        case 3: return k_EDOTA_SPT_Grid;
         default: return null;
       }
     }
@@ -4856,10 +4865,11 @@ public final class DotaCommonmessages {
       "d\020B\022\027\n\023k_EDOTA_CW_New_Meta\020C\022\025\n\021k_EDOTA_" +
       "CW_My_Bad\020D\022\025\n\021k_EDOTA_CW_Regret\020E\022\024\n\020k_",
       "EDOTA_CW_Relax\020F\022\032\n\026k_EDOTA_CW_MissingHe" +
-      "ro\020G\022\033\n\027k_EDOTA_CW_ReturnedHero\020H*\\\n\023EDO" +
+      "ro\020G\022\033\n\027k_EDOTA_CW_ReturnedHero\020H*r\n\023EDO" +
       "TAStatPopupTypes\022\030\n\024k_EDOTA_SPT_Textline" +
       "\020\000\022\025\n\021k_EDOTA_SPT_Basic\020\001\022\024\n\020k_EDOTA_SPT" +
-      "_Poll\020\002B\021\n\017com.dota2.proto"
+      "_Poll\020\002\022\024\n\020k_EDOTA_SPT_Grid\020\003B\021\n\017com.dot" +
+      "a2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
