@@ -65,6 +65,7 @@ public class Snapshot implements Cloneable {
     public void clearTransientData() {
         gameEvents.clear();
         tempEntities.clear();
+        modifiers.clear();
         chatEvents.clear();
         userMessages.clear();
         gameRulesProxy = null;

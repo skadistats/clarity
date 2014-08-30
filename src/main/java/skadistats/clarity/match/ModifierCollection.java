@@ -1,9 +1,11 @@
 package skadistats.clarity.match;
 
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+
+import skadistats.clarity.model.ModifierTableEntry;
 
 import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 import com.rits.cloning.Cloner;
@@ -12,34 +14,43 @@ public class ModifierCollection implements Cloneable {
     
     private static final Cloner CLONER = new Cloner();
     
-    private final List<Map<Integer, CDOTAModifierBuffTableEntry>> modifiers = new ArrayList<Map<Integer, CDOTAModifierBuffTableEntry>>(2048);
+    private final List<ModifierTableEntry> modifiers = new LinkedList<ModifierTableEntry>();
+    private final Map<Integer, LinkedList<ModifierTableEntry>> modifiersForEntity = new HashMap<Integer, LinkedList<ModifierTableEntry>>();
 
     public ModifierCollection() {
-        for (int i = 0; i < 2048; i++) {
-            modifiers.add(null);
-        }
     }
     
-    public void set(int entityIndex, int modifierIndex, CDOTAModifierBuffTableEntry modifier) {
-        Map<Integer, CDOTAModifierBuffTableEntry> modsForEntity = modifiers.get(entityIndex);
-        if (modsForEntity == null) {
-            modsForEntity = new TreeMap<Integer, CDOTAModifierBuffTableEntry>();
-            modifiers.set(entityIndex, modsForEntity);
+    public ModifierTableEntry add(CDOTAModifierBuffTableEntry tableEntry) {
+    	ModifierTableEntry newModifier = new ModifierTableEntry(tableEntry);
+        modifiers.add(newModifier);
+        //int entityIndex = tableEntry.getParent() & 0x7FF;
+        if(modifiersForEntity.containsKey(tableEntry.getParent())){
+        	modifiersForEntity.get(tableEntry.getParent()).add(newModifier);
         }
-        modsForEntity.put(modifierIndex, modifier);
+        else{
+        	LinkedList<ModifierTableEntry> list = new LinkedList<ModifierTableEntry>();
+        	list.add(newModifier);
+        	modifiersForEntity.put(tableEntry.getParent(), list);
+        }
+        return newModifier;
     }
     
-    public void remove(int entityIndex, int modifierIndex) {
-        modifiers.get(entityIndex).remove(modifierIndex);
+    public void clear(){
+    	modifiers.clear();
+    	modifiersForEntity.clear();
     }
     
-    public CDOTAModifierBuffTableEntry get(int entityIndex, int modifierIndex) {
-        try {
-            return modifiers.get(entityIndex).get(modifierIndex);
-        } catch (NullPointerException e) {
-            return null;
-        }
+    public List<ModifierTableEntry> getAll() {
+    	return modifiers;
     }
+
+    public List<ModifierTableEntry> getAllForEntity(int handle) {
+    	if(modifiersForEntity.containsKey(handle))
+    		return modifiersForEntity.get(handle);
+    	else
+    		return new LinkedList<ModifierTableEntry>();
+    }
+    
     
     @Override
     public ModifierCollection clone() {
