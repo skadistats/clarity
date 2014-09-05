@@ -2107,6 +2107,483 @@ public final class DotaCommonmessages {
     // @@protoc_insertion_point(class_scope:CDOTAMsg_ItemAlert)
   }
 
+  public interface CDOTAMsg_EnemyItemAlertOrBuilder
+      extends com.google.protobuf.MessageOrBuilder {
+
+    // optional uint32 player_id = 1;
+    /**
+     * <code>optional uint32 player_id = 1;</code>
+     */
+    boolean hasPlayerId();
+    /**
+     * <code>optional uint32 player_id = 1;</code>
+     */
+    int getPlayerId();
+
+    // optional int32 itemid = 2;
+    /**
+     * <code>optional int32 itemid = 2;</code>
+     */
+    boolean hasItemid();
+    /**
+     * <code>optional int32 itemid = 2;</code>
+     */
+    int getItemid();
+  }
+  /**
+   * Protobuf type {@code CDOTAMsg_EnemyItemAlert}
+   */
+  public static final class CDOTAMsg_EnemyItemAlert extends
+      com.google.protobuf.GeneratedMessage
+      implements CDOTAMsg_EnemyItemAlertOrBuilder {
+    // Use CDOTAMsg_EnemyItemAlert.newBuilder() to construct.
+    private CDOTAMsg_EnemyItemAlert(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+      super(builder);
+      this.unknownFields = builder.getUnknownFields();
+    }
+    private CDOTAMsg_EnemyItemAlert(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+    private static final CDOTAMsg_EnemyItemAlert defaultInstance;
+    public static CDOTAMsg_EnemyItemAlert getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public CDOTAMsg_EnemyItemAlert getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private final com.google.protobuf.UnknownFieldSet unknownFields;
+    @java.lang.Override
+    public final com.google.protobuf.UnknownFieldSet
+        getUnknownFields() {
+      return this.unknownFields;
+    }
+    private CDOTAMsg_EnemyItemAlert(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+          com.google.protobuf.UnknownFieldSet.newBuilder();
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input, unknownFields,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              playerId_ = input.readUInt32();
+              break;
+            }
+            case 16: {
+              bitField0_ |= 0x00000002;
+              itemid_ = input.readInt32();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        this.unknownFields = unknownFields.build();
+        makeExtensionsImmutable();
+      }
+    }
+    public static final com.google.protobuf.Descriptors.Descriptor
+        getDescriptor() {
+      return com.dota2.proto.DotaCommonmessages.internal_static_CDOTAMsg_EnemyItemAlert_descriptor;
+    }
+
+    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+        internalGetFieldAccessorTable() {
+      return com.dota2.proto.DotaCommonmessages.internal_static_CDOTAMsg_EnemyItemAlert_fieldAccessorTable
+          .ensureFieldAccessorsInitialized(
+              com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.class, com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.Builder.class);
+    }
+
+    public static com.google.protobuf.Parser<CDOTAMsg_EnemyItemAlert> PARSER =
+        new com.google.protobuf.AbstractParser<CDOTAMsg_EnemyItemAlert>() {
+      public CDOTAMsg_EnemyItemAlert parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new CDOTAMsg_EnemyItemAlert(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<CDOTAMsg_EnemyItemAlert> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // optional uint32 player_id = 1;
+    public static final int PLAYER_ID_FIELD_NUMBER = 1;
+    private int playerId_;
+    /**
+     * <code>optional uint32 player_id = 1;</code>
+     */
+    public boolean hasPlayerId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional uint32 player_id = 1;</code>
+     */
+    public int getPlayerId() {
+      return playerId_;
+    }
+
+    // optional int32 itemid = 2;
+    public static final int ITEMID_FIELD_NUMBER = 2;
+    private int itemid_;
+    /**
+     * <code>optional int32 itemid = 2;</code>
+     */
+    public boolean hasItemid() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional int32 itemid = 2;</code>
+     */
+    public int getItemid() {
+      return itemid_;
+    }
+
+    private void initFields() {
+      playerId_ = 0;
+      itemid_ = 0;
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeInt32(2, itemid_);
+      }
+      getUnknownFields().writeTo(output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, playerId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeInt32Size(2, itemid_);
+      }
+      size += getUnknownFields().getSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    @java.lang.Override
+    protected Builder newBuilderForType(
+        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+      Builder builder = new Builder(parent);
+      return builder;
+    }
+    /**
+     * Protobuf type {@code CDOTAMsg_EnemyItemAlert}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessage.Builder<Builder>
+       implements com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlertOrBuilder {
+      public static final com.google.protobuf.Descriptors.Descriptor
+          getDescriptor() {
+        return com.dota2.proto.DotaCommonmessages.internal_static_CDOTAMsg_EnemyItemAlert_descriptor;
+      }
+
+      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+          internalGetFieldAccessorTable() {
+        return com.dota2.proto.DotaCommonmessages.internal_static_CDOTAMsg_EnemyItemAlert_fieldAccessorTable
+            .ensureFieldAccessorsInitialized(
+                com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.class, com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.Builder.class);
+      }
+
+      // Construct using com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private Builder(
+          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+        super(parent);
+        maybeForceBuilderInitialization();
+      }
+      private void maybeForceBuilderInitialization() {
+        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+        }
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        playerId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        itemid_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.google.protobuf.Descriptors.Descriptor
+          getDescriptorForType() {
+        return com.dota2.proto.DotaCommonmessages.internal_static_CDOTAMsg_EnemyItemAlert_descriptor;
+      }
+
+      public com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert getDefaultInstanceForType() {
+        return com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.getDefaultInstance();
+      }
+
+      public com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert build() {
+        com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert buildPartial() {
+        com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert result = new com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.playerId_ = playerId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.itemid_ = itemid_;
+        result.bitField0_ = to_bitField0_;
+        onBuilt();
+        return result;
+      }
+
+      public Builder mergeFrom(com.google.protobuf.Message other) {
+        if (other instanceof com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert) {
+          return mergeFrom((com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert)other);
+        } else {
+          super.mergeFrom(other);
+          return this;
+        }
+      }
+
+      public Builder mergeFrom(com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert other) {
+        if (other == com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert.getDefaultInstance()) return this;
+        if (other.hasPlayerId()) {
+          setPlayerId(other.getPlayerId());
+        }
+        if (other.hasItemid()) {
+          setItemid(other.getItemid());
+        }
+        this.mergeUnknownFields(other.getUnknownFields());
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.dota2.proto.DotaCommonmessages.CDOTAMsg_EnemyItemAlert) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional uint32 player_id = 1;
+      private int playerId_ ;
+      /**
+       * <code>optional uint32 player_id = 1;</code>
+       */
+      public boolean hasPlayerId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional uint32 player_id = 1;</code>
+       */
+      public int getPlayerId() {
+        return playerId_;
+      }
+      /**
+       * <code>optional uint32 player_id = 1;</code>
+       */
+      public Builder setPlayerId(int value) {
+        bitField0_ |= 0x00000001;
+        playerId_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 player_id = 1;</code>
+       */
+      public Builder clearPlayerId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        playerId_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional int32 itemid = 2;
+      private int itemid_ ;
+      /**
+       * <code>optional int32 itemid = 2;</code>
+       */
+      public boolean hasItemid() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional int32 itemid = 2;</code>
+       */
+      public int getItemid() {
+        return itemid_;
+      }
+      /**
+       * <code>optional int32 itemid = 2;</code>
+       */
+      public Builder setItemid(int value) {
+        bitField0_ |= 0x00000002;
+        itemid_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional int32 itemid = 2;</code>
+       */
+      public Builder clearItemid() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        itemid_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:CDOTAMsg_EnemyItemAlert)
+    }
+
+    static {
+      defaultInstance = new CDOTAMsg_EnemyItemAlert(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:CDOTAMsg_EnemyItemAlert)
+  }
+
   public interface CDOTAMsg_MapLineOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
@@ -4776,6 +5253,11 @@ public final class DotaCommonmessages {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_CDOTAMsg_ItemAlert_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_CDOTAMsg_EnemyItemAlert_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_CDOTAMsg_EnemyItemAlert_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CDOTAMsg_MapLine_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -4810,66 +5292,67 @@ public final class DotaCommonmessages {
       "\005\022\t\n\001y\030\002 \001(\005\022\016\n\006target\030\003 \001(\005\022\023\n\013direct_p" +
       "ing\030\004 \001(\010\022\014\n\004type\030\005 \001(\005\":\n\022CDOTAMsg_Item" +
       "Alert\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\016\n\006itemid\030\003 " +
-      "\001(\005\"9\n\020CDOTAMsg_MapLine\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030" +
-      "\002 \001(\005\022\017\n\007initial\030\003 \001(\010\"S\n\022CDOTAMsg_World" +
-      "Line\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\017\n" +
-      "\007initial\030\004 \001(\010\022\013\n\003end\030\005 \001(\010\"~\n\026CDOTAMsg_",
-      "SendStatPopup\0229\n\005style\030\001 \001(\0162\024.EDOTAStat" +
-      "PopupTypes:\024k_EDOTA_SPT_Textline\022\024\n\014stat" +
-      "_strings\030\002 \003(\t\022\023\n\013stat_images\030\003 \003(\005\">\n\025C" +
-      "DOTAMsg_CoachHUDPing\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001" +
-      "(\r\022\017\n\007tgtpath\030\003 \001(\t*\343\016\n\025EDOTAChatWheelMe" +
-      "ssage\022\021\n\rk_EDOTA_CW_Ok\020\000\022\023\n\017k_EDOTA_CW_C" +
-      "are\020\001\022\026\n\022k_EDOTA_CW_GetBack\020\002\022\030\n\024k_EDOTA" +
-      "_CW_NeedWards\020\003\022\023\n\017k_EDOTA_CW_Stun\020\004\022\023\n\017" +
-      "k_EDOTA_CW_Help\020\005\022\023\n\017k_EDOTA_CW_Push\020\006\022\026" +
-      "\n\022k_EDOTA_CW_GoodJob\020\007\022\026\n\022k_EDOTA_CW_Mis",
-      "sing\020\010\022\032\n\026k_EDOTA_CW_Missing_Top\020\t\022\032\n\026k_" +
-      "EDOTA_CW_Missing_Mid\020\n\022\035\n\031k_EDOTA_CW_Mis" +
-      "sing_Bottom\020\013\022\021\n\rk_EDOTA_CW_Go\020\014\022\027\n\023k_ED" +
-      "OTA_CW_Initiate\020\r\022\025\n\021k_EDOTA_CW_Follow\020\016" +
-      "\022\027\n\023k_EDOTA_CW_Group_Up\020\017\022\031\n\025k_EDOTA_CW_" +
-      "Spread_Out\020\020\022\031\n\025k_EDOTA_CW_Split_Farm\020\021\022" +
-      "\025\n\021k_EDOTA_CW_Attack\020\022\022\022\n\016k_EDOTA_CW_BRB" +
-      "\020\023\022\023\n\017k_EDOTA_CW_Dive\020\024\022\022\n\016k_EDOTA_CW_OM" +
-      "W\020\025\022\030\n\024k_EDOTA_CW_Get_Ready\020\026\022\023\n\017k_EDOTA" +
-      "_CW_Bait\020\027\022\023\n\017k_EDOTA_CW_Heal\020\030\022\023\n\017k_EDO",
-      "TA_CW_Mana\020\031\022\022\n\016k_EDOTA_CW_OOM\020\032\022\035\n\031k_ED" +
-      "OTA_CW_Skill_Cooldown\020\033\022\031\n\025k_EDOTA_CW_Ul" +
-      "ti_Ready\020\034\022\035\n\031k_EDOTA_CW_Enemy_Returned\020" +
-      "\035\022\032\n\026k_EDOTA_CW_All_Missing\020\036\022\035\n\031k_EDOTA" +
-      "_CW_Enemy_Incoming\020\037\022\032\n\026k_EDOTA_CW_Invis" +
-      "_Enemy\020 \022\035\n\031k_EDOTA_CW_Enemy_Had_Rune\020!\022" +
-      "\031\n\025k_EDOTA_CW_Split_Push\020\"\022\035\n\031k_EDOTA_CW" +
-      "_Coming_To_Gank\020#\022\033\n\027k_EDOTA_CW_Request_" +
-      "Gank\020$\022 \n\034k_EDOTA_CW_Fight_Under_Tower\020%" +
-      "\022\031\n\025k_EDOTA_CW_Deny_Tower\020&\022\032\n\026k_EDOTA_C",
-      "W_Buy_Courier\020\'\022\036\n\032k_EDOTA_CW_Upgrade_Co" +
-      "urier\020(\022\035\n\031k_EDOTA_CW_Need_Detection\020)\022\"" +
-      "\n\036k_EDOTA_CW_They_Have_Detection\020*\022\025\n\021k_" +
-      "EDOTA_CW_Buy_TP\020+\022\034\n\030k_EDOTA_CW_Reuse_Co" +
-      "urier\020,\022\025\n\021k_EDOTA_CW_Deward\020-\022\033\n\027k_EDOT" +
-      "A_CW_Building_Mek\020.\022\034\n\030k_EDOTA_CW_Buildi" +
-      "ng_Pipe\020/\022\035\n\031k_EDOTA_CW_Stack_And_Pull\0200" +
-      "\022\023\n\017k_EDOTA_CW_Pull\0201\022\026\n\022k_EDOTA_CW_Pull" +
-      "ing\0202\022\024\n\020k_EDOTA_CW_Stack\0203\022\027\n\023k_EDOTA_C" +
-      "W_Jungling\0204\022\025\n\021k_EDOTA_CW_Roshan\0205\022\032\n\026k",
-      "_EDOTA_CW_Affirmative\0206\022\023\n\017k_EDOTA_CW_Wa" +
-      "it\0207\022\024\n\020k_EDOTA_CW_Pause\0208\022\033\n\027k_EDOTA_CW" +
-      "_Current_Time\0209\022\032\n\026k_EDOTA_CW_Check_Rune" +
-      "s\020:\022\031\n\025k_EDOTA_CW_Smoke_Gank\020;\022\023\n\017k_EDOT" +
-      "A_CW_GLHF\020<\022\023\n\017k_EDOTA_CW_Nice\020=\022\025\n\021k_ED" +
-      "OTA_CW_Thanks\020>\022\024\n\020k_EDOTA_CW_Sorry\020?\022\031\n" +
-      "\025k_EDOTA_CW_No_Give_Up\020@\022\034\n\030k_EDOTA_CW_J" +
-      "ust_Happened\020A\022\033\n\027k_EDOTA_CW_Game_Is_Har" +
-      "d\020B\022\027\n\023k_EDOTA_CW_New_Meta\020C\022\025\n\021k_EDOTA_" +
-      "CW_My_Bad\020D\022\025\n\021k_EDOTA_CW_Regret\020E\022\024\n\020k_",
-      "EDOTA_CW_Relax\020F\022\032\n\026k_EDOTA_CW_MissingHe" +
-      "ro\020G\022\033\n\027k_EDOTA_CW_ReturnedHero\020H*r\n\023EDO" +
-      "TAStatPopupTypes\022\030\n\024k_EDOTA_SPT_Textline" +
-      "\020\000\022\025\n\021k_EDOTA_SPT_Basic\020\001\022\024\n\020k_EDOTA_SPT" +
-      "_Poll\020\002\022\024\n\020k_EDOTA_SPT_Grid\020\003B\021\n\017com.dot" +
-      "a2.proto"
+      "\001(\005\"<\n\027CDOTAMsg_EnemyItemAlert\022\021\n\tplayer" +
+      "_id\030\001 \001(\r\022\016\n\006itemid\030\002 \001(\005\"9\n\020CDOTAMsg_Ma" +
+      "pLine\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001(\005\022\017\n\007initial\030\003" +
+      " \001(\010\"S\n\022CDOTAMsg_WorldLine\022\t\n\001x\030\001 \001(\005\022\t\n",
+      "\001y\030\002 \001(\005\022\t\n\001z\030\003 \001(\005\022\017\n\007initial\030\004 \001(\010\022\013\n\003" +
+      "end\030\005 \001(\010\"~\n\026CDOTAMsg_SendStatPopup\0229\n\005s" +
+      "tyle\030\001 \001(\0162\024.EDOTAStatPopupTypes:\024k_EDOT" +
+      "A_SPT_Textline\022\024\n\014stat_strings\030\002 \003(\t\022\023\n\013" +
+      "stat_images\030\003 \003(\005\">\n\025CDOTAMsg_CoachHUDPi" +
+      "ng\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001(\r\022\017\n\007tgtpath\030\003 \001(" +
+      "\t*\343\016\n\025EDOTAChatWheelMessage\022\021\n\rk_EDOTA_C" +
+      "W_Ok\020\000\022\023\n\017k_EDOTA_CW_Care\020\001\022\026\n\022k_EDOTA_C" +
+      "W_GetBack\020\002\022\030\n\024k_EDOTA_CW_NeedWards\020\003\022\023\n" +
+      "\017k_EDOTA_CW_Stun\020\004\022\023\n\017k_EDOTA_CW_Help\020\005\022",
+      "\023\n\017k_EDOTA_CW_Push\020\006\022\026\n\022k_EDOTA_CW_GoodJ" +
+      "ob\020\007\022\026\n\022k_EDOTA_CW_Missing\020\010\022\032\n\026k_EDOTA_" +
+      "CW_Missing_Top\020\t\022\032\n\026k_EDOTA_CW_Missing_M" +
+      "id\020\n\022\035\n\031k_EDOTA_CW_Missing_Bottom\020\013\022\021\n\rk" +
+      "_EDOTA_CW_Go\020\014\022\027\n\023k_EDOTA_CW_Initiate\020\r\022" +
+      "\025\n\021k_EDOTA_CW_Follow\020\016\022\027\n\023k_EDOTA_CW_Gro" +
+      "up_Up\020\017\022\031\n\025k_EDOTA_CW_Spread_Out\020\020\022\031\n\025k_" +
+      "EDOTA_CW_Split_Farm\020\021\022\025\n\021k_EDOTA_CW_Atta" +
+      "ck\020\022\022\022\n\016k_EDOTA_CW_BRB\020\023\022\023\n\017k_EDOTA_CW_D" +
+      "ive\020\024\022\022\n\016k_EDOTA_CW_OMW\020\025\022\030\n\024k_EDOTA_CW_",
+      "Get_Ready\020\026\022\023\n\017k_EDOTA_CW_Bait\020\027\022\023\n\017k_ED" +
+      "OTA_CW_Heal\020\030\022\023\n\017k_EDOTA_CW_Mana\020\031\022\022\n\016k_" +
+      "EDOTA_CW_OOM\020\032\022\035\n\031k_EDOTA_CW_Skill_Coold" +
+      "own\020\033\022\031\n\025k_EDOTA_CW_Ulti_Ready\020\034\022\035\n\031k_ED" +
+      "OTA_CW_Enemy_Returned\020\035\022\032\n\026k_EDOTA_CW_Al" +
+      "l_Missing\020\036\022\035\n\031k_EDOTA_CW_Enemy_Incoming" +
+      "\020\037\022\032\n\026k_EDOTA_CW_Invis_Enemy\020 \022\035\n\031k_EDOT" +
+      "A_CW_Enemy_Had_Rune\020!\022\031\n\025k_EDOTA_CW_Spli" +
+      "t_Push\020\"\022\035\n\031k_EDOTA_CW_Coming_To_Gank\020#\022" +
+      "\033\n\027k_EDOTA_CW_Request_Gank\020$\022 \n\034k_EDOTA_",
+      "CW_Fight_Under_Tower\020%\022\031\n\025k_EDOTA_CW_Den" +
+      "y_Tower\020&\022\032\n\026k_EDOTA_CW_Buy_Courier\020\'\022\036\n" +
+      "\032k_EDOTA_CW_Upgrade_Courier\020(\022\035\n\031k_EDOTA" +
+      "_CW_Need_Detection\020)\022\"\n\036k_EDOTA_CW_They_" +
+      "Have_Detection\020*\022\025\n\021k_EDOTA_CW_Buy_TP\020+\022" +
+      "\034\n\030k_EDOTA_CW_Reuse_Courier\020,\022\025\n\021k_EDOTA" +
+      "_CW_Deward\020-\022\033\n\027k_EDOTA_CW_Building_Mek\020" +
+      ".\022\034\n\030k_EDOTA_CW_Building_Pipe\020/\022\035\n\031k_EDO" +
+      "TA_CW_Stack_And_Pull\0200\022\023\n\017k_EDOTA_CW_Pul" +
+      "l\0201\022\026\n\022k_EDOTA_CW_Pulling\0202\022\024\n\020k_EDOTA_C",
+      "W_Stack\0203\022\027\n\023k_EDOTA_CW_Jungling\0204\022\025\n\021k_" +
+      "EDOTA_CW_Roshan\0205\022\032\n\026k_EDOTA_CW_Affirmat" +
+      "ive\0206\022\023\n\017k_EDOTA_CW_Wait\0207\022\024\n\020k_EDOTA_CW" +
+      "_Pause\0208\022\033\n\027k_EDOTA_CW_Current_Time\0209\022\032\n" +
+      "\026k_EDOTA_CW_Check_Runes\020:\022\031\n\025k_EDOTA_CW_" +
+      "Smoke_Gank\020;\022\023\n\017k_EDOTA_CW_GLHF\020<\022\023\n\017k_E" +
+      "DOTA_CW_Nice\020=\022\025\n\021k_EDOTA_CW_Thanks\020>\022\024\n" +
+      "\020k_EDOTA_CW_Sorry\020?\022\031\n\025k_EDOTA_CW_No_Giv" +
+      "e_Up\020@\022\034\n\030k_EDOTA_CW_Just_Happened\020A\022\033\n\027" +
+      "k_EDOTA_CW_Game_Is_Hard\020B\022\027\n\023k_EDOTA_CW_",
+      "New_Meta\020C\022\025\n\021k_EDOTA_CW_My_Bad\020D\022\025\n\021k_E" +
+      "DOTA_CW_Regret\020E\022\024\n\020k_EDOTA_CW_Relax\020F\022\032" +
+      "\n\026k_EDOTA_CW_MissingHero\020G\022\033\n\027k_EDOTA_CW" +
+      "_ReturnedHero\020H*r\n\023EDOTAStatPopupTypes\022\030" +
+      "\n\024k_EDOTA_SPT_Textline\020\000\022\025\n\021k_EDOTA_SPT_" +
+      "Basic\020\001\022\024\n\020k_EDOTA_SPT_Poll\020\002\022\024\n\020k_EDOTA" +
+      "_SPT_Grid\020\003B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -4888,26 +5371,32 @@ public final class DotaCommonmessages {
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAMsg_ItemAlert_descriptor,
               new java.lang.String[] { "X", "Y", "Itemid", });
-          internal_static_CDOTAMsg_MapLine_descriptor =
+          internal_static_CDOTAMsg_EnemyItemAlert_descriptor =
             getDescriptor().getMessageTypes().get(2);
+          internal_static_CDOTAMsg_EnemyItemAlert_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_CDOTAMsg_EnemyItemAlert_descriptor,
+              new java.lang.String[] { "PlayerId", "Itemid", });
+          internal_static_CDOTAMsg_MapLine_descriptor =
+            getDescriptor().getMessageTypes().get(3);
           internal_static_CDOTAMsg_MapLine_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAMsg_MapLine_descriptor,
               new java.lang.String[] { "X", "Y", "Initial", });
           internal_static_CDOTAMsg_WorldLine_descriptor =
-            getDescriptor().getMessageTypes().get(3);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_CDOTAMsg_WorldLine_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAMsg_WorldLine_descriptor,
               new java.lang.String[] { "X", "Y", "Z", "Initial", "End", });
           internal_static_CDOTAMsg_SendStatPopup_descriptor =
-            getDescriptor().getMessageTypes().get(4);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_CDOTAMsg_SendStatPopup_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAMsg_SendStatPopup_descriptor,
               new java.lang.String[] { "Style", "StatStrings", "StatImages", });
           internal_static_CDOTAMsg_CoachHUDPing_descriptor =
-            getDescriptor().getMessageTypes().get(5);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_CDOTAMsg_CoachHUDPing_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CDOTAMsg_CoachHUDPing_descriptor,

@@ -155,6 +155,10 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_PlayerMMR_VALUE, DotaUsermessages.CDOTAUserMsg_PlayerMMR.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_AbilitySteal_VALUE, DotaUsermessages.CDOTAUserMsg_AbilitySteal.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CourierKilledAlert_VALUE, DotaUsermessages.CDOTAUserMsg_CourierKilledAlert.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_EnemyItemAlert_VALUE, DotaUsermessages.CDOTAUserMsg_EnemyItemAlert.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_StatsMatchDetails_VALUE, DotaUsermessages.CDOTAUserMsg_StatsMatchDetails.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_MiniTaunt_VALUE, DotaUsermessages.CDOTAUserMsg_MiniTaunt.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_BuyBackStateAlert_VALUE, DotaUsermessages.CDOTAUserMsg_BuyBackStateAlert.class);
     }    
     
     private static final Map<Class<? extends GeneratedMessage>, Method> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, Method>() {

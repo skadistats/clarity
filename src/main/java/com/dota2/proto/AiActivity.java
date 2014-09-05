@@ -2417,6 +2417,10 @@ public final class AiActivity {
      * <code>ACT_DOTA_STATIC_STORM = 601;</code>
      */
     ACT_DOTA_STATIC_STORM(600, 601),
+    /**
+     * <code>ACT_DOTA_MINI_TAUNT = 602;</code>
+     */
+    ACT_DOTA_MINI_TAUNT(601, 602),
     ;
 
     /**
@@ -4823,6 +4827,10 @@ public final class AiActivity {
      * <code>ACT_DOTA_STATIC_STORM = 601;</code>
      */
     public static final int ACT_DOTA_STATIC_STORM_VALUE = 601;
+    /**
+     * <code>ACT_DOTA_MINI_TAUNT = 602;</code>
+     */
+    public static final int ACT_DOTA_MINI_TAUNT_VALUE = 602;
 
 
     public final int getNumber() { return value; }
@@ -5430,6 +5438,7 @@ public final class AiActivity {
         case 599: return ACT_DOTA_THUNDER_STRIKE;
         case 600: return ACT_DOTA_KINETIC_FIELD;
         case 601: return ACT_DOTA_STATIC_STORM;
+        case 602: return ACT_DOTA_MINI_TAUNT;
         default: return null;
       }
     }
@@ -5490,7 +5499,7 @@ public final class AiActivity {
       descriptor;
   static {
     java.lang.String[] descriptorData = {
-      "\n\021ai_activity.proto*\366\202\001\n\010Activity\022\030\n\013ACT" +
+      "\n\021ai_activity.proto*\220\203\001\n\010Activity\022\030\n\013ACT" +
       "_INVALID\020\377\377\377\377\377\377\377\377\377\001\022\r\n\tACT_RESET\020\000\022\014\n\010AC" +
       "T_IDLE\020\001\022\022\n\016ACT_TRANSITION\020\002\022\r\n\tACT_COVE" +
       "R\020\003\022\021\n\rACT_COVER_MED\020\004\022\021\n\rACT_COVER_LOW\020" +
@@ -5909,7 +5918,8 @@ public final class AiActivity {
       "DOTA_MIDNIGHT_PULSE\020\325\004\022\036\n\031ACT_DOTA_ANCES" +
       "TRAL_SPIRIT\020\326\004\022\034\n\027ACT_DOTA_THUNDER_STRIK" +
       "E\020\327\004\022\033\n\026ACT_DOTA_KINETIC_FIELD\020\330\004\022\032\n\025ACT" +
-      "_DOTA_STATIC_STORM\020\331\004B\021\n\017com.dota2.proto"
+      "_DOTA_STATIC_STORM\020\331\004\022\030\n\023ACT_DOTA_MINI_T",
+      "AUNT\020\332\004B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
