@@ -18,7 +18,8 @@ public class DemFileInfoHandler implements Handler<CDemoFileInfo> {
     @Override
     public void apply(int peekTick, CDemoFileInfo message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
-        //TODO Handle
+
+        match.setFileInfo(message);
     }
 
 }
