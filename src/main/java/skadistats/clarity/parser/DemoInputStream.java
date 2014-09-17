@@ -92,7 +92,11 @@ public class DemoInputStream implements Closeable {
                     int size = ms.readRawVarint32();
                     byte[] data = ms.readRawBytes(size);
                     if (isCompressed) {
-                        data = Snappy.uncompress(data);
+                    	if (Snappy.isValidCompressedBuffer(data)) {
+                            data = Snappy.uncompress(data);
+                    	} else {
+                    		throw new IOException("according to snappy, the compressed packet is not valid!");
+                    	}
                     }
                     Class<? extends GeneratedMessage> topClazz = PacketTypes.DEMO.get(kind);
                     if (topClazz == null) {
