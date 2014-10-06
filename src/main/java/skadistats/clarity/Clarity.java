@@ -29,6 +29,10 @@ public class Clarity {
     public static PeekIterator peekIteratorForFile(String fileName, Profile... profile) throws IOException {
         return new PeekIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
     }
+
+    public static TickIterator tickIteratorForStream(InputStream stream, Profile... profile) throws IOException {
+        return new TickIterator(demoInputStreamForStream(stream, profile));
+    }
     
     public static TickIterator tickIteratorForFile(String fileName, Profile... profile) throws IOException {
         return new TickIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
@@ -41,18 +45,22 @@ public class Clarity {
     public static DemoIndex indexForFile(String fileName, Profile... profile) throws IOException {
         return new DemoIndex(iteratorForFile(fileName, profile));
     }
-    
+
+    public static CDemoFileInfo infoForStream(InputStream stream) throws IOException {
+        DemoInputStream s = null;
+        try {
+            s = demoInputStreamForStream(stream, Profile.FILE_INFO);
+            s.skipToFileInfo();
+            return (CDemoFileInfo) s.read().getMessage();
+        } finally {
+            if (s != null) {
+                s.close();
+            }
+        }
+    }
+
     public static CDemoFileInfo infoForFile(String fileName) throws IOException {
-    	DemoInputStream s = null;
-    	try {
-	        s = demoInputStreamForStream(new FileInputStream(fileName), Profile.FILE_INFO);
-	        s.skipToFileInfo();
-	        return (CDemoFileInfo) s.read().getMessage();
-    	} finally {
-    		if (s != null) {
-    			s.close();
-    		}
-    	}
+    	return infoForStream(new FileInputStream(fileName));
     }
     
 }
