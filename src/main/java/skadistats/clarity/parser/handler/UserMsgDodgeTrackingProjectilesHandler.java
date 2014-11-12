@@ -19,9 +19,9 @@ public class UserMsgDodgeTrackingProjectilesHandler implements Handler<CDOTAUser
     @Override
     public void apply(int peekTick, CDOTAUserMsg_DodgeTrackingProjectiles message, Match match) {
         HandlerHelper.traceMessage(log, peekTick, message);
-        log.debug("{} DODGE_TRACKING_PROJECTILES [target={}]",
+        log.debug("{} DODGE_TRACKING_PROJECTILES [target_index={}]",
             match.getReplayTimeAsString(),
-            match.getEntities().getByIndex(message.getEntindex()).getDtClass().getDtName() 
+            message.getEntindex()
         );
         match.getUserMessages().add(UserMessage.build(message, match));
     }
