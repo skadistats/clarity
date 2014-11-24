@@ -12,7 +12,7 @@ public class Profile {
 
     public static Profile NET_TICK = new Profile()
         .append(
-        Netmessages.CNETMsg_Tick.class
+        Networkbasetypes.CNETMsg_Tick.class
         );
 
     public static Profile REPLAY_TIME = new Profile()

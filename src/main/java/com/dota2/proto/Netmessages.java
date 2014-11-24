@@ -9,142 +9,6 @@ public final class Netmessages {
       com.google.protobuf.ExtensionRegistry registry) {
   }
   /**
-   * Protobuf enum {@code NET_Messages}
-   */
-  public enum NET_Messages
-      implements com.google.protobuf.ProtocolMessageEnum {
-    /**
-     * <code>net_NOP = 0;</code>
-     */
-    net_NOP(0, 0),
-    /**
-     * <code>net_Disconnect = 1;</code>
-     */
-    net_Disconnect(1, 1),
-    /**
-     * <code>net_File = 2;</code>
-     */
-    net_File(2, 2),
-    /**
-     * <code>net_SplitScreenUser = 3;</code>
-     */
-    net_SplitScreenUser(3, 3),
-    /**
-     * <code>net_Tick = 4;</code>
-     */
-    net_Tick(4, 4),
-    /**
-     * <code>net_StringCmd = 5;</code>
-     */
-    net_StringCmd(5, 5),
-    /**
-     * <code>net_SetConVar = 6;</code>
-     */
-    net_SetConVar(6, 6),
-    /**
-     * <code>net_SignonState = 7;</code>
-     */
-    net_SignonState(7, 7),
-    ;
-
-    /**
-     * <code>net_NOP = 0;</code>
-     */
-    public static final int net_NOP_VALUE = 0;
-    /**
-     * <code>net_Disconnect = 1;</code>
-     */
-    public static final int net_Disconnect_VALUE = 1;
-    /**
-     * <code>net_File = 2;</code>
-     */
-    public static final int net_File_VALUE = 2;
-    /**
-     * <code>net_SplitScreenUser = 3;</code>
-     */
-    public static final int net_SplitScreenUser_VALUE = 3;
-    /**
-     * <code>net_Tick = 4;</code>
-     */
-    public static final int net_Tick_VALUE = 4;
-    /**
-     * <code>net_StringCmd = 5;</code>
-     */
-    public static final int net_StringCmd_VALUE = 5;
-    /**
-     * <code>net_SetConVar = 6;</code>
-     */
-    public static final int net_SetConVar_VALUE = 6;
-    /**
-     * <code>net_SignonState = 7;</code>
-     */
-    public static final int net_SignonState_VALUE = 7;
-
-
-    public final int getNumber() { return value; }
-
-    public static NET_Messages valueOf(int value) {
-      switch (value) {
-        case 0: return net_NOP;
-        case 1: return net_Disconnect;
-        case 2: return net_File;
-        case 3: return net_SplitScreenUser;
-        case 4: return net_Tick;
-        case 5: return net_StringCmd;
-        case 6: return net_SetConVar;
-        case 7: return net_SignonState;
-        default: return null;
-      }
-    }
-
-    public static com.google.protobuf.Internal.EnumLiteMap<NET_Messages>
-        internalGetValueMap() {
-      return internalValueMap;
-    }
-    private static com.google.protobuf.Internal.EnumLiteMap<NET_Messages>
-        internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<NET_Messages>() {
-            public NET_Messages findValueByNumber(int number) {
-              return NET_Messages.valueOf(number);
-            }
-          };
-
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
-      return getDescriptor().getValues().get(index);
-    }
-    public final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
-      return getDescriptor();
-    }
-    public static final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(0);
-    }
-
-    private static final NET_Messages[] VALUES = values();
-
-    public static NET_Messages valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-      if (desc.getType() != getDescriptor()) {
-        throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
-      }
-      return VALUES[desc.getIndex()];
-    }
-
-    private final int index;
-    private final int value;
-
-    private NET_Messages(int index, int value) {
-      this.index = index;
-      this.value = value;
-    }
-
-    // @@protoc_insertion_point(enum_scope:NET_Messages)
-  }
-
-  /**
    * Protobuf enum {@code CLC_Messages}
    */
   public enum CLC_Messages
@@ -273,7 +137,7 @@ public final class Netmessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(1);
+      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(0);
     }
 
     private static final CLC_Messages[] VALUES = values();
@@ -296,88 +160,6 @@ public final class Netmessages {
     }
 
     // @@protoc_insertion_point(enum_scope:CLC_Messages)
-  }
-
-  /**
-   * Protobuf enum {@code VoiceDataFormat_t}
-   */
-  public enum VoiceDataFormat_t
-      implements com.google.protobuf.ProtocolMessageEnum {
-    /**
-     * <code>VOICEDATA_FORMAT_STEAM = 0;</code>
-     */
-    VOICEDATA_FORMAT_STEAM(0, 0),
-    /**
-     * <code>VOICEDATA_FORMAT_ENGINE = 1;</code>
-     */
-    VOICEDATA_FORMAT_ENGINE(1, 1),
-    ;
-
-    /**
-     * <code>VOICEDATA_FORMAT_STEAM = 0;</code>
-     */
-    public static final int VOICEDATA_FORMAT_STEAM_VALUE = 0;
-    /**
-     * <code>VOICEDATA_FORMAT_ENGINE = 1;</code>
-     */
-    public static final int VOICEDATA_FORMAT_ENGINE_VALUE = 1;
-
-
-    public final int getNumber() { return value; }
-
-    public static VoiceDataFormat_t valueOf(int value) {
-      switch (value) {
-        case 0: return VOICEDATA_FORMAT_STEAM;
-        case 1: return VOICEDATA_FORMAT_ENGINE;
-        default: return null;
-      }
-    }
-
-    public static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
-        internalGetValueMap() {
-      return internalValueMap;
-    }
-    private static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
-        internalValueMap =
-          new com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>() {
-            public VoiceDataFormat_t findValueByNumber(int number) {
-              return VoiceDataFormat_t.valueOf(number);
-            }
-          };
-
-    public final com.google.protobuf.Descriptors.EnumValueDescriptor
-        getValueDescriptor() {
-      return getDescriptor().getValues().get(index);
-    }
-    public final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptorForType() {
-      return getDescriptor();
-    }
-    public static final com.google.protobuf.Descriptors.EnumDescriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(2);
-    }
-
-    private static final VoiceDataFormat_t[] VALUES = values();
-
-    public static VoiceDataFormat_t valueOf(
-        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
-      if (desc.getType() != getDescriptor()) {
-        throw new java.lang.IllegalArgumentException(
-          "EnumValueDescriptor is not for this type.");
-      }
-      return VALUES[desc.getIndex()];
-    }
-
-    private final int index;
-    private final int value;
-
-    private VoiceDataFormat_t(int index, int value) {
-      this.index = index;
-      this.value = value;
-    }
-
-    // @@protoc_insertion_point(enum_scope:VoiceDataFormat_t)
   }
 
   /**
@@ -653,7 +435,7 @@ public final class Netmessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(3);
+      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(1);
     }
 
     private static final SVC_Messages[] VALUES = values();
@@ -676,6 +458,88 @@ public final class Netmessages {
     }
 
     // @@protoc_insertion_point(enum_scope:SVC_Messages)
+  }
+
+  /**
+   * Protobuf enum {@code VoiceDataFormat_t}
+   */
+  public enum VoiceDataFormat_t
+      implements com.google.protobuf.ProtocolMessageEnum {
+    /**
+     * <code>VOICEDATA_FORMAT_STEAM = 0;</code>
+     */
+    VOICEDATA_FORMAT_STEAM(0, 0),
+    /**
+     * <code>VOICEDATA_FORMAT_ENGINE = 1;</code>
+     */
+    VOICEDATA_FORMAT_ENGINE(1, 1),
+    ;
+
+    /**
+     * <code>VOICEDATA_FORMAT_STEAM = 0;</code>
+     */
+    public static final int VOICEDATA_FORMAT_STEAM_VALUE = 0;
+    /**
+     * <code>VOICEDATA_FORMAT_ENGINE = 1;</code>
+     */
+    public static final int VOICEDATA_FORMAT_ENGINE_VALUE = 1;
+
+
+    public final int getNumber() { return value; }
+
+    public static VoiceDataFormat_t valueOf(int value) {
+      switch (value) {
+        case 0: return VOICEDATA_FORMAT_STEAM;
+        case 1: return VOICEDATA_FORMAT_ENGINE;
+        default: return null;
+      }
+    }
+
+    public static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
+        internalGetValueMap() {
+      return internalValueMap;
+    }
+    private static com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>
+        internalValueMap =
+          new com.google.protobuf.Internal.EnumLiteMap<VoiceDataFormat_t>() {
+            public VoiceDataFormat_t findValueByNumber(int number) {
+              return VoiceDataFormat_t.valueOf(number);
+            }
+          };
+
+    public final com.google.protobuf.Descriptors.EnumValueDescriptor
+        getValueDescriptor() {
+      return getDescriptor().getValues().get(index);
+    }
+    public final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptorForType() {
+      return getDescriptor();
+    }
+    public static final com.google.protobuf.Descriptors.EnumDescriptor
+        getDescriptor() {
+      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(2);
+    }
+
+    private static final VoiceDataFormat_t[] VALUES = values();
+
+    public static VoiceDataFormat_t valueOf(
+        com.google.protobuf.Descriptors.EnumValueDescriptor desc) {
+      if (desc.getType() != getDescriptor()) {
+        throw new java.lang.IllegalArgumentException(
+          "EnumValueDescriptor is not for this type.");
+      }
+      return VALUES[desc.getIndex()];
+    }
+
+    private final int index;
+    private final int value;
+
+    private VoiceDataFormat_t(int index, int value) {
+      this.index = index;
+      this.value = value;
+    }
+
+    // @@protoc_insertion_point(enum_scope:VoiceDataFormat_t)
   }
 
   /**
@@ -735,7 +599,7 @@ public final class Netmessages {
     }
     public static final com.google.protobuf.Descriptors.EnumDescriptor
         getDescriptor() {
-      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(4);
+      return com.dota2.proto.Netmessages.getDescriptor().getEnumTypes().get(3);
     }
 
     private static final ESplitScreenMessageType[] VALUES = values();
@@ -758,5965 +622,6 @@ public final class Netmessages {
     }
 
     // @@protoc_insertion_point(enum_scope:ESplitScreenMessageType)
-  }
-
-  public interface CMsg_CVarsOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // repeated .CMsg_CVars.CVar cvars = 1;
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar> 
-        getCvarsList();
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    com.dota2.proto.Netmessages.CMsg_CVars.CVar getCvars(int index);
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    int getCvarsCount();
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    java.util.List<? extends com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder> 
-        getCvarsOrBuilderList();
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder getCvarsOrBuilder(
-        int index);
-  }
-  /**
-   * Protobuf type {@code CMsg_CVars}
-   */
-  public static final class CMsg_CVars extends
-      com.google.protobuf.GeneratedMessage
-      implements CMsg_CVarsOrBuilder {
-    // Use CMsg_CVars.newBuilder() to construct.
-    private CMsg_CVars(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CMsg_CVars(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CMsg_CVars defaultInstance;
-    public static CMsg_CVars getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CMsg_CVars getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CMsg_CVars(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              if (!((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-                cvars_ = new java.util.ArrayList<com.dota2.proto.Netmessages.CMsg_CVars.CVar>();
-                mutable_bitField0_ |= 0x00000001;
-              }
-              cvars_.add(input.readMessage(com.dota2.proto.Netmessages.CMsg_CVars.CVar.PARSER, extensionRegistry));
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000001) == 0x00000001)) {
-          cvars_ = java.util.Collections.unmodifiableList(cvars_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CMsg_CVars.class, com.dota2.proto.Netmessages.CMsg_CVars.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CMsg_CVars> PARSER =
-        new com.google.protobuf.AbstractParser<CMsg_CVars>() {
-      public CMsg_CVars parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CMsg_CVars(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CMsg_CVars> getParserForType() {
-      return PARSER;
-    }
-
-    public interface CVarOrBuilder
-        extends com.google.protobuf.MessageOrBuilder {
-
-      // optional string name = 1;
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      boolean hasName();
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      java.lang.String getName();
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      com.google.protobuf.ByteString
-          getNameBytes();
-
-      // optional string value = 2;
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      boolean hasValue();
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      java.lang.String getValue();
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      com.google.protobuf.ByteString
-          getValueBytes();
-    }
-    /**
-     * Protobuf type {@code CMsg_CVars.CVar}
-     */
-    public static final class CVar extends
-        com.google.protobuf.GeneratedMessage
-        implements CVarOrBuilder {
-      // Use CVar.newBuilder() to construct.
-      private CVar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-        super(builder);
-        this.unknownFields = builder.getUnknownFields();
-      }
-      private CVar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-      private static final CVar defaultInstance;
-      public static CVar getDefaultInstance() {
-        return defaultInstance;
-      }
-
-      public CVar getDefaultInstanceForType() {
-        return defaultInstance;
-      }
-
-      private final com.google.protobuf.UnknownFieldSet unknownFields;
-      @java.lang.Override
-      public final com.google.protobuf.UnknownFieldSet
-          getUnknownFields() {
-        return this.unknownFields;
-      }
-      private CVar(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        initFields();
-        int mutable_bitField0_ = 0;
-        com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-            com.google.protobuf.UnknownFieldSet.newBuilder();
-        try {
-          boolean done = false;
-          while (!done) {
-            int tag = input.readTag();
-            switch (tag) {
-              case 0:
-                done = true;
-                break;
-              default: {
-                if (!parseUnknownField(input, unknownFields,
-                                       extensionRegistry, tag)) {
-                  done = true;
-                }
-                break;
-              }
-              case 10: {
-                bitField0_ |= 0x00000001;
-                name_ = input.readBytes();
-                break;
-              }
-              case 18: {
-                bitField0_ |= 0x00000002;
-                value_ = input.readBytes();
-                break;
-              }
-            }
-          }
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          throw e.setUnfinishedMessage(this);
-        } catch (java.io.IOException e) {
-          throw new com.google.protobuf.InvalidProtocolBufferException(
-              e.getMessage()).setUnfinishedMessage(this);
-        } finally {
-          this.unknownFields = unknownFields.build();
-          makeExtensionsImmutable();
-        }
-      }
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_CVar_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_CVar_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CMsg_CVars.CVar.class, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder.class);
-      }
-
-      public static com.google.protobuf.Parser<CVar> PARSER =
-          new com.google.protobuf.AbstractParser<CVar>() {
-        public CVar parsePartialFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws com.google.protobuf.InvalidProtocolBufferException {
-          return new CVar(input, extensionRegistry);
-        }
-      };
-
-      @java.lang.Override
-      public com.google.protobuf.Parser<CVar> getParserForType() {
-        return PARSER;
-      }
-
-      private int bitField0_;
-      // optional string name = 1;
-      public static final int NAME_FIELD_NUMBER = 1;
-      private java.lang.Object name_;
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      public boolean hasName() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            name_ = s;
-          }
-          return s;
-        }
-      }
-      /**
-       * <code>optional string name = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          name_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      // optional string value = 2;
-      public static final int VALUE_FIELD_NUMBER = 2;
-      private java.lang.Object value_;
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      public boolean hasValue() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      public java.lang.String getValue() {
-        java.lang.Object ref = value_;
-        if (ref instanceof java.lang.String) {
-          return (java.lang.String) ref;
-        } else {
-          com.google.protobuf.ByteString bs = 
-              (com.google.protobuf.ByteString) ref;
-          java.lang.String s = bs.toStringUtf8();
-          if (bs.isValidUtf8()) {
-            value_ = s;
-          }
-          return s;
-        }
-      }
-      /**
-       * <code>optional string value = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getValueBytes() {
-        java.lang.Object ref = value_;
-        if (ref instanceof java.lang.String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          value_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-
-      private void initFields() {
-        name_ = "";
-        value_ = "";
-      }
-      private byte memoizedIsInitialized = -1;
-      public final boolean isInitialized() {
-        byte isInitialized = memoizedIsInitialized;
-        if (isInitialized != -1) return isInitialized == 1;
-
-        memoizedIsInitialized = 1;
-        return true;
-      }
-
-      public void writeTo(com.google.protobuf.CodedOutputStream output)
-                          throws java.io.IOException {
-        getSerializedSize();
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          output.writeBytes(1, getNameBytes());
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          output.writeBytes(2, getValueBytes());
-        }
-        getUnknownFields().writeTo(output);
-      }
-
-      private int memoizedSerializedSize = -1;
-      public int getSerializedSize() {
-        int size = memoizedSerializedSize;
-        if (size != -1) return size;
-
-        size = 0;
-        if (((bitField0_ & 0x00000001) == 0x00000001)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(1, getNameBytes());
-        }
-        if (((bitField0_ & 0x00000002) == 0x00000002)) {
-          size += com.google.protobuf.CodedOutputStream
-            .computeBytesSize(2, getValueBytes());
-        }
-        size += getUnknownFields().getSerializedSize();
-        memoizedSerializedSize = size;
-        return size;
-      }
-
-      private static final long serialVersionUID = 0L;
-      @java.lang.Override
-      protected java.lang.Object writeReplace()
-          throws java.io.ObjectStreamException {
-        return super.writeReplace();
-      }
-
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          com.google.protobuf.ByteString data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          com.google.protobuf.ByteString data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(byte[] data)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          byte[] data,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return PARSER.parseFrom(data, extensionRegistry);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return PARSER.parseFrom(input);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return PARSER.parseFrom(input, extensionRegistry);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseDelimitedFrom(java.io.InputStream input)
-          throws java.io.IOException {
-        return PARSER.parseDelimitedFrom(input);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseDelimitedFrom(
-          java.io.InputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return PARSER.parseDelimitedFrom(input, extensionRegistry);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          com.google.protobuf.CodedInputStream input)
-          throws java.io.IOException {
-        return PARSER.parseFrom(input);
-      }
-      public static com.dota2.proto.Netmessages.CMsg_CVars.CVar parseFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        return PARSER.parseFrom(input, extensionRegistry);
-      }
-
-      public static Builder newBuilder() { return Builder.create(); }
-      public Builder newBuilderForType() { return newBuilder(); }
-      public static Builder newBuilder(com.dota2.proto.Netmessages.CMsg_CVars.CVar prototype) {
-        return newBuilder().mergeFrom(prototype);
-      }
-      public Builder toBuilder() { return newBuilder(this); }
-
-      @java.lang.Override
-      protected Builder newBuilderForType(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        Builder builder = new Builder(parent);
-        return builder;
-      }
-      /**
-       * Protobuf type {@code CMsg_CVars.CVar}
-       */
-      public static final class Builder extends
-          com.google.protobuf.GeneratedMessage.Builder<Builder>
-         implements com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder {
-        public static final com.google.protobuf.Descriptors.Descriptor
-            getDescriptor() {
-          return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_CVar_descriptor;
-        }
-
-        protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-            internalGetFieldAccessorTable() {
-          return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_CVar_fieldAccessorTable
-              .ensureFieldAccessorsInitialized(
-                  com.dota2.proto.Netmessages.CMsg_CVars.CVar.class, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder.class);
-        }
-
-        // Construct using com.dota2.proto.Netmessages.CMsg_CVars.CVar.newBuilder()
-        private Builder() {
-          maybeForceBuilderInitialization();
-        }
-
-        private Builder(
-            com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-          super(parent);
-          maybeForceBuilderInitialization();
-        }
-        private void maybeForceBuilderInitialization() {
-          if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          }
-        }
-        private static Builder create() {
-          return new Builder();
-        }
-
-        public Builder clear() {
-          super.clear();
-          name_ = "";
-          bitField0_ = (bitField0_ & ~0x00000001);
-          value_ = "";
-          bitField0_ = (bitField0_ & ~0x00000002);
-          return this;
-        }
-
-        public Builder clone() {
-          return create().mergeFrom(buildPartial());
-        }
-
-        public com.google.protobuf.Descriptors.Descriptor
-            getDescriptorForType() {
-          return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_CVar_descriptor;
-        }
-
-        public com.dota2.proto.Netmessages.CMsg_CVars.CVar getDefaultInstanceForType() {
-          return com.dota2.proto.Netmessages.CMsg_CVars.CVar.getDefaultInstance();
-        }
-
-        public com.dota2.proto.Netmessages.CMsg_CVars.CVar build() {
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar result = buildPartial();
-          if (!result.isInitialized()) {
-            throw newUninitializedMessageException(result);
-          }
-          return result;
-        }
-
-        public com.dota2.proto.Netmessages.CMsg_CVars.CVar buildPartial() {
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar result = new com.dota2.proto.Netmessages.CMsg_CVars.CVar(this);
-          int from_bitField0_ = bitField0_;
-          int to_bitField0_ = 0;
-          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-            to_bitField0_ |= 0x00000001;
-          }
-          result.name_ = name_;
-          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-            to_bitField0_ |= 0x00000002;
-          }
-          result.value_ = value_;
-          result.bitField0_ = to_bitField0_;
-          onBuilt();
-          return result;
-        }
-
-        public Builder mergeFrom(com.google.protobuf.Message other) {
-          if (other instanceof com.dota2.proto.Netmessages.CMsg_CVars.CVar) {
-            return mergeFrom((com.dota2.proto.Netmessages.CMsg_CVars.CVar)other);
-          } else {
-            super.mergeFrom(other);
-            return this;
-          }
-        }
-
-        public Builder mergeFrom(com.dota2.proto.Netmessages.CMsg_CVars.CVar other) {
-          if (other == com.dota2.proto.Netmessages.CMsg_CVars.CVar.getDefaultInstance()) return this;
-          if (other.hasName()) {
-            bitField0_ |= 0x00000001;
-            name_ = other.name_;
-            onChanged();
-          }
-          if (other.hasValue()) {
-            bitField0_ |= 0x00000002;
-            value_ = other.value_;
-            onChanged();
-          }
-          this.mergeUnknownFields(other.getUnknownFields());
-          return this;
-        }
-
-        public final boolean isInitialized() {
-          return true;
-        }
-
-        public Builder mergeFrom(
-            com.google.protobuf.CodedInputStream input,
-            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-            throws java.io.IOException {
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar parsedMessage = null;
-          try {
-            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-            parsedMessage = (com.dota2.proto.Netmessages.CMsg_CVars.CVar) e.getUnfinishedMessage();
-            throw e;
-          } finally {
-            if (parsedMessage != null) {
-              mergeFrom(parsedMessage);
-            }
-          }
-          return this;
-        }
-        private int bitField0_;
-
-        // optional string name = 1;
-        private java.lang.Object name_ = "";
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public boolean hasName() {
-          return ((bitField0_ & 0x00000001) == 0x00000001);
-        }
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public java.lang.String getName() {
-          java.lang.Object ref = name_;
-          if (!(ref instanceof java.lang.String)) {
-            java.lang.String s = ((com.google.protobuf.ByteString) ref)
-                .toStringUtf8();
-            name_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public com.google.protobuf.ByteString
-            getNameBytes() {
-          java.lang.Object ref = name_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            name_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public Builder setName(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-          name_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public Builder clearName() {
-          bitField0_ = (bitField0_ & ~0x00000001);
-          name_ = getDefaultInstance().getName();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string name = 1;</code>
-         */
-        public Builder setNameBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-          name_ = value;
-          onChanged();
-          return this;
-        }
-
-        // optional string value = 2;
-        private java.lang.Object value_ = "";
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public boolean hasValue() {
-          return ((bitField0_ & 0x00000002) == 0x00000002);
-        }
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public java.lang.String getValue() {
-          java.lang.Object ref = value_;
-          if (!(ref instanceof java.lang.String)) {
-            java.lang.String s = ((com.google.protobuf.ByteString) ref)
-                .toStringUtf8();
-            value_ = s;
-            return s;
-          } else {
-            return (java.lang.String) ref;
-          }
-        }
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public com.google.protobuf.ByteString
-            getValueBytes() {
-          java.lang.Object ref = value_;
-          if (ref instanceof String) {
-            com.google.protobuf.ByteString b = 
-                com.google.protobuf.ByteString.copyFromUtf8(
-                    (java.lang.String) ref);
-            value_ = b;
-            return b;
-          } else {
-            return (com.google.protobuf.ByteString) ref;
-          }
-        }
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public Builder setValue(
-            java.lang.String value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-          value_ = value;
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public Builder clearValue() {
-          bitField0_ = (bitField0_ & ~0x00000002);
-          value_ = getDefaultInstance().getValue();
-          onChanged();
-          return this;
-        }
-        /**
-         * <code>optional string value = 2;</code>
-         */
-        public Builder setValueBytes(
-            com.google.protobuf.ByteString value) {
-          if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-          value_ = value;
-          onChanged();
-          return this;
-        }
-
-        // @@protoc_insertion_point(builder_scope:CMsg_CVars.CVar)
-      }
-
-      static {
-        defaultInstance = new CVar(true);
-        defaultInstance.initFields();
-      }
-
-      // @@protoc_insertion_point(class_scope:CMsg_CVars.CVar)
-    }
-
-    // repeated .CMsg_CVars.CVar cvars = 1;
-    public static final int CVARS_FIELD_NUMBER = 1;
-    private java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar> cvars_;
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    public java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar> getCvarsList() {
-      return cvars_;
-    }
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    public java.util.List<? extends com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder> 
-        getCvarsOrBuilderList() {
-      return cvars_;
-    }
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    public int getCvarsCount() {
-      return cvars_.size();
-    }
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    public com.dota2.proto.Netmessages.CMsg_CVars.CVar getCvars(int index) {
-      return cvars_.get(index);
-    }
-    /**
-     * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-     */
-    public com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder getCvarsOrBuilder(
-        int index) {
-      return cvars_.get(index);
-    }
-
-    private void initFields() {
-      cvars_ = java.util.Collections.emptyList();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      for (int i = 0; i < cvars_.size(); i++) {
-        output.writeMessage(1, cvars_.get(i));
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      for (int i = 0; i < cvars_.size(); i++) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, cvars_.get(i));
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CMsg_CVars parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CMsg_CVars prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CMsg_CVars}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CMsg_CVars.class, com.dota2.proto.Netmessages.CMsg_CVars.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CMsg_CVars.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getCvarsFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (cvarsBuilder_ == null) {
-          cvars_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-        } else {
-          cvarsBuilder_.clear();
-        }
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CMsg_CVars_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CMsg_CVars getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CMsg_CVars build() {
-        com.dota2.proto.Netmessages.CMsg_CVars result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CMsg_CVars buildPartial() {
-        com.dota2.proto.Netmessages.CMsg_CVars result = new com.dota2.proto.Netmessages.CMsg_CVars(this);
-        int from_bitField0_ = bitField0_;
-        if (cvarsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001)) {
-            cvars_ = java.util.Collections.unmodifiableList(cvars_);
-            bitField0_ = (bitField0_ & ~0x00000001);
-          }
-          result.cvars_ = cvars_;
-        } else {
-          result.cvars_ = cvarsBuilder_.build();
-        }
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CMsg_CVars) {
-          return mergeFrom((com.dota2.proto.Netmessages.CMsg_CVars)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CMsg_CVars other) {
-        if (other == com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance()) return this;
-        if (cvarsBuilder_ == null) {
-          if (!other.cvars_.isEmpty()) {
-            if (cvars_.isEmpty()) {
-              cvars_ = other.cvars_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-            } else {
-              ensureCvarsIsMutable();
-              cvars_.addAll(other.cvars_);
-            }
-            onChanged();
-          }
-        } else {
-          if (!other.cvars_.isEmpty()) {
-            if (cvarsBuilder_.isEmpty()) {
-              cvarsBuilder_.dispose();
-              cvarsBuilder_ = null;
-              cvars_ = other.cvars_;
-              bitField0_ = (bitField0_ & ~0x00000001);
-              cvarsBuilder_ = 
-                com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
-                   getCvarsFieldBuilder() : null;
-            } else {
-              cvarsBuilder_.addAllMessages(other.cvars_);
-            }
-          }
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CMsg_CVars parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CMsg_CVars) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // repeated .CMsg_CVars.CVar cvars = 1;
-      private java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar> cvars_ =
-        java.util.Collections.emptyList();
-      private void ensureCvarsIsMutable() {
-        if (!((bitField0_ & 0x00000001) == 0x00000001)) {
-          cvars_ = new java.util.ArrayList<com.dota2.proto.Netmessages.CMsg_CVars.CVar>(cvars_);
-          bitField0_ |= 0x00000001;
-         }
-      }
-
-      private com.google.protobuf.RepeatedFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder, com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder> cvarsBuilder_;
-
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar> getCvarsList() {
-        if (cvarsBuilder_ == null) {
-          return java.util.Collections.unmodifiableList(cvars_);
-        } else {
-          return cvarsBuilder_.getMessageList();
-        }
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public int getCvarsCount() {
-        if (cvarsBuilder_ == null) {
-          return cvars_.size();
-        } else {
-          return cvarsBuilder_.getCount();
-        }
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.CVar getCvars(int index) {
-        if (cvarsBuilder_ == null) {
-          return cvars_.get(index);
-        } else {
-          return cvarsBuilder_.getMessage(index);
-        }
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder setCvars(
-          int index, com.dota2.proto.Netmessages.CMsg_CVars.CVar value) {
-        if (cvarsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCvarsIsMutable();
-          cvars_.set(index, value);
-          onChanged();
-        } else {
-          cvarsBuilder_.setMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder setCvars(
-          int index, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder builderForValue) {
-        if (cvarsBuilder_ == null) {
-          ensureCvarsIsMutable();
-          cvars_.set(index, builderForValue.build());
-          onChanged();
-        } else {
-          cvarsBuilder_.setMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder addCvars(com.dota2.proto.Netmessages.CMsg_CVars.CVar value) {
-        if (cvarsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCvarsIsMutable();
-          cvars_.add(value);
-          onChanged();
-        } else {
-          cvarsBuilder_.addMessage(value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder addCvars(
-          int index, com.dota2.proto.Netmessages.CMsg_CVars.CVar value) {
-        if (cvarsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          ensureCvarsIsMutable();
-          cvars_.add(index, value);
-          onChanged();
-        } else {
-          cvarsBuilder_.addMessage(index, value);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder addCvars(
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder builderForValue) {
-        if (cvarsBuilder_ == null) {
-          ensureCvarsIsMutable();
-          cvars_.add(builderForValue.build());
-          onChanged();
-        } else {
-          cvarsBuilder_.addMessage(builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder addCvars(
-          int index, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder builderForValue) {
-        if (cvarsBuilder_ == null) {
-          ensureCvarsIsMutable();
-          cvars_.add(index, builderForValue.build());
-          onChanged();
-        } else {
-          cvarsBuilder_.addMessage(index, builderForValue.build());
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder addAllCvars(
-          java.lang.Iterable<? extends com.dota2.proto.Netmessages.CMsg_CVars.CVar> values) {
-        if (cvarsBuilder_ == null) {
-          ensureCvarsIsMutable();
-          super.addAll(values, cvars_);
-          onChanged();
-        } else {
-          cvarsBuilder_.addAllMessages(values);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder clearCvars() {
-        if (cvarsBuilder_ == null) {
-          cvars_ = java.util.Collections.emptyList();
-          bitField0_ = (bitField0_ & ~0x00000001);
-          onChanged();
-        } else {
-          cvarsBuilder_.clear();
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public Builder removeCvars(int index) {
-        if (cvarsBuilder_ == null) {
-          ensureCvarsIsMutable();
-          cvars_.remove(index);
-          onChanged();
-        } else {
-          cvarsBuilder_.remove(index);
-        }
-        return this;
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder getCvarsBuilder(
-          int index) {
-        return getCvarsFieldBuilder().getBuilder(index);
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder getCvarsOrBuilder(
-          int index) {
-        if (cvarsBuilder_ == null) {
-          return cvars_.get(index);  } else {
-          return cvarsBuilder_.getMessageOrBuilder(index);
-        }
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public java.util.List<? extends com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder> 
-           getCvarsOrBuilderList() {
-        if (cvarsBuilder_ != null) {
-          return cvarsBuilder_.getMessageOrBuilderList();
-        } else {
-          return java.util.Collections.unmodifiableList(cvars_);
-        }
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder addCvarsBuilder() {
-        return getCvarsFieldBuilder().addBuilder(
-            com.dota2.proto.Netmessages.CMsg_CVars.CVar.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder addCvarsBuilder(
-          int index) {
-        return getCvarsFieldBuilder().addBuilder(
-            index, com.dota2.proto.Netmessages.CMsg_CVars.CVar.getDefaultInstance());
-      }
-      /**
-       * <code>repeated .CMsg_CVars.CVar cvars = 1;</code>
-       */
-      public java.util.List<com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder> 
-           getCvarsBuilderList() {
-        return getCvarsFieldBuilder().getBuilderList();
-      }
-      private com.google.protobuf.RepeatedFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars.CVar, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder, com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder> 
-          getCvarsFieldBuilder() {
-        if (cvarsBuilder_ == null) {
-          cvarsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
-              com.dota2.proto.Netmessages.CMsg_CVars.CVar, com.dota2.proto.Netmessages.CMsg_CVars.CVar.Builder, com.dota2.proto.Netmessages.CMsg_CVars.CVarOrBuilder>(
-                  cvars_,
-                  ((bitField0_ & 0x00000001) == 0x00000001),
-                  getParentForChildren(),
-                  isClean());
-          cvars_ = null;
-        }
-        return cvarsBuilder_;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CMsg_CVars)
-    }
-
-    static {
-      defaultInstance = new CMsg_CVars(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CMsg_CVars)
-  }
-
-  public interface CNETMsg_NOPOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-  }
-  /**
-   * Protobuf type {@code CNETMsg_NOP}
-   */
-  public static final class CNETMsg_NOP extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_NOPOrBuilder {
-    // Use CNETMsg_NOP.newBuilder() to construct.
-    private CNETMsg_NOP(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_NOP(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_NOP defaultInstance;
-    public static CNETMsg_NOP getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_NOP getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_NOP(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_NOP_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_NOP_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_NOP.class, com.dota2.proto.Netmessages.CNETMsg_NOP.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_NOP> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_NOP>() {
-      public CNETMsg_NOP parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_NOP(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_NOP> getParserForType() {
-      return PARSER;
-    }
-
-    private void initFields() {
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_NOP parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_NOP prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_NOP}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_NOPOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_NOP_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_NOP_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_NOP.class, com.dota2.proto.Netmessages.CNETMsg_NOP.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_NOP.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_NOP_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_NOP getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_NOP.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_NOP build() {
-        com.dota2.proto.Netmessages.CNETMsg_NOP result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_NOP buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_NOP result = new com.dota2.proto.Netmessages.CNETMsg_NOP(this);
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_NOP) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_NOP)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_NOP other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_NOP.getDefaultInstance()) return this;
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_NOP parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_NOP) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_NOP)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_NOP(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_NOP)
-  }
-
-  public interface CNETMsg_DisconnectOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional string text_deprecated = 1;
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    boolean hasTextDeprecated();
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    java.lang.String getTextDeprecated();
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getTextDeprecatedBytes();
-
-    // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
-    /**
-     * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-     */
-    boolean hasReason();
-    /**
-     * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-     */
-    com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason getReason();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_Disconnect}
-   */
-  public static final class CNETMsg_Disconnect extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_DisconnectOrBuilder {
-    // Use CNETMsg_Disconnect.newBuilder() to construct.
-    private CNETMsg_Disconnect(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_Disconnect(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_Disconnect defaultInstance;
-    public static CNETMsg_Disconnect getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_Disconnect getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_Disconnect(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              textDeprecated_ = input.readBytes();
-              break;
-            }
-            case 16: {
-              int rawValue = input.readEnum();
-              com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason value = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.valueOf(rawValue);
-              if (value == null) {
-                unknownFields.mergeVarintField(2, rawValue);
-              } else {
-                bitField0_ |= 0x00000002;
-                reason_ = value;
-              }
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_Disconnect_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_Disconnect_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_Disconnect.class, com.dota2.proto.Netmessages.CNETMsg_Disconnect.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_Disconnect> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_Disconnect>() {
-      public CNETMsg_Disconnect parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_Disconnect(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_Disconnect> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional string text_deprecated = 1;
-    public static final int TEXT_DEPRECATED_FIELD_NUMBER = 1;
-    private java.lang.Object textDeprecated_;
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    public boolean hasTextDeprecated() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    public java.lang.String getTextDeprecated() {
-      java.lang.Object ref = textDeprecated_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          textDeprecated_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string text_deprecated = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getTextDeprecatedBytes() {
-      java.lang.Object ref = textDeprecated_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        textDeprecated_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
-    public static final int REASON_FIELD_NUMBER = 2;
-    private com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason reason_;
-    /**
-     * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-     */
-    public boolean hasReason() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-     */
-    public com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason getReason() {
-      return reason_;
-    }
-
-    private void initFields() {
-      textDeprecated_ = "";
-      reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getTextDeprecatedBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeEnum(2, reason_.getNumber());
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getTextDeprecatedBytes());
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(2, reason_.getNumber());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Disconnect parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_Disconnect prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_Disconnect}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_DisconnectOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Disconnect_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Disconnect_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_Disconnect.class, com.dota2.proto.Netmessages.CNETMsg_Disconnect.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_Disconnect.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        textDeprecated_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Disconnect_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Disconnect getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_Disconnect.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Disconnect build() {
-        com.dota2.proto.Netmessages.CNETMsg_Disconnect result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Disconnect buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_Disconnect result = new com.dota2.proto.Netmessages.CNETMsg_Disconnect(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.textDeprecated_ = textDeprecated_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.reason_ = reason_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_Disconnect) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_Disconnect)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_Disconnect other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_Disconnect.getDefaultInstance()) return this;
-        if (other.hasTextDeprecated()) {
-          bitField0_ |= 0x00000001;
-          textDeprecated_ = other.textDeprecated_;
-          onChanged();
-        }
-        if (other.hasReason()) {
-          setReason(other.getReason());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_Disconnect parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_Disconnect) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional string text_deprecated = 1;
-      private java.lang.Object textDeprecated_ = "";
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public boolean hasTextDeprecated() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public java.lang.String getTextDeprecated() {
-        java.lang.Object ref = textDeprecated_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          textDeprecated_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getTextDeprecatedBytes() {
-        java.lang.Object ref = textDeprecated_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          textDeprecated_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public Builder setTextDeprecated(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        textDeprecated_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public Builder clearTextDeprecated() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        textDeprecated_ = getDefaultInstance().getTextDeprecated();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string text_deprecated = 1;</code>
-       */
-      public Builder setTextDeprecatedBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        textDeprecated_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];
-      private com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
-      /**
-       * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-       */
-      public boolean hasReason() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-       */
-      public com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason getReason() {
-        return reason_;
-      }
-      /**
-       * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-       */
-      public Builder setReason(com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason value) {
-        if (value == null) {
-          throw new NullPointerException();
-        }
-        bitField0_ |= 0x00000002;
-        reason_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional .ENetworkDisconnectionReason reason = 2 [default = NETWORK_DISCONNECT_INVALID];</code>
-       */
-      public Builder clearReason() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        reason_ = com.dota2.proto.NetworkConnection.ENetworkDisconnectionReason.NETWORK_DISCONNECT_INVALID;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_Disconnect)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_Disconnect(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_Disconnect)
-  }
-
-  public interface CNETMsg_FileOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional int32 transfer_id = 1;
-    /**
-     * <code>optional int32 transfer_id = 1;</code>
-     */
-    boolean hasTransferId();
-    /**
-     * <code>optional int32 transfer_id = 1;</code>
-     */
-    int getTransferId();
-
-    // optional string file_name = 2;
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    boolean hasFileName();
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    java.lang.String getFileName();
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    com.google.protobuf.ByteString
-        getFileNameBytes();
-
-    // optional bool is_replay_demo_file = 3;
-    /**
-     * <code>optional bool is_replay_demo_file = 3;</code>
-     */
-    boolean hasIsReplayDemoFile();
-    /**
-     * <code>optional bool is_replay_demo_file = 3;</code>
-     */
-    boolean getIsReplayDemoFile();
-
-    // optional bool deny = 4;
-    /**
-     * <code>optional bool deny = 4;</code>
-     */
-    boolean hasDeny();
-    /**
-     * <code>optional bool deny = 4;</code>
-     */
-    boolean getDeny();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_File}
-   */
-  public static final class CNETMsg_File extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_FileOrBuilder {
-    // Use CNETMsg_File.newBuilder() to construct.
-    private CNETMsg_File(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_File(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_File defaultInstance;
-    public static CNETMsg_File getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_File getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_File(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              transferId_ = input.readInt32();
-              break;
-            }
-            case 18: {
-              bitField0_ |= 0x00000002;
-              fileName_ = input.readBytes();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              isReplayDemoFile_ = input.readBool();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              deny_ = input.readBool();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_File_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_File_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_File.class, com.dota2.proto.Netmessages.CNETMsg_File.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_File> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_File>() {
-      public CNETMsg_File parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_File(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_File> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional int32 transfer_id = 1;
-    public static final int TRANSFER_ID_FIELD_NUMBER = 1;
-    private int transferId_;
-    /**
-     * <code>optional int32 transfer_id = 1;</code>
-     */
-    public boolean hasTransferId() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional int32 transfer_id = 1;</code>
-     */
-    public int getTransferId() {
-      return transferId_;
-    }
-
-    // optional string file_name = 2;
-    public static final int FILE_NAME_FIELD_NUMBER = 2;
-    private java.lang.Object fileName_;
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    public boolean hasFileName() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    public java.lang.String getFileName() {
-      java.lang.Object ref = fileName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          fileName_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string file_name = 2;</code>
-     */
-    public com.google.protobuf.ByteString
-        getFileNameBytes() {
-      java.lang.Object ref = fileName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        fileName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    // optional bool is_replay_demo_file = 3;
-    public static final int IS_REPLAY_DEMO_FILE_FIELD_NUMBER = 3;
-    private boolean isReplayDemoFile_;
-    /**
-     * <code>optional bool is_replay_demo_file = 3;</code>
-     */
-    public boolean hasIsReplayDemoFile() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional bool is_replay_demo_file = 3;</code>
-     */
-    public boolean getIsReplayDemoFile() {
-      return isReplayDemoFile_;
-    }
-
-    // optional bool deny = 4;
-    public static final int DENY_FIELD_NUMBER = 4;
-    private boolean deny_;
-    /**
-     * <code>optional bool deny = 4;</code>
-     */
-    public boolean hasDeny() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional bool deny = 4;</code>
-     */
-    public boolean getDeny() {
-      return deny_;
-    }
-
-    private void initFields() {
-      transferId_ = 0;
-      fileName_ = "";
-      isReplayDemoFile_ = false;
-      deny_ = false;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, transferId_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, getFileNameBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBool(3, isReplayDemoFile_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBool(4, deny_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, transferId_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, getFileNameBytes());
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(3, isReplayDemoFile_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(4, deny_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_File parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_File prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_File}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_FileOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_File_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_File_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_File.class, com.dota2.proto.Netmessages.CNETMsg_File.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_File.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        transferId_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        fileName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000002);
-        isReplayDemoFile_ = false;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        deny_ = false;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_File_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_File getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_File.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_File build() {
-        com.dota2.proto.Netmessages.CNETMsg_File result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_File buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_File result = new com.dota2.proto.Netmessages.CNETMsg_File(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.transferId_ = transferId_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.fileName_ = fileName_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.isReplayDemoFile_ = isReplayDemoFile_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.deny_ = deny_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_File) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_File)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_File other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_File.getDefaultInstance()) return this;
-        if (other.hasTransferId()) {
-          setTransferId(other.getTransferId());
-        }
-        if (other.hasFileName()) {
-          bitField0_ |= 0x00000002;
-          fileName_ = other.fileName_;
-          onChanged();
-        }
-        if (other.hasIsReplayDemoFile()) {
-          setIsReplayDemoFile(other.getIsReplayDemoFile());
-        }
-        if (other.hasDeny()) {
-          setDeny(other.getDeny());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_File parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_File) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional int32 transfer_id = 1;
-      private int transferId_ ;
-      /**
-       * <code>optional int32 transfer_id = 1;</code>
-       */
-      public boolean hasTransferId() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional int32 transfer_id = 1;</code>
-       */
-      public int getTransferId() {
-        return transferId_;
-      }
-      /**
-       * <code>optional int32 transfer_id = 1;</code>
-       */
-      public Builder setTransferId(int value) {
-        bitField0_ |= 0x00000001;
-        transferId_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 transfer_id = 1;</code>
-       */
-      public Builder clearTransferId() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        transferId_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional string file_name = 2;
-      private java.lang.Object fileName_ = "";
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public boolean hasFileName() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public java.lang.String getFileName() {
-        java.lang.Object ref = fileName_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          fileName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public com.google.protobuf.ByteString
-          getFileNameBytes() {
-        java.lang.Object ref = fileName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          fileName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public Builder setFileName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        fileName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public Builder clearFileName() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        fileName_ = getDefaultInstance().getFileName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string file_name = 2;</code>
-       */
-      public Builder setFileNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000002;
-        fileName_ = value;
-        onChanged();
-        return this;
-      }
-
-      // optional bool is_replay_demo_file = 3;
-      private boolean isReplayDemoFile_ ;
-      /**
-       * <code>optional bool is_replay_demo_file = 3;</code>
-       */
-      public boolean hasIsReplayDemoFile() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional bool is_replay_demo_file = 3;</code>
-       */
-      public boolean getIsReplayDemoFile() {
-        return isReplayDemoFile_;
-      }
-      /**
-       * <code>optional bool is_replay_demo_file = 3;</code>
-       */
-      public Builder setIsReplayDemoFile(boolean value) {
-        bitField0_ |= 0x00000004;
-        isReplayDemoFile_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool is_replay_demo_file = 3;</code>
-       */
-      public Builder clearIsReplayDemoFile() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        isReplayDemoFile_ = false;
-        onChanged();
-        return this;
-      }
-
-      // optional bool deny = 4;
-      private boolean deny_ ;
-      /**
-       * <code>optional bool deny = 4;</code>
-       */
-      public boolean hasDeny() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional bool deny = 4;</code>
-       */
-      public boolean getDeny() {
-        return deny_;
-      }
-      /**
-       * <code>optional bool deny = 4;</code>
-       */
-      public Builder setDeny(boolean value) {
-        bitField0_ |= 0x00000008;
-        deny_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional bool deny = 4;</code>
-       */
-      public Builder clearDeny() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        deny_ = false;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_File)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_File(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_File)
-  }
-
-  public interface CNETMsg_SplitScreenUserOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional int32 slot = 1;
-    /**
-     * <code>optional int32 slot = 1;</code>
-     */
-    boolean hasSlot();
-    /**
-     * <code>optional int32 slot = 1;</code>
-     */
-    int getSlot();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_SplitScreenUser}
-   */
-  public static final class CNETMsg_SplitScreenUser extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_SplitScreenUserOrBuilder {
-    // Use CNETMsg_SplitScreenUser.newBuilder() to construct.
-    private CNETMsg_SplitScreenUser(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_SplitScreenUser(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_SplitScreenUser defaultInstance;
-    public static CNETMsg_SplitScreenUser getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_SplitScreenUser getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_SplitScreenUser(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              slot_ = input.readInt32();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SplitScreenUser_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SplitScreenUser_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.class, com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_SplitScreenUser> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_SplitScreenUser>() {
-      public CNETMsg_SplitScreenUser parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_SplitScreenUser(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_SplitScreenUser> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional int32 slot = 1;
-    public static final int SLOT_FIELD_NUMBER = 1;
-    private int slot_;
-    /**
-     * <code>optional int32 slot = 1;</code>
-     */
-    public boolean hasSlot() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional int32 slot = 1;</code>
-     */
-    public int getSlot() {
-      return slot_;
-    }
-
-    private void initFields() {
-      slot_ = 0;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeInt32(1, slot_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeInt32Size(1, slot_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_SplitScreenUser}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_SplitScreenUserOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SplitScreenUser_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SplitScreenUser_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.class, com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        slot_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SplitScreenUser_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser build() {
-        com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser result = new com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.slot_ = slot_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser.getDefaultInstance()) return this;
-        if (other.hasSlot()) {
-          setSlot(other.getSlot());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_SplitScreenUser) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional int32 slot = 1;
-      private int slot_ ;
-      /**
-       * <code>optional int32 slot = 1;</code>
-       */
-      public boolean hasSlot() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional int32 slot = 1;</code>
-       */
-      public int getSlot() {
-        return slot_;
-      }
-      /**
-       * <code>optional int32 slot = 1;</code>
-       */
-      public Builder setSlot(int value) {
-        bitField0_ |= 0x00000001;
-        slot_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional int32 slot = 1;</code>
-       */
-      public Builder clearSlot() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        slot_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_SplitScreenUser)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_SplitScreenUser(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_SplitScreenUser)
-  }
-
-  public interface CNETMsg_TickOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional uint32 tick = 1;
-    /**
-     * <code>optional uint32 tick = 1;</code>
-     */
-    boolean hasTick();
-    /**
-     * <code>optional uint32 tick = 1;</code>
-     */
-    int getTick();
-
-    // optional uint32 host_frametime_deprecated = 2;
-    /**
-     * <code>optional uint32 host_frametime_deprecated = 2;</code>
-     */
-    boolean hasHostFrametimeDeprecated();
-    /**
-     * <code>optional uint32 host_frametime_deprecated = 2;</code>
-     */
-    int getHostFrametimeDeprecated();
-
-    // optional uint32 host_frametime_std_deviation_deprecated = 3;
-    /**
-     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-     */
-    boolean hasHostFrametimeStdDeviationDeprecated();
-    /**
-     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-     */
-    int getHostFrametimeStdDeviationDeprecated();
-
-    // optional uint32 host_computationtime = 4;
-    /**
-     * <code>optional uint32 host_computationtime = 4;</code>
-     */
-    boolean hasHostComputationtime();
-    /**
-     * <code>optional uint32 host_computationtime = 4;</code>
-     */
-    int getHostComputationtime();
-
-    // optional uint32 host_computationtime_std_deviation = 5;
-    /**
-     * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-     */
-    boolean hasHostComputationtimeStdDeviation();
-    /**
-     * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-     */
-    int getHostComputationtimeStdDeviation();
-
-    // optional uint32 host_framestarttime_std_deviation = 6;
-    /**
-     * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-     */
-    boolean hasHostFramestarttimeStdDeviation();
-    /**
-     * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-     */
-    int getHostFramestarttimeStdDeviation();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_Tick}
-   */
-  public static final class CNETMsg_Tick extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_TickOrBuilder {
-    // Use CNETMsg_Tick.newBuilder() to construct.
-    private CNETMsg_Tick(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_Tick(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_Tick defaultInstance;
-    public static CNETMsg_Tick getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_Tick getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_Tick(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              tick_ = input.readUInt32();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              hostFrametimeDeprecated_ = input.readUInt32();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              hostFrametimeStdDeviationDeprecated_ = input.readUInt32();
-              break;
-            }
-            case 32: {
-              bitField0_ |= 0x00000008;
-              hostComputationtime_ = input.readUInt32();
-              break;
-            }
-            case 40: {
-              bitField0_ |= 0x00000010;
-              hostComputationtimeStdDeviation_ = input.readUInt32();
-              break;
-            }
-            case 48: {
-              bitField0_ |= 0x00000020;
-              hostFramestarttimeStdDeviation_ = input.readUInt32();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_Tick_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_Tick_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_Tick.class, com.dota2.proto.Netmessages.CNETMsg_Tick.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_Tick> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_Tick>() {
-      public CNETMsg_Tick parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_Tick(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_Tick> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional uint32 tick = 1;
-    public static final int TICK_FIELD_NUMBER = 1;
-    private int tick_;
-    /**
-     * <code>optional uint32 tick = 1;</code>
-     */
-    public boolean hasTick() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional uint32 tick = 1;</code>
-     */
-    public int getTick() {
-      return tick_;
-    }
-
-    // optional uint32 host_frametime_deprecated = 2;
-    public static final int HOST_FRAMETIME_DEPRECATED_FIELD_NUMBER = 2;
-    private int hostFrametimeDeprecated_;
-    /**
-     * <code>optional uint32 host_frametime_deprecated = 2;</code>
-     */
-    public boolean hasHostFrametimeDeprecated() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional uint32 host_frametime_deprecated = 2;</code>
-     */
-    public int getHostFrametimeDeprecated() {
-      return hostFrametimeDeprecated_;
-    }
-
-    // optional uint32 host_frametime_std_deviation_deprecated = 3;
-    public static final int HOST_FRAMETIME_STD_DEVIATION_DEPRECATED_FIELD_NUMBER = 3;
-    private int hostFrametimeStdDeviationDeprecated_;
-    /**
-     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-     */
-    public boolean hasHostFrametimeStdDeviationDeprecated() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-     */
-    public int getHostFrametimeStdDeviationDeprecated() {
-      return hostFrametimeStdDeviationDeprecated_;
-    }
-
-    // optional uint32 host_computationtime = 4;
-    public static final int HOST_COMPUTATIONTIME_FIELD_NUMBER = 4;
-    private int hostComputationtime_;
-    /**
-     * <code>optional uint32 host_computationtime = 4;</code>
-     */
-    public boolean hasHostComputationtime() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional uint32 host_computationtime = 4;</code>
-     */
-    public int getHostComputationtime() {
-      return hostComputationtime_;
-    }
-
-    // optional uint32 host_computationtime_std_deviation = 5;
-    public static final int HOST_COMPUTATIONTIME_STD_DEVIATION_FIELD_NUMBER = 5;
-    private int hostComputationtimeStdDeviation_;
-    /**
-     * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-     */
-    public boolean hasHostComputationtimeStdDeviation() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
-    }
-    /**
-     * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-     */
-    public int getHostComputationtimeStdDeviation() {
-      return hostComputationtimeStdDeviation_;
-    }
-
-    // optional uint32 host_framestarttime_std_deviation = 6;
-    public static final int HOST_FRAMESTARTTIME_STD_DEVIATION_FIELD_NUMBER = 6;
-    private int hostFramestarttimeStdDeviation_;
-    /**
-     * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-     */
-    public boolean hasHostFramestarttimeStdDeviation() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
-    }
-    /**
-     * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-     */
-    public int getHostFramestarttimeStdDeviation() {
-      return hostFramestarttimeStdDeviation_;
-    }
-
-    private void initFields() {
-      tick_ = 0;
-      hostFrametimeDeprecated_ = 0;
-      hostFrametimeStdDeviationDeprecated_ = 0;
-      hostComputationtime_ = 0;
-      hostComputationtimeStdDeviation_ = 0;
-      hostFramestarttimeStdDeviation_ = 0;
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt32(1, tick_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt32(2, hostFrametimeDeprecated_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt32(3, hostFrametimeStdDeviationDeprecated_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeUInt32(4, hostComputationtime_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeUInt32(5, hostComputationtimeStdDeviation_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeUInt32(6, hostFramestarttimeStdDeviation_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, tick_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(2, hostFrametimeDeprecated_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(3, hostFrametimeStdDeviationDeprecated_);
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(4, hostComputationtime_);
-      }
-      if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(5, hostComputationtimeStdDeviation_);
-      }
-      if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(6, hostFramestarttimeStdDeviation_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_Tick parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_Tick prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_Tick}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_TickOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Tick_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Tick_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_Tick.class, com.dota2.proto.Netmessages.CNETMsg_Tick.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_Tick.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        tick_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        hostFrametimeDeprecated_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        hostFrametimeStdDeviationDeprecated_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        hostComputationtime_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        hostComputationtimeStdDeviation_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000010);
-        hostFramestarttimeStdDeviation_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000020);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_Tick_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Tick getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_Tick.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Tick build() {
-        com.dota2.proto.Netmessages.CNETMsg_Tick result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_Tick buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_Tick result = new com.dota2.proto.Netmessages.CNETMsg_Tick(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.tick_ = tick_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.hostFrametimeDeprecated_ = hostFrametimeDeprecated_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.hostFrametimeStdDeviationDeprecated_ = hostFrametimeStdDeviationDeprecated_;
-        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.hostComputationtime_ = hostComputationtime_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000010;
-        }
-        result.hostComputationtimeStdDeviation_ = hostComputationtimeStdDeviation_;
-        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
-          to_bitField0_ |= 0x00000020;
-        }
-        result.hostFramestarttimeStdDeviation_ = hostFramestarttimeStdDeviation_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_Tick) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_Tick)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_Tick other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_Tick.getDefaultInstance()) return this;
-        if (other.hasTick()) {
-          setTick(other.getTick());
-        }
-        if (other.hasHostFrametimeDeprecated()) {
-          setHostFrametimeDeprecated(other.getHostFrametimeDeprecated());
-        }
-        if (other.hasHostFrametimeStdDeviationDeprecated()) {
-          setHostFrametimeStdDeviationDeprecated(other.getHostFrametimeStdDeviationDeprecated());
-        }
-        if (other.hasHostComputationtime()) {
-          setHostComputationtime(other.getHostComputationtime());
-        }
-        if (other.hasHostComputationtimeStdDeviation()) {
-          setHostComputationtimeStdDeviation(other.getHostComputationtimeStdDeviation());
-        }
-        if (other.hasHostFramestarttimeStdDeviation()) {
-          setHostFramestarttimeStdDeviation(other.getHostFramestarttimeStdDeviation());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_Tick parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_Tick) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional uint32 tick = 1;
-      private int tick_ ;
-      /**
-       * <code>optional uint32 tick = 1;</code>
-       */
-      public boolean hasTick() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional uint32 tick = 1;</code>
-       */
-      public int getTick() {
-        return tick_;
-      }
-      /**
-       * <code>optional uint32 tick = 1;</code>
-       */
-      public Builder setTick(int value) {
-        bitField0_ |= 0x00000001;
-        tick_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 tick = 1;</code>
-       */
-      public Builder clearTick() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        tick_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 host_frametime_deprecated = 2;
-      private int hostFrametimeDeprecated_ ;
-      /**
-       * <code>optional uint32 host_frametime_deprecated = 2;</code>
-       */
-      public boolean hasHostFrametimeDeprecated() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional uint32 host_frametime_deprecated = 2;</code>
-       */
-      public int getHostFrametimeDeprecated() {
-        return hostFrametimeDeprecated_;
-      }
-      /**
-       * <code>optional uint32 host_frametime_deprecated = 2;</code>
-       */
-      public Builder setHostFrametimeDeprecated(int value) {
-        bitField0_ |= 0x00000002;
-        hostFrametimeDeprecated_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 host_frametime_deprecated = 2;</code>
-       */
-      public Builder clearHostFrametimeDeprecated() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        hostFrametimeDeprecated_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 host_frametime_std_deviation_deprecated = 3;
-      private int hostFrametimeStdDeviationDeprecated_ ;
-      /**
-       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-       */
-      public boolean hasHostFrametimeStdDeviationDeprecated() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-       */
-      public int getHostFrametimeStdDeviationDeprecated() {
-        return hostFrametimeStdDeviationDeprecated_;
-      }
-      /**
-       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-       */
-      public Builder setHostFrametimeStdDeviationDeprecated(int value) {
-        bitField0_ |= 0x00000004;
-        hostFrametimeStdDeviationDeprecated_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 host_frametime_std_deviation_deprecated = 3;</code>
-       */
-      public Builder clearHostFrametimeStdDeviationDeprecated() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        hostFrametimeStdDeviationDeprecated_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 host_computationtime = 4;
-      private int hostComputationtime_ ;
-      /**
-       * <code>optional uint32 host_computationtime = 4;</code>
-       */
-      public boolean hasHostComputationtime() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
-      }
-      /**
-       * <code>optional uint32 host_computationtime = 4;</code>
-       */
-      public int getHostComputationtime() {
-        return hostComputationtime_;
-      }
-      /**
-       * <code>optional uint32 host_computationtime = 4;</code>
-       */
-      public Builder setHostComputationtime(int value) {
-        bitField0_ |= 0x00000008;
-        hostComputationtime_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 host_computationtime = 4;</code>
-       */
-      public Builder clearHostComputationtime() {
-        bitField0_ = (bitField0_ & ~0x00000008);
-        hostComputationtime_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 host_computationtime_std_deviation = 5;
-      private int hostComputationtimeStdDeviation_ ;
-      /**
-       * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-       */
-      public boolean hasHostComputationtimeStdDeviation() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-       */
-      public int getHostComputationtimeStdDeviation() {
-        return hostComputationtimeStdDeviation_;
-      }
-      /**
-       * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-       */
-      public Builder setHostComputationtimeStdDeviation(int value) {
-        bitField0_ |= 0x00000010;
-        hostComputationtimeStdDeviation_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 host_computationtime_std_deviation = 5;</code>
-       */
-      public Builder clearHostComputationtimeStdDeviation() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        hostComputationtimeStdDeviation_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 host_framestarttime_std_deviation = 6;
-      private int hostFramestarttimeStdDeviation_ ;
-      /**
-       * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-       */
-      public boolean hasHostFramestarttimeStdDeviation() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
-      }
-      /**
-       * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-       */
-      public int getHostFramestarttimeStdDeviation() {
-        return hostFramestarttimeStdDeviation_;
-      }
-      /**
-       * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-       */
-      public Builder setHostFramestarttimeStdDeviation(int value) {
-        bitField0_ |= 0x00000020;
-        hostFramestarttimeStdDeviation_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 host_framestarttime_std_deviation = 6;</code>
-       */
-      public Builder clearHostFramestarttimeStdDeviation() {
-        bitField0_ = (bitField0_ & ~0x00000020);
-        hostFramestarttimeStdDeviation_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_Tick)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_Tick(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_Tick)
-  }
-
-  public interface CNETMsg_StringCmdOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional string command = 1;
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    boolean hasCommand();
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    java.lang.String getCommand();
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    com.google.protobuf.ByteString
-        getCommandBytes();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_StringCmd}
-   */
-  public static final class CNETMsg_StringCmd extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_StringCmdOrBuilder {
-    // Use CNETMsg_StringCmd.newBuilder() to construct.
-    private CNETMsg_StringCmd(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_StringCmd(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_StringCmd defaultInstance;
-    public static CNETMsg_StringCmd getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_StringCmd getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_StringCmd(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              bitField0_ |= 0x00000001;
-              command_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_StringCmd_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_StringCmd_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_StringCmd.class, com.dota2.proto.Netmessages.CNETMsg_StringCmd.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_StringCmd> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_StringCmd>() {
-      public CNETMsg_StringCmd parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_StringCmd(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_StringCmd> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional string command = 1;
-    public static final int COMMAND_FIELD_NUMBER = 1;
-    private java.lang.Object command_;
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    public boolean hasCommand() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    public java.lang.String getCommand() {
-      java.lang.Object ref = command_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          command_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string command = 1;</code>
-     */
-    public com.google.protobuf.ByteString
-        getCommandBytes() {
-      java.lang.Object ref = command_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        command_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private void initFields() {
-      command_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, getCommandBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, getCommandBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_StringCmd parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_StringCmd prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_StringCmd}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_StringCmdOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_StringCmd_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_StringCmd_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_StringCmd.class, com.dota2.proto.Netmessages.CNETMsg_StringCmd.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_StringCmd.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        command_ = "";
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_StringCmd_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_StringCmd getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_StringCmd.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_StringCmd build() {
-        com.dota2.proto.Netmessages.CNETMsg_StringCmd result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_StringCmd buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_StringCmd result = new com.dota2.proto.Netmessages.CNETMsg_StringCmd(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.command_ = command_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_StringCmd) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_StringCmd)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_StringCmd other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_StringCmd.getDefaultInstance()) return this;
-        if (other.hasCommand()) {
-          bitField0_ |= 0x00000001;
-          command_ = other.command_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_StringCmd parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_StringCmd) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional string command = 1;
-      private java.lang.Object command_ = "";
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public boolean hasCommand() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public java.lang.String getCommand() {
-        java.lang.Object ref = command_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          command_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public com.google.protobuf.ByteString
-          getCommandBytes() {
-        java.lang.Object ref = command_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          command_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public Builder setCommand(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        command_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public Builder clearCommand() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        command_ = getDefaultInstance().getCommand();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string command = 1;</code>
-       */
-      public Builder setCommandBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000001;
-        command_ = value;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_StringCmd)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_StringCmd(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_StringCmd)
-  }
-
-  public interface CNETMsg_SetConVarOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional .CMsg_CVars convars = 1;
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    boolean hasConvars();
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    com.dota2.proto.Netmessages.CMsg_CVars getConvars();
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_SetConVar}
-   */
-  public static final class CNETMsg_SetConVar extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_SetConVarOrBuilder {
-    // Use CNETMsg_SetConVar.newBuilder() to construct.
-    private CNETMsg_SetConVar(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_SetConVar(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_SetConVar defaultInstance;
-    public static CNETMsg_SetConVar getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_SetConVar getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_SetConVar(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 10: {
-              com.dota2.proto.Netmessages.CMsg_CVars.Builder subBuilder = null;
-              if (((bitField0_ & 0x00000001) == 0x00000001)) {
-                subBuilder = convars_.toBuilder();
-              }
-              convars_ = input.readMessage(com.dota2.proto.Netmessages.CMsg_CVars.PARSER, extensionRegistry);
-              if (subBuilder != null) {
-                subBuilder.mergeFrom(convars_);
-                convars_ = subBuilder.buildPartial();
-              }
-              bitField0_ |= 0x00000001;
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SetConVar_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SetConVar_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_SetConVar.class, com.dota2.proto.Netmessages.CNETMsg_SetConVar.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_SetConVar> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_SetConVar>() {
-      public CNETMsg_SetConVar parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_SetConVar(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_SetConVar> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional .CMsg_CVars convars = 1;
-    public static final int CONVARS_FIELD_NUMBER = 1;
-    private com.dota2.proto.Netmessages.CMsg_CVars convars_;
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    public boolean hasConvars() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    public com.dota2.proto.Netmessages.CMsg_CVars getConvars() {
-      return convars_;
-    }
-    /**
-     * <code>optional .CMsg_CVars convars = 1;</code>
-     */
-    public com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
-      return convars_;
-    }
-
-    private void initFields() {
-      convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeMessage(1, convars_);
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeMessageSize(1, convars_);
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SetConVar parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_SetConVar prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_SetConVar}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_SetConVarOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SetConVar_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SetConVar_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_SetConVar.class, com.dota2.proto.Netmessages.CNETMsg_SetConVar.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_SetConVar.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-          getConvarsFieldBuilder();
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        if (convarsBuilder_ == null) {
-          convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
-        } else {
-          convarsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SetConVar_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SetConVar getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_SetConVar.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SetConVar build() {
-        com.dota2.proto.Netmessages.CNETMsg_SetConVar result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SetConVar buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_SetConVar result = new com.dota2.proto.Netmessages.CNETMsg_SetConVar(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        if (convarsBuilder_ == null) {
-          result.convars_ = convars_;
-        } else {
-          result.convars_ = convarsBuilder_.build();
-        }
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_SetConVar) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_SetConVar)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_SetConVar other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_SetConVar.getDefaultInstance()) return this;
-        if (other.hasConvars()) {
-          mergeConvars(other.getConvars());
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_SetConVar parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_SetConVar) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional .CMsg_CVars convars = 1;
-      private com.dota2.proto.Netmessages.CMsg_CVars convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
-      private com.google.protobuf.SingleFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder> convarsBuilder_;
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public boolean hasConvars() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars getConvars() {
-        if (convarsBuilder_ == null) {
-          return convars_;
-        } else {
-          return convarsBuilder_.getMessage();
-        }
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public Builder setConvars(com.dota2.proto.Netmessages.CMsg_CVars value) {
-        if (convarsBuilder_ == null) {
-          if (value == null) {
-            throw new NullPointerException();
-          }
-          convars_ = value;
-          onChanged();
-        } else {
-          convarsBuilder_.setMessage(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public Builder setConvars(
-          com.dota2.proto.Netmessages.CMsg_CVars.Builder builderForValue) {
-        if (convarsBuilder_ == null) {
-          convars_ = builderForValue.build();
-          onChanged();
-        } else {
-          convarsBuilder_.setMessage(builderForValue.build());
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public Builder mergeConvars(com.dota2.proto.Netmessages.CMsg_CVars value) {
-        if (convarsBuilder_ == null) {
-          if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              convars_ != com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance()) {
-            convars_ =
-              com.dota2.proto.Netmessages.CMsg_CVars.newBuilder(convars_).mergeFrom(value).buildPartial();
-          } else {
-            convars_ = value;
-          }
-          onChanged();
-        } else {
-          convarsBuilder_.mergeFrom(value);
-        }
-        bitField0_ |= 0x00000001;
-        return this;
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public Builder clearConvars() {
-        if (convarsBuilder_ == null) {
-          convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
-          onChanged();
-        } else {
-          convarsBuilder_.clear();
-        }
-        bitField0_ = (bitField0_ & ~0x00000001);
-        return this;
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVars.Builder getConvarsBuilder() {
-        bitField0_ |= 0x00000001;
-        onChanged();
-        return getConvarsFieldBuilder().getBuilder();
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      public com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
-        if (convarsBuilder_ != null) {
-          return convarsBuilder_.getMessageOrBuilder();
-        } else {
-          return convars_;
-        }
-      }
-      /**
-       * <code>optional .CMsg_CVars convars = 1;</code>
-       */
-      private com.google.protobuf.SingleFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder> 
-          getConvarsFieldBuilder() {
-        if (convarsBuilder_ == null) {
-          convarsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder>(
-                  convars_,
-                  getParentForChildren(),
-                  isClean());
-          convars_ = null;
-        }
-        return convarsBuilder_;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_SetConVar)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_SetConVar(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_SetConVar)
-  }
-
-  public interface CNETMsg_SignonStateOrBuilder
-      extends com.google.protobuf.MessageOrBuilder {
-
-    // optional uint32 signon_state = 1;
-    /**
-     * <code>optional uint32 signon_state = 1;</code>
-     */
-    boolean hasSignonState();
-    /**
-     * <code>optional uint32 signon_state = 1;</code>
-     */
-    int getSignonState();
-
-    // optional uint32 spawn_count = 2;
-    /**
-     * <code>optional uint32 spawn_count = 2;</code>
-     */
-    boolean hasSpawnCount();
-    /**
-     * <code>optional uint32 spawn_count = 2;</code>
-     */
-    int getSpawnCount();
-
-    // optional uint32 num_server_players = 3;
-    /**
-     * <code>optional uint32 num_server_players = 3;</code>
-     */
-    boolean hasNumServerPlayers();
-    /**
-     * <code>optional uint32 num_server_players = 3;</code>
-     */
-    int getNumServerPlayers();
-
-    // repeated string players_networkids = 4;
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    java.util.List<java.lang.String>
-    getPlayersNetworkidsList();
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    int getPlayersNetworkidsCount();
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    java.lang.String getPlayersNetworkids(int index);
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    com.google.protobuf.ByteString
-        getPlayersNetworkidsBytes(int index);
-
-    // optional string map_name = 5;
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    boolean hasMapName();
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    java.lang.String getMapName();
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    com.google.protobuf.ByteString
-        getMapNameBytes();
-  }
-  /**
-   * Protobuf type {@code CNETMsg_SignonState}
-   */
-  public static final class CNETMsg_SignonState extends
-      com.google.protobuf.GeneratedMessage
-      implements CNETMsg_SignonStateOrBuilder {
-    // Use CNETMsg_SignonState.newBuilder() to construct.
-    private CNETMsg_SignonState(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
-      super(builder);
-      this.unknownFields = builder.getUnknownFields();
-    }
-    private CNETMsg_SignonState(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
-
-    private static final CNETMsg_SignonState defaultInstance;
-    public static CNETMsg_SignonState getDefaultInstance() {
-      return defaultInstance;
-    }
-
-    public CNETMsg_SignonState getDefaultInstanceForType() {
-      return defaultInstance;
-    }
-
-    private final com.google.protobuf.UnknownFieldSet unknownFields;
-    @java.lang.Override
-    public final com.google.protobuf.UnknownFieldSet
-        getUnknownFields() {
-      return this.unknownFields;
-    }
-    private CNETMsg_SignonState(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      initFields();
-      int mutable_bitField0_ = 0;
-      com.google.protobuf.UnknownFieldSet.Builder unknownFields =
-          com.google.protobuf.UnknownFieldSet.newBuilder();
-      try {
-        boolean done = false;
-        while (!done) {
-          int tag = input.readTag();
-          switch (tag) {
-            case 0:
-              done = true;
-              break;
-            default: {
-              if (!parseUnknownField(input, unknownFields,
-                                     extensionRegistry, tag)) {
-                done = true;
-              }
-              break;
-            }
-            case 8: {
-              bitField0_ |= 0x00000001;
-              signonState_ = input.readUInt32();
-              break;
-            }
-            case 16: {
-              bitField0_ |= 0x00000002;
-              spawnCount_ = input.readUInt32();
-              break;
-            }
-            case 24: {
-              bitField0_ |= 0x00000004;
-              numServerPlayers_ = input.readUInt32();
-              break;
-            }
-            case 34: {
-              if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                playersNetworkids_ = new com.google.protobuf.LazyStringArrayList();
-                mutable_bitField0_ |= 0x00000008;
-              }
-              playersNetworkids_.add(input.readBytes());
-              break;
-            }
-            case 42: {
-              bitField0_ |= 0x00000008;
-              mapName_ = input.readBytes();
-              break;
-            }
-          }
-        }
-      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-        throw e.setUnfinishedMessage(this);
-      } catch (java.io.IOException e) {
-        throw new com.google.protobuf.InvalidProtocolBufferException(
-            e.getMessage()).setUnfinishedMessage(this);
-      } finally {
-        if (((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-          playersNetworkids_ = new com.google.protobuf.UnmodifiableLazyStringList(playersNetworkids_);
-        }
-        this.unknownFields = unknownFields.build();
-        makeExtensionsImmutable();
-      }
-    }
-    public static final com.google.protobuf.Descriptors.Descriptor
-        getDescriptor() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SignonState_descriptor;
-    }
-
-    protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-        internalGetFieldAccessorTable() {
-      return com.dota2.proto.Netmessages.internal_static_CNETMsg_SignonState_fieldAccessorTable
-          .ensureFieldAccessorsInitialized(
-              com.dota2.proto.Netmessages.CNETMsg_SignonState.class, com.dota2.proto.Netmessages.CNETMsg_SignonState.Builder.class);
-    }
-
-    public static com.google.protobuf.Parser<CNETMsg_SignonState> PARSER =
-        new com.google.protobuf.AbstractParser<CNETMsg_SignonState>() {
-      public CNETMsg_SignonState parsePartialFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws com.google.protobuf.InvalidProtocolBufferException {
-        return new CNETMsg_SignonState(input, extensionRegistry);
-      }
-    };
-
-    @java.lang.Override
-    public com.google.protobuf.Parser<CNETMsg_SignonState> getParserForType() {
-      return PARSER;
-    }
-
-    private int bitField0_;
-    // optional uint32 signon_state = 1;
-    public static final int SIGNON_STATE_FIELD_NUMBER = 1;
-    private int signonState_;
-    /**
-     * <code>optional uint32 signon_state = 1;</code>
-     */
-    public boolean hasSignonState() {
-      return ((bitField0_ & 0x00000001) == 0x00000001);
-    }
-    /**
-     * <code>optional uint32 signon_state = 1;</code>
-     */
-    public int getSignonState() {
-      return signonState_;
-    }
-
-    // optional uint32 spawn_count = 2;
-    public static final int SPAWN_COUNT_FIELD_NUMBER = 2;
-    private int spawnCount_;
-    /**
-     * <code>optional uint32 spawn_count = 2;</code>
-     */
-    public boolean hasSpawnCount() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>optional uint32 spawn_count = 2;</code>
-     */
-    public int getSpawnCount() {
-      return spawnCount_;
-    }
-
-    // optional uint32 num_server_players = 3;
-    public static final int NUM_SERVER_PLAYERS_FIELD_NUMBER = 3;
-    private int numServerPlayers_;
-    /**
-     * <code>optional uint32 num_server_players = 3;</code>
-     */
-    public boolean hasNumServerPlayers() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
-    }
-    /**
-     * <code>optional uint32 num_server_players = 3;</code>
-     */
-    public int getNumServerPlayers() {
-      return numServerPlayers_;
-    }
-
-    // repeated string players_networkids = 4;
-    public static final int PLAYERS_NETWORKIDS_FIELD_NUMBER = 4;
-    private com.google.protobuf.LazyStringList playersNetworkids_;
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    public java.util.List<java.lang.String>
-        getPlayersNetworkidsList() {
-      return playersNetworkids_;
-    }
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    public int getPlayersNetworkidsCount() {
-      return playersNetworkids_.size();
-    }
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    public java.lang.String getPlayersNetworkids(int index) {
-      return playersNetworkids_.get(index);
-    }
-    /**
-     * <code>repeated string players_networkids = 4;</code>
-     */
-    public com.google.protobuf.ByteString
-        getPlayersNetworkidsBytes(int index) {
-      return playersNetworkids_.getByteString(index);
-    }
-
-    // optional string map_name = 5;
-    public static final int MAP_NAME_FIELD_NUMBER = 5;
-    private java.lang.Object mapName_;
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    public boolean hasMapName() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
-    }
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    public java.lang.String getMapName() {
-      java.lang.Object ref = mapName_;
-      if (ref instanceof java.lang.String) {
-        return (java.lang.String) ref;
-      } else {
-        com.google.protobuf.ByteString bs = 
-            (com.google.protobuf.ByteString) ref;
-        java.lang.String s = bs.toStringUtf8();
-        if (bs.isValidUtf8()) {
-          mapName_ = s;
-        }
-        return s;
-      }
-    }
-    /**
-     * <code>optional string map_name = 5;</code>
-     */
-    public com.google.protobuf.ByteString
-        getMapNameBytes() {
-      java.lang.Object ref = mapName_;
-      if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
-            com.google.protobuf.ByteString.copyFromUtf8(
-                (java.lang.String) ref);
-        mapName_ = b;
-        return b;
-      } else {
-        return (com.google.protobuf.ByteString) ref;
-      }
-    }
-
-    private void initFields() {
-      signonState_ = 0;
-      spawnCount_ = 0;
-      numServerPlayers_ = 0;
-      playersNetworkids_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      mapName_ = "";
-    }
-    private byte memoizedIsInitialized = -1;
-    public final boolean isInitialized() {
-      byte isInitialized = memoizedIsInitialized;
-      if (isInitialized != -1) return isInitialized == 1;
-
-      memoizedIsInitialized = 1;
-      return true;
-    }
-
-    public void writeTo(com.google.protobuf.CodedOutputStream output)
-                        throws java.io.IOException {
-      getSerializedSize();
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeUInt32(1, signonState_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt32(2, spawnCount_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeUInt32(3, numServerPlayers_);
-      }
-      for (int i = 0; i < playersNetworkids_.size(); i++) {
-        output.writeBytes(4, playersNetworkids_.getByteString(i));
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeBytes(5, getMapNameBytes());
-      }
-      getUnknownFields().writeTo(output);
-    }
-
-    private int memoizedSerializedSize = -1;
-    public int getSerializedSize() {
-      int size = memoizedSerializedSize;
-      if (size != -1) return size;
-
-      size = 0;
-      if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(1, signonState_);
-      }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(2, spawnCount_);
-      }
-      if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(3, numServerPlayers_);
-      }
-      {
-        int dataSize = 0;
-        for (int i = 0; i < playersNetworkids_.size(); i++) {
-          dataSize += com.google.protobuf.CodedOutputStream
-            .computeBytesSizeNoTag(playersNetworkids_.getByteString(i));
-        }
-        size += dataSize;
-        size += 1 * getPlayersNetworkidsList().size();
-      }
-      if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(5, getMapNameBytes());
-      }
-      size += getUnknownFields().getSerializedSize();
-      memoizedSerializedSize = size;
-      return size;
-    }
-
-    private static final long serialVersionUID = 0L;
-    @java.lang.Override
-    protected java.lang.Object writeReplace()
-        throws java.io.ObjectStreamException {
-      return super.writeReplace();
-    }
-
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        com.google.protobuf.ByteString data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        com.google.protobuf.ByteString data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(byte[] data)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        byte[] data,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws com.google.protobuf.InvalidProtocolBufferException {
-      return PARSER.parseFrom(data, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseDelimitedFrom(java.io.InputStream input)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseDelimitedFrom(
-        java.io.InputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseDelimitedFrom(input, extensionRegistry);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        com.google.protobuf.CodedInputStream input)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input);
-    }
-    public static com.dota2.proto.Netmessages.CNETMsg_SignonState parseFrom(
-        com.google.protobuf.CodedInputStream input,
-        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-        throws java.io.IOException {
-      return PARSER.parseFrom(input, extensionRegistry);
-    }
-
-    public static Builder newBuilder() { return Builder.create(); }
-    public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(com.dota2.proto.Netmessages.CNETMsg_SignonState prototype) {
-      return newBuilder().mergeFrom(prototype);
-    }
-    public Builder toBuilder() { return newBuilder(this); }
-
-    @java.lang.Override
-    protected Builder newBuilderForType(
-        com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-      Builder builder = new Builder(parent);
-      return builder;
-    }
-    /**
-     * Protobuf type {@code CNETMsg_SignonState}
-     */
-    public static final class Builder extends
-        com.google.protobuf.GeneratedMessage.Builder<Builder>
-       implements com.dota2.proto.Netmessages.CNETMsg_SignonStateOrBuilder {
-      public static final com.google.protobuf.Descriptors.Descriptor
-          getDescriptor() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SignonState_descriptor;
-      }
-
-      protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
-          internalGetFieldAccessorTable() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SignonState_fieldAccessorTable
-            .ensureFieldAccessorsInitialized(
-                com.dota2.proto.Netmessages.CNETMsg_SignonState.class, com.dota2.proto.Netmessages.CNETMsg_SignonState.Builder.class);
-      }
-
-      // Construct using com.dota2.proto.Netmessages.CNETMsg_SignonState.newBuilder()
-      private Builder() {
-        maybeForceBuilderInitialization();
-      }
-
-      private Builder(
-          com.google.protobuf.GeneratedMessage.BuilderParent parent) {
-        super(parent);
-        maybeForceBuilderInitialization();
-      }
-      private void maybeForceBuilderInitialization() {
-        if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
-        }
-      }
-      private static Builder create() {
-        return new Builder();
-      }
-
-      public Builder clear() {
-        super.clear();
-        signonState_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000001);
-        spawnCount_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
-        numServerPlayers_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000004);
-        playersNetworkids_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        mapName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000010);
-        return this;
-      }
-
-      public Builder clone() {
-        return create().mergeFrom(buildPartial());
-      }
-
-      public com.google.protobuf.Descriptors.Descriptor
-          getDescriptorForType() {
-        return com.dota2.proto.Netmessages.internal_static_CNETMsg_SignonState_descriptor;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SignonState getDefaultInstanceForType() {
-        return com.dota2.proto.Netmessages.CNETMsg_SignonState.getDefaultInstance();
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SignonState build() {
-        com.dota2.proto.Netmessages.CNETMsg_SignonState result = buildPartial();
-        if (!result.isInitialized()) {
-          throw newUninitializedMessageException(result);
-        }
-        return result;
-      }
-
-      public com.dota2.proto.Netmessages.CNETMsg_SignonState buildPartial() {
-        com.dota2.proto.Netmessages.CNETMsg_SignonState result = new com.dota2.proto.Netmessages.CNETMsg_SignonState(this);
-        int from_bitField0_ = bitField0_;
-        int to_bitField0_ = 0;
-        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
-          to_bitField0_ |= 0x00000001;
-        }
-        result.signonState_ = signonState_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
-        }
-        result.spawnCount_ = spawnCount_;
-        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
-          to_bitField0_ |= 0x00000004;
-        }
-        result.numServerPlayers_ = numServerPlayers_;
-        if (((bitField0_ & 0x00000008) == 0x00000008)) {
-          playersNetworkids_ = new com.google.protobuf.UnmodifiableLazyStringList(
-              playersNetworkids_);
-          bitField0_ = (bitField0_ & ~0x00000008);
-        }
-        result.playersNetworkids_ = playersNetworkids_;
-        if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
-          to_bitField0_ |= 0x00000008;
-        }
-        result.mapName_ = mapName_;
-        result.bitField0_ = to_bitField0_;
-        onBuilt();
-        return result;
-      }
-
-      public Builder mergeFrom(com.google.protobuf.Message other) {
-        if (other instanceof com.dota2.proto.Netmessages.CNETMsg_SignonState) {
-          return mergeFrom((com.dota2.proto.Netmessages.CNETMsg_SignonState)other);
-        } else {
-          super.mergeFrom(other);
-          return this;
-        }
-      }
-
-      public Builder mergeFrom(com.dota2.proto.Netmessages.CNETMsg_SignonState other) {
-        if (other == com.dota2.proto.Netmessages.CNETMsg_SignonState.getDefaultInstance()) return this;
-        if (other.hasSignonState()) {
-          setSignonState(other.getSignonState());
-        }
-        if (other.hasSpawnCount()) {
-          setSpawnCount(other.getSpawnCount());
-        }
-        if (other.hasNumServerPlayers()) {
-          setNumServerPlayers(other.getNumServerPlayers());
-        }
-        if (!other.playersNetworkids_.isEmpty()) {
-          if (playersNetworkids_.isEmpty()) {
-            playersNetworkids_ = other.playersNetworkids_;
-            bitField0_ = (bitField0_ & ~0x00000008);
-          } else {
-            ensurePlayersNetworkidsIsMutable();
-            playersNetworkids_.addAll(other.playersNetworkids_);
-          }
-          onChanged();
-        }
-        if (other.hasMapName()) {
-          bitField0_ |= 0x00000010;
-          mapName_ = other.mapName_;
-          onChanged();
-        }
-        this.mergeUnknownFields(other.getUnknownFields());
-        return this;
-      }
-
-      public final boolean isInitialized() {
-        return true;
-      }
-
-      public Builder mergeFrom(
-          com.google.protobuf.CodedInputStream input,
-          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
-          throws java.io.IOException {
-        com.dota2.proto.Netmessages.CNETMsg_SignonState parsedMessage = null;
-        try {
-          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
-        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (com.dota2.proto.Netmessages.CNETMsg_SignonState) e.getUnfinishedMessage();
-          throw e;
-        } finally {
-          if (parsedMessage != null) {
-            mergeFrom(parsedMessage);
-          }
-        }
-        return this;
-      }
-      private int bitField0_;
-
-      // optional uint32 signon_state = 1;
-      private int signonState_ ;
-      /**
-       * <code>optional uint32 signon_state = 1;</code>
-       */
-      public boolean hasSignonState() {
-        return ((bitField0_ & 0x00000001) == 0x00000001);
-      }
-      /**
-       * <code>optional uint32 signon_state = 1;</code>
-       */
-      public int getSignonState() {
-        return signonState_;
-      }
-      /**
-       * <code>optional uint32 signon_state = 1;</code>
-       */
-      public Builder setSignonState(int value) {
-        bitField0_ |= 0x00000001;
-        signonState_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 signon_state = 1;</code>
-       */
-      public Builder clearSignonState() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        signonState_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 spawn_count = 2;
-      private int spawnCount_ ;
-      /**
-       * <code>optional uint32 spawn_count = 2;</code>
-       */
-      public boolean hasSpawnCount() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>optional uint32 spawn_count = 2;</code>
-       */
-      public int getSpawnCount() {
-        return spawnCount_;
-      }
-      /**
-       * <code>optional uint32 spawn_count = 2;</code>
-       */
-      public Builder setSpawnCount(int value) {
-        bitField0_ |= 0x00000002;
-        spawnCount_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 spawn_count = 2;</code>
-       */
-      public Builder clearSpawnCount() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        spawnCount_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // optional uint32 num_server_players = 3;
-      private int numServerPlayers_ ;
-      /**
-       * <code>optional uint32 num_server_players = 3;</code>
-       */
-      public boolean hasNumServerPlayers() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
-      }
-      /**
-       * <code>optional uint32 num_server_players = 3;</code>
-       */
-      public int getNumServerPlayers() {
-        return numServerPlayers_;
-      }
-      /**
-       * <code>optional uint32 num_server_players = 3;</code>
-       */
-      public Builder setNumServerPlayers(int value) {
-        bitField0_ |= 0x00000004;
-        numServerPlayers_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional uint32 num_server_players = 3;</code>
-       */
-      public Builder clearNumServerPlayers() {
-        bitField0_ = (bitField0_ & ~0x00000004);
-        numServerPlayers_ = 0;
-        onChanged();
-        return this;
-      }
-
-      // repeated string players_networkids = 4;
-      private com.google.protobuf.LazyStringList playersNetworkids_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-      private void ensurePlayersNetworkidsIsMutable() {
-        if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          playersNetworkids_ = new com.google.protobuf.LazyStringArrayList(playersNetworkids_);
-          bitField0_ |= 0x00000008;
-         }
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public java.util.List<java.lang.String>
-          getPlayersNetworkidsList() {
-        return java.util.Collections.unmodifiableList(playersNetworkids_);
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public int getPlayersNetworkidsCount() {
-        return playersNetworkids_.size();
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public java.lang.String getPlayersNetworkids(int index) {
-        return playersNetworkids_.get(index);
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public com.google.protobuf.ByteString
-          getPlayersNetworkidsBytes(int index) {
-        return playersNetworkids_.getByteString(index);
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public Builder setPlayersNetworkids(
-          int index, java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensurePlayersNetworkidsIsMutable();
-        playersNetworkids_.set(index, value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public Builder addPlayersNetworkids(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensurePlayersNetworkidsIsMutable();
-        playersNetworkids_.add(value);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public Builder addAllPlayersNetworkids(
-          java.lang.Iterable<java.lang.String> values) {
-        ensurePlayersNetworkidsIsMutable();
-        super.addAll(values, playersNetworkids_);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public Builder clearPlayersNetworkids() {
-        playersNetworkids_ = com.google.protobuf.LazyStringArrayList.EMPTY;
-        bitField0_ = (bitField0_ & ~0x00000008);
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>repeated string players_networkids = 4;</code>
-       */
-      public Builder addPlayersNetworkidsBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  ensurePlayersNetworkidsIsMutable();
-        playersNetworkids_.add(value);
-        onChanged();
-        return this;
-      }
-
-      // optional string map_name = 5;
-      private java.lang.Object mapName_ = "";
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public boolean hasMapName() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
-      }
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public java.lang.String getMapName() {
-        java.lang.Object ref = mapName_;
-        if (!(ref instanceof java.lang.String)) {
-          java.lang.String s = ((com.google.protobuf.ByteString) ref)
-              .toStringUtf8();
-          mapName_ = s;
-          return s;
-        } else {
-          return (java.lang.String) ref;
-        }
-      }
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public com.google.protobuf.ByteString
-          getMapNameBytes() {
-        java.lang.Object ref = mapName_;
-        if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
-              com.google.protobuf.ByteString.copyFromUtf8(
-                  (java.lang.String) ref);
-          mapName_ = b;
-          return b;
-        } else {
-          return (com.google.protobuf.ByteString) ref;
-        }
-      }
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public Builder setMapName(
-          java.lang.String value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        mapName_ = value;
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public Builder clearMapName() {
-        bitField0_ = (bitField0_ & ~0x00000010);
-        mapName_ = getDefaultInstance().getMapName();
-        onChanged();
-        return this;
-      }
-      /**
-       * <code>optional string map_name = 5;</code>
-       */
-      public Builder setMapNameBytes(
-          com.google.protobuf.ByteString value) {
-        if (value == null) {
-    throw new NullPointerException();
-  }
-  bitField0_ |= 0x00000010;
-        mapName_ = value;
-        onChanged();
-        return this;
-      }
-
-      // @@protoc_insertion_point(builder_scope:CNETMsg_SignonState)
-    }
-
-    static {
-      defaultInstance = new CNETMsg_SignonState(true);
-      defaultInstance.initFields();
-    }
-
-    // @@protoc_insertion_point(class_scope:CNETMsg_SignonState)
   }
 
   public interface CCLCMsg_ClientInfoOrBuilder
@@ -8372,6 +2277,16 @@ public final class Netmessages {
      * <code>optional uint32 uncompressed_sample_offset = 6;</code>
      */
     int getUncompressedSampleOffset();
+
+    // optional uint32 tick = 7;
+    /**
+     * <code>optional uint32 tick = 7;</code>
+     */
+    boolean hasTick();
+    /**
+     * <code>optional uint32 tick = 7;</code>
+     */
+    int getTick();
   }
   /**
    * Protobuf type {@code CCLCMsg_VoiceData}
@@ -8458,6 +2373,11 @@ public final class Netmessages {
             case 48: {
               bitField0_ |= 0x00000020;
               uncompressedSampleOffset_ = input.readUInt32();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
+              tick_ = input.readUInt32();
               break;
             }
           }
@@ -8596,6 +2516,22 @@ public final class Netmessages {
       return uncompressedSampleOffset_;
     }
 
+    // optional uint32 tick = 7;
+    public static final int TICK_FIELD_NUMBER = 7;
+    private int tick_;
+    /**
+     * <code>optional uint32 tick = 7;</code>
+     */
+    public boolean hasTick() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional uint32 tick = 7;</code>
+     */
+    public int getTick() {
+      return tick_;
+    }
+
     private void initFields() {
       data_ = com.google.protobuf.ByteString.EMPTY;
       xuid_ = 0L;
@@ -8603,6 +2539,7 @@ public final class Netmessages {
       sequenceBytes_ = 0;
       sectionNumber_ = 0;
       uncompressedSampleOffset_ = 0;
+      tick_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -8633,6 +2570,9 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         output.writeUInt32(6, uncompressedSampleOffset_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeUInt32(7, tick_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -8666,6 +2606,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(6, uncompressedSampleOffset_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(7, tick_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -8795,6 +2739,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000010);
         uncompressedSampleOffset_ = 0;
         bitField0_ = (bitField0_ & ~0x00000020);
+        tick_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
         return this;
       }
 
@@ -8847,6 +2793,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000020;
         }
         result.uncompressedSampleOffset_ = uncompressedSampleOffset_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.tick_ = tick_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -8880,6 +2830,9 @@ public final class Netmessages {
         }
         if (other.hasUncompressedSampleOffset()) {
           setUncompressedSampleOffset(other.getUncompressedSampleOffset());
+        }
+        if (other.hasTick()) {
+          setTick(other.getTick());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -9108,6 +3061,39 @@ public final class Netmessages {
       public Builder clearUncompressedSampleOffset() {
         bitField0_ = (bitField0_ & ~0x00000020);
         uncompressedSampleOffset_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 tick = 7;
+      private int tick_ ;
+      /**
+       * <code>optional uint32 tick = 7;</code>
+       */
+      public boolean hasTick() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional uint32 tick = 7;</code>
+       */
+      public int getTick() {
+        return tick_;
+      }
+      /**
+       * <code>optional uint32 tick = 7;</code>
+       */
+      public Builder setTick(int value) {
+        bitField0_ |= 0x00000040;
+        tick_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 tick = 7;</code>
+       */
+      public Builder clearTick() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        tick_ = 0;
         onChanged();
         return this;
       }
@@ -12132,11 +6118,11 @@ public final class Netmessages {
     /**
      * <code>optional .CMsg_CVars convars = 1;</code>
      */
-    com.dota2.proto.Netmessages.CMsg_CVars getConvars();
+    com.dota2.proto.Networkbasetypes.CMsg_CVars getConvars();
     /**
      * <code>optional .CMsg_CVars convars = 1;</code>
      */
-    com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder();
+    com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder getConvarsOrBuilder();
   }
   /**
    * Protobuf type {@code CCLCMsg_SplitPlayerConnect}
@@ -12190,11 +6176,11 @@ public final class Netmessages {
               break;
             }
             case 10: {
-              com.dota2.proto.Netmessages.CMsg_CVars.Builder subBuilder = null;
+              com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 subBuilder = convars_.toBuilder();
               }
-              convars_ = input.readMessage(com.dota2.proto.Netmessages.CMsg_CVars.PARSER, extensionRegistry);
+              convars_ = input.readMessage(com.dota2.proto.Networkbasetypes.CMsg_CVars.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(convars_);
                 convars_ = subBuilder.buildPartial();
@@ -12244,7 +6230,7 @@ public final class Netmessages {
     private int bitField0_;
     // optional .CMsg_CVars convars = 1;
     public static final int CONVARS_FIELD_NUMBER = 1;
-    private com.dota2.proto.Netmessages.CMsg_CVars convars_;
+    private com.dota2.proto.Networkbasetypes.CMsg_CVars convars_;
     /**
      * <code>optional .CMsg_CVars convars = 1;</code>
      */
@@ -12254,18 +6240,18 @@ public final class Netmessages {
     /**
      * <code>optional .CMsg_CVars convars = 1;</code>
      */
-    public com.dota2.proto.Netmessages.CMsg_CVars getConvars() {
+    public com.dota2.proto.Networkbasetypes.CMsg_CVars getConvars() {
       return convars_;
     }
     /**
      * <code>optional .CMsg_CVars convars = 1;</code>
      */
-    public com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
+    public com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
       return convars_;
     }
 
     private void initFields() {
-      convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
+      convars_ = com.dota2.proto.Networkbasetypes.CMsg_CVars.getDefaultInstance();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -12413,7 +6399,7 @@ public final class Netmessages {
       public Builder clear() {
         super.clear();
         if (convarsBuilder_ == null) {
-          convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
+          convars_ = com.dota2.proto.Networkbasetypes.CMsg_CVars.getDefaultInstance();
         } else {
           convarsBuilder_.clear();
         }
@@ -12501,9 +6487,9 @@ public final class Netmessages {
       private int bitField0_;
 
       // optional .CMsg_CVars convars = 1;
-      private com.dota2.proto.Netmessages.CMsg_CVars convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
+      private com.dota2.proto.Networkbasetypes.CMsg_CVars convars_ = com.dota2.proto.Networkbasetypes.CMsg_CVars.getDefaultInstance();
       private com.google.protobuf.SingleFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder> convarsBuilder_;
+          com.dota2.proto.Networkbasetypes.CMsg_CVars, com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder, com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder> convarsBuilder_;
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
@@ -12513,7 +6499,7 @@ public final class Netmessages {
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
-      public com.dota2.proto.Netmessages.CMsg_CVars getConvars() {
+      public com.dota2.proto.Networkbasetypes.CMsg_CVars getConvars() {
         if (convarsBuilder_ == null) {
           return convars_;
         } else {
@@ -12523,7 +6509,7 @@ public final class Netmessages {
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
-      public Builder setConvars(com.dota2.proto.Netmessages.CMsg_CVars value) {
+      public Builder setConvars(com.dota2.proto.Networkbasetypes.CMsg_CVars value) {
         if (convarsBuilder_ == null) {
           if (value == null) {
             throw new NullPointerException();
@@ -12540,7 +6526,7 @@ public final class Netmessages {
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
       public Builder setConvars(
-          com.dota2.proto.Netmessages.CMsg_CVars.Builder builderForValue) {
+          com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder builderForValue) {
         if (convarsBuilder_ == null) {
           convars_ = builderForValue.build();
           onChanged();
@@ -12553,12 +6539,12 @@ public final class Netmessages {
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
-      public Builder mergeConvars(com.dota2.proto.Netmessages.CMsg_CVars value) {
+      public Builder mergeConvars(com.dota2.proto.Networkbasetypes.CMsg_CVars value) {
         if (convarsBuilder_ == null) {
           if (((bitField0_ & 0x00000001) == 0x00000001) &&
-              convars_ != com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance()) {
+              convars_ != com.dota2.proto.Networkbasetypes.CMsg_CVars.getDefaultInstance()) {
             convars_ =
-              com.dota2.proto.Netmessages.CMsg_CVars.newBuilder(convars_).mergeFrom(value).buildPartial();
+              com.dota2.proto.Networkbasetypes.CMsg_CVars.newBuilder(convars_).mergeFrom(value).buildPartial();
           } else {
             convars_ = value;
           }
@@ -12574,7 +6560,7 @@ public final class Netmessages {
        */
       public Builder clearConvars() {
         if (convarsBuilder_ == null) {
-          convars_ = com.dota2.proto.Netmessages.CMsg_CVars.getDefaultInstance();
+          convars_ = com.dota2.proto.Networkbasetypes.CMsg_CVars.getDefaultInstance();
           onChanged();
         } else {
           convarsBuilder_.clear();
@@ -12585,7 +6571,7 @@ public final class Netmessages {
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
-      public com.dota2.proto.Netmessages.CMsg_CVars.Builder getConvarsBuilder() {
+      public com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder getConvarsBuilder() {
         bitField0_ |= 0x00000001;
         onChanged();
         return getConvarsFieldBuilder().getBuilder();
@@ -12593,7 +6579,7 @@ public final class Netmessages {
       /**
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
-      public com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
+      public com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder getConvarsOrBuilder() {
         if (convarsBuilder_ != null) {
           return convarsBuilder_.getMessageOrBuilder();
         } else {
@@ -12604,11 +6590,11 @@ public final class Netmessages {
        * <code>optional .CMsg_CVars convars = 1;</code>
        */
       private com.google.protobuf.SingleFieldBuilder<
-          com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder> 
+          com.dota2.proto.Networkbasetypes.CMsg_CVars, com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder, com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder> 
           getConvarsFieldBuilder() {
         if (convarsBuilder_ == null) {
           convarsBuilder_ = new com.google.protobuf.SingleFieldBuilder<
-              com.dota2.proto.Netmessages.CMsg_CVars, com.dota2.proto.Netmessages.CMsg_CVars.Builder, com.dota2.proto.Netmessages.CMsg_CVarsOrBuilder>(
+              com.dota2.proto.Networkbasetypes.CMsg_CVars, com.dota2.proto.Networkbasetypes.CMsg_CVars.Builder, com.dota2.proto.Networkbasetypes.CMsg_CVarsOrBuilder>(
                   convars_,
                   getParentForChildren(),
                   isClean());
@@ -32539,6 +26525,16 @@ public final class Netmessages {
      * <code>optional uint32 uncompressed_sample_offset = 9;</code>
      */
     int getUncompressedSampleOffset();
+
+    // optional uint32 tick = 10;
+    /**
+     * <code>optional uint32 tick = 10;</code>
+     */
+    boolean hasTick();
+    /**
+     * <code>optional uint32 tick = 10;</code>
+     */
+    int getTick();
   }
   /**
    * Protobuf type {@code CSVCMsg_VoiceData}
@@ -32640,6 +26636,11 @@ public final class Netmessages {
             case 72: {
               bitField0_ |= 0x00000100;
               uncompressedSampleOffset_ = input.readUInt32();
+              break;
+            }
+            case 80: {
+              bitField0_ |= 0x00000200;
+              tick_ = input.readUInt32();
               break;
             }
           }
@@ -32826,6 +26827,22 @@ public final class Netmessages {
       return uncompressedSampleOffset_;
     }
 
+    // optional uint32 tick = 10;
+    public static final int TICK_FIELD_NUMBER = 10;
+    private int tick_;
+    /**
+     * <code>optional uint32 tick = 10;</code>
+     */
+    public boolean hasTick() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    /**
+     * <code>optional uint32 tick = 10;</code>
+     */
+    public int getTick() {
+      return tick_;
+    }
+
     private void initFields() {
       client_ = 0;
       proximity_ = false;
@@ -32836,6 +26853,7 @@ public final class Netmessages {
       sequenceBytes_ = 0;
       sectionNumber_ = 0;
       uncompressedSampleOffset_ = 0;
+      tick_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -32875,6 +26893,9 @@ public final class Netmessages {
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         output.writeUInt32(9, uncompressedSampleOffset_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeUInt32(10, tick_);
       }
       getUnknownFields().writeTo(output);
     }
@@ -32920,6 +26941,10 @@ public final class Netmessages {
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt32Size(9, uncompressedSampleOffset_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(10, tick_);
       }
       size += getUnknownFields().getSerializedSize();
       memoizedSerializedSize = size;
@@ -33055,6 +27080,8 @@ public final class Netmessages {
         bitField0_ = (bitField0_ & ~0x00000080);
         uncompressedSampleOffset_ = 0;
         bitField0_ = (bitField0_ & ~0x00000100);
+        tick_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -33119,6 +27146,10 @@ public final class Netmessages {
           to_bitField0_ |= 0x00000100;
         }
         result.uncompressedSampleOffset_ = uncompressedSampleOffset_;
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.tick_ = tick_;
         result.bitField0_ = to_bitField0_;
         onBuilt();
         return result;
@@ -33161,6 +27192,9 @@ public final class Netmessages {
         }
         if (other.hasUncompressedSampleOffset()) {
           setUncompressedSampleOffset(other.getUncompressedSampleOffset());
+        }
+        if (other.hasTick()) {
+          setTick(other.getTick());
         }
         this.mergeUnknownFields(other.getUnknownFields());
         return this;
@@ -33488,6 +27522,39 @@ public final class Netmessages {
       public Builder clearUncompressedSampleOffset() {
         bitField0_ = (bitField0_ & ~0x00000100);
         uncompressedSampleOffset_ = 0;
+        onChanged();
+        return this;
+      }
+
+      // optional uint32 tick = 10;
+      private int tick_ ;
+      /**
+       * <code>optional uint32 tick = 10;</code>
+       */
+      public boolean hasTick() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional uint32 tick = 10;</code>
+       */
+      public int getTick() {
+        return tick_;
+      }
+      /**
+       * <code>optional uint32 tick = 10;</code>
+       */
+      public Builder setTick(int value) {
+        bitField0_ |= 0x00000200;
+        tick_ = value;
+        onChanged();
+        return this;
+      }
+      /**
+       * <code>optional uint32 tick = 10;</code>
+       */
+      public Builder clearTick() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        tick_ = 0;
         onChanged();
         return this;
       }
@@ -34623,56 +28690,6 @@ public final class Netmessages {
   }
 
   private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CMsg_CVars_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CMsg_CVars_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CMsg_CVars_CVar_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CMsg_CVars_CVar_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_NOP_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_NOP_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_Disconnect_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_Disconnect_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_File_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_File_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_SplitScreenUser_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_SplitScreenUser_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_Tick_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_Tick_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_StringCmd_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_StringCmd_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_SetConVar_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_SetConVar_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
-    internal_static_CNETMsg_SignonState_descriptor;
-  private static
-    com.google.protobuf.GeneratedMessage.FieldAccessorTable
-      internal_static_CNETMsg_SignonState_fieldAccessorTable;
-  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_CCLCMsg_ClientInfo_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -34872,295 +28889,210 @@ public final class Netmessages {
   static {
     java.lang.String[] descriptorData = {
       "\n\021netmessages.proto\032 google/protobuf/des" +
-      "criptor.proto\032\026networkbasetypes.proto\032\030n" +
-      "etwork_connection.proto\"R\n\nCMsg_CVars\022\037\n" +
-      "\005cvars\030\001 \003(\0132\020.CMsg_CVars.CVar\032#\n\004CVar\022\014" +
-      "\n\004name\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\r\n\013CNETMsg_N" +
-      "OP\"w\n\022CNETMsg_Disconnect\022\027\n\017text_depreca" +
-      "ted\030\001 \001(\t\022H\n\006reason\030\002 \001(\0162\034.ENetworkDisc" +
-      "onnectionReason:\032NETWORK_DISCONNECT_INVA" +
-      "LID\"a\n\014CNETMsg_File\022\023\n\013transfer_id\030\001 \001(\005" +
-      "\022\021\n\tfile_name\030\002 \001(\t\022\033\n\023is_replay_demo_fi",
-      "le\030\003 \001(\010\022\014\n\004deny\030\004 \001(\010\"\'\n\027CNETMsg_SplitS" +
-      "creenUser\022\014\n\004slot\030\001 \001(\005\"\345\001\n\014CNETMsg_Tick" +
-      "\022\014\n\004tick\030\001 \001(\r\022!\n\031host_frametime_depreca" +
-      "ted\030\002 \001(\r\022/\n\'host_frametime_std_deviatio" +
-      "n_deprecated\030\003 \001(\r\022\034\n\024host_computationti" +
-      "me\030\004 \001(\r\022*\n\"host_computationtime_std_dev" +
-      "iation\030\005 \001(\r\022)\n!host_framestarttime_std_" +
-      "deviation\030\006 \001(\r\"$\n\021CNETMsg_StringCmd\022\017\n\007" +
-      "command\030\001 \001(\t\"1\n\021CNETMsg_SetConVar\022\034\n\007co" +
-      "nvars\030\001 \001(\0132\013.CMsg_CVars\"\212\001\n\023CNETMsg_Sig",
-      "nonState\022\024\n\014signon_state\030\001 \001(\r\022\023\n\013spawn_" +
-      "count\030\002 \001(\r\022\032\n\022num_server_players\030\003 \001(\r\022" +
-      "\032\n\022players_networkids\030\004 \003(\t\022\020\n\010map_name\030" +
-      "\005 \001(\t\"\246\001\n\022CCLCMsg_ClientInfo\022\026\n\016send_tab" +
-      "le_crc\030\001 \001(\007\022\024\n\014server_count\030\002 \001(\r\022\017\n\007is" +
-      "_hltv\030\003 \001(\010\022\021\n\tis_replay\030\004 \001(\010\022\022\n\nfriend" +
-      "s_id\030\005 \001(\r\022\024\n\014friends_name\030\006 \001(\t\022\024\n\014cust" +
-      "om_files\030\007 \003(\007\"S\n\014CCLCMsg_Move\022\033\n\023num_ba" +
-      "ckup_commands\030\001 \001(\r\022\030\n\020num_new_commands\030" +
-      "\002 \001(\r\022\014\n\004data\030\003 \001(\014\"\277\001\n\021CCLCMsg_VoiceDat",
-      "a\022\014\n\004data\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030" +
-      "\003 \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_FOR" +
-      "MAT_STEAM\022\026\n\016sequence_bytes\030\004 \001(\005\022\026\n\016sec" +
-      "tion_number\030\005 \001(\r\022\"\n\032uncompressed_sample" +
-      "_offset\030\006 \001(\r\"A\n\023CCLCMsg_BaselineAck\022\025\n\r" +
-      "baseline_tick\030\001 \001(\005\022\023\n\013baseline_nr\030\002 \001(\005" +
-      "\"*\n\024CCLCMsg_ListenEvents\022\022\n\nevent_mask\030\001" +
-      " \003(\007\"\\\n\030CCLCMsg_RespondCvarValue\022\016\n\006cook" +
-      "ie\030\001 \001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004name\030\003 " +
-      "\001(\t\022\r\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_FileCRCChe",
-      "ck\022\021\n\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(\t\022\025\n\rc" +
-      "ode_filename\030\003 \001(\005\022\020\n\010filename\030\004 \001(\t\022\013\n\003" +
-      "crc\030\005 \001(\007\"+\n\027CCLCMsg_LoadingProgress\022\020\n\010" +
-      "progress\030\001 \001(\005\":\n\032CCLCMsg_SplitPlayerCon" +
-      "nect\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars\"7\n\025CC" +
-      "LCMsg_ClientMessage\022\020\n\010msg_type\030\001 \001(\005\022\014\n" +
-      "\004data\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo\022\020\n\010pr" +
-      "otocol\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005\022\024\n\014is" +
-      "_dedicated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022\021\n\tis_" +
-      "replay\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_crc\030\007 ",
-      "\001(\007\022\022\n\nclient_crc\030\010 \001(\007\022\030\n\020string_table_" +
-      "crc\030\t \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013max_cl" +
-      "asses\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025\n\rtick" +
-      "_interval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022\020\n\010map" +
-      "_name\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\thost_na" +
-      "me\030\021 \001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021CSVCMsg" +
-      "_ClassInfo\022\030\n\020create_on_client\030\001 \001(\010\022+\n\007" +
-      "classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo.class_" +
-      "t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017data_t" +
-      "able_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(\t\"\"\n\020C",
-      "SVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n\021CSVCM" +
-      "sg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005codec\030\002" +
-      " \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMsg_Prin" +
-      "t\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds\022\026\n\016re" +
-      "liable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\0132\033.CSV" +
-      "CMsg_Sounds.sounddata_t\032\336\002\n\013sounddata_t\022" +
-      "\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(\021\022\020\n\010o" +
-      "rigin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013delay_v" +
-      "alue\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(\005\022\024\n\014e" +
-      "ntity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005\022\r\n\005pi",
-      "tch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_num\030\013 " +
-      "\001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016speaker" +
-      "_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005\022\023\n\013so" +
-      "und_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001(\010\022\022\n\n" +
-      "is_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefetch\022\023\n\013" +
-      "sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetView\022\024\n\014" +
-      "entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixAngle\022\020" +
-      "\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013.CMsgQA" +
-      "ngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005angle\030" +
-      "\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSPDecal\022",
-      "\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal_textu" +
-      "re_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001(\005\022\023\n\013" +
-      "model_index\030\004 \001(\005\022\024\n\014low_priority\030\005 \001(\010\"" +
-      "z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001(\0162\030.E" +
-      "SplitScreenMessageType:\027MSG_SPLITSCREEN_" +
-      "ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_index\030\003 " +
-      "\001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006cookie\030\001 " +
-      "\001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_Menu\022\023" +
-      "\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_values\030\002" +
-      " \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_end\030\001 \001",
-      "(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneeds_deco" +
-      "der\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg_SendT" +
-      "able.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004type\030\001" +
-      " \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 \001(\005\022\020\n" +
-      "\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024\n\014num_" +
-      "elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022\022\n\nhig" +
-      "h_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001\n\025CSVC" +
-      "Msg_GameEventList\0228\n\013descriptors\030\001 \003(\0132#" +
-      ".CSVCMsg_GameEventList.descriptor_t\032#\n\005k" +
-      "ey_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y\n\014desc",
-      "riptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\022" +
-      "*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventList.ke" +
-      "y_t\"\310\001\n\026CSVCMsg_PacketEntities\022\023\n\013max_en" +
-      "tries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001(\005\022\020\n\010" +
-      "is_delta\030\003 \001(\010\022\027\n\017update_baseline\030\004 \001(\010\022" +
-      "\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 \001(\005\022\023\n" +
-      "\013entity_data\030\007 \001(\014\022\032\n\022pending_full_frame" +
-      "\030\010 \001(\010\"R\n\024CSVCMsg_TempEntities\022\020\n\010reliab" +
-      "le\030\001 \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013entity_" +
-      "data\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStringTable",
-      "\022\014\n\004name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001(\005\022\023\n\013n" +
-      "um_entries\030\003 \001(\005\022\034\n\024user_data_fixed_size" +
-      "\030\004 \001(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n\023user_d" +
-      "ata_size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(\005\022\023\n\013st" +
-      "ring_data\030\010 \001(\014\"_\n\031CSVCMsg_UpdateStringT" +
-      "able\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_changed_en" +
-      "tries\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"\376\001\n\021CSV" +
-      "CMsg_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n\tproxim" +
-      "ity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audible_mask\030" +
-      "\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006format\030\006 \001(",
-      "\0162\022.VoiceDataFormat_t:\026VOICEDATA_FORMAT_" +
-      "STEAM\022\026\n\016sequence_bytes\030\007 \001(\005\022\026\n\016section" +
-      "_number\030\010 \001(\r\022\"\n\032uncompressed_sample_off" +
-      "set\030\t \001(\r\"<\n\026CSVCMsg_PacketReliable\022\014\n\004t" +
-      "ick\030\001 \001(\005\022\024\n\014messagessize\030\002 \001(\005\"T\n\026CSVCM" +
-      "sg_FullFrameSplit\022\014\n\004tick\030\001 \001(\005\022\017\n\007secti" +
-      "on\030\002 \001(\005\022\r\n\005total\030\003 \001(\005\022\014\n\004data\030\004 \001(\014*\237\001" +
-      "\n\014NET_Messages\022\013\n\007net_NOP\020\000\022\022\n\016net_Disco" +
-      "nnect\020\001\022\014\n\010net_File\020\002\022\027\n\023net_SplitScreen" +
-      "User\020\003\022\014\n\010net_Tick\020\004\022\021\n\rnet_StringCmd\020\005\022",
-      "\021\n\rnet_SetConVar\020\006\022\023\n\017net_SignonState\020\007*" +
-      "\352\001\n\014CLC_Messages\022\022\n\016clc_ClientInfo\020\010\022\014\n\010" +
-      "clc_Move\020\t\022\021\n\rclc_VoiceData\020\n\022\023\n\017clc_Bas" +
-      "elineAck\020\013\022\024\n\020clc_ListenEvents\020\014\022\030\n\024clc_" +
-      "RespondCvarValue\020\r\022\024\n\020clc_FileCRCCheck\020\016" +
-      "\022\027\n\023clc_LoadingProgress\020\017\022\032\n\026clc_SplitPl" +
-      "ayerConnect\020\020\022\025\n\021clc_ClientMessage\020\021*L\n\021" +
-      "VoiceDataFormat_t\022\032\n\026VOICEDATA_FORMAT_ST" +
-      "EAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001*\241\004\n\014S" +
-      "VC_Messages\022\022\n\016svc_ServerInfo\020\010\022\021\n\rsvc_S",
-      "endTable\020\t\022\021\n\rsvc_ClassInfo\020\n\022\020\n\014svc_Set" +
-      "Pause\020\013\022\031\n\025svc_CreateStringTable\020\014\022\031\n\025sv" +
-      "c_UpdateStringTable\020\r\022\021\n\rsvc_VoiceInit\020\016" +
-      "\022\021\n\rsvc_VoiceData\020\017\022\r\n\tsvc_Print\020\020\022\016\n\nsv" +
-      "c_Sounds\020\021\022\017\n\013svc_SetView\020\022\022\020\n\014svc_FixAn" +
-      "gle\020\023\022\026\n\022svc_CrosshairAngle\020\024\022\020\n\014svc_BSP" +
-      "Decal\020\025\022\023\n\017svc_SplitScreen\020\026\022\023\n\017svc_User" +
-      "Message\020\027\022\025\n\021svc_EntityMessage\020\030\022\021\n\rsvc_" +
-      "GameEvent\020\031\022\026\n\022svc_PacketEntities\020\032\022\024\n\020s" +
-      "vc_TempEntities\020\033\022\020\n\014svc_Prefetch\020\034\022\014\n\010s",
-      "vc_Menu\020\035\022\025\n\021svc_GameEventList\020\036\022\024\n\020svc_" +
-      "GetCvarValue\020\037\022\026\n\022svc_PacketReliable\020 \022\026" +
-      "\n\022svc_FullFrameSplit\020!*V\n\027ESplitScreenMe" +
-      "ssageType\022\033\n\027MSG_SPLITSCREEN_ADDUSER\020\000\022\036" +
-      "\n\032MSG_SPLITSCREEN_REMOVEUSER\020\001B\021\n\017com.do" +
-      "ta2.proto"
+      "criptor.proto\032\026networkbasetypes.proto\"\246\001" +
+      "\n\022CCLCMsg_ClientInfo\022\026\n\016send_table_crc\030\001" +
+      " \001(\007\022\024\n\014server_count\030\002 \001(\r\022\017\n\007is_hltv\030\003 " +
+      "\001(\010\022\021\n\tis_replay\030\004 \001(\010\022\022\n\nfriends_id\030\005 \001" +
+      "(\r\022\024\n\014friends_name\030\006 \001(\t\022\024\n\014custom_files" +
+      "\030\007 \003(\007\"S\n\014CCLCMsg_Move\022\033\n\023num_backup_com" +
+      "mands\030\001 \001(\r\022\030\n\020num_new_commands\030\002 \001(\r\022\014\n" +
+      "\004data\030\003 \001(\014\"\315\001\n\021CCLCMsg_VoiceData\022\014\n\004dat" +
+      "a\030\001 \001(\014\022\014\n\004xuid\030\002 \001(\006\022:\n\006format\030\003 \001(\0162\022.",
+      "VoiceDataFormat_t:\026VOICEDATA_FORMAT_STEA" +
+      "M\022\026\n\016sequence_bytes\030\004 \001(\005\022\026\n\016section_num" +
+      "ber\030\005 \001(\r\022\"\n\032uncompressed_sample_offset\030" +
+      "\006 \001(\r\022\014\n\004tick\030\007 \001(\r\"A\n\023CCLCMsg_BaselineA" +
+      "ck\022\025\n\rbaseline_tick\030\001 \001(\005\022\023\n\013baseline_nr" +
+      "\030\002 \001(\005\"*\n\024CCLCMsg_ListenEvents\022\022\n\nevent_" +
+      "mask\030\001 \003(\007\"\\\n\030CCLCMsg_RespondCvarValue\022\016" +
+      "\n\006cookie\030\001 \001(\005\022\023\n\013status_code\030\002 \001(\005\022\014\n\004n" +
+      "ame\030\003 \001(\t\022\r\n\005value\030\004 \001(\t\"m\n\024CCLCMsg_File" +
+      "CRCCheck\022\021\n\tcode_path\030\001 \001(\005\022\014\n\004path\030\002 \001(",
+      "\t\022\025\n\rcode_filename\030\003 \001(\005\022\020\n\010filename\030\004 \001" +
+      "(\t\022\013\n\003crc\030\005 \001(\007\"+\n\027CCLCMsg_LoadingProgre" +
+      "ss\022\020\n\010progress\030\001 \001(\005\":\n\032CCLCMsg_SplitPla" +
+      "yerConnect\022\034\n\007convars\030\001 \001(\0132\013.CMsg_CVars" +
+      "\"7\n\025CCLCMsg_ClientMessage\022\020\n\010msg_type\030\001 " +
+      "\001(\005\022\014\n\004data\030\002 \001(\014\"\366\002\n\022CSVCMsg_ServerInfo" +
+      "\022\020\n\010protocol\030\001 \001(\005\022\024\n\014server_count\030\002 \001(\005" +
+      "\022\024\n\014is_dedicated\030\003 \001(\010\022\017\n\007is_hltv\030\004 \001(\010\022" +
+      "\021\n\tis_replay\030\005 \001(\010\022\014\n\004c_os\030\006 \001(\005\022\017\n\007map_" +
+      "crc\030\007 \001(\007\022\022\n\nclient_crc\030\010 \001(\007\022\030\n\020string_",
+      "table_crc\030\t \001(\007\022\023\n\013max_clients\030\n \001(\005\022\023\n\013" +
+      "max_classes\030\013 \001(\005\022\023\n\013player_slot\030\014 \001(\005\022\025" +
+      "\n\rtick_interval\030\r \001(\002\022\020\n\010game_dir\030\016 \001(\t\022" +
+      "\020\n\010map_name\030\017 \001(\t\022\020\n\010sky_name\030\020 \001(\t\022\021\n\th" +
+      "ost_name\030\021 \001(\t\022\022\n\naddon_name\030\022 \001(\t\"\244\001\n\021C" +
+      "SVCMsg_ClassInfo\022\030\n\020create_on_client\030\001 \001" +
+      "(\010\022+\n\007classes\030\002 \003(\0132\032.CSVCMsg_ClassInfo." +
+      "class_t\032H\n\007class_t\022\020\n\010class_id\030\001 \001(\005\022\027\n\017" +
+      "data_table_name\030\002 \001(\t\022\022\n\nclass_name\030\003 \001(" +
+      "\t\"\"\n\020CSVCMsg_SetPause\022\016\n\006paused\030\001 \001(\010\"G\n",
+      "\021CSVCMsg_VoiceInit\022\017\n\007quality\030\001 \001(\005\022\r\n\005c" +
+      "odec\030\002 \001(\t\022\022\n\007version\030\003 \001(\005:\0010\"\035\n\rCSVCMs" +
+      "g_Print\022\014\n\004text\030\001 \001(\t\"\266\003\n\016CSVCMsg_Sounds" +
+      "\022\026\n\016reliable_sound\030\001 \001(\010\022+\n\006sounds\030\002 \003(\013" +
+      "2\033.CSVCMsg_Sounds.sounddata_t\032\336\002\n\013soundd" +
+      "ata_t\022\020\n\010origin_x\030\001 \001(\021\022\020\n\010origin_y\030\002 \001(" +
+      "\021\022\020\n\010origin_z\030\003 \001(\021\022\016\n\006volume\030\004 \001(\r\022\023\n\013d" +
+      "elay_value\030\005 \001(\002\022\027\n\017sequence_number\030\006 \001(" +
+      "\005\022\024\n\014entity_index\030\007 \001(\005\022\017\n\007channel\030\010 \001(\005" +
+      "\022\r\n\005pitch\030\t \001(\005\022\r\n\005flags\030\n \001(\005\022\021\n\tsound_",
+      "num\030\013 \001(\r\022\030\n\020sound_num_handle\030\014 \001(\007\022\026\n\016s" +
+      "peaker_entity\030\r \001(\005\022\023\n\013random_seed\030\016 \001(\005" +
+      "\022\023\n\013sound_level\030\017 \001(\005\022\023\n\013is_sentence\030\020 \001" +
+      "(\010\022\022\n\nis_ambient\030\021 \001(\010\"\'\n\020CSVCMsg_Prefet" +
+      "ch\022\023\n\013sound_index\030\001 \001(\005\"\'\n\017CSVCMsg_SetVi" +
+      "ew\022\024\n\014entity_index\030\001 \001(\005\"@\n\020CSVCMsg_FixA" +
+      "ngle\022\020\n\010relative\030\001 \001(\010\022\032\n\005angle\030\002 \001(\0132\013." +
+      "CMsgQAngle\"4\n\026CSVCMsg_CrosshairAngle\022\032\n\005" +
+      "angle\030\001 \001(\0132\013.CMsgQAngle\"\212\001\n\020CSVCMsg_BSP" +
+      "Decal\022\030\n\003pos\030\001 \001(\0132\013.CMsgVector\022\033\n\023decal",
+      "_texture_index\030\002 \001(\005\022\024\n\014entity_index\030\003 \001" +
+      "(\005\022\023\n\013model_index\030\004 \001(\005\022\024\n\014low_priority\030" +
+      "\005 \001(\010\"z\n\023CSVCMsg_SplitScreen\022?\n\004type\030\001 \001" +
+      "(\0162\030.ESplitScreenMessageType:\027MSG_SPLITS" +
+      "CREEN_ADDUSER\022\014\n\004slot\030\002 \001(\005\022\024\n\014player_in" +
+      "dex\030\003 \001(\005\"9\n\024CSVCMsg_GetCvarValue\022\016\n\006coo" +
+      "kie\030\001 \001(\005\022\021\n\tcvar_name\030\002 \001(\t\"<\n\014CSVCMsg_" +
+      "Menu\022\023\n\013dialog_type\030\001 \001(\005\022\027\n\017menu_key_va" +
+      "lues\030\002 \001(\014\"\260\002\n\021CSVCMsg_SendTable\022\016\n\006is_e" +
+      "nd\030\001 \001(\010\022\026\n\016net_table_name\030\002 \001(\t\022\025\n\rneed",
+      "s_decoder\030\003 \001(\010\022,\n\005props\030\004 \003(\0132\035.CSVCMsg" +
+      "_SendTable.sendprop_t\032\255\001\n\nsendprop_t\022\014\n\004" +
+      "type\030\001 \001(\005\022\020\n\010var_name\030\002 \001(\t\022\r\n\005flags\030\003 " +
+      "\001(\005\022\020\n\010priority\030\004 \001(\005\022\017\n\007dt_name\030\005 \001(\t\022\024" +
+      "\n\014num_elements\030\006 \001(\005\022\021\n\tlow_value\030\007 \001(\002\022" +
+      "\022\n\nhigh_value\030\010 \001(\002\022\020\n\010num_bits\030\t \001(\005\"\321\001" +
+      "\n\025CSVCMsg_GameEventList\0228\n\013descriptors\030\001" +
+      " \003(\0132#.CSVCMsg_GameEventList.descriptor_" +
+      "t\032#\n\005key_t\022\014\n\004type\030\001 \001(\005\022\014\n\004name\030\002 \001(\t\032Y" +
+      "\n\014descriptor_t\022\017\n\007eventid\030\001 \001(\005\022\014\n\004name\030",
+      "\002 \001(\t\022*\n\004keys\030\003 \003(\0132\034.CSVCMsg_GameEventL" +
+      "ist.key_t\"\310\001\n\026CSVCMsg_PacketEntities\022\023\n\013" +
+      "max_entries\030\001 \001(\005\022\027\n\017updated_entries\030\002 \001" +
+      "(\005\022\020\n\010is_delta\030\003 \001(\010\022\027\n\017update_baseline\030" +
+      "\004 \001(\010\022\020\n\010baseline\030\005 \001(\005\022\022\n\ndelta_from\030\006 " +
+      "\001(\005\022\023\n\013entity_data\030\007 \001(\014\022\032\n\022pending_full" +
+      "_frame\030\010 \001(\010\"R\n\024CSVCMsg_TempEntities\022\020\n\010" +
+      "reliable\030\001 \001(\010\022\023\n\013num_entries\030\002 \001(\005\022\023\n\013e" +
+      "ntity_data\030\003 \001(\014\"\312\001\n\031CSVCMsg_CreateStrin" +
+      "gTable\022\014\n\004name\030\001 \001(\t\022\023\n\013max_entries\030\002 \001(",
+      "\005\022\023\n\013num_entries\030\003 \001(\005\022\034\n\024user_data_fixe" +
+      "d_size\030\004 \001(\010\022\026\n\016user_data_size\030\005 \001(\005\022\033\n\023" +
+      "user_data_size_bits\030\006 \001(\005\022\r\n\005flags\030\007 \001(\005" +
+      "\022\023\n\013string_data\030\010 \001(\014\"_\n\031CSVCMsg_UpdateS" +
+      "tringTable\022\020\n\010table_id\030\001 \001(\005\022\033\n\023num_chan" +
+      "ged_entries\030\002 \001(\005\022\023\n\013string_data\030\003 \001(\014\"\214" +
+      "\002\n\021CSVCMsg_VoiceData\022\016\n\006client\030\001 \001(\005\022\021\n\t" +
+      "proximity\030\002 \001(\010\022\014\n\004xuid\030\003 \001(\006\022\024\n\014audible" +
+      "_mask\030\004 \001(\005\022\022\n\nvoice_data\030\005 \001(\014\022:\n\006forma" +
+      "t\030\006 \001(\0162\022.VoiceDataFormat_t:\026VOICEDATA_F",
+      "ORMAT_STEAM\022\026\n\016sequence_bytes\030\007 \001(\005\022\026\n\016s" +
+      "ection_number\030\010 \001(\r\022\"\n\032uncompressed_samp" +
+      "le_offset\030\t \001(\r\022\014\n\004tick\030\n \001(\r\"<\n\026CSVCMsg" +
+      "_PacketReliable\022\014\n\004tick\030\001 \001(\005\022\024\n\014message" +
+      "ssize\030\002 \001(\005\"T\n\026CSVCMsg_FullFrameSplit\022\014\n" +
+      "\004tick\030\001 \001(\005\022\017\n\007section\030\002 \001(\005\022\r\n\005total\030\003 " +
+      "\001(\005\022\014\n\004data\030\004 \001(\014*\352\001\n\014CLC_Messages\022\022\n\016cl" +
+      "c_ClientInfo\020\010\022\014\n\010clc_Move\020\t\022\021\n\rclc_Voic" +
+      "eData\020\n\022\023\n\017clc_BaselineAck\020\013\022\024\n\020clc_List" +
+      "enEvents\020\014\022\030\n\024clc_RespondCvarValue\020\r\022\024\n\020",
+      "clc_FileCRCCheck\020\016\022\027\n\023clc_LoadingProgres" +
+      "s\020\017\022\032\n\026clc_SplitPlayerConnect\020\020\022\025\n\021clc_C" +
+      "lientMessage\020\021*\241\004\n\014SVC_Messages\022\022\n\016svc_S" +
+      "erverInfo\020\010\022\021\n\rsvc_SendTable\020\t\022\021\n\rsvc_Cl" +
+      "assInfo\020\n\022\020\n\014svc_SetPause\020\013\022\031\n\025svc_Creat" +
+      "eStringTable\020\014\022\031\n\025svc_UpdateStringTable\020" +
+      "\r\022\021\n\rsvc_VoiceInit\020\016\022\021\n\rsvc_VoiceData\020\017\022" +
+      "\r\n\tsvc_Print\020\020\022\016\n\nsvc_Sounds\020\021\022\017\n\013svc_Se" +
+      "tView\020\022\022\020\n\014svc_FixAngle\020\023\022\026\n\022svc_Crossha" +
+      "irAngle\020\024\022\020\n\014svc_BSPDecal\020\025\022\023\n\017svc_Split",
+      "Screen\020\026\022\023\n\017svc_UserMessage\020\027\022\025\n\021svc_Ent" +
+      "ityMessage\020\030\022\021\n\rsvc_GameEvent\020\031\022\026\n\022svc_P" +
+      "acketEntities\020\032\022\024\n\020svc_TempEntities\020\033\022\020\n" +
+      "\014svc_Prefetch\020\034\022\014\n\010svc_Menu\020\035\022\025\n\021svc_Gam" +
+      "eEventList\020\036\022\024\n\020svc_GetCvarValue\020\037\022\026\n\022sv" +
+      "c_PacketReliable\020 \022\026\n\022svc_FullFrameSplit" +
+      "\020!*L\n\021VoiceDataFormat_t\022\032\n\026VOICEDATA_FOR" +
+      "MAT_STEAM\020\000\022\033\n\027VOICEDATA_FORMAT_ENGINE\020\001" +
+      "*V\n\027ESplitScreenMessageType\022\033\n\027MSG_SPLIT" +
+      "SCREEN_ADDUSER\020\000\022\036\n\032MSG_SPLITSCREEN_REMO",
+      "VEUSER\020\001B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
         public com.google.protobuf.ExtensionRegistry assignDescriptors(
             com.google.protobuf.Descriptors.FileDescriptor root) {
           descriptor = root;
-          internal_static_CMsg_CVars_descriptor =
-            getDescriptor().getMessageTypes().get(0);
-          internal_static_CMsg_CVars_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CMsg_CVars_descriptor,
-              new java.lang.String[] { "Cvars", });
-          internal_static_CMsg_CVars_CVar_descriptor =
-            internal_static_CMsg_CVars_descriptor.getNestedTypes().get(0);
-          internal_static_CMsg_CVars_CVar_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CMsg_CVars_CVar_descriptor,
-              new java.lang.String[] { "Name", "Value", });
-          internal_static_CNETMsg_NOP_descriptor =
-            getDescriptor().getMessageTypes().get(1);
-          internal_static_CNETMsg_NOP_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_NOP_descriptor,
-              new java.lang.String[] { });
-          internal_static_CNETMsg_Disconnect_descriptor =
-            getDescriptor().getMessageTypes().get(2);
-          internal_static_CNETMsg_Disconnect_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_Disconnect_descriptor,
-              new java.lang.String[] { "TextDeprecated", "Reason", });
-          internal_static_CNETMsg_File_descriptor =
-            getDescriptor().getMessageTypes().get(3);
-          internal_static_CNETMsg_File_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_File_descriptor,
-              new java.lang.String[] { "TransferId", "FileName", "IsReplayDemoFile", "Deny", });
-          internal_static_CNETMsg_SplitScreenUser_descriptor =
-            getDescriptor().getMessageTypes().get(4);
-          internal_static_CNETMsg_SplitScreenUser_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_SplitScreenUser_descriptor,
-              new java.lang.String[] { "Slot", });
-          internal_static_CNETMsg_Tick_descriptor =
-            getDescriptor().getMessageTypes().get(5);
-          internal_static_CNETMsg_Tick_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_Tick_descriptor,
-              new java.lang.String[] { "Tick", "HostFrametimeDeprecated", "HostFrametimeStdDeviationDeprecated", "HostComputationtime", "HostComputationtimeStdDeviation", "HostFramestarttimeStdDeviation", });
-          internal_static_CNETMsg_StringCmd_descriptor =
-            getDescriptor().getMessageTypes().get(6);
-          internal_static_CNETMsg_StringCmd_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_StringCmd_descriptor,
-              new java.lang.String[] { "Command", });
-          internal_static_CNETMsg_SetConVar_descriptor =
-            getDescriptor().getMessageTypes().get(7);
-          internal_static_CNETMsg_SetConVar_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_SetConVar_descriptor,
-              new java.lang.String[] { "Convars", });
-          internal_static_CNETMsg_SignonState_descriptor =
-            getDescriptor().getMessageTypes().get(8);
-          internal_static_CNETMsg_SignonState_fieldAccessorTable = new
-            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
-              internal_static_CNETMsg_SignonState_descriptor,
-              new java.lang.String[] { "SignonState", "SpawnCount", "NumServerPlayers", "PlayersNetworkids", "MapName", });
           internal_static_CCLCMsg_ClientInfo_descriptor =
-            getDescriptor().getMessageTypes().get(9);
+            getDescriptor().getMessageTypes().get(0);
           internal_static_CCLCMsg_ClientInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ClientInfo_descriptor,
               new java.lang.String[] { "SendTableCrc", "ServerCount", "IsHltv", "IsReplay", "FriendsId", "FriendsName", "CustomFiles", });
           internal_static_CCLCMsg_Move_descriptor =
-            getDescriptor().getMessageTypes().get(10);
+            getDescriptor().getMessageTypes().get(1);
           internal_static_CCLCMsg_Move_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_Move_descriptor,
               new java.lang.String[] { "NumBackupCommands", "NumNewCommands", "Data", });
           internal_static_CCLCMsg_VoiceData_descriptor =
-            getDescriptor().getMessageTypes().get(11);
+            getDescriptor().getMessageTypes().get(2);
           internal_static_CCLCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Data", "Xuid", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", });
+              new java.lang.String[] { "Data", "Xuid", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", "Tick", });
           internal_static_CCLCMsg_BaselineAck_descriptor =
-            getDescriptor().getMessageTypes().get(12);
+            getDescriptor().getMessageTypes().get(3);
           internal_static_CCLCMsg_BaselineAck_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_BaselineAck_descriptor,
               new java.lang.String[] { "BaselineTick", "BaselineNr", });
           internal_static_CCLCMsg_ListenEvents_descriptor =
-            getDescriptor().getMessageTypes().get(13);
+            getDescriptor().getMessageTypes().get(4);
           internal_static_CCLCMsg_ListenEvents_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ListenEvents_descriptor,
               new java.lang.String[] { "EventMask", });
           internal_static_CCLCMsg_RespondCvarValue_descriptor =
-            getDescriptor().getMessageTypes().get(14);
+            getDescriptor().getMessageTypes().get(5);
           internal_static_CCLCMsg_RespondCvarValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_RespondCvarValue_descriptor,
               new java.lang.String[] { "Cookie", "StatusCode", "Name", "Value", });
           internal_static_CCLCMsg_FileCRCCheck_descriptor =
-            getDescriptor().getMessageTypes().get(15);
+            getDescriptor().getMessageTypes().get(6);
           internal_static_CCLCMsg_FileCRCCheck_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_FileCRCCheck_descriptor,
               new java.lang.String[] { "CodePath", "Path", "CodeFilename", "Filename", "Crc", });
           internal_static_CCLCMsg_LoadingProgress_descriptor =
-            getDescriptor().getMessageTypes().get(16);
+            getDescriptor().getMessageTypes().get(7);
           internal_static_CCLCMsg_LoadingProgress_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_LoadingProgress_descriptor,
               new java.lang.String[] { "Progress", });
           internal_static_CCLCMsg_SplitPlayerConnect_descriptor =
-            getDescriptor().getMessageTypes().get(17);
+            getDescriptor().getMessageTypes().get(8);
           internal_static_CCLCMsg_SplitPlayerConnect_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_SplitPlayerConnect_descriptor,
               new java.lang.String[] { "Convars", });
           internal_static_CCLCMsg_ClientMessage_descriptor =
-            getDescriptor().getMessageTypes().get(18);
+            getDescriptor().getMessageTypes().get(9);
           internal_static_CCLCMsg_ClientMessage_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CCLCMsg_ClientMessage_descriptor,
               new java.lang.String[] { "MsgType", "Data", });
           internal_static_CSVCMsg_ServerInfo_descriptor =
-            getDescriptor().getMessageTypes().get(19);
+            getDescriptor().getMessageTypes().get(10);
           internal_static_CSVCMsg_ServerInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_ServerInfo_descriptor,
               new java.lang.String[] { "Protocol", "ServerCount", "IsDedicated", "IsHltv", "IsReplay", "COs", "MapCrc", "ClientCrc", "StringTableCrc", "MaxClients", "MaxClasses", "PlayerSlot", "TickInterval", "GameDir", "MapName", "SkyName", "HostName", "AddonName", });
           internal_static_CSVCMsg_ClassInfo_descriptor =
-            getDescriptor().getMessageTypes().get(20);
+            getDescriptor().getMessageTypes().get(11);
           internal_static_CSVCMsg_ClassInfo_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_ClassInfo_descriptor,
@@ -35172,25 +29104,25 @@ public final class Netmessages {
               internal_static_CSVCMsg_ClassInfo_class_t_descriptor,
               new java.lang.String[] { "ClassId", "DataTableName", "ClassName", });
           internal_static_CSVCMsg_SetPause_descriptor =
-            getDescriptor().getMessageTypes().get(21);
+            getDescriptor().getMessageTypes().get(12);
           internal_static_CSVCMsg_SetPause_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SetPause_descriptor,
               new java.lang.String[] { "Paused", });
           internal_static_CSVCMsg_VoiceInit_descriptor =
-            getDescriptor().getMessageTypes().get(22);
+            getDescriptor().getMessageTypes().get(13);
           internal_static_CSVCMsg_VoiceInit_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_VoiceInit_descriptor,
               new java.lang.String[] { "Quality", "Codec", "Version", });
           internal_static_CSVCMsg_Print_descriptor =
-            getDescriptor().getMessageTypes().get(23);
+            getDescriptor().getMessageTypes().get(14);
           internal_static_CSVCMsg_Print_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Print_descriptor,
               new java.lang.String[] { "Text", });
           internal_static_CSVCMsg_Sounds_descriptor =
-            getDescriptor().getMessageTypes().get(24);
+            getDescriptor().getMessageTypes().get(15);
           internal_static_CSVCMsg_Sounds_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Sounds_descriptor,
@@ -35202,55 +29134,55 @@ public final class Netmessages {
               internal_static_CSVCMsg_Sounds_sounddata_t_descriptor,
               new java.lang.String[] { "OriginX", "OriginY", "OriginZ", "Volume", "DelayValue", "SequenceNumber", "EntityIndex", "Channel", "Pitch", "Flags", "SoundNum", "SoundNumHandle", "SpeakerEntity", "RandomSeed", "SoundLevel", "IsSentence", "IsAmbient", });
           internal_static_CSVCMsg_Prefetch_descriptor =
-            getDescriptor().getMessageTypes().get(25);
+            getDescriptor().getMessageTypes().get(16);
           internal_static_CSVCMsg_Prefetch_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Prefetch_descriptor,
               new java.lang.String[] { "SoundIndex", });
           internal_static_CSVCMsg_SetView_descriptor =
-            getDescriptor().getMessageTypes().get(26);
+            getDescriptor().getMessageTypes().get(17);
           internal_static_CSVCMsg_SetView_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SetView_descriptor,
               new java.lang.String[] { "EntityIndex", });
           internal_static_CSVCMsg_FixAngle_descriptor =
-            getDescriptor().getMessageTypes().get(27);
+            getDescriptor().getMessageTypes().get(18);
           internal_static_CSVCMsg_FixAngle_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_FixAngle_descriptor,
               new java.lang.String[] { "Relative", "Angle", });
           internal_static_CSVCMsg_CrosshairAngle_descriptor =
-            getDescriptor().getMessageTypes().get(28);
+            getDescriptor().getMessageTypes().get(19);
           internal_static_CSVCMsg_CrosshairAngle_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_CrosshairAngle_descriptor,
               new java.lang.String[] { "Angle", });
           internal_static_CSVCMsg_BSPDecal_descriptor =
-            getDescriptor().getMessageTypes().get(29);
+            getDescriptor().getMessageTypes().get(20);
           internal_static_CSVCMsg_BSPDecal_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_BSPDecal_descriptor,
               new java.lang.String[] { "Pos", "DecalTextureIndex", "EntityIndex", "ModelIndex", "LowPriority", });
           internal_static_CSVCMsg_SplitScreen_descriptor =
-            getDescriptor().getMessageTypes().get(30);
+            getDescriptor().getMessageTypes().get(21);
           internal_static_CSVCMsg_SplitScreen_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SplitScreen_descriptor,
               new java.lang.String[] { "Type", "Slot", "PlayerIndex", });
           internal_static_CSVCMsg_GetCvarValue_descriptor =
-            getDescriptor().getMessageTypes().get(31);
+            getDescriptor().getMessageTypes().get(22);
           internal_static_CSVCMsg_GetCvarValue_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_GetCvarValue_descriptor,
               new java.lang.String[] { "Cookie", "CvarName", });
           internal_static_CSVCMsg_Menu_descriptor =
-            getDescriptor().getMessageTypes().get(32);
+            getDescriptor().getMessageTypes().get(23);
           internal_static_CSVCMsg_Menu_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_Menu_descriptor,
               new java.lang.String[] { "DialogType", "MenuKeyValues", });
           internal_static_CSVCMsg_SendTable_descriptor =
-            getDescriptor().getMessageTypes().get(33);
+            getDescriptor().getMessageTypes().get(24);
           internal_static_CSVCMsg_SendTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_SendTable_descriptor,
@@ -35262,7 +29194,7 @@ public final class Netmessages {
               internal_static_CSVCMsg_SendTable_sendprop_t_descriptor,
               new java.lang.String[] { "Type", "VarName", "Flags", "Priority", "DtName", "NumElements", "LowValue", "HighValue", "NumBits", });
           internal_static_CSVCMsg_GameEventList_descriptor =
-            getDescriptor().getMessageTypes().get(34);
+            getDescriptor().getMessageTypes().get(25);
           internal_static_CSVCMsg_GameEventList_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_GameEventList_descriptor,
@@ -35280,43 +29212,43 @@ public final class Netmessages {
               internal_static_CSVCMsg_GameEventList_descriptor_t_descriptor,
               new java.lang.String[] { "Eventid", "Name", "Keys", });
           internal_static_CSVCMsg_PacketEntities_descriptor =
-            getDescriptor().getMessageTypes().get(35);
+            getDescriptor().getMessageTypes().get(26);
           internal_static_CSVCMsg_PacketEntities_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_PacketEntities_descriptor,
               new java.lang.String[] { "MaxEntries", "UpdatedEntries", "IsDelta", "UpdateBaseline", "Baseline", "DeltaFrom", "EntityData", "PendingFullFrame", });
           internal_static_CSVCMsg_TempEntities_descriptor =
-            getDescriptor().getMessageTypes().get(36);
+            getDescriptor().getMessageTypes().get(27);
           internal_static_CSVCMsg_TempEntities_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_TempEntities_descriptor,
               new java.lang.String[] { "Reliable", "NumEntries", "EntityData", });
           internal_static_CSVCMsg_CreateStringTable_descriptor =
-            getDescriptor().getMessageTypes().get(37);
+            getDescriptor().getMessageTypes().get(28);
           internal_static_CSVCMsg_CreateStringTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_CreateStringTable_descriptor,
               new java.lang.String[] { "Name", "MaxEntries", "NumEntries", "UserDataFixedSize", "UserDataSize", "UserDataSizeBits", "Flags", "StringData", });
           internal_static_CSVCMsg_UpdateStringTable_descriptor =
-            getDescriptor().getMessageTypes().get(38);
+            getDescriptor().getMessageTypes().get(29);
           internal_static_CSVCMsg_UpdateStringTable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_UpdateStringTable_descriptor,
               new java.lang.String[] { "TableId", "NumChangedEntries", "StringData", });
           internal_static_CSVCMsg_VoiceData_descriptor =
-            getDescriptor().getMessageTypes().get(39);
+            getDescriptor().getMessageTypes().get(30);
           internal_static_CSVCMsg_VoiceData_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_VoiceData_descriptor,
-              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", });
+              new java.lang.String[] { "Client", "Proximity", "Xuid", "AudibleMask", "VoiceData", "Format", "SequenceBytes", "SectionNumber", "UncompressedSampleOffset", "Tick", });
           internal_static_CSVCMsg_PacketReliable_descriptor =
-            getDescriptor().getMessageTypes().get(40);
+            getDescriptor().getMessageTypes().get(31);
           internal_static_CSVCMsg_PacketReliable_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_PacketReliable_descriptor,
               new java.lang.String[] { "Tick", "Messagessize", });
           internal_static_CSVCMsg_FullFrameSplit_descriptor =
-            getDescriptor().getMessageTypes().get(41);
+            getDescriptor().getMessageTypes().get(32);
           internal_static_CSVCMsg_FullFrameSplit_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_CSVCMsg_FullFrameSplit_descriptor,
@@ -35329,7 +29261,6 @@ public final class Netmessages {
         new com.google.protobuf.Descriptors.FileDescriptor[] {
           com.google.protobuf.DescriptorProtos.getDescriptor(),
           com.dota2.proto.Networkbasetypes.getDescriptor(),
-          com.dota2.proto.NetworkConnection.getDescriptor(),
         }, assigner);
   }
 

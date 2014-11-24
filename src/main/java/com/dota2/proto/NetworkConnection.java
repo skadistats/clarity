@@ -202,6 +202,34 @@ public final class NetworkConnection {
      * <code>NETWORK_DISCONNECT_REJECTED_BY_GAME = 46;</code>
      */
     NETWORK_DISCONNECT_REJECTED_BY_GAME(46, 46),
+    /**
+     * <code>NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR = 47;</code>
+     */
+    NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR(47, 47),
+    /**
+     * <code>NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR = 48;</code>
+     */
+    NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR(48, 48),
+    /**
+     * <code>NETWORK_DISCONNECT_BAD_SERVER_PASSWORD = 49;</code>
+     */
+    NETWORK_DISCONNECT_BAD_SERVER_PASSWORD(49, 49),
+    /**
+     * <code>NETWORK_DISCONNECT_DIRECT_CONNECT_RESERVATION = 50;</code>
+     */
+    NETWORK_DISCONNECT_DIRECT_CONNECT_RESERVATION(50, 50),
+    /**
+     * <code>NETWORK_DISCONNECT_CONNECTION_FAILURE = 51;</code>
+     */
+    NETWORK_DISCONNECT_CONNECTION_FAILURE(51, 51),
+    /**
+     * <code>NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS = 52;</code>
+     */
+    NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS(52, 52),
+    /**
+     * <code>NETWORK_DISCONNECT_RECONNECTION = 53;</code>
+     */
+    NETWORK_DISCONNECT_RECONNECTION(53, 53),
     ;
 
     /**
@@ -392,6 +420,34 @@ public final class NetworkConnection {
      * <code>NETWORK_DISCONNECT_REJECTED_BY_GAME = 46;</code>
      */
     public static final int NETWORK_DISCONNECT_REJECTED_BY_GAME_VALUE = 46;
+    /**
+     * <code>NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR = 47;</code>
+     */
+    public static final int NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR_VALUE = 47;
+    /**
+     * <code>NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR = 48;</code>
+     */
+    public static final int NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR_VALUE = 48;
+    /**
+     * <code>NETWORK_DISCONNECT_BAD_SERVER_PASSWORD = 49;</code>
+     */
+    public static final int NETWORK_DISCONNECT_BAD_SERVER_PASSWORD_VALUE = 49;
+    /**
+     * <code>NETWORK_DISCONNECT_DIRECT_CONNECT_RESERVATION = 50;</code>
+     */
+    public static final int NETWORK_DISCONNECT_DIRECT_CONNECT_RESERVATION_VALUE = 50;
+    /**
+     * <code>NETWORK_DISCONNECT_CONNECTION_FAILURE = 51;</code>
+     */
+    public static final int NETWORK_DISCONNECT_CONNECTION_FAILURE_VALUE = 51;
+    /**
+     * <code>NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS = 52;</code>
+     */
+    public static final int NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS_VALUE = 52;
+    /**
+     * <code>NETWORK_DISCONNECT_RECONNECTION = 53;</code>
+     */
+    public static final int NETWORK_DISCONNECT_RECONNECTION_VALUE = 53;
 
 
     public final int getNumber() { return value; }
@@ -445,6 +501,13 @@ public final class NetworkConnection {
         case 44: return NETWORK_DISCONNECT_PURESERVER_MISMATCH;
         case 45: return NETWORK_DISCONNECT_USERCMD;
         case 46: return NETWORK_DISCONNECT_REJECTED_BY_GAME;
+        case 47: return NETWORK_DISCONNECT_MESSAGE_PARSE_ERROR;
+        case 48: return NETWORK_DISCONNECT_INVALID_MESSAGE_ERROR;
+        case 49: return NETWORK_DISCONNECT_BAD_SERVER_PASSWORD;
+        case 50: return NETWORK_DISCONNECT_DIRECT_CONNECT_RESERVATION;
+        case 51: return NETWORK_DISCONNECT_CONNECTION_FAILURE;
+        case 52: return NETWORK_DISCONNECT_NO_PEER_GROUP_HANDLERS;
+        case 53: return NETWORK_DISCONNECT_RECONNECTION;
         default: return null;
       }
     }
@@ -517,7 +580,7 @@ public final class NetworkConnection {
   static {
     java.lang.String[] descriptorData = {
       "\n\030network_connection.proto\032 google/proto" +
-      "buf/descriptor.proto*\201\034\n\033ENetworkDisconn" +
+      "buf/descriptor.proto*\217 \n\033ENetworkDisconn" +
       "ectionReason\022\036\n\032NETWORK_DISCONNECT_INVAL" +
       "ID\020\000\022\037\n\033NETWORK_DISCONNECT_SHUTDOWN\020\001\022F\n" +
       "%NETWORK_DISCONNECT_DISCONNECT_BY_USER\020\002" +
@@ -607,9 +670,22 @@ public final class NetworkConnection {
       "ONNECT_USERCMD\020-\032\036\242\324\030\032#GameUI_Disconnect" +
       "_UserCmd\022N\n#NETWORK_DISCONNECT_REJECTED_",
       "BY_GAME\020.\032%\242\324\030!#GameUI_Disconnect_Reject" +
-      "edByGame:E\n\030network_connection_token\022!.g" +
-      "oogle.protobuf.EnumValueOptions\030\304\212\003 \001(\tB" +
-      "\021\n\017com.dota2.proto"
+      "edByGame\022T\n&NETWORK_DISCONNECT_MESSAGE_P" +
+      "ARSE_ERROR\020/\032(\242\324\030$#GameUI_Disconnect_Mes" +
+      "sageParseError\022X\n(NETWORK_DISCONNECT_INV" +
+      "ALID_MESSAGE_ERROR\0200\032*\242\324\030&#GameUI_Discon" +
+      "nect_InvalidMessageError\022T\n&NETWORK_DISC" +
+      "ONNECT_BAD_SERVER_PASSWORD\0201\032(\242\324\030$#GameU" +
+      "I_Disconnect_BadServerPassword\0221\n-NETWOR" +
+      "K_DISCONNECT_DIRECT_CONNECT_RESERVATION\020" +
+      "2\022S\n%NETWORK_DISCONNECT_CONNECTION_FAILU",
+      "RE\0203\032(\242\324\030$#GameUI_Disconnect_ConnectionF" +
+      "ailure\022Y\n)NETWORK_DISCONNECT_NO_PEER_GRO" +
+      "UP_HANDLERS\0204\032*\242\324\030&#GameUI_Disconnect_No" +
+      "PeerGroupHandlers\022#\n\037NETWORK_DISCONNECT_" +
+      "RECONNECTION\0205:E\n\030network_connection_tok" +
+      "en\022!.google.protobuf.EnumValueOptions\030\304\212" +
+      "\003 \001(\tB\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -619,6 +695,11 @@ public final class NetworkConnection {
           networkConnectionToken.internalInit(descriptor.getExtensions().get(0));
           com.google.protobuf.ExtensionRegistry registry =
             com.google.protobuf.ExtensionRegistry.newInstance();
+          registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
+          registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
+          registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
+          registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
+          registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
           registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
           registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);
           registry.add(com.dota2.proto.NetworkConnection.networkConnectionToken);

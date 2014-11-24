@@ -305,6 +305,58 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_CW_ReturnedHero = 72;</code>
      */
     k_EDOTA_CW_ReturnedHero(72, 72),
+    /**
+     * <code>k_EDOTA_CW_GG = 73;</code>
+     */
+    k_EDOTA_CW_GG(73, 73),
+    /**
+     * <code>k_EDOTA_CW_GGWP = 74;</code>
+     */
+    k_EDOTA_CW_GGWP(74, 74),
+    /**
+     * <code>k_EDOTA_CW_All_GG = 75;</code>
+     */
+    k_EDOTA_CW_All_GG(75, 75),
+    /**
+     * <code>k_EDOTA_CW_All_GGWP = 76;</code>
+     */
+    k_EDOTA_CW_All_GGWP(76, 76),
+    /**
+     * <code>k_EDOTA_CW_What_To_Buy = 77;</code>
+     */
+    k_EDOTA_CW_What_To_Buy(77, 77),
+    /**
+     * <code>k_EDOTA_CW_Im_Retreating = 78;</code>
+     */
+    k_EDOTA_CW_Im_Retreating(78, 78),
+    /**
+     * <code>k_EDOTA_CW_Space_Created = 79;</code>
+     */
+    k_EDOTA_CW_Space_Created(79, 79),
+    /**
+     * <code>k_EDOTA_CW_Whoops = 80;</code>
+     */
+    k_EDOTA_CW_Whoops(80, 80),
+    /**
+     * <code>k_EDOTA_CW_Tower_then_Back = 81;</code>
+     */
+    k_EDOTA_CW_Tower_then_Back(81, 81),
+    /**
+     * <code>k_EDOTA_CW_Barracks_then_Back = 82;</code>
+     */
+    k_EDOTA_CW_Barracks_then_Back(82, 82),
+    /**
+     * <code>k_EDOTA_CW_Ward_Bottom_Rune = 83;</code>
+     */
+    k_EDOTA_CW_Ward_Bottom_Rune(83, 83),
+    /**
+     * <code>k_EDOTA_CW_Ward_Top_Rune = 84;</code>
+     */
+    k_EDOTA_CW_Ward_Top_Rune(84, 84),
+    /**
+     * <code>k_EDOTA_CW_Zeus_Ult = 85;</code>
+     */
+    k_EDOTA_CW_Zeus_Ult(85, 85),
     ;
 
     /**
@@ -599,6 +651,58 @@ public final class DotaCommonmessages {
      * <code>k_EDOTA_CW_ReturnedHero = 72;</code>
      */
     public static final int k_EDOTA_CW_ReturnedHero_VALUE = 72;
+    /**
+     * <code>k_EDOTA_CW_GG = 73;</code>
+     */
+    public static final int k_EDOTA_CW_GG_VALUE = 73;
+    /**
+     * <code>k_EDOTA_CW_GGWP = 74;</code>
+     */
+    public static final int k_EDOTA_CW_GGWP_VALUE = 74;
+    /**
+     * <code>k_EDOTA_CW_All_GG = 75;</code>
+     */
+    public static final int k_EDOTA_CW_All_GG_VALUE = 75;
+    /**
+     * <code>k_EDOTA_CW_All_GGWP = 76;</code>
+     */
+    public static final int k_EDOTA_CW_All_GGWP_VALUE = 76;
+    /**
+     * <code>k_EDOTA_CW_What_To_Buy = 77;</code>
+     */
+    public static final int k_EDOTA_CW_What_To_Buy_VALUE = 77;
+    /**
+     * <code>k_EDOTA_CW_Im_Retreating = 78;</code>
+     */
+    public static final int k_EDOTA_CW_Im_Retreating_VALUE = 78;
+    /**
+     * <code>k_EDOTA_CW_Space_Created = 79;</code>
+     */
+    public static final int k_EDOTA_CW_Space_Created_VALUE = 79;
+    /**
+     * <code>k_EDOTA_CW_Whoops = 80;</code>
+     */
+    public static final int k_EDOTA_CW_Whoops_VALUE = 80;
+    /**
+     * <code>k_EDOTA_CW_Tower_then_Back = 81;</code>
+     */
+    public static final int k_EDOTA_CW_Tower_then_Back_VALUE = 81;
+    /**
+     * <code>k_EDOTA_CW_Barracks_then_Back = 82;</code>
+     */
+    public static final int k_EDOTA_CW_Barracks_then_Back_VALUE = 82;
+    /**
+     * <code>k_EDOTA_CW_Ward_Bottom_Rune = 83;</code>
+     */
+    public static final int k_EDOTA_CW_Ward_Bottom_Rune_VALUE = 83;
+    /**
+     * <code>k_EDOTA_CW_Ward_Top_Rune = 84;</code>
+     */
+    public static final int k_EDOTA_CW_Ward_Top_Rune_VALUE = 84;
+    /**
+     * <code>k_EDOTA_CW_Zeus_Ult = 85;</code>
+     */
+    public static final int k_EDOTA_CW_Zeus_Ult_VALUE = 85;
 
 
     public final int getNumber() { return value; }
@@ -678,6 +782,19 @@ public final class DotaCommonmessages {
         case 70: return k_EDOTA_CW_Relax;
         case 71: return k_EDOTA_CW_MissingHero;
         case 72: return k_EDOTA_CW_ReturnedHero;
+        case 73: return k_EDOTA_CW_GG;
+        case 74: return k_EDOTA_CW_GGWP;
+        case 75: return k_EDOTA_CW_All_GG;
+        case 76: return k_EDOTA_CW_All_GGWP;
+        case 77: return k_EDOTA_CW_What_To_Buy;
+        case 78: return k_EDOTA_CW_Im_Retreating;
+        case 79: return k_EDOTA_CW_Space_Created;
+        case 80: return k_EDOTA_CW_Whoops;
+        case 81: return k_EDOTA_CW_Tower_then_Back;
+        case 82: return k_EDOTA_CW_Barracks_then_Back;
+        case 83: return k_EDOTA_CW_Ward_Bottom_Rune;
+        case 84: return k_EDOTA_CW_Ward_Top_Rune;
+        case 85: return k_EDOTA_CW_Zeus_Ult;
         default: return null;
       }
     }
@@ -5302,7 +5419,7 @@ public final class DotaCommonmessages {
       "A_SPT_Textline\022\024\n\014stat_strings\030\002 \003(\t\022\023\n\013" +
       "stat_images\030\003 \003(\005\">\n\025CDOTAMsg_CoachHUDPi" +
       "ng\022\t\n\001x\030\001 \001(\r\022\t\n\001y\030\002 \001(\r\022\017\n\007tgtpath\030\003 \001(" +
-      "\t*\343\016\n\025EDOTAChatWheelMessage\022\021\n\rk_EDOTA_C" +
+      "\t*\305\021\n\025EDOTAChatWheelMessage\022\021\n\rk_EDOTA_C" +
       "W_Ok\020\000\022\023\n\017k_EDOTA_CW_Care\020\001\022\026\n\022k_EDOTA_C" +
       "W_GetBack\020\002\022\030\n\024k_EDOTA_CW_NeedWards\020\003\022\023\n" +
       "\017k_EDOTA_CW_Stun\020\004\022\023\n\017k_EDOTA_CW_Help\020\005\022",
@@ -5349,10 +5466,19 @@ public final class DotaCommonmessages {
       "New_Meta\020C\022\025\n\021k_EDOTA_CW_My_Bad\020D\022\025\n\021k_E" +
       "DOTA_CW_Regret\020E\022\024\n\020k_EDOTA_CW_Relax\020F\022\032" +
       "\n\026k_EDOTA_CW_MissingHero\020G\022\033\n\027k_EDOTA_CW" +
-      "_ReturnedHero\020H*r\n\023EDOTAStatPopupTypes\022\030" +
-      "\n\024k_EDOTA_SPT_Textline\020\000\022\025\n\021k_EDOTA_SPT_" +
-      "Basic\020\001\022\024\n\020k_EDOTA_SPT_Poll\020\002\022\024\n\020k_EDOTA" +
-      "_SPT_Grid\020\003B\021\n\017com.dota2.proto"
+      "_ReturnedHero\020H\022\021\n\rk_EDOTA_CW_GG\020I\022\023\n\017k_" +
+      "EDOTA_CW_GGWP\020J\022\025\n\021k_EDOTA_CW_All_GG\020K\022\027" +
+      "\n\023k_EDOTA_CW_All_GGWP\020L\022\032\n\026k_EDOTA_CW_Wh" +
+      "at_To_Buy\020M\022\034\n\030k_EDOTA_CW_Im_Retreating\020" +
+      "N\022\034\n\030k_EDOTA_CW_Space_Created\020O\022\025\n\021k_EDO" +
+      "TA_CW_Whoops\020P\022\036\n\032k_EDOTA_CW_Tower_then_" +
+      "Back\020Q\022!\n\035k_EDOTA_CW_Barracks_then_Back\020",
+      "R\022\037\n\033k_EDOTA_CW_Ward_Bottom_Rune\020S\022\034\n\030k_" +
+      "EDOTA_CW_Ward_Top_Rune\020T\022\027\n\023k_EDOTA_CW_Z" +
+      "eus_Ult\020U*r\n\023EDOTAStatPopupTypes\022\030\n\024k_ED" +
+      "OTA_SPT_Textline\020\000\022\025\n\021k_EDOTA_SPT_Basic\020" +
+      "\001\022\024\n\020k_EDOTA_SPT_Poll\020\002\022\024\n\020k_EDOTA_SPT_G" +
+      "rid\020\003B\021\n\017com.dota2.proto"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {

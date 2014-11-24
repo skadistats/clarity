@@ -37,9 +37,9 @@ public class PacketTypes {
     public static final Map<Integer, Class<? extends GeneratedMessage>> EMBED;
     static {
         EMBED = new HashMap<Integer, Class<? extends GeneratedMessage>>();
-        EMBED.put(Netmessages.NET_Messages.net_SetConVar_VALUE, Netmessages.CNETMsg_SetConVar.class);
-        EMBED.put(Netmessages.NET_Messages.net_SignonState_VALUE, Netmessages.CNETMsg_SignonState.class);
-        EMBED.put(Netmessages.NET_Messages.net_Tick_VALUE, Netmessages.CNETMsg_Tick.class);
+        EMBED.put(Networkbasetypes.NET_Messages.net_SetConVar_VALUE, Networkbasetypes.CNETMsg_SetConVar.class);
+        EMBED.put(Networkbasetypes.NET_Messages.net_SignonState_VALUE, Networkbasetypes.CNETMsg_SignonState.class);
+        EMBED.put(Networkbasetypes.NET_Messages.net_Tick_VALUE, Networkbasetypes.CNETMsg_Tick.class);
         EMBED.put(Netmessages.SVC_Messages.svc_ClassInfo_VALUE, Netmessages.CSVCMsg_ClassInfo.class);
         EMBED.put(Netmessages.SVC_Messages.svc_CreateStringTable_VALUE, Netmessages.CSVCMsg_CreateStringTable.class);
         EMBED.put(Netmessages.SVC_Messages.svc_GameEvent_VALUE, Networkbasetypes.CSVCMsg_GameEvent.class);
@@ -159,6 +159,8 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_StatsMatchDetails_VALUE, DotaUsermessages.CDOTAUserMsg_StatsMatchDetails.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_MiniTaunt_VALUE, DotaUsermessages.CDOTAUserMsg_MiniTaunt.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_BuyBackStateAlert_VALUE, DotaUsermessages.CDOTAUserMsg_BuyBackStateAlert.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_QuickBuyAlert_VALUE, DotaUsermessages.CDOTAUserMsg_QuickBuyAlert.class);
+        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_StatsHeroDetails_VALUE, DotaUsermessages.CDOTAUserMsg_StatsHeroMinuteDetails.class);
     }    
     
     private static final Map<Class<? extends GeneratedMessage>, Method> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, Method>() {

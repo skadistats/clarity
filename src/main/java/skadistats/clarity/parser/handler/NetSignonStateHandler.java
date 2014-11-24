@@ -8,7 +8,7 @@ import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
 
-import com.dota2.proto.Netmessages.CNETMsg_SignonState;
+import com.dota2.proto.Networkbasetypes.CNETMsg_SignonState;
 
 @RegisterHandler(CNETMsg_SignonState.class)
 public class NetSignonStateHandler implements Handler<CNETMsg_SignonState> {

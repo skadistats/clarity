@@ -73,7 +73,9 @@ enum EDotaUserMessages {
 	DOTA_UM_EnemyItemAlert = 129;
 	DOTA_UM_StatsMatchDetails = 130;
 	DOTA_UM_MiniTaunt = 131;
-	DOTA_UM_BuyBackStateAlert = 132;	
+	DOTA_UM_BuyBackStateAlert = 132;
+	DOTA_UM_QuickBuyAlert = 133;
+	DOTA_UM_StatsHeroDetails = 134;
 }
 
 enum DOTA_CHAT_MESSAGE {
@@ -118,7 +120,6 @@ enum DOTA_CHAT_MESSAGE {
 	CHAT_MESSAGE_AUTO_UNPAUSED = 37;
 	CHAT_MESSAGE_YOUPAUSED = 38;
 	CHAT_MESSAGE_CANTUNPAUSETEAM = 39;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_DEPRECATED = 40;
 	CHAT_MESSAGE_VOICE_TEXT_BANNED = 41;
 	CHAT_MESSAGE_SPECTATORS_WATCHING_THIS_GAME = 42;
 	CHAT_MESSAGE_REPORT_REMINDER = 43;
@@ -126,7 +127,6 @@ enum DOTA_CHAT_MESSAGE {
 	CHAT_MESSAGE_TAUNT = 45;
 	CHAT_MESSAGE_RANDOM = 46;
 	CHAT_MESSAGE_RD_TURN = 47;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY_DEPRECATED = 48;
 	CHAT_MESSAGE_DROP_RATE_BONUS = 49;
 	CHAT_MESSAGE_NO_BATTLE_POINTS = 50;
 	CHAT_MESSAGE_DENIED_AEGIS = 51;
@@ -138,19 +138,12 @@ enum DOTA_CHAT_MESSAGE {
 	CHAT_MESSAGE_HOLDOUT_TOWER_DESTROYED = 57;
 	CHAT_MESSAGE_HOLDOUT_WALL_DESTROYED = 58;
 	CHAT_MESSAGE_HOLDOUT_WALL_FINISHED = 59;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_DEPRECATED = 60;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY_DEPRECATED = 61;
 	CHAT_MESSAGE_PLAYER_LEFT_LIMITED_HERO = 62;
 	CHAT_MESSAGE_ABANDON_LIMITED_HERO_EXPLANATION = 63;
 	CHAT_MESSAGE_DISCONNECT_LIMITED_HERO = 64;
 	CHAT_MESSAGE_LOW_PRIORITY_COMPLETED_EXPLANATION = 65;
 	CHAT_MESSAGE_RECRUITMENT_DROP_RATE_BONUS = 66;
 	CHAT_MESSAGE_FROSTIVUS_SHINING_BOOSTER_ACTIVE = 67;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_RANKED_DEPRECATED = 68;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_RANKED_DEPRECATED = 69;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_EARLY_RANKED_DEPRECATED = 70;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_RANKED_DEPRECATED = 71;
-  CHAT_MESSAGE_SAFE_TO_LEAVE_ABANDONER_AFK_EARLY_RANKED_DEPRECATED = 72;
 	CHAT_MESSAGE_PLAYER_LEFT_AFK = 73;
 	CHAT_MESSAGE_PLAYER_LEFT_DISCONNECTED_TOO_LONG = 74;
 	CHAT_MESSAGE_PLAYER_ABANDONED = 75;
@@ -185,6 +178,7 @@ enum DOTA_ABILITY_PING_TYPE {
 	ABILITY_PING_READY = 1;
 	ABILITY_PING_MANA = 2;
 	ABILITY_PING_COOLDOWN = 3;
+	ABILITY_PING_ENEMY = 4;
 }
 
 enum DOTA_COMBATLOG_TYPES {
@@ -249,6 +243,31 @@ enum DOTA_OVERHEAD_ALERT {
 	OVERHEAD_ALERT_LAST_HIT_MISS = 15;
 }
 
+enum EHeroStatType {
+	k_EHeroStatType_None = 0;
+	k_EHeroStatType_AxeTotalDamage = 2000;
+	k_EHeroStatType_BattleHungerDamage = 2001;
+	k_EHeroStatType_CounterHelixDamage = 2002;
+	k_EHeroStatType_CullingBladeDamage = 2003;
+	k_EHeroStatType_BerserkersCallCastCount = 2004;
+	k_EHeroStatType_BerserkersCallHeroesHitAverage = 2005;
+	k_EHeroStatType_BerserkersCallOtherUnitsHit = 2006;
+	k_EHeroStatType_BerserkersCallHeroAttacksTaken = 2007;
+	k_EHeroStatType_BerserkersCallOtherAttacksTaken = 2008;
+	k_EHeroStatType_BattleHungerCastCount = 2009;
+	k_EHeroStatType_BattleHungerPotentialDuration = 2010;
+	k_EHeroStatType_BattleHungerAverageDuration = 2011;
+	k_EHeroStatType_CounterHelixProcCount = 2012;
+	k_EHeroStatType_CounterHelixHeroProcCount = 2013;
+	k_EHeroStatType_CounterHelixHeroesHitAverage = 2014;
+	k_EHeroStatType_CounterHelixOtherUnitsHitCount = 2015;
+	k_EHeroStatType_CullingBladeCastCount = 2016;
+	k_EHeroStatType_CullingBladeKillCount = 2017;
+	k_EHeroStatType_CullingBladeAverageHealthCulled = 2018;
+	k_EHeroStatType_CullingBladeAverageDamageAvailable = 2019;
+	k_EHeroStatType_CullingBladeHeroBuffAverage = 2020;
+}
+
 message CDOTAUserMsg_AIDebugLine {
 	optional string message = 1;
 }
@@ -270,45 +289,6 @@ message CDOTAUserMsg_ChatEvent {
 	optional sint32 playerid_4 = 6 [default = -1];
 	optional sint32 playerid_5 = 7 [default = -1];
 	optional sint32 playerid_6 = 8 [default = -1];
-}
-
-message CDOTAUserMsg_CombatLogData {
-	optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
-	optional uint32 target_name = 2;
-	optional uint32 attacker_name = 3;
-	optional bool attacker_illusion = 4;
-	optional bool target_illusion = 5;
-	optional uint32 inflictor_name = 6;
-	optional int32 value = 7;
-	optional int32 health = 8;
-	optional float time = 9;
-}
-
-message CMsgDOTACombatLogEntry {
-	optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
-	optional uint32 target_name = 2;
-	optional uint32 target_source_name = 3;
-	optional uint32 attacker_name = 4;
-	optional uint32 damage_source_name = 5;
-	optional uint32 inflictor_name = 6;
-	optional bool is_attacker_illusion = 7;
-	optional bool is_attacker_hero = 8;
-	optional bool is_target_illusion = 9;
-	optional bool is_target_hero = 10;
-	optional bool is_visible_radiant = 11;
-	optional bool is_visible_dire = 12;
-	optional uint32 value = 13;
-	optional int32 health = 14;
-	optional float timestamp = 15;
-	optional float stun_duration = 16;
-	optional float slow_duration = 17;
-	optional bool is_ability_toggle_on = 18;
-	optional bool is_ability_toggle_off = 19;
-	optional uint32 ability_level = 20;
-	optional float location_x = 21;
-	optional float location_y = 22;
-	optional uint32 gold_reason = 23;
-	optional float timestamp_raw = 24;
 }
 
 message CDOTAUserMsg_CombatLogShowDeath {
@@ -371,10 +351,17 @@ message CDOTAUserMsg_EnemyItemAlert {
 message CDOTAUserMsg_WillPurchaseAlert {
 	optional int32 itemid = 1;
 	optional int32 player_id = 2;
+	optional uint32 gold_remaining = 3;
 }
 
 message CDOTAUserMsg_BuyBackStateAlert {
 	optional int32 player_id = 1;
+}
+
+message CDOTAUserMsg_QuickBuyAlert {
+	optional int32 player_id = 1;
+	optional int32 itemid = 2;
+	optional int32 gold_required = 3;
 }
 
 message CDOTAUserMsg_CourierKilledAlert {
@@ -382,53 +369,6 @@ message CDOTAUserMsg_CourierKilledAlert {
 	optional uint32 gold_value = 2;
 	optional int32 entity_handle = 3;
 	optional int32 timestamp = 4;
-}
-
-message CDOTAUserMsg_StatsHeroMinuteDetails {
-	optional uint32 last_hits = 1;
-	optional uint32 hero_kills = 2;
-	optional uint32 hero_damage = 3;
-	optional uint32 tower_damage = 4;
-	optional float average_position = 5;
-	optional uint32 total_xp = 6;
-	optional uint32 net_worth = 7;
-	optional uint32 harvested_creep_gold = 8;
-}
-
-message CDOTAUserMsg_StatsTeamMinuteDetails {
-	repeated .CDOTAUserMsg_StatsHeroMinuteDetails player_stats = 1;
-	optional uint32 tower_kills = 2;
-	optional uint32 barrack_kills = 3;
-	optional uint32 available_lane_creep_gold = 4;
-	optional uint32 balance_kill_value = 5;
-	optional uint32 balance_tower_value = 6;
-	optional uint32 balance_barracks_value = 7;
-	optional uint32 balance_gold_value = 8;
-	optional uint32 balance_xp_value = 9;
-}
-
-message CDOTAUserMsg_StatsPlayerKillShare {
-	optional int32 player_id = 1;
-	optional float kill_share_percent = 2;
-}
-
-message CDOTAUserMsg_StatsKillDetails {
-	optional uint32 victim_id = 1;
-	repeated .CDOTAUserMsg_StatsPlayerKillShare kill_shares = 2;
-	optional uint32 damage_to_kill = 3;
-	optional uint32 effective_health = 4;
-	optional float death_time = 5;
-}
-
-message CDOTAUserMsg_StatsMatchDetails {
-	repeated .CDOTAUserMsg_StatsTeamMinuteDetails radiant_stats = 1;
-	repeated .CDOTAUserMsg_StatsTeamMinuteDetails dire_stats = 2;
-	repeated .CDOTAUserMsg_StatsKillDetails radiant_kills = 3;
-	repeated .CDOTAUserMsg_StatsKillDetails dire_kills = 4;
-}
-
-message CDOTAUserMsg_MiniTaunt {
-	optional uint32 taunting_player_id = 1;
 }
 
 message CDOTAUserMsg_MinimapEvent {
@@ -838,4 +778,114 @@ message CDOTAUserMsg_AbilitySteal {
 	optional uint32 ability_id = 2;
 	optional uint32 ability_level = 3;
 }
+
+message CDOTAUserMsg_StatsHeroLookup {
+	optional int32 player_id = 1;
+	optional int32 hero_id = 2;
+}
+
+message CDOTAUserMsg_StatsHeroMinuteDetails {
+	optional uint32 last_hits = 1;
+	optional uint32 hero_kills = 2;
+	optional uint32 hero_damage = 3;
+	optional uint32 tower_damage = 4;
+	optional float average_position = 5;
+	optional uint32 total_xp = 6;
+	optional uint32 net_worth = 7;
+	optional uint32 harvested_creep_gold = 8;
+}
+
+message CDOTAUserMsg_StatsTeamMinuteDetails {
+	repeated .CDOTAUserMsg_StatsHeroMinuteDetails player_stats = 1;
+	optional uint32 tower_kills = 2;
+	optional uint32 barrack_kills = 3;
+	optional uint32 available_lane_creep_gold = 4;
+	optional uint32 balance_kill_value = 5;
+	optional uint32 balance_tower_value = 6;
+	optional uint32 balance_barracks_value = 7;
+	optional uint32 balance_gold_value = 8;
+	optional uint32 balance_xp_value = 9;
+}
+
+message CDOTAUserMsg_StatsPlayerKillShare {
+	optional int32 player_id = 1;
+	optional float kill_share_percent = 2;
+}
+
+message CDOTAUserMsg_StatsKillDetails {
+	optional uint32 victim_id = 1;
+	repeated .CDOTAUserMsg_StatsPlayerKillShare kill_shares = 2;
+	optional uint32 damage_to_kill = 3;
+	optional uint32 effective_health = 4;
+	optional float death_time = 5;
+}
+
+message CDOTAUserMsg_StatsMatchDetails {
+	repeated .CDOTAUserMsg_StatsHeroLookup hero_lookup = 1;
+	repeated .CDOTAUserMsg_StatsTeamMinuteDetails radiant_stats = 2;
+	repeated .CDOTAUserMsg_StatsTeamMinuteDetails dire_stats = 3;
+	repeated .CDOTAUserMsg_StatsKillDetails radiant_kills = 4;
+	repeated .CDOTAUserMsg_StatsKillDetails dire_kills = 5;
+}
+
+message CDOTAUserMsg_MiniTaunt {
+	optional uint32 taunting_player_id = 1;
+}
+
+message CMsgHeroAbilityStat {
+	optional .EHeroStatType stat_type = 1 [default = k_EHeroStatType_None];
+	optional int32 int_value = 2;
+	optional float float_value = 3;
+}
+
+message CMsgCombatAnalyzerPlayerStat {
+	optional uint32 account_id = 1;
+	repeated .CMsgHeroAbilityStat hero_ability_stats = 2;
+}
+
+message CMsgCombatAnalyzerStats {
+	optional uint64 match_id = 1;
+	repeated .CMsgCombatAnalyzerPlayerStat player_stats = 2;
+}
+
+message CDOTAUserMsg_CombatLogData {
+	optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
+	optional uint32 target_name = 2;
+	optional uint32 attacker_name = 3;
+	optional bool attacker_illusion = 4;
+	optional bool target_illusion = 5;
+	optional uint32 inflictor_name = 6;
+	optional int32 value = 7;
+	optional int32 health = 8;
+	optional float time = 9;
+}
+
+message CMsgDOTACombatLogEntry {
+	optional .DOTA_COMBATLOG_TYPES type = 1 [default = DOTA_COMBATLOG_DAMAGE];
+	optional uint32 target_name = 2;
+	optional uint32 target_source_name = 3;
+	optional uint32 attacker_name = 4;
+	optional uint32 damage_source_name = 5;
+	optional uint32 inflictor_name = 6;
+	optional bool is_attacker_illusion = 7;
+	optional bool is_attacker_hero = 8;
+	optional bool is_target_illusion = 9;
+	optional bool is_target_hero = 10;
+	optional bool is_visible_radiant = 11;
+	optional bool is_visible_dire = 12;
+	optional uint32 value = 13;
+	optional int32 health = 14;
+	optional float timestamp = 15;
+	optional float stun_duration = 16;
+	optional float slow_duration = 17;
+	optional bool is_ability_toggle_on = 18;
+	optional bool is_ability_toggle_off = 19;
+	optional uint32 ability_level = 20;
+	optional float location_x = 21;
+	optional float location_y = 22;
+	optional uint32 gold_reason = 23;
+	optional float timestamp_raw = 24;
+}
+
+
 

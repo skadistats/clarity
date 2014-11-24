@@ -15,7 +15,7 @@ import com.dota2.proto.Demo.CDemoPacket;
 import com.dota2.proto.Demo.CDemoSendTables;
 import com.dota2.proto.Demo.CDemoStringTables;
 import com.dota2.proto.Demo.EDemoCommands;
-import com.dota2.proto.Netmessages.CNETMsg_Tick;
+import com.dota2.proto.Networkbasetypes.CNETMsg_Tick;
 import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
@@ -155,7 +155,11 @@ public class DemoInputStream implements Closeable {
                                 log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                                 continue;
                             } else if (!isFiltered(umClazz)) {
-                                return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                                try {
+                                    return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                                } catch (Exception e) {
+                                    log.error("failed to read user message of class {}, Valve plz... ;-)", umClazz.getName(), e);
+                                }
                             }
                         }
                     } else if (!isFiltered(subMessage.getClass())) {

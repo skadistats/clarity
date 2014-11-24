@@ -8,7 +8,7 @@ import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
 
-import com.dota2.proto.Netmessages.CNETMsg_SetConVar;
+import com.dota2.proto.Networkbasetypes.CNETMsg_SetConVar;
 
 @RegisterHandler(CNETMsg_SetConVar.class)
 public class NetSetConVarHandler implements Handler<CNETMsg_SetConVar> {

@@ -8,7 +8,7 @@ import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
 
-import com.dota2.proto.Netmessages.CNETMsg_Tick;
+import com.dota2.proto.Networkbasetypes.CNETMsg_Tick;
 
 @RegisterHandler(CNETMsg_Tick.class)
 public class NetTickHandler implements Handler<CNETMsg_Tick> {
