@@ -66,6 +66,7 @@ To use the stable version, add the following dependency in your pom.xml, and you
 	<version>1.0</version>
 </dependency>
 ```
+Warning: Stable version is out of date, and will not be able to parse new replays. Use the newest snapshot instead! Stable will be updated before the century ends, I promise ;-)
 
 There is also the possibility to use the bleeding edge, which I try to keep in sync with the Git-Repo.
 However, this latest snapshot is not available in Maven Central, so you got to add a pointer to the 
