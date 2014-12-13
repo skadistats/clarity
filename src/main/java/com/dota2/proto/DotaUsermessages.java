@@ -4086,13 +4086,13 @@ public final class DotaUsermessages {
   public interface CDOTAUserMsg_ChatEventOrBuilder
       extends com.google.protobuf.MessageOrBuilder {
 
-    // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
+    // optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
     /**
-     * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+     * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
      */
     boolean hasType();
     /**
-     * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+     * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
      */
     com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE getType();
 
@@ -4303,17 +4303,17 @@ public final class DotaUsermessages {
     }
 
     private int bitField0_;
-    // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
+    // optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
     public static final int TYPE_FIELD_NUMBER = 1;
     private com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE type_;
     /**
-     * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+     * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
      */
     public boolean hasType() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+     * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
      */
     public com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE getType() {
       return type_;
@@ -4446,10 +4446,6 @@ public final class DotaUsermessages {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasType()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -4759,10 +4755,6 @@ public final class DotaUsermessages {
       }
 
       public final boolean isInitialized() {
-        if (!hasType()) {
-          
-          return false;
-        }
         return true;
       }
 
@@ -4785,22 +4777,22 @@ public final class DotaUsermessages {
       }
       private int bitField0_;
 
-      // required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
+      // optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
       private com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE type_ = com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE.CHAT_MESSAGE_INVALID;
       /**
-       * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+       * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
        */
       public boolean hasType() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+       * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
        */
       public com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE getType() {
         return type_;
       }
       /**
-       * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+       * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
        */
       public Builder setType(com.dota2.proto.DotaUsermessages.DOTA_CHAT_MESSAGE value) {
         if (value == null) {
@@ -4812,7 +4804,7 @@ public final class DotaUsermessages {
         return this;
       }
       /**
-       * <code>required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
+       * <code>optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];</code>
        */
       public Builder clearType() {
         bitField0_ = (bitField0_ & ~0x00000001);
@@ -71460,7 +71452,7 @@ public final class DotaUsermessages {
       "\007message\030\001 \001(\t\"$\n\021CDOTAUserMsg_Ping\022\017\n\007m" +
       "essage\030\001 \001(\t\",\n\027CDOTAUserMsg_SwapVerify\022" +
       "\021\n\tplayer_id\030\001 \001(\r\"\357\001\n\026CDOTAUserMsg_Chat" +
-      "Event\0226\n\004type\030\001 \002(\0162\022.DOTA_CHAT_MESSAGE:" +
+      "Event\0226\n\004type\030\001 \001(\0162\022.DOTA_CHAT_MESSAGE:" +
       "\024CHAT_MESSAGE_INVALID\022\r\n\005value\030\002 \001(\r\022\026\n\n" +
       "playerid_1\030\003 \001(\021:\002-1\022\026\n\nplayerid_2\030\004 \001(\021",
       ":\002-1\022\026\n\nplayerid_3\030\005 \001(\021:\002-1\022\026\n\nplayerid" +

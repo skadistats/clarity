@@ -155,11 +155,7 @@ public class DemoInputStream implements Closeable {
                                 log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                                 continue;
                             } else if (!isFiltered(umClazz)) {
-                                try {
-                                    return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
-                                } catch (Exception e) {
-                                    log.error("failed to read user message of class {}, Valve plz... ;-)", umClazz.getName(), e);
-                                }
+                                return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
                             }
                         }
                     } else if (!isFiltered(subMessage.getClass())) {

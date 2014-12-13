@@ -281,7 +281,7 @@ message CDOTAUserMsg_SwapVerify {
 }
 
 message CDOTAUserMsg_ChatEvent {
-	required .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
+	optional .DOTA_CHAT_MESSAGE type = 1 [default = CHAT_MESSAGE_INVALID];
 	optional uint32 value = 2;
 	optional sint32 playerid_1 = 3 [default = -1];
 	optional sint32 playerid_2 = 4 [default = -1];
