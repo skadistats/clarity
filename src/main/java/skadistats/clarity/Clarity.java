@@ -1,17 +1,11 @@
 package skadistats.clarity;
 
+import com.dota2.proto.Demo.CDemoFileInfo;
+import skadistats.clarity.parser.*;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
-import skadistats.clarity.parser.DemoIndex;
-import skadistats.clarity.parser.DemoInputStream;
-import skadistats.clarity.parser.DemoInputStreamIterator;
-import skadistats.clarity.parser.PeekIterator;
-import skadistats.clarity.parser.Profile;
-import skadistats.clarity.parser.TickIterator;
-
-import com.dota2.proto.Demo.CDemoFileInfo;
 
 public class Clarity {
 
@@ -21,11 +15,6 @@ public class Clarity {
     	return d;
     }
 
-    @Deprecated
-    public static DemoInputStreamIterator iteratorForFile(String fileName, Profile... profile) throws IOException {
-        return new DemoInputStreamIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
-    }
-    
     public static PeekIterator peekIteratorForFile(String fileName, Profile... profile) throws IOException {
         return new PeekIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
     }
@@ -43,7 +32,7 @@ public class Clarity {
     }
 
     public static DemoIndex indexForFile(String fileName, Profile... profile) throws IOException {
-        return new DemoIndex(iteratorForFile(fileName, profile));
+        return new DemoIndex(peekIteratorForFile(fileName, profile));
     }
 
     public static CDemoFileInfo infoForStream(InputStream stream) throws IOException {
