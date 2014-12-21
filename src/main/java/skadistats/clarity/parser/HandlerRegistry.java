@@ -19,10 +19,12 @@ public class HandlerRegistry {
 
     private static final Logger log = LoggerFactory.getLogger(HandlerRegistry.class);
     
-    private static final Map<Class<?>, Handler<?>> H;
-    
+    private static final Map<Class<?>, Handler<?>> HANDLERS;
+    private static final Map<String, Handler<?>> MULTIHANDLERS;
+
     static {
-        H = new HashMap<Class<?>, Handler<?>>();
+        HANDLERS = new HashMap<Class<?>, Handler<?>>();
+        MULTIHANDLERS = new HashMap<String, Handler<?>>();
         registerHandlersFromPackage(DemFileHeaderHandler.class.getPackage().getName());
     }
     
@@ -35,21 +37,36 @@ public class HandlerRegistry {
         for (Class<?> clazz : reflections.getTypesAnnotatedWith(RegisterHandler.class)) {
             RegisterHandler mb = clazz.getAnnotation(RegisterHandler.class);
             try {
-                H.put(mb.value(), (Handler<?>) clazz.newInstance());
+                HANDLERS.put(mb.value(), (Handler<?>) clazz.newInstance());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
+        for (Class<?> clazz : reflections.getTypesAnnotatedWith(RegisterMultiHandler.class)) {
+            RegisterMultiHandler mb = clazz.getAnnotation(RegisterMultiHandler.class);
+            try {
+                MULTIHANDLERS.put(mb.value(), (Handler<?>) clazz.newInstance());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
         }
     }
     
-    public static <T> void apply(int peekTick, T message, Match match) {
+    public static <T extends GeneratedMessage> void apply(int peekTick, T message, Match match) {
         @SuppressWarnings("unchecked")
-        Handler<T> h = (Handler<T>) H.get(message.getClass());
+        Handler<T> h = (Handler<T>) HANDLERS.get(message.getClass());
+        if (h == null) {
+            for (String prefix : MULTIHANDLERS.keySet()) {
+                if (message.getClass().getSimpleName().startsWith(prefix)) {
+                    h = (Handler<T>) MULTIHANDLERS.get(prefix);
+                    break;
+                }
+            }
+        }
         if (h != null) {
             h.apply(peekTick, message, match);
         } else {
-            GeneratedMessage gm = (GeneratedMessage)message;
-            log.trace("unable to apply message of type {}", gm.getDescriptorForType().getName());
+            log.trace("unable to apply message of type {}", message.getDescriptorForType().getName());
         }
     }
 

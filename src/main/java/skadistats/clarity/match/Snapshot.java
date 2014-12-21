@@ -1,8 +1,7 @@
 package skadistats.clarity.match;
 
-import skadistats.clarity.model.Entity;
-
 import com.rits.cloning.Cloner;
+import skadistats.clarity.model.Entity;
 
 public class Snapshot implements Cloneable {
     
@@ -13,7 +12,6 @@ public class Snapshot implements Cloneable {
     private final GameEventCollection gameEvents = new GameEventCollection();
     private final ModifierCollection modifiers = new ModifierCollection();
     private final TempEntityCollection tempEntities = new TempEntityCollection();
-    private final ChatEventCollection chatEvents = new ChatEventCollection();
     private final UserMessageCollection userMessages = new UserMessageCollection();
     
     
@@ -37,9 +35,7 @@ public class Snapshot implements Cloneable {
         return entities;
     }
 
-    public GameEventCollection getGameEvents() {
-        return gameEvents;
-    }
+    public GameEventCollection getGameEvents() { return gameEvents; }
     
     public ModifierCollection getModifiers() {
         return modifiers;
@@ -47,10 +43,6 @@ public class Snapshot implements Cloneable {
     
     public TempEntityCollection getTempEntities() {
         return tempEntities;
-    }
-    
-    public ChatEventCollection getChatEvents() {
-        return chatEvents;
     }
     
     public UserMessageCollection getUserMessages() {
@@ -66,7 +58,6 @@ public class Snapshot implements Cloneable {
         gameEvents.clear();
         tempEntities.clear();
         modifiers.clear();
-        chatEvents.clear();
         userMessages.clear();
         gameRulesProxy = null;
         playerResource = null;

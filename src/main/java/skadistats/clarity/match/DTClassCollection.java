@@ -1,13 +1,13 @@
 package skadistats.clarity.match;
 
+import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.SendTable;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.SendTable;
-
-public class DTClassCollection {
+public class DTClassCollection extends BaseCollection<DTClassCollection, DTClass> {
 
     private final Map<Integer, DTClass> byClassId = new TreeMap<Integer, DTClass>();
     private final Map<String, DTClass> byDtName = new TreeMap<String, DTClass>();

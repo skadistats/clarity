@@ -28,7 +28,6 @@ public class Match {
     // info from the prologue
     private final DTClassCollection dtClasses = new DTClassCollection();
     private final GameEventDescriptorCollection gameEventDescriptors = new GameEventDescriptorCollection();
-    private final DescriptorCollection descriptors = new DescriptorCollection();
     private StringTableCollection prologueStringTables;
     private float tickInterval = 1.0f/30.0f;
 
@@ -79,10 +78,6 @@ public class Match {
         return gameEventDescriptors;
     }
     
-    public DescriptorCollection getDescriptors() {
-        return descriptors;
-    }
-
     public StringTableCollection getStringTables() {
         return current.getStringTables();
     }
@@ -91,9 +86,7 @@ public class Match {
         return current.getEntities();
     }
 
-    public GameEventCollection getGameEvents() {
-        return current.getGameEvents();
-    }
+    public GameEventCollection getGameEvents() { return current.getGameEvents(); }
     
     public ModifierCollection getModifiers() {
         return current.getModifiers();
@@ -107,10 +100,6 @@ public class Match {
         return current.getUserMessages();
     }
     
-    public ChatEventCollection getChatEvents() {
-        return current.getChatEvents();
-    }
-
     public Entity getGameRulesProxy() {
         return current.getGameRulesProxy();
     }

@@ -12,12 +12,12 @@ public class Profile {
 
     public static Profile NET_TICK = new Profile()
         .append(
-        Networkbasetypes.CNETMsg_Tick.class
+            Networkbasetypes.CNETMsg_Tick.class
         );
 
     public static Profile REPLAY_TIME = new Profile()
         .append(
-        Netmessages.CSVCMsg_ServerInfo.class
+            Netmessages.CSVCMsg_ServerInfo.class
         );
 
     public static Profile STRING_TABLES = new Profile()
@@ -47,8 +47,19 @@ public class Profile {
 
     public static Profile USERMESSAGE_CONTAINER = new Profile()
         .append(
-        Networkbasetypes.CSVCMsg_UserMessage.class
+            Networkbasetypes.CSVCMsg_UserMessage.class
         );
+
+    public static Profile USERMESSAGE_ALL = new Profile() {
+        @Override
+        public boolean contains(Class<?> clazz) {
+            if (super.contains(clazz)) {
+                return true;
+            }
+            return clazz.getSimpleName().startsWith("CDOTAUserMsg_");
+        }
+    }
+        .dependsOn(USERMESSAGE_CONTAINER);
 
     public static Profile ENTITIES = new Profile()
         .dependsOn(SEND_TABLES)
@@ -72,7 +83,7 @@ public class Profile {
             Netmessages.CSVCMsg_GameEventList.class,
             Networkbasetypes.CSVCMsg_GameEvent.class
         );
-    
+
     public static Profile COMBAT_LOG = new Profile()
         .dependsOn(GAME_EVENTS)
         .dependsOn(STRING_TABLES);
@@ -98,12 +109,12 @@ public class Profile {
             return true;
         }
     };
-    
+
     public static Profile FILE_INFO = new Profile()
-    .append(
-    	Demo.CDemoFileInfo.class
-    );
-    
+        .append(
+            Demo.CDemoFileInfo.class
+        );
+
 
     private final Set<Class<?>> protoClasses = new HashSet<Class<?>>();
     private boolean tickwiseData;
