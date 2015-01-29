@@ -33,7 +33,7 @@ public class DemoIndex {
         while (iter.hasNext()) {
             Peek p = iter.next();
             if (sync) {
-                skew = p.getTick() - p.getPeekTick();
+                skew = p.getTick() - p.getTick();
                 if (p.getMessage() instanceof CSVCMsg_PacketEntities) {
                     sync = false;
                 }

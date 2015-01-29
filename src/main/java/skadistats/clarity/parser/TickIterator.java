@@ -46,7 +46,7 @@ public class TickIterator extends AbstractDemoInputStreamIterator<Tick> {
             if (p == null) {
                 break;
             }
-            if (!peeks.isEmpty() && p.getBorder().isPeekTickBorder()) {
+            if (!peeks.isEmpty() && p.getTick() != peeks.get(0).getTick()) {
                 break;
             }
             consumeNextPeek();

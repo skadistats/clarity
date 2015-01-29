@@ -1,24 +1,16 @@
 package skadistats.clarity.parser;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.dota2.proto.Demo.*;
+import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 
-import skadistats.clarity.parser.Peek.BorderType;
-
-import com.dota2.proto.Demo.CDemoFullPacket;
-import com.dota2.proto.Demo.CDemoPacket;
-import com.dota2.proto.Demo.CDemoSendTables;
-import com.dota2.proto.Demo.CDemoStringTables;
-import com.dota2.proto.Demo.EDemoCommands;
-import com.dota2.proto.Networkbasetypes.CNETMsg_Tick;
-import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.GeneratedMessage;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class DemoInputStream implements Closeable {
 
@@ -35,9 +27,7 @@ public class DemoInputStream implements Closeable {
     private int fileInfoOffset;
     private int n = -1;
     private int tick = 0;
-    private int peekTick = 0;
     private boolean full = false;
-    private BorderType border = BorderType.NONE;
     private State state = State.TOP;
 
     public DemoInputStream(InputStream is, Profile... profile) {
@@ -72,8 +62,7 @@ public class DemoInputStream implements Closeable {
     }
     
     private Peek genPeek(GeneratedMessage message) {
-        Peek result = new Peek(++n, tick, peekTick, full, border, message);
-        border = BorderType.NONE;
+        Peek result = new Peek(++n, tick, full, message);
         return result;
     }
 
@@ -84,11 +73,7 @@ public class DemoInputStream implements Closeable {
                     int kind = ms.readRawVarint32();
                     boolean isCompressed = (kind & EDemoCommands.DEM_IsCompressed_VALUE) == EDemoCommands.DEM_IsCompressed_VALUE;
                     kind &= ~EDemoCommands.DEM_IsCompressed_VALUE;
-                    int nextPeekTick = ms.readRawVarint32();
-                    if (nextPeekTick != peekTick) {
-                        border = border.addPeekTickBorder();
-                    }
-                    peekTick = nextPeekTick;
+                    tick = ms.readRawVarint32();
                     int size = ms.readRawVarint32();
                     byte[] data = ms.readRawBytes(size);
                     if (isCompressed) {
@@ -141,13 +126,7 @@ public class DemoInputStream implements Closeable {
                         continue;
                     }
                     GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
-                    if (subMessage instanceof CNETMsg_Tick) {
-                        tick = ((CNETMsg_Tick) subMessage).getTick();
-                        border = border.addNetTickBorder();
-                        if (!isFiltered(CNETMsg_Tick.class)) {
-                            return genPeek(subMessage);
-                        }
-                    } else if (subMessage instanceof CSVCMsg_UserMessage) {
+                    if (subMessage instanceof CSVCMsg_UserMessage) {
                         if (!isFiltered(CSVCMsg_UserMessage.class)) {
                             CSVCMsg_UserMessage userMessage = (CSVCMsg_UserMessage) subMessage;
                             Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
