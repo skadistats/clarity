@@ -2,4 +2,6 @@
 /.settings
 /.classpath
 /.project
+/.idea
+/*.iml
 /release.bat
