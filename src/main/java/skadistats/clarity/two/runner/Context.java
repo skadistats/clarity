@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.two.framework.EventListener;
 import skadistats.clarity.two.framework.EventProvider;
 import skadistats.clarity.two.framework.EventProviders;
+import skadistats.clarity.two.framework.InitializerMethod;
 import skadistats.clarity.two.framework.annotation.EventMarker;
 import skadistats.clarity.two.framework.annotation.Initializer;
 
@@ -19,6 +20,7 @@ public class Context {
 
     private Map<Class<?>, Object> processors = new HashMap<>();
     private Map<Class<? extends Annotation>, Set<EventListener>> processedEvents = new HashMap<>();
+    private Map<Class<? extends Annotation>, Set<InitializerMethod>> initializers = new HashMap<>();
 
     public void addProcessor(Object processor) {
         requireProcessorClass(processor.getClass());
@@ -36,6 +38,7 @@ public class Context {
             List<Method> initializers = findMethodsWithAnnotation(processorClass, Initializer.class);
             for (Method initializer : initializers) {
                 Initializer i = initializer.getAnnotation(Initializer.class);
+                registerInitializer(new InitializerMethod(i, processorClass, initializer));
             }
         }
     }
@@ -53,6 +56,16 @@ public class Context {
             throw new RuntimeException("oops. no provider found for required listener");
         }
         requireProcessorClass(provider.getProviderClass());
+    }
+
+    private void registerInitializer(InitializerMethod initializerMethod) {
+        log.info("register initializer {}", initializerMethod.getEventClass());
+        Set<InitializerMethod> initializerMethods = initializers.get(initializerMethod.getEventClass());
+        if (initializerMethods == null) {
+            initializerMethods = new HashSet<>();
+            initializers.put(initializerMethod.getEventClass(), initializerMethods);
+        }
+        initializerMethods.add(initializerMethod);
     }
 
     private List<EventListener> findEventListeners(Class<?> searchedClass) {
@@ -79,7 +92,7 @@ public class Context {
         return methods;
     }
 
-    public void initialize() {
+    private void instantiateMissingProcessors() {
         for (Map.Entry<Class<?>, Object> entry : processors.entrySet()) {
             if (entry.getValue() == null) {
                 try {
@@ -91,6 +104,30 @@ public class Context {
                 }
             }
         }
+    }
+
+    private void callInitializers() {
+        for (Map.Entry<Class<? extends Annotation>, Set<InitializerMethod>> entry : initializers.entrySet()) {
+            Set<EventListener> eventListeners = processedEvents.get(entry.getKey());
+            if (eventListeners != null) {
+                for (EventListener eventListener : eventListeners) {
+                    for (InitializerMethod method : entry.getValue()) {
+                        try {
+                            method.invoke(processors.get(method.getProcessorClass()), this, eventListener);
+                        } catch (InvocationTargetException e) {
+                            throw new RuntimeException(e);
+                        } catch (IllegalAccessException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public void initialize() {
+        instantiateMissingProcessors();
+        callInitializers();
     }
 
 

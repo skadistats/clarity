@@ -1,29 +1,25 @@
 package skadistats.clarity.two.framework;
 
-import skadistats.clarity.two.runner.Context;
+import skadistats.clarity.two.framework.annotation.Initializer;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class EventListener {
+public class InitializerMethod {
 
-    private final Annotation annotation;
+    private final Initializer annotation;
     private final Class<?> processorClass;
     private final Method method;
 
-    public EventListener(Annotation annotation, Class<?> processorClass, Method method) {
+    public InitializerMethod(Initializer annotation, Class<?> processorClass, Method method) {
         this.annotation = annotation;
         this.processorClass = processorClass;
         this.method = method;
     }
 
-    public Annotation getAnnotation() {
-        return annotation;
-    }
-
     public Class<? extends Annotation> getEventClass() {
-        return annotation.annotationType();
+        return annotation.value();
     }
 
     public Class<?> getProcessorClass() {
@@ -39,7 +35,7 @@ public class EventListener {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventListener that = (EventListener) o;
+        InitializerMethod that = (InitializerMethod) o;
 
         if (!annotation.equals(that.annotation)) return false;
         if (!method.equals(that.method)) return false;

@@ -1,6 +1,7 @@
 package skadistats.clarity.two.processor.reader.event;
 
 import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.two.framework.EnlistmentMode;
 import skadistats.clarity.two.framework.annotation.EventMarker;
 
 import java.lang.annotation.ElementType;
@@ -12,6 +13,6 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 @EventMarker
 public @interface OnMessage {
+    EnlistmentMode enlist() default EnlistmentMode.SPECIFIED;
     Class<? extends GeneratedMessage> value() default GeneratedMessage.class;
-
 }
