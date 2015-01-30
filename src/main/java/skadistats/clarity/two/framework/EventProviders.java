@@ -1,9 +1,6 @@
 package skadistats.clarity.two.framework;
 
-import org.reflections.Reflections;
-import org.reflections.scanners.TypeAnnotationsScanner;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
+import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.two.framework.annotation.EventMarker;
@@ -19,12 +16,9 @@ public class EventProviders {
 
     private static Map<Class<? extends Annotation>, EventProvider> PROVIDERS = new HashMap<>();
 
-    public static void scan(String packageName) {
-        Reflections reflections = new Reflections(new ConfigurationBuilder()
-                .setUrls(ClasspathHelper.forPackage(packageName))
-                .setScanners(new TypeAnnotationsScanner())
-        );
-        for (Class<?> providerClass : reflections.getTypesAnnotatedWith(ProvidesEvent.class)) {
+    static {
+        for (Class<?> providerClass : ClassIndex.getAnnotated(ProvidesEvent.class)) {
+            log.info("{}", providerClass.getName());
             ProvidesEvent provideAnnotation = providerClass.getAnnotation(ProvidesEvent.class);
             for (Class<? extends Annotation> eventClass : provideAnnotation.value()) {
                 if (!eventClass.isAnnotationPresent(EventMarker.class)) {
