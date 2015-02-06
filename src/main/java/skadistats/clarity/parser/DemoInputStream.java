@@ -93,18 +93,15 @@ public class DemoInputStream implements Closeable {
                     if (message instanceof CDemoPacket) {
                         es = CodedInputStream.newInstance(((CDemoPacket) message).getData().toByteArray());
                         state = State.EMBED;
-                        log.warn("---------- OPEN CDemoPacket");
                         continue;
                     } else if (message instanceof CDemoSendTables) {
                         es = CodedInputStream.newInstance(((CDemoSendTables) message).getData().toByteArray());
                         state = State.EMBED;
-                        log.warn("---------- OPEN CDemoSendTables");
                         continue;
                     } else if (message instanceof CDemoFullPacket) {
                         CDemoFullPacket fullMessage = (CDemoFullPacket)message;
                         es = CodedInputStream.newInstance(fullMessage.getPacket().getData().toByteArray());
                         state = State.EMBED;
-                        log.warn("---------- OPEN CDemoFullPacket");
                         full = true;
                         if (!isFiltered(CDemoStringTables.class)) {
                             return genPeek(fullMessage.getStringTable());
@@ -118,7 +115,6 @@ public class DemoInputStream implements Closeable {
                     if (es.isAtEnd()) {
                         es = null;
                         state = State.TOP;
-                        log.warn("---------- CLOSE");
                         continue;
                     }
                     int subKind = es.readRawVarint32();
