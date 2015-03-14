@@ -55,6 +55,7 @@ public class InputStreamProcessor {
             kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             int tick = cs.readRawVarint32();
             int size = cs.readRawVarint32();
+            ctx.setTick(tick);
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
             if (messageClass == null) {
                 log.warn("unknown top level message of kind {}", kind);
