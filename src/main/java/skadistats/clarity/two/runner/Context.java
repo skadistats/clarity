@@ -2,9 +2,9 @@ package skadistats.clarity.two.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.two.framework.EventProvider;
-import skadistats.clarity.two.framework.EventProviders;
-import skadistats.clarity.two.framework.annotation.InvocationPointMarker;
+import skadistats.clarity.two.framework.UsagePointProvider;
+import skadistats.clarity.two.framework.UsagePoints;
+import skadistats.clarity.two.framework.annotation.UsagePointMarker;
 import skadistats.clarity.two.framework.invocation.*;
 import skadistats.clarity.two.framework.invocation.EventListener;
 
@@ -17,7 +17,7 @@ public class Context {
     private static final Logger log = LoggerFactory.getLogger(Context.class);
 
     private Map<Class<?>, Object> processors = new HashMap<>();
-    private Set<InvocationPoint> invocationPoints = new HashSet<>();
+    private Set<UsagePoint> usagePoints = new HashSet<>();
     private Map<Class<? extends Annotation>, Set<EventListener>> processedEvents = new HashMap<>();
     private Map<Class<? extends Annotation>, InitializerMethod> initializers = new HashMap<>();
 
@@ -34,13 +34,13 @@ public class Context {
         if (!processors.containsKey(processorClass)) {
             log.info("require processor {}", processorClass.getName());
             processors.put(processorClass, null);
-            List<InvocationPoint> ips = findInvocationPoints(processorClass);
-            for (InvocationPoint ip : ips) {
-                invocationPoints.add(ip);
-                if (ip instanceof EventListener) {
-                    requireEventListener((EventListener) ip);
-                } else if (ip instanceof InitializerMethod) {
-                    registerInitializer((InitializerMethod) ip);
+            List<UsagePoint> ups = findUsagePoints(processorClass);
+            for (UsagePoint up : ups) {
+                usagePoints.add(up);
+                if (up instanceof EventListener) {
+                    requireEventListener((EventListener) up);
+                } else if (up instanceof InitializerMethod) {
+                    registerInitializer((InitializerMethod) up);
                 }
             }
         }
@@ -54,7 +54,7 @@ public class Context {
             processedEvents.put(eventListener.getEventClass(), eventListeners);
         }
         eventListeners.add(eventListener);
-        EventProvider provider = EventProviders.getEventProviderFor(eventListener.getEventClass());
+        UsagePointProvider provider = UsagePoints.getProvidersFor(eventListener.getEventClass());
         if (provider == null) {
             throw new RuntimeException("oops. no provider found for required listener");
         }
@@ -70,18 +70,21 @@ public class Context {
         initializers.put(initializer.getEventClass(), initializer);
     }
 
-    private List<InvocationPoint> findInvocationPoints(Class<?> searchedClass) {
-        List<InvocationPoint> invocationPoints = new ArrayList<>();
+    private List<UsagePoint> findUsagePoints(Class<?> searchedClass) {
+        List<UsagePoint> ups = new ArrayList<>();
+        for (Annotation classAnnotation : searchedClass.getAnnotations()) {
+            if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
+                ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
+            }
+        }
         for (Method method : searchedClass.getMethods()) {
             for (Annotation methodAnnotation : method.getAnnotations()) {
-                if (methodAnnotation.annotationType().isAnnotationPresent(InvocationPointMarker.class)) {
-                    InvocationPointMarker marker = methodAnnotation.annotationType().getAnnotation(InvocationPointMarker.class);
-                    InvocationPointType ipt = marker.value();
-                    invocationPoints.add(ipt.newInstance(methodAnnotation, searchedClass, method, marker.arity()));
+                if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
+                    ups.add(UsagePointType.newInstance(methodAnnotation, searchedClass, method));
                 }
             }
         }
-        return invocationPoints;
+        return ups;
     }
 
     private void instantiateMissingProcessors() {
@@ -97,25 +100,26 @@ public class Context {
     }
 
     private void bindInvocationPoints() {
-        for (InvocationPoint invocationPoint : invocationPoints) {
-            try {
-                invocationPoint.bind(this);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+        for (UsagePoint up : usagePoints) {
+            if (up instanceof InvocationPoint){
+                try {
+                    ((InvocationPoint)up).bind(this);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+
             }
         }
     }
 
     private void callInitializers() {
-        for (Map.Entry<Class<? extends Annotation>, InitializerMethod> initializerMethodEntry : initializers.entrySet()) {
-            Set<EventListener> eventListeners = processedEvents.get(initializerMethodEntry.getKey());
-            if (eventListeners != null) {
-                for (EventListener eventListener : eventListeners) {
-                    try {
-                        initializerMethodEntry.getValue().invoke(eventListener);
-                    } catch (Throwable e) {
-                        throw new RuntimeException(e);
-                    }
+        for (UsagePoint up : usagePoints) {
+            InitializerMethod im = initializers.get(up.getAnnotation().annotationType());
+            if (im != null){
+                try {
+                    im.invoke(up);
+                } catch (Throwable e) {
+                    throw new RuntimeException(e);
                 }
             }
         }

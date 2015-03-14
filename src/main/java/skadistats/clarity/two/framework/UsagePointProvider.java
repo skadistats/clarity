@@ -2,12 +2,12 @@ package skadistats.clarity.two.framework;
 
 import java.lang.annotation.Annotation;
 
-public class EventProvider {
+public class UsagePointProvider {
 
     private final Class<? extends Annotation> eventClass;
     private final Class<?> providerClass;
 
-    public EventProvider(Class<? extends Annotation> eventClass, Class<?> providerClass) {
+    public UsagePointProvider(Class<? extends Annotation> eventClass, Class<?> providerClass) {
         this.eventClass = eventClass;
         this.providerClass = providerClass;
     }
@@ -25,7 +25,7 @@ public class EventProvider {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        EventProvider that = (EventProvider) o;
+        UsagePointProvider that = (UsagePointProvider) o;
 
         if (!eventClass.equals(that.eventClass)) return false;
         if (!providerClass.equals(that.providerClass)) return false;
