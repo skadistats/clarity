@@ -17,7 +17,7 @@ import skadistats.clarity.two.processor.runner.OnInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-@Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class})
+@Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class, OnTickStart.class, OnTickEnd.class })
 public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
@@ -48,14 +48,19 @@ public class InputStreamProcessor {
             throw new IOException("replay does not have the proper header");
         }
         ctx.createEvent(OnFileInfoOffset.class, int.class).raise(cs.readFixed32());
-
+        ctx.createEvent(OnTickStart.class).raise();
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
             boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             int tick = cs.readRawVarint32();
             int size = cs.readRawVarint32();
+            boolean newTick = tick != ctx.getTick();
             ctx.setTick(tick);
+            if (newTick) {
+                ctx.createEvent(OnTickEnd.class).raise();
+                ctx.createEvent(OnTickStart.class).raise();
+            }
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
             if (messageClass == null) {
                 log.warn("unknown top level message of kind {}", kind);
@@ -79,6 +84,7 @@ public class InputStreamProcessor {
                 }
             }
         }
+        ctx.createEvent(OnTickEnd.class).raise();
     }
 
     @OnMessageContainer
