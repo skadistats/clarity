@@ -1,4 +1,4 @@
-package skadistats.clarity.two.runner;
+package skadistats.clarity.two.processor.runner;
 
 import skadistats.clarity.two.framework.annotation.Provides;
 

@@ -1,6 +1,6 @@
 package skadistats.clarity.two.framework.invocation;
 
-import skadistats.clarity.two.runner.Context;
+import skadistats.clarity.two.processor.runner.Context;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

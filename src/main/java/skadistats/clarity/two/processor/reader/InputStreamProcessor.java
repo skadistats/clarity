@@ -11,8 +11,8 @@ import skadistats.clarity.two.framework.annotation.Initializer;
 import skadistats.clarity.two.framework.annotation.Provides;
 import skadistats.clarity.two.framework.invocation.Event;
 import skadistats.clarity.two.framework.invocation.EventListener;
-import skadistats.clarity.two.runner.Context;
-import skadistats.clarity.two.runner.OnInputStream;
+import skadistats.clarity.two.processor.runner.Context;
+import skadistats.clarity.two.processor.runner.OnInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

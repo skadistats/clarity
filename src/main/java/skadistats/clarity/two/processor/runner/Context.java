@@ -1,4 +1,4 @@
-package skadistats.clarity.two.runner;
+package skadistats.clarity.two.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
