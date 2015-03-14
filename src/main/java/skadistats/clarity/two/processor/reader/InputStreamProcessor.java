@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.parser.PacketTypes;
-import skadistats.clarity.two.framework.EnlistmentMode;
 import skadistats.clarity.two.framework.annotation.Initializer;
 import skadistats.clarity.two.framework.annotation.Provides;
 import skadistats.clarity.two.framework.invocation.EventListener;
@@ -87,7 +86,7 @@ public class InputStreamProcessor {
         }
     }
 
-    @OnMessageContainer(enlist = EnlistmentMode.NONE)
+    @OnMessageContainer
     public void processEmbedded(Context ctx, CodedInputStream cs) throws IOException {
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
