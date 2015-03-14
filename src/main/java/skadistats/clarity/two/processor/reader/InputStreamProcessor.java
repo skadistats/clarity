@@ -10,11 +10,7 @@ import skadistats.clarity.parser.PacketTypes;
 import skadistats.clarity.two.framework.EnlistmentMode;
 import skadistats.clarity.two.framework.EventListener;
 import skadistats.clarity.two.framework.annotation.Initializer;
-import skadistats.clarity.two.framework.annotation.ProvidesEvent;
-import skadistats.clarity.two.processor.reader.event.OnFileInfoOffset;
-import skadistats.clarity.two.processor.reader.event.OnInputStream;
-import skadistats.clarity.two.processor.reader.event.OnMessage;
-import skadistats.clarity.two.processor.reader.event.OnMessageContainer;
+import skadistats.clarity.two.framework.annotation.Provides;
 import skadistats.clarity.two.runner.Context;
 
 import java.io.IOException;
@@ -22,7 +18,7 @@ import java.io.InputStream;
 import java.util.HashSet;
 import java.util.Set;
 
-@ProvidesEvent({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class})
+@Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class})
 public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);

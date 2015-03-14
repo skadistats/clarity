@@ -136,19 +136,14 @@ public class Context {
         if (eventListeners == null) {
             return;
         }
-        Object[] compiledParams;
-        if (params.length == 0) {
-            compiledParams = params;
-        } else {
-            compiledParams = new Object[params.length + 1];
-            compiledParams[0] = this;
-            System.arraycopy(params, 0, compiledParams, 1, params.length);
-        }
+        Object[] compiledParams = new Object[params.length + 1];
+        compiledParams[0] = this;
+        System.arraycopy(params, 0, compiledParams, 1, params.length);
         for (EventListener eventListener : eventListeners) {
             try {
                 eventListener.invoke(processors.get(eventListener.getProcessorClass()), compiledParams);
             } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(eventListener.getEventClass().getName() + " failed!", e);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }

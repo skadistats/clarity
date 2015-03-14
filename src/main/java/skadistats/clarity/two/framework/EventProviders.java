@@ -4,7 +4,7 @@ import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.two.framework.annotation.EventMarker;
-import skadistats.clarity.two.framework.annotation.ProvidesEvent;
+import skadistats.clarity.two.framework.annotation.Provides;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -17,9 +17,13 @@ public class EventProviders {
     private static Map<Class<? extends Annotation>, EventProvider> PROVIDERS = new HashMap<>();
 
     static {
-        for (Class<?> providerClass : ClassIndex.getAnnotated(ProvidesEvent.class)) {
-            log.info("{}", providerClass.getName());
-            ProvidesEvent provideAnnotation = providerClass.getAnnotation(ProvidesEvent.class);
+        for (Class<?> providerClass : ClassIndex.getAnnotated(Provides.class)) {
+            log.info("provider found on ClassIndex: {}", providerClass.getName());
+            Provides provideAnnotation = providerClass.getAnnotation(Provides.class);
+            if (provideAnnotation == null) {
+                // ClassIndex does not reflect real class. Can sometimes happen when working in the IDE.
+                continue;
+            }
             for (Class<? extends Annotation> eventClass : provideAnnotation.value()) {
                 if (!eventClass.isAnnotationPresent(EventMarker.class)) {
                     throw new RuntimeException(String.format("Class %s provides %s, which is not marked as an event.", providerClass.getName(), eventClass.getName()));

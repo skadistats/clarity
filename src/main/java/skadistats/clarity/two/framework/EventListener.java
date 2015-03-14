@@ -31,6 +31,10 @@ public class EventListener {
     }
 
     public void invoke(Object processor, Object... params) throws InvocationTargetException, IllegalAccessException {
+        System.out.println("call " + method + " with " + params.length + " args.");
+        for (Object param : params) {
+            System.out.println(param.getClass().getName());
+        }
         method.invoke(processor, params);
     }
 

@@ -1,4 +1,4 @@
-package skadistats.clarity.two.processor.reader.event;
+package skadistats.clarity.two.processor.reader;
 
 import skadistats.clarity.two.framework.annotation.EventMarker;
 
