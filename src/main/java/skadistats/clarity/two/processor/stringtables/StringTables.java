@@ -14,7 +14,7 @@ import skadistats.clarity.two.processor.runner.Context;
 
 import java.util.*;
 
-@Provides(UseStringTable.class)
+@Provides(UsesStringTable.class)
 public class StringTables {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
@@ -24,8 +24,8 @@ public class StringTables {
     private final List<StringTable> byId = new ArrayList<>();
     private final Map<String, StringTable> byName = new TreeMap<String, StringTable>();
 
-    @Initializer(UseStringTable.class)
-    public void initStringTableUsage(final Context ctx, final UsagePoint<UseStringTable> usagePoint) {
+    @Initializer(UsesStringTable.class)
+    public void initStringTableUsage(final Context ctx, final UsagePoint<UsesStringTable> usagePoint) {
         processedLists.add(usagePoint.getAnnotation().value());
     }
 

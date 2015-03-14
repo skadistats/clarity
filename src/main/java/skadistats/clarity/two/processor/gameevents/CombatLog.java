@@ -8,7 +8,7 @@ import skadistats.clarity.two.framework.invocation.Event;
 import skadistats.clarity.two.processor.reader.OnTickEnd;
 import skadistats.clarity.two.processor.runner.Context;
 import skadistats.clarity.two.processor.stringtables.StringTables;
-import skadistats.clarity.two.processor.stringtables.UseStringTable;
+import skadistats.clarity.two.processor.stringtables.UsesStringTable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class CombatLog {
     private final List<Entry> logEntries = new LinkedList<>();
 
     @OnGameEventDescriptor(GAME_EVENT_NAME)
-    @UseStringTable(CombatLog.STRING_TABLE_NAME)
+    @UsesStringTable(CombatLog.STRING_TABLE_NAME)
     public void onGameEventDescriptor(Context ctx, GameEventDescriptor descriptor){
         typeIdx = descriptor.getIndexForKey("type");
         sourceNameIdx = descriptor.getIndexForKey("sourcename");
