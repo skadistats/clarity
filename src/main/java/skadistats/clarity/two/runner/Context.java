@@ -77,7 +77,7 @@ public class Context {
                 if (methodAnnotation.annotationType().isAnnotationPresent(InvocationPointMarker.class)) {
                     InvocationPointMarker marker = methodAnnotation.annotationType().getAnnotation(InvocationPointMarker.class);
                     InvocationPointType ipt = marker.value();
-                    invocationPoints.add(ipt.newInstance(methodAnnotation, searchedClass, method));
+                    invocationPoints.add(ipt.newInstance(methodAnnotation, searchedClass, method, marker.arity()));
                 }
             }
         }
@@ -127,12 +127,17 @@ public class Context {
         callInitializers();
     }
 
-    public Event createEvent(Class<? extends Annotation> eventType) {
-        return null;
-    }
-
-    public void raise(Class<? extends Annotation> eventType, Object... params) {
-
+    public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
+        Set<EventListener<A>> listeners = new HashSet<>();
+        Set<EventListener> eventListeners = processedEvents.get(eventType);
+        if(eventListeners != null) {
+            for (EventListener<A> listener : eventListeners) {
+                if (listener.isInvokedFor(parameterTypes)) {
+                    listeners.add(listener);
+                }
+            }
+        }
+        return new Event<>(listeners);
     }
 
 }

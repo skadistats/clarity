@@ -1,6 +1,5 @@
 package skadistats.clarity.two.framework.invocation;
 
-import com.google.common.base.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.two.runner.Context;
@@ -18,15 +17,20 @@ public abstract class AbstractInvocationPoint<A extends Annotation> implements I
     protected final A annotation;
     protected final Class<?> processorClass;
     protected final Method method;
+    protected final int arity;
     protected MethodHandle methodHandle;
-    protected Predicate<Class[]> invocationClassPredicate;
-    protected Predicate<Object[]> invocationParameterPredicate;
+    protected Class[] parameterClasses;
 
-    public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method) {
+    public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method, int arity) {
         this.log = LoggerFactory.getLogger(getClass());
         this.annotation = annotation;
         this.processorClass = processorClass;
         this.method = method;
+        this.arity = arity;
+        this.parameterClasses = new Class[arity];
+        for (int a = 0; a < arity; a++){
+            parameterClasses[a] = Object.class;
+        }
     }
 
     public A getAnnotation() {
@@ -41,26 +45,37 @@ public abstract class AbstractInvocationPoint<A extends Annotation> implements I
         return method;
     }
 
-    public Predicate<Object[]> getInvocationParameterPredicate() {
-        return invocationParameterPredicate;
-    }
-
-    public void setInvocationParameterPredicate(Predicate<Object[]> invocationParameterPredicate) {
-        this.invocationParameterPredicate = invocationParameterPredicate;
+    public int getArity() {
+        return arity;
     }
 
     abstract Class<? extends Annotation> getEventClass();
 
+    public void setParameterClasses(Class... parameterClasses) {
+        this.parameterClasses = parameterClasses;
+    }
+
+    @Override
     public void bind(Context ctx) throws IllegalAccessException {
         log.info("bind {} to context", method);
         MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass)).bindTo(ctx);
         methodHandle = new ConstantCallSite(boundHandle).dynamicInvoker();
     }
 
-    public boolean isInvokedFor(Object... args) {
-        return invocationParameterPredicate == null ? true : invocationParameterPredicate.apply(args);
+    @Override
+    public boolean isInvokedFor(Class... classes) throws IllegalArgumentException {
+        if (classes.length != arity){
+            throw new IllegalArgumentException("supplied parameter classes have wrong arity");
+        }
+        for (int a = 0; a < arity; a++){
+            if (!parameterClasses[a].isAssignableFrom(classes[a])){
+                return false;
+            }
+        }
+        return true;
     }
 
+    @Override
     public void invoke(Object... args) throws Throwable {
         methodHandle.invokeWithArguments(args);
     }

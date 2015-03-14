@@ -14,7 +14,7 @@ public class Runner {
         c.addProcessor(processor);
         c.addProcessor(new StringTables());
         c.initialize();
-        c.raise(OnInputStream.class, is);
+        c.createEvent(OnInputStream.class, InputStream.class).raise(is);
     }
 
 }

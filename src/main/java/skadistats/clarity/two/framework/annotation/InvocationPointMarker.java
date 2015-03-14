@@ -11,4 +11,5 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.ANNOTATION_TYPE})
 public @interface InvocationPointMarker {
     InvocationPointType value();
+    int arity() default 1;
 }

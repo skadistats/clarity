@@ -10,10 +10,11 @@ public interface InvocationPoint<A extends Annotation> {
     A getAnnotation();
     Class<?> getProcessorClass();
     Method getMethod();
+    int getArity();
 
     void bind(Context ctx) throws IllegalAccessException;
 
-    boolean isInvokedFor(Object... args);
+    boolean isInvokedFor(Class... args);
     void invoke(Object... args) throws Throwable;
 
 

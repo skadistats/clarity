@@ -7,8 +7,8 @@ import java.lang.reflect.Method;
 
 public class InitializerMethod extends AbstractInvocationPoint<Initializer> {
 
-    public InitializerMethod(Initializer annotation, Class<?> processorClass, Method method) {
-        super(annotation, processorClass, method);
+    public InitializerMethod(Initializer annotation, Class<?> processorClass, Method method, int arity) {
+        super(annotation, processorClass, method, arity);
     }
 
     @Override
