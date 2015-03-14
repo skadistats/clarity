@@ -41,9 +41,19 @@ public class Context {
                     requireEventListener((EventListener) up);
                 } else if (up instanceof InitializerMethod) {
                     registerInitializer((InitializerMethod) up);
+                } else {
+                    requireProvider(up);
                 }
             }
         }
+    }
+
+    private void requireProvider(UsagePoint up) {
+        UsagePointProvider provider = UsagePoints.getProvidersFor(up.getUsagePointClass());
+        if (provider == null) {
+            throw new RuntimeException("oops. no provider found for required usage point");
+        }
+        requireProcessorClass(provider.getProviderClass());
     }
 
     private void requireEventListener(EventListener eventListener) {
@@ -54,11 +64,7 @@ public class Context {
             processedEvents.put(eventListener.getUsagePointClass(), eventListeners);
         }
         eventListeners.add(eventListener);
-        UsagePointProvider provider = UsagePoints.getProvidersFor(eventListener.getUsagePointClass());
-        if (provider == null) {
-            throw new RuntimeException("oops. no provider found for required listener");
-        }
-        requireProcessorClass(provider.getProviderClass());
+        requireProvider(eventListener);
     }
 
     private void registerInitializer(InitializerMethod initializer) {

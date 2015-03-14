@@ -1,7 +1,6 @@
 package skadistats.clarity.two.runner;
 
 import skadistats.clarity.two.framework.annotation.Provides;
-import skadistats.clarity.two.processor.stringtables.StringTables;
 
 import java.io.InputStream;
 
@@ -12,7 +11,6 @@ public class Runner {
         Context c = new Context();
         c.addProcessor(this);
         c.addProcessor(processor);
-        c.addProcessor(new StringTables());
         c.initialize();
         c.createEvent(OnInputStream.class, InputStream.class).raise(is);
     }
