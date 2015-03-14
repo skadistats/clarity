@@ -1,30 +1,19 @@
 package skadistats.clarity.decoder;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import skadistats.clarity.model.*;
+import skadistats.clarity.two.processor.sendtables.DTClasses;
 
-import skadistats.clarity.match.DTClassCollection;
-import skadistats.clarity.model.PropFlag;
-import skadistats.clarity.model.PropType;
-import skadistats.clarity.model.ReceiveProp;
-import skadistats.clarity.model.SendProp;
-import skadistats.clarity.model.SendTable;
-import skadistats.clarity.model.SendTableExclusion;
+import java.util.*;
 
 public class SendTableFlattener {
 
-    private final DTClassCollection lookup;
+    private final DTClasses lookup;
     private final SendTable descendant;
     private final Set<SendTableExclusion> exclusions;
     private final List<ReceiveProp> receiveProps;
     private final StringBuffer nameBuf;
 
-    public SendTableFlattener(DTClassCollection lookup, SendTable descendant) {
+    public SendTableFlattener(DTClasses lookup, SendTable descendant) {
         this.lookup = lookup;
         this.descendant = descendant;
         this.exclusions = aggregateExclusions(descendant);
