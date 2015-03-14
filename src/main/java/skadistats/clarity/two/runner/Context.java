@@ -5,10 +5,8 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.two.framework.EventProvider;
 import skadistats.clarity.two.framework.EventProviders;
 import skadistats.clarity.two.framework.annotation.InvocationPointMarker;
+import skadistats.clarity.two.framework.invocation.*;
 import skadistats.clarity.two.framework.invocation.EventListener;
-import skadistats.clarity.two.framework.invocation.InitializerMethod;
-import skadistats.clarity.two.framework.invocation.InvocationPoint;
-import skadistats.clarity.two.framework.invocation.InvocationPointType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -19,6 +17,7 @@ public class Context {
     private static final Logger log = LoggerFactory.getLogger(Context.class);
 
     private Map<Class<?>, Object> processors = new HashMap<>();
+    private Set<InvocationPoint> invocationPoints = new HashSet<>();
     private Map<Class<? extends Annotation>, Set<EventListener>> processedEvents = new HashMap<>();
     private Map<Class<? extends Annotation>, InitializerMethod> initializers = new HashMap<>();
 
@@ -27,12 +26,17 @@ public class Context {
         processors.put(processor.getClass(), processor);
     }
 
+    public <T> T getProcessor(Class<T> processorClass) {
+        return (T) processors.get(processorClass);
+    }
+
     private void requireProcessorClass(Class<?> processorClass) {
         if (!processors.containsKey(processorClass)) {
             log.info("require processor {}", processorClass.getName());
             processors.put(processorClass, null);
-            List<InvocationPoint> invocationPoints = findInvocationPoints(processorClass);
-            for (InvocationPoint ip : invocationPoints) {
+            List<InvocationPoint> ips = findInvocationPoints(processorClass);
+            for (InvocationPoint ip : ips) {
+                invocationPoints.add(ip);
                 if (ip instanceof EventListener) {
                     requireEventListener((EventListener) ip);
                 } else if (ip instanceof InitializerMethod) {
@@ -85,10 +89,33 @@ public class Context {
             if (entry.getValue() == null) {
                 try {
                     entry.setValue(entry.getKey().newInstance());
-                } catch (InstantiationException e) {
+                } catch (Exception e) {
                     throw new RuntimeException(e);
-                } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
+
+    private void bindInvocationPoints() {
+        for (InvocationPoint invocationPoint : invocationPoints) {
+            try {
+                invocationPoint.bind(this);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private void callInitializers() {
+        for (Map.Entry<Class<? extends Annotation>, InitializerMethod> initializerMethodEntry : initializers.entrySet()) {
+            Set<EventListener> eventListeners = processedEvents.get(initializerMethodEntry.getKey());
+            if (eventListeners != null) {
+                for (EventListener eventListener : eventListeners) {
+                    try {
+                        initializerMethodEntry.getValue().invoke(eventListener);
+                    } catch (Throwable e) {
+                        throw new RuntimeException(e);
+                    }
                 }
             }
         }
@@ -96,10 +123,16 @@ public class Context {
 
     public void initialize() {
         instantiateMissingProcessors();
-        // callInitializers();
+        bindInvocationPoints();
+        callInitializers();
+    }
+
+    public Event createEvent(Class<? extends Annotation> eventType) {
+        return null;
     }
 
     public void raise(Class<? extends Annotation> eventType, Object... params) {
+
     }
 
 }

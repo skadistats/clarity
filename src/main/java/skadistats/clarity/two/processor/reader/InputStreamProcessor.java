@@ -1,6 +1,7 @@
 package skadistats.clarity.two.processor.reader;
 
 import com.dota2.proto.Demo;
+import com.google.common.base.Predicate;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
@@ -16,24 +17,24 @@ import skadistats.clarity.two.runner.OnInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Set;
 
 @Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class})
 public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
 
-    private Set<Class<? extends GeneratedMessage>> raisedClasses = new HashSet<>();
-
     @Initializer(OnMessage.class)
-    public void onMessageEventHandlerFound(Context ctx, EventListener listener) {
-        OnMessage a = (OnMessage) listener.getAnnotation();
-        raisedClasses.add(a.value());
+    public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
+        listener.setInvocationParameterPredicate(new Predicate<Object[]>() {
+            @Override
+            public boolean apply(Object[] objects) {
+                return objects.length == 1 && listener.getAnnotation().value().isAssignableFrom(objects[1].getClass());
+            }
+        });
     }
 
     private boolean isEmitted(Class<? extends GeneratedMessage> messageClass) {
-        return raisedClasses.contains(messageClass);
+        return true;
     }
 
     private byte[] readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
