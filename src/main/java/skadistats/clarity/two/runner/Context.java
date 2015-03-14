@@ -6,6 +6,7 @@ import skadistats.clarity.two.framework.EventProvider;
 import skadistats.clarity.two.framework.EventProviders;
 import skadistats.clarity.two.framework.annotation.InvocationPointMarker;
 import skadistats.clarity.two.framework.invocation.EventListener;
+import skadistats.clarity.two.framework.invocation.InitializerMethod;
 import skadistats.clarity.two.framework.invocation.InvocationPoint;
 import skadistats.clarity.two.framework.invocation.InvocationPointType;
 
@@ -19,6 +20,7 @@ public class Context {
 
     private Map<Class<?>, Object> processors = new HashMap<>();
     private Map<Class<? extends Annotation>, Set<EventListener>> processedEvents = new HashMap<>();
+    private Map<Class<? extends Annotation>, InitializerMethod> initializers = new HashMap<>();
 
     public void addProcessor(Object processor) {
         requireProcessorClass(processor.getClass());
@@ -33,6 +35,8 @@ public class Context {
             for (InvocationPoint ip : invocationPoints) {
                 if (ip instanceof EventListener) {
                     requireEventListener((EventListener) ip);
+                } else if (ip instanceof InitializerMethod) {
+                    registerInitializer((InitializerMethod) ip);
                 }
             }
         }
@@ -53,18 +57,27 @@ public class Context {
         requireProcessorClass(provider.getProviderClass());
     }
 
+    private void registerInitializer(InitializerMethod initializer) {
+        log.info("register initializer {}", initializer.getEventClass());
+        if (initializers.containsKey(initializer.getEventClass())) {
+            log.warn("ignoring duplicate initializer for event {} found in {}, already provided by {}", initializer.getEventClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getEventClass()).getProcessorClass().getName());
+            return;
+        }
+        initializers.put(initializer.getEventClass(), initializer);
+    }
+
     private List<InvocationPoint> findInvocationPoints(Class<?> searchedClass) {
-        List<InvocationPoint> eventListeners = new ArrayList<>();
+        List<InvocationPoint> invocationPoints = new ArrayList<>();
         for (Method method : searchedClass.getMethods()) {
             for (Annotation methodAnnotation : method.getAnnotations()) {
                 if (methodAnnotation.annotationType().isAnnotationPresent(InvocationPointMarker.class)) {
                     InvocationPointMarker marker = methodAnnotation.annotationType().getAnnotation(InvocationPointMarker.class);
                     InvocationPointType ipt = marker.value();
-                    ipt.newInstance(methodAnnotation, searchedClass, method);
+                    invocationPoints.add(ipt.newInstance(methodAnnotation, searchedClass, method));
                 }
             }
         }
-        return eventListeners;
+        return invocationPoints;
     }
 
     private void instantiateMissingProcessors() {
