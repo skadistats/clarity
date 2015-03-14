@@ -1,7 +1,6 @@
 package skadistats.clarity.two.runner;
 
 import skadistats.clarity.two.framework.annotation.Provides;
-import skadistats.clarity.two.processor.reader.OnInputStream;
 import skadistats.clarity.two.processor.stringtables.StringTables;
 
 import java.io.InputStream;

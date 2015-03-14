@@ -8,10 +8,11 @@ import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.parser.PacketTypes;
 import skadistats.clarity.two.framework.EnlistmentMode;
-import skadistats.clarity.two.framework.EventListener;
 import skadistats.clarity.two.framework.annotation.Initializer;
 import skadistats.clarity.two.framework.annotation.Provides;
+import skadistats.clarity.two.framework.invocation.EventListener;
 import skadistats.clarity.two.runner.Context;
+import skadistats.clarity.two.runner.OnInputStream;
 
 import java.io.IOException;
 import java.io.InputStream;

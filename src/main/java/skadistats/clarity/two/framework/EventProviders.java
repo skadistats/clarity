@@ -3,7 +3,7 @@ package skadistats.clarity.two.framework;
 import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.two.framework.annotation.EventMarker;
+import skadistats.clarity.two.framework.annotation.InvocationPointMarker;
 import skadistats.clarity.two.framework.annotation.Provides;
 
 import java.lang.annotation.Annotation;
@@ -25,7 +25,7 @@ public class EventProviders {
                 continue;
             }
             for (Class<? extends Annotation> eventClass : provideAnnotation.value()) {
-                if (!eventClass.isAnnotationPresent(EventMarker.class)) {
+                if (!eventClass.isAnnotationPresent(InvocationPointMarker.class)) {
                     throw new RuntimeException(String.format("Class %s provides %s, which is not marked as an event.", providerClass.getName(), eventClass.getName()));
                 }
                 if (PROVIDERS.containsKey(eventClass)) {
