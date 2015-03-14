@@ -47,14 +47,14 @@ public class Context {
     }
 
     private void requireEventListener(EventListener eventListener) {
-        log.info("require event listener {}", eventListener.getEventClass());
-        Set<EventListener> eventListeners = processedEvents.get(eventListener.getEventClass());
+        log.info("require event listener {}", eventListener.getUsagePointClass());
+        Set<EventListener> eventListeners = processedEvents.get(eventListener.getUsagePointClass());
         if (eventListeners == null) {
             eventListeners = new HashSet<>();
-            processedEvents.put(eventListener.getEventClass(), eventListeners);
+            processedEvents.put(eventListener.getUsagePointClass(), eventListeners);
         }
         eventListeners.add(eventListener);
-        UsagePointProvider provider = UsagePoints.getProvidersFor(eventListener.getEventClass());
+        UsagePointProvider provider = UsagePoints.getProvidersFor(eventListener.getUsagePointClass());
         if (provider == null) {
             throw new RuntimeException("oops. no provider found for required listener");
         }
@@ -62,12 +62,12 @@ public class Context {
     }
 
     private void registerInitializer(InitializerMethod initializer) {
-        log.info("register initializer {}", initializer.getEventClass());
-        if (initializers.containsKey(initializer.getEventClass())) {
-            log.warn("ignoring duplicate initializer for event {} found in {}, already provided by {}", initializer.getEventClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getEventClass()).getProcessorClass().getName());
+        log.info("register initializer {}", initializer.getUsagePointClass());
+        if (initializers.containsKey(initializer.getUsagePointClass())) {
+            log.warn("ignoring duplicate initializer for event {} found in {}, already provided by {}", initializer.getUsagePointClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getUsagePointClass()).getProcessorClass().getName());
             return;
         }
-        initializers.put(initializer.getEventClass(), initializer);
+        initializers.put(initializer.getUsagePointClass(), initializer);
     }
 
     private List<UsagePoint> findUsagePoints(Class<?> searchedClass) {
@@ -114,7 +114,10 @@ public class Context {
 
     private void callInitializers() {
         for (UsagePoint up : usagePoints) {
-            InitializerMethod im = initializers.get(up.getAnnotation().annotationType());
+            if (up instanceof InitializerMethod) {
+                continue;
+            }
+            InitializerMethod im = initializers.get(up.getUsagePointClass());
             if (im != null){
                 try {
                     im.invoke(up);

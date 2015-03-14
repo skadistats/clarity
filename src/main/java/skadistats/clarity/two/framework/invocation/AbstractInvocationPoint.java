@@ -27,8 +27,6 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
         return arity;
     }
 
-    abstract Class<? extends Annotation> getEventClass();
-
     public void setParameterClasses(Class... parameterClasses) {
         this.parameterClasses = parameterClasses;
     }

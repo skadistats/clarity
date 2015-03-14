@@ -33,6 +33,10 @@ public class UsagePoint<A extends Annotation> {
         return method;
     }
 
+    public Class<? extends Annotation> getUsagePointClass() {
+        return annotation.annotationType();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

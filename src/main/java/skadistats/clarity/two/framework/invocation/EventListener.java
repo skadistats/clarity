@@ -9,10 +9,4 @@ public class EventListener<A extends Annotation> extends AbstractInvocationPoint
         super(annotation, processorClass, method, arity);
     }
 
-    public Class<? extends Annotation> getEventClass() {
-        return annotation.annotationType();
-    }
-
-
-
 }

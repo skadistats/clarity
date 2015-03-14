@@ -1,5 +1,6 @@
 package skadistats.clarity.two.framework.invocation;
 
+import skadistats.clarity.two.framework.annotation.Initializer;
 import skadistats.clarity.two.framework.annotation.UsagePointMarker;
 
 import java.lang.annotation.Annotation;
@@ -19,7 +20,7 @@ public enum UsagePointType {
             case FEATURE:
                 return new UsagePoint(annotation, processorClass, method);
             case INITIALIZER:
-                return new InitializerMethod(annotation, processorClass, method, marker.arity());
+                return (UsagePoint<A>) new InitializerMethod((Initializer) annotation, processorClass, method, marker.arity());
             default:
                 throw new RuntimeException("don't know how to create a newInstance for a UsagePoint of type "+ marker.value());
         }
