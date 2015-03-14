@@ -62,8 +62,13 @@ public class StringTables {
         }
     }
 
-    public StringTable getByName(String name) {
+    public StringTable forName(String name) {
         return byName.get(name);
     }
+
+    public StringTable forId(int id) {
+        return byId.get(id);
+    }
+
 
 }

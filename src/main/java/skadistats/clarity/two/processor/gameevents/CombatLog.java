@@ -84,7 +84,7 @@ public class CombatLog {
         private final GameEvent event;
 
         private Entry(Context ctx, GameEvent event) {
-            this.combatLogNames = ctx.getProcessor(StringTables.class).getByName(STRING_TABLE_NAME);
+            this.combatLogNames = ctx.getProcessor(StringTables.class).forName(STRING_TABLE_NAME);
             this.event = event;
         }
 

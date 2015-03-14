@@ -1,33 +1,26 @@
 package skadistats.clarity.decoder;
 
-import java.util.List;
-
+import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.model.*;
+import skadistats.clarity.two.processor.entities.Entities;
+import skadistats.clarity.two.processor.sendtables.DTClasses;
 
-import skadistats.clarity.match.DTClassCollection;
-import skadistats.clarity.match.EntityCollection;
-import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.Handle;
-import skadistats.clarity.model.PVS;
-import skadistats.clarity.model.ReceiveProp;
-import skadistats.clarity.model.StringTable;
-
-import com.google.protobuf.ByteString;
+import java.util.List;
 
 public class PacketEntitiesDecoder {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final DTClassCollection dtClasses;
+    private final DTClasses dtClasses;
     private final StringTable baseline;
     private final int classBits;
     private final int numEntries;
     private final boolean isDelta;
     private final EntityBitStream stream;
 
-    public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, DTClassCollection dtClasses, StringTable baseline) {
+    public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, DTClasses dtClasses, StringTable baseline) {
         this.dtClasses = dtClasses;
         this.baseline = baseline;
         this.stream = new EntityBitStream(data);
@@ -36,7 +29,7 @@ public class PacketEntitiesDecoder {
         this.classBits = Util.calcBitsNeededFor(dtClasses.size() - 1);
     }
 
-    public void decodeAndApply(EntityCollection world) {
+    public void decodeAndApply(Entities world) {
         int index = -1;
         int count = 0;
         while (count < numEntries) {
@@ -48,7 +41,7 @@ public class PacketEntitiesDecoder {
         }
     }
 
-    private int decodeDiff(int index, EntityCollection entities) {
+    private int decodeDiff(int index, Entities entities) {
         index = stream.readEntityIndex(index);
         PVS pvs = stream.readEntityPVS();
         DTClass cls = null;
@@ -98,7 +91,7 @@ public class PacketEntitiesDecoder {
         return index;
     }
 
-    private void decodeDeletionDiffs(EntityCollection entities) {
+    private void decodeDeletionDiffs(Entities entities) {
         while (stream.readBit()) {
             int index = stream.readNumericBits(11); // max is 2^11-1, or 2047
             entities.remove(index);
