@@ -1,6 +1,7 @@
 package skadistats.clarity.two.processor.reader;
 
 import com.dota2.proto.Demo;
+import com.dota2.proto.Networkbasetypes;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
@@ -22,9 +23,12 @@ public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
 
+    private boolean unpackUserMessages = false;
+
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
+        unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
     }
 
     private byte[] readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
@@ -98,13 +102,25 @@ public class InputStreamProcessor {
                 cs.skipRawBytes(size);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                if (ev.isListenedTo()) {
+                if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
                     GeneratedMessage subMessage = PacketTypes.parse(messageClass, cs.readRawBytes(size));
-                    ev.raise(subMessage);
+                    if (ev.isListenedTo()) {
+                        ev.raise(subMessage);
+                    }
+                    if (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class) {
+                        Networkbasetypes.CSVCMsg_UserMessage userMessage = (Networkbasetypes.CSVCMsg_UserMessage) subMessage;
+                        Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
+                        if (umClazz == null) {
+                            log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
+                        } else {
+                            ctx.createEvent(OnMessage.class, umClazz).raise(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                        }
+                    }
                 } else {
                     cs.skipRawBytes(size);
                 }
             }
         }
     }
+
 }
