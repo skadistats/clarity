@@ -27,10 +27,6 @@ public class InputStreamProcessor {
         listener.setParameterClasses(listener.getAnnotation().value());
     }
 
-    private boolean isEmitted(Class<? extends GeneratedMessage> messageClass) {
-        return true;
-    }
-
     private byte[] readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
         byte[] data = ms.readRawBytes(size);
         if (isCompressed) {
