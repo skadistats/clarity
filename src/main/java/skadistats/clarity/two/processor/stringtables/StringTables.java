@@ -62,4 +62,8 @@ public class StringTables {
         }
     }
 
+    public StringTable getByName(String name) {
+        return byName.get(name);
+    }
+
 }

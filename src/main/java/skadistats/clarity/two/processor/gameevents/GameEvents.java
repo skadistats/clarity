@@ -14,11 +14,23 @@ import skadistats.clarity.two.processor.runner.Context;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Provides({OnGameEvent.class})
+@Provides({ OnGameEventDescriptor.class, OnGameEvent.class})
 public class GameEvents {
 
     private final Map<Integer, GameEventDescriptor> byId = new TreeMap<>();
     private final Map<String, GameEventDescriptor> byName = new TreeMap<>();
+
+    @Initializer(OnGameEventDescriptor.class)
+    public void initOnGameEventDescriptor(final Context ctx, final EventListener<OnGameEventDescriptor> eventListener) {
+        eventListener.setInvocationPredicate(new Predicate<Object[]>() {
+            @Override
+            public boolean apply(Object[] args) {
+                String v = eventListener.getAnnotation().value();
+                GameEventDescriptor ev = (GameEventDescriptor) args[0];
+                return v.length() == 0 || v.equals(ev.getName());
+            }
+        });
+    }
 
     @Initializer(OnGameEvent.class)
     public void initOnGameEvent(final Context ctx, final EventListener<OnGameEvent> eventListener) {
@@ -47,6 +59,7 @@ public class GameEvents {
             );
             byName.put(gev.getName(), gev);
             byId.put(gev.getEventId(), gev);
+            ctx.createEvent(OnGameEventDescriptor.class, GameEventDescriptor.class).raise(gev);
         }
     }
 
@@ -86,6 +99,5 @@ public class GameEvents {
         }
         ctx.createEvent(OnGameEvent.class, GameEvent.class).raise(e);
     }
-
 
 }
