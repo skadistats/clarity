@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.ANNOTATION_TYPE})
 public @interface UsagePointMarker {
     UsagePointType value();
-    int arity() default 1;
+    Class[] parameterClasses();
 }

@@ -1,6 +1,7 @@
 package skadistats.clarity.two.processor.stringtables;
 
 import skadistats.clarity.two.framework.annotation.UsagePointMarker;
+import skadistats.clarity.two.framework.invocation.UsagePoint;
 import skadistats.clarity.two.framework.invocation.UsagePointType;
 
 import java.lang.annotation.ElementType;
@@ -10,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.METHOD })
-@UsagePointMarker(UsagePointType.FEATURE)
+@UsagePointMarker(value = UsagePointType.FEATURE, parameterClasses = { UsagePoint.class })
 public @interface UseStringTable {
     String value();
 }

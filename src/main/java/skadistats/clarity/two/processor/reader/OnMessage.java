@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(UsagePointType.EVENT_LISTENER)
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { GeneratedMessage.class })
 public @interface OnMessage {
     Class<? extends GeneratedMessage> value() default GeneratedMessage.class;
 }

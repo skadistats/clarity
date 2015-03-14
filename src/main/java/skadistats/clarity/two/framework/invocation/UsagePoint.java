@@ -2,6 +2,7 @@ package skadistats.clarity.two.framework.invocation;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.two.framework.annotation.UsagePointMarker;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -13,12 +14,14 @@ public class UsagePoint<A extends Annotation> {
     protected final A annotation;
     protected final Class<?> processorClass;
     protected final Method method;
+    protected final UsagePointMarker usagePointMarker;
 
-    public UsagePoint(A annotation, Class<?> processorClass, Method method) {
+    public UsagePoint(A annotation, Class<?> processorClass, Method method, UsagePointMarker usagePointMarker) {
         this.log = LoggerFactory.getLogger(getClass());
         this.annotation = annotation;
         this.processorClass = processorClass;
         this.method = method;
+        this.usagePointMarker = usagePointMarker;
     }
 
     public A getAnnotation() {

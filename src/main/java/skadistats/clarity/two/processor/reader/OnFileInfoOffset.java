@@ -10,6 +10,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(UsagePointType.EVENT_LISTENER)
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { int.class })
 public @interface OnFileInfoOffset {
 }

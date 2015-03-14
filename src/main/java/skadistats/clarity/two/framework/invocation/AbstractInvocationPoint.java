@@ -1,5 +1,6 @@
 package skadistats.clarity.two.framework.invocation;
 
+import skadistats.clarity.two.framework.annotation.UsagePointMarker;
 import skadistats.clarity.two.runner.Context;
 
 import java.lang.annotation.Annotation;
@@ -14,21 +15,21 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     protected MethodHandle methodHandle;
     protected Class[] parameterClasses;
 
-    public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method, int arity) {
-        super(annotation, processorClass, method);
-        this.arity = arity;
-        this.parameterClasses = new Class[arity];
-        for (int a = 0; a < arity; a++){
-            parameterClasses[a] = Object.class;
-        }
+    public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method, UsagePointMarker marker) {
+        super(annotation, processorClass, method, marker);
+        this.arity = marker.parameterClasses().length;
+        this.parameterClasses = marker.parameterClasses();
     }
 
     public int getArity() {
         return arity;
     }
 
-    public void setParameterClasses(Class... parameterClasses) {
-        this.parameterClasses = parameterClasses;
+    public void setParameterClasses(Class... classes) {
+        if (classes.length != arity){
+            throw new IllegalArgumentException("supplied parameter classes have wrong arity");
+        }
+        this.parameterClasses = classes;
     }
 
     @Override
