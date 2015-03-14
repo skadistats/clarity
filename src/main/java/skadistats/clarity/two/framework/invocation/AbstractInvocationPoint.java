@@ -1,5 +1,6 @@
 package skadistats.clarity.two.framework.invocation;
 
+import com.google.common.base.Predicate;
 import skadistats.clarity.two.framework.annotation.UsagePointMarker;
 import skadistats.clarity.two.processor.runner.Context;
 
@@ -14,6 +15,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     protected final int arity;
     protected MethodHandle methodHandle;
     protected Class[] parameterClasses;
+    protected Predicate<Object[]> invocationPredicate;
 
     public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method, UsagePointMarker marker) {
         super(annotation, processorClass, method, marker);
@@ -32,6 +34,10 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
         this.parameterClasses = classes;
     }
 
+    public void setInvocationPredicate(Predicate<Object[]> invocationPredicate) {
+        this.invocationPredicate = invocationPredicate;
+    }
+
     @Override
     public void bind(Context ctx) throws IllegalAccessException {
         log.info("bind {} to context", method);
@@ -40,7 +46,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     }
 
     @Override
-    public boolean isInvokedFor(Class... classes) throws IllegalArgumentException {
+    public boolean isInvokedForParameterClasses(Class... classes) throws IllegalArgumentException {
         if (classes.length != arity){
             throw new IllegalArgumentException("supplied parameter classes have wrong arity");
         }
@@ -50,6 +56,17 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
             }
         }
         return true;
+    }
+
+    @Override
+    public boolean isInvokedForArguments(Object... args) throws IllegalArgumentException {
+        if (args.length != arity){
+            throw new IllegalArgumentException("supplied arguments have wrong arity");
+        }
+        if (invocationPredicate == null) {
+            return true;
+        }
+        return invocationPredicate.apply(args);
     }
 
     @Override

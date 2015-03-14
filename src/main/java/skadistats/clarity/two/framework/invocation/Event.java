@@ -18,10 +18,12 @@ public class Event<A extends Annotation> {
 
     public void raise(Object... args){
         for (EventListener<A> listener : listeners) {
-            try {
-                listener.invoke(args);
-            } catch (Throwable throwable) {
-                throw new RuntimeException(throwable);
+            if (listener.isInvokedForArguments(args)) {
+                try {
+                    listener.invoke(args);
+                } catch (Throwable throwable) {
+                    throw new RuntimeException(throwable);
+                }
             }
         }
     }

@@ -145,7 +145,7 @@ public class ExecutionModel {
         Set<EventListener> eventListeners = processedEvents.get(eventType);
         if(eventListeners != null) {
             for (EventListener<A> listener : eventListeners) {
-                if (listener.isInvokedFor(parameterTypes)) {
+                if (listener.isInvokedForParameterClasses(parameterTypes)) {
                     listeners.add(listener);
                 }
             }

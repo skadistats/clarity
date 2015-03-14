@@ -14,7 +14,8 @@ public interface InvocationPoint<A extends Annotation> {
 
     void bind(Context ctx) throws IllegalAccessException;
 
-    boolean isInvokedFor(Class... args);
+    boolean isInvokedForParameterClasses(Class... classes);
+    boolean isInvokedForArguments(Object... args);
     void invoke(Object... args) throws Throwable;
 
 
