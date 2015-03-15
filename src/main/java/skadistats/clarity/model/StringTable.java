@@ -1,8 +1,7 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.decoder.Util;
-
 import com.google.protobuf.ByteString;
+import skadistats.clarity.decoder.Util;
 
 public class StringTable {
     
@@ -31,6 +30,14 @@ public class StringTable {
         if (index < names.length) {
             this.names[index] = name;
             this.values[index] = value;
+        } else {
+            throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
+        }
+    }
+
+    public StringTableEntry getByIndex(int index) {
+        if (index < names.length) {
+            return new StringTableEntry(index, this.names[index], this.values[index]);
         } else {
             throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
         }
