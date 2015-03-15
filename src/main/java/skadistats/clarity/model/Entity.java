@@ -4,11 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.rits.cloning.Cloner;
-
-public class Entity implements Cloneable {
-
-    private static final Cloner CLONER = new Cloner();
+public class Entity {
 
     private final int index;
     private final int serial;
@@ -70,11 +66,6 @@ public class Entity implements Cloneable {
             i++;
         }
         return (T[]) result.toArray((T[]) Array.newInstance(clazz, 0));
-    }
-
-    @Override
-    public Entity clone() {
-        return CLONER.deepClone(this);
     }
 
     @Override
