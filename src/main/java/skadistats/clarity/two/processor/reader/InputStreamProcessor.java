@@ -62,9 +62,9 @@ public class InputStreamProcessor {
             int tick = cs.readRawVarint32();
             int size = cs.readRawVarint32();
             boolean newTick = tick != ctx.getTick();
-            ctx.setTick(tick);
             if (newTick) {
                 ctx.createEvent(OnTickEnd.class).raise();
+                ctx.setTick(tick);
                 ctx.createEvent(OnTickStart.class).raise();
             }
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
