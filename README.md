@@ -58,7 +58,7 @@ and then fetch the dependency with:
 
 # Example Code
 
-For example code, please see the the separate project [clarity-examples](https://github.com/skadistats/clarity-examples/tree/2.0-dev).
+For example code, please see the the separate project [clarity-examples](https://github.com/skadistats/clarity-examples).
 
 # License
 
