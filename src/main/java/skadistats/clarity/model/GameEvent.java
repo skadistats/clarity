@@ -19,10 +19,10 @@ public class GameEvent {
         return (T) state[index];
     }
 
-    public <T> T getProperty(String key) {
-        Integer index = descriptor.getIndexForKey(key);
+    public <T> T getProperty(String property) {
+        Integer index = descriptor.getIndexForKey(property);
         if (index == null) {
-            throw new IllegalArgumentException("key not found for this GameEvent");
+            throw new IllegalArgumentException(String.format("property %s not found on game event of class %s", property, descriptor.getName()));
         }
         return (T) state[index.intValue()];
     }

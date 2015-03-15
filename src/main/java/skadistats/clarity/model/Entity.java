@@ -50,7 +50,11 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        return (T) state[dtClass.getPropertyIndex(property)];
+        Integer index = dtClass.getPropertyIndex(property);
+        if (index == null) {
+            throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
+        }
+        return (T) state[index.intValue()];
     }
 
     @SuppressWarnings("unchecked")
