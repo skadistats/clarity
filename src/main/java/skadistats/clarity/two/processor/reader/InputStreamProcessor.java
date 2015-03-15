@@ -23,6 +23,7 @@ public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
 
+    private CodedInputStream mainStream;
     private boolean unpackUserMessages = false;
 
     @Initializer(OnMessage.class)
@@ -45,7 +46,8 @@ public class InputStreamProcessor {
 
     @OnInputStream
     public void processStream(Context ctx, InputStream is) throws IOException {
-        CodedInputStream cs = CodedInputStream.newInstance(is);
+        mainStream = CodedInputStream.newInstance(is);
+        CodedInputStream cs = mainStream;
         cs.setSizeLimit(Integer.MAX_VALUE);
         String header = new String(cs.readRawBytes(8));
         if (!"PBUFDEM\0".equals(header)) {
@@ -121,6 +123,10 @@ public class InputStreamProcessor {
                 }
             }
         }
+    }
+
+    public void skipBytes(int numBytes) throws IOException {
+        mainStream.skipRawBytes(numBytes);
     }
 
 }

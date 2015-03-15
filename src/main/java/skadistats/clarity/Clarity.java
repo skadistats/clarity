@@ -1,66 +1,40 @@
 package skadistats.clarity;
 
+import com.dota2.proto.Demo.CDemoFileInfo;
+import skadistats.clarity.two.processor.reader.InputStreamProcessor;
+import skadistats.clarity.two.processor.reader.OnFileInfoOffset;
+import skadistats.clarity.two.processor.reader.OnMessage;
+import skadistats.clarity.two.processor.runner.Context;
+import skadistats.clarity.two.processor.runner.Runner;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import skadistats.clarity.parser.DemoIndex;
-import skadistats.clarity.parser.DemoInputStream;
-import skadistats.clarity.parser.DemoInputStreamIterator;
-import skadistats.clarity.parser.PeekIterator;
-import skadistats.clarity.parser.Profile;
-import skadistats.clarity.parser.TickIterator;
-
-import com.dota2.proto.Demo.CDemoFileInfo;
-
 public class Clarity {
 
-    private static DemoInputStream demoInputStreamForStream(InputStream stream, Profile... profile) throws IOException {
-    	DemoInputStream d = new DemoInputStream(stream, profile);
-    	d.bootstrap();
-    	return d;
-    }
-
-    @Deprecated
-    public static DemoInputStreamIterator iteratorForFile(String fileName, Profile... profile) throws IOException {
-        return new DemoInputStreamIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
-    }
-    
-    public static PeekIterator peekIteratorForFile(String fileName, Profile... profile) throws IOException {
-        return new PeekIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
-    }
-
-    public static TickIterator tickIteratorForStream(InputStream stream, Profile... profile) throws IOException {
-        return new TickIterator(demoInputStreamForStream(stream, profile));
-    }
-    
-    public static TickIterator tickIteratorForFile(String fileName, Profile... profile) throws IOException {
-        return new TickIterator(demoInputStreamForStream(new FileInputStream(fileName), profile));
-    }
-
-    public static DemoIndex indexForStream(InputStream stream, Profile... profile) throws IOException {
-        return new DemoIndex(new PeekIterator(demoInputStreamForStream(stream, profile)));
-    }
-
-    public static DemoIndex indexForFile(String fileName, Profile... profile) throws IOException {
-        return new DemoIndex(iteratorForFile(fileName, profile));
-    }
-
-    public static CDemoFileInfo infoForStream(InputStream stream) throws IOException {
-        DemoInputStream s = null;
-        try {
-            s = demoInputStreamForStream(stream, Profile.FILE_INFO);
-            s.skipToFileInfo();
-            return (CDemoFileInfo) s.read().getMessage();
-        } finally {
-            if (s != null) {
-                s.close();
-            }
+    public static class InfoRetriever {
+        private CDemoFileInfo fileInfo;
+        @OnFileInfoOffset
+        public void onFileInfoOffset(Context ctx, int offset) throws IOException {
+            ctx.getProcessor(InputStreamProcessor.class).skipBytes(offset - 12);
+        }
+        @OnMessage(CDemoFileInfo.class)
+        public void onFileInfo(Context ctx, CDemoFileInfo message) throws IOException {
+            this.fileInfo = message;
+        }
+        public CDemoFileInfo retrieve(InputStream stream) {
+            new Runner().runWith(stream, this);
+            return fileInfo;
         }
     }
 
     public static CDemoFileInfo infoForFile(String fileName) throws IOException {
     	return infoForStream(new FileInputStream(fileName));
     }
-    
+
+    public static CDemoFileInfo infoForStream(final InputStream stream) throws IOException {
+        return new InfoRetriever().retrieve(stream);
+    }
+
 }
