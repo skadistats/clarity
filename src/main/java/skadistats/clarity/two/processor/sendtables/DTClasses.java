@@ -8,10 +8,7 @@ import skadistats.clarity.two.framework.annotation.Provides;
 import skadistats.clarity.two.processor.reader.OnMessage;
 import skadistats.clarity.two.processor.runner.Context;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 @Provides({UsesDTClasses.class})
 public class DTClasses {
@@ -88,6 +85,10 @@ public class DTClasses {
 
     public SendTable sendTableForDtName(String dtName) {
         return byDtName.get(dtName).getSendTable();
+    }
+
+    public Iterator<DTClass> iterator() {
+        return byClassId.values().iterator();
     }
 
     public int size() {
