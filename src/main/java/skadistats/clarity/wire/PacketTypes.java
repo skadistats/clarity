@@ -3,8 +3,10 @@ package skadistats.clarity.wire;
 import com.dota2.proto.*;
 import com.google.protobuf.GeneratedMessage;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.lang.invoke.ConstantCallSite;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -157,19 +159,24 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_BuyBackStateAlert_VALUE, DotaUsermessages.CDOTAUserMsg_BuyBackStateAlert.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_QuickBuyAlert_VALUE, DotaUsermessages.CDOTAUserMsg_QuickBuyAlert.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_StatsHeroDetails_VALUE, DotaUsermessages.CDOTAUserMsg_StatsHeroMinuteDetails.class);
-    }    
-    
-    private static final Map<Class<? extends GeneratedMessage>, Method> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, Method>() {
+    }
+
+    private static final Map<Class<? extends GeneratedMessage>, MethodHandle> PARSE_METHODS = new HashMap<Class<? extends GeneratedMessage>, MethodHandle>() {
         private static final long serialVersionUID = -6842762498712492043L;
         @SuppressWarnings("unchecked")
         @Override
-        public Method get(Object key) {
-            Method m = super.get(key);
+        public MethodHandle get(Object key) {
+            MethodHandle m = super.get(key);
             if (m == null) {
                 try {
-                    Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) key;
-                    m = clazz.getMethod("parseFrom", byte[].class);
-                    put(clazz, m);
+                    m = new ConstantCallSite(
+                        MethodHandles.publicLookup().findStatic(
+                            (Class<? extends GeneratedMessage>) key,
+                            "parseFrom",
+                            MethodType.methodType((Class<? extends GeneratedMessage>) key, byte[].class)
+                        )
+                    ).dynamicInvoker();
+                    put((Class<? extends GeneratedMessage>) key, m);
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
@@ -177,17 +184,13 @@ public class PacketTypes {
             return m;
         }
     };
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends GeneratedMessage> T parse(Class<T> clazz, byte[] data) {
         try {
-            return (T) PARSE_METHODS.get(clazz).invoke(null, data);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            return (T) PARSE_METHODS.get(clazz).invoke(data);
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
         }
     }
     
