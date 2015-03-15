@@ -32,7 +32,7 @@ public class ExecutionModel {
 
     private void requireProcessorClass(Class<?> processorClass) {
         if (!processors.containsKey(processorClass)) {
-            log.info("require processor {}", processorClass.getName());
+            log.debug("require processor {}", processorClass.getName());
             processors.put(processorClass, null);
             List<UsagePoint> ups = findUsagePoints(processorClass);
             for (UsagePoint up : ups) {
@@ -57,7 +57,7 @@ public class ExecutionModel {
     }
 
     private void requireEventListener(EventListener eventListener) {
-        log.info("require event listener {}", eventListener.getUsagePointClass());
+        log.debug("require event listener {}", eventListener.getUsagePointClass());
         Set<EventListener> eventListeners = processedEvents.get(eventListener.getUsagePointClass());
         if (eventListeners == null) {
             eventListeners = new HashSet<>();
@@ -68,7 +68,7 @@ public class ExecutionModel {
     }
 
     private void registerInitializer(InitializerMethod initializer) {
-        log.info("register initializer {}", initializer.getUsagePointClass());
+        log.debug("register initializer {}", initializer.getUsagePointClass());
         if (initializers.containsKey(initializer.getUsagePointClass())) {
             log.warn("ignoring duplicate initializer for event {} found in {}, already provided by {}", initializer.getUsagePointClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getUsagePointClass()).getProcessorClass().getName());
             return;

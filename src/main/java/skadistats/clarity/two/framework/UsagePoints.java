@@ -18,7 +18,7 @@ public class UsagePoints {
 
     static {
         for (Class<?> providerClass : ClassIndex.getAnnotated(Provides.class)) {
-            log.info("provider found on ClassIndex: {}", providerClass.getName());
+            log.debug("provider found on ClassIndex: {}", providerClass.getName());
             Provides provideAnnotation = providerClass.getAnnotation(Provides.class);
             if (provideAnnotation == null) {
                 // ClassIndex does not reflect real class. Can sometimes happen when working in the IDE.
