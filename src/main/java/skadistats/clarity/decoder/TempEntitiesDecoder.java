@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.ReceiveProp;
-import skadistats.clarity.two.processor.sendtables.DTClasses;
+import skadistats.clarity.processor.sendtables.DTClasses;
 
 import java.util.ArrayList;
 import java.util.List;

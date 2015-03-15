@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder;
 
 import skadistats.clarity.model.*;
-import skadistats.clarity.two.processor.sendtables.DTClasses;
+import skadistats.clarity.processor.sendtables.DTClasses;
 
 import java.util.*;
 

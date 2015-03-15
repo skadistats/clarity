@@ -1,11 +1,11 @@
 package skadistats.clarity;
 
 import com.dota2.proto.Demo.CDemoFileInfo;
-import skadistats.clarity.two.processor.reader.InputStreamProcessor;
-import skadistats.clarity.two.processor.reader.OnFileInfoOffset;
-import skadistats.clarity.two.processor.reader.OnMessage;
-import skadistats.clarity.two.processor.runner.Context;
-import skadistats.clarity.two.processor.runner.Runner;
+import skadistats.clarity.processor.reader.InputStreamProcessor;
+import skadistats.clarity.processor.reader.OnFileInfoOffset;
+import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.Runner;
 
 import java.io.FileInputStream;
 import java.io.IOException;

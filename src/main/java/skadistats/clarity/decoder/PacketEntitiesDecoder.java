@@ -4,8 +4,8 @@ import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.model.*;
-import skadistats.clarity.two.processor.entities.Entities;
-import skadistats.clarity.two.processor.sendtables.DTClasses;
+import skadistats.clarity.processor.entities.Entities;
+import skadistats.clarity.processor.sendtables.DTClasses;
 
 import java.util.List;
 
