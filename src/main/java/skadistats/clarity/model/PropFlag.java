@@ -1,52 +1,63 @@
 package skadistats.clarity.model;
 
-public enum PropFlag {
+public class PropFlag {
 
-    UNSIGNED(1 << 0),
-    COORD(1 << 1),
-    NO_SCALE(1 << 2),
-    ROUND_DOWN(1 << 3),
-    ROUND_UP(1 << 4),
-    NORMAL(1 << 5),
-    EXCLUDE(1 << 6),
-    XYZE(1 << 7),
-    INSIDE_ARRAY(1 << 8),
-    PROXY_ALWAYS(1 << 9),
-    VECTOR_ELEM(1 << 10),
-    COLLAPSIBLE(1 << 11),
-    COORD_MP(1 << 12),
-    COORD_MP_LOW_PRECISION(1 << 13),
-    COORD_MP_INTEGRAL(1 << 14),
-    CELL_COORD(1 << 15),
-    CELL_COORD_LOW_PRECISION(1 << 16),
-    CELL_COORD_INTEGRAL(1 << 17),
-    CHANGES_OFTEN(1 << 18),
-    ENCODED_AGAINST_TICKCOUNT(1 << 19);
+    public static final int UNSIGNED = 1 << 0;
+    public static final int COORD = 1 << 1;
+    public static final int NO_SCALE = 1 << 2;
+    public static final int ROUND_DOWN = 1 << 3;
+    public static final int ROUND_UP = 1 << 4;
+    public static final int NORMAL = 1 << 5;
+    public static final int EXCLUDE = 1 << 6;
+    public static final int XYZE = 1 << 7;
+    public static final int INSIDE_ARRAY = 1 << 8;
+    public static final int PROXY_ALWAYS = 1 << 9;
+    public static final int VECTOR_ELEM = 1 << 10;
+    public static final int COLLAPSIBLE = 1 << 11;
+    public static final int COORD_MP = 1 << 12;
+    public static final int COORD_MP_LOW_PRECISION = 1 << 13;
+    public static final int COORD_MP_INTEGRAL = 1 << 14;
+    public static final int CELL_COORD = 1 << 15;
+    public static final int CELL_COORD_LOW_PRECISION = 1 << 16;
+    public static final int CELL_COORD_INTEGRAL = 1 << 17;
+    public static final int CHANGES_OFTEN = 1 << 18;
+    public static final int ENCODED_AGAINST_TICKCOUNT = 1 << 19;
 
-    private final int flag;
+    private static final String[] NAMES = {
+        "UNSIGNED",
+        "COORD",
+        "NO_SCALE",
+        "ROUND_DOWN",
+        "ROUND_UP",
+        "NORMAL",
+        "EXCLUDE",
+        "XYZE",
+        "INSIDE_ARRAY",
+        "PROXY_ALWAYS",
+        "VECTOR_ELEM",
+        "COLLAPSIBLE",
+        "COORD_MP",
+        "COORD_MP_LOW_PRECISION",
+        "COORD_MP_INTEGRAL",
+        "CELL_COORD",
+        "CELL_COORD_LOW_PRECISION",
+        "CELL_COORD_INTEGRAL",
+        "CHANGES_OFTEN",
+        "ENCODED_AGAINST_TICKCOUNT"
+    };
 
-    private PropFlag(int flag) {
-        this.flag = flag;
-    }
-
-    public int getFlag() {
-        return flag;
-    }
-    
-    public static String dump(int flag) {
+    public static String descriptionForFlags(int flags) {
         StringBuffer buf = new StringBuffer();
-        for (PropFlag f : values()) {
-            if ((flag & f.getFlag()) == 0) {
-                continue;
+        for (String name : NAMES) {
+            if ((flags & 1) != 0) {
+                if (buf.length() > 0) {
+                    buf.append(", ");
+                }
+                buf.append(name);
             }
-            if (buf.length() != 0) {
-                buf.append(" | ");
-            }
-            buf.append(f);
+            flags = flags >> 1;
         }
         return buf.toString();
-        
-        
     }
 
 }

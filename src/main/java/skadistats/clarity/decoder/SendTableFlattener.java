@@ -47,12 +47,12 @@ public class SendTableFlattener {
     private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator, Deque<String> path, String src) {
         for (SendProp sp : ancestor.getAllNonExclusions()) {
             boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getNetTableName(), sp.getVarName()));
-            boolean ineligible = (sp.isFlagSet(PropFlag.INSIDE_ARRAY));
+            boolean ineligible = ((sp.getFlags() & PropFlag.INSIDE_ARRAY) != 0);
             if (excluded || ineligible) {
                 continue;
             }
             if (sp.getType() == PropType.DATATABLE) {
-                if (sp.isFlagSet(PropFlag.COLLAPSIBLE)) {
+                if ((sp.getFlags() & PropFlag.COLLAPSIBLE) != 0) {
                     _flattenCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator, path, src);
                 } else {
                     path.offerLast(sp.getVarName());
@@ -79,7 +79,7 @@ public class SendTableFlattener {
             int cursor = offset;
             while (cursor < sorted.size()) {
                 ReceiveProp rp = sorted.get(cursor);
-                boolean changesOften = rp.isFlagSet(PropFlag.CHANGES_OFTEN) && priority == 64;
+                boolean changesOften = (rp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
                 if (changesOften || rp.getPriority() == priority) {
                     Collections.swap(sorted, cursor, hole);
                     hole++;

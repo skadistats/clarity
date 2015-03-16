@@ -25,21 +25,22 @@ public class FloatDecoder implements PropDecoder<Float> {
     
     @Override
     public Float decode(EntityBitStream stream, Prop prop) {
-        if (prop.isFlagSet(PropFlag.COORD)) {
+        int flags = prop.getFlags();
+        if ((flags & PropFlag.COORD) != 0) {
             return decodeCoord(stream);
-        } else if (prop.isFlagSet(PropFlag.COORD_MP)) {
+        } else if ((flags & PropFlag.COORD_MP) != 0) {
             return decodeFloatCoordMp(stream, false, false);
-        } else if (prop.isFlagSet(PropFlag.COORD_MP_LOW_PRECISION)) {
+        } else if ((flags & PropFlag.COORD_MP_LOW_PRECISION) != 0) {
             return decodeFloatCoordMp(stream, false, true);
-        } else if (prop.isFlagSet(PropFlag.COORD_MP_INTEGRAL)) {
+        } else if ((flags & PropFlag.COORD_MP_INTEGRAL) != 0) {
             return decodeFloatCoordMp(stream, true, false);
-        } else if (prop.isFlagSet(PropFlag.NO_SCALE)) {
+        } else if ((flags & PropFlag.NO_SCALE) != 0) {
             return decodeNoScale(stream);
-        } else if (prop.isFlagSet(PropFlag.NORMAL)) {
+        } else if ((flags & PropFlag.NORMAL) != 0) {
             return decodeNormal(stream);
-        } else if (prop.isFlagSet(PropFlag.CELL_COORD)) {
+        } else if ((flags & PropFlag.CELL_COORD) != 0) {
             return decodeCellCoord(stream, prop.getNumBits());
-        } else if (prop.isFlagSet(PropFlag.CELL_COORD_INTEGRAL)) {
+        } else if ((flags & PropFlag.CELL_COORD_INTEGRAL) != 0) {
             return decodeCellCoordIntegral(stream, prop.getNumBits());
         } else {
             return decodeDefault(stream, prop.getNumBits(), prop.getHighValue(), prop.getLowValue());

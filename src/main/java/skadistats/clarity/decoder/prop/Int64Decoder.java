@@ -8,8 +8,9 @@ public class Int64Decoder implements PropDecoder<Long> {
 
     @Override
     public Long decode(EntityBitStream stream, Prop prop) {
-        boolean isUnsigned = prop.isFlagSet(PropFlag.UNSIGNED);
-        if (prop.isFlagSet(PropFlag.ENCODED_AGAINST_TICKCOUNT)) {
+        int flags = prop.getFlags();
+        boolean isUnsigned = (flags & PropFlag.UNSIGNED) != 0;
+        if ((flags & PropFlag.ENCODED_AGAINST_TICKCOUNT) != 0) {
             // this integer is encoded against tick count (?)...
             // in this case, we read a protobuf-style varint
             long v = stream.readVarInt();
@@ -24,7 +25,7 @@ public class Int64Decoder implements PropDecoder<Long> {
 
         boolean negate = false;
         int remainder = prop.getNumBits() - 32;
-        if (!prop.isFlagSet(PropFlag.UNSIGNED)) {
+        if ((flags & PropFlag.UNSIGNED) == 0) {
             remainder -= 1;
             negate = stream.readBit();
         }

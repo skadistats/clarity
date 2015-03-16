@@ -3,8 +3,6 @@ package skadistats.clarity.model;
 
 public interface Prop {
 
-    boolean isFlagSet(PropFlag flag);
-
     SendTableExclusion getExcludeIdentifier();
 
     PropType getType();

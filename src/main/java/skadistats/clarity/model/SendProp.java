@@ -30,10 +30,6 @@ public class SendProp implements Prop {
         this.numBits = numBits;
     }
 
-    public boolean isFlagSet(PropFlag flag) {
-        return (flags & flag.getFlag()) != 0;
-    }
-
     public SendTableExclusion getExcludeIdentifier() {
         return new SendTableExclusion(dtName, varName);
     }

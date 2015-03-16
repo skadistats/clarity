@@ -13,10 +13,6 @@ public class ReceiveProp implements Prop {
         this.name = name;
     }
 
-    public boolean isFlagSet(PropFlag flag) {
-        return sendProp.isFlagSet(flag);
-    }
-
     public SendTableExclusion getExcludeIdentifier() {
         return sendProp.getExcludeIdentifier();
     }
