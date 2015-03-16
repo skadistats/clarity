@@ -31,8 +31,8 @@ public class TempEntitiesDecoder {
         DTClass cls = null;
         int count = 0;
         while (count < numEntries) {
-            stream.readBit(); // seems to be always 0
-            if (stream.readBit()) {
+            stream.readNumericBits(1); // seems to be always 0
+            if (stream.readNumericBits(1) == 1) {
                 cls = dtClasses.forClassId(stream.readNumericBits(classBits) - 1);
             }
             Object[] state = null;

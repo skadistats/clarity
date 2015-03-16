@@ -1,9 +1,9 @@
 package skadistats.clarity.decoder;
 
+import skadistats.clarity.model.PVS;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import skadistats.clarity.model.PVS;
 
 public class EntityBitStream extends BitStream {
 
@@ -44,7 +44,7 @@ public class EntityBitStream extends BitStream {
         int cursor = -1;
 
         while (true) {
-            if (readBit()) {
+            if (readNumericBits(1) == 1) {
                 cursor += 1;
             } else {
                 int offset = readVarInt();

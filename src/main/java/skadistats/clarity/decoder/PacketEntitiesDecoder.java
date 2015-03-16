@@ -92,7 +92,7 @@ public class PacketEntitiesDecoder {
     }
 
     private void decodeDeletionDiffs(Entities entities) {
-        while (stream.readBit()) {
+        while (stream.readNumericBits(1) == 1) {
             int index = stream.readNumericBits(11); // max is 2^11-1, or 2047
             entities.remove(index);
         }

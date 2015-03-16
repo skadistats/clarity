@@ -1,12 +1,11 @@
 package skadistats.clarity.decoder;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.google.protobuf.ByteString;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.StringTableEntry;
 
-import com.google.protobuf.ByteString;
+import java.util.LinkedList;
+import java.util.List;
 
 public class StringTableDecoder {
 
@@ -19,23 +18,23 @@ public class StringTableDecoder {
         LinkedList<String> keyHistory = new LinkedList<String>();
         List<StringTableEntry> result = new LinkedList<StringTableEntry>();
         
-        boolean mysteryFlag = stream.readBit();
+        boolean mysteryFlag = stream.readNumericBits(1) == 1;
         int index = -1;
         StringBuffer nameBuf = new StringBuffer();
         while (result.size() < numEntries) {
             // read index
-            if (stream.readBit()) {
+            if (stream.readNumericBits(1) == 1) {
                 index++;
             } else {
                 index = stream.readNumericBits(bitsPerIndex);
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readBit()) {
-                if (mysteryFlag && stream.readBit()) {
+            if (stream.readNumericBits(1) == 1) {
+                if (mysteryFlag && stream.readNumericBits(1) == 1) {
                     throw new RuntimeException("mystery_flag assert failed!");
                 }
-                if (stream.readBit()) {
+                if (stream.readNumericBits(1) == 1) {
                     int basis = stream.readNumericBits(5);
                     int length = stream.readNumericBits(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
@@ -50,7 +49,7 @@ public class StringTableDecoder {
             }
             // read value
             ByteString value = null;
-            if (stream.readBit()) {
+            if (stream.readNumericBits(1) == 1) {
                 int bitLength = 0;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
