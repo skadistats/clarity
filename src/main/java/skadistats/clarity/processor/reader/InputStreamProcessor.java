@@ -35,11 +35,7 @@ public class InputStreamProcessor {
     private byte[] readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
         byte[] data = ms.readRawBytes(size);
         if (isCompressed) {
-            if (Snappy.isValidCompressedBuffer(data)) {
-                data = Snappy.uncompress(data);
-            } else {
-                throw new IOException("according to snappy, the compressed packet is not valid!");
-            }
+            data = Snappy.uncompress(data);
         }
         return data;
     }
