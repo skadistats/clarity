@@ -17,11 +17,11 @@ public class TempEntitiesDecoder {
     private final DTClasses dtClasses;
     private final int classBits;
     private final int numEntries;
-    private final EntityBitStream stream;
+    private final BitStream stream;
 
     public TempEntitiesDecoder(byte[] data, int numEntries, DTClasses dtClasses) {
         this.dtClasses = dtClasses;
-        this.stream = new EntityBitStream(data);
+        this.stream = new BitStream(data);
         this.numEntries = numEntries;
         this.classBits = Util.calcBitsNeededFor(dtClasses.size() - 1);
     }

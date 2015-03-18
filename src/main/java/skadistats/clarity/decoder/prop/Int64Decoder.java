@@ -1,13 +1,13 @@
 package skadistats.clarity.decoder.prop;
 
-import skadistats.clarity.decoder.EntityBitStream;
+import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.model.Prop;
 import skadistats.clarity.model.PropFlag;
 
 public class Int64Decoder implements PropDecoder<Long> {
 
     @Override
-    public Long decode(EntityBitStream stream, Prop prop) {
+    public Long decode(BitStream stream, Prop prop) {
         int flags = prop.getFlags();
         boolean isUnsigned = (flags & PropFlag.UNSIGNED) != 0;
         if ((flags & PropFlag.ENCODED_AGAINST_TICKCOUNT) != 0) {

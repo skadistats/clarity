@@ -1,10 +1,10 @@
 package skadistats.clarity.decoder.prop;
 
-import skadistats.clarity.decoder.EntityBitStream;
+import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.model.Prop;
 
 public interface PropDecoder<T> {
 
-    T decode(EntityBitStream stream, Prop prop);
+    T decode(BitStream stream, Prop prop);
 
 }

@@ -18,12 +18,12 @@ public class PacketEntitiesDecoder {
     private final int classBits;
     private final int numEntries;
     private final boolean isDelta;
-    private final EntityBitStream stream;
+    private final BitStream stream;
 
     public PacketEntitiesDecoder(byte[] data, int numEntries, boolean isDelta, DTClasses dtClasses, StringTable baseline) {
         this.dtClasses = dtClasses;
         this.baseline = baseline;
-        this.stream = new EntityBitStream(data);
+        this.stream = new BitStream(data);
         this.numEntries = numEntries;
         this.isDelta = isDelta;
         this.classBits = Util.calcBitsNeededFor(dtClasses.size() - 1);

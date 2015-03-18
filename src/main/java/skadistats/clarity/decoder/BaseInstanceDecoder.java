@@ -1,14 +1,14 @@
 package skadistats.clarity.decoder;
 
-import java.util.List;
-
 import skadistats.clarity.decoder.prop.PropDecoder;
 import skadistats.clarity.model.ReceiveProp;
+
+import java.util.List;
 
 public class BaseInstanceDecoder {
 
     public static Object[] decode(byte[] data, List<ReceiveProp> receiveProps) {
-        EntityBitStream stream = new EntityBitStream(data);
+        BitStream stream = new BitStream(data);
         List<Integer> propList = stream.readEntityPropList();
 
         Object[] state = new Object[receiveProps.size()];
