@@ -60,10 +60,6 @@ public class BitStream {
         return (int) ret;
     }
 
-    public boolean readBit() {
-        return readNumericBits(1) == 1;
-    }
-
     public byte[] readBits(int num) {
         byte[] result = new byte[(num + 7) / 8];
         int i = 0;

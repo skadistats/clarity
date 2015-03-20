@@ -27,7 +27,7 @@ public class Int64Decoder implements PropDecoder<Long> {
         int remainder = prop.getNumBits() - 32;
         if ((flags & PropFlag.UNSIGNED) == 0) {
             remainder -= 1;
-            negate = stream.readBit();
+            negate = stream.readNumericBits(1) == 1;
         }
         long l = stream.readNumericBits(32);
         long r = stream.readNumericBits(remainder);
