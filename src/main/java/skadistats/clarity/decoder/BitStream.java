@@ -1,9 +1,7 @@
 package skadistats.clarity.decoder;
 
 import skadistats.clarity.model.PVS;
-
-import java.util.ArrayList;
-import java.util.List;
+import skadistats.clarity.processor.entities.Entities;
 
 public class BitStream {
 
@@ -148,22 +146,22 @@ public class BitStream {
         return PVS.values()[(readNumericBits(1) << 1) | readNumericBits(1)];
     }
 
-    public List<Integer> readEntityPropList() {
-        List<Integer> propList = new ArrayList<Integer>();
+    public int readEntityPropList(int[] indices) {
+        int i = 0;
         int cursor = -1;
-
         while (true) {
             if (readBit()) {
                 cursor += 1;
             } else {
                 int offset = readVarInt();
-                if (offset == 0x3fff) {
-                    return propList;
+                if (offset == Entities.MAX_ENTITY) {
+                    return i;
                 } else {
                     cursor += offset + 1;
                 }
             }
-            propList.add(cursor);
+            indices[i] = cursor;
+            i++;
         }
     }
 }

@@ -3,6 +3,7 @@ package skadistats.clarity.processor.sendtables;
 import com.dota2.proto.Demo;
 import com.dota2.proto.Netmessages;
 import skadistats.clarity.decoder.SendTableFlattener;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -15,6 +16,7 @@ public class DTClasses {
 
     private final Map<Integer, DTClass> byClassId = new TreeMap<Integer, DTClass>();
     private final Map<String, DTClass> byDtName = new TreeMap<String, DTClass>();
+    private int classBits;
 
     @OnMessage(Netmessages.CSVCMsg_SendTable.class)
     public void onSendTable(Context ctx, Netmessages.CSVCMsg_SendTable message) {
@@ -73,6 +75,8 @@ public class DTClasses {
                 dtc.setSuperClass(byDtName.get(superClassName));
             }
         }
+
+        classBits = Util.calcBitsNeededFor(size() - 1);
     }
 
     public DTClass forClassId(int id) {
@@ -93,6 +97,10 @@ public class DTClasses {
 
     public int size() {
         return byClassId.size();
+    }
+
+    public int getClassBits() {
+        return classBits;
     }
 
 }
