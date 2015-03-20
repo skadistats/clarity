@@ -55,7 +55,7 @@ public class StringTables {
             );
             byId.add(table);
             byName.put(table.getName(), table);
-            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumEntries());
+            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumEntries());
             applyChanges(ctx, table, changes);
         } else {
             byId.add(null);
@@ -66,7 +66,7 @@ public class StringTables {
     public void onUpdateStringTable(Context ctx, Netmessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
-            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData().toByteArray(), message.getNumChangedEntries());
+            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumChangedEntries());
             applyChanges(ctx, table, changes);
         }
     }

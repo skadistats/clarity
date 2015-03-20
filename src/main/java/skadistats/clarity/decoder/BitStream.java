@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder;
 
+import com.google.protobuf.ByteString;
 import skadistats.clarity.model.PVS;
 import skadistats.clarity.processor.entities.Entities;
 
@@ -25,23 +26,24 @@ public class BitStream {
     final long[] data;
     int pos;
 
-    public BitStream(byte[] bytes) {
+    public BitStream(ByteString input) {
+        int len = input.size();
 
-        data = new long[(bytes.length + 7) / 8];
+        data = new long[(len + 7) >> 3];
         pos = 0;
 
         long akku = 0;
-        for (int i = 0; i < bytes.length; i++) {
+        for (int i = 0; i < len; i++) {
             int shift = 8 * (i & 7);
-            long val = ((long) bytes[i]) & 0xFF;
+            long val = ((long) input.byteAt(i)) & 0xFF;
             akku = akku | (val << shift);
             if ((i & 7) == 7) {
                 data[i / 8] = akku;
                 akku = 0;
             }
         }
-        if ((bytes.length & 7) != 0) {
-            data[bytes.length / 8] = akku;
+        if ((len & 7) != 0) {
+            data[len >> 3] = akku;
         }
     }
 

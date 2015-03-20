@@ -1,6 +1,7 @@
 package skadistats.clarity.wire;
 
 import com.dota2.proto.*;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 
 import java.lang.invoke.ConstantCallSite;
@@ -173,7 +174,7 @@ public class PacketTypes {
                         MethodHandles.publicLookup().findStatic(
                             (Class<? extends GeneratedMessage>) key,
                             "parseFrom",
-                            MethodType.methodType((Class<? extends GeneratedMessage>) key, byte[].class)
+                            MethodType.methodType((Class<? extends GeneratedMessage>) key, ByteString.class)
                         )
                     ).dynamicInvoker();
                     put((Class<? extends GeneratedMessage>) key, m);
@@ -186,7 +187,7 @@ public class PacketTypes {
     };
 
     @SuppressWarnings("unchecked")
-    public static <T extends GeneratedMessage> T parse(Class<T> clazz, byte[] data) {
+    public static <T extends GeneratedMessage> T parse(Class<T> clazz, ByteString data) {
         try {
             return (T) PARSE_METHODS.get(clazz).invoke(data);
         } catch (Throwable throwable) {

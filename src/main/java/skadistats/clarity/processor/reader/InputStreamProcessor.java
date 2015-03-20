@@ -2,6 +2,7 @@ package skadistats.clarity.processor.reader;
 
 import com.dota2.proto.Demo;
 import com.dota2.proto.Networkbasetypes;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
@@ -32,12 +33,13 @@ public class InputStreamProcessor {
         unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
     }
 
-    private byte[] readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
+    private ByteString readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
+        ms.readBytes();
         byte[] data = ms.readRawBytes(size);
         if (isCompressed) {
             data = Snappy.uncompress(data);
         }
-        return data;
+        return ByteString.copyFrom(data);
     }
 
     @OnInputStream
@@ -69,10 +71,10 @@ public class InputStreamProcessor {
                 cs.skipRawBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
                 Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readData(cs, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(CodedInputStream.newInstance(message.getData().toByteArray()));
+                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoSendTables.class) {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readData(cs, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(CodedInputStream.newInstance(message.getData().toByteArray()));
+                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 // TODO: ignored for now
                 cs.skipRawBytes(size);
@@ -101,7 +103,7 @@ public class InputStreamProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = PacketTypes.parse(messageClass, cs.readRawBytes(size));
+                    GeneratedMessage subMessage = PacketTypes.parse(messageClass, ByteString.copyFrom(cs.readRawBytes(size)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
@@ -111,7 +113,7 @@ public class InputStreamProcessor {
                         if (umClazz == null) {
                             log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                         } else {
-                            ctx.createEvent(OnMessage.class, umClazz).raise(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                            ctx.createEvent(OnMessage.class, umClazz).raise(PacketTypes.parse(umClazz, userMessage.getMsgData()));
                         }
                     }
                 } else {

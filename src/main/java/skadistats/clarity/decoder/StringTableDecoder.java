@@ -12,7 +12,7 @@ public class StringTableDecoder {
     private static final int MAX_NAME_LENGTH = 0x400;
     private static final int KEY_HISTORY_SIZE = 32;
 
-    public static List<StringTableEntry> decode(StringTable table, byte[] data, int numEntries) {
+    public static List<StringTableEntry> decode(StringTable table, ByteString data, int numEntries) {
         BitStream stream = new BitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<String>();

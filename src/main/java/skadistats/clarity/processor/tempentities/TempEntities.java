@@ -23,7 +23,7 @@ public class TempEntities {
     public void onTempEntities(Context ctx, Netmessages.CSVCMsg_TempEntities message) {
         Event<OnTempEntity> ev = ctx.createEvent(OnTempEntity.class, Entity.class);
         if (ev.isListenedTo()) {
-            BitStream stream = new BitStream(message.getEntityData().toByteArray());
+            BitStream stream = new BitStream(message.getEntityData());
             DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
             DTClass cls = null;
             int count = message.getNumEntries();

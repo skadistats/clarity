@@ -47,7 +47,7 @@ public class Entities {
 
     @OnMessage(Netmessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(Context ctx, Netmessages.CSVCMsg_PacketEntities message) {
-        BitStream stream = new BitStream(message.getEntityData().toByteArray());
+        BitStream stream = new BitStream(message.getEntityData());
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
@@ -108,7 +108,7 @@ public class Entities {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
-            BitStream stream = new BitStream(be.rawBaseline.toByteArray());
+            BitStream stream = new BitStream(be.rawBaseline);
             be.baseline = new Object[cls.getReceiveProps().size()];
             int cIndices = stream.readEntityPropList(indices);
             for (int ci = 0; ci < cIndices; ci++) {
