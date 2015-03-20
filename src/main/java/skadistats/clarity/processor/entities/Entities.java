@@ -23,7 +23,7 @@ import java.util.Map;
 @UsesDTClasses
 public class Entities {
 
-    public static final int MAX_ENTITY = 0x3fff;
+    public static final int MAX_PROPERTIES = 0x3fff;
 
     private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
 
@@ -37,7 +37,7 @@ public class Entities {
     }
 
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
-    private final int[] indices = new int[MAX_ENTITY + 1];
+    private final int[] indices = new int[MAX_PROPERTIES];
 
     @OnStringTableEntry("instancebaseline")
     public void onBaseline(Context ctx, StringTable table, StringTableEntry oldEntry, StringTableEntry newEntry) {

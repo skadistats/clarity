@@ -146,7 +146,7 @@ public class BitStream {
                 cursor += 1;
             } else {
                 int offset = readVarInt();
-                if (offset == Entities.MAX_ENTITY) {
+                if (offset == Entities.MAX_PROPERTIES) {
                     return i;
                 } else {
                     cursor += offset + 1;

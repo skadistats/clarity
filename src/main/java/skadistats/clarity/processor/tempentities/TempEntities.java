@@ -17,7 +17,7 @@ import skadistats.clarity.processor.sendtables.UsesDTClasses;
 @UsesDTClasses
 public class TempEntities {
 
-    private final int[] indices = new int[Entities.MAX_ENTITY + 1];
+    private final int[] indices = new int[Entities.MAX_PROPERTIES];
 
     @OnMessage(Netmessages.CSVCMsg_TempEntities.class)
     public void onTempEntities(Context ctx, Netmessages.CSVCMsg_TempEntities message) {
