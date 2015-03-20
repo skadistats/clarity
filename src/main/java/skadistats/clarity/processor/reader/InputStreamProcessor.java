@@ -34,7 +34,6 @@ public class InputStreamProcessor {
     }
 
     private ByteString readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
-        ms.readBytes();
         byte[] data = ms.readRawBytes(size);
         if (isCompressed) {
             data = Snappy.uncompress(data);
