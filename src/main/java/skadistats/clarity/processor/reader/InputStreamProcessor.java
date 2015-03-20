@@ -5,6 +5,7 @@ import com.dota2.proto.Networkbasetypes;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
@@ -38,7 +39,7 @@ public class InputStreamProcessor {
         if (isCompressed) {
             data = Snappy.uncompress(data);
         }
-        return ByteString.copyFrom(data);
+        return ZeroCopy.wrap(data);
     }
 
     @OnInputStream
@@ -102,7 +103,7 @@ public class InputStreamProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = PacketTypes.parse(messageClass, ByteString.copyFrom(cs.readRawBytes(size)));
+                    GeneratedMessage subMessage = PacketTypes.parse(messageClass, ZeroCopy.wrap(cs.readRawBytes(size)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
