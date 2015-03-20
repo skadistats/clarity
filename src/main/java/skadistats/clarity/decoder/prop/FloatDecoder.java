@@ -48,13 +48,13 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeCoord(BitStream stream) {
-        boolean hasInt = stream.readBit(); // integer component present?
-        boolean hasFrac = stream.readBit(); // fractional component present?
+        boolean hasInt = stream.readNumericBits(1) == 1; // integer component present?
+        boolean hasFrac = stream.readNumericBits(1) == 1; // fractional component present?
 
         if (!(hasInt || hasFrac)) {
             return 0.0f;
         }
-        boolean sign = stream.readBit();
+        boolean sign = stream.readNumericBits(1) == 1;
         int i = 0;
         int f = 0;
         if (hasInt) {
@@ -66,23 +66,23 @@ public class FloatDecoder implements PropDecoder<Float> {
         float v = i + ((float) f * COORD_RESOLUTION);
         return sign ? -v : v;
     }
-    
+
     public float decodeFloatCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
         int i = 0;
         int f = 0;
         boolean sign = false;
         float value = 0.0f;
 
-        boolean inBounds = stream.readBit();
+        boolean inBounds = stream.readNumericBits(1) == 1;
         if (integral) {
             i = stream.readNumericBits(1);
             if (i != 0) {
-                sign = stream.readBit();
+                sign = stream.readNumericBits(1) == 1;
                 value = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
             i = stream.readNumericBits(1);
-            sign = stream.readBit();
+            sign = stream.readNumericBits(1) == 1;
             if (i != 0) {
                 i = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
@@ -97,7 +97,7 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeNormal(BitStream stream) {
-        boolean isNegative = stream.readBit();
+        boolean isNegative = stream.readNumericBits(1) == 1;
         int l = stream.readNumericBits(NORMAL_FRACTIONAL_BITS);
         float v = (float) l * NORMAL_RESOLUTION;
         return isNegative ? -v : v;

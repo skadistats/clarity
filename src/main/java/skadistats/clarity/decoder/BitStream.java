@@ -146,7 +146,7 @@ public class BitStream {
         int i = 0;
         int cursor = -1;
         while (true) {
-            if (readBit()) {
+            if (readNumericBits(1 ) == 1) {
                 cursor += 1;
             } else {
                 int offset = readVarInt();

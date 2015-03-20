@@ -97,7 +97,7 @@ public class Entities {
             }
         }
         if (message.getIsDelta()) {
-            while (stream.readBit()) {
+            while (stream.readNumericBits(1) == 1) {
                 entityIndex = stream.readNumericBits(11); // max is 2^11-1, or 2047
                 entities[entityIndex] = null;
             }

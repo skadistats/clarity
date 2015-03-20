@@ -28,8 +28,8 @@ public class TempEntities {
             DTClass cls = null;
             int count = message.getNumEntries();
             while (count-- > 0) {
-                stream.readBit(); // seems to be always 0
-                if (stream.readBit()) {
+                stream.readNumericBits(1); // seems to be always 0
+                if (stream.readNumericBits(1) == 1) {
                     cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()) - 1);
                 }
                 Object[] state = new Object[cls.getReceiveProps().size()];
