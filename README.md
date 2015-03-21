@@ -63,14 +63,13 @@ To use the stable version, add the following dependency in your pom.xml, and you
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>1.0</version>
+	<version>1.1</version>
 </dependency>
 ```
-Warning: Stable version is out of date, and will not be able to parse new replays. Use the newest snapshot instead! Stable will be updated before the century ends, I promise ;-)
 
 There is also the possibility to use the bleeding edge, which I try to keep in sync with the Git-Repo.
 However, this latest snapshot is not available in Maven Central, so you got to add a pointer to the 
-repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
+repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/v1/pom.xml), which already does that)
 
 To add the snapshot repository, add the following:
 ```XML
@@ -94,16 +93,14 @@ and then fetch the dependency with:
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>1.1-SNAPSHOT</version>
+	<version>1.2-SNAPSHOT</version>
 </dependency>
 ```
 
 # Example Code
 
-For example code, please see the the separate project [clarity-examples](https://github.com/skadistats/clarity-examples).
+For example code, please see the the separate project [clarity-examples](https://github.com/skadistats/clarity-examples/tree/v1).
 
 # License
 
-See LICENSE in the project root. The license for this project is a modified
-MIT with an additional clause requiring specifically worded hyperlink
-attribution in web properties using clarity.
+See LICENSE in the project root.
