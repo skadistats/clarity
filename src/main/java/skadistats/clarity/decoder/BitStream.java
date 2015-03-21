@@ -3,7 +3,6 @@ package skadistats.clarity.decoder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.model.PVS;
 import skadistats.clarity.processor.entities.Entities;
 
 import java.io.IOException;
@@ -134,15 +133,11 @@ public class BitStream {
         return baseIndex + offset + 1;
     }
 
-    public PVS readEntityPVS() {
-        return PVS.values()[(readNumericBits(1) << 1) | readNumericBits(1)];
-    }
-
     public int readEntityPropList(int[] indices) {
         int i = 0;
         int cursor = -1;
         while (true) {
-            if (readNumericBits(1 ) == 1) {
+            if (readNumericBits(1) == 1) {
                 cursor += 1;
             } else {
                 int offset = readVarInt();
@@ -152,8 +147,7 @@ public class BitStream {
                     cursor += offset + 1;
                 }
             }
-            indices[i] = cursor;
-            i++;
+            indices[i++] = cursor;
         }
     }
 }

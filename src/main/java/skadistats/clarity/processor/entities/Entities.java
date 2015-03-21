@@ -52,7 +52,7 @@ public class Entities {
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
 
-        PVS pvs;
+        int pvs;
         DTClass cls;
         int serial;
         Object[] base;
@@ -62,9 +62,9 @@ public class Entities {
 
         while (updateCount-- != 0) {
             entityIndex = stream.readEntityIndex(entityIndex);
-            pvs = stream.readEntityPVS();
-            switch (pvs) {
-                case ENTER:
+            pvs = stream.readNumericBits(2);
+            if ((pvs & 1) == 0) {
+                if ((pvs & 2) != 0) {
                     cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()));
                     serial = stream.readNumericBits(10);
                     base = getBaseline(dtClasses, cls.getClassId());
@@ -74,26 +74,20 @@ public class Entities {
                         ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
                         state[indices[ci]] = r.getType().getDecoder().decode(stream, r);
                     }
-                    entities[entityIndex] = new Entity(entityIndex, serial, cls, pvs, state);
-                    break;
-                case PRESERVE:
+                    entities[entityIndex] = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
+                } else {
                     entity = entities[entityIndex];
                     cls = entity.getDtClass();
-                    entity.setPvs(pvs);
+                    entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
                     cIndices = stream.readEntityPropList(indices);
                     for (int ci = 0; ci < cIndices; ci++) {
                         ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
                         state[indices[ci]] = r.getType().getDecoder().decode(stream, r);
                     }
-                    break;
-                case LEAVE:
-                    entity = entities[entityIndex];
-                    entity.setPvs(pvs);
-                    break;
-                case LEAVE_AND_DELETE:
-                    entities[entityIndex] = null;
-                    break;
+                }
+            } else if ((pvs & 2) != 0) {
+                entities[entityIndex] = null;
             }
         }
         if (message.getIsDelta()) {
