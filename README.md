@@ -28,7 +28,7 @@ clarity produces the following data you might be interested in from a replay. Ch
 # Usage
 
 Clarity 2.0 is currently in Beta and not available in Maven Central, so you got to add a pointer to the
-repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/2.0-dev/pom.xml), which already does that)
+repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
 
 To add the snapshot repository, add the following:
 ```XML
