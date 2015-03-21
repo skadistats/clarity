@@ -84,7 +84,7 @@ public class Entity {
         builder.append("]");
         for (int i = 0; i < state.length; i++) {
             builder.append("\n");
-            builder.append(dtClass.getReceiveProps().get(i).getVarName());
+            builder.append(dtClass.getReceiveProps()[i].getVarName());
             builder.append(" = ");
             builder.append(state[i]);
         }

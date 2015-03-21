@@ -1,7 +1,6 @@
 package skadistats.clarity.model;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class DTClass {
@@ -9,10 +8,10 @@ public class DTClass {
     private final String dtName;
     private final SendTable sendTable;
     private int classId = -1;
-    private List<ReceiveProp> receiveProps;
+    private ReceiveProp[] receiveProps;
     private Map<String, Integer> propsByName;
     private DTClass superClass;
-    
+
     public DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
         this.sendTable = sendTable;
@@ -53,16 +52,16 @@ public class DTClass {
         return sendTable;
     }
 
-    public List<ReceiveProp> getReceiveProps() {
+    public ReceiveProp[] getReceiveProps() {
         return receiveProps;
     }
 
-    public void setReceiveProps(List<ReceiveProp> receiveProps) {
+    public void setReceiveProps(ReceiveProp[] receiveProps) {
         this.receiveProps = receiveProps;
         this.propsByName = new HashMap<String, Integer>();
-        for(int i = 0; i < this.receiveProps.size(); ++i)
-            this.propsByName.put(this.receiveProps.get(i).getVarName(), i);
-        
+        for(int i = 0; i < receiveProps.length; ++i) {
+            this.propsByName.put(receiveProps[i].getVarName(), i);
+        }
     }
     
     public Integer getPropertyIndex(String name){

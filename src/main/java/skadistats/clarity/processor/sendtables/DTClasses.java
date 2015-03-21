@@ -65,7 +65,7 @@ public class DTClasses {
                 continue;
             }
             List<ReceiveProp> rps = new SendTableFlattener(this, dtc.getSendTable()).flatten();
-            dtc.setReceiveProps(rps);
+            dtc.setReceiveProps(rps.toArray(new ReceiveProp[] {}));
         }
 
         // last packet of the prologue: set super classes

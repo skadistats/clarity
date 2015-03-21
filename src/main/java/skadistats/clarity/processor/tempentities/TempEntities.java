@@ -26,18 +26,19 @@ public class TempEntities {
             BitStream stream = new BitStream(message.getEntityData());
             DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
             DTClass cls = null;
+            ReceiveProp[] receiveProps = null;
             int count = message.getNumEntries();
             while (count-- > 0) {
                 stream.readNumericBits(1); // seems to be always 0
                 if (stream.readNumericBits(1) == 1) {
                     cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()) - 1);
+                    receiveProps = cls.getReceiveProps();
                 }
-                Object[] state = new Object[cls.getReceiveProps().size()];
+                Object[] state = new Object[receiveProps.length];
                 int cIndices = stream.readEntityPropList(indices);
                 for (int ci = 0; ci < cIndices; ci++) {
                     int o = indices[ci];
-                    ReceiveProp r = cls.getReceiveProps().get(o);
-                    state[o] = r.decode(stream);
+                    state[o] = receiveProps[o].decode(stream);
                 }
                 ev.raise(new Entity(0, 0, cls, null, state));
             }

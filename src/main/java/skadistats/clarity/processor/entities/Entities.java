@@ -59,6 +59,7 @@ public class Entities {
         Object[] state;
         Entity entity;
         int cIndices;
+        ReceiveProp[] receiveProps;
 
         while (updateCount-- != 0) {
             entityIndex = stream.readEntityIndex(entityIndex);
@@ -70,10 +71,10 @@ public class Entities {
                     base = getBaseline(dtClasses, cls.getClassId());
                     state = Arrays.copyOf(base, base.length);
                     cIndices = stream.readEntityPropList(indices);
+                    receiveProps = cls.getReceiveProps();
                     for (int ci = 0; ci < cIndices; ci++) {
                         int o = indices[ci];
-                        ReceiveProp r = cls.getReceiveProps().get(o);
-                        state[o] = r.decode(stream);
+                        state[o] = receiveProps[o].decode(stream);
                     }
                     entities[entityIndex] = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
                 } else {
@@ -82,10 +83,10 @@ public class Entities {
                     entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
                     cIndices = stream.readEntityPropList(indices);
+                    receiveProps = cls.getReceiveProps();
                     for (int ci = 0; ci < cIndices; ci++) {
                         int o = indices[ci];
-                        ReceiveProp r = cls.getReceiveProps().get(o);
-                        state[o] = r.decode(stream);
+                        state[o] = receiveProps[o].decode(stream);
                     }
                 }
             } else if ((pvs & 2) != 0) {
@@ -104,13 +105,13 @@ public class Entities {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
+            ReceiveProp[] receiveProps = cls.getReceiveProps();
             BitStream stream = new BitStream(be.rawBaseline);
-            be.baseline = new Object[cls.getReceiveProps().size()];
+            be.baseline = new Object[receiveProps.length];
             int cIndices = stream.readEntityPropList(indices);
             for (int ci = 0; ci < cIndices; ci++) {
                 int o = indices[ci];
-                ReceiveProp r = cls.getReceiveProps().get(o);
-                be.baseline[o] = r.decode(stream);
+                be.baseline[o] = receiveProps[o].decode(stream);
             }
         }
         return be.baseline;
