@@ -35,8 +35,9 @@ public class TempEntities {
                 Object[] state = new Object[cls.getReceiveProps().size()];
                 int cIndices = stream.readEntityPropList(indices);
                 for (int ci = 0; ci < cIndices; ci++) {
-                    ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
-                    state[indices[ci]] = r.getType().getDecoder().decode(stream, r);
+                    int o = indices[ci];
+                    ReceiveProp r = cls.getReceiveProps().get(o);
+                    state[o] = r.decode(stream);
                 }
                 ev.raise(new Entity(0, 0, cls, null, state));
             }

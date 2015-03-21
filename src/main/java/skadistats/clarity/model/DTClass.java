@@ -68,4 +68,5 @@ public class DTClass {
     public Integer getPropertyIndex(String name){
         return this.propsByName.get(name);
     }
+
 }

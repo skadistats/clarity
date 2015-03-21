@@ -6,7 +6,7 @@ public class SendProp implements Prop {
     private final SendTable table;
     private final SendProp template;
     
-    private final int type;
+    private final PropType type;
     private final String varName;
     private final int flags;
     private final int priority;
@@ -19,7 +19,7 @@ public class SendProp implements Prop {
     public SendProp(SendTable table, SendProp template, int type, String varName, int flags, int priority, String dtName, int numElements, float lowValue, float highValue, int numBits) {
         this.table = table;
         this.template = template;
-        this.type = type;
+        this.type = PropType.values()[type];
         this.varName = varName;
         this.flags = flags;
         this.priority = priority;
@@ -35,7 +35,7 @@ public class SendProp implements Prop {
     }
 
     public PropType getType() {
-        return PropType.values()[type];
+        return type;
     }
 
     public String getSrc() {

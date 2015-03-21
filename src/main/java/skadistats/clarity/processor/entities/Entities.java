@@ -71,8 +71,9 @@ public class Entities {
                     state = Arrays.copyOf(base, base.length);
                     cIndices = stream.readEntityPropList(indices);
                     for (int ci = 0; ci < cIndices; ci++) {
-                        ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
-                        state[indices[ci]] = r.getType().getDecoder().decode(stream, r);
+                        int o = indices[ci];
+                        ReceiveProp r = cls.getReceiveProps().get(o);
+                        state[o] = r.decode(stream);
                     }
                     entities[entityIndex] = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
                 } else {
@@ -82,8 +83,9 @@ public class Entities {
                     state = entity.getState();
                     cIndices = stream.readEntityPropList(indices);
                     for (int ci = 0; ci < cIndices; ci++) {
-                        ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
-                        state[indices[ci]] = r.getType().getDecoder().decode(stream, r);
+                        int o = indices[ci];
+                        ReceiveProp r = cls.getReceiveProps().get(o);
+                        state[o] = r.decode(stream);
                     }
                 }
             } else if ((pvs & 2) != 0) {
@@ -106,8 +108,9 @@ public class Entities {
             be.baseline = new Object[cls.getReceiveProps().size()];
             int cIndices = stream.readEntityPropList(indices);
             for (int ci = 0; ci < cIndices; ci++) {
-                ReceiveProp r = cls.getReceiveProps().get(indices[ci]);
-                be.baseline[indices[ci]] = r.getType().getDecoder().decode(stream, r);
+                int o = indices[ci];
+                ReceiveProp r = cls.getReceiveProps().get(o);
+                be.baseline[o] = r.decode(stream);
             }
         }
         return be.baseline;

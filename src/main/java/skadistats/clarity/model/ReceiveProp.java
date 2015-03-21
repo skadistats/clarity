@@ -1,16 +1,21 @@
 package skadistats.clarity.model;
 
 
+import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.prop.PropDecoder;
+
 public class ReceiveProp implements Prop {
 
     private final SendProp sendProp;
     private final String source;
     private final String name;
+    private final PropDecoder propDecoder;
 
     public ReceiveProp(SendProp sendProp, String source, String name) {
         this.sendProp = sendProp;
         this.source = source;
         this.name = name;
+        this.propDecoder = sendProp.getType().getDecoder();
     }
 
     public SendTableExclusion getExcludeIdentifier() {
@@ -59,6 +64,10 @@ public class ReceiveProp implements Prop {
     
     public int getFlags() {
         return sendProp.getFlags();
+    }
+
+    public Object decode(BitStream stream) {
+        return propDecoder.decode(stream, this);
     }
 
     @Override
