@@ -83,18 +83,17 @@ public class BitStream {
     }
 
     public int readVarInt() {
-        int run = 0;
+        int shift = 0;
         int value = 0;
-
+        int bits;
         while (true) {
-            int bits = readNumericBits(8);
-            value = value | ((bits & 0x7f) << run);
-            run += 7;
-            if ((bits >> 7) == 0 || run == 35) {
-                break;
+            bits = readNumericBits(8);
+            value |= (bits & 0x7F) << shift;
+            shift += 7;
+            if ((bits & 0x80) != 0 || shift == 35) {
+                return value;
             }
         }
-        return value;
     }
 
     public String toString() {
