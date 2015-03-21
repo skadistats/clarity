@@ -90,7 +90,7 @@ public class BitStream {
             bits = readNumericBits(8);
             value |= (bits & 0x7F) << shift;
             shift += 7;
-            if ((bits & 0x80) != 0 || shift == 35) {
+            if ((bits & 0x80) == 0 || shift == 35) {
                 return value;
             }
         }
