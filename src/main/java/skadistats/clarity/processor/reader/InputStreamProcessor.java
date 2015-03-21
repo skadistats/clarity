@@ -1,7 +1,5 @@
 package skadistats.clarity.processor.reader;
 
-import com.dota2.proto.Demo;
-import com.dota2.proto.Networkbasetypes;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
@@ -16,6 +14,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInputStream;
 import skadistats.clarity.wire.PacketTypes;
+import skadistats.clarity.wire.proto.Demo;
+import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.io.IOException;
 import java.io.InputStream;

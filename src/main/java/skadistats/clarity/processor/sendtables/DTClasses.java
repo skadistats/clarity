@@ -1,13 +1,13 @@
 package skadistats.clarity.processor.sendtables;
 
-import com.dota2.proto.Demo;
-import com.dota2.proto.Netmessages;
 import skadistats.clarity.decoder.SendTableFlattener;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.proto.Demo;
+import skadistats.clarity.wire.proto.Netmessages;
 
 import java.util.*;
 

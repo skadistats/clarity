@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.entities;
 
-import com.dota2.proto.Netmessages;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
@@ -13,6 +12,7 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.wire.proto.Netmessages;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.tempentities;
 
-import com.dota2.proto.Netmessages;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Provides;
@@ -12,6 +11,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
+import skadistats.clarity.wire.proto.Netmessages;
 
 @Provides({ OnTempEntity.class })
 @UsesDTClasses

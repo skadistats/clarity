@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.stringtables;
 
-import com.dota2.proto.Netmessages;
 import com.google.common.base.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,6 +10,7 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.proto.Netmessages;
 
 import java.util.*;
 

@@ -44,9 +44,9 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>com.google.protobuf</groupId>
-			<artifactId>protobuf-java</artifactId>
-			<version>2.5.0</version>
+			<groupId>com.skadistats</groupId>
+			<artifactId>clarity-protobuf</artifactId>
+			<version>LATEST</version>
 		</dependency>
 		<dependency>
 			<groupId>org.xerial.snappy</groupId>

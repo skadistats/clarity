@@ -1,7 +1,5 @@
 package skadistats.clarity.processor.gameevents;
 
-import com.dota2.proto.Netmessages;
-import com.dota2.proto.Networkbasetypes;
 import com.google.common.base.Predicate;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -10,6 +8,8 @@ import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.proto.Netmessages;
+import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.util.Map;
 import java.util.TreeMap;
