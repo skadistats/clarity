@@ -2,9 +2,10 @@ package skadistats.clarity.processor.runner;
 
 import java.io.InputStream;
 
-public abstract class AbstractRunner<T extends Context> implements Runner {
+public abstract class AbstractRunner<R extends Runner, T extends Context> implements Runner<AbstractRunner<R,T>,T> {
 
     private final Class<T> contextClass;
+    protected T context;
 
     public AbstractRunner(Class<T> contextClass) {
         this.contextClass = contextClass;
@@ -18,23 +19,26 @@ public abstract class AbstractRunner<T extends Context> implements Runner {
         }
     }
 
-    private T createContext(Object... processors) {
+    private void createContext(Object... processors) {
         ExecutionModel executionModel = new ExecutionModel();
         executionModel.addProcessor(this);
         for (Object p : processors) {
             executionModel.addProcessor(p);
         }
-        T context = instantiateContext();
+        context = instantiateContext();
         context.setExecutionModel(executionModel);
         executionModel.initialize(context);
-        return context;
     }
 
     @Override
-    public Context runWith(InputStream is, Object... processors) {
-        Context ctx = createContext(processors);
-        ctx.createEvent(OnInputStream.class, InputStream.class).raise(is);
-        return ctx;
+    public AbstractRunner<R, T> runWith(InputStream is, Object... processors) {
+        createContext(processors);
+        context.createEvent(OnInputStream.class, InputStream.class).raise(is);
+        return this;
+    }
+
+    public T getContext() {
+        return context;
     }
 
 }

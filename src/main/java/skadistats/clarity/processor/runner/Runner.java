@@ -2,8 +2,9 @@ package skadistats.clarity.processor.runner;
 
 import java.io.InputStream;
 
-public interface Runner {
+public interface Runner<R extends Runner, T extends Context> {
 
-    Context runWith(InputStream is, Object...processors);
+    T getContext();
+    R runWith(InputStream is, Object...processors);
 
 }
