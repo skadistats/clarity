@@ -95,6 +95,10 @@ public class InputStreamProcessor {
     public void processEmbedded(Context ctx, CodedInputStream cs) throws IOException {
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
+            if (kind == 0) {
+                // this seems to happen with live replays
+                break;
+            }
             int size = cs.readRawVarint32();
             Class<? extends GeneratedMessage> messageClass = PacketTypes.EMBED.get(kind);
             if (messageClass == null) {
