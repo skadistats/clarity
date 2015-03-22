@@ -1,6 +1,17 @@
 # clarity
 
-Comically fast, almost complete Dota 2 "demo" (aka "replay") parser written in java. 
+Comically fast, almost complete Dota 2 "demo" (aka "replay") parser written in java.
+ 
+### Note
+
+This is the README for version 1 of the library, so you might wanna check out
+[version 2](https://github.com/skadistats/clarity).
+
+### Upgrading from an earlier 1.x
+The protobuf-classes used by clarity have been factored out into a separate project, to make reuse among
+v1 and v2 possible. While doing that I also moved them to another package, so when you want to move to 1.2
+you might have to adjust a lot of imports. A global search and replace from `com.dota2.proto.` to 
+`skadistats.clarity.wire.proto.` on your whole project should do the trick.
 
 # Replay Data
 
@@ -63,37 +74,7 @@ To use the stable version, add the following dependency in your pom.xml, and you
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>1.1</version>
-</dependency>
-```
-
-There is also the possibility to use the bleeding edge, which I try to keep in sync with the Git-Repo.
-However, this latest snapshot is not available in Maven Central, so you got to add a pointer to the 
-repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/v1/pom.xml), which already does that)
-
-To add the snapshot repository, add the following:
-```XML
-<repositories>
-	<repository>
-		<id>sonatype.oss.snapshots</id>
-		<name>Sonatype OSS Snapshot Repository</name>
-		<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-		<releases>
-			<enabled>false</enabled>
-		</releases>
-		<snapshots>
-			<enabled>true</enabled>
-		</snapshots>
-	</repository>
-</repositories>
-```
-
-and then fetch the dependency with:
-```XML
-<dependency>
-	<groupId>com.skadistats</groupId>
-	<artifactId>clarity</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 </dependency>
 ```
 

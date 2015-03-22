@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>1.2-SNAPSHOT</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 	<name>clarity</name>
 	<description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
