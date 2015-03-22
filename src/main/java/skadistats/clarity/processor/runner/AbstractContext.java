@@ -10,10 +10,10 @@ public abstract class AbstractContext implements Context {
 
     protected final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
-    protected final ExecutionModel executionModel;
+    protected ExecutionModel executionModel;
     protected int tick = 0;
 
-    public AbstractContext(ExecutionModel executionModel) {
+    public void setExecutionModel(ExecutionModel executionModel) {
         this.executionModel = executionModel;
     }
 

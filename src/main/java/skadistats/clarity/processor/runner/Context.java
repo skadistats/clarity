@@ -6,6 +6,8 @@ import java.lang.annotation.Annotation;
 
 public interface Context {
 
+    void setExecutionModel(ExecutionModel executionModel);
+
     public <T> T getProcessor(Class<T> processorClass);
     public int getTick();
     public void setTick(int tick);

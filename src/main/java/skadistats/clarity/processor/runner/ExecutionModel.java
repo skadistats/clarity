@@ -46,6 +46,9 @@ public class ExecutionModel {
     }
 
     private void requireProvider(UsagePoint up) {
+        if (OnInputStream.class.equals(up.getUsagePointClass())) {
+            return;
+        }
         UsagePointProvider provider = UsagePoints.getProvidersFor(up.getUsagePointClass());
         if (provider == null) {
             throw new RuntimeException("oops. no provider found for required usage point " + up.getUsagePointClass());
