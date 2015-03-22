@@ -4,7 +4,7 @@ import skadistats.clarity.processor.reader.InputStreamProcessor;
 import skadistats.clarity.processor.reader.OnFileInfoOffset;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
-import skadistats.clarity.processor.runner.Runner;
+import skadistats.clarity.processor.runner.SimpleRunner;
 import skadistats.clarity.wire.proto.Demo;
 
 import java.io.FileInputStream;
@@ -24,7 +24,7 @@ public class Clarity {
             this.fileInfo = message;
         }
         public Demo.CDemoFileInfo retrieve(InputStream stream) {
-            new Runner().runWith(stream, this);
+            new SimpleRunner().runWith(stream, this);
             return fileInfo;
         }
     }

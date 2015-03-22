@@ -5,7 +5,13 @@ import skadistats.clarity.event.Provides;
 import java.io.InputStream;
 
 @Provides({OnInputStream.class})
-public class Runner {
+public class SimpleRunner {
+
+    public class Context extends AbstractContext {
+        public Context(ExecutionModel executionModel) {
+            super(executionModel);
+        }
+    }
 
     public Context runWith(InputStream is, Object... processors) {
         ExecutionModel executionModel = new ExecutionModel();
