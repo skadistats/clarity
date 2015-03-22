@@ -1,12 +1,12 @@
 package skadistats.clarity.parser;
 
+import skadistats.clarity.wire.proto.Demo;
+import skadistats.clarity.wire.proto.DotaUsermessages;
+import skadistats.clarity.wire.proto.Netmessages;
+import skadistats.clarity.wire.proto.Networkbasetypes;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import com.dota2.proto.Demo;
-import com.dota2.proto.DotaUsermessages;
-import com.dota2.proto.Netmessages;
-import com.dota2.proto.Networkbasetypes;
 
 public class Profile {
 

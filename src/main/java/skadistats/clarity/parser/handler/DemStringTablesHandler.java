@@ -1,18 +1,16 @@
 package skadistats.clarity.parser.handler;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
+import skadistats.clarity.wire.proto.Demo.CDemoStringTables;
+import skadistats.clarity.wire.proto.Demo.CDemoStringTables.items_t;
+import skadistats.clarity.wire.proto.Demo.CDemoStringTables.table_t;
 
-import com.dota2.proto.Demo.CDemoStringTables;
-import com.dota2.proto.Demo.CDemoStringTables.items_t;
-import com.dota2.proto.Demo.CDemoStringTables.table_t;
+import java.util.List;
 
 @RegisterHandler(CDemoStringTables.class)
 public class DemStringTablesHandler implements Handler<CDemoStringTables> {

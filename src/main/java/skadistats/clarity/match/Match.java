@@ -1,17 +1,15 @@
 
 package skadistats.clarity.match;
 
-import java.util.Iterator;
-
 import org.joda.time.Duration;
 import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
-
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.GameRulesStateType;
 import skadistats.clarity.parser.Peek;
+import skadistats.clarity.wire.proto.Demo.CDemoFileInfo;
 
-import com.dota2.proto.Demo.CDemoFileInfo;
+import java.util.Iterator;
 
 public class Match {
 

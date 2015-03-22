@@ -2,13 +2,11 @@ package skadistats.clarity.parser.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-
-import com.dota2.proto.Netmessages.CSVCMsg_ServerInfo;
+import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_ServerInfo;
 
 @RegisterHandler(CSVCMsg_ServerInfo.class)
 public class SvcServerInfoHandler implements Handler<CSVCMsg_ServerInfo> {

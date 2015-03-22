@@ -2,13 +2,11 @@ package skadistats.clarity.parser.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-
-import com.dota2.proto.Demo.CDemoStop;
+import skadistats.clarity.wire.proto.Demo.CDemoStop;
 
 @RegisterHandler(CDemoStop.class)
 public class DemStopHandler implements Handler<CDemoStop> {

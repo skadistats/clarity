@@ -1,24 +1,20 @@
 package skadistats.clarity.parser;
 
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-
+import com.google.protobuf.CodedInputStream;
+import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
-
 import skadistats.clarity.parser.Peek.BorderType;
+import skadistats.clarity.wire.PacketTypes;
+import skadistats.clarity.wire.proto.Demo.*;
+import skadistats.clarity.wire.proto.Networkbasetypes.CNETMsg_Tick;
+import skadistats.clarity.wire.proto.Networkbasetypes.CSVCMsg_UserMessage;
 
-import com.dota2.proto.Demo.CDemoFullPacket;
-import com.dota2.proto.Demo.CDemoPacket;
-import com.dota2.proto.Demo.CDemoSendTables;
-import com.dota2.proto.Demo.CDemoStringTables;
-import com.dota2.proto.Demo.EDemoCommands;
-import com.dota2.proto.Networkbasetypes.CNETMsg_Tick;
-import com.dota2.proto.Networkbasetypes.CSVCMsg_UserMessage;
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.GeneratedMessage;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class DemoInputStream implements Closeable {
 
@@ -103,19 +99,19 @@ public class DemoInputStream implements Closeable {
                         log.warn("unknown top level message of kind {}", kind);
                         continue;
                     }
-                    GeneratedMessage message = PacketTypes.parse(topClazz, data);
+                    GeneratedMessage message = PacketTypes.parse(topClazz, ZeroCopy.wrap(data));
                     full = false;
                     if (message instanceof CDemoPacket) {
-                        es = CodedInputStream.newInstance(((CDemoPacket) message).getData().toByteArray());
+                        es = ((CDemoPacket) message).getData().newCodedInput();
                         state = State.EMBED;
                         continue;
                     } else if (message instanceof CDemoSendTables) {
-                        es = CodedInputStream.newInstance(((CDemoSendTables) message).getData().toByteArray());
+                        es = ((CDemoSendTables) message).getData().newCodedInput();
                         state = State.EMBED;
                         continue;
                     } else if (message instanceof CDemoFullPacket) {
                         CDemoFullPacket fullMessage = (CDemoFullPacket)message;
-                        es = CodedInputStream.newInstance(fullMessage.getPacket().getData().toByteArray());
+                        es = fullMessage.getPacket().getData().newCodedInput();
                         state = State.EMBED;
                         full = true;
                         if (!isFiltered(CDemoStringTables.class)) {
@@ -140,7 +136,7 @@ public class DemoInputStream implements Closeable {
                         log.warn("unknown embedded message of kind {}", subKind);
                         continue;
                     }
-                    GeneratedMessage subMessage = PacketTypes.parse(subClazz, subData);
+                    GeneratedMessage subMessage = PacketTypes.parse(subClazz, ZeroCopy.wrap(subData));
                     if (subMessage instanceof CNETMsg_Tick) {
                         tick = ((CNETMsg_Tick) subMessage).getTick();
                         border = border.addNetTickBorder();
@@ -155,7 +151,7 @@ public class DemoInputStream implements Closeable {
                                 log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                                 continue;
                             } else if (!isFiltered(umClazz)) {
-                                return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData().toByteArray()));
+                                return genPeek(PacketTypes.parse(umClazz, userMessage.getMsgData()));
                             }
                         }
                     } else if (!isFiltered(subMessage.getClass())) {

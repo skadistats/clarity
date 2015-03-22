@@ -1,10 +1,7 @@
 package skadistats.clarity.parser.handler;
 
-import java.util.LinkedList;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.PropType;
@@ -13,9 +10,10 @@ import skadistats.clarity.model.SendTable;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
+import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_SendTable;
+import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
-import com.dota2.proto.Netmessages.CSVCMsg_SendTable;
-import com.dota2.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
+import java.util.LinkedList;
 
 @RegisterHandler(CSVCMsg_SendTable.class)
 public class SvcSendTableHandler implements Handler<CSVCMsg_SendTable> {

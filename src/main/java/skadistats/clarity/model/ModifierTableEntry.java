@@ -1,14 +1,13 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+
+import javax.vecmath.Vector2f;
+import javax.vecmath.Vector3f;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.vecmath.Vector2f;
-import javax.vecmath.Vector3f;
-
-import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 public class ModifierTableEntry {
 	private Map<Integer, Object> data;

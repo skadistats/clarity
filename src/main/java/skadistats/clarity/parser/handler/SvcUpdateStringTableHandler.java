@@ -1,10 +1,7 @@
 package skadistats.clarity.parser.handler;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.decoder.StringTableDecoder;
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.StringTable;
@@ -12,8 +9,9 @@ import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
+import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_UpdateStringTable;
 
-import com.dota2.proto.Netmessages.CSVCMsg_UpdateStringTable;
+import java.util.List;
 
 @RegisterHandler(CSVCMsg_UpdateStringTable.class)
 public class SvcUpdateStringTableHandler implements Handler<CSVCMsg_UpdateStringTable> {

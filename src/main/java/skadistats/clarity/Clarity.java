@@ -1,7 +1,7 @@
 package skadistats.clarity;
 
-import com.dota2.proto.Demo.CDemoFileInfo;
 import skadistats.clarity.parser.*;
+import skadistats.clarity.wire.proto.Demo.CDemoFileInfo;
 
 import java.io.FileInputStream;
 import java.io.IOException;

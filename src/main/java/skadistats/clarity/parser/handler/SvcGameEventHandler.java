@@ -2,16 +2,14 @@ package skadistats.clarity.parser.handler;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-
-import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent;
-import com.dota2.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
+import skadistats.clarity.wire.proto.Networkbasetypes.CSVCMsg_GameEvent;
+import skadistats.clarity.wire.proto.Networkbasetypes.CSVCMsg_GameEvent.key_t;
 
 @RegisterHandler(CSVCMsg_GameEvent.class)
 public class SvcGameEventHandler implements Handler<CSVCMsg_GameEvent> {

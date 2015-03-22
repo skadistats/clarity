@@ -1,17 +1,12 @@
 package skadistats.clarity.parser.handler;
 
 
+import com.google.protobuf.ByteString;
 import org.slf4j.LoggerFactory;
-
 import skadistats.clarity.match.Match;
-import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.Handle;
 import skadistats.clarity.model.ModifierTableEntry;
 import skadistats.clarity.parser.HandlerHelper;
-
-import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
-import com.dota2.proto.DotaModifiers.DOTA_MODIFIER_ENTRY_TYPE;
-import com.google.protobuf.ByteString;
+import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 public enum StringTableApplier {
 

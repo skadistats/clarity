@@ -1,23 +1,21 @@
 package skadistats.clarity.parser;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterators;
+import com.google.protobuf.GeneratedMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import skadistats.clarity.model.PacketType;
+import skadistats.clarity.wire.proto.Demo.CDemoStop;
+import skadistats.clarity.wire.proto.Demo.CDemoStringTables;
+import skadistats.clarity.wire.proto.Demo.CDemoSyncTick;
+import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_PacketEntities;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import skadistats.clarity.model.PacketType;
-
-import com.dota2.proto.Demo.CDemoStop;
-import com.dota2.proto.Demo.CDemoStringTables;
-import com.dota2.proto.Demo.CDemoSyncTick;
-import com.dota2.proto.Netmessages.CSVCMsg_PacketEntities;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Iterators;
-import com.google.protobuf.GeneratedMessage;
 
 public class DemoIndex {
 

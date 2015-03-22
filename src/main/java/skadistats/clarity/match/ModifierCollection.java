@@ -1,14 +1,13 @@
 package skadistats.clarity.match;
 
+import com.rits.cloning.Cloner;
+import skadistats.clarity.model.ModifierTableEntry;
+import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
-import skadistats.clarity.model.ModifierTableEntry;
-
-import com.dota2.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
-import com.rits.cloning.Cloner;
 
 public class ModifierCollection implements Cloneable {
     
