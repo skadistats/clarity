@@ -25,7 +25,7 @@ public class InputStreamProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
 
-    private CodedInputStream mainStream;
+    private CodedInputStream ms;
     private boolean unpackUserMessages = false;
 
     @Initializer(OnMessage.class)
@@ -34,7 +34,7 @@ public class InputStreamProcessor {
         unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
     }
 
-    private ByteString readData(CodedInputStream ms, int size, boolean isCompressed) throws IOException {
+    private ByteString readPacket(int size, boolean isCompressed) throws IOException {
         byte[] data = ms.readRawBytes(size);
         if (isCompressed) {
             data = Snappy.uncompress(data);
@@ -44,21 +44,20 @@ public class InputStreamProcessor {
 
     @OnInputStream
     public void processStream(Context ctx, InputStream is) throws IOException {
-        mainStream = CodedInputStream.newInstance(is);
-        CodedInputStream cs = mainStream;
-        cs.setSizeLimit(Integer.MAX_VALUE);
-        String header = new String(cs.readRawBytes(8));
+        ms = CodedInputStream.newInstance(is);
+        ms.setSizeLimit(Integer.MAX_VALUE);
+        String header = new String(ms.readRawBytes(8));
         if (!"PBUFDEM\0".equals(header)) {
             throw new IOException("replay does not have the proper header");
         }
-        ctx.createEvent(OnFileInfoOffset.class, int.class).raise(cs.readFixed32());
+        ctx.createEvent(OnFileInfoOffset.class, int.class).raise(ms.readFixed32());
         ctx.createEvent(OnTickStart.class).raise();
-        while (!cs.isAtEnd()) {
-            int kind = cs.readRawVarint32();
+        while (!ms.isAtEnd()) {
+            int kind = ms.readRawVarint32();
             boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-            int tick = cs.readRawVarint32();
-            int size = cs.readRawVarint32();
+            int tick = ms.readRawVarint32();
+            int size = ms.readRawVarint32();
             boolean newTick = tick != ctx.getTick();
             if (newTick) {
                 ctx.createEvent(OnTickEnd.class).raise();
@@ -68,23 +67,23 @@ public class InputStreamProcessor {
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
             if (messageClass == null) {
                 log.warn("unknown top level message of kind {}", kind);
-                cs.skipRawBytes(size);
+                ms.skipRawBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readData(cs, size, isCompressed));
+                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readData(cs, size, isCompressed));
+                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 // TODO: ignored for now
-                cs.skipRawBytes(size);
+                ms.skipRawBytes(size);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo()) {
-                    GeneratedMessage message = PacketTypes.parse(messageClass, readData(cs, size, isCompressed));
+                    GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(size, isCompressed));
                     ev.raise(message);
                 } else {
-                    cs.skipRawBytes(size);
+                    ms.skipRawBytes(size);
                 }
             }
         }
@@ -128,7 +127,7 @@ public class InputStreamProcessor {
     }
 
     public void skipBytes(int numBytes) throws IOException {
-        mainStream.skipRawBytes(numBytes);
+        ms.skipRawBytes(numBytes);
     }
 
 }
