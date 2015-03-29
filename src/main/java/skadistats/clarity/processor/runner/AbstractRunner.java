@@ -8,17 +8,9 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
 
-public abstract class AbstractRunner implements Runner {
+public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 
     private Context context;
-    private int tick;
-
-    protected abstract class AbstractSource implements Source {
-        @Override
-        public void setTick(int tick) {
-            AbstractRunner.this.tick = tick;
-        }
-    }
 
     protected ExecutionModel createExecutionModel(Object... processors) {
         ExecutionModel executionModel = new ExecutionModel(this);
@@ -45,7 +37,7 @@ public abstract class AbstractRunner implements Runner {
     abstract protected Source getSource();
 
     @Override
-    public Runner runWith(Object... processors) {
+    public AbstractRunner<T> runWith(Object... processors) {
         ExecutionModel em = createExecutionModel(processors);
         context = new Context(em);
         em.initialize(context);
@@ -55,11 +47,6 @@ public abstract class AbstractRunner implements Runner {
 
     public Context getContext() {
         return context;
-    }
-
-    @Override
-    public int getTick() {
-        return tick;
     }
 
 }

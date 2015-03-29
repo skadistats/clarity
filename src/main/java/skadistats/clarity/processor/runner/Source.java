@@ -4,7 +4,12 @@ import com.google.protobuf.CodedInputStream;
 
 public interface Source {
 
+    enum LoopControlCommand {
+        CONTINUE, BREAK, FALLTHROUGH
+    }
+
     CodedInputStream stream();
-    void setTick(int tick);
+    boolean isTickBorder(int upcomingTick);
+    LoopControlCommand doLoopControl(int nextTickWithData);
 
 }

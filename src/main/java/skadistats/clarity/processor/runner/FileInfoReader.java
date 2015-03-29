@@ -7,7 +7,7 @@ import skadistats.clarity.wire.proto.Demo;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class FileInfoReader extends AbstractRunner {
+public class FileInfoReader extends AbstractRunner<FileInfoReader> {
 
     private final CodedInputStream cis;
     private Demo.CDemoFileInfo fileInfo;
@@ -21,10 +21,18 @@ public class FileInfoReader extends AbstractRunner {
 
     @Override
     protected Source getSource() {
-        return new AbstractSource() {
+        return new Source() {
             @Override
             public CodedInputStream stream() {
                 return cis;
+            }
+            @Override
+            public boolean isTickBorder(int upcomingTick) {
+                return false;
+            }
+            @Override
+            public LoopControlCommand doLoopControl(int nextTickWithData) {
+                return LoopControlCommand.FALLTHROUGH;
             }
         };
     }
@@ -36,6 +44,11 @@ public class FileInfoReader extends AbstractRunner {
 
     public Demo.CDemoFileInfo getFileInfo() {
         return fileInfo;
+    }
+
+    @Override
+    public int getTick() {
+        return 0;
     }
 
 }
