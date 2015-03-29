@@ -10,6 +10,6 @@ public interface Source {
 
     CodedInputStream stream();
     boolean isTickBorder(int upcomingTick);
-    LoopControlCommand doLoopControl(int nextTickWithData);
+    LoopControlCommand doLoopControl(Context ctx, int nextTickWithData);
 
 }

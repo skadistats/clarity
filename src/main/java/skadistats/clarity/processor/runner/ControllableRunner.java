@@ -57,7 +57,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             }
 
             @Override
-            public LoopControlCommand doLoopControl(int nextTick) {
+            public LoopControlCommand doLoopControl(Context ctx, int nextTick) {
                 try {
                     lock.lockInterruptibly();
                 } catch (InterruptedException e) {

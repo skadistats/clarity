@@ -31,7 +31,7 @@ public class FileInfoReader extends AbstractRunner<FileInfoReader> {
                 return false;
             }
             @Override
-            public LoopControlCommand doLoopControl(int nextTickWithData) {
+            public LoopControlCommand doLoopControl(Context ctx, int nextTickWithData) {
                 return LoopControlCommand.FALLTHROUGH;
             }
         };

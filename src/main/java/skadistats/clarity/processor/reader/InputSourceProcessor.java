@@ -45,7 +45,7 @@ public class InputSourceProcessor {
     public void processSource(Context ctx, Source src) throws IOException {
         while (true) {
             if (src.stream().isAtEnd()) {
-                Source.LoopControlCommand loopCtl = src.doLoopControl(Integer.MAX_VALUE);
+                Source.LoopControlCommand loopCtl = src.doLoopControl(ctx, Integer.MAX_VALUE);
                 if (loopCtl == Source.LoopControlCommand.CONTINUE) {
                     continue;
                 } else {
@@ -59,7 +59,7 @@ public class InputSourceProcessor {
                 int tick = src.stream().readRawVarint32();
                 int size = src.stream().readRawVarint32();
                 if (src.isTickBorder(tick)) {
-                    Source.LoopControlCommand loopCtl = src.doLoopControl(tick);
+                    Source.LoopControlCommand loopCtl = src.doLoopControl(ctx, tick);
                     if (loopCtl == Source.LoopControlCommand.CONTINUE) {
                         continue;
                     } else if (loopCtl == Source.LoopControlCommand.BREAK) {
