@@ -96,15 +96,22 @@ public class BitStream {
         }
     }
 
+    public int peekBit(int pos) {
+        int start = pos >> 6;
+        int s = pos & 63;
+        long ret = (data[start] >>> s) & masks[1];
+        return (int) ret;
+    }
+
     public String toString() {
         StringBuffer buf = new StringBuffer();
 
-        int min = Math.max(0, (pos - 32) / 64);
-        int max = Math.min(data.length - 1, (pos + 63) / 64);
+        int min = Math.max(0, (pos - 32));
+        int max = Math.min(data.length * 64 - 1, pos + 64);
         for (int i = min; i <= max; i++) {
-            buf.append(new StringBuffer(String.format("%64s", Long.toBinaryString(data[i])).replace(' ', '0')).reverse());
+            buf.append(peekBit(i));
         }
-        buf.insert(pos - min * 32, '*');
+        buf.insert(pos - min, '*');
         return buf.toString();
     }
 
