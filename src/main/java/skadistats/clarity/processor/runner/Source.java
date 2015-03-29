@@ -1,10 +1,10 @@
 package skadistats.clarity.processor.runner;
 
-import java.io.InputStream;
+import com.google.protobuf.CodedInputStream;
 
 public interface Source {
 
-    InputStream getInputStream();
+    CodedInputStream stream();
     void setTick(int tick);
 
 }

@@ -20,12 +20,11 @@ import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.io.IOException;
 
-@Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class, OnTickStart.class, OnTickEnd.class })
+@Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class })
 public class InputSourceProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
 
-    private CodedInputStream ms;
     private boolean unpackUserMessages = false;
 
     @Initializer(OnMessage.class)
@@ -34,8 +33,8 @@ public class InputSourceProcessor {
         unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
     }
 
-    private ByteString readPacket(int size, boolean isCompressed) throws IOException {
-        byte[] data = ms.readRawBytes(size);
+    private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
+        byte[] data = source.stream().readRawBytes(size);
         if (isCompressed) {
             data = Snappy.uncompress(data);
         }
@@ -43,47 +42,40 @@ public class InputSourceProcessor {
     }
 
     @OnInputSource
-    public void processStream(Context ctx, Source source) throws IOException {
-        ms = CodedInputStream.newInstance(source.getInputStream());
-        ms.setSizeLimit(Integer.MAX_VALUE);
-        String header = new String(ms.readRawBytes(8));
-        if (!"PBUFDEM\0".equals(header)) {
-            throw new IOException("replay does not have the proper header");
-        }
-        ctx.createEvent(OnFileInfoOffset.class, int.class).raise(ms.readFixed32());
+    public void processSource(Context ctx, Source src) throws IOException {
         ctx.createEvent(OnTickStart.class).raise();
-        while (!ms.isAtEnd()) {
-            int kind = ms.readRawVarint32();
+        while (!src.stream().isAtEnd()) {
+            int kind = src.stream().readRawVarint32();
             boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-            int tick = ms.readRawVarint32();
-            int size = ms.readRawVarint32();
+            int tick = src.stream().readRawVarint32();
+            int size = src.stream().readRawVarint32();
             boolean newTick = tick != ctx.getTick();
             if (newTick) {
                 ctx.createEvent(OnTickEnd.class).raise();
-                source.setTick(tick);
+                src.setTick(tick);
                 ctx.createEvent(OnTickStart.class).raise();
             }
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
             if (messageClass == null) {
                 log.warn("unknown top level message of kind {}", kind);
-                ms.skipRawBytes(size);
+                src.stream().skipRawBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(size, isCompressed));
+                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(size, isCompressed));
+                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 // TODO: ignored for now
-                ms.skipRawBytes(size);
+                src.stream().skipRawBytes(size);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo()) {
-                    GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(size, isCompressed));
+                    GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                     ev.raise(message);
                 } else {
-                    ms.skipRawBytes(size);
+                    src.stream().skipRawBytes(size);
                 }
             }
         }
@@ -124,10 +116,6 @@ public class InputSourceProcessor {
                 }
             }
         }
-    }
-
-    public void skipBytes(int numBytes) throws IOException {
-        ms.skipRawBytes(numBytes);
     }
 
 }
