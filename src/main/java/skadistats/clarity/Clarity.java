@@ -1,6 +1,6 @@
 package skadistats.clarity;
 
-import skadistats.clarity.processor.reader.InputStreamProcessor;
+import skadistats.clarity.processor.reader.InputSourceProcessor;
 import skadistats.clarity.processor.reader.OnFileInfoOffset;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
@@ -17,7 +17,7 @@ public class Clarity {
         private Demo.CDemoFileInfo fileInfo;
         @OnFileInfoOffset
         public void onFileInfoOffset(Context ctx, int offset) throws IOException {
-            ctx.getProcessor(InputStreamProcessor.class).skipBytes(offset - 12);
+            ctx.getProcessor(InputSourceProcessor.class).skipBytes(offset - 12);
         }
         @OnMessage(Demo.CDemoFileInfo.class)
         public void onFileInfo(Context ctx, Demo.CDemoFileInfo message) throws IOException {

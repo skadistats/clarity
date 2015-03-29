@@ -21,9 +21,9 @@ import skadistats.clarity.wire.proto.Networkbasetypes;
 import java.io.IOException;
 
 @Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class, OnTickStart.class, OnTickEnd.class })
-public class InputStreamProcessor {
+public class InputSourceProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(InputStreamProcessor.class);
+    private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
 
     private CodedInputStream ms;
     private boolean unpackUserMessages = false;
