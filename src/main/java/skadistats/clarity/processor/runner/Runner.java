@@ -1,10 +1,11 @@
 package skadistats.clarity.processor.runner;
 
-import java.io.InputStream;
+public interface Runner<I> {
 
-public interface Runner<R extends Runner, T extends Context> {
+    Context getContext();
+    int getTick();
 
-    T getContext();
-    R runWith(InputStream is, Object...processors);
+    Runner runWith(I input, Object...processors);
+
 
 }

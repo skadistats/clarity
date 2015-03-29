@@ -1,44 +1,47 @@
 package skadistats.clarity.processor.runner;
 
-import java.io.InputStream;
+public abstract class AbstractRunner<I> implements Runner<I> {
 
-public abstract class AbstractRunner<R extends Runner, T extends Context> implements Runner<AbstractRunner<R,T>,T> {
+    private Context context;
+    private int tick;
 
-    private final Class<T> contextClass;
-    protected T context;
-
-    public AbstractRunner(Class<T> contextClass) {
-        this.contextClass = contextClass;
-    }
-
-    protected T instantiateContext() {
-        try {
-            return contextClass.newInstance();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+    protected abstract class AbstractSource<I> implements Source {
+        @Override
+        public void setTick(int tick) {
+            AbstractRunner.this.tick = tick;
         }
     }
 
-    private void createContext(Object... processors) {
-        ExecutionModel executionModel = new ExecutionModel();
-        executionModel.addProcessor(this);
+    protected ExecutionModel createExecutionModel(Object... processors) {
+        ExecutionModel executionModel = new ExecutionModel(this);
         for (Object p : processors) {
             executionModel.addProcessor(p);
         }
-        context = instantiateContext();
-        context.setExecutionModel(executionModel);
-        executionModel.initialize(context);
+        return executionModel;
     }
 
+    protected void setTick(int tick) {
+        this.tick = tick;
+    }
+
+    abstract protected Source getSource(I input );
+
     @Override
-    public AbstractRunner<R, T> runWith(InputStream is, Object... processors) {
-        createContext(processors);
-        context.createEvent(OnInputStream.class, InputStream.class).raise(is);
+    public Runner runWith(I input, Object... processors) {
+        ExecutionModel em = createExecutionModel(processors);
+        context = new Context(em);
+        em.initialize(context);
+        context.createEvent(OnInputSource.class, Source.class).raise(getSource(input));
         return this;
     }
 
-    public T getContext() {
+    public Context getContext() {
         return context;
+    }
+
+    @Override
+    public int getTick() {
+        return tick;
     }
 
 }

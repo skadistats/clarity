@@ -12,13 +12,13 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.runner.Context;
-import skadistats.clarity.processor.runner.OnInputStream;
+import skadistats.clarity.processor.runner.OnInputSource;
+import skadistats.clarity.processor.runner.Source;
 import skadistats.clarity.wire.PacketTypes;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 @Provides({OnMessageContainer.class, OnMessage.class, OnFileInfoOffset.class, OnTickStart.class, OnTickEnd.class })
 public class InputStreamProcessor {
@@ -42,9 +42,9 @@ public class InputStreamProcessor {
         return ZeroCopy.wrap(data);
     }
 
-    @OnInputStream
-    public void processStream(Context ctx, InputStream is) throws IOException {
-        ms = CodedInputStream.newInstance(is);
+    @OnInputSource
+    public void processStream(Context ctx, Source source) throws IOException {
+        ms = CodedInputStream.newInstance(source.getInputStream());
         ms.setSizeLimit(Integer.MAX_VALUE);
         String header = new String(ms.readRawBytes(8));
         if (!"PBUFDEM\0".equals(header)) {
@@ -61,7 +61,7 @@ public class InputStreamProcessor {
             boolean newTick = tick != ctx.getTick();
             if (newTick) {
                 ctx.createEvent(OnTickEnd.class).raise();
-                ctx.setTick(tick);
+                source.setTick(tick);
                 ctx.createEvent(OnTickStart.class).raise();
             }
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);

@@ -13,10 +13,16 @@ public class ExecutionModel {
 
     private static final Logger log = LoggerFactory.getLogger(ExecutionModel.class);
 
+    private final Runner runner;
     private final Map<Class<?>, Object> processors = new HashMap<>();
     private final Set<UsagePoint> usagePoints = new HashSet<>();
     private final Map<Class<? extends Annotation>, Set<EventListener>> processedEvents = new HashMap<>();
     private final Map<Class<? extends Annotation>, InitializerMethod> initializers = new HashMap<>();
+
+    public ExecutionModel(Runner runner) {
+        this.runner = runner;
+        addProcessor(runner);
+    }
 
     public void addProcessor(Object processor) {
         requireProcessorClass(processor.getClass());
@@ -25,6 +31,10 @@ public class ExecutionModel {
 
     public <T> T getProcessor(Class<T> processorClass) {
         return (T) processors.get(processorClass);
+    }
+
+    public Runner getRunner() {
+        return runner;
     }
 
     private void requireProcessorClass(Class<?> processorClass) {
@@ -46,7 +56,7 @@ public class ExecutionModel {
     }
 
     private void requireProvider(UsagePoint up) {
-        if (OnInputStream.class.equals(up.getUsagePointClass())) {
+        if (OnInputSource.class.equals(up.getUsagePointClass())) {
             return;
         }
         UsagePointProvider provider = UsagePoints.getProvidersFor(up.getUsagePointClass());

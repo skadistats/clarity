@@ -1,11 +1,17 @@
 package skadistats.clarity.processor.runner;
 
-public class SimpleRunner extends AbstractRunner<SimpleRunner, SimpleRunner.SimpleContext> {
+import java.io.InputStream;
 
-    public static class SimpleContext extends AbstractContext {}
+public class SimpleRunner extends AbstractRunner<InputStream> {
 
-    public SimpleRunner() {
-        super(SimpleContext.class);
+    @Override
+    protected Source getSource(final InputStream input) {
+        return new AbstractSource<InputStream>() {
+            @Override
+            public InputStream getInputStream() {
+                return input;
+            }
+        };
     }
 
 }
