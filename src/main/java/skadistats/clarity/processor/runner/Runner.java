@@ -1,11 +1,11 @@
 package skadistats.clarity.processor.runner;
 
-public interface Runner<I> {
+public interface Runner {
 
     Context getContext();
     int getTick();
 
-    Runner runWith(I input, Object...processors);
+    Runner runWith(Object... processors);
 
 
 }

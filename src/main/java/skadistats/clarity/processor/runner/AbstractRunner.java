@@ -1,11 +1,11 @@
 package skadistats.clarity.processor.runner;
 
-public abstract class AbstractRunner<I> implements Runner<I> {
+public abstract class AbstractRunner implements Runner {
 
     private Context context;
     private int tick;
 
-    protected abstract class AbstractSource<I> implements Source {
+    protected abstract class AbstractSource implements Source {
         @Override
         public void setTick(int tick) {
             AbstractRunner.this.tick = tick;
@@ -20,18 +20,14 @@ public abstract class AbstractRunner<I> implements Runner<I> {
         return executionModel;
     }
 
-    protected void setTick(int tick) {
-        this.tick = tick;
-    }
-
-    abstract protected Source getSource(I input );
+    abstract protected Source getSource();
 
     @Override
-    public Runner runWith(I input, Object... processors) {
+    public Runner runWith(Object... processors) {
         ExecutionModel em = createExecutionModel(processors);
         context = new Context(em);
         em.initialize(context);
-        context.createEvent(OnInputSource.class, Source.class).raise(getSource(input));
+        context.createEvent(OnInputSource.class, Source.class).raise(getSource());
         return this;
     }
 

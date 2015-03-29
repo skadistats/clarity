@@ -24,7 +24,7 @@ public class Clarity {
             this.fileInfo = message;
         }
         public Demo.CDemoFileInfo retrieve(InputStream stream) {
-            new SimpleRunner().runWith(stream, this);
+            new SimpleRunner(stream).runWith(this);
             return fileInfo;
         }
     }
