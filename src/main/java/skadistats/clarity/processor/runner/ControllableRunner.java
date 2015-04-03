@@ -17,8 +17,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     private Thread runnerThread;
 
-    private int upcomingTick = -1;
+    /* tick the processor is waiting at to be signaled to continue further processing */
+    private int upcomingTick = 0;
+    /* tick the processor has last processed */
     private int processorTick = -1;
+    /* tick the user wants to be at the end of */
     private int wantedTick = -1;
 
     public ControllableRunner(InputStream inputStream) throws IOException {
@@ -36,11 +39,6 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         });
         runnerThread.start();
         return this;
-    }
-
-    @Override
-    public int getTick() {
-        return wantedTick;
     }
 
     @Override
@@ -67,8 +65,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                     upcomingTick = nextTick;
                     if (upcomingTick <= wantedTick) {
                         processorTick = upcomingTick;
+                        endTicksUntil(ctx, upcomingTick - 1);
+                        startNewTick(ctx);
                         return LoopControlCommand.FALLTHROUGH;
                     } else {
+                        endTicksUntil(ctx, wantedTick);
                         wantedTickReached.signalAll();
                         try {
                             moreProcessingNeeded.await();
@@ -76,27 +77,25 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             return LoopControlCommand.BREAK;
                         }
                         processorTick = upcomingTick;
+                        startNewTick(ctx);
                         return LoopControlCommand.FALLTHROUGH;
                     }
                 } finally {
                     lock.unlock();
                 }
             }
-
         };
     }
 
     public void tick() throws InterruptedException {
         lock.lock();
         try {
-            if (wantedTick > processorTick) {
+            if (tick != wantedTick) {
                 wantedTickReached.await();
             }
             wantedTick++;
-            if (wantedTick > processorTick) {
-                moreProcessingNeeded.signal();
-                wantedTickReached.await();
-            }
+            moreProcessingNeeded.signal();
+            wantedTickReached.await();
         } finally {
             lock.unlock();
         }

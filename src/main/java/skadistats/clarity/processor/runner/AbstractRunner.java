@@ -1,6 +1,8 @@
 package skadistats.clarity.processor.runner;
 
 import com.google.protobuf.CodedInputStream;
+import skadistats.clarity.processor.reader.OnTickEnd;
+import skadistats.clarity.processor.reader.OnTickStart;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,6 +13,9 @@ import java.util.Arrays;
 public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 
     private Context context;
+
+    /* tick the user is at the end of */
+    protected int tick = -1;
 
     protected ExecutionModel createExecutionModel(Object... processors) {
         ExecutionModel executionModel = new ExecutionModel(this);
@@ -32,6 +37,28 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         CodedInputStream codedInputStream = CodedInputStream.newInstance(is);
         codedInputStream.setSizeLimit(Integer.MAX_VALUE);
         return codedInputStream;
+    }
+
+    protected void endTicksUntil(Context ctx, int untilTick) {
+        while (tick < untilTick) {
+            if (tick != -1) {
+                ctx.createEvent(OnTickEnd.class).raise();
+            }
+            tick++;
+            ctx.createEvent(OnTickStart.class).raise();
+        }
+        if (tick != -1) {
+            ctx.createEvent(OnTickEnd.class).raise();
+        }
+    }
+
+    protected void startNewTick(Context ctx) {
+        tick++;
+        ctx.createEvent(OnTickStart.class).raise();
+    }
+
+    public int getTick() {
+        return tick;
     }
 
     abstract protected Source getSource();
