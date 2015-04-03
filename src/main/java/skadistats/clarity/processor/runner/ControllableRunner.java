@@ -2,8 +2,9 @@ package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.decoder.DemoInputStream;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -13,17 +14,38 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private final Condition wantedTickReached = lock.newCondition();
     private final Condition moreProcessingNeeded = lock.newCondition();
 
+    private final File demoFile;
     private Thread runnerThread;
 
-    /* tick the processor is waiting at to be signaled to continue further processing */
-    private int upcomingTick = 0;
-    /* tick the user wants to be at the end of */
-    private int wantedTick = -1;
+    private Integer lastTick;
 
-    public ControllableRunner(InputStream inputStream) throws IOException {
-        DemoInputStream dis = new DemoInputStream(inputStream);
-        dis.ensureDemHeader();
+    /* tick the processor is waiting at to be signaled to continue further processing */
+    private int upcomingTick = -1;
+    /* tick we want to be at the end of */
+    private int wantedTick = -1;
+    /* tick the user wanted to be at the end of */
+    private Integer demandedTick;
+
+    public ControllableRunner(File demoFile) throws IOException {
+        this.demoFile = demoFile;
+        initCodedInputStreamForTick(-1);
+    }
+
+    private int initCodedInputStreamForTick(int initTick) throws IOException {
+        int fpTick;
+        DemoInputStream dis = new DemoInputStream(new FileInputStream(demoFile));
+        if (initTick == - 1) {
+            dis.ensureDemHeader();
+            fpTick = -1;
+        } else {
+            DemoInputStream.PacketPosition pos = dis.getFullPacketBeforeTick(initTick, fullPacketPositions);
+            dis = new DemoInputStream(new FileInputStream(demoFile));
+            dis.skipBytes(pos.getOffset());
+            fpTick = pos.getTick();
+        }
         cis = dis.newCodedInputStream();
+        cisBaseOffset = dis.getOffset();
+        return fpTick;
     }
 
     @Override
@@ -50,23 +72,26 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 }
                 try {
                     upcomingTick = nextTick;
-                    if (upcomingTick <= wantedTick) {
+                    if (demandedTick != null) {
+                        processorTick = upcomingTick;
+                        endTicksUntil(ctx, tick);
+                        return processDemandedTick(ctx);
+                    } else if (upcomingTick <= wantedTick) {
                         processorTick = upcomingTick;
                         endTicksUntil(ctx, upcomingTick - 1);
-                        startNewTick(ctx);
-                        return LoopControlCommand.FALLTHROUGH;
+                        return processDemandedTick(ctx);
                     } else {
                         endTicksUntil(ctx, wantedTick);
                         wantedTickReached.signalAll();
-                        try {
-                            moreProcessingNeeded.await();
-                        } catch (InterruptedException e) {
-                            return LoopControlCommand.BREAK;
-                        }
+                        moreProcessingNeeded.await();
                         processorTick = upcomingTick;
-                        startNewTick(ctx);
-                        return LoopControlCommand.FALLTHROUGH;
+                        return processDemandedTick(ctx);
                     }
+                } catch (IOException e) {
+                    log.error("IO error in runner thread", e);
+                    return LoopControlCommand.BREAK;
+                } catch (InterruptedException e) {
+                    return LoopControlCommand.BREAK;
                 } finally {
                     lock.unlock();
                 }
@@ -74,15 +99,58 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         };
     }
 
-    public void tick() throws InterruptedException {
+    private Source.LoopControlCommand processDemandedTick(Context ctx) throws IOException {
+        boolean headerProcessed = tick != - 1;
+        if (demandedTick == null || !headerProcessed) {
+            startNewTick(ctx);
+            return Source.LoopControlCommand.FALLTHROUGH;
+        } else {
+            wantedTick = demandedTick;
+            demandedTick = null;
+            int diff = wantedTick - upcomingTick;
+            if (diff >= 0 && diff < 1800) {
+                startNewTick(ctx);
+                return Source.LoopControlCommand.FALLTHROUGH;
+            } else {
+                upcomingTick = initCodedInputStreamForTick(wantedTick);
+                processorTick = upcomingTick;
+                tick =  upcomingTick - 1;
+                startNewTick(ctx);
+                return Source.LoopControlCommand.CONTINUE;
+            }
+        }
+    }
+
+    public void setDemandedTick(int demandedTick) {
+        lock.lock();
+        try {
+            this.demandedTick = demandedTick;
+            moreProcessingNeeded.signal();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void seek(int demandedTick) {
+        lock.lock();
+        try {
+            this.demandedTick = demandedTick;
+            moreProcessingNeeded.signal();
+            wantedTickReached.awaitUninterruptibly();
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    public void tick() {
         lock.lock();
         try {
             if (tick != wantedTick) {
-                wantedTickReached.await();
+                wantedTickReached.awaitUninterruptibly();
             }
             wantedTick++;
             moreProcessingNeeded.signal();
-            wantedTickReached.await();
+            wantedTickReached.awaitUninterruptibly();
         } finally {
             lock.unlock();
         }
@@ -96,6 +164,18 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         if (runnerThread != null && runnerThread.isAlive()) {
             runnerThread.interrupt();
         }
+    }
+
+    public int getLastTick() throws IOException {
+        if (lastTick == null) {
+            DemoInputStream dis = new DemoInputStream(new FileInputStream(demoFile));
+            int fileInfoOffset = dis.ensureDemHeader();
+            dis.skipBytes(fileInfoOffset - 12);
+            dis.readRawVarint32();
+            lastTick = dis.readRawVarint32();
+            dis.close();
+        }
+        return lastTick;
     }
 
 }

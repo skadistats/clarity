@@ -53,6 +53,7 @@ public class InputSourceProcessor {
                     break;
                 }
             } else {
+                int offset = src.stream().getTotalBytesRead();
                 int kind = src.stream().readRawVarint32();
                 boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
                 kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
@@ -77,7 +78,7 @@ public class InputSourceProcessor {
                     Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                     ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
                 } else if (messageClass == Demo.CDemoFullPacket.class) {
-                    src.markFullPacket(tick, size, isCompressed);
+                    Event<OnFullPacket> ev = ctx.createEvent(OnFullPacket.class, messageClass, boolean.class);
                     src.stream().skipRawBytes(size);
                 } else {
                     Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
