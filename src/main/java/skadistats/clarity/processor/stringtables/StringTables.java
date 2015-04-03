@@ -62,7 +62,7 @@ public class StringTables {
 
     @OnMessage(Netmessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(Context ctx, Netmessages.CSVCMsg_CreateStringTable message) {
-        if (requestedTables.contains(message.getName())) {
+        if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
                 message.getMaxEntries(),
