@@ -77,7 +77,7 @@ public class InputSourceProcessor {
                     Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                     ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
                 } else if (messageClass == Demo.CDemoFullPacket.class) {
-                    // TODO: ignored for now
+                    src.markFullPacket(tick, size, isCompressed);
                     src.stream().skipRawBytes(size);
                 } else {
                     Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
@@ -97,7 +97,7 @@ public class InputSourceProcessor {
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
             if (kind == 0) {
-                // this seems to happen with live replays
+                // this seems to happen with console recorded replays
                 break;
             }
             int size = cs.readRawVarint32();

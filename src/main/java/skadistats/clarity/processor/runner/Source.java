@@ -10,6 +10,7 @@ public interface Source {
 
     CodedInputStream stream();
     boolean isTickBorder(int upcomingTick);
+    void markFullPacket(int tick, int size, boolean isCompressed);
     LoopControlCommand doLoopControl(Context ctx, int nextTickWithData);
 
 }

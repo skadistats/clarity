@@ -1,7 +1,5 @@
 package skadistats.clarity.processor.runner;
 
-import com.google.protobuf.CodedInputStream;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.locks.Condition;
@@ -13,20 +11,16 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private final Condition wantedTickReached = lock.newCondition();
     private final Condition moreProcessingNeeded = lock.newCondition();
 
-    private final CodedInputStream cis;
-
     private Thread runnerThread;
 
     /* tick the processor is waiting at to be signaled to continue further processing */
     private int upcomingTick = 0;
-    /* tick the processor has last processed */
-    private int processorTick = -1;
     /* tick the user wants to be at the end of */
     private int wantedTick = -1;
 
     public ControllableRunner(InputStream inputStream) throws IOException {
         ensureDemHeader(inputStream);
-        this.cis = createCodedInputStream(inputStream);
+        cis = createCodedInputStream(inputStream);
     }
 
     @Override
@@ -43,17 +37,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     @Override
     protected Source getSource() {
-        return new Source() {
-            @Override
-            public CodedInputStream stream() {
-                return cis;
-            }
-
-            @Override
-            public boolean isTickBorder(int upcomingTick) {
-                return processorTick != upcomingTick;
-            }
-
+        return new AbstractSource() {
             @Override
             public LoopControlCommand doLoopControl(Context ctx, int nextTick) {
                 try {
