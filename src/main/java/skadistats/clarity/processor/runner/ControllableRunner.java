@@ -42,6 +42,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             dis = new DemoInputStream(new FileInputStream(demoFile));
             dis.skipBytes(pos.getOffset());
             fpTick = pos.getTick();
+            shouldEmitFullPacket = true;
         }
         cis = dis.newCodedInputStream();
         cisBaseOffset = dis.getOffset();

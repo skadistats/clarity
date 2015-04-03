@@ -36,7 +36,7 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         }
 
         @Override
-        public boolean shouldEmitFullPacket(int tick, int cisOffset) {
+        public boolean shouldEmitResetOnFullPacket(int tick, int cisOffset) {
             if (shouldEmitFullPacket) {
                 shouldEmitFullPacket = false;
                 return true;

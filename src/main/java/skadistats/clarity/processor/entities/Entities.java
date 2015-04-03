@@ -8,10 +8,13 @@ import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.reader.OnReset;
+import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Netmessages;
 
 import java.util.Arrays;
@@ -26,6 +29,7 @@ public class Entities {
     public static final int MAX_PROPERTIES = 0x3fff;
 
     private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
+    private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
 
     private class BaselineEntry {
         private ByteString rawBaseline;
@@ -36,8 +40,17 @@ public class Entities {
         }
     }
 
-    private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
     private final int[] indices = new int[MAX_PROPERTIES];
+
+    @OnReset
+    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+        if (phase == ResetPhase.CLEAR) {
+//            baselineEntries.clear();
+            for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
+                entities[entityIndex] = null;
+            }
+        }
+    }
 
     @OnStringTableEntry("instancebaseline")
     public void onBaseline(Context ctx, StringTable table, StringTableEntry oldEntry, StringTableEntry newEntry) {

@@ -20,7 +20,7 @@ import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.io.IOException;
 
-@Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class })
+@Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class, OnReset.class, OnFullPacket.class })
 public class InputSourceProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
@@ -78,8 +78,23 @@ public class InputSourceProcessor {
                     Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                     ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
                 } else if (messageClass == Demo.CDemoFullPacket.class) {
-                    Event<OnFullPacket> ev = ctx.createEvent(OnFullPacket.class, messageClass, boolean.class);
-                    src.stream().skipRawBytes(size);
+                    Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
+                    Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
+                    boolean shouldEmitReset = src.shouldEmitResetOnFullPacket(tick, offset);
+                    if (evFull.isListenedTo() || (shouldEmitReset && evReset.isListenedTo())) {
+                        Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                        if (evFull.isListenedTo()) {
+                            evFull.raise(message);
+                        }
+                        if ((shouldEmitReset && evReset.isListenedTo())) {
+                            for (ResetPhase phase : ResetPhase.values()) {
+                                evReset.raise(message, phase);
+                            }
+                            ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
+                        }
+                    } else {
+                        src.stream().skipRawBytes(size);
+                    }
                 } else {
                     Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                     if (ev.isListenedTo()) {

@@ -9,7 +9,10 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.reader.OnReset;
+import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Netmessages;
 
 import java.util.*;
@@ -40,6 +43,21 @@ public class StringTables {
                 return v.length() == 0 || v.equals(t.getName());
             }
         });
+    }
+
+    @OnReset
+    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+        if (phase == ResetPhase.CLEAR) {
+            // maybe clear?
+        } else if (phase == ResetPhase.STRINGTABLES) {
+            Demo.CDemoStringTables dst = packet.getStringTable();
+            for (Demo.CDemoStringTables.table_t t : dst.getTablesList()) {
+                if (!requestedTables.contains(t.getTableName())) {
+                    continue;
+                }
+            }
+            // and now?
+        }
     }
 
     @OnMessage(Netmessages.CSVCMsg_CreateStringTable.class)

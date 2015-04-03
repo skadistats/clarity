@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { Demo.CDemoFullPacket.class })
-public @interface OnFullPacket {
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { Demo.CDemoFullPacket.class, ResetPhase.class })
+public @interface OnReset {
 }

@@ -10,7 +10,7 @@ public interface Source {
 
     CodedInputStream stream();
     boolean isTickBorder(int upcomingTick);
-    boolean shouldEmitFullPacket(int tick, int cisOffset);
+    boolean shouldEmitResetOnFullPacket(int tick, int cisOffset);
     LoopControlCommand doLoopControl(Context ctx, int nextTickWithData);
 
 }
