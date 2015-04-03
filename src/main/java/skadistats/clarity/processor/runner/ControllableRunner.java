@@ -1,5 +1,7 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.decoder.DemoInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.concurrent.locks.Condition;
@@ -19,8 +21,9 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private int wantedTick = -1;
 
     public ControllableRunner(InputStream inputStream) throws IOException {
-        ensureDemHeader(inputStream);
-        cis = createCodedInputStream(inputStream);
+        DemoInputStream dis = new DemoInputStream(inputStream);
+        dis.ensureDemHeader();
+        cis = dis.newCodedInputStream();
     }
 
     @Override

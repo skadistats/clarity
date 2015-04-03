@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.proto.Demo;
 
@@ -11,9 +12,10 @@ public class FileInfoReader extends AbstractRunner<FileInfoReader> {
     private Demo.CDemoFileInfo fileInfo;
 
     public FileInfoReader(InputStream inputStream) throws IOException {
-        int offset = ensureDemHeader(inputStream);
-        inputStream.skip(offset - 12);
-        cis = createCodedInputStream(inputStream);
+        DemoInputStream dis = new DemoInputStream(inputStream);
+        int offset = dis.ensureDemHeader();
+        dis.skipBytes(offset - 12);
+        cis = dis.newCodedInputStream();
         super.runWith(this);
     }
 

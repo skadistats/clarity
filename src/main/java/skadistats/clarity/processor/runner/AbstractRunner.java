@@ -6,12 +6,6 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Arrays;
-
 public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -46,20 +40,6 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
             executionModel.addProcessor(p);
         }
         return executionModel;
-    }
-
-    protected int ensureDemHeader(InputStream ms) throws IOException {
-        byte[] header = new byte[12];
-        if (ms.read(header) != 12 || !"PBUFDEM\0".equals(new String(Arrays.copyOfRange(header, 0, 8)))) {
-            throw new IOException("given stream does not seem to contain a valid replay");
-        }
-        return ByteBuffer.wrap(header, 8, 4).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().get();
-    }
-
-    protected CodedInputStream createCodedInputStream(InputStream is) {
-        CodedInputStream codedInputStream = CodedInputStream.newInstance(is);
-        codedInputStream.setSizeLimit(Integer.MAX_VALUE);
-        return codedInputStream;
     }
 
     protected void endTicksUntil(Context ctx, int untilTick) {

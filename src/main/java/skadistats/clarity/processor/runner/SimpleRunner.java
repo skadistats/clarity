@@ -1,13 +1,16 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.decoder.DemoInputStream;
+
 import java.io.IOException;
 import java.io.InputStream;
 
 public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
     public SimpleRunner(InputStream inputStream) throws IOException {
-        ensureDemHeader(inputStream);
-        cis = createCodedInputStream(inputStream);
+        DemoInputStream dis = new DemoInputStream(inputStream);
+        dis.ensureDemHeader();
+        cis = dis.newCodedInputStream();
     }
 
     @Override
