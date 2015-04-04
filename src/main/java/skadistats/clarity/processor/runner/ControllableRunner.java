@@ -1,14 +1,10 @@
 package skadistats.clarity.processor.runner;
 
 import com.google.common.collect.Iterators;
-import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.source.LoopControlCommand;
+import skadistats.clarity.source.PacketPosition;
 import skadistats.clarity.source.Source;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -23,14 +19,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private final Condition wantedTickReached = lock.newCondition();
     private final Condition moreProcessingNeeded = lock.newCondition();
 
-    private final File demoFile;
     private Thread runnerThread;
 
-    private DemoInputStream dis;
-    private int cisBaseOffset;
-    private TreeSet<DemoInputStream.PacketPosition> fullPacketPositions = new TreeSet<>();
+    private TreeSet<PacketPosition> fullPacketPositions = new TreeSet<>();
     private ResetPhase resetPhase;
-    private TreeSet<DemoInputStream.PacketPosition> seekPositions;
+    private TreeSet<PacketPosition> seekPositions;
 
     private Integer lastTick;
 
@@ -41,43 +34,21 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     /* tick the user wanted to be at the end of */
     private Integer demandedTick;
 
-    public ControllableRunner(File demoFile) throws IOException {
-        this.demoFile = demoFile;
-        dis = newDemoStream();
-        dis.ensureDemHeader();
-        newCodedStream();
-    }
-
-    private DemoInputStream newDemoStream() throws FileNotFoundException {
-        return new DemoInputStream(new FileInputStream(demoFile));
-    }
-
-    private void newCodedStream() throws IOException {
-        cis = dis.newCodedInputStream();
-        cisBaseOffset = dis.getOffset();
-    }
-
-    @Override
-    public ControllableRunner runWith(final Object... processors) {
-        runnerThread = new Thread(new Runnable() {
+    public ControllableRunner(Source s) throws IOException {
+        super(s);
+        source.ensureDemoHeader();
+        source.skipBytes(4);
+        this.loopController = new LoopController() {
             @Override
-            public void run() {
-                ControllableRunner.super.runWith(processors);
+            public boolean isTickBorder(int upcomingTick) {
+                return processorTick != upcomingTick;
             }
-        });
-        runnerThread.start();
-        return this;
-    }
-
-    @Override
-    protected Source getSource() {
-        return new AbstractSource() {
             @Override
-            public LoopControlCommand doLoopControl(Context ctx, int nextTick) {
+            public Command doLoopControl(Context ctx, int nextTick) {
                 try {
                     lock.lockInterruptibly();
                 } catch (InterruptedException e) {
-                    return LoopControlCommand.BREAK;
+                    return Command.BREAK;
                 }
                 try {
                     upcomingTick = nextTick;
@@ -96,44 +67,43 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 continue;
                             }
                             processorTick = upcomingTick;
-                            return LoopControlCommand.FALLTHROUGH;
+                            return Command.FALLTHROUGH;
                         } else {
                             if (tick == -1) {
                                 startNewTick(ctx);
                                 processorTick = upcomingTick;
-                                return LoopControlCommand.FALLTHROUGH;
+                                return Command.FALLTHROUGH;
                             }
                             if (resetPhase == null) {
                                 endTicksUntil(ctx, tick);
                             }
                             if (demandedTick != null) {
+                                source.setPosition(0);
                                 resetPhase = ResetPhase.CLEAR;
                                 wantedTick = demandedTick;
                                 demandedTick = null;
-                                seekPositions = newDemoStream().getFullPacketsBeforeTick(wantedTick, fullPacketPositions);
+                                seekPositions = source.getFullPacketsBeforeTick(wantedTick, fullPacketPositions);
                             }
-                            dis = newDemoStream();
-                            DemoInputStream.PacketPosition pos = seekPositions.pollFirst();
-                            dis.skipTo(pos);
-                            newCodedStream();
+                            PacketPosition pos = seekPositions.pollFirst();
+                            source.setPosition(pos.getOffset());
                             processorTick = pos.getTick();
-                            return LoopControlCommand.CONTINUE;
+                            return Command.CONTINUE;
                         }
                     }
                 } catch (IOException e) {
                     log.error("IO error in runner thread", e);
-                    return LoopControlCommand.BREAK;
+                    return Command.BREAK;
                 } catch (InterruptedException e) {
-                    return LoopControlCommand.BREAK;
+                    return Command.BREAK;
                 } finally {
                     lock.unlock();
                 }
             }
 
             @Override
-            public Iterator<ResetPhase> evaluateResetPhases(int tick, int cisOffset) throws IOException {
+            public Iterator<ResetPhase> evaluateResetPhases(int tick, int offset) throws IOException {
                 if (resetPhase == null) {
-                    fullPacketPositions.add(new DemoInputStream.PacketPosition(tick, cisBaseOffset + cisOffset));
+                    fullPacketPositions.add(new PacketPosition(tick, offset));
                     return Iterators.emptyIterator();
                 }
                 List<ResetPhase> phaseList = new LinkedList<>();
@@ -151,6 +121,18 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 return phaseList.iterator();
             }
         };
+    }
+
+    @Override
+    public ControllableRunner runWith(final Object... processors) {
+        runnerThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ControllableRunner.super.runWith(processors);
+            }
+        });
+        runnerThread.start();
+        return this;
     }
 
     public void setDemandedTick(int demandedTick) {
@@ -200,12 +182,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public int getLastTick() throws IOException {
         if (lastTick == null) {
-            DemoInputStream dis = new DemoInputStream(new FileInputStream(demoFile));
-            int fileInfoOffset = dis.ensureDemHeader();
-            dis.skipBytes(fileInfoOffset - 12);
-            dis.readRawVarint32();
-            lastTick = dis.readRawVarint32();
-            dis.close();
+            lastTick = source.getLastTick();
         }
         return lastTick;
     }

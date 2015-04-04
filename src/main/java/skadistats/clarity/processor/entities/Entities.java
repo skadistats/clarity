@@ -45,7 +45,7 @@ public class Entities {
     @OnReset
     public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
-//            baselineEntries.clear();
+            baselineEntries.clear();
             for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
                 entities[entityIndex] = null;
             }

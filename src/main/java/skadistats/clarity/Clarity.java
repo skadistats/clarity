@@ -1,6 +1,7 @@
 package skadistats.clarity;
 
 import skadistats.clarity.processor.runner.FileInfoReader;
+import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.wire.proto.Demo;
 
 import java.io.FileInputStream;
@@ -14,7 +15,7 @@ public class Clarity {
     }
 
     public static Demo.CDemoFileInfo infoForStream(final InputStream stream) throws IOException {
-        return new FileInfoReader(stream).getFileInfo();
+        return new FileInfoReader(new InputStreamSource(stream)).getFileInfo();
     }
 
 }

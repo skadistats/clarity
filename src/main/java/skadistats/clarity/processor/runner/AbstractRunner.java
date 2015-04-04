@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.runner;
 
-import com.google.protobuf.CodedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.processor.reader.OnTickEnd;
@@ -11,6 +10,8 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    protected final Source source;
+    protected LoopController loopController;
     private Context context;
 
     /* tick the user is at the end of */
@@ -18,17 +19,8 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     /* tick the processor has last processed */
     protected int processorTick = -1;
 
-    protected CodedInputStream cis;
-
-    protected abstract class AbstractSource implements Source {
-        @Override
-        public CodedInputStream stream() {
-            return cis;
-        }
-        @Override
-        public boolean isTickBorder(int upcomingTick) {
-            return processorTick != upcomingTick;
-        }
+    public AbstractRunner(Source source) {
+        this.source = source;
     }
 
     protected ExecutionModel createExecutionModel(Object... processors) {
@@ -61,14 +53,12 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         return tick;
     }
 
-    abstract protected Source getSource();
-
     @Override
     public AbstractRunner<T> runWith(Object... processors) {
         ExecutionModel em = createExecutionModel(processors);
         context = new Context(em);
         em.initialize(context);
-        context.createEvent(OnInputSource.class, Source.class).raise(getSource());
+        context.createEvent(OnInputSource.class, Source.class, LoopController.class).raise(source, loopController);
         return this;
     }
 

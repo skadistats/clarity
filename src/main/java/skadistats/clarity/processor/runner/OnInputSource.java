@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { Source.class })
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { Source.class, LoopController.class })
 public @interface OnInputSource {
 }

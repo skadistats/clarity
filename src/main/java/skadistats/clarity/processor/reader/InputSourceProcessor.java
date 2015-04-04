@@ -12,13 +12,14 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
-import skadistats.clarity.source.LoopControlCommand;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.PacketTypes;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Networkbasetypes;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.Iterator;
 
@@ -36,7 +37,7 @@ public class InputSourceProcessor {
     }
 
     private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
-        byte[] data = source.stream().readRawBytes(size);
+        byte[] data = source.readBytes(size);
         if (isCompressed) {
             data = Snappy.uncompress(data);
         }
@@ -44,72 +45,73 @@ public class InputSourceProcessor {
     }
 
     @OnInputSource
-    public void processSource(Context ctx, Source src) throws IOException {
+    public void processSource(Context ctx, Source src, LoopController ctl) throws IOException {
         while (true) {
-            if (src.stream().isAtEnd()) {
-                LoopControlCommand loopCtl = src.doLoopControl(ctx, Integer.MAX_VALUE);
-                if (loopCtl == LoopControlCommand.CONTINUE) {
+            int offset = src.getPosition();
+            int kind;
+            try {
+                kind = src.readVarInt32();
+            } catch (EOFException e) {
+                LoopController.Command loopCtl = ctl.doLoopControl(ctx, Integer.MAX_VALUE);
+                if (loopCtl == LoopController.Command.CONTINUE) {
                     continue;
                 } else {
                     // FALLTHROUGH at end of stream means to break also.
                     break;
                 }
-            } else {
-                int offset = src.stream().getTotalBytesRead();
-                int kind = src.stream().readRawVarint32();
-                boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-                kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-                int tick = src.stream().readRawVarint32();
-                int size = src.stream().readRawVarint32();
-                if (src.isTickBorder(tick)) {
-                    LoopControlCommand loopCtl = src.doLoopControl(ctx, tick);
-                    if (loopCtl == LoopControlCommand.CONTINUE) {
-                        continue;
-                    } else if (loopCtl == LoopControlCommand.BREAK) {
-                        break;
+            }
+            boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+            kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+            int tick = src.readVarInt32();
+            int size = src.readVarInt32();
+            if (ctl.isTickBorder(tick)) {
+                LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
+                if (loopCtl == LoopController.Command.CONTINUE) {
+                    continue;
+                } else if (loopCtl == LoopController.Command.BREAK) {
+                    break;
+                }
+            }
+            Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
+            if (messageClass == null) {
+                log.warn("unknown top level message of kind {}", kind);
+                src.skipBytes(size);
+            } else if (messageClass == Demo.CDemoPacket.class) {
+                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
+            } else if (messageClass == Demo.CDemoSendTables.class) {
+                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
+            } else if (messageClass == Demo.CDemoFullPacket.class) {
+                Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
+                Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
+                Demo.CDemoFullPacket message = null;
+                if (evFull.isListenedTo() || evReset.isListenedTo()) {
+                    message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                } else {
+                    src.skipBytes(size);
+                }
+                Iterator<ResetPhase> phases = ctl.evaluateResetPhases(tick, offset);
+                if (evFull.isListenedTo()) {
+                    evFull.raise(message);
+                }
+                if (evReset.isListenedTo() && phases.hasNext()) {
+                    ResetPhase phase = null;
+                    while (phases.hasNext()) {
+                        phase = phases.next();
+                        evReset.raise(message, phase);
+                    }
+                    if (phase == ResetPhase.STRINGTABLE_APPLY) {
+                        ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
                     }
                 }
-                Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
-                if (messageClass == null) {
-                    log.warn("unknown top level message of kind {}", kind);
-                    src.stream().skipRawBytes(size);
-                } else if (messageClass == Demo.CDemoPacket.class) {
-                    Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                    ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
-                } else if (messageClass == Demo.CDemoSendTables.class) {
-                    Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                    ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
-                } else if (messageClass == Demo.CDemoFullPacket.class) {
-                    Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
-                    Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
-                    Demo.CDemoFullPacket message = null;
-                    if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                        message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                    } else {
-                        src.stream().skipRawBytes(size);
-                    }
-                    Iterator<ResetPhase> phases = src.evaluateResetPhases(tick, offset);
-                    if (evFull.isListenedTo()) {
-                        evFull.raise(message);
-                    }
-                    if (evReset.isListenedTo() && phases.hasNext()) {
-                        ResetPhase phase = null;
-                        while (phases.hasNext()) {
-                            phase = phases.next();
-                            evReset.raise(message, phase);
-                        }
-                        if (phase == ResetPhase.STRINGTABLE_APPLY) {
-                            ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
-                        }
-                    }
+            } else {
+                Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
+                if (ev.isListenedTo()) {
+                    GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                    ev.raise(message);
                 } else {
-                    Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                    if (ev.isListenedTo()) {
-                        GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                        ev.raise(message);
-                    } else {
-                        src.stream().skipRawBytes(size);
-                    }
+                    src.skipBytes(size);
                 }
             }
         }

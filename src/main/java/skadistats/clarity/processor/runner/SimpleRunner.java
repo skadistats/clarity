@@ -1,28 +1,22 @@
 package skadistats.clarity.processor.runner;
 
-import com.google.common.collect.Iterators;
-import skadistats.clarity.decoder.DemoInputStream;
-import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.source.LoopControlCommand;
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
 
 public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
-    public SimpleRunner(InputStream inputStream) throws IOException {
-        DemoInputStream dis = new DemoInputStream(inputStream);
-        dis.ensureDemHeader();
-        cis = dis.newCodedInputStream();
-    }
-
-    @Override
-    protected Source getSource() {
-        return new AbstractSource() {
+    public SimpleRunner(Source s) throws IOException {
+        super(s);
+        source.ensureDemoHeader();
+        source.skipBytes(4);
+        this.loopController = new LoopController() {
             @Override
-            public LoopControlCommand doLoopControl(Context ctx, int upcomingTick) {
+            public boolean isTickBorder(int upcomingTick) {
+                return processorTick != upcomingTick;
+            }
+            @Override
+            public LoopController.Command doLoopControl(Context ctx, int upcomingTick) {
                 processorTick = upcomingTick;
                 if (processorTick != Integer.MAX_VALUE) {
                     endTicksUntil(ctx, processorTick - 1);
@@ -30,11 +24,7 @@ public class SimpleRunner extends AbstractRunner<SimpleRunner> {
                 } else {
                     endTicksUntil(ctx, tick);
                 }
-                return LoopControlCommand.FALLTHROUGH;
-            }
-            @Override
-            public Iterator<ResetPhase> evaluateResetPhases(int tick, int cisOffset) {
-                return Iterators.emptyIterator();
+                return LoopController.Command.FALLTHROUGH;
             }
         };
     }
