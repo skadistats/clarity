@@ -19,6 +19,7 @@ import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Networkbasetypes;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 @Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class, OnReset.class, OnFullPacket.class })
 public class InputSourceProcessor {
@@ -80,20 +81,25 @@ public class InputSourceProcessor {
                 } else if (messageClass == Demo.CDemoFullPacket.class) {
                     Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
                     Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
-                    boolean shouldEmitReset = src.shouldEmitResetOnFullPacket(tick, offset);
-                    if (evFull.isListenedTo() || (shouldEmitReset && evReset.isListenedTo())) {
-                        Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                        if (evFull.isListenedTo()) {
-                            evFull.raise(message);
-                        }
-                        if ((shouldEmitReset && evReset.isListenedTo())) {
-                            for (ResetPhase phase : ResetPhase.values()) {
-                                evReset.raise(message, phase);
-                            }
-                            ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
-                        }
+                    Demo.CDemoFullPacket message = null;
+                    if (evFull.isListenedTo() || evReset.isListenedTo()) {
+                        message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
                     } else {
                         src.stream().skipRawBytes(size);
+                    }
+                    Iterator<ResetPhase> phases = src.evaluateResetPhases(tick, offset);
+                    if (evFull.isListenedTo()) {
+                        evFull.raise(message);
+                    }
+                    if (evReset.isListenedTo() && phases.hasNext()) {
+                        ResetPhase phase = null;
+                        while (phases.hasNext()) {
+                            phase = phases.next();
+                            evReset.raise(message, phase);
+                        }
+                        if (phase == ResetPhase.STRINGTABLE_APPLY) {
+                            ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
+                        }
                     }
                 } else {
                     Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);

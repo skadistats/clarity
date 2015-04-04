@@ -1,6 +1,10 @@
 package skadistats.clarity.processor.runner;
 
 import com.google.protobuf.CodedInputStream;
+import skadistats.clarity.processor.reader.ResetPhase;
+
+import java.io.IOException;
+import java.util.Iterator;
 
 public interface Source {
 
@@ -10,7 +14,7 @@ public interface Source {
 
     CodedInputStream stream();
     boolean isTickBorder(int upcomingTick);
-    boolean shouldEmitResetOnFullPacket(int tick, int cisOffset);
+    Iterator<ResetPhase> evaluateResetPhases(int tick, int cisOffset) throws IOException;
     LoopControlCommand doLoopControl(Context ctx, int nextTickWithData);
 
 }

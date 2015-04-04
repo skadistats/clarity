@@ -2,5 +2,6 @@ package skadistats.clarity.processor.reader;
 
 public enum ResetPhase {
     CLEAR,
-    STRINGTABLES
+    STRINGTABLE_ACCUMULATION,
+    STRINGTABLE_APPLY,
 }

@@ -25,7 +25,9 @@ public class StringTables {
     private final Set<String> requestedTables = new HashSet<>();
 
     private final List<StringTable> byId = new ArrayList<>();
-    private final Map<String, StringTable> byName = new TreeMap<String, StringTable>();
+    private final Map<String, StringTable> byName = new TreeMap<>();
+
+    private final Map<String, Demo.CDemoStringTables.table_t> resetStringTables = new TreeMap<>();
 
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final Context ctx, final UsagePoint<UsesStringTable> usagePoint) {
@@ -48,15 +50,27 @@ public class StringTables {
     @OnReset
     public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
-            // maybe clear?
-        } else if (phase == ResetPhase.STRINGTABLES) {
+            for (StringTable table : byName.values()) {
+                table.reset();
+            }
+            resetStringTables.clear();
+        } else if (phase == ResetPhase.STRINGTABLE_ACCUMULATION) {
             Demo.CDemoStringTables dst = packet.getStringTable();
             for (Demo.CDemoStringTables.table_t t : dst.getTablesList()) {
                 if (!requestedTables.contains(t.getTableName())) {
                     continue;
                 }
+                resetStringTables.put(t.getTableName(), t);
             }
-            // and now?
+        } else if (phase == ResetPhase.STRINGTABLE_APPLY) {
+            for (Map.Entry<String, Demo.CDemoStringTables.table_t> entry : resetStringTables.entrySet()) {
+                List<StringTableEntry> changes = new ArrayList<>();
+                for (Demo.CDemoStringTables.items_t item : entry.getValue().getItemsList()) {
+                    changes.add(new StringTableEntry(changes.size(), item.getStr(), item.getData()));
+                }
+                StringTable table = byName.get(entry.getKey());
+                applyChanges(ctx, table, 1, changes);
+            }
         }
     }
 
@@ -74,7 +88,7 @@ public class StringTables {
             byId.add(table);
             byName.put(table.getName(), table);
             List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumEntries());
-            applyChanges(ctx, table, changes);
+            applyChanges(ctx, table, 0, changes);
         } else {
             byId.add(null);
         }
@@ -85,11 +99,11 @@ public class StringTables {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
             List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumChangedEntries());
-            applyChanges(ctx, table, changes);
+            applyChanges(ctx, table, 1, changes);
         }
     }
 
-    private void applyChanges(Context ctx, StringTable table, List<StringTableEntry> changes) {
+    private void applyChanges(Context ctx, StringTable table, int tbl, List<StringTableEntry> changes) {
         Event<OnStringTableEntry> ev = ctx.createEvent(OnStringTableEntry.class, StringTable.class, StringTableEntry.class, StringTableEntry.class);
         if (!ev.isListenedTo()) {
             ev = null;
@@ -97,7 +111,7 @@ public class StringTables {
         StringTableEntry eOld;
         for (StringTableEntry eNew : changes) {
             eOld = table.getByIndex(eNew.getIndex());
-            table.set(eNew.getIndex(), eNew.getKey(), eNew.getValue());
+            table.set(tbl, eNew.getIndex(), eNew.getKey(), eNew.getValue());
             if (ev != null) {
                 ev.raise(table, eOld, eNew);
             }

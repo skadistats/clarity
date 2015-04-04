@@ -1,11 +1,14 @@
 package skadistats.clarity.processor.runner;
 
+import com.google.common.collect.Iterators;
 import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.wire.proto.Demo;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 
 public class FileInfoReader extends AbstractRunner<FileInfoReader> {
 
@@ -25,6 +28,10 @@ public class FileInfoReader extends AbstractRunner<FileInfoReader> {
             @Override
             public LoopControlCommand doLoopControl(Context ctx, int nextTickWithData) {
                 return LoopControlCommand.FALLTHROUGH;
+            }
+            @Override
+            public Iterator<ResetPhase> evaluateResetPhases(int tick, int cisOffset) {
+                return Iterators.emptyIterator();
             }
         };
     }

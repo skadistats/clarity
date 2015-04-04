@@ -3,11 +3,8 @@ package skadistats.clarity.processor.runner;
 import com.google.protobuf.CodedInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
-
-import java.util.TreeSet;
 
 public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 
@@ -20,9 +17,6 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     /* tick the processor has last processed */
     protected int processorTick = -1;
 
-    protected TreeSet<DemoInputStream.PacketPosition> fullPacketPositions = new TreeSet<>();
-    protected boolean shouldEmitFullPacket;
-    protected int cisBaseOffset;
     protected CodedInputStream cis;
 
     protected abstract class AbstractSource implements Source {
@@ -33,17 +27,6 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         @Override
         public boolean isTickBorder(int upcomingTick) {
             return processorTick != upcomingTick;
-        }
-
-        @Override
-        public boolean shouldEmitResetOnFullPacket(int tick, int cisOffset) {
-            if (shouldEmitFullPacket) {
-                shouldEmitFullPacket = false;
-                return true;
-            } else {
-                fullPacketPositions.add(new DemoInputStream.PacketPosition(tick, cisBaseOffset + cisOffset));
-                return false;
-            }
         }
     }
 

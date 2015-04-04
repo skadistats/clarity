@@ -146,29 +146,35 @@ public class DemoInputStream {
         return ByteBuffer.wrap(header, 8, 4).order(ByteOrder.LITTLE_ENDIAN).asIntBuffer().get();
     }
 
-    public PacketPosition getFullPacketBeforeTick(int wantedTick, TreeSet<PacketPosition> fullPacketPositions) throws IOException {
+    public TreeSet<PacketPosition> getFullPacketsBeforeTick(int wantedTick, TreeSet<PacketPosition> fullPacketPositions) throws IOException {
         if (offset != 0) {
             throw new IOException("must be at the beginning of the stream");
         }
-        PacketPosition cur = fullPacketPositions.floor(new PacketPosition(wantedTick, 0));
-        if (cur == null) {
-            throw new IOException("never seen a full packet below tick " + wantedTick);
-        }
-        skipBytes(cur.offset);
-        while (true) {
-            int at = offset;
-            int kind = readRawVarint32() & ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-            int tick = readRawVarint32();
-            int size = readRawVarint32();
-            if (tick >= wantedTick) {
-                return cur;
+        PacketPosition wanted = new PacketPosition(wantedTick, 0);
+        if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
+            skipBytes(fullPacketPositions.floor(wanted).offset);
+            while (true) {
+                int at = offset;
+                int kind = readRawVarint32() & ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+                int tick = readRawVarint32();
+                int size = readRawVarint32();
+                if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
+                    fullPacketPositions.add(new PacketPosition(tick, at));
+                }
+                if (tick >= wantedTick) {
+                    break;
+                }
+                skipBytes(size);
             }
-            if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
-                cur = new PacketPosition(tick, at);
-                fullPacketPositions.add(cur);
-            }
-            skipBytes(size);
         }
+        return new TreeSet<PacketPosition>(fullPacketPositions.headSet(wanted, true));
+    }
+
+    public void skipTo(PacketPosition packetPosition) throws IOException {
+        if (offset > packetPosition.offset) {
+            throw new IOException("cannot seek backwards");
+        }
+        skipBytes(packetPosition.offset - offset);
     }
 
 }

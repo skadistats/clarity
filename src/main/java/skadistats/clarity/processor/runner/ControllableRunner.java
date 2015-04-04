@@ -1,10 +1,17 @@
 package skadistats.clarity.processor.runner;
 
+import com.google.common.collect.Iterators;
 import skadistats.clarity.decoder.DemoInputStream;
+import skadistats.clarity.processor.reader.ResetPhase;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -17,6 +24,12 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private final File demoFile;
     private Thread runnerThread;
 
+    private DemoInputStream dis;
+    private int cisBaseOffset;
+    private TreeSet<DemoInputStream.PacketPosition> fullPacketPositions = new TreeSet<>();
+    private ResetPhase resetPhase;
+    private TreeSet<DemoInputStream.PacketPosition> seekPositions;
+
     private Integer lastTick;
 
     /* tick the processor is waiting at to be signaled to continue further processing */
@@ -28,25 +41,18 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public ControllableRunner(File demoFile) throws IOException {
         this.demoFile = demoFile;
-        initCodedInputStreamForTick(-1);
+        dis = newDemoStream();
+        dis.ensureDemHeader();
+        newCodedStream();
     }
 
-    private int initCodedInputStreamForTick(int initTick) throws IOException {
-        int fpTick;
-        DemoInputStream dis = new DemoInputStream(new FileInputStream(demoFile));
-        if (initTick == - 1) {
-            dis.ensureDemHeader();
-            fpTick = -1;
-        } else {
-            DemoInputStream.PacketPosition pos = dis.getFullPacketBeforeTick(initTick, fullPacketPositions);
-            dis = new DemoInputStream(new FileInputStream(demoFile));
-            dis.skipBytes(pos.getOffset());
-            fpTick = pos.getTick();
-            shouldEmitFullPacket = true;
-        }
+    private DemoInputStream newDemoStream() throws FileNotFoundException {
+        return new DemoInputStream(new FileInputStream(demoFile));
+    }
+
+    private void newCodedStream() throws IOException {
         cis = dis.newCodedInputStream();
         cisBaseOffset = dis.getOffset();
-        return fpTick;
     }
 
     @Override
@@ -73,20 +79,44 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 }
                 try {
                     upcomingTick = nextTick;
-                    if (demandedTick != null) {
-                        processorTick = upcomingTick;
-                        endTicksUntil(ctx, tick);
-                        return processDemandedTick(ctx);
-                    } else if (upcomingTick <= wantedTick) {
-                        processorTick = upcomingTick;
-                        endTicksUntil(ctx, upcomingTick - 1);
-                        return processDemandedTick(ctx);
-                    } else {
-                        endTicksUntil(ctx, wantedTick);
-                        wantedTickReached.signalAll();
-                        moreProcessingNeeded.await();
-                        processorTick = upcomingTick;
-                        return processDemandedTick(ctx);
+                    while (true) {
+                        if ((demandedTick == null && resetPhase == null)) {
+                            endTicksUntil(ctx, tick);
+                            if (tick == wantedTick) {
+                                wantedTickReached.signalAll();
+                                moreProcessingNeeded.await();
+                            }
+                            if (demandedTick != null) {
+                                continue;
+                            }
+                            startNewTick(ctx);
+                            if (wantedTick < upcomingTick) {
+                                continue;
+                            }
+                            processorTick = upcomingTick;
+                            return Source.LoopControlCommand.FALLTHROUGH;
+                        } else {
+                            if (tick == -1) {
+                                startNewTick(ctx);
+                                processorTick = upcomingTick;
+                                return Source.LoopControlCommand.FALLTHROUGH;
+                            }
+                            if (resetPhase == null) {
+                                endTicksUntil(ctx, tick);
+                            }
+                            if (demandedTick != null) {
+                                resetPhase = ResetPhase.CLEAR;
+                                wantedTick = demandedTick;
+                                demandedTick = null;
+                                seekPositions = newDemoStream().getFullPacketsBeforeTick(wantedTick, fullPacketPositions);
+                            }
+                            dis = newDemoStream();
+                            DemoInputStream.PacketPosition pos = seekPositions.pollFirst();
+                            dis.skipTo(pos);
+                            newCodedStream();
+                            processorTick = pos.getTick();
+                            return Source.LoopControlCommand.CONTINUE;
+                        }
                     }
                 } catch (IOException e) {
                     log.error("IO error in runner thread", e);
@@ -97,29 +127,28 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                     lock.unlock();
                 }
             }
-        };
-    }
 
-    private Source.LoopControlCommand processDemandedTick(Context ctx) throws IOException {
-        boolean headerProcessed = tick != - 1;
-        if (demandedTick == null || !headerProcessed) {
-            startNewTick(ctx);
-            return Source.LoopControlCommand.FALLTHROUGH;
-        } else {
-            wantedTick = demandedTick;
-            demandedTick = null;
-            int diff = wantedTick - upcomingTick;
-            if (diff >= 0 && diff < 1800) {
-                startNewTick(ctx);
-                return Source.LoopControlCommand.FALLTHROUGH;
-            } else {
-                upcomingTick = initCodedInputStreamForTick(wantedTick);
-                processorTick = upcomingTick;
-                tick =  upcomingTick - 1;
-                startNewTick(ctx);
-                return Source.LoopControlCommand.CONTINUE;
+            @Override
+            public Iterator<ResetPhase> evaluateResetPhases(int tick, int cisOffset) throws IOException {
+                if (resetPhase == null) {
+                    fullPacketPositions.add(new DemoInputStream.PacketPosition(tick, cisBaseOffset + cisOffset));
+                    return Iterators.emptyIterator();
+                }
+                List<ResetPhase> phaseList = new LinkedList<>();
+                if (resetPhase == ResetPhase.CLEAR) {
+                    resetPhase = ResetPhase.STRINGTABLE_ACCUMULATION;
+                    phaseList.add(ResetPhase.CLEAR);
+                    phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
+                } else if (!seekPositions.isEmpty()) {
+                    phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
+                }
+                if (seekPositions.isEmpty()) {
+                    resetPhase = null;
+                    phaseList.add(ResetPhase.STRINGTABLE_APPLY);
+                }
+                return phaseList.iterator();
             }
-        }
+        };
     }
 
     public void setDemandedTick(int demandedTick) {
