@@ -97,7 +97,6 @@ public class InputSourceProcessor {
                     ResetPhase phase = null;
                     while (phases.hasNext()) {
                         phase = phases.next();
-                        //log.info("reset phase {}", phase);
                         evReset.raise(message, phase);
                     }
                     if (phase == ResetPhase.STRINGTABLE_APPLY) {
