@@ -182,6 +182,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public int getLastTick() throws IOException {
         if (lastTick == null) {
+            lock.lock();
             try {
                 lastTick = source.getLastTick();
             } finally {
