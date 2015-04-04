@@ -64,13 +64,11 @@ public class InputSourceProcessor {
             kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
             int tick = src.readVarInt32();
             int size = src.readVarInt32();
-            if (ctl.isTickBorder(tick)) {
-                LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
-                if (loopCtl == LoopController.Command.CONTINUE) {
-                    continue;
-                } else if (loopCtl == LoopController.Command.BREAK) {
-                    break;
-                }
+            LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
+            if (loopCtl == LoopController.Command.CONTINUE) {
+                continue;
+            } else if (loopCtl == LoopController.Command.BREAK) {
+                break;
             }
             Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
             if (messageClass == null) {
@@ -99,6 +97,7 @@ public class InputSourceProcessor {
                     ResetPhase phase = null;
                     while (phases.hasNext()) {
                         phase = phases.next();
+                        //log.info("reset phase {}", phase);
                         evReset.raise(message, phase);
                     }
                     if (phase == ResetPhase.STRINGTABLE_APPLY) {

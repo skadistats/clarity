@@ -17,10 +17,6 @@ public class FileInfoReader extends AbstractRunner<FileInfoReader> {
         source.setPosition(offset);
         this.loopController = new LoopController() {
             @Override
-            public boolean isTickBorder(int upcomingTick) {
-                return processorTick != upcomingTick;
-            }
-            @Override
             public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
                 return LoopController.Command.FALLTHROUGH;
             }

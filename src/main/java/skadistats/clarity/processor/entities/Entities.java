@@ -14,6 +14,7 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.processor.stringtables.StringTables;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Netmessages;
 
@@ -81,7 +82,7 @@ public class Entities {
                 if ((pvs & 2) != 0) {
                     cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()));
                     serial = stream.readNumericBits(10);
-                    base = getBaseline(dtClasses, cls.getClassId());
+                    base = getBaseline(ctx, dtClasses, cls.getClassId());
                     state = Arrays.copyOf(base, base.length);
                     cIndices = stream.readEntityPropList(indices);
                     receiveProps = cls.getReceiveProps();
@@ -114,8 +115,17 @@ public class Entities {
         }
     }
 
-    private Object[] getBaseline(DTClasses dtClasses, int clsId) {
+    private Object[] getBaseline(Context ctx, DTClasses dtClasses, int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
+        if (be == null) {
+            StringTable st = ctx.getProcessor(StringTables.class).forName("instancebaseline");
+            ByteString valueByName = st.getValueByName(String.valueOf(clsId));
+            if (valueByName == null) {
+                System.out.println("no value for " + clsId + ", " + dtClasses.forClassId(clsId).getDtName());
+            }
+            be = new BaselineEntry(valueByName);
+            baselineEntries.put(clsId, be);
+        }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
             ReceiveProp[] receiveProps = cls.getReceiveProps();

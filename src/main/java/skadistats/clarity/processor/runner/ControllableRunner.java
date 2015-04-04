@@ -23,6 +23,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     private TreeSet<PacketPosition> fullPacketPositions = new TreeSet<>();
     private ResetPhase resetPhase;
+    private PacketPosition resetPosition;
     private TreeSet<PacketPosition> seekPositions;
 
     private Integer lastTick;
@@ -40,10 +41,6 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         source.skipBytes(4);
         this.loopController = new LoopController() {
             @Override
-            public boolean isTickBorder(int upcomingTick) {
-                return processorTick != upcomingTick;
-            }
-            @Override
             public Command doLoopControl(Context ctx, int nextTick) {
                 try {
                     lock.lockInterruptibly();
@@ -52,6 +49,9 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 }
                 try {
                     upcomingTick = nextTick;
+                    if ((resetPhase == null && upcomingTick == tick) || resetPosition != null) {
+                        return Command.FALLTHROUGH;
+                    }
                     while (true) {
                         if ((demandedTick == null && resetPhase == null)) {
                             endTicksUntil(ctx, tick);
@@ -66,27 +66,24 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             if (wantedTick < upcomingTick) {
                                 continue;
                             }
-                            processorTick = upcomingTick;
                             return Command.FALLTHROUGH;
                         } else {
                             if (tick == -1) {
                                 startNewTick(ctx);
-                                processorTick = upcomingTick;
                                 return Command.FALLTHROUGH;
                             }
                             if (resetPhase == null) {
                                 endTicksUntil(ctx, tick);
                             }
                             if (demandedTick != null) {
-                                source.setPosition(0);
                                 resetPhase = ResetPhase.CLEAR;
                                 wantedTick = demandedTick;
                                 demandedTick = null;
                                 seekPositions = source.getFullPacketsBeforeTick(wantedTick, fullPacketPositions);
                             }
-                            PacketPosition pos = seekPositions.pollFirst();
-                            source.setPosition(pos.getOffset());
-                            processorTick = pos.getTick();
+                            resetPosition = seekPositions.pollFirst();
+                            upcomingTick = resetPosition.getTick();
+                            source.setPosition(resetPosition.getOffset());
                             return Command.CONTINUE;
                         }
                     }
@@ -102,23 +99,31 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
             @Override
             public Iterator<ResetPhase> evaluateResetPhases(int tick, int offset) throws IOException {
-                if (resetPhase == null) {
-                    fullPacketPositions.add(new PacketPosition(tick, offset));
-                    return Iterators.emptyIterator();
+                lock.lock();
+                try {
+                    if (resetPhase == null) {
+                        fullPacketPositions.add(new PacketPosition(tick, offset));
+                        return Iterators.emptyIterator();
+                    }
+                    List<ResetPhase> phaseList = new LinkedList<>();
+                    if (resetPhase == ResetPhase.CLEAR) {
+                        resetPhase = ResetPhase.STRINGTABLE_ACCUMULATION;
+                        phaseList.add(ResetPhase.CLEAR);
+                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
+                    } else if (!seekPositions.isEmpty()) {
+                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
+                    }
+                    if (seekPositions.isEmpty()) {
+                        resetPhase = null;
+                        ControllableRunner.this.tick = tick;
+                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
+                        phaseList.add(ResetPhase.STRINGTABLE_APPLY);
+                    }
+                    resetPosition = null;
+                    return phaseList.iterator();
+                } finally {
+                    lock.unlock();
                 }
-                List<ResetPhase> phaseList = new LinkedList<>();
-                if (resetPhase == ResetPhase.CLEAR) {
-                    resetPhase = ResetPhase.STRINGTABLE_ACCUMULATION;
-                    phaseList.add(ResetPhase.CLEAR);
-                    phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
-                } else if (!seekPositions.isEmpty()) {
-                    phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
-                }
-                if (seekPositions.isEmpty()) {
-                    resetPhase = null;
-                    phaseList.add(ResetPhase.STRINGTABLE_APPLY);
-                }
-                return phaseList.iterator();
             }
         };
     }
@@ -131,6 +136,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 ControllableRunner.super.runWith(processors);
             }
         });
+        runnerThread.setName("clarity-runner");
+        runnerThread.setDaemon(false);
         runnerThread.start();
         return this;
     }

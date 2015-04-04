@@ -12,7 +12,6 @@ public abstract class LoopController {
         CONTINUE, BREAK, FALLTHROUGH
     }
 
-    abstract public boolean isTickBorder(int upcomingTick);
     abstract public Command doLoopControl(Context ctx, int nextTickWithData);
 
     public Iterator<ResetPhase> evaluateResetPhases(int tick, int offset) throws IOException {

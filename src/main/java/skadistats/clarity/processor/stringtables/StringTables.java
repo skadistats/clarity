@@ -68,8 +68,8 @@ public class StringTables {
                 for (Demo.CDemoStringTables.items_t item : entry.getValue().getItemsList()) {
                     changes.add(new StringTableEntry(changes.size(), item.getStr(), item.getData()));
                 }
-                StringTable table = byName.get(entry.getKey());
-                applyChanges(ctx, table, 1, changes);
+                StringTable table = byName.get(entry.getValue().getTableName());
+                applyChanges(ctx, table, 1, changes, false);
             }
         }
     }
@@ -88,7 +88,7 @@ public class StringTables {
             byId.add(table);
             byName.put(table.getName(), table);
             List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumEntries());
-            applyChanges(ctx, table, 0, changes);
+            applyChanges(ctx, table, 0, changes, true);
         } else {
             byId.add(null);
         }
@@ -99,13 +99,13 @@ public class StringTables {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
             List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumChangedEntries());
-            applyChanges(ctx, table, 1, changes);
+            applyChanges(ctx, table, 1, changes, true);
         }
     }
 
-    private void applyChanges(Context ctx, StringTable table, int tbl, List<StringTableEntry> changes) {
+    private void applyChanges(Context ctx, StringTable table, int tbl, List<StringTableEntry> changes, boolean emit) {
         Event<OnStringTableEntry> ev = ctx.createEvent(OnStringTableEntry.class, StringTable.class, StringTableEntry.class, StringTableEntry.class);
-        if (!ev.isListenedTo()) {
+        if (!emit || !ev.isListenedTo()) {
             ev = null;
         }
         StringTableEntry eOld;

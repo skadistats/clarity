@@ -16,8 +16,6 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     /* tick the user is at the end of */
     protected int tick = -1;
-    /* tick the processor has last processed */
-    protected int processorTick = -1;
 
     public AbstractRunner(Source source) {
         this.source = source;
