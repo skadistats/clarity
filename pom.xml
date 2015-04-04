@@ -5,7 +5,7 @@
 	<version>2.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<name>clarity</name>
-	<description>Clarity stream a fast, almost complete replay parser for Dota 2.</description>
+	<description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
 	<url>https://github.com/skadistats/clarity</url>
 
 	<parent>
