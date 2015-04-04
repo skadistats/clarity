@@ -5,6 +5,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
+import skadistats.clarity.source.Source;
 
 public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 

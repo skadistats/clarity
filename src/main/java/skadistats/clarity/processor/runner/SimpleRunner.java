@@ -3,6 +3,8 @@ package skadistats.clarity.processor.runner;
 import com.google.common.collect.Iterators;
 import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.ResetPhase;
+import skadistats.clarity.source.LoopControlCommand;
+import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 import java.io.InputStream;

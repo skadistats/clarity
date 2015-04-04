@@ -3,6 +3,8 @@ package skadistats.clarity.processor.runner;
 import com.google.common.collect.Iterators;
 import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.ResetPhase;
+import skadistats.clarity.source.LoopControlCommand;
+import skadistats.clarity.source.Source;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -75,7 +77,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 try {
                     lock.lockInterruptibly();
                 } catch (InterruptedException e) {
-                    return Source.LoopControlCommand.BREAK;
+                    return LoopControlCommand.BREAK;
                 }
                 try {
                     upcomingTick = nextTick;
@@ -94,12 +96,12 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 continue;
                             }
                             processorTick = upcomingTick;
-                            return Source.LoopControlCommand.FALLTHROUGH;
+                            return LoopControlCommand.FALLTHROUGH;
                         } else {
                             if (tick == -1) {
                                 startNewTick(ctx);
                                 processorTick = upcomingTick;
-                                return Source.LoopControlCommand.FALLTHROUGH;
+                                return LoopControlCommand.FALLTHROUGH;
                             }
                             if (resetPhase == null) {
                                 endTicksUntil(ctx, tick);
@@ -115,7 +117,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             dis.skipTo(pos);
                             newCodedStream();
                             processorTick = pos.getTick();
-                            return Source.LoopControlCommand.CONTINUE;
+                            return LoopControlCommand.CONTINUE;
                         }
                     }
                 } catch (IOException e) {

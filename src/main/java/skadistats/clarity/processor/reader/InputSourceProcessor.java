@@ -13,7 +13,8 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInputSource;
-import skadistats.clarity.processor.runner.Source;
+import skadistats.clarity.source.LoopControlCommand;
+import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.PacketTypes;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Networkbasetypes;
@@ -46,8 +47,8 @@ public class InputSourceProcessor {
     public void processSource(Context ctx, Source src) throws IOException {
         while (true) {
             if (src.stream().isAtEnd()) {
-                Source.LoopControlCommand loopCtl = src.doLoopControl(ctx, Integer.MAX_VALUE);
-                if (loopCtl == Source.LoopControlCommand.CONTINUE) {
+                LoopControlCommand loopCtl = src.doLoopControl(ctx, Integer.MAX_VALUE);
+                if (loopCtl == LoopControlCommand.CONTINUE) {
                     continue;
                 } else {
                     // FALLTHROUGH at end of stream means to break also.
@@ -61,10 +62,10 @@ public class InputSourceProcessor {
                 int tick = src.stream().readRawVarint32();
                 int size = src.stream().readRawVarint32();
                 if (src.isTickBorder(tick)) {
-                    Source.LoopControlCommand loopCtl = src.doLoopControl(ctx, tick);
-                    if (loopCtl == Source.LoopControlCommand.CONTINUE) {
+                    LoopControlCommand loopCtl = src.doLoopControl(ctx, tick);
+                    if (loopCtl == LoopControlCommand.CONTINUE) {
                         continue;
-                    } else if (loopCtl == Source.LoopControlCommand.BREAK) {
+                    } else if (loopCtl == LoopControlCommand.BREAK) {
                         break;
                     }
                 }

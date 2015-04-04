@@ -1,16 +1,13 @@
-package skadistats.clarity.processor.runner;
+package skadistats.clarity.source;
 
 import com.google.protobuf.CodedInputStream;
 import skadistats.clarity.processor.reader.ResetPhase;
+import skadistats.clarity.processor.runner.Context;
 
 import java.io.IOException;
 import java.util.Iterator;
 
 public interface Source {
-
-    enum LoopControlCommand {
-        CONTINUE, BREAK, FALLTHROUGH
-    }
 
     CodedInputStream stream();
     boolean isTickBorder(int upcomingTick);

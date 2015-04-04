@@ -4,6 +4,8 @@ import com.google.common.collect.Iterators;
 import skadistats.clarity.decoder.DemoInputStream;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.ResetPhase;
+import skadistats.clarity.source.LoopControlCommand;
+import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.proto.Demo;
 
 import java.io.IOException;
