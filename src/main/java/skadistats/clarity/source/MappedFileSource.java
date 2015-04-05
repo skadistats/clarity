@@ -42,11 +42,19 @@ public class MappedFileSource extends Source {
     }
 
     @Override
-    public void readBytes(byte[] dst, int offset, int len) throws IOException {
-        if (buf.remaining() < len) {
+    public void readBytes(byte[] dest, int offset, int length) throws IOException {
+        if (buf.remaining() < length) {
             throw new EOFException();
         }
-        buf.get(dst, offset, len);
+        buf.get(dest, offset, length);
+    }
+
+    @Override
+    public int getLastTick() throws IOException {
+        int backup = getPosition();
+        int lastTick = super.getLastTick();
+        setPosition(backup);
+        return lastTick;
     }
 
 }

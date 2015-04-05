@@ -42,15 +42,15 @@ public class InputStreamSource extends Source {
     }
 
     @Override
-    public void readBytes(byte[] dst, int offset, int len) throws IOException {
-        while (len > 0) {
-            int r = stream.read(dst, offset, len);
+    public void readBytes(byte[] dest, int offset, int length) throws IOException {
+        while (length > 0) {
+            int r = stream.read(dest, offset, length);
             if (r == -1) {
                 throw new EOFException();
             }
             position += r;
             offset += r;
-            len -= r;
+            length -= r;
         }
     }
 
