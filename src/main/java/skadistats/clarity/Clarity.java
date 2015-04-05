@@ -25,7 +25,7 @@ public class Clarity {
         src.ensureDemoHeader();
         src.setPosition(src.readFixedInt32());
         boolean isCompressed = (src.readVarInt32() & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-        src.readVarInt32();
+        src.skipVarInt32();
         int size = src.readVarInt32();
         byte[] data = src.readBytes(size);
         if (isCompressed) {

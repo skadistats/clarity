@@ -41,7 +41,7 @@ public abstract class Source {
                     result |= (tmp & 0x7f) << 21;
                     result |= (tmp = readByte()) << 28;
                     if (tmp < 0) {
-                        throw new IOException("malformed varint");
+                        throw new IOException("malformed varint detected");
                     }
                 }
             }
@@ -55,6 +55,15 @@ public abstract class Source {
 
     public void skipBytes(int num) throws IOException {
         setPosition(getPosition() + num);
+    }
+
+    public void skipVarInt32() throws IOException {
+        if (readByte() >= 0) return;
+        if (readByte() >= 0) return;
+        if (readByte() >= 0) return;
+        if (readByte() >= 0) return;
+        if (readByte() >= 0) return;
+        throw new IOException("malformed varint detected");
     }
 
     public void ensureDemoHeader() throws IOException {
@@ -90,7 +99,7 @@ public abstract class Source {
         int backup = getPosition();
         setPosition(8);
         setPosition(readFixedInt32());
-        readVarInt32();
+        skipVarInt32();
         int lastTick = readVarInt32();
         setPosition(backup);
         return lastTick;
