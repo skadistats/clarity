@@ -24,14 +24,10 @@ public class InputStreamSource extends Source {
         if (position > newPosition) {
             throw new UnsupportedOperationException("cannot rewind input stream");
         }
-        int n = newPosition - position;
-        while (n > 0) {
-            long r = stream.skip(n);
-            if (r == 0) {
-                throw new EOFException();
-            }
-            position += r;
-            n -= r;
+        while (position != newPosition) {
+            byte[] dummy = new byte[1024];
+            int r = Math.min(dummy.length, newPosition - position);
+            readBytes(dummy, 0, r);
         }
     }
 
@@ -55,19 +51,6 @@ public class InputStreamSource extends Source {
             position += r;
             offset += r;
             len -= r;
-        }
-    }
-
-    @Override
-    public void skipBytes(int num) throws IOException {
-        int n = num;
-        while (n > 0) {
-            long r = stream.skip(n);
-            if (r == 0) {
-                throw new EOFException();
-            }
-            position += r;
-            n -= r;
         }
     }
 
