@@ -36,7 +36,7 @@ public class Clarity {
     }
 
     /**
-     * Retrieves summary-data from the given input stream
+     * Retrieves summary-data from the given input source
      *
      * @param source the {@code Source} providing the replay data
      * @return the {@code CDemoFileInfo} protobuf message
