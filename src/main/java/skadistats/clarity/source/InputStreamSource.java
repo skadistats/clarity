@@ -8,6 +8,7 @@ public class InputStreamSource extends Source {
 
     private final InputStream stream;
     private int position;
+    private byte[] dummy = new byte[32768];
 
     public InputStreamSource(InputStream stream) {
         this.stream = stream;
@@ -25,7 +26,6 @@ public class InputStreamSource extends Source {
             throw new UnsupportedOperationException("cannot rewind input stream");
         }
         while (position != newPosition) {
-            byte[] dummy = new byte[1024];
             int r = Math.min(dummy.length, newPosition - position);
             readBytes(dummy, 0, r);
         }
