@@ -146,7 +146,11 @@ public abstract class Source {
      * @throws IOException if there is not enough data or the if no valid header was found
      */
     public void ensureDemoHeader() throws IOException {
-        if (!"PBUFDEM\0".equals(new String(readBytes(8)))) {
+        try {
+            if (!"PBUFDEM\0".equals(new String(readBytes(8)))) {
+                throw new IOException();
+            }
+        } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }
     }
