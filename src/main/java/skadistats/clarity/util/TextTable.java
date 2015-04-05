@@ -114,20 +114,31 @@ public class TextTable {
 
     public void print(PrintWriter writer) {
         int[] widths = calculateColumnWidths();
-        String f = calcFormatString(widths, frame);
-        if (framed) {
-            writer.println(calcSeparatorString(widths, frame, 0));
+        String f = calcFormatString(widths);
+        if (title != null) {
+            if (framed) {
+                writer.println(calcTitleSeparatorString(widths, 0));
+            }
+            writer.format(calcTitleFormatString(widths), title);
+            writer.println();
+            if (framed) {
+                writer.println(calcTitleSeparatorString(widths, 1));
+            }
+        } else {
+            if (framed) {
+                writer.println(calcSeparatorString(widths, 0));
+            }
         }
         writer.format(f, getHeaders());
         writer.println();
         if (framed) {
-            writer.println(calcSeparatorString(widths, frame, 1));
+            writer.println(calcSeparatorString(widths, 1));
         }
         for (int r = 0; r < getRowCount(); r++) {
             writer.format(f, getObjects(r));
             writer.println();
             if (framed) {
-                writer.println(calcSeparatorString(widths, frame, r + 1 == getRowCount() ? 2 : 1));
+                writer.println(calcSeparatorString(widths, r + 1 == getRowCount() ? 2 : 1));
             }
         }
     }
@@ -147,7 +158,7 @@ public class TextTable {
         return CharBuffer.allocate(n).toString().replace('\0', ch);
     }
 
-    private String calcFormatString(int[] widths, char[] frame) {
+    private String calcFormatString(int[] widths) {
         StringBuffer buf = new StringBuffer();
         if (framed) {
             buf.append(frame[0]);
@@ -168,7 +179,25 @@ public class TextTable {
         return buf.toString();
     }
 
-    private String calcSeparatorString(int[] widths, char frame[], int pos) {
+    private String calcTitleFormatString(int[] widths) {
+        StringBuffer buf = new StringBuffer();
+        if (framed) {
+            buf.append(frame[0]);
+        }
+        buf.append(paddingLeft);
+        buf.append('%');
+        buf.append('-');
+        buf.append(widths[widths.length - 1] - (framed ? 2 : 0) - paddingLeft.length() - paddingRight.length());
+        buf.append('s');
+        buf.append(paddingRight);
+        if (framed) {
+            buf.append(frame[0]);
+        }
+        return buf.toString();
+    }
+
+
+    private String calcSeparatorString(int[] widths, int pos) {
         StringBuffer buf = new StringBuffer();
         buf.append(frame[2 + pos]);
         for (int i = 0; i < columns.length; i++) {
@@ -177,6 +206,21 @@ public class TextTable {
         }
         return buf.toString();
     }
+
+    private String calcTitleSeparatorString(int[] widths, int pos) {
+        StringBuffer buf = new StringBuffer();
+        buf.append(frame[2 + pos]);
+        for (int i = 0; i < columns.length; i++) {
+            buf.append(repeat(paddingLeft.length() + widths[i] + paddingRight.length(), frame[1]));
+            if (i + 1 == columns.length) {
+                buf.append(frame[8 + pos]);
+            } else {
+                buf.append(frame[pos == 0 ? 1 : 5]);
+            }
+        }
+        return buf.toString();
+    }
+
 
     private int[] calculateColumnWidths() {
         int[] widths = new int[columns.length + 1];

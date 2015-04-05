@@ -92,6 +92,7 @@ public class StringTable {
 
     public String toString() {
         TextTable t = new TextTable.Builder()
+            .setTitle(getName())
             .setFrame(TextTable.FRAME_COMPAT)
             .addColumn("Index", Alignment.RIGHT)
             .addColumn("Key", Alignment.RIGHT)
