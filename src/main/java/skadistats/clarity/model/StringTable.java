@@ -1,7 +1,9 @@
 package skadistats.clarity.model;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.decoder.Util;
+import skadistats.clarity.util.TextTable;
+
+import static skadistats.clarity.util.TextTable.Alignment;
 
 public class StringTable {
 
@@ -89,23 +91,18 @@ public class StringTable {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer();
-        String[] convValues = new String[names.length];
-        for (int i = 0; i < names.length; i++) {
-            convValues[i] = values[i][1] == null ? null : Util.convertByteString(values[i][1], "ISO-8859-1");
+        TextTable t = new TextTable.Builder()
+            .setFrame(TextTable.FRAME_COMPAT)
+            .addColumn("Index", Alignment.RIGHT)
+            .addColumn("Key", Alignment.RIGHT)
+            .addColumn("Value", Alignment.RIGHT)
+            .build();
+        for (int i = 0; i < entryCount; i++) {
+            t.setData(i, 0, i);
+            t.setData(i, 1, names[i][1]);
+            t.setData(i, 2, values[i][1] != null ? (values[i][1].size() + " bytes") : null);
         }
-        for (int i = 0; i < names.length; i++) {
-            if (names[i][1] == null) {
-                continue;
-            }
-            buf.append(i);
-            buf.append(":");
-            buf.append(names[i][1]);
-            buf.append(" = ");
-            buf.append(convValues[i]);
-            buf.append("\r\n");
-        }
-        return buf.toString();
+        return t.toString();
     }
 
 }
