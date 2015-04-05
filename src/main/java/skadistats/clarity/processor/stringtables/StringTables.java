@@ -1,13 +1,14 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.common.base.Predicate;
+import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.decoder.StringTableDecoder;
+import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.*;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
@@ -20,14 +21,21 @@ import java.util.*;
 @Provides({UsesStringTable.class, OnStringTableEntry.class})
 public class StringTables {
 
+    private static final int MAX_NAME_LENGTH = 0x400;
+    private static final int KEY_HISTORY_SIZE = 32;
+
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private final Set<String> requestedTables = new HashSet<>();
-
-    private final List<StringTable> byId = new ArrayList<>();
+    private int numTables = 0;
+    private final Map<Integer, StringTable> byId = new TreeMap<>();
     private final Map<String, StringTable> byName = new TreeMap<>();
 
     private final Map<String, Demo.CDemoStringTables.table_t> resetStringTables = new TreeMap<>();
+
+    private Set<String> requestedTables = new HashSet<>();
+    private Set<String> updateEventTables = new HashSet<>();
+    private Event<OnStringTableEntry> updateEvent = null;
+
 
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final Context ctx, final UsagePoint<UsesStringTable> usagePoint) {
@@ -35,14 +43,20 @@ public class StringTables {
     }
 
     @Initializer(OnStringTableEntry.class)
-    public void initStringTableUsage(final Context ctx, final EventListener<OnStringTableEntry> eventListener) {
-        requestedTables.add(eventListener.getAnnotation().value());
+    public void initStringTableEntryEvent(final Context ctx, final EventListener<OnStringTableEntry> eventListener) {
+        final String tableName = eventListener.getAnnotation().value();
+        requestedTables.add(tableName);
+        if ("*".equals(tableName)) {
+            updateEventTables = requestedTables;
+        } else {
+            updateEventTables.add(tableName);
+        }
+        updateEvent = ctx.createEvent(OnStringTableEntry.class, StringTable.class, int.class, String.class, ByteString.class);
         eventListener.setInvocationPredicate(new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] args) {
-                String v = eventListener.getAnnotation().value();
                 StringTable t = (StringTable) args[0];
-                return v.length() == 0 || v.equals(t.getName());
+                return "*".equals(tableName) || t.getName().equals(tableName);
             }
         });
     }
@@ -50,26 +64,30 @@ public class StringTables {
     @OnReset
     public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
+            resetStringTables.clear();
             for (StringTable table : byName.values()) {
                 table.reset();
             }
-            resetStringTables.clear();
         } else if (phase == ResetPhase.STRINGTABLE_ACCUMULATION) {
-            Demo.CDemoStringTables dst = packet.getStringTable();
-            for (Demo.CDemoStringTables.table_t t : dst.getTablesList()) {
-                if (!requestedTables.contains(t.getTableName())) {
+            for (Demo.CDemoStringTables.table_t tt : packet.getStringTable().getTablesList()) {
+                if (!byName.containsKey(tt.getTableName())) {
                     continue;
                 }
-                resetStringTables.put(t.getTableName(), t);
+                resetStringTables.put(tt.getTableName(), tt);
             }
         } else if (phase == ResetPhase.STRINGTABLE_APPLY) {
-            for (Map.Entry<String, Demo.CDemoStringTables.table_t> entry : resetStringTables.entrySet()) {
-                List<StringTableEntry> changes = new ArrayList<>();
-                for (Demo.CDemoStringTables.items_t item : entry.getValue().getItemsList()) {
-                    changes.add(new StringTableEntry(changes.size(), item.getStr(), item.getData()));
+            for (StringTable table : byName.values()) {
+                Demo.CDemoStringTables.table_t tt = resetStringTables.get(table.getName());
+                if (tt != null) {
+                    for (int i = 0; i < tt.getItemsCount(); i++) {
+                        Demo.CDemoStringTables.items_t it = tt.getItems(i);
+                        setSingleEntry(ctx, table, 2, i, it.getStr(), it.getData());
+                    }
+                } else {
+                    for (int i = 0; i < table.getEntryCount(); i++) {
+                        raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
+                    }
                 }
-                StringTable table = byName.get(entry.getValue().getTableName());
-                applyChanges(ctx, table, 1, changes, false);
             }
         }
     }
@@ -85,36 +103,79 @@ public class StringTables {
                 message.getUserDataSizeBits(),
                 message.getFlags()
             );
-            byId.add(table);
+            byId.put(numTables, table);
             byName.put(table.getName(), table);
-            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumEntries());
-            applyChanges(ctx, table, 0, changes, true);
-        } else {
-            byId.add(null);
+            decode(ctx, table, 3, message.getStringData(), message.getNumEntries());
         }
+        numTables++;
     }
 
     @OnMessage(Netmessages.CSVCMsg_UpdateStringTable.class)
     public void onUpdateStringTable(Context ctx, Netmessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
-            List<StringTableEntry> changes = StringTableDecoder.decode(table, message.getStringData(), message.getNumChangedEntries());
-            applyChanges(ctx, table, 1, changes, true);
+            decode(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
         }
     }
 
-    private void applyChanges(Context ctx, StringTable table, int tbl, List<StringTableEntry> changes, boolean emit) {
-        Event<OnStringTableEntry> ev = ctx.createEvent(OnStringTableEntry.class, StringTable.class, StringTableEntry.class, StringTableEntry.class);
-        if (!emit || !ev.isListenedTo()) {
-            ev = null;
-        }
-        StringTableEntry eOld;
-        for (StringTableEntry eNew : changes) {
-            eOld = table.getByIndex(eNew.getIndex());
-            table.set(tbl, eNew.getIndex(), eNew.getKey(), eNew.getValue());
-            if (ev != null) {
-                ev.raise(table, eOld, eNew);
+    private void decode(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
+        BitStream stream = new BitStream(data);
+        int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
+        LinkedList<String> keyHistory = new LinkedList<>();
+
+        boolean mysteryFlag = stream.readNumericBits(1) == 1;
+        int index = -1;
+        StringBuffer nameBuf = new StringBuffer();
+        while (numEntries-- > 0) {
+            // read index
+            if (stream.readNumericBits(1) == 1) {
+                index++;
+            } else {
+                index = stream.readNumericBits(bitsPerIndex);
             }
+            // read name
+            nameBuf.setLength(0);
+            if (stream.readNumericBits(1) == 1) {
+                if (mysteryFlag && stream.readNumericBits(1) == 1) {
+                    throw new RuntimeException("mystery_flag assert failed!");
+                }
+                if (stream.readNumericBits(1) == 1) {
+                    int basis = stream.readNumericBits(5);
+                    int length = stream.readNumericBits(5);
+                    nameBuf.append(keyHistory.get(basis).substring(0, length));
+                    nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
+                } else {
+                    nameBuf.append(stream.readString(MAX_NAME_LENGTH));
+                }
+                if (keyHistory.size() == KEY_HISTORY_SIZE) {
+                    keyHistory.remove(0);
+                }
+                keyHistory.add(nameBuf.toString());
+            }
+            // read value
+            ByteString value = null;
+            if (stream.readNumericBits(1) == 1) {
+                int bitLength = 0;
+                if (table.getUserDataFixedSize()) {
+                    bitLength = table.getUserDataSizeBits();
+                } else {
+                    bitLength = stream.readNumericBits(14) * 8;
+                }
+
+                value = ByteString.copyFrom(stream.readBits(bitLength));
+            }
+            setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
+        }
+    }
+
+    private void setSingleEntry(Context ctx, StringTable table, int mode, int index, String key, ByteString value) {
+        table.set(mode, index, key, value);
+        raise(table, index, key, value);
+    }
+
+    private void raise(StringTable table, int index, String key, ByteString value) {
+        if (updateEvent != null) {
+            updateEvent.raise(table, index, key, value);
         }
     }
 
@@ -125,6 +186,5 @@ public class StringTables {
     public StringTable forId(int id) {
         return byId.get(id);
     }
-
 
 }

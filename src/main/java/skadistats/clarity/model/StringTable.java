@@ -4,16 +4,19 @@ import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.Util;
 
 public class StringTable {
-    
+
     private final String name;
     private final int maxEntries;
     private final boolean userDataFixedSize;
     private final int userDataSize;
     private final int userDataSizeBits;
     private final int flags;
-    
+
     private final String[][] names;
     private final ByteString[][] values;
+
+    private int initialEntryCount;
+    private int entryCount;
 
     public StringTable(String name, int maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags) {
         this.name = name;
@@ -24,26 +27,20 @@ public class StringTable {
         this.flags = flags;
         this.names = new String[maxEntries][2];
         this.values = new ByteString[maxEntries][2];
+        this.initialEntryCount = 0;
+        this.entryCount = 0;
     }
 
     public void set(int tbl, int index, String name, ByteString value) {
-        if (index < names.length) {
-            this.names[index][tbl] = name;
-            this.values[index][tbl] = value;
-            if (tbl == 0) {
-                this.names[index][1] = name;
-                this.values[index][1] = value;
-            }
-        } else {
-            throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
+        if ((tbl & 1) != 0) {
+            initialEntryCount = Math.max(initialEntryCount, index + 1);
+            this.names[index][0] = name;
+            this.values[index][0] = value;
         }
-    }
-
-    public StringTableEntry getByIndex(int index) {
-        if (index < names.length) {
-            return new StringTableEntry(index, this.names[index][1], this.values[index][1]);
-        } else {
-            throw new RuntimeException("out of index (" + index + "/" + names.length + ")");
+        if ((tbl & 2) != 0) {
+            entryCount = Math.max(entryCount, index + 1);
+            this.names[index][1] = name;
+            this.values[index][1] = value;
         }
     }
 
@@ -55,20 +52,12 @@ public class StringTable {
         return names[index][1];
     }
 
-    public ByteString getValueByName(String key) {
-        for (int i = 0; i < names.length; i++) {
-            if (key.equals(names[i][1])) {
-                return values[i][1];
-            }
-        }
-        return null;
-    }
-
     public void reset() {
-        for (int i = 0; i < names.length; i++) {
+        for (int i = 0; i < maxEntries; i++) {
             names[i][1] = names[i][0];
             values[i][1] = values[i][0];
         }
+        entryCount = initialEntryCount;
     }
 
     public int getMaxEntries() {
@@ -93,6 +82,10 @@ public class StringTable {
     
     public int getFlags() {
         return flags;
+    }
+
+    public int getEntryCount() {
+        return entryCount;
     }
 
     public String toString() {

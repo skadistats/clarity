@@ -1,11 +1,9 @@
 package skadistats.clarity.processor.modifiers;
 
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.Handle;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.wire.proto.DotaModifiers;
@@ -13,12 +11,10 @@ import skadistats.clarity.wire.proto.DotaModifiers;
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {
 
-    private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
-
     @OnStringTableEntry("ActiveModifiers")
-    public void onTableEntry(Context ctx, StringTable table, StringTableEntry oldEntry, StringTableEntry newEntry) throws InvalidProtocolBufferException {
-        if (newEntry.getValue() != null) {
-            DotaModifiers.CDOTAModifierBuffTableEntry message = DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(newEntry.getValue());
+    public void onTableEntry(Context ctx, StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {
+        if (value != null) {
+            DotaModifiers.CDOTAModifierBuffTableEntry message = DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
             ctx.createEvent(OnModifierTableEntry.class, DotaModifiers.CDOTAModifierBuffTableEntry.class).raise(message);
         }
     }
