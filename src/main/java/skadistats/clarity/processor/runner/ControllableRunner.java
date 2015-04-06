@@ -35,6 +35,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     /* tick the user wanted to be at the end of */
     private Integer demandedTick;
 
+    private long t0;
+
     public ControllableRunner(Source s) throws IOException {
         super(s);
         source.ensureDemoHeader();
@@ -56,6 +58,10 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                         if ((demandedTick == null && resetPhase == null)) {
                             endTicksUntil(ctx, tick);
                             if (tick == wantedTick) {
+                                if (log.isDebugEnabled() && t0 != 0) {
+                                    log.debug("now at {}. Took {} microns.", tick, (System.nanoTime() - t0) / 1000);
+                                    t0 = 0;
+                                }
                                 wantedTickReached.signalAll();
                                 moreProcessingNeeded.await();
                             }
@@ -85,9 +91,13 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 endTicksUntil(ctx, tick);
                             }
                             if (demandedTick != null) {
-                                resetPhase = ResetPhase.CLEAR;
                                 wantedTick = demandedTick;
                                 demandedTick = null;
+                                int diff = wantedTick - tick;
+                                if (resetPhase == null && diff >= 0 && diff <= 200) {
+                                    continue;
+                                }
+                                resetPhase = ResetPhase.CLEAR;
                                 seekPositions = source.getFullPacketsBeforeTick(wantedTick, fullPacketPositions);
                             }
                             resetPosition = seekPositions.pollFirst();
@@ -141,6 +151,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         runnerThread = new Thread(new Runnable() {
             @Override
             public void run() {
+                log.debug("runner started");
                 ControllableRunner.super.runWith(processors);
                 log.debug("runner finished");
             }
@@ -155,6 +166,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         lock.lock();
         try {
             this.demandedTick = demandedTick;
+            t0 = System.nanoTime();
             moreProcessingNeeded.signal();
         } finally {
             lock.unlock();
@@ -165,6 +177,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         lock.lock();
         try {
             this.demandedTick = demandedTick;
+            t0 = System.nanoTime();
             moreProcessingNeeded.signal();
             wantedTickReached.awaitUninterruptibly();
         } finally {
@@ -179,6 +192,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 wantedTickReached.awaitUninterruptibly();
             }
             wantedTick++;
+            t0 = System.nanoTime();
             moreProcessingNeeded.signal();
             wantedTickReached.awaitUninterruptibly();
         } finally {
