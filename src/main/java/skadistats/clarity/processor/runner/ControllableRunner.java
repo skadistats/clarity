@@ -1,9 +1,9 @@
 package skadistats.clarity.processor.runner;
 
-import com.google.common.collect.Iterators;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.source.PacketPosition;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.util.Iterators;
 
 import java.io.IOException;
 import java.util.Iterator;

@@ -1,7 +1,7 @@
 package skadistats.clarity.event;
 
-import com.google.common.base.Predicate;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.util.Predicate;
 
 import java.lang.annotation.Annotation;
 import java.lang.invoke.ConstantCallSite;

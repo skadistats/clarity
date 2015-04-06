@@ -1,8 +1,5 @@
 package skadistats.clarity.processor.entities;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.event.Event;
@@ -17,6 +14,8 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.util.Predicate;
+import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Netmessages;
 
@@ -173,13 +172,20 @@ public class Entities {
         return e == null || e.getSerial() != Handle.serialForHandle(handle) ? null : e;
     }
 
-    public Iterator<Entity> getAllByPredicate(Predicate<Entity> predicate) {
-        return Iterators.filter(
-            Iterators.forArray(entities),
-            Predicates.and(
-                Predicates.notNull(),
-                predicate
-            ));
+    public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
+        return new SimpleIterator<Entity>() {
+            int i = -1;
+            @Override
+            public Entity readNext() {
+                while(++i < entities.length) {
+                    Entity e = entities[i];
+                    if (e != null && predicate.apply(e)) {
+                        return e;
+                    }
+                }
+                return null;
+            }
+        };
     }
 
     public Entity getByPredicate(Predicate<Entity> predicate) {

@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.stringtables;
 
-import com.google.common.base.Predicate;
 import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +12,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Netmessages;
 

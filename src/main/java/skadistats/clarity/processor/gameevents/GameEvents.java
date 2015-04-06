@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.gameevents;
 
-import com.google.common.base.Predicate;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
@@ -8,6 +7,7 @@ import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.proto.Netmessages;
 import skadistats.clarity.wire.proto.Networkbasetypes;
 
