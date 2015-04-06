@@ -75,7 +75,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             return Command.FALLTHROUGH;
                         } else {
                             if (tick == -1) {
-                                wantedTick = 0; tick = 0;
+                                wantedTick = 0;
+                                setTick(0);
                                 return Command.FALLTHROUGH;
                             }
                             if (demandedTick == null && resetPhase == ResetPhase.FORWARD_TO_WANTED) {
