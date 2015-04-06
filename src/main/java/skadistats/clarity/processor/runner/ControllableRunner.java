@@ -115,7 +115,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                     }
                     if (seekPositions.isEmpty()) {
                         resetPhase = null;
-                        ControllableRunner.this.tick = tick;
+                        setTick(tick);
                         phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
                         phaseList.add(ResetPhase.STRINGTABLE_APPLY);
                     }
@@ -134,6 +134,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             @Override
             public void run() {
                 ControllableRunner.super.runWith(processors);
+                log.debug("runner finished");
             }
         });
         runnerThread.setName("clarity-runner");

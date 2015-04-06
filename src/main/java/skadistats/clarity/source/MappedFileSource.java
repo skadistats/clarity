@@ -51,9 +51,11 @@ public class MappedFileSource extends Source {
 
     @Override
     public int getLastTick() throws IOException {
-        int backup = getPosition();
-        int lastTick = super.getLastTick();
-        setPosition(backup);
+        if (lastTick == null) {
+            int backup = getPosition();
+            super.getLastTick();
+            setPosition(backup);
+        }
         return lastTick;
     }
 

@@ -34,7 +34,7 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
             if (tick != -1) {
                 ctx.createEvent(OnTickEnd.class).raise();
             }
-            tick++;
+            setTick(tick + 1);
             ctx.createEvent(OnTickStart.class).raise();
         }
         if (tick != -1) {
@@ -43,8 +43,12 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     }
 
     protected void startNewTick(Context ctx) {
-        tick++;
+        setTick(tick + 1);
         ctx.createEvent(OnTickStart.class).raise();
+    }
+
+    protected void setTick(int tick) {
+        this.tick = tick;
     }
 
     public int getTick() {

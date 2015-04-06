@@ -2,6 +2,7 @@ package skadistats.clarity.source;
 
 import skadistats.clarity.wire.proto.Demo;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -24,6 +25,8 @@ import java.util.TreeSet;
  * </ul>
  */
 public abstract class Source {
+
+    protected Integer lastTick;
 
     /**
      * returns the current position
@@ -167,18 +170,21 @@ public abstract class Source {
         PacketPosition wanted = new PacketPosition(wantedTick, 0);
         if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
             setPosition(fullPacketPositions.floor(wanted).getOffset());
-            while (true) {
-                int at = getPosition();
-                int kind = readVarInt32() & ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-                int tick = readVarInt32();
-                int size = readVarInt32();
-                if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
-                    fullPacketPositions.add(new PacketPosition(tick, at));
+            try {
+                while (true) {
+                    int at = getPosition();
+                    int kind = readVarInt32() & ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+                    int tick = readVarInt32();
+                    int size = readVarInt32();
+                    if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
+                        fullPacketPositions.add(new PacketPosition(tick, at));
+                    }
+                    if (tick >= wantedTick) {
+                        break;
+                    }
+                    skipBytes(size);
                 }
-                if (tick >= wantedTick) {
-                    break;
-                }
-                skipBytes(size);
+            } catch (EOFException e) {
             }
         }
         setPosition(backup);
@@ -195,11 +201,13 @@ public abstract class Source {
      * @throws IOException if the position cannot be adjusted, or the data is invalid
      */
     public int getLastTick() throws IOException {
-        setPosition(8);
-        setPosition(readFixedInt32());
-        skipVarInt32();
-        int lastTick = readVarInt32();
-        return lastTick;
+        if (lastTick == null) {
+            setPosition(8);
+            setPosition(readFixedInt32());
+            skipVarInt32();
+            lastTick = readVarInt32();
+        }
+        return lastTick.intValue();
     }
 
 }
