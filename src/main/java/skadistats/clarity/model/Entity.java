@@ -1,5 +1,7 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.util.TextTable;
+
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -74,22 +76,19 @@ public class Entity {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("\n\n-- Entity [index=");
-        builder.append(index);
-        builder.append(", serial=");
-        builder.append(serial);
-        builder.append(", dtClass=");
-        builder.append(dtClass.getDtName());
-        builder.append("]");
+        TextTable t = new TextTable.Builder()
+            .setTitle("idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName())
+            .setFrame(TextTable.FRAME_COMPAT)
+            .addColumn("Index", TextTable.Alignment.RIGHT)
+            .addColumn("Property")
+            .addColumn("Value")
+            .build();
         for (int i = 0; i < state.length; i++) {
-            builder.append("\n");
-            builder.append(dtClass.getReceiveProps()[i].getVarName());
-            builder.append(" = ");
-            builder.append(state[i]);
+            t.setData(i, 0, i);
+            t.setData(i, 1, dtClass.getReceiveProps()[i].getVarName());
+            t.setData(i, 2, state[i]);
         }
-
-        return builder.toString();
+        return t.toString();
     }
 
 }
