@@ -55,7 +55,7 @@ public class Entities {
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
-        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class);
+        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, int[].class, int.class);
     }
 
     @Initializer(OnEntityDeleted.class)
@@ -126,7 +126,7 @@ public class Entities {
                         state[o] = receiveProps[o].decode(stream);
                     }
                     if (evUpdated != null) {
-                        evUpdated.raise(entity);
+                        evUpdated.raise(entity, indices, cIndices);
                     }
                 }
             } else if ((pvs & 2) != 0) {
