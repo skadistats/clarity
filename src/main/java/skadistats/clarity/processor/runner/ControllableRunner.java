@@ -69,10 +69,19 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             return Command.FALLTHROUGH;
                         } else {
                             if (tick == -1) {
-                                startNewTick(ctx);
+                                wantedTick = 0; tick = 0;
                                 return Command.FALLTHROUGH;
                             }
-                            if (resetPhase == null) {
+                            if (demandedTick == null && resetPhase == ResetPhase.FORWARD_TO_WANTED) {
+                                if (wantedTick >= upcomingTick) {
+                                    return Command.FALLTHROUGH;
+                                }
+                                resetPhase = null;
+                                tick = wantedTick - 1;
+                                startNewTick(ctx);
+                                continue;
+                            }
+                            if (resetPhase == null && wantedTick != tick) {
                                 endTicksUntil(ctx, tick);
                             }
                             if (demandedTick != null) {
@@ -114,8 +123,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                         phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
                     }
                     if (seekPositions.isEmpty()) {
-                        resetPhase = null;
-                        setTick(tick);
+                        resetPhase = ResetPhase.FORWARD_TO_WANTED;
                         phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
                         phaseList.add(ResetPhase.STRINGTABLE_APPLY);
                     }
