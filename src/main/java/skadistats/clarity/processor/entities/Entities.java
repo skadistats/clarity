@@ -5,6 +5,9 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.event.Event;
+import skadistats.clarity.event.EventListener;
+import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -22,7 +25,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Provides({UsesEntities.class})
+@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class })
 @UsesDTClasses
 public class Entities {
 
@@ -30,6 +33,11 @@ public class Entities {
 
     private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
+    private final int[] indices = new int[MAX_PROPERTIES];
+
+    private Event<OnEntityCreated> evCreated;
+    private Event<OnEntityUpdated> evUpdated;
+    private Event<OnEntityDeleted> evDeleted;
 
     private class BaselineEntry {
         private ByteString rawBaseline;
@@ -40,7 +48,20 @@ public class Entities {
         }
     }
 
-    private final int[] indices = new int[MAX_PROPERTIES];
+    @Initializer(OnEntityCreated.class)
+    public void initOnEntityCreated(final Context ctx, final EventListener<OnEntityCreated> eventListener) {
+        evCreated = ctx.createEvent(OnEntityCreated.class, Entity.class);
+    }
+
+    @Initializer(OnEntityUpdated.class)
+    public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
+        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class);
+    }
+
+    @Initializer(OnEntityDeleted.class)
+    public void initOnEntityDeleted(final Context ctx, final EventListener<OnEntityDeleted> eventListener) {
+        evDeleted = ctx.createEvent(OnEntityDeleted.class, Entity.class);
+    }
 
     @OnReset
     public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
@@ -88,7 +109,11 @@ public class Entities {
                         int o = indices[ci];
                         state[o] = receiveProps[o].decode(stream);
                     }
-                    entities[entityIndex] = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
+                    entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
+                    entities[entityIndex] = entity;
+                    if (evCreated != null) {
+                        evCreated.raise(entity);
+                    }
                 } else {
                     entity = entities[entityIndex];
                     cls = entity.getDtClass();
@@ -100,14 +125,24 @@ public class Entities {
                         int o = indices[ci];
                         state[o] = receiveProps[o].decode(stream);
                     }
+                    if (evUpdated != null) {
+                        evUpdated.raise(entity);
+                    }
                 }
             } else if ((pvs & 2) != 0) {
+                entity = entities[entityIndex];
                 entities[entityIndex] = null;
+                if (evDeleted != null) {
+                    evDeleted.raise(entity);
+                }
             }
         }
         if (message.getIsDelta()) {
             while (stream.readNumericBits(1) == 1) {
                 entityIndex = stream.readNumericBits(11); // max is 2^11-1, or 2047
+                if (evDeleted != null) {
+                    evDeleted.raise(entities[entityIndex]);
+                }
                 entities[entityIndex] = null;
             }
         }
