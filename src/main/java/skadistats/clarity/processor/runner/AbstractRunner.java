@@ -16,6 +16,8 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     /* tick the user is at the end of */
     protected int tick = -1;
+    /* tick is synthetic (does not contain replay data) */
+    protected boolean synthetic = true;
 
     public AbstractRunner(Source source) {
         this.source = source;
@@ -32,19 +34,22 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     protected void endTicksUntil(Context ctx, int untilTick) {
         while (tick < untilTick) {
             if (tick != -1) {
-                ctx.createEvent(OnTickEnd.class).raise();
+                ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
             }
             setTick(tick + 1);
-            ctx.createEvent(OnTickStart.class).raise();
+            synthetic = true;
+            ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
         }
         if (tick != -1) {
-            ctx.createEvent(OnTickEnd.class).raise();
+            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
+            synthetic = false;
         }
     }
 
-    protected void startNewTick(Context ctx) {
+    protected void startNewTick(Context ctx, int upcomingTick) {
         setTick(tick + 1);
-        ctx.createEvent(OnTickStart.class).raise();
+        synthetic = tick != upcomingTick;
+        ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
     }
 
     protected void setTick(int tick) {

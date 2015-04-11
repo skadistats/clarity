@@ -10,7 +10,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = {})
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { boolean.class })
 public @interface OnTickStart {
-
 }

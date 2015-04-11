@@ -68,7 +68,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             if (demandedTick != null) {
                                 continue;
                             }
-                            startNewTick(ctx);
+                            startNewTick(ctx, upcomingTick);
                             if (wantedTick < upcomingTick) {
                                 continue;
                             }
@@ -85,7 +85,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 }
                                 resetPhase = null;
                                 tick = wantedTick - 1;
-                                startNewTick(ctx);
+                                startNewTick(ctx, upcomingTick);
                                 continue;
                             }
                             if (resetPhase == null && wantedTick != tick) {
