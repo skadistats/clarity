@@ -51,7 +51,7 @@ public class CombatLog {
     }
 
     @OnTickEnd
-    public void onTickEnd(Context ctx) {
+    public void onTickEnd(Context ctx, boolean synthetic) {
         Event<OnCombatLogEntry> ev = ctx.createEvent(OnCombatLogEntry.class, Entry.class);
         for (Entry e : logEntries) {
             ev.raise(e);
