@@ -50,6 +50,31 @@ public class Entity {
         return state;
     }
 
+    /**
+     * Check if this entity contains the given property.
+     *
+     * @param property Name of the property
+     * @return True, if and only if the given property is present in this entity
+     */
+    public boolean hasProperty(String property) {
+        return dtClass.getPropertyIndex(property) != null;
+    }
+
+    /**
+     * Check if this entity contains all of the given properties.
+     *
+     * @param properties Names of the properties
+     * @return True, if and only if the given properties are present in this entity
+     */
+    public boolean hasProperties(String... properties) {
+        for (String property : properties) {
+            if (!hasProperty(property)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
         Integer index = dtClass.getPropertyIndex(property);
