@@ -1,7 +1,6 @@
-option java_package = "skadistats.clarity.wire.proto";
-
-import "google/protobuf/descriptor.proto";
 import "networkbasetypes.proto";
+
+option cc_generic_services = false;
 
 enum CLC_Messages {
 	clc_ClientInfo = 8;
