@@ -2,24 +2,21 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<version>2.1</version>
 	<packaging>jar</packaging>
 	<name>clarity</name>
 	<description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
 	<url>https://github.com/skadistats/clarity</url>
-
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
-
 	<properties>
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
 	<licenses>
 		<license>
 			<name>BSD style license</name>
@@ -27,13 +24,11 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-
 	<scm>
 		<url>https://github.com/skadistats/clarity</url>
 		<connection>scm:git:git@github.com:skadistats/clarity.git</connection>
 		<developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
 	</scm>
-
 	<developers>
 		<developer>
 			<id>spheenik</id>
@@ -41,8 +36,12 @@
 			<email>clarity@martin.schrodt.org</email>
 		</developer>
 	</developers>
-
 	<dependencies>
+		<dependency>
+			<groupId>com.google.protobuf</groupId>
+			<artifactId>protobuf-java</artifactId>
+			<version>2.5.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.xerial.snappy</groupId>
 			<artifactId>snappy-java</artifactId>
@@ -53,11 +52,10 @@
 			<artifactId>logback-classic</artifactId>
 			<version>1.1.2</version>
 		</dependency>
-        <dependency>
-            <groupId>org.atteo.classindex</groupId>
-            <artifactId>classindex</artifactId>
-            <version>3.3</version>
-        </dependency>
+		<dependency>
+			<groupId>org.atteo.classindex</groupId>
+			<artifactId>classindex</artifactId>
+			<version>3.3</version>
+		</dependency>
 	</dependencies>
-
 </project>
