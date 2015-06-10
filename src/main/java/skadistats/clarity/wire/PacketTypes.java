@@ -97,7 +97,7 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_AIDebugLine_VALUE, DotaUsermessages.CDOTAUserMsg_AIDebugLine.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_ChatEvent_VALUE, DotaUsermessages.CDOTAUserMsg_ChatEvent.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CombatHeroPositions_VALUE, DotaUsermessages.CDOTAUserMsg_CombatHeroPositions.class);
-        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CombatLogData_VALUE, DotaUsermessages.CDOTAUserMsg_CombatLogData.class);
+        //USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CombatLogData_VALUE, DotaUsermessages.CDOTAUserMsg_CombatLogData.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CombatLogShowDeath_VALUE, DotaUsermessages.CDOTAUserMsg_CombatLogShowDeath.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CreateLinearProjectile_VALUE, DotaUsermessages.CDOTAUserMsg_CreateLinearProjectile.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_DestroyLinearProjectile_VALUE, DotaUsermessages.CDOTAUserMsg_DestroyLinearProjectile.class);
@@ -126,7 +126,7 @@ public class PacketTypes {
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_CharacterSpeakConcept_VALUE, null); // MISSING
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_SwapVerify_VALUE, DotaUsermessages.CDOTAUserMsg_SwapVerify.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_WorldLine_VALUE, DotaUsermessages.CDOTAUserMsg_WorldLine.class);
-        USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_TournamentDrop_VALUE, DotaUsermessages.CDOTAUserMsg_TournamentDrop.class);
+        //USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_TournamentDrop_VALUE, DotaUsermessages.CDOTAUserMsg_TournamentDrop.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_ItemAlert_VALUE, DotaUsermessages.CDOTAUserMsg_ItemAlert.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_HalloweenDrops_VALUE, DotaUsermessages.CDOTAUserMsg_HalloweenDrops.class);
         USERMSG.put(DotaUsermessages.EDotaUserMessages.DOTA_UM_ChatWheel_VALUE, DotaUsermessages.CDOTAUserMsg_ChatWheel.class);

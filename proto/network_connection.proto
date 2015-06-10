@@ -1,3 +1,4 @@
+option java_package = "skadistats.clarity.wire.proto";
 import "google/protobuf/descriptor.proto";
 
 option cc_generic_services = false;

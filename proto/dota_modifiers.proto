@@ -1,3 +1,4 @@
+option java_package = "skadistats.clarity.wire.proto";
 import "networkbasetypes.proto";
 
 option optimize_for = SPEED;

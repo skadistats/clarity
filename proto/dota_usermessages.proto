@@ -1,3 +1,4 @@
+option java_package = "skadistats.clarity.wire.proto";
 import "networkbasetypes.proto";
 import "ai_activity.proto";
 import "dota_commonmessages.proto";
