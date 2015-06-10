@@ -2,6 +2,7 @@ package skadistats.clarity.util;
 
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import java.lang.UnsupportedOperationException;
 
 public abstract class SimpleIterator<T> implements Iterator<T> {
 
@@ -25,5 +26,9 @@ public abstract class SimpleIterator<T> implements Iterator<T> {
         }
         next = null;
         return v;
+    }
+    @Override
+    public void remove(){
+        throw new UnsupportedOperationException();
     }
 }
