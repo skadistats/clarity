@@ -12,6 +12,7 @@ import skadistats.clarity.processor.stringtables.UsesStringTable;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Arrays;
 
 @Provides({OnCombatLogEntry.class})
 public class CombatLog {
@@ -101,7 +102,7 @@ public class CombatLog {
 
     @OnTickEnd
     public void onTickEnd(Context ctx, boolean synthetic) {
-        Event<OnCombatLogEntry> ev = ctx.createEvent(OnYASPCombatLogEntry.class, Entry.class);
+        Event<OnCombatLogEntry> ev = ctx.createEvent(OnCombatLogEntry.class, Entry.class);
         for (Entry e : logEntries) {
             ev.raise(e);
         }
@@ -131,19 +132,19 @@ public class CombatLog {
         }
 
         public String getSourceName() {
-            return translate(readCombatLogName((int)event.getProperty(sourceNameIdx)));
+            return readCombatLogName((int)event.getProperty(sourceNameIdx));
         }
 
         public String getTargetName() {
-            return translate(readCombatLogName((int)event.getProperty(targetNameIdx)));
+            return readCombatLogName((int)event.getProperty(targetNameIdx));
         }
 
         public String getAttackerName() {
-            return translate(readCombatLogName((int)event.getProperty(attackerNameIdx)));
+            return readCombatLogName((int)event.getProperty(attackerNameIdx));
         }
 
         public String getInflictorName() {
-            return translate(readCombatLogName((int)event.getProperty(inflictorNameIdx)));
+            return readCombatLogName((int)event.getProperty(inflictorNameIdx));
         }
 
         public boolean isAttackerIllusion() {
@@ -167,7 +168,7 @@ public class CombatLog {
         }
 
         public String getTargetSourceName() {
-            return translate(readCombatLogName((int)event.getProperty(targetSourceNameIdx)));
+            return readCombatLogName((int)event.getProperty(targetSourceNameIdx));
         }
 
         public float getTimestampRaw() {
@@ -218,7 +219,7 @@ public class CombatLog {
             return event.getProperty(xpReasonIdx);
         }
         public String getValueName(){
-            return translate(readCombatLogName(getValue()));
+            return readCombatLogName(getValue());
         }
         public float getStunDuration() {
             return event.getProperty(stunDurationIdx);

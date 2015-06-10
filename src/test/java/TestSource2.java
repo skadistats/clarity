@@ -13,7 +13,7 @@ public class TestSource2 {
        System.out.println(event.toString());
     }
     
-    @Test
+    //@Test
     public void test() throws Exception {
         long tStart = System.currentTimeMillis();
         new SimpleRunner(new MappedFileSource("replays/source2.dem")).runWith(this);
