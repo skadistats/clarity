@@ -15,6 +15,7 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.PacketTypes;
 import skadistats.clarity.wire.proto.Demo;
 import skadistats.clarity.wire.proto.Networkbasetypes;
@@ -34,6 +35,17 @@ public class InputSourceProcessor {
     public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
         unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
+    }
+
+    @Initializer(OnMessageContainer.class)
+    public void initOnMessageContainerListener(final Context ctx, final EventListener<OnMessageContainer> listener) {
+        listener.setInvocationPredicate(new Predicate<Object[]>() {
+            @Override
+            public boolean apply(Object[] args) {
+                Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) args[0];
+                return listener.getAnnotation().value().isAssignableFrom(clazz);
+            }
+        });
     }
 
     private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
@@ -76,10 +88,10 @@ public class InputSourceProcessor {
                 src.skipBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
                 Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
+                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoPacket.class, message.getData());
             } else if (messageClass == Demo.CDemoSendTables.class) {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getData().newCodedInput());
+                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
                 Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
@@ -100,7 +112,7 @@ public class InputSourceProcessor {
                         evReset.raise(message, phase);
                     }
                     if (phase == ResetPhase.STRINGTABLE_APPLY) {
-                        ctx.createEvent(OnMessageContainer.class, CodedInputStream.class).raise(message.getPacket().getData().newCodedInput());
+                        ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, message.getPacket().getData());
                     }
                 }
             } else {
@@ -116,7 +128,8 @@ public class InputSourceProcessor {
     }
 
     @OnMessageContainer
-    public void processEmbedded(Context ctx, CodedInputStream cs) throws IOException {
+    public void processEmbedded(Context ctx, Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
+        CodedInputStream cs = bytes.newCodedInput();
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
             if (kind == 0) {
