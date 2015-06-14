@@ -17,7 +17,7 @@ import java.util.Arrays;
 @Provides({OnCombatLogEntry.class})
 public class CombatLog {
 
-       public static final String STRING_TABLE_NAME = "CombatLogNames";
+    public static final String STRING_TABLE_NAME = "CombatLogNames";
     public static final String GAME_EVENT_NAME   = "dota_combatlog";
 
     private final List<Entry> logEntries = new LinkedList<>();
