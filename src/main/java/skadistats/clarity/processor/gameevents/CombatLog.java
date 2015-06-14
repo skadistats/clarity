@@ -40,8 +40,6 @@ public class CombatLog {
     private Integer abilityToggleOffIdx;
     private Integer abilityLevelIdx;
     private Integer goldReasonIdx;
-    
-    //yasp
     private Integer xpReasonIdx;
     //temporary manually set idx values for fields missing in gameeventdescriptor
     Integer stunDurationIdx = 16;
@@ -81,18 +79,15 @@ public class CombatLog {
         abilityToggleOffIdx = descriptor.getIndexForKey("ability_toggle_off");
         abilityLevelIdx = descriptor.getIndexForKey("ability_level");
         goldReasonIdx = descriptor.getIndexForKey("gold_reason");
-        
-        //yasp
         xpReasonIdx = descriptor.getIndexForKey("xp_reason");
-        //descriptor only contains a subset of the keys available
-        //we can't use this method to get indices of some combat log fields
+        //descriptor only contains a subset of the keys mentioned in protobufs
         /*
         stunDurationIdx = descriptor.getIndexForKey("stun_duration");
         slowDurationIdx = descriptor.getIndexForKey("slow_duration");
         locationXIdx = descriptor.getIndexForKey("location_x");
         locationYIdx = descriptor.getIndexForKey("location_y");
         */
-        System.err.println(Arrays.toString(descriptor.getKeys()));
+        //System.err.println(Arrays.toString(descriptor.getKeys()));
     }
 
     @OnGameEvent(GAME_EVENT_NAME)
@@ -186,12 +181,9 @@ public class CombatLog {
         public int getAbilityLevel() {
             return event.getProperty(abilityLevelIdx);
         }
-        
-        //yasp augmentations
         //TODO: for full safety, all getters should check for null on Idx
         public String toString(){
             //print the underlying gameevent
-            //this uses gameeventdescriptor to dump!  missing fields aren't shown
             return event.toString();
         }
         public boolean isTargetHero() {
@@ -221,6 +213,7 @@ public class CombatLog {
         public String getValueName(){
             return readCombatLogName(getValue());
         }
+        /*
         public float getStunDuration() {
             return event.getProperty(stunDurationIdx);
         }
@@ -248,5 +241,6 @@ public class CombatLog {
         public int getObsWardsPlaced(){
             return event.getProperty(obsWardsPlacedIdx);
         }
+        */
     }
 }
