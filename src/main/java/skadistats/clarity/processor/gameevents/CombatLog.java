@@ -17,47 +17,9 @@ import java.util.List;
 public class CombatLog {
 
     public static final String STRING_TABLE_NAME = "CombatLogNames";
-    public static final String GAME_EVENT_NAME   = "dota_combatlog";
+    public static final String GAME_EVENT_NAME = "dota_combatlog";
 
     private final List<Entry> logEntries = new LinkedList<>();
-
-    @OnGameEventDescriptor(GAME_EVENT_NAME)
-    @UsesStringTable(CombatLog.STRING_TABLE_NAME)
-    public void onGameEventDescriptor(Context ctx, GameEventDescriptor descriptor){
-        typeIdx = descriptor.getIndexForKey("type");
-        sourceNameIdx = descriptor.getIndexForKey("sourcename");
-        targetNameIdx = descriptor.getIndexForKey("targetname");
-        attackerNameIdx = descriptor.getIndexForKey("attackername");
-        inflictorNameIdx = descriptor.getIndexForKey("inflictorname");
-        attackerIllusionIdx = descriptor.getIndexForKey("attackerillusion");
-        targetIllusionIdx = descriptor.getIndexForKey("targetillusion");
-        valueIdx = descriptor.getIndexForKey("value");
-        healthIdx = descriptor.getIndexForKey("health");
-        timestampIdx = descriptor.getIndexForKey("timestamp");
-        targetSourceNameIdx = descriptor.getIndexForKey("targetsourcename");
-
-        timestampRawIdx = descriptor.getIndexForKey("timestampraw");
-        attackerHeroIdx = descriptor.getIndexForKey("attackerhero");
-        targetHeroIdx = descriptor.getIndexForKey("targethero");
-        abilityToggleOnIdx = descriptor.getIndexForKey("ability_toggle_on");
-        abilityToggleOffIdx = descriptor.getIndexForKey("ability_toggle_off");
-        abilityLevelIdx = descriptor.getIndexForKey("ability_level");
-        goldReasonIdx = descriptor.getIndexForKey("gold_reason");
-    }
-
-    @OnGameEvent(GAME_EVENT_NAME)
-    public void onGameEvent(Context ctx, GameEvent gameEvent) {
-        logEntries.add(new Entry(ctx, gameEvent));
-    }
-
-    @OnTickEnd
-    public void onTickEnd(Context ctx, boolean synthetic) {
-        Event<OnCombatLogEntry> ev = ctx.createEvent(OnCombatLogEntry.class, Entry.class);
-        for (Entry e : logEntries) {
-            ev.raise(e);
-        }
-        logEntries.clear();
-    }
 
     private int typeIdx;
     private int sourceNameIdx;
@@ -77,6 +39,62 @@ public class CombatLog {
     private Integer abilityToggleOffIdx;
     private Integer abilityLevelIdx;
     private Integer goldReasonIdx;
+    private Integer xpReasonIdx;
+
+    // those indices are in the combat log protobuf, but do never show up in the replay data
+    Integer stunDurationIdx = 16;
+    Integer slowDurationIdx = 17;
+    Integer locationXIdx = 21;
+    Integer locationYIdx = 22;
+    Integer modifierDurationIdx = 25;
+    Integer lastHitsIdx = 27;
+    Integer attackerTeamIdx = 28;
+    Integer targetTeamIdx = 29;
+    Integer obsWardsPlacedIdx = 30;
+    Integer assist_player0Idx = 31;
+    Integer assist_player1Idx = 32;
+    Integer assist_player2Idx = 33;
+    Integer assist_player3Idx = 34;
+    Integer stack_countIdx = 35;
+    Integer hidden_modifierIdx = 36;
+
+    @OnGameEventDescriptor(GAME_EVENT_NAME)
+    @UsesStringTable(CombatLog.STRING_TABLE_NAME)
+    public void onGameEventDescriptor(Context ctx, GameEventDescriptor descriptor) {
+        typeIdx = descriptor.getIndexForKey("type");
+        sourceNameIdx = descriptor.getIndexForKey("sourcename");
+        targetNameIdx = descriptor.getIndexForKey("targetname");
+        attackerNameIdx = descriptor.getIndexForKey("attackername");
+        inflictorNameIdx = descriptor.getIndexForKey("inflictorname");
+        attackerIllusionIdx = descriptor.getIndexForKey("attackerillusion");
+        targetIllusionIdx = descriptor.getIndexForKey("targetillusion");
+        valueIdx = descriptor.getIndexForKey("value");
+        healthIdx = descriptor.getIndexForKey("health");
+        timestampIdx = descriptor.getIndexForKey("timestamp");
+        targetSourceNameIdx = descriptor.getIndexForKey("targetsourcename");
+        timestampRawIdx = descriptor.getIndexForKey("timestampraw");
+        attackerHeroIdx = descriptor.getIndexForKey("attackerhero");
+        targetHeroIdx = descriptor.getIndexForKey("targethero");
+        abilityToggleOnIdx = descriptor.getIndexForKey("ability_toggle_on");
+        abilityToggleOffIdx = descriptor.getIndexForKey("ability_toggle_off");
+        abilityLevelIdx = descriptor.getIndexForKey("ability_level");
+        goldReasonIdx = descriptor.getIndexForKey("gold_reason");
+        xpReasonIdx = descriptor.getIndexForKey("xp_reason");
+    }
+
+    @OnGameEvent(GAME_EVENT_NAME)
+    public void onGameEvent(Context ctx, GameEvent gameEvent) {
+        logEntries.add(new Entry(ctx, gameEvent));
+    }
+
+    @OnTickEnd
+    public void onTickEnd(Context ctx, boolean synthetic) {
+        Event<OnCombatLogEntry> ev = ctx.createEvent(OnCombatLogEntry.class, Entry.class);
+        for (Entry e : logEntries) {
+            ev.raise(e);
+        }
+        logEntries.clear();
+    }
 
     public class Entry {
 
@@ -92,11 +110,6 @@ public class CombatLog {
             return idx == 0 ? null : combatLogNames.getNameByIndex(idx);
         }
 
-        private String translate(String in) {
-            // TODO: translate modifier_XXX, or npc_hero_XXX into correct names...
-            return in;
-        }
-
         public GameEvent getGameEvent() {
             return event;
         }
@@ -106,27 +119,19 @@ public class CombatLog {
         }
 
         public String getSourceName() {
-            return translate(readCombatLogName((int)event.getProperty(sourceNameIdx)));
+            return readCombatLogName((int) event.getProperty(sourceNameIdx));
         }
 
         public String getTargetName() {
-            return translate(readCombatLogName((int)event.getProperty(targetNameIdx)));
-        }
-
-        public String getTargetNameCompiled() {
-            return getTargetName() + (isTargetIllusion() ? " (Illusion)" : "");
+            return readCombatLogName((int) event.getProperty(targetNameIdx));
         }
 
         public String getAttackerName() {
-            return translate(readCombatLogName((int)event.getProperty(attackerNameIdx)));
-        }
-
-        public String getAttackerNameCompiled() {
-            return getAttackerName() + (isAttackerIllusion() ? " (Illusion)" : "");
+            return readCombatLogName((int) event.getProperty(attackerNameIdx));
         }
 
         public String getInflictorName() {
-            return translate(readCombatLogName((int)event.getProperty(inflictorNameIdx)));
+            return readCombatLogName((int) event.getProperty(inflictorNameIdx));
         }
 
         public boolean isAttackerIllusion() {
@@ -150,19 +155,11 @@ public class CombatLog {
         }
 
         public String getTargetSourceName() {
-            return translate(readCombatLogName((int)event.getProperty(targetSourceNameIdx)));
+            return readCombatLogName((int) event.getProperty(targetSourceNameIdx));
         }
 
         public float getTimestampRaw() {
             return event.getProperty(timestampRawIdx);
-        }
-
-        public boolean isAttackerHero() {
-            return event.getProperty(attackerHeroIdx);
-        }
-
-        public boolean isTargetHero() {
-            return event.getProperty(targetHeroIdx);
         }
 
         public boolean isAbilityToggleOn() {
@@ -177,9 +174,42 @@ public class CombatLog {
             return event.getProperty(abilityLevelIdx);
         }
 
+        //TODO: for full safety, all getters should check for null on Idx
+        public String toString() {
+            //print the underlying gameevent
+            return event.toString();
+        }
+
+        public boolean isTargetHero() {
+            if (targetHeroIdx == null) {
+                return true;
+            }
+            return event.getProperty(targetHeroIdx);
+        }
+
+        public boolean isAttackerHero() {
+            if (attackerHeroIdx == null) {
+                return true;
+            }
+            return event.getProperty(attackerHeroIdx);
+        }
+
         public int getGoldReason() {
+            if (goldReasonIdx == null) {
+                return 0;
+            }
             return event.getProperty(goldReasonIdx);
         }
-    }
 
+        public int getXpReason() {
+            if (xpReasonIdx == null) {
+                return 0;
+            }
+            return event.getProperty(xpReasonIdx);
+        }
+
+        public String getValueName() {
+            return readCombatLogName(getValue());
+        }
+    }
 }
