@@ -27,8 +27,9 @@ public abstract class SimpleIterator<T> implements Iterator<T> {
         next = null;
         return v;
     }
+
     @Override
-    public void remove(){
-        throw new UnsupportedOperationException();
+    public void remove() {
+        throw new UnsupportedOperationException("remove");
     }
 }
