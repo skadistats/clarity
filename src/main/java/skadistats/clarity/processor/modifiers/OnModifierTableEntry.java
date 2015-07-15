@@ -2,7 +2,7 @@ package skadistats.clarity.processor.modifiers;
 
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointType;
-import skadistats.clarity.wire.proto.DotaModifiers;
+import skadistats.clarity.wire.s1.proto.DotaModifiers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

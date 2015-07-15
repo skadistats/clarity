@@ -5,8 +5,8 @@ import org.xerial.snappy.Snappy;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.PacketTypes;
-import skadistats.clarity.wire.proto.Demo;
+import skadistats.clarity.wire.s1.PacketTypes;
+import skadistats.clarity.wire.s1.proto.Demo;
 
 import java.io.IOException;
 import java.io.InputStream;

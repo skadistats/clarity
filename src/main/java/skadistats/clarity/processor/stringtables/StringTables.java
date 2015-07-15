@@ -13,8 +13,8 @@ import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
-import skadistats.clarity.wire.proto.Demo;
-import skadistats.clarity.wire.proto.Netmessages;
+import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.s1.proto.Netmessages;
 
 import java.util.*;
 

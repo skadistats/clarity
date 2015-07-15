@@ -6,8 +6,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
-import skadistats.clarity.wire.proto.Demo;
-import skadistats.clarity.wire.proto.Netmessages;
+import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.s1.proto.Netmessages;
 
 import java.util.*;
 
