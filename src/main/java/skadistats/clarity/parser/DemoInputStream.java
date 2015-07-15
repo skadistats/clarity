@@ -7,10 +7,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.parser.Peek.BorderType;
-import skadistats.clarity.wire.PacketTypes;
-import skadistats.clarity.wire.proto.Demo.*;
-import skadistats.clarity.wire.proto.Networkbasetypes.CNETMsg_Tick;
-import skadistats.clarity.wire.proto.Networkbasetypes.CSVCMsg_UserMessage;
+import skadistats.clarity.wire.s1.PacketTypes;
+import skadistats.clarity.wire.s1.proto.Demo.*;
+import skadistats.clarity.wire.s1.proto.Networkbasetypes.CNETMsg_Tick;
+import skadistats.clarity.wire.s1.proto.Networkbasetypes.CSVCMsg_UserMessage;
 
 import java.io.Closeable;
 import java.io.IOException;

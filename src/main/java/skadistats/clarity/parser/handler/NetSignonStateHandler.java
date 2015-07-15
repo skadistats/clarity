@@ -6,7 +6,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Networkbasetypes.CNETMsg_SignonState;
+import skadistats.clarity.wire.s1.proto.Networkbasetypes.CNETMsg_SignonState;
 
 @RegisterHandler(CNETMsg_SignonState.class)
 public class NetSignonStateHandler implements Handler<CNETMsg_SignonState> {

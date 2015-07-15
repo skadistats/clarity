@@ -10,8 +10,8 @@ import skadistats.clarity.model.SendTable;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_SendTable;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_SendTable;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_SendTable.sendprop_t;
 
 import java.util.LinkedList;
 

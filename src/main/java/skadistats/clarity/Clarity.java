@@ -1,7 +1,7 @@
 package skadistats.clarity;
 
 import skadistats.clarity.parser.*;
-import skadistats.clarity.wire.proto.Demo.CDemoFileInfo;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoFileInfo;
 
 import java.io.FileInputStream;
 import java.io.IOException;

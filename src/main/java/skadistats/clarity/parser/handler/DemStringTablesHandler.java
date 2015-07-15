@@ -6,9 +6,9 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Demo.CDemoStringTables;
-import skadistats.clarity.wire.proto.Demo.CDemoStringTables.items_t;
-import skadistats.clarity.wire.proto.Demo.CDemoStringTables.table_t;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStringTables;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStringTables.items_t;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStringTables.table_t;
 
 import java.util.List;
 

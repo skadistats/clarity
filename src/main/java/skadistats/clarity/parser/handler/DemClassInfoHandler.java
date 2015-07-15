@@ -6,8 +6,8 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Demo.CDemoClassInfo;
-import skadistats.clarity.wire.proto.Demo.CDemoClassInfo.class_t;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoClassInfo;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoClassInfo.class_t;
 
 @RegisterHandler(CDemoClassInfo.class)
 public class DemClassInfoHandler implements Handler<CDemoClassInfo> {

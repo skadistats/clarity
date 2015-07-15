@@ -6,7 +6,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_VoiceData;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_VoiceData;
 
 @RegisterHandler(CSVCMsg_VoiceData.class)
 public class SvcVoiceDataHandler implements Handler<CSVCMsg_VoiceData> {

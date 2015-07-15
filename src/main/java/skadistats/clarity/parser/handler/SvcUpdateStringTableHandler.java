@@ -9,7 +9,7 @@ import skadistats.clarity.model.StringTableEntry;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_UpdateStringTable;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_UpdateStringTable;
 
 import java.util.List;
 

@@ -9,9 +9,10 @@ This is the README for version 1 of the library, so you might wanna check out
 
 ### Upgrading from an earlier 1.x
 The protobuf-classes used by clarity have been factored out into a separate project, to make reuse among
-v1 and v2 possible. While doing that I also moved them to another package, so when you want to move to 1.2
-you might have to adjust a lot of imports. A global search and replace from `com.dota2.proto.` to 
-`skadistats.clarity.wire.proto.` on your whole project should do the trick.
+v1 and v2 possible. While doing that I also moved them to another package, so if you want to move to 1.3
+you have to adjust a lot of imports. A global search and replace from `com.dota2.proto.` (up to 1.1) or 
+`skadistats.clarity.wire.proto.` (1.2) to `skadistats.clarity.wire.s1.proto.` on your whole project 
+should do the trick.
 
 # Replay Data
 
@@ -74,7 +75,7 @@ To use the stable version, add the following dependency in your pom.xml, and you
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>1.2</version>
+	<version>1.3</version>
 </dependency>
 ```
 

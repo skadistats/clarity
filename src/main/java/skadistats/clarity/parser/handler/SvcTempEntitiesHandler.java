@@ -7,7 +7,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_TempEntities;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_TempEntities;
 
 @RegisterHandler(CSVCMsg_TempEntities.class)
 public class SvcTempEntitiesHandler implements Handler<CSVCMsg_TempEntities> {

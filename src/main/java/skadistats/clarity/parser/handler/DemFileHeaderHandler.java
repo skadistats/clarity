@@ -6,7 +6,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Demo.CDemoFileHeader;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoFileHeader;
 
 @RegisterHandler(CDemoFileHeader.class)
 public class DemFileHeaderHandler implements Handler<CDemoFileHeader> {

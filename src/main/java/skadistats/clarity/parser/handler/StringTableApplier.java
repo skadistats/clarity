@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.match.Match;
 import skadistats.clarity.model.ModifierTableEntry;
 import skadistats.clarity.parser.HandlerHelper;
-import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+import skadistats.clarity.wire.s1.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 public enum StringTableApplier {
 

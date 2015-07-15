@@ -7,7 +7,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.GameRulesStateType;
 import skadistats.clarity.parser.Peek;
-import skadistats.clarity.wire.proto.Demo.CDemoFileInfo;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoFileInfo;
 
 import java.util.Iterator;
 

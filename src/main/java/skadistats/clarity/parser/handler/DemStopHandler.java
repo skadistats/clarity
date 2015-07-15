@@ -6,7 +6,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Demo.CDemoStop;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStop;
 
 @RegisterHandler(CDemoStop.class)
 public class DemStopHandler implements Handler<CDemoStop> {

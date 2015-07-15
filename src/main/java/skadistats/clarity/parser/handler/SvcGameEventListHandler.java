@@ -7,9 +7,9 @@ import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_GameEventList;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_GameEventList.descriptor_t;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_GameEventList.key_t;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_GameEventList;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_GameEventList.descriptor_t;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_GameEventList.key_t;
 
 @RegisterHandler(CSVCMsg_GameEventList.class)
 public class SvcGameEventListHandler implements Handler<CSVCMsg_GameEventList> {

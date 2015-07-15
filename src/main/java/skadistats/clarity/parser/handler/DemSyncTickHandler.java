@@ -9,7 +9,7 @@ import skadistats.clarity.model.ReceiveProp;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Demo.CDemoSyncTick;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoSyncTick;
 
 import java.util.Iterator;
 import java.util.List;

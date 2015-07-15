@@ -2,7 +2,7 @@ package skadistats.clarity.match;
 
 import com.rits.cloning.Cloner;
 import skadistats.clarity.model.ModifierTableEntry;
-import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+import skadistats.clarity.wire.s1.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 import java.util.HashMap;
 import java.util.LinkedList;

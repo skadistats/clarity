@@ -6,7 +6,7 @@ import skadistats.clarity.match.Match;
 import skadistats.clarity.parser.Handler;
 import skadistats.clarity.parser.HandlerHelper;
 import skadistats.clarity.parser.RegisterHandler;
-import skadistats.clarity.wire.proto.Networkbasetypes.CNETMsg_Tick;
+import skadistats.clarity.wire.s1.proto.Networkbasetypes.CNETMsg_Tick;
 
 @RegisterHandler(CNETMsg_Tick.class)
 public class NetTickHandler implements Handler<CNETMsg_Tick> {

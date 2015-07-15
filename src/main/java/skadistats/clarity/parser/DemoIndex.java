@@ -6,10 +6,10 @@ import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.model.PacketType;
-import skadistats.clarity.wire.proto.Demo.CDemoStop;
-import skadistats.clarity.wire.proto.Demo.CDemoStringTables;
-import skadistats.clarity.wire.proto.Demo.CDemoSyncTick;
-import skadistats.clarity.wire.proto.Netmessages.CSVCMsg_PacketEntities;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStop;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoStringTables;
+import skadistats.clarity.wire.s1.proto.Demo.CDemoSyncTick;
+import skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_PacketEntities;
 
 import java.io.IOException;
 import java.util.ArrayList;

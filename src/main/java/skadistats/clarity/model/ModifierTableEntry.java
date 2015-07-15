@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.wire.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
+import skadistats.clarity.wire.s1.proto.DotaModifiers.CDOTAModifierBuffTableEntry;
 
 import javax.vecmath.Vector2f;
 import javax.vecmath.Vector3f;

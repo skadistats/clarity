@@ -1,9 +1,9 @@
 package skadistats.clarity.parser;
 
-import skadistats.clarity.wire.proto.Demo;
-import skadistats.clarity.wire.proto.DotaUsermessages;
-import skadistats.clarity.wire.proto.Netmessages;
-import skadistats.clarity.wire.proto.Networkbasetypes;
+import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.s1.proto.DotaUsermessages;
+import skadistats.clarity.wire.s1.proto.Netmessages;
+import skadistats.clarity.wire.s1.proto.Networkbasetypes;
 
 import java.util.HashSet;
 import java.util.Set;
