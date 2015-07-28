@@ -31,7 +31,7 @@ public class BitStream {
 
     public BitStream(ByteString input) {
         int len = input.size();
-        data = new long[(len + 7) >> 3];
+        data = new long[(len + 15) >> 3];
         pos = 0;
         try {
             Snappy.arrayCopy(ZeroCopy.extract(input), 0, len, data, 0);
