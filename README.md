@@ -4,6 +4,10 @@ Clarity is a parser for Dota 2 replay files written in Java.
 
 Version 2.0 offers a new event based interface to replay data, which will make usage much easier and more versatile for you.
 
+##### Announcement regarding Source 2
+
+Work on a version supporting the Dota 2 Reborn engine will start soon - stay tuned :)
+
 # Replay Data
 
 clarity produces the following data you might be interested in from a replay. Choose from:
