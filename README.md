@@ -33,8 +33,6 @@ clarity produces the following data you might be interested in from a replay. Ch
 # Usage
 
 Fetch the current stable version (2.0) from Maven Central with
-
-and then fetch the dependency with:
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
