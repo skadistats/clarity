@@ -39,7 +39,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public ControllableRunner(Source s) throws IOException {
         super(s);
-        source.ensureDemoHeader();
+        source.readEngineType();
         source.skipBytes(4);
         this.loopController = new LoopController() {
             @Override

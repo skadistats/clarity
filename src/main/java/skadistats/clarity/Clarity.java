@@ -2,6 +2,7 @@ package skadistats.clarity;
 
 import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
@@ -44,9 +45,10 @@ public class Clarity {
      * @see Source
      */
     public static Demo.CDemoFileInfo infoForSource(final Source source) throws IOException {
-        source.ensureDemoHeader();
+        EngineType engineType = source.readEngineType();
         source.setPosition(source.readFixedInt32());
-        boolean isCompressed = (source.readVarInt32() & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+        int kind = source.readVarInt32();
+        boolean isCompressed = (kind & engineType.getCompressedFlag()) == engineType.getCompressedFlag();
         source.skipVarInt32();
         int size = source.readVarInt32();
         byte[] data = source.readBytes(size);

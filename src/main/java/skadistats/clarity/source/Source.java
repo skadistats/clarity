@@ -1,5 +1,6 @@
 package skadistats.clarity.source;
 
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.wire.s1.proto.Demo;
 
 import java.io.EOFException;
@@ -144,15 +145,17 @@ public abstract class Source {
     }
 
     /**
-     * reads the header of a demo file
+     * reads the magic of a demo file, identifying the engine type
      *
-     * @throws IOException if there is not enough data or the if no valid header was found
+     * @throws IOException if there is not enough data or the if no valid magic was found
      */
-    public void ensureDemoHeader() throws IOException {
+    public EngineType readEngineType() throws IOException {
         try {
-            if (!"PBUFDEM\0".equals(new String(readBytes(8)))) {
+            EngineType et = EngineType.forMagic(new String(readBytes(8)));
+            if (et == null) {
                 throw new IOException();
             }
+            return et;
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }

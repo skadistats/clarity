@@ -8,7 +8,7 @@ public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
     public SimpleRunner(Source s) throws IOException {
         super(s);
-        source.ensureDemoHeader();
+        source.readEngineType();
         source.skipBytes(4);
         this.loopController = new LoopController() {
             @Override
