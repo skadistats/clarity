@@ -1,12 +1,13 @@
-# Clarity 2.0 beta
+# Clarity 2
 
 Clarity is a parser for Dota 2 replay files written in Java.
 
-Version 2.0 offers a new event based interface to replay data, which will make usage much easier and more versatile for you.
+Version 2 offers a new event based interface to replay data, which will make usage much easier and more versatile for you.
 
-##### Announcement regarding Source 2
+##### News
 
-Work on a version supporting the Dota 2 Reborn engine will start soon - stay tuned :)
+I made a formal 2.0 release from the latest snapshot. There have not been bug reports for quite some time, so I decided
+to mark the current state as 2.0. Work on version 2.1, with Source 2 support, will start now.
 
 # Replay Data
 
@@ -31,7 +32,7 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Clarity 2.0 is currently in Beta and not available in Maven Central, so you got to add a pointer to the
+Clarity 2.1 is currently in Beta and not available in Maven Central, so you got to add a pointer to the
 repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
 
 To add the snapshot repository, add the following:
@@ -56,7 +57,7 @@ and then fetch the dependency with:
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.0-SNAPSHOT</version>
+	<version>2.1-SNAPSHOT</version>
 </dependency>
 ```
 
