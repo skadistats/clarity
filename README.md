@@ -32,7 +32,18 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Clarity 2.1 is currently in Beta and not available in Maven Central, so you got to add a pointer to the
+Fetch the current stable version (2.0) from Maven Central with
+
+and then fetch the dependency with:
+```XML
+<dependency>
+	<groupId>com.skadistats</groupId>
+	<artifactId>clarity</artifactId>
+	<version>2.0</version>
+</dependency>
+```
+
+Clarity 2.1 is work in progress and only available as a snapshot, so you got to add a pointer to the
 repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
 
 To add the snapshot repository, add the following:
