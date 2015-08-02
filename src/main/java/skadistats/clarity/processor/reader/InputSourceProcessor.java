@@ -20,7 +20,7 @@ import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.Networkbasetypes;
+import skadistats.clarity.wire.common.proto.Networkbasetypes;
 
 import java.io.EOFException;
 import java.io.IOException;
