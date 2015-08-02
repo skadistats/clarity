@@ -10,7 +10,11 @@ import java.io.IOException;
 
 public enum EngineType {
 
-    SOURCE1("PBUFDEM\0", Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE, false) {
+    SOURCE1(
+        "PBUFDEM\0",
+        Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
+        false
+    ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
             return skadistats.clarity.wire.s1.EmbeddedPackets.classForKind(kind);
@@ -29,7 +33,11 @@ public enum EngineType {
         }
     },
 
-    SOURCE2("PBDEMS2\0", Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE, true) {
+    SOURCE2(
+        "PBDEMS2\0",
+        Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
+        true
+    ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
             return skadistats.clarity.wire.s2.EmbeddedPackets.classForKind(kind);

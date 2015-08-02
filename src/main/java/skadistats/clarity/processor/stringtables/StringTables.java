@@ -1,8 +1,10 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.*;
@@ -14,8 +16,8 @@ import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.Netmessages;
 
+import java.io.IOException;
 import java.util.*;
 
 @Provides({UsesStringTable.class, OnStringTableEntry.class})
@@ -92,8 +94,8 @@ public class StringTables {
         }
     }
 
-    @OnMessage(Netmessages.CSVCMsg_CreateStringTable.class)
-    public void onCreateStringTable(Context ctx, Netmessages.CSVCMsg_CreateStringTable message) {
+    @OnMessage(skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_CreateStringTable.class)
+    public void onCreateStringTable(Context ctx, skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_CreateStringTable message) {
         if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
@@ -105,20 +107,20 @@ public class StringTables {
             );
             byId.put(numTables, table);
             byName.put(table.getName(), table);
-            decode(ctx, table, 3, message.getStringData(), message.getNumEntries());
+            decodeS1(ctx, table, 3, message.getStringData(), message.getNumEntries());
         }
         numTables++;
     }
 
-    @OnMessage(Netmessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, Netmessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
-            decode(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
+            decodeS1(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
         }
     }
 
-    private void decode(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
+    private void decodeS1(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
         BitStream stream = new BitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
@@ -160,6 +162,89 @@ public class StringTables {
                     bitLength = table.getUserDataSizeBits();
                 } else {
                     bitLength = stream.readNumericBits(14) * 8;
+                }
+
+                value = ByteString.copyFrom(stream.readBits(bitLength));
+            }
+            setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
+        }
+    }
+
+    @OnMessage(skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_CreateStringTable.class)
+    public void onCreateStringTable(Context ctx, skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_CreateStringTable message) throws IOException {
+        if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
+            StringTable table = new StringTable(
+                message.getName(),
+                4096,
+                message.getUserDataFixedSize(),
+                message.getUserDataSize(),
+                message.getUserDataSizeBits(),
+                message.getFlags()
+            );
+            byId.put(numTables, table);
+            byName.put(table.getName(), table);
+
+            ByteString data = message.getStringData();
+            if (message.getDataCompressed()) {
+                data = ZeroCopy.wrap(Snappy.uncompress(ZeroCopy.extract(data)));
+                //byte[] unp = new byte[message.getUncompressedSize()];
+                //LZSS.unpack(ZeroCopy.extract(data), unp);
+                //data = ZeroCopy.wrap(unp);
+            }
+            decodeS2(ctx, table, 3, data, message.getNumEntries());
+        }
+        numTables++;
+    }
+
+    @OnMessage(skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_UpdateStringTable message) {
+        StringTable table = byId.get(message.getTableId());
+        if (table != null) {
+            decodeS2(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
+        }
+    }
+
+    private void decodeS2(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
+        BitStream stream = new BitStream(data);
+        LinkedList<String> keyHistory = new LinkedList<>();
+
+        int index = -1;
+        StringBuffer nameBuf = new StringBuffer();
+        while (numEntries-- > 0) {
+            // read index
+            if (stream.readNumericBits(1) == 1) {
+                index++;
+            } else {
+                index = stream.readVarInt() + 1;
+            }
+            // read name
+            nameBuf.setLength(0);
+            if (stream.readNumericBits(1) == 1) {
+                if (stream.readNumericBits(1) == 1) {
+                    int basis = stream.readNumericBits(5);
+                    int length = stream.readNumericBits(5);
+                    nameBuf.append(keyHistory.get(basis).substring(0, length));
+                    nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
+                } else {
+                    nameBuf.append(stream.readString(MAX_NAME_LENGTH));
+                }
+                if (keyHistory.size() == KEY_HISTORY_SIZE) {
+                    keyHistory.remove(0);
+                }
+                keyHistory.add(nameBuf.toString());
+            }
+            // read value
+            ByteString value = null;
+            if (stream.readNumericBits(1) == 1) {
+                int bitLength;
+                if (table.getUserDataFixedSize()) {
+                    bitLength = table.getUserDataSizeBits();
+                } else {
+                    bitLength = stream.readNumericBits(14) * 8;
+                    int mysteryBits = stream.readNumericBits(3);
+                    if (mysteryBits != 0) {
+                        log.info("mystery bits are NOT zero, but " + mysteryBits);
+                    }
                 }
 
                 value = ByteString.copyFrom(stream.readBits(bitLength));
