@@ -7,8 +7,7 @@ import java.io.IOException;
 public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
     public SimpleRunner(Source s) throws IOException {
-        super(s);
-        source.readEngineType();
+        super(s, s.readEngineType());
         source.skipBytes(4);
         this.loopController = new LoopController() {
             @Override

@@ -58,6 +58,7 @@ public class InputSourceProcessor {
 
     @OnInputSource
     public void processSource(Context ctx, Source src, LoopController ctl) throws IOException {
+        int compressedFlag = ctx.getEngineType().getCompressedFlag();
         while (true) {
             int offset = src.getPosition();
             int kind;
@@ -72,8 +73,8 @@ public class InputSourceProcessor {
                     break;
                 }
             }
-            boolean isCompressed = (kind & Demo.EDemoCommands.DEM_IsCompressed_VALUE) == Demo.EDemoCommands.DEM_IsCompressed_VALUE;
-            kind &= ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+            boolean isCompressed = (kind & compressedFlag) == compressedFlag;
+            kind &= ~compressedFlag;
             int tick = src.readVarInt32();
             int size = src.readVarInt32();
             LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);

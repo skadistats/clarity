@@ -2,15 +2,20 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.source.Source;
+
+import java.io.IOException;
 
 public abstract class AbstractRunner<T extends Runner> implements Runner<AbstractRunner<T>> {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
     protected final Source source;
+    protected final EngineType engineType;
+
     protected LoopController loopController;
     private Context context;
 
@@ -19,8 +24,9 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     /* tick is synthetic (does not contain replay data) */
     protected boolean synthetic = true;
 
-    public AbstractRunner(Source source) {
+    public AbstractRunner(Source source, EngineType engineType) throws IOException {
         this.source = source;
+        this.engineType = engineType;
     }
 
     protected ExecutionModel createExecutionModel(Object... processors) {
@@ -56,8 +62,14 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         this.tick = tick;
     }
 
+    @Override
     public int getTick() {
         return tick;
+    }
+
+    @Override
+    public EngineType getEngineType() {
+        return engineType;
     }
 
     @Override

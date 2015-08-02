@@ -2,6 +2,7 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
 
 import java.lang.annotation.Annotation;
@@ -22,6 +23,10 @@ public class Context {
 
     public int getTick() {
         return executionModel.getRunner().getTick();
+    }
+
+    public EngineType getEngineType() {
+        return executionModel.getRunner().getEngineType();
     }
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {

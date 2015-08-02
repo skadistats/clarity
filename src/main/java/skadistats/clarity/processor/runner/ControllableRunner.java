@@ -38,8 +38,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private long t0;
 
     public ControllableRunner(Source s) throws IOException {
-        super(s);
-        source.readEngineType();
+        super(s, s.readEngineType());
         source.skipBytes(4);
         this.loopController = new LoopController() {
             @Override
