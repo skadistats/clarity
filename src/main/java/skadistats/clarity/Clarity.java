@@ -6,8 +6,8 @@ import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.s1.PacketTypes;
-import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.Packet;
+import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +55,7 @@ public class Clarity {
         if (isCompressed) {
             data = Snappy.uncompress(data);
         }
-        return PacketTypes.parse(Demo.CDemoFileInfo.class, ZeroCopy.wrap(data));
+        return Packet.parse(Demo.CDemoFileInfo.class, ZeroCopy.wrap(data));
     }
 
 }

@@ -7,6 +7,7 @@ import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -16,8 +17,9 @@ import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.util.Predicate;
-import skadistats.clarity.wire.s1.PacketTypes;
-import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.Packet;
+import skadistats.clarity.wire.common.DemoPackets;
+import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.s1.proto.Networkbasetypes;
 
 import java.io.EOFException;
@@ -34,7 +36,7 @@ public class InputSourceProcessor {
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
-        unpackUserMessages |= PacketTypes.USERMSG.containsValue(listener.getAnnotation().value());
+        unpackUserMessages |= ctx.getEngineType().isUserMessage(listener.getAnnotation().value());
     }
 
     @Initializer(OnMessageContainer.class)
@@ -83,22 +85,22 @@ public class InputSourceProcessor {
             } else if (loopCtl == LoopController.Command.BREAK) {
                 break;
             }
-            Class<? extends GeneratedMessage> messageClass = PacketTypes.DEMO.get(kind);
+            Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
             if (messageClass == null) {
                 log.warn("unknown top level message of kind {}", kind);
                 src.skipBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                Demo.CDemoPacket message = (Demo.CDemoPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoPacket.class, message.getData());
             } else if (messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
                 Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
                 Demo.CDemoFullPacket message = null;
                 if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                    message = (Demo.CDemoFullPacket) PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                    message = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 } else {
                     src.skipBytes(size);
                 }
@@ -119,7 +121,7 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo()) {
-                    GeneratedMessage message = PacketTypes.parse(messageClass, readPacket(src, size, isCompressed));
+                    GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
                     ev.raise(message);
                 } else {
                     src.skipBytes(size);
@@ -130,6 +132,8 @@ public class InputSourceProcessor {
 
     @OnMessageContainer
     public void processEmbedded(Context ctx, Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
+        if (ctx.getEngineType() == EngineType.SOURCE2) return;
+
         CodedInputStream cs = bytes.newCodedInput();
         while (!cs.isAtEnd()) {
             int kind = cs.readRawVarint32();
@@ -138,24 +142,24 @@ public class InputSourceProcessor {
                 break;
             }
             int size = cs.readRawVarint32();
-            Class<? extends GeneratedMessage> messageClass = PacketTypes.EMBED.get(kind);
+            Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 log.warn("unknown embedded message of kind {}", kind);
                 cs.skipRawBytes(size);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = PacketTypes.parse(messageClass, ZeroCopy.wrap(cs.readRawBytes(size)));
+                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(cs.readRawBytes(size)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
                     if (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class) {
                         Networkbasetypes.CSVCMsg_UserMessage userMessage = (Networkbasetypes.CSVCMsg_UserMessage) subMessage;
-                        Class<? extends GeneratedMessage> umClazz = PacketTypes.USERMSG.get(userMessage.getMsgType());
+                        Class<? extends GeneratedMessage> umClazz = ctx.getEngineType().userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
                         } else {
-                            ctx.createEvent(OnMessage.class, umClazz).raise(PacketTypes.parse(umClazz, userMessage.getMsgData()));
+                            ctx.createEvent(OnMessage.class, umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
                         }
                     }
                 } else {

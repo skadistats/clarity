@@ -39,7 +39,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public ControllableRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        source.skipBytes(4);
+        engineType.skipHeaderOffsets(source);
         this.loopController = new LoopController() {
             @Override
             public Command doLoopControl(Context ctx, int nextTick) {
