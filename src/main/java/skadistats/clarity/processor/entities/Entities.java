@@ -16,7 +16,7 @@ import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
-import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.s1.proto.Netmessages;
 
 import java.util.Arrays;

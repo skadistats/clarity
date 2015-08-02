@@ -8,8 +8,8 @@ import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
+import skadistats.clarity.wire.common.proto.Networkbasetypes;
 import skadistats.clarity.wire.s1.proto.Netmessages;
-import skadistats.clarity.wire.s1.proto.Networkbasetypes;
 
 import java.util.Map;
 import java.util.TreeMap;

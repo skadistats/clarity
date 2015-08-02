@@ -1,6 +1,7 @@
 package skadistats.clarity.engine;
 
 import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -22,6 +23,10 @@ public enum EngineType {
         public boolean isUserMessage(Class<? extends GeneratedMessage> clazz) {
             return skadistats.clarity.wire.s1.UserMessagePackets.isKnownClass(clazz);
         }
+        @Override
+        public int readEmbeddedKind(BitStream bs) {
+            return bs.readVarInt();
+        }
     },
 
     SOURCE2("PBDEMS2\0", Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE, true) {
@@ -32,11 +37,15 @@ public enum EngineType {
 
         @Override
         public Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind) {
-            return skadistats.clarity.wire.s2.UserMessagePackets.classForKind(kind);
+            throw new UnsupportedOperationException();
         }
         @Override
         public boolean isUserMessage(Class<? extends GeneratedMessage> clazz) {
-            return skadistats.clarity.wire.s2.UserMessagePackets.isKnownClass(clazz);
+            return false;
+        }
+        @Override
+        public int readEmbeddedKind(BitStream bs) {
+            return bs.readEntityIndex(-1);
         }
     };
 
@@ -69,6 +78,7 @@ public enum EngineType {
     public abstract Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind);
     public abstract Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     public abstract boolean isUserMessage(Class<? extends GeneratedMessage> clazz);
+    public abstract int readEmbeddedKind(BitStream bs);
 
     public static EngineType forMagic(String magic) {
         for (EngineType et : values()) {

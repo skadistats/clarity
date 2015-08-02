@@ -1,12 +1,12 @@
 package skadistats.clarity.processor.reader;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
+import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
@@ -94,7 +94,9 @@ public class InputSourceProcessor {
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoPacket.class, message.getData());
             } else if (messageClass == Demo.CDemoSendTables.class) {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
+                if (ctx.getEngineType() == EngineType.SOURCE1) {
+                    ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
+                }
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
                 Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
@@ -132,24 +134,22 @@ public class InputSourceProcessor {
 
     @OnMessageContainer
     public void processEmbedded(Context ctx, Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
-        if (ctx.getEngineType() == EngineType.SOURCE2) return;
-
-        CodedInputStream cs = bytes.newCodedInput();
-        while (!cs.isAtEnd()) {
-            int kind = cs.readRawVarint32();
+        BitStream bs = new BitStream(bytes);
+        while (bs.remaining() >= 8) {
+            int kind = ctx.getEngineType().readEmbeddedKind(bs);
             if (kind == 0) {
                 // this seems to happen with console recorded replays
                 break;
             }
-            int size = cs.readRawVarint32();
+            int size = bs.readVarInt();
             Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 log.warn("unknown embedded message of kind {}", kind);
-                cs.skipRawBytes(size);
+                bs.skip(size * 8);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(cs.readRawBytes(size)));
+                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBits(size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
@@ -163,7 +163,7 @@ public class InputSourceProcessor {
                         }
                     }
                 } else {
-                    cs.skipRawBytes(size);
+                    bs.skip(size * 8);
                 }
             }
         }

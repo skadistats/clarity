@@ -1,7 +1,7 @@
 package skadistats.clarity.source;
 
 import skadistats.clarity.engine.EngineType;
-import skadistats.clarity.wire.s1.proto.Demo;
+import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -164,11 +164,13 @@ public abstract class Source {
     /**
      * gets the positions of all full packets up to a given tick
      *
+     *
+     * @param engineType
      * @param wantedTick the tick
      * @param fullPacketPositions a set of positions found in previous runs
      * @throws IOException if the underlying data is invalid
      */
-    public TreeSet<PacketPosition> getFullPacketsBeforeTick(int wantedTick, TreeSet<PacketPosition> fullPacketPositions) throws IOException {
+    public TreeSet<PacketPosition> getFullPacketsBeforeTick(EngineType engineType, int wantedTick, TreeSet<PacketPosition> fullPacketPositions) throws IOException {
         int backup = getPosition();
         PacketPosition wanted = new PacketPosition(wantedTick, 0);
         if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
@@ -176,7 +178,7 @@ public abstract class Source {
             try {
                 while (true) {
                     int at = getPosition();
-                    int kind = readVarInt32() & ~Demo.EDemoCommands.DEM_IsCompressed_VALUE;
+                    int kind = readVarInt32() & ~engineType.getCompressedFlag();
                     int tick = readVarInt32();
                     int size = readVarInt32();
                     if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {

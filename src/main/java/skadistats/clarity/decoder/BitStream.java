@@ -27,10 +27,11 @@ public class BitStream {
     };
 
     final long[] data;
+    int len;
     int pos;
 
     public BitStream(ByteString input) {
-        int len = input.size();
+        len = input.size();
         data = new long[(len + 15) >> 3];
         pos = 0;
         try {
@@ -38,6 +39,15 @@ public class BitStream {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        len = len * 8; // from now on size in bits
+    }
+
+    public int remaining() {
+        return len - pos;
+    }
+
+    public void skip(int n) {
+        pos = pos + n;
     }
 
     public int readNumericBits(int n) {
