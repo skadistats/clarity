@@ -175,7 +175,7 @@ public class StringTables {
         if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
-                4096,
+                100,
                 message.getUserDataFixedSize(),
                 message.getUserDataSize(),
                 message.getUserDataSizeBits(),

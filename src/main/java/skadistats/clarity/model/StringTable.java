@@ -3,6 +3,8 @@ package skadistats.clarity.model;
 import com.google.protobuf.ByteString;
 import skadistats.clarity.util.TextTable;
 
+import java.util.Arrays;
+
 import static skadistats.clarity.util.TextTable.Alignment;
 
 public class StringTable {
@@ -14,8 +16,8 @@ public class StringTable {
     private final int userDataSizeBits;
     private final int flags;
 
-    private final String[][] names;
-    private final ByteString[][] values;
+    private String[][] names;
+    private ByteString[][] values;
 
     private int initialEntryCount;
     private int entryCount;
@@ -33,7 +35,23 @@ public class StringTable {
         this.entryCount = 0;
     }
 
+    private void ensureSize(int minCapacity) {
+        if (names.length < minCapacity) {
+            int oldCapacity = names.length;
+            int newCapacity = oldCapacity + (oldCapacity >> 1);
+            if (newCapacity - minCapacity < 0)
+                newCapacity = minCapacity;
+            names = Arrays.copyOf(names, newCapacity);
+            values = Arrays.copyOf(values, newCapacity);
+            for (int i = oldCapacity; i < newCapacity; i++) {
+                names[i] = new String[2];
+                values[i] = new ByteString[2];
+            }
+        }
+    }
+
     public void set(int tbl, int index, String name, ByteString value) {
+        ensureSize(index + 1);
         if ((tbl & 1) != 0) {
             initialEntryCount = Math.max(initialEntryCount, index + 1);
             this.names[index][0] = name;
@@ -55,7 +73,7 @@ public class StringTable {
     }
 
     public void reset() {
-        for (int i = 0; i < maxEntries; i++) {
+        for (int i = 0; i < names.length; i++) {
             names[i][1] = names[i][0];
             values[i][1] = values[i][0];
         }
