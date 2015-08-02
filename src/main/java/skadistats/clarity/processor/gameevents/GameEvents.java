@@ -8,8 +8,8 @@ import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
+import skadistats.clarity.wire.common.proto.NetmessagesCommon;
 import skadistats.clarity.wire.common.proto.Networkbasetypes;
-import skadistats.clarity.wire.s1.proto.Netmessages;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -44,12 +44,12 @@ public class GameEvents {
         });
     }
 
-    @OnMessage(Netmessages.CSVCMsg_GameEventList.class)
-    public void onGameEventList(Context ctx, Netmessages.CSVCMsg_GameEventList message) {
-        for (Netmessages.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
+    @OnMessage(NetmessagesCommon.CSVCMsg_GameEventList.class)
+    public void onGameEventList(Context ctx, NetmessagesCommon.CSVCMsg_GameEventList message) {
+        for (NetmessagesCommon.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
             String[] keys = new String[d.getKeysCount()];
             for (int i = 0; i < d.getKeysCount(); i++) {
-                Netmessages.CSVCMsg_GameEventList.key_t k = d.getKeys(i);
+                NetmessagesCommon.CSVCMsg_GameEventList.key_t k = d.getKeys(i);
                 keys[i] = k.getName();
             }
             GameEventDescriptor gev = new GameEventDescriptor(
