@@ -17,14 +17,18 @@ public class SendTableFlattener {
         this.lookup = lookup;
         this.descendant = descendant;
         this.exclusions = aggregateExclusions(descendant);
-        this.receiveProps = new LinkedList<ReceiveProp>();
+        this.receiveProps = new ArrayList<>(1024);
         this.nameBuf = new StringBuffer();
     }
 
     private Set<SendTableExclusion> aggregateExclusions(SendTable table) {
-        Set<SendTableExclusion> result = table.getAllExclusions();
-        for (SendProp sp : table.getAllRelations()) {
-            result.addAll(aggregateExclusions(lookup.sendTableForDtName(sp.getDtName())));
+        Set<SendTableExclusion> result = new HashSet<>();
+        for (SendProp sp : table.getSendProps()) {
+            if ((sp.getFlags() & PropFlag.EXCLUDE) != 0) {
+                result.add(sp.getExcludeIdentifier());
+            } else if (sp.getType() == PropType.DATATABLE) {
+                result.addAll(aggregateExclusions(lookup.sendTableForDtName(sp.getDtName())));
+            }
         }
         return result;
     }
@@ -45,10 +49,11 @@ public class SendTableFlattener {
     }
 
     private void _flattenCollapsible(SendTable ancestor, List<SendProp> accumulator, Deque<String> path, String src) {
-        for (SendProp sp : ancestor.getAllNonExclusions()) {
-            boolean excluded = exclusions.contains(new SendTableExclusion(ancestor.getNetTableName(), sp.getVarName()));
-            boolean ineligible = ((sp.getFlags() & PropFlag.INSIDE_ARRAY) != 0);
-            if (excluded || ineligible) {
+        for (SendProp sp : ancestor.getSendProps()) {
+            if (((PropFlag.EXCLUDE | PropFlag.INSIDE_ARRAY) & sp.getFlags()) != 0) {
+                continue;
+            }
+            if (exclusions.contains(new SendTableExclusion(ancestor.getNetTableName(), sp.getVarName()))) {
                 continue;
             }
             if (sp.getType() == PropType.DATATABLE) {
@@ -67,7 +72,7 @@ public class SendTableFlattener {
 
     private List<ReceiveProp> sort() {
         List<ReceiveProp> sorted = new ArrayList<ReceiveProp>(receiveProps);
-        Set<Integer> priorities = new TreeSet<Integer>();
+        Set<Integer> priorities = new TreeSet<>();
         priorities.add(64);
         for (ReceiveProp rp : sorted) {
             priorities.add(rp.getPriority());
