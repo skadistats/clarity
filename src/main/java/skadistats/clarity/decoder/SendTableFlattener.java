@@ -7,14 +7,14 @@ import java.util.*;
 
 public class SendTableFlattener {
 
-    private final DTClasses lookup;
-    private final SendTable descendant;
+    private final DTClasses dtClasses;
+    private final SendTable table;
     private final Set<SendTableExclusion> exclusions;
     private final List<ReceiveProp> receiveProps;
 
-    public SendTableFlattener(DTClasses lookup, SendTable descendant) {
-        this.lookup = lookup;
-        this.descendant = descendant;
+    public SendTableFlattener(DTClasses dtClasses, SendTable table) {
+        this.dtClasses = dtClasses;
+        this.table = table;
         this.exclusions = new HashSet<>();
         this.receiveProps = new ArrayList<>(1024);
     }
@@ -24,7 +24,7 @@ public class SendTableFlattener {
             if ((sp.getFlags() & PropFlag.EXCLUDE) != 0) {
                 exclusions.add(sp.getExcludeIdentifier());
             } else if (sp.getType() == PropType.DATATABLE) {
-                aggregateExclusions(lookup.sendTableForDtName(sp.getDtName()));
+                aggregateExclusions(dtClasses.sendTableForDtName(sp.getDtName()));
             }
         }
     }
@@ -49,12 +49,12 @@ public class SendTableFlattener {
             }
             if (sp.getType() == PropType.DATATABLE) {
                 if ((sp.getFlags() & PropFlag.COLLAPSIBLE) != 0) {
-                    gatherCollapsible(lookup.sendTableForDtName(sp.getDtName()), accumulator, nameBuf);
+                    gatherCollapsible(dtClasses.sendTableForDtName(sp.getDtName()), accumulator, nameBuf);
                 } else {
                     int l = nameBuf.length();
                     nameBuf.append(sp.getVarName());
                     nameBuf.append('.');
-                    gather(lookup.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), nameBuf);
+                    gather(dtClasses.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), nameBuf);
                     nameBuf.setLength(l);
                 }
             } else {
@@ -91,8 +91,8 @@ public class SendTableFlattener {
     }
 
     public List<ReceiveProp> flatten() {
-        aggregateExclusions(descendant);
-        gather(descendant, new LinkedList<SendProp>(), new StringBuilder());
+        aggregateExclusions(table);
+        gather(table, new LinkedList<SendProp>(), new StringBuilder());
         return sort();
     }
 }
