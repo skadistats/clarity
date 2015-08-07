@@ -13,7 +13,8 @@ public enum EngineType {
     SOURCE1(
         "PBUFDEM\0",
         Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
-        false
+        false, // has 4 extra header bytes
+        true   // CDemoSendTables is container
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -36,7 +37,8 @@ public enum EngineType {
     SOURCE2(
         "PBDEMS2\0",
         Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
-        true
+        true, // has 4 extra header bytes
+        false // CDemoSendTables is container
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -60,11 +62,14 @@ public enum EngineType {
     private final String magic;
     private final int compressedFlag;
     private final boolean extraHeaderInt32;
+    private final boolean sendTablesContainer;
 
-    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32) {
+
+    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer) {
         this.magic = magic;
         this.compressedFlag = compressedFlag;
         this.extraHeaderInt32 = extraHeaderInt32;
+        this.sendTablesContainer = sendTablesContainer;
     }
 
     public String getMagic() {
@@ -73,6 +78,10 @@ public enum EngineType {
 
     public int getCompressedFlag() {
         return compressedFlag;
+    }
+
+    public boolean isSendTablesContainer() {
+        return sendTablesContainer;
     }
 
     public void skipHeaderOffsets(Source source) throws IOException {

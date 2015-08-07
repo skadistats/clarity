@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -92,11 +91,9 @@ public class InputSourceProcessor {
             } else if (messageClass == Demo.CDemoPacket.class) {
                 Demo.CDemoPacket message = (Demo.CDemoPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoPacket.class, message.getData());
-            } else if (messageClass == Demo.CDemoSendTables.class) {
+            } else if (ctx.getEngineType().isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                if (ctx.getEngineType() == EngineType.SOURCE1) {
-                    ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
-                }
+                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
                 Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
