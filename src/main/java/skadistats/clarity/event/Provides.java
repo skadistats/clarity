@@ -1,6 +1,7 @@
 package skadistats.clarity.event;
 
 import org.atteo.classindex.IndexAnnotated;
+import skadistats.clarity.engine.EngineType;
 
 import java.lang.annotation.*;
 
@@ -8,5 +9,8 @@ import java.lang.annotation.*;
 @Target(value = ElementType.TYPE)
 @IndexAnnotated
 public @interface Provides {
+
     Class<? extends Annotation>[] value();
+    EngineType[] engine() default {};
+
 }

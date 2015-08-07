@@ -59,7 +59,7 @@ public class ExecutionModel {
         if (OnInputSource.class.equals(up.getUsagePointClass())) {
             return;
         }
-        UsagePointProvider provider = UsagePoints.getProvidersFor(up.getUsagePointClass());
+        UsagePointProvider provider = UsagePoints.getProviderFor(up.getUsagePointClass(), runner.getEngineType());
         if (provider == null) {
             throw new RuntimeException("oops. no provider found for required usage point " + up.getUsagePointClass());
         }

@@ -1,51 +1,27 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.decoder.SendTableFlattener;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.*;
+import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.SendTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
-import java.util.*;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 @Provides({UsesDTClasses.class})
 public class DTClasses {
 
-    private final Map<Integer, DTClass> byClassId = new TreeMap<Integer, DTClass>();
-    private final Map<String, DTClass> byDtName = new TreeMap<String, DTClass>();
+    private final Map<Integer, DTClass> byClassId = new TreeMap<>();
+    private final Map<String, DTClass> byDtName = new TreeMap<>();
     private int classBits;
 
-    @OnMessage(S1NetMessages.CSVCMsg_SendTable.class)
-    public void onSendTable(Context ctx, S1NetMessages.CSVCMsg_SendTable message) {
-
-        LinkedList<SendProp> props = new LinkedList<SendProp>();
-        SendTable st = new SendTable(
-            message.getNetTableName(),
-            message.getNeedsDecoder(),
-            props
-        );
-
-        for (S1NetMessages.CSVCMsg_SendTable.sendprop_t sp : message.getPropsList()) {
-            props.add(
-                new SendProp(
-                    st,
-                    sp.getType() == PropType.ARRAY.ordinal() ? props.peekLast() : null,
-                    sp.getType(),
-                    sp.getVarName(),
-                    sp.getFlags(),
-                    sp.getPriority(),
-                    sp.getDtName(),
-                    sp.getNumElements(),
-                    sp.getLowValue(),
-                    sp.getHighValue(),
-                    sp.getNumBits()
-                )
-            );
-        }
-        byDtName.put(message.getNetTableName(), new DTClass(message.getNetTableName(), st));
+    @OnDTClass
+    public void onDTClass(Context ctx, DTClass dtClass) {
+        byDtName.put(dtClass.getDtName(), dtClass);
     }
 
     @OnMessage(Demo.CDemoClassInfo.class)
@@ -59,24 +35,7 @@ public class DTClasses {
 
     @OnMessage(Demo.CDemoSyncTick.class)
     public void onSyncTick(Context ctx, Demo.CDemoSyncTick message) {
-        // last packet of the prologue: compile receive tables!
-        for (DTClass dtc : byClassId.values()) {
-            if (!dtc.getSendTable().isDecoderNeeded()) {
-                continue;
-            }
-            List<ReceiveProp> rps = new SendTableFlattener(this, dtc.getSendTable()).flatten();
-            dtc.setReceiveProps(rps.toArray(new ReceiveProp[] {}));
-        }
-
-        // last packet of the prologue: set super classes
-        for (DTClass dtc : byClassId.values()) {
-            String superClassName = dtc.getSendTable().getBaseClass();
-            if (superClassName != null) {
-                dtc.setSuperClass(byDtName.get(superClassName));
-            }
-        }
-
-        classBits = Util.calcBitsNeededFor(size() - 1);
+        classBits = Util.calcBitsNeededFor(byClassId.size() - 1);
     }
 
     public DTClass forClassId(int id) {
@@ -93,10 +52,6 @@ public class DTClasses {
 
     public Iterator<DTClass> iterator() {
         return byClassId.values().iterator();
-    }
-
-    public int size() {
-        return byClassId.size();
     }
 
     public int getClassBits() {
