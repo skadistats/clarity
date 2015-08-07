@@ -47,7 +47,7 @@ public class PropFlag {
     };
 
     public static String descriptionForFlags(int flags) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         for (String name : NAMES) {
             if ((flags & 1) != 0) {
                 if (buf.length() > 0) {

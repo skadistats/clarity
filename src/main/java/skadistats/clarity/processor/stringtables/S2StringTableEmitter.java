@@ -57,7 +57,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         LinkedList<String> keyHistory = new LinkedList<>();
 
         int index = -1;
-        StringBuffer nameBuf = new StringBuffer();
+        StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
             if (stream.readNumericBits(1) == 1) {

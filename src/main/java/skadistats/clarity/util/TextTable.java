@@ -159,7 +159,7 @@ public class TextTable {
     }
 
     private String calcFormatString(int[] widths) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (framed) {
             buf.append(frame[0]);
         }
@@ -180,7 +180,7 @@ public class TextTable {
     }
 
     private String calcTitleFormatString(int[] widths) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         if (framed) {
             buf.append(frame[0]);
         }
@@ -198,7 +198,7 @@ public class TextTable {
 
 
     private String calcSeparatorString(int[] widths, int pos) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(frame[2 + pos]);
         for (int i = 0; i < columns.length; i++) {
             buf.append(repeat(paddingLeft.length() + widths[i] + paddingRight.length(), frame[1]));
@@ -208,7 +208,7 @@ public class TextTable {
     }
 
     private String calcTitleSeparatorString(int[] widths, int pos) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         buf.append(frame[2 + pos]);
         for (int i = 0; i < columns.length; i++) {
             buf.append(repeat(paddingLeft.length() + widths[i] + paddingRight.length(), frame[1]));

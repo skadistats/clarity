@@ -80,7 +80,7 @@ public class BitStream {
     }
 
     public String readString(int num) {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
         while (num > 0) {
             char c = (char) readNumericBits(8);
             if (c == 0) {
@@ -114,7 +114,7 @@ public class BitStream {
     }
 
     public String toString() {
-        StringBuffer buf = new StringBuffer();
+        StringBuilder buf = new StringBuilder();
 
         int min = Math.max(0, (pos - 32));
         int max = Math.min(data.length * 64 - 1, pos + 64);

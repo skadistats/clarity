@@ -49,7 +49,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
 
         boolean mysteryFlag = stream.readNumericBits(1) == 1;
         int index = -1;
-        StringBuffer nameBuf = new StringBuffer();
+        StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
             if (stream.readNumericBits(1) == 1) {
