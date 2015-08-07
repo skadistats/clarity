@@ -7,7 +7,17 @@ Version 2 offers a new event based interface to replay data, which will make usa
 ##### News
 
 I made a formal 2.0 release from the latest snapshot. There have not been bug reports for quite some time, so I decided
-to mark the current state as 2.0. Work on version 2.1, with Source 2 support, will start now.
+to mark the current state as 2.0. Work on version 2.1, with Source 2 support, has started.
+
+Current status regarding Source 2:
+
+- reading info: working
+- processing gameevents: working
+- stringtables: working
+- combat log: working
+- DT-classes: in progress
+- entities: not at all
+
 
 # Replay Data
 
