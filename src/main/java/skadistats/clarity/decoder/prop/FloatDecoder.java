@@ -1,8 +1,8 @@
 package skadistats.clarity.decoder.prop;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.Prop;
 import skadistats.clarity.model.PropFlag;
+import skadistats.clarity.model.SendProp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -24,7 +24,7 @@ public class FloatDecoder implements PropDecoder<Float> {
     private static final float NORMAL_RESOLUTION = (1.0f / NORMAL_DENOMINATOR);
     
     @Override
-    public Float decode(BitStream stream, Prop prop) {
+    public Float decode(BitStream stream, SendProp prop) {
         int flags = prop.getFlags();
         if ((flags & PropFlag.COORD) != 0) {
             return decodeCoord(stream);

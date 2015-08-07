@@ -2,12 +2,12 @@ package skadistats.clarity.decoder.prop;
 
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.model.Prop;
+import skadistats.clarity.model.SendProp;
 
 public class ArrayDecoder implements PropDecoder<Object[]> {
 
     @Override
-    public Object[] decode(BitStream stream, Prop prop) {
+    public Object[] decode(BitStream stream, SendProp prop) {
         int count = stream.readNumericBits(Util.calcBitsNeededFor(prop.getNumElements() - 1));
         Object[] result = new Object[count];
         PropDecoder<?> decoder = prop.getTemplate().getType().getDecoder();

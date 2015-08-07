@@ -1,13 +1,13 @@
 package skadistats.clarity.decoder.prop;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.Prop;
 import skadistats.clarity.model.PropFlag;
+import skadistats.clarity.model.SendProp;
 
 public class IntDecoder implements PropDecoder<Integer> {
 
     @Override
-    public Integer decode(BitStream stream, Prop prop) {
+    public Integer decode(BitStream stream, SendProp prop) {
         int v = 0;
         int flags = prop.getFlags();
         boolean isUnsigned = (flags & PropFlag.UNSIGNED) != 0;

@@ -16,21 +16,20 @@ public class SendTableFlattener {
     public SendTableFlattener(DTClasses lookup, SendTable descendant) {
         this.lookup = lookup;
         this.descendant = descendant;
-        this.exclusions = aggregateExclusions(descendant);
+        this.exclusions = new HashSet<>();
         this.receiveProps = new ArrayList<>(1024);
         this.nameBuf = new StringBuffer();
+        aggregateExclusions(descendant);
     }
 
-    private Set<SendTableExclusion> aggregateExclusions(SendTable table) {
-        Set<SendTableExclusion> result = new HashSet<>();
+    private void aggregateExclusions(SendTable table) {
         for (SendProp sp : table.getSendProps()) {
             if ((sp.getFlags() & PropFlag.EXCLUDE) != 0) {
-                result.add(sp.getExcludeIdentifier());
+                exclusions.add(sp.getExcludeIdentifier());
             } else if (sp.getType() == PropType.DATATABLE) {
-                result.addAll(aggregateExclusions(lookup.sendTableForDtName(sp.getDtName())));
+                aggregateExclusions(lookup.sendTableForDtName(sp.getDtName()));
             }
         }
-        return result;
     }
 
     private void _flatten(SendTable ancestor, List<SendProp> accumulator, Deque<String> path, String src) {
@@ -71,11 +70,11 @@ public class SendTableFlattener {
     }
 
     private List<ReceiveProp> sort() {
-        List<ReceiveProp> sorted = new ArrayList<ReceiveProp>(receiveProps);
+        List<ReceiveProp> sorted = new ArrayList<>(receiveProps);
         Set<Integer> priorities = new TreeSet<>();
         priorities.add(64);
         for (ReceiveProp rp : sorted) {
-            priorities.add(rp.getPriority());
+            priorities.add(rp.getSendProp().getPriority());
         }
         int offset = 0;
 
@@ -84,8 +83,9 @@ public class SendTableFlattener {
             int cursor = offset;
             while (cursor < sorted.size()) {
                 ReceiveProp rp = sorted.get(cursor);
-                boolean changesOften = (rp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
-                if (changesOften || rp.getPriority() == priority) {
+                SendProp sp = rp.getSendProp();
+                boolean changesOften = (sp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
+                if (changesOften || sp.getPriority() == priority) {
                     Collections.swap(sorted, cursor, hole);
                     hole++;
                     offset++;

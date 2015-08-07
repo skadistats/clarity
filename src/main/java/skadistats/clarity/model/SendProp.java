@@ -1,7 +1,7 @@
 package skadistats.clarity.model;
 
 
-public class SendProp implements Prop {
+public class SendProp {
 
     private final SendTable table;
     private final SendProp template;
@@ -16,6 +16,8 @@ public class SendProp implements Prop {
     private final float highValue;
     private final int numBits;
 
+    private final SendTableExclusion excludeIdentifier;
+
     public SendProp(SendTable table, SendProp template, int type, String varName, int flags, int priority, String dtName, int numElements, float lowValue, float highValue, int numBits) {
         this.table = table;
         this.template = template;
@@ -28,10 +30,11 @@ public class SendProp implements Prop {
         this.lowValue = lowValue;
         this.highValue = highValue;
         this.numBits = numBits;
+        this.excludeIdentifier = new SendTableExclusion(dtName, varName);
     }
 
     public SendTableExclusion getExcludeIdentifier() {
-        return new SendTableExclusion(dtName, varName);
+        return excludeIdentifier;
     }
 
     public PropType getType() {
