@@ -7,23 +7,17 @@ import skadistats.clarity.decoder.prop.PropDecoder;
 public class ReceiveProp {
 
     private final SendProp sendProp;
-    private final String source;
     private final String name;
     private final PropDecoder propDecoder;
 
-    public ReceiveProp(SendProp sendProp, String source, String name) {
+    public ReceiveProp(SendProp sendProp, String name) {
         this.sendProp = sendProp;
-        this.source = source;
         this.name = name;
         this.propDecoder = sendProp.getType().getDecoder();
     }
 
     public SendProp getSendProp() {
         return sendProp;
-    }
-
-    public String getSrc() {
-        return source;
     }
 
     public String getVarName() {
@@ -38,7 +32,7 @@ public class ReceiveProp {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("ReceiveProp [source=");
-        builder.append(source);
+        builder.append(sendProp.getSrc());
         builder.append(", name=");
         builder.append(name);
         builder.append(", type=");

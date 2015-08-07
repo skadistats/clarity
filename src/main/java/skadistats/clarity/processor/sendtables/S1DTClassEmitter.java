@@ -22,7 +22,6 @@ public class S1DTClassEmitter {
         LinkedList<SendProp> props = new LinkedList<SendProp>();
         SendTable st = new SendTable(
             message.getNetTableName(),
-            message.getNeedsDecoder(),
             props
         );
 
@@ -53,9 +52,6 @@ public class S1DTClassEmitter {
         Iterator<DTClass> iter = dtClasses.iterator();
         while (iter.hasNext()) {
             DTClass dtc = iter.next();
-            if (!dtc.getSendTable().isDecoderNeeded()) {
-                continue;
-            }
             List<ReceiveProp> rps = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
             dtc.setReceiveProps(rps.toArray(new ReceiveProp[] {}));
         }

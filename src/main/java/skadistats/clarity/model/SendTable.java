@@ -5,21 +5,15 @@ import java.util.List;
 public class SendTable {
 
     private final String netTableName;
-    private final boolean decoderNeeded;
     private final List<SendProp> props;
 
-    public SendTable(String netTableName, boolean decoderNeeded, List<SendProp> props) {
+    public SendTable(String netTableName, List<SendProp> props) {
         this.netTableName = netTableName;
-        this.decoderNeeded = decoderNeeded;
         this.props = props;
     }
     
     public String getNetTableName() {
         return netTableName;
-    }
-
-    public boolean isDecoderNeeded() {
-        return decoderNeeded;
     }
 
     public List<SendProp> getSendProps() {
@@ -34,6 +28,5 @@ public class SendTable {
         }
         return null;
     }
-    
 
 }
