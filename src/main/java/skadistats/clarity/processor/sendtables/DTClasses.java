@@ -7,7 +7,7 @@ import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.Netmessages;
+import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.*;
 
@@ -18,8 +18,8 @@ public class DTClasses {
     private final Map<String, DTClass> byDtName = new TreeMap<String, DTClass>();
     private int classBits;
 
-    @OnMessage(Netmessages.CSVCMsg_SendTable.class)
-    public void onSendTable(Context ctx, Netmessages.CSVCMsg_SendTable message) {
+    @OnMessage(S1NetMessages.CSVCMsg_SendTable.class)
+    public void onSendTable(Context ctx, S1NetMessages.CSVCMsg_SendTable message) {
 
         LinkedList<SendProp> props = new LinkedList<SendProp>();
         SendTable st = new SendTable(
@@ -28,7 +28,7 @@ public class DTClasses {
             props
         );
 
-        for (Netmessages.CSVCMsg_SendTable.sendprop_t sp : message.getPropsList()) {
+        for (S1NetMessages.CSVCMsg_SendTable.sendprop_t sp : message.getPropsList()) {
             props.add(
                 new SendProp(
                     st,

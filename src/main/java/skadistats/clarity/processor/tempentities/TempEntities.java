@@ -11,7 +11,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
-import skadistats.clarity.wire.s1.proto.Netmessages;
+import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 @Provides({ OnTempEntity.class })
 @UsesDTClasses
@@ -19,8 +19,8 @@ public class TempEntities {
 
     private final int[] indices = new int[Entities.MAX_PROPERTIES];
 
-    @OnMessage(Netmessages.CSVCMsg_TempEntities.class)
-    public void onTempEntities(Context ctx, Netmessages.CSVCMsg_TempEntities message) {
+    @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
+    public void onTempEntities(Context ctx, S1NetMessages.CSVCMsg_TempEntities message) {
         Event<OnTempEntity> ev = ctx.createEvent(OnTempEntity.class, Entity.class);
         if (ev.isListenedTo()) {
             BitStream stream = new BitStream(message.getEntityData());

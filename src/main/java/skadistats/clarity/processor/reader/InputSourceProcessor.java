@@ -19,7 +19,7 @@ import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.Networkbasetypes;
+import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -145,13 +145,13 @@ public class InputSourceProcessor {
                 bs.skip(size * 8);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                if (ev.isListenedTo() || (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class)) {
+                if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBits(size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
-                    if (unpackUserMessages && messageClass == Networkbasetypes.CSVCMsg_UserMessage.class) {
-                        Networkbasetypes.CSVCMsg_UserMessage userMessage = (Networkbasetypes.CSVCMsg_UserMessage) subMessage;
+                    if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
+                        NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
                         Class<? extends GeneratedMessage> umClazz = ctx.getEngineType().userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             log.warn("unknown usermessage of kind {}", userMessage.getMsgType());

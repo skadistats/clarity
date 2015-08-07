@@ -17,7 +17,7 @@ import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetmessagesCommon;
+import skadistats.clarity.wire.common.proto.NetMessages;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -77,8 +77,8 @@ public class Entities {
         baselineEntries.put(Integer.valueOf(key), new BaselineEntry(value));
     }
 
-    @OnMessage(NetmessagesCommon.CSVCMsg_PacketEntities.class)
-    public void onPacketEntities(Context ctx, NetmessagesCommon.CSVCMsg_PacketEntities message) {
+    @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
+    public void onPacketEntities(Context ctx, NetMessages.CSVCMsg_PacketEntities message) {
         BitStream stream = new BitStream(message.getEntityData());
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         int updateCount = message.getUpdatedEntries();

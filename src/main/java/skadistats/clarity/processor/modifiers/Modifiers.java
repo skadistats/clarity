@@ -6,7 +6,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
-import skadistats.clarity.wire.s1.proto.DotaModifiers;
+import skadistats.clarity.wire.s1.proto.S1DotaModifiers;
 
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {
@@ -14,8 +14,8 @@ public class Modifiers {
     @OnStringTableEntry("ActiveModifiers")
     public void onTableEntry(Context ctx, StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {
         if (value != null) {
-            DotaModifiers.CDOTAModifierBuffTableEntry message = DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
-            ctx.createEvent(OnModifierTableEntry.class, DotaModifiers.CDOTAModifierBuffTableEntry.class).raise(message);
+            S1DotaModifiers.CDOTAModifierBuffTableEntry message = S1DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
+            ctx.createEvent(OnModifierTableEntry.class, S1DotaModifiers.CDOTAModifierBuffTableEntry.class).raise(message);
         }
     }
 

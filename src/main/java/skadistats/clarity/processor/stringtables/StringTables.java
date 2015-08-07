@@ -16,6 +16,8 @@ import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 import java.util.*;
@@ -94,8 +96,8 @@ public class StringTables {
         }
     }
 
-    @OnMessage(skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_CreateStringTable.class)
-    public void onCreateStringTable(Context ctx, skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_CreateStringTable message) {
+    @OnMessage(S1NetMessages.CSVCMsg_CreateStringTable.class)
+    public void onCreateStringTable(Context ctx, S1NetMessages.CSVCMsg_CreateStringTable message) {
         if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
@@ -112,8 +114,8 @@ public class StringTables {
         numTables++;
     }
 
-    @OnMessage(skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, skadistats.clarity.wire.s1.proto.Netmessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(S1NetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, S1NetMessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
             decodeS1(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
@@ -170,8 +172,8 @@ public class StringTables {
         }
     }
 
-    @OnMessage(skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_CreateStringTable.class)
-    public void onCreateStringTable(Context ctx, skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_CreateStringTable message) throws IOException {
+    @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
+    public void onCreateStringTable(Context ctx, S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
         if (requestedTables.contains("*") || requestedTables.contains(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
@@ -196,8 +198,8 @@ public class StringTables {
         numTables++;
     }
 
-    @OnMessage(skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, skadistats.clarity.wire.s2.proto.Netmessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(S2NetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, S2NetMessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = byId.get(message.getTableId());
         if (table != null) {
             decodeS2(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
