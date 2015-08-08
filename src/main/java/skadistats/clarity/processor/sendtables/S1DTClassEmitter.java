@@ -4,10 +4,7 @@ import skadistats.clarity.decoder.SendTableFlattener;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.s1.PropType;
-import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.model.s1.SendProp;
-import skadistats.clarity.model.s1.SendTable;
+import skadistats.clarity.model.s1.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -46,8 +43,18 @@ public class S1DTClassEmitter {
                 )
             );
         }
-        DTClass dtClass = new DTClass(message.getNetTableName(), st);
+        DTClass dtClass = new S1DTClass(message.getNetTableName(), st);
         ctx.createEvent(OnDTClass.class, DTClass.class).raise(dtClass);
+    }
+
+    @OnMessage(Demo.CDemoClassInfo.class)
+    public void onClassInfo(Context ctx, Demo.CDemoClassInfo message) {
+        DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
+        for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
+            DTClass dt = dtClasses.forDtName(ct.getTableName());
+            dt.setClassId(ct.getClassId());
+            dtClasses.byClassId.put(ct.getClassId(), dt);
+        }
     }
 
     @OnMessage(Demo.CDemoSyncTick.class)

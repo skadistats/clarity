@@ -19,12 +19,16 @@ public class SendTableFlattener {
         this.receiveProps = new ArrayList<>(1024);
     }
 
+    private SendTable sendTableForDtName(String dtName) {
+        return dtClasses.forDtName(dtName).getSendTable();
+    }
+
     private void aggregateExclusions(SendTable table) {
         for (SendProp sp : table.getSendProps()) {
             if ((sp.getFlags() & PropFlag.EXCLUDE) != 0) {
                 exclusions.add(sp.getExcludeIdentifier());
             } else if (sp.getType() == PropType.DATATABLE) {
-                aggregateExclusions(dtClasses.sendTableForDtName(sp.getDtName()));
+                aggregateExclusions(sendTableForDtName(sp.getDtName()));
             }
         }
     }
@@ -49,12 +53,12 @@ public class SendTableFlattener {
             }
             if (sp.getType() == PropType.DATATABLE) {
                 if ((sp.getFlags() & PropFlag.COLLAPSIBLE) != 0) {
-                    gatherCollapsible(dtClasses.sendTableForDtName(sp.getDtName()), accumulator, nameBuf);
+                    gatherCollapsible(sendTableForDtName(sp.getDtName()), accumulator, nameBuf);
                 } else {
                     int l = nameBuf.length();
                     nameBuf.append(sp.getVarName());
                     nameBuf.append('.');
-                    gather(dtClasses.sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), nameBuf);
+                    gather(sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), nameBuf);
                     nameBuf.setLength(l);
                 }
             } else {
@@ -95,4 +99,5 @@ public class SendTableFlattener {
         gather(table, new LinkedList<SendProp>(), new StringBuilder());
         return sort();
     }
+
 }
