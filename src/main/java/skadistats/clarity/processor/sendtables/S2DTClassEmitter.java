@@ -2,8 +2,8 @@ package skadistats.clarity.processor.sendtables;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;

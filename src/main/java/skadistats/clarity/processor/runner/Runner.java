@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.runner;
 
-import skadistats.clarity.engine.EngineType;
+import skadistats.clarity.model.EngineType;
 
 public interface Runner<T extends Runner> {
 

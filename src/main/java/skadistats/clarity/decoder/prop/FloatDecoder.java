@@ -1,8 +1,8 @@
 package skadistats.clarity.decoder.prop;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.PropFlag;
-import skadistats.clarity.model.SendProp;
+import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.SendProp;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

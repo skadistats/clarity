@@ -2,8 +2,8 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
+import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 

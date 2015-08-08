@@ -1,10 +1,10 @@
 package skadistats.clarity.decoder.prop;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.PropFlag;
-import skadistats.clarity.model.PropType;
-import skadistats.clarity.model.SendProp;
 import skadistats.clarity.model.Vector;
+import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.PropType;
+import skadistats.clarity.model.s1.SendProp;
 
 public class VectorDecoder implements PropDecoder<Vector> {
 

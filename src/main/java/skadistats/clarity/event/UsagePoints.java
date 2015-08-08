@@ -3,7 +3,7 @@ package skadistats.clarity.event;
 import org.atteo.classindex.ClassIndex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.engine.EngineType;
+import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;

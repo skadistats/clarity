@@ -1,4 +1,4 @@
-package skadistats.clarity.model;
+package skadistats.clarity.model.s1;
 
 import java.util.List;
 

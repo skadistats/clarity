@@ -1,5 +1,8 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.model.s1.ReceiveProp;
+import skadistats.clarity.model.s1.SendTable;
+
 import java.util.HashMap;
 import java.util.Map;
 

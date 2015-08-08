@@ -7,6 +7,7 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.*;
+import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;

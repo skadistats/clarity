@@ -1,7 +1,7 @@
 package skadistats.clarity.event;
 
 import org.atteo.classindex.IndexAnnotated;
-import skadistats.clarity.engine.EngineType;
+import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.*;
 

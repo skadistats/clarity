@@ -1,4 +1,4 @@
-package skadistats.clarity.engine;
+package skadistats.clarity.model;
 
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.BitStream;

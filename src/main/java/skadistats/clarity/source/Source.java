@@ -1,6 +1,6 @@
 package skadistats.clarity.source;
 
-import skadistats.clarity.engine.EngineType;
+import skadistats.clarity.model.EngineType;
 import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.EOFException;

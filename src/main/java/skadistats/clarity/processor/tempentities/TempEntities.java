@@ -5,7 +5,7 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.ReceiveProp;
+import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.processor.entities.Entities;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;

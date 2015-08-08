@@ -3,7 +3,7 @@ package skadistats.clarity.processor.sendtables;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.SendTable;
+import skadistats.clarity.model.s1.SendTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
