@@ -17,6 +17,8 @@ Current status regarding Source 2:
 - combat log: working
 - DT-classes: in progress
 - entities: not at all
+- temp entities: well, no
+- modifiers: nope
 
 
 # Replay Data
