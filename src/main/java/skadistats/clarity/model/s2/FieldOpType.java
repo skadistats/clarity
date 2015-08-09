@@ -2,9 +2,7 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.decoder.BitStream;
 
-import java.util.Comparator;
-
-enum FieldOpType {
+public enum FieldOpType {
 
     PlusOne(36271) {
         @Override
@@ -57,14 +55,6 @@ enum FieldOpType {
     NonTopoComplexPack4Bits(99),
     FieldPathEncodeFinish(25474);
 
-    public static final Comparator<FieldOpType> OP_COMPARATOR = new Comparator<FieldOpType>() {
-        @Override
-        public int compare(FieldOpType o1, FieldOpType o2) {
-            int r = Integer.compare(o1.weight, o2.weight);
-            return r != 0 ? r : Integer.compare(o1.ordinal(), o2.ordinal());
-        }
-    };
-
     private final int weight;
 
     FieldOpType(int weight) {
@@ -75,4 +65,7 @@ enum FieldOpType {
         throw new UnsupportedOperationException(String.format("FieldOp '%s' not implemented!", this.toString()));
     }
 
+    public int getWeight() {
+        return weight;
+    }
 }
