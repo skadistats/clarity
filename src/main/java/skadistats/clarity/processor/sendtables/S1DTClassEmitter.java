@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.decoder.SendTableFlattener;
+import skadistats.clarity.decoder.s1.SendTableFlattener;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;

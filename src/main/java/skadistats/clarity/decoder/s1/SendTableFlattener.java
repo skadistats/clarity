@@ -1,4 +1,4 @@
-package skadistats.clarity.decoder;
+package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.s1.*;
 import skadistats.clarity.processor.sendtables.DTClasses;

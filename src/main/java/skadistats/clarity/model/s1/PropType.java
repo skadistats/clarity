@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s1;
 
-import skadistats.clarity.decoder.prop.*;
+import skadistats.clarity.decoder.s1.prop.*;
 
 public enum PropType {
     INT(new IntDecoder()),

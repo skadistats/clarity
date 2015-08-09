@@ -2,7 +2,7 @@ package skadistats.clarity.model.s1;
 
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.decoder.prop.PropDecoder;
+import skadistats.clarity.decoder.s1.prop.PropDecoder;
 
 public class ReceiveProp {
 
