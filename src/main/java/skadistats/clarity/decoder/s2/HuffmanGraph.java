@@ -2,10 +2,10 @@ package skadistats.clarity.decoder.s2;
 
 public class HuffmanGraph {
 
-    private final FieldPathDecoder.Node root;
+    private final HuffmanTree.Node root;
     private final StringBuilder g;
 
-    public HuffmanGraph(FieldPathDecoder.Node root) {
+    public HuffmanGraph(HuffmanTree.Node root) {
         this.root = root;
         this.g = new StringBuilder();
     }
@@ -19,21 +19,21 @@ public class HuffmanGraph {
         return g.toString();
     }
 
-    public void genNodesRecursive(FieldPathDecoder.Node node, String path) {
-        if (node instanceof FieldPathDecoder.InternalNode) {
-            FieldPathDecoder.InternalNode internal = (FieldPathDecoder.InternalNode) node;
+    public void genNodesRecursive(HuffmanTree.Node node, String path) {
+        if (node instanceof HuffmanTree.InternalNode) {
+            HuffmanTree.InternalNode internal = (HuffmanTree.InternalNode) node;
             g.append(String.format("%s [label=%s];\n", internal.getNum(), internal.getWeight()));
             genNodesRecursive(internal.getLeft(), path + "0");
             genNodesRecursive(internal.getRight(), path + "1");
         } else {
-            FieldPathDecoder.LeafNode leaf = (FieldPathDecoder.LeafNode) node;
+            HuffmanTree.LeafNode leaf = (HuffmanTree.LeafNode) node;
             g.append(String.format("%s [shape=record, label=\"{{%s|%s}|%s}\"];\n", leaf.getNum(), path, leaf.getWeight(), leaf.getOp().toString()));
         }
     }
 
-    public void genEdgesRecursive(FieldPathDecoder.Node node) {
-        if (node instanceof FieldPathDecoder.InternalNode) {
-            FieldPathDecoder.InternalNode internal = (FieldPathDecoder.InternalNode) node;
+    public void genEdgesRecursive(HuffmanTree.Node node) {
+        if (node instanceof HuffmanTree.InternalNode) {
+            HuffmanTree.InternalNode internal = (HuffmanTree.InternalNode) node;
             g.append(String.format("%s -> %s [label=0];\n", internal.getNum(), internal.getLeft().getNum()));
             genEdgesRecursive(internal.getLeft());
             g.append(String.format("%s -> %s [label=1];\n", internal.getNum(), internal.getRight().getNum()));
