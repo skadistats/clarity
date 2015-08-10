@@ -10,6 +10,37 @@ public class HuffmanTree {
     private int count = 0;
     private int num = 1;
 
+    public Node buildStatic() {
+        int num = 0;
+        InternalNode root = new InternalNode(num++);
+        for (FieldOpType op : FieldOpType.values()) {
+            String prefix = op.getPrefix();
+            if (prefix != null) {
+                InternalNode n = root;
+                for (int i = 0; i < prefix.length() - 1; i++) {
+                    if (prefix.charAt(i) == '0') {
+                        if (n.left == null) {
+                            n.left = new InternalNode(num++);
+                        }
+                        n = (InternalNode) n.left;
+                    } else {
+                        if (n.right == null) {
+                            n.right = new InternalNode(num++);
+                        }
+                        n = (InternalNode) n.right;
+                    }
+                }
+                LeafNode leaf = new LeafNode(op, num++);
+                if (prefix.charAt(prefix.length() - 1) == '0') {
+                    n.left = leaf;
+                } else {
+                    n.right = leaf;
+                }
+            }
+        }
+        return root;
+    }
+
     public Node build() {
         PriorityQueue<Node> queue = new PriorityQueue<>();
         int n = 1;
@@ -20,7 +51,6 @@ public class HuffmanTree {
         while (queue.size() > 1) {
             queue.offer(new InternalNode(queue.poll(), queue.poll(), n++));
         }
-        System.out.println(new HuffmanGraph(queue.peek()).generate());
         return queue.peek();
     }
 
@@ -58,8 +88,6 @@ public class HuffmanTree {
             count = lastIdx;
             add(new InternalNode(node1, node2, num++));
         }
-
-        System.out.println(new HuffmanGraph(node1).generate());
         return node1;
     }
 
@@ -155,12 +183,15 @@ public class HuffmanTree {
     }
 
     static class InternalNode extends Node {
-        private final Node left;
-        private final Node right;
+        private Node left;
+        private Node right;
         public InternalNode(Node left, Node right, int num) {
             super(left.weight + right.weight, num);
             this.left = left;
             this.right = right;
+        }
+        public InternalNode(int num) {
+            super(0, num);
         }
         public Node getLeft() {
             return left;

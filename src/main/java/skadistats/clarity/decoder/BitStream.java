@@ -42,6 +42,10 @@ public class BitStream {
         len = len * 8; // from now on size in bits
     }
 
+    public int pos() {
+        return pos;
+    }
+
     public int remaining() {
         return len - pos;
     }
