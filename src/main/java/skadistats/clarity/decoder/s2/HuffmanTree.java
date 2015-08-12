@@ -1,49 +1,39 @@
 package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.model.s2.FieldOpType;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.PriorityQueue;
 
 public class HuffmanTree {
 
-    private final Node[] nodes = new Node[200];
-    private int count = 0;
-    private int num = 1;
+    final Node root;
+    private final int[][] tree;
 
-    public Node buildStatic() {
-        int num = 0;
-        InternalNode root = new InternalNode(num++);
-        for (FieldOpType op : FieldOpType.values()) {
-            String prefix = op.getPrefix();
-            if (prefix != null) {
-                InternalNode n = root;
-                for (int i = 0; i < prefix.length() - 1; i++) {
-                    if (prefix.charAt(i) == '0') {
-                        if (n.left == null) {
-                            n.left = new InternalNode(num++);
-                        }
-                        n = (InternalNode) n.left;
-                    } else {
-                        if (n.right == null) {
-                            n.right = new InternalNode(num++);
-                        }
-                        n = (InternalNode) n.right;
-                    }
-                }
-                LeafNode leaf = new LeafNode(op, num++);
-                if (prefix.charAt(prefix.length() - 1) == '0') {
-                    n.left = leaf;
-                } else {
-                    n.right = leaf;
-                }
-            }
-        }
-        return root;
+    public HuffmanTree() {
+        root = buildTree();
+
+        List<int[]> akku = new ArrayList<>();
+        buildFixedTreeR(akku, root);
+
+        tree = reverseTree(akku);
+
+        //dump(0, "");
     }
 
-    public Node build() {
+    public FieldOpType decodeOp(BitStream bs) {
+        int i = 0;
+        do {
+            i = tree[i][bs.readNumericBits(1)];
+        } while (i >= 0);
+        return FieldOpType.values()[- i - 1];
+    }
+
+    private Node buildTree() {
         PriorityQueue<Node> queue = new PriorityQueue<>();
-        int n = 1;
+        int n = 0;
         for (FieldOpType op : FieldOpType.values()) {
             LeafNode newLeaf = new LeafNode(op, n++);
             queue.offer(newLeaf);
@@ -54,112 +44,48 @@ public class HuffmanTree {
         return queue.peek();
     }
 
+    private int buildFixedTreeR(List<int[]> akku, Node n) {
+        akku.add(
+            new int[] {
+                (n.left  instanceof LeafNode) ? - n.left.op.ordinal() - 1 : buildFixedTreeR(akku, n.left),
+                (n.right instanceof LeafNode) ? - n.right.op.ordinal() - 1 : buildFixedTreeR(akku, n.right)
+            }
+        );
+        return akku.size() - 1;
+    }
 
-    public Node buildValve() {
-        for (FieldOpType op : FieldOpType.values()) {
-            add(new LeafNode(op, num++));
+    private int[][] reverseTree(List<int[]> akku) {
+        int r = akku.size() - 1;
+        int[][] reverse = new int[r + 1][2];
+        for (int i = 0; i <= r; i++) {
+            for (int j = 0; j <= 1; j++) {
+                int s = akku.get(r - i)[j];
+                reverse[i][j] = s < 0 ? s : r - s;
+            }
         }
-        Node node1, node2;
-        while (true) {
-            node1 = nodes[0];
-            if (count < 2) break;
-            node2 = nodes[0];
-            if (count != 1) {
-                node2 = nodes[count - 1];
-                nodes[0] = node2;
-            }
-            int lastIdx = count - 1;
-            if (lastIdx >= 2) {
-                magicShuffle(((count + ((count + 1) >> 31) + 1) >> 1) - 1, count - 1);
-                node2 = nodes[0];
-            }
-            if (lastIdx > 0) {
-                int preLastIdx = lastIdx - 1;
-                if (preLastIdx > 0) {
-                    nodes[0] = nodes[preLastIdx];
-                    if (preLastIdx >= 2) {
-                        magicShuffle(preLastIdx / 2, preLastIdx);
-                    }
-                    lastIdx = preLastIdx;
-                } else {
-                    lastIdx = 0;
-                }
-            }
-            count = lastIdx;
-            add(new InternalNode(node1, node2, num++));
-        }
-        return node1;
+        return reverse;
     }
 
-    private void add(Node node){
-        nodes[count] = node;
-        if (count != 0) {
-            int i = count;
-            int j;
-            do {
-                j = i;
-                i = ((i + ((i + 1) >> 31) + 1) >> 1) - 1;
-                if (nodeLess(nodes[j], nodes[i])) break;
-                swap(i, j);
-            } while (i != 0);
-        }
-        count++;
-    }
-
-    private void magicShuffle(int middle, int lastIdx) {
-        int left, right, pos;
-        pos = 0;
-        do {
-            right = 2 * pos + 1;
-            left = pos;
-            if (right < lastIdx) {
-                if (!nodeLess(nodes[pos], nodes[right])) {
-                    right = pos;
-                }
-                left = right;
-            }
-            right = 2 * pos + 2;
-            if (right < lastIdx && nodeLess(nodes[left], nodes[right])) {
-                left = right;
-            }
-            if (left == pos) break;
-            swap(pos, left);
-            pos = left;
-        } while (left < middle);
-    }
-
-    private void swap(int i, int j) {
-        Node temp = nodes[i];
-        nodes[i] = nodes[j];
-        nodes[j] = temp;
-    }
-
-    private boolean nodeLess(HuffmanTree.Node n1, HuffmanTree.Node n2) {
-        boolean result = true;
-        if (n1.weight <= n2.weight) {
-            if (n1.weight >= n2.weight) {
-                result = n1.num < n2.num;
+    private void dump(int i, String prefix) {
+        for (int s = 0; s < 2; s++) {
+            if (tree[i][s] < 0) {
+                System.out.println(FieldOpType.values()[- tree[i][s] - 1] + ": " + prefix + s);
             } else {
-                result = false;
+                dump(tree[i][s], prefix + s);
             }
         }
-        return result;
     }
 
     static abstract class Node implements Comparable<Node> {
-        private final int weight;
-        private final int num;
+        final int weight;
+        final int num;
+        FieldOpType op;
+        Node left;
+        Node right;
         public Node(int weight, int num) {
             this.weight = weight;
             this.num = num;
         }
-        public int getWeight() {
-            return weight;
-        }
-        public int getNum() {
-            return num;
-        }
-
         @Override
         public int compareTo(Node o) {
             int r = Integer.compare(weight, o.weight);
@@ -168,13 +94,9 @@ public class HuffmanTree {
     }
 
     static class LeafNode extends Node {
-        private final FieldOpType op;
         public LeafNode(FieldOpType op, int num) {
-            super(op.getWeight(), num);
+            super(Math.max(op.getWeight(), 1), num);
             this.op = op;
-        }
-        public FieldOpType getOp() {
-            return op;
         }
         @Override
         public String toString() {
@@ -183,25 +105,14 @@ public class HuffmanTree {
     }
 
     static class InternalNode extends Node {
-        private Node left;
-        private Node right;
         public InternalNode(Node left, Node right, int num) {
             super(left.weight + right.weight, num);
             this.left = left;
             this.right = right;
         }
-        public InternalNode(int num) {
-            super(0, num);
-        }
-        public Node getLeft() {
-            return left;
-        }
-        public Node getRight() {
-            return right;
-        }
         @Override
         public String toString() {
-            return String.format("(%s)", getWeight());
+            return String.format("(%s)", weight);
         }
     }
 

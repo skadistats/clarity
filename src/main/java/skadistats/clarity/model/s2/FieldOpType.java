@@ -4,31 +4,31 @@ import skadistats.clarity.decoder.BitStream;
 
 public enum FieldOpType {
 
-    PlusOne(36271, "0") {
+    PlusOne(36271) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last] += 1;
         }
     },
-    PlusTwo(10334, "1110") {
+    PlusTwo(10334) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last] += 2;
         }
     },
-    PlusThree(1375, "110010") {
+    PlusThree(1375) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last] += 3;
         }
     },
-    PlusFour(646, "11011111") {
+    PlusFour(646) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last] += 4;
         }
     },
-    PlusN(4128, "11010") {
+    PlusN(4128) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int bc : BIT_COUNTS) {
@@ -38,7 +38,7 @@ public enum FieldOpType {
             }
         }
     },
-    PushOneLeftDeltaZeroRightZero(35, "110110001101") {
+    PushOneLeftDeltaZeroRightZero(35) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[++fp.last] = 0;
@@ -55,14 +55,14 @@ public enum FieldOpType {
             }
         }
     },
-    PushOneLeftDeltaOneRightZero(521, "11011010") {
+    PushOneLeftDeltaOneRightZero(521) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last]++;
             fp.path[++fp.last] = 0;
         }
     },
-    PushOneLeftDeltaOneRightNonZero(2942, "11000") {
+    PushOneLeftDeltaOneRightNonZero(2942) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last]++;
@@ -78,14 +78,20 @@ public enum FieldOpType {
     PushOneLeftDeltaNRightNonZero(471),
     PushOneLeftDeltaNRightNonZeroPack6Bits(10530),
     PushOneLeftDeltaNRightNonZeroPack8Bits(251),
-    PushTwoLeftDeltaZero(0, "110110001100100110000000000") {
+    PushTwoLeftDeltaZero(0) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[++fp.last] = 0;
             fp.path[++fp.last] = 0;
         }
     },
-    PushTwoPack5LeftDeltaZero(0),
+    PushTwoPack5LeftDeltaZero(0) {
+        @Override
+        public void execute(FieldPath fp, BitStream bs) {
+            fp.path[++fp.last] = bs.readNumericBits(5);
+            fp.path[++fp.last] = bs.readNumericBits(5);
+        }
+    },
     PushThreeLeftDeltaZero(0),
     PushThreePack5LeftDeltaZero(0),
     PushTwoLeftDeltaOne(0),
@@ -98,14 +104,14 @@ public enum FieldOpType {
     PushThreePack5LeftDeltaN(0),
     PushN(0),
     PushNAndNonTopographical(310),
-    PopOnePlusOne(2, "110110001100001") {
+    PopOnePlusOne(2) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[--fp.last]++;
         }
     },
     PopOnePlusN(0),
-    PopAllButOnePlusOne(1837, "110011") {
+    PopAllButOnePlusOne(1837) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.last = 0;
@@ -115,7 +121,7 @@ public enum FieldOpType {
     PopAllButOnePlusN(149),
     PopAllButOnePlusNPack3Bits(300),
     PopAllButOnePlusNPack6Bits(634),
-    PopNPlusOne(0, "1101100011000110") {
+    PopNPlusOne(0) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int bc : BIT_COUNTS) {
@@ -129,7 +135,7 @@ public enum FieldOpType {
     },
     PopNPlusN(0),
     PopNAndNonTopographical(1),
-    NonTopoComplex(76, "11011000111") {
+    NonTopoComplex(76) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
@@ -141,7 +147,7 @@ public enum FieldOpType {
         }
     },
     NonTopoPenultimatePluseOne(271),
-    NonTopoComplexPack4Bits(99, "1101100010") {
+    NonTopoComplexPack4Bits(99) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
@@ -151,7 +157,7 @@ public enum FieldOpType {
             }
         }
     },
-    FieldPathEncodeFinish(25474, "10") {
+    FieldPathEncodeFinish(25474) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
         }
@@ -160,15 +166,9 @@ public enum FieldOpType {
     private static final int[] BIT_COUNTS = {2, 4, 10, 17, 30};
 
     private final int weight;
-    private final String prefix;
 
     FieldOpType(int weight) {
-        this(weight, null);
-    }
-
-    FieldOpType(int weight, String prefix) {
         this.weight = weight;
-        this.prefix = prefix;
     }
 
     public void execute(FieldPath fp, BitStream bs) {
@@ -179,7 +179,4 @@ public enum FieldOpType {
         return weight;
     }
 
-    public String getPrefix() {
-        return prefix;
-    }
 }
