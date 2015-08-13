@@ -32,8 +32,8 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int bc : BIT_COUNTS) {
-                if (bs.readNumericBits(1) == 1) {
-                    fp.path[fp.last] += bs.readNumericBits(bc) + 5;
+                if (bs.readBits(1) == 1) {
+                    fp.path[fp.last] += bs.readBits(bc) + 5;
                 }
             }
         }
@@ -48,8 +48,8 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int bc : BIT_COUNTS) {
-                if (bs.readNumericBits(1) == 1) {
-                    fp.path[++fp.last] = bs.readNumericBits(bc);
+                if (bs.readBits(1) == 1) {
+                    fp.path[++fp.last] = bs.readBits(bc);
                     return;
                 }
             }
@@ -67,8 +67,8 @@ public enum FieldOpType {
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last]++;
             for (int bc : BIT_COUNTS) {
-                if (bs.readNumericBits(1) == 1) {
-                    fp.path[++fp.last] = bs.readNumericBits(bc);
+                if (bs.readBits(1) == 1) {
+                    fp.path[++fp.last] = bs.readBits(bc);
                     return;
                 }
             }
@@ -88,8 +88,8 @@ public enum FieldOpType {
     PushTwoPack5LeftDeltaZero(0) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
-            fp.path[++fp.last] = bs.readNumericBits(5);
-            fp.path[++fp.last] = bs.readNumericBits(5);
+            fp.path[++fp.last] = bs.readBits(5);
+            fp.path[++fp.last] = bs.readBits(5);
         }
     },
     PushThreeLeftDeltaZero(0),
@@ -125,8 +125,8 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int bc : BIT_COUNTS) {
-                if (bs.readNumericBits(1) == 1) {
-                    fp.last -= bs.readNumericBits(bc);
+                if (bs.readBits(1) == 1) {
+                    fp.last -= bs.readBits(bc);
                     fp.path[fp.last]++;
                     return;
                 }
@@ -139,9 +139,8 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
-                if (bs.readNumericBits(1) == 1) {
-                    // TODO: THIS IS BUGGY, need to read as signed
-                    fp.path[i] += bs.readVarInt();
+                if (bs.readBits(1) == 1) {
+                    fp.path[i] += bs.readVarInt32();
                 }
             }
         }
@@ -151,8 +150,8 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
-                if (bs.readNumericBits(1) == 1) {
-                    fp.path[i] += bs.readNumericBits(4) - 7;
+                if (bs.readBits(1) == 1) {
+                    fp.path[i] += bs.readBits(4) - 7;
                 }
             }
         }
@@ -178,5 +177,6 @@ public enum FieldOpType {
     public int getWeight() {
         return weight;
     }
+
 
 }

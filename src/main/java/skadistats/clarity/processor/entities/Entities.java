@@ -2,6 +2,7 @@ package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -95,15 +96,15 @@ public class Entities {
         ReceiveProp[] receiveProps;
 
         while (updateCount-- != 0) {
-            entityIndex = stream.readEntityIndex(entityIndex);
-            pvs = stream.readNumericBits(2);
+            entityIndex += stream.readUBitVar() + 1;
+            pvs = stream.readBits(2);
             if ((pvs & 1) == 0) {
                 if ((pvs & 2) != 0) {
-                    cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()));
-                    serial = stream.readNumericBits(10);
+                    cls = dtClasses.forClassId(stream.readBits(dtClasses.getClassBits()));
+                    serial = stream.readBits(10);
                     base = getBaseline(dtClasses, cls.getClassId());
                     state = Arrays.copyOf(base, base.length);
-                    cIndices = stream.readEntityPropList(indices);
+                    cIndices = Util.readS1EntityPropList(stream, indices);
                     receiveProps = cls.getReceiveProps();
                     for (int ci = 0; ci < cIndices; ci++) {
                         int o = indices[ci];
@@ -119,7 +120,7 @@ public class Entities {
                     cls = entity.getDtClass();
                     entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
-                    cIndices = stream.readEntityPropList(indices);
+                    cIndices = Util.readS1EntityPropList(stream, indices);
                     receiveProps = cls.getReceiveProps();
                     for (int ci = 0; ci < cIndices; ci++) {
                         int o = indices[ci];
@@ -138,8 +139,8 @@ public class Entities {
             }
         }
         if (message.getIsDelta()) {
-            while (stream.readNumericBits(1) == 1) {
-                entityIndex = stream.readNumericBits(11); // max is 2^11-1, or 2047
+            while (stream.readBits(1) == 1) {
+                entityIndex = stream.readBits(11); // max is 2^11-1, or 2047
                 if (evDeleted != null) {
                     evDeleted.raise(entities[entityIndex]);
                 }
@@ -155,7 +156,7 @@ public class Entities {
             ReceiveProp[] receiveProps = cls.getReceiveProps();
             BitStream stream = new BitStream(be.rawBaseline);
             be.baseline = new Object[receiveProps.length];
-            int cIndices = stream.readEntityPropList(indices);
+            int cIndices = Util.readS1EntityPropList(stream, indices);
             for (int ci = 0; ci < cIndices; ci++) {
                 int o = indices[ci];
                 be.baseline[o] = receiveProps[o].decode(stream);

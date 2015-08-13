@@ -30,7 +30,7 @@ public enum EngineType {
         }
         @Override
         public int readEmbeddedKind(BitStream bs) {
-            return bs.readVarInt();
+            return bs.readVarUInt32();
         }
     },
 
@@ -55,7 +55,7 @@ public enum EngineType {
         }
         @Override
         public int readEmbeddedKind(BitStream bs) {
-            return bs.readEntityIndex(-1);
+            return bs.readUBitVar();
         }
     };
 

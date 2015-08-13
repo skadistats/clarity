@@ -26,7 +26,7 @@ public class HuffmanTree {
     public FieldOpType decodeOp(BitStream bs) {
         int i = 0;
         do {
-            i = tree[i][bs.readNumericBits(1)];
+            i = tree[i][bs.readBits(1)];
         } while (i >= 0);
         return FieldOpType.values()[- i - 1];
     }
@@ -35,8 +35,7 @@ public class HuffmanTree {
         PriorityQueue<Node> queue = new PriorityQueue<>();
         int n = 0;
         for (FieldOpType op : FieldOpType.values()) {
-            LeafNode newLeaf = new LeafNode(op, n++);
-            queue.offer(newLeaf);
+            queue.offer(new LeafNode(op, n++));
         }
         while (queue.size() > 1) {
             queue.offer(new InternalNode(queue.poll(), queue.poll(), n++));

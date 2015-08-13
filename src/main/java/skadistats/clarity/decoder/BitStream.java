@@ -3,7 +3,6 @@ package skadistats.clarity.decoder;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.processor.entities.Entities;
 
 import java.io.IOException;
 
@@ -54,7 +53,7 @@ public class BitStream {
         pos = pos + n;
     }
 
-    public int readNumericBits(int n) {
+    public int readBits(int n) {
         int start = pos >> 6;
         int end = (pos + n - 1) >> 6;
         int s = pos & 63;
@@ -69,52 +68,74 @@ public class BitStream {
         return (int) ret;
     }
 
-    public byte[] readBits(int num) {
-        byte[] result = new byte[(num + 7) / 8];
+    public byte[] readBytes(int n) {
+        byte[] result = new byte[(n + 7) / 8];
         int i = 0;
-        while (num > 7) {
-            num -= 8;
-            result[i] = (byte) readNumericBits(8);
+        while (n > 7) {
+            n -= 8;
+            result[i] = (byte) readBits(8);
             i++;
         }
-        if (num != 0) {
-            result[i] = (byte) readNumericBits(num);
+        if (n != 0) {
+            result[i] = (byte) readBits(n);
         }
         return result;
     }
 
-    public String readString(int num) {
+    public String readString(int n) {
         StringBuilder buf = new StringBuilder();
-        while (num > 0) {
-            char c = (char) readNumericBits(8);
+        while (n > 0) {
+            char c = (char) readBits(8);
             if (c == 0) {
                 break;
             }
             buf.append(c);
-            num--;
+            n--;
         }
         return buf.toString();
     }
 
-    public int readVarInt() {
-        int shift = 0;
-        int value = 0;
-        int bits;
+    public int readVarUInt32() {
+        int s = 0;
+        int v = 0;
+        int b;
         while (true) {
-            bits = readNumericBits(8);
-            value |= (bits & 0x7F) << shift;
-            shift += 7;
-            if ((bits & 0x80) == 0 || shift == 35) {
-                return value;
+            b = readBits(8);
+            v |= (b & 0x7F) << s;
+            s += 7;
+            if ((b & 0x80) == 0 || s == 35) {
+                return v;
             }
         }
     }
 
-    public int peekBit(int pos) {
-        int start = pos >> 6;
-        int s = pos & 63;
-        long ret = (data[start] >>> s) & masks[1];
-        return (int) ret;
+    public int readVarInt32() {
+        int v = readVarUInt32();
+        return (v >> 1) ^ -(v & 1);
+    }
+
+    public int readUBitVar() {
+        // Thanks to Robin Dietrich for providing a clean version of this code :-)
+
+        // The header looks like this: [XY00001111222233333333333333333333] where everything > 0 is optional.
+        // The first 2 bits (X and Y) tell us how much (if any) to read other than the 6 initial bits:
+        // Y set -> read 4
+        // X set -> read 8
+        // X + Y set -> read 28
+
+        int v = readBits(6);
+        switch (v & 48) {
+            case 16:
+                v = (v & 15) | (readBits(4) << 4);
+                break;
+            case 32:
+                v = (v & 15) | (readBits(8) << 4);
+                break;
+            case 48:
+                v = (v & 15) | (readBits(28) << 4);
+                break;
+        }
+        return v;
     }
 
     public String toString() {
@@ -129,45 +150,12 @@ public class BitStream {
         return buf.toString();
     }
 
-    public int readEntityIndex(int baseIndex) {
-        // Thanks to Robin Dietrich for providing a clean version of this code :-)
-
-        // The header looks like this: [XY00001111222233333333333333333333] where everything > 0 is optional.
-        // The first 2 bits (X and Y) tell us how much (if any) to read other than the 6 initial bits:
-        // Y set -> read 4
-        // X set -> read 8
-        // X + Y set -> read 28
-
-        int offset = readNumericBits(6);
-        switch (offset & 48) {
-            case 16:
-                offset = (offset & 15) | (readNumericBits(4) << 4);
-                break;
-            case 32:
-                offset = (offset & 15) | (readNumericBits(8) << 4);
-                break;
-            case 48:
-                offset = (offset & 15) | (readNumericBits(28) << 4);
-                break;
-        }
-        return baseIndex + offset + 1;
+    private int peekBit(int pos) {
+        int start = pos >> 6;
+        int s = pos & 63;
+        long ret = (data[start] >>> s) & masks[1];
+        return (int) ret;
     }
 
-    public int readEntityPropList(int[] indices) {
-        int i = 0;
-        int cursor = -1;
-        while (true) {
-            if (readNumericBits(1) == 1) {
-                cursor += 1;
-            } else {
-                int offset = readVarInt();
-                if (offset == Entities.MAX_PROPERTIES) {
-                    return i;
-                } else {
-                    cursor += offset + 1;
-                }
-            }
-            indices[i++] = cursor;
-        }
-    }
+
 }

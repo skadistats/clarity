@@ -15,7 +15,7 @@ public class IntDecoder implements PropDecoder<Integer> {
         if ((flags & PropFlag.ENCODED_AGAINST_TICKCOUNT) != 0) {
             // this integer is encoded against tick count (?)...
             // in this case, we read a protobuf-style varint
-            v = stream.readVarInt();
+            v = stream.readVarUInt32();
             if (isUnsigned) {
                 return v; // as is -- why?
             }
@@ -24,7 +24,7 @@ public class IntDecoder implements PropDecoder<Integer> {
             return (-(v & PropFlag.UNSIGNED)) ^ (v >>> PropFlag.UNSIGNED);
         }
 
-        v = stream.readNumericBits(prop.getNumBits());
+        v = stream.readBits(prop.getNumBits());
         int s = (0x80000000 >>> (32 - prop.getNumBits())) & (selfUnsigned - PropFlag.UNSIGNED);
         return (v ^ s) - s;
     }
