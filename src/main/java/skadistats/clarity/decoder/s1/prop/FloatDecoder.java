@@ -48,20 +48,20 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeCoord(BitStream stream) {
-        boolean hasInt = stream.readNumericBits(1) == 1; // integer component present?
-        boolean hasFrac = stream.readNumericBits(1) == 1; // fractional component present?
+        boolean hasInt = stream.readBits(1) == 1; // integer component present?
+        boolean hasFrac = stream.readBits(1) == 1; // fractional component present?
 
         if (!(hasInt || hasFrac)) {
             return 0.0f;
         }
-        boolean sign = stream.readNumericBits(1) == 1;
+        boolean sign = stream.readBits(1) == 1;
         int i = 0;
         int f = 0;
         if (hasInt) {
-            i = stream.readNumericBits(COORD_INTEGER_BITS) + 1;
+            i = stream.readBits(COORD_INTEGER_BITS) + 1;
         }
         if (hasFrac) {
-            f = stream.readNumericBits(COORD_FRACTIONAL_BITS);
+            f = stream.readBits(COORD_FRACTIONAL_BITS);
         }
         float v = i + ((float) f * COORD_RESOLUTION);
         return sign ? -v : v;
@@ -73,48 +73,48 @@ public class FloatDecoder implements PropDecoder<Float> {
         boolean sign = false;
         float value = 0.0f;
 
-        boolean inBounds = stream.readNumericBits(1) == 1;
+        boolean inBounds = stream.readBits(1) == 1;
         if (integral) {
-            i = stream.readNumericBits(1);
+            i = stream.readBits(1);
             if (i != 0) {
-                sign = stream.readNumericBits(1) == 1;
-                value = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+                sign = stream.readBits(1) == 1;
+                value = stream.readBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
-            i = stream.readNumericBits(1);
-            sign = stream.readNumericBits(1) == 1;
+            i = stream.readBits(1);
+            sign = stream.readBits(1) == 1;
             if (i != 0) {
-                i = stream.readNumericBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+                i = stream.readBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
-            f = stream.readNumericBits(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
+            f = stream.readBits(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
             value = i + ((float) f * (lowPrecision ? COORD_RESOLUTION_LOWPRECISION : COORD_RESOLUTION));
         }
         return sign ? -value : value;
     }
 
     public float decodeNoScale(BitStream stream) {
-        return ByteBuffer.wrap(stream.readBits(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+        return ByteBuffer.wrap(stream.readBytes(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
     }
 
     public float decodeNormal(BitStream stream) {
-        boolean isNegative = stream.readNumericBits(1) == 1;
-        int l = stream.readNumericBits(NORMAL_FRACTIONAL_BITS);
+        boolean isNegative = stream.readBits(1) == 1;
+        int l = stream.readBits(NORMAL_FRACTIONAL_BITS);
         float v = (float) l * NORMAL_RESOLUTION;
         return isNegative ? -v : v;
     }
 
     public float decodeCellCoord(BitStream stream, int numBits) {
-        int v = stream.readNumericBits(numBits);
-        return v + COORD_RESOLUTION * stream.readNumericBits(COORD_FRACTIONAL_BITS);
+        int v = stream.readBits(numBits);
+        return v + COORD_RESOLUTION * stream.readBits(COORD_FRACTIONAL_BITS);
     }
 
     public float decodeCellCoordIntegral(BitStream stream, int numBits) {
-        int v = stream.readNumericBits(numBits);
+        int v = stream.readBits(numBits);
         return (float) v;
     }
 
     public float decodeDefault(BitStream stream, int numBits, float high, float low) {
-        int t = stream.readNumericBits(numBits);
+        int t = stream.readBits(numBits);
         float f = (float) t / ((1 << numBits) - 1);
         return f * (high - low) + low;
     }

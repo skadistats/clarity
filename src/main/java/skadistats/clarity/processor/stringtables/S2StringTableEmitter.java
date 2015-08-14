@@ -60,17 +60,17 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readNumericBits(1) == 1) {
+            if (stream.readBits(1) == 1) {
                 index++;
             } else {
-                index = stream.readVarInt() + 1;
+                index = stream.readVarUInt32() + 1;
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readNumericBits(1) == 1) {
-                if (stream.readNumericBits(1) == 1) {
-                    int basis = stream.readNumericBits(5);
-                    int length = stream.readNumericBits(5);
+            if (stream.readBits(1) == 1) {
+                if (stream.readBits(1) == 1) {
+                    int basis = stream.readBits(5);
+                    int length = stream.readBits(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
                     nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
                 } else {
@@ -83,18 +83,18 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readNumericBits(1) == 1) {
+            if (stream.readBits(1) == 1) {
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
-                    bitLength = stream.readNumericBits(14) * 8;
-                    int mysteryBits = stream.readNumericBits(3);
+                    bitLength = stream.readBits(14) * 8;
+                    int mysteryBits = stream.readBits(3);
                     if (mysteryBits != 0) {
                         log.info("mystery bits are NOT zero, but " + mysteryBits);
                     }
                 }
-                value = ByteString.copyFrom(stream.readBits(bitLength));
+                value = ByteString.copyFrom(stream.readBytes(bitLength));
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

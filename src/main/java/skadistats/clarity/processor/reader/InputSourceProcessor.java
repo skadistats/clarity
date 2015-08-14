@@ -138,7 +138,7 @@ public class InputSourceProcessor {
                 // this seems to happen with console recorded replays
                 break;
             }
-            int size = bs.readVarInt();
+            int size = bs.readVarUInt32();
             Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 log.warn("unknown embedded message of kind {}", kind);
@@ -146,7 +146,7 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBits(size * 8)));
+                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBytes(size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }

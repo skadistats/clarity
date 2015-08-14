@@ -47,25 +47,25 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
 
-        boolean mysteryFlag = stream.readNumericBits(1) == 1;
+        boolean mysteryFlag = stream.readBits(1) == 1;
         int index = -1;
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readNumericBits(1) == 1) {
+            if (stream.readBits(1) == 1) {
                 index++;
             } else {
-                index = stream.readNumericBits(bitsPerIndex);
+                index = stream.readBits(bitsPerIndex);
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readNumericBits(1) == 1) {
-                if (mysteryFlag && stream.readNumericBits(1) == 1) {
+            if (stream.readBits(1) == 1) {
+                if (mysteryFlag && stream.readBits(1) == 1) {
                     throw new RuntimeException("mystery_flag assert failed!");
                 }
-                if (stream.readNumericBits(1) == 1) {
-                    int basis = stream.readNumericBits(5);
-                    int length = stream.readNumericBits(5);
+                if (stream.readBits(1) == 1) {
+                    int basis = stream.readBits(5);
+                    int length = stream.readBits(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
                     nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
                 } else {
@@ -78,15 +78,15 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readNumericBits(1) == 1) {
+            if (stream.readBits(1) == 1) {
                 int bitLength = 0;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
-                    bitLength = stream.readNumericBits(14) * 8;
+                    bitLength = stream.readBits(14) * 8;
                 }
 
-                value = ByteString.copyFrom(stream.readBits(bitLength));
+                value = ByteString.copyFrom(stream.readBytes(bitLength));
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

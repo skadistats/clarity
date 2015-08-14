@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.tempentities;
 
 import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
@@ -29,13 +30,13 @@ public class TempEntities {
             ReceiveProp[] receiveProps = null;
             int count = message.getNumEntries();
             while (count-- > 0) {
-                stream.readNumericBits(1); // seems to be always 0
-                if (stream.readNumericBits(1) == 1) {
-                    cls = dtClasses.forClassId(stream.readNumericBits(dtClasses.getClassBits()) - 1);
+                stream.readBits(1); // seems to be always 0
+                if (stream.readBits(1) == 1) {
+                    cls = dtClasses.forClassId(stream.readBits(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
                 Object[] state = new Object[receiveProps.length];
-                int cIndices = stream.readEntityPropList(indices);
+                int cIndices = Util.readS1EntityPropList(stream, indices);
                 for (int ci = 0; ci < cIndices; ci++) {
                     int o = indices[ci];
                     state[o] = receiveProps[o].decode(stream);
