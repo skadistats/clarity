@@ -7,8 +7,13 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -51,11 +56,11 @@ public class SourceTest {
 			public Void answer(InvocationOnMock invocation) {
 				Object[] args = invocation.getArguments();
 				byte[] dst = (byte[]) args[0];
-				
+
 				for(int i = 0; i < dst.length; i++){
 					dst[i] = (byte)i;
 				}
-				
+
 				return null;
 			}
 		};
@@ -65,6 +70,44 @@ public class SourceTest {
 		byte[] actual = source.readBytes(5);
 
 		assertArrayEquals(expected, actual);
+	}
+
+	@Test
+	public void readFixedInt32_bigEndian() throws IOException {
+		source = spy(source);
+
+		ByteBuffer returnValue = ByteBuffer.allocate(4).putInt(Integer.MAX_VALUE);
+		returnValue = returnValue.order(ByteOrder.LITTLE_ENDIAN);
+		returnValue.flip();
+		
+		ByteBuffer expected = ByteBuffer.allocate(4).putInt(Integer.MAX_VALUE);
+		expected = expected.order(ByteOrder.LITTLE_ENDIAN);
+		expected.flip();
+		
+		when(source.readBytes(4)).thenReturn(returnValue.array());
+		
+		int actual = source.readFixedInt32();
+		
+		assertEquals(expected.getInt(), actual);;
+	}
+
+	@Test
+	public void readFixedInt32_litleEndian() throws IOException {
+		source = spy(source);
+
+		ByteBuffer returnValue = ByteBuffer.allocate(4).putInt(Integer.MAX_VALUE);
+		returnValue = returnValue.order(ByteOrder.BIG_ENDIAN);
+		returnValue.flip();
+
+		ByteBuffer expected = ByteBuffer.allocate(4).putInt(Integer.MAX_VALUE);
+		expected = expected.order(ByteOrder.LITTLE_ENDIAN);
+		expected.flip();
+		
+		when(source.readBytes(4)).thenReturn(expected.array());
+		
+		int actual = source.readFixedInt32();
+		
+		assertEquals(expected.getInt(), actual);
 	}
 
 	@Test
@@ -78,13 +121,77 @@ public class SourceTest {
 	}
 
 	@Test
-	public void testSkipBytes() {
-		fail("Not yet implemented");
+	public void testSkipBytes() throws IOException {
+		source = spy(source);
+		when(source.getPosition()).thenReturn(42);
+
+		source.skipBytes(4);
+		
+		verify(source, times(1)).setPosition(46);
 	}
 
 	@Test
-	public void testSkipVarInt32() {
-		fail("Not yet implemented");
+	public void testSkipVarInt32_notEmpty() throws IOException {
+		source = spy(source);
+		when(source.readByte()).thenReturn((byte)1);
+		
+		source.skipVarInt32();
+		
+		verify(source, times(1)).readByte();
+	}
+	
+	@Test
+	public void testSkipVarInt32_firstByteEmpty() throws IOException {
+		source = spy(source);
+		when(source.readByte())
+		.thenReturn((byte)-1)
+		.thenReturn((byte)1);
+		
+		source.skipVarInt32();
+		
+		verify(source, times(2)).readByte();
+	}
+	
+	@Test
+	public void testSkipVarInt32_secondByteEmpty() throws IOException {
+		source = spy(source);
+		when(source.readByte())
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)1);
+		
+		source.skipVarInt32();
+		
+		verify(source, times(3)).readByte();
+	}
+	
+	@Test
+	public void testSkipVarInt32_thirdByteEmpty() throws IOException {
+		source = spy(source);
+		when(source.readByte())
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)1);
+		
+		source.skipVarInt32();
+		
+		verify(source, times(4)).readByte();
+	}
+	
+	@Test
+	public void testSkipVarInt32_fourthByteEmpty() throws IOException {
+		source = spy(source);
+		when(source.readByte())
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)-1)
+		.thenReturn((byte)1);
+		
+		source.skipVarInt32();
+		
+		verify(source, times(5)).readByte();
 	}
 
 	@Test
