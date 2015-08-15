@@ -48,20 +48,20 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeCoord(BitStream stream) {
-        boolean hasInt = stream.readBits(1) == 1; // integer component present?
-        boolean hasFrac = stream.readBits(1) == 1; // fractional component present?
+        boolean hasInt = stream.readUInt(1) == 1; // integer component present?
+        boolean hasFrac = stream.readUInt(1) == 1; // fractional component present?
 
         if (!(hasInt || hasFrac)) {
             return 0.0f;
         }
-        boolean sign = stream.readBits(1) == 1;
+        boolean sign = stream.readUInt(1) == 1;
         int i = 0;
         int f = 0;
         if (hasInt) {
-            i = stream.readBits(COORD_INTEGER_BITS) + 1;
+            i = stream.readUInt(COORD_INTEGER_BITS) + 1;
         }
         if (hasFrac) {
-            f = stream.readBits(COORD_FRACTIONAL_BITS);
+            f = stream.readUInt(COORD_FRACTIONAL_BITS);
         }
         float v = i + ((float) f * COORD_RESOLUTION);
         return sign ? -v : v;
@@ -73,20 +73,20 @@ public class FloatDecoder implements PropDecoder<Float> {
         boolean sign = false;
         float value = 0.0f;
 
-        boolean inBounds = stream.readBits(1) == 1;
+        boolean inBounds = stream.readUInt(1) == 1;
         if (integral) {
-            i = stream.readBits(1);
+            i = stream.readUInt(1);
             if (i != 0) {
-                sign = stream.readBits(1) == 1;
-                value = stream.readBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+                sign = stream.readUInt(1) == 1;
+                value = stream.readUInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
-            i = stream.readBits(1);
-            sign = stream.readBits(1) == 1;
+            i = stream.readUInt(1);
+            sign = stream.readUInt(1) == 1;
             if (i != 0) {
-                i = stream.readBits(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+                i = stream.readUInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
-            f = stream.readBits(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
+            f = stream.readUInt(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
             value = i + ((float) f * (lowPrecision ? COORD_RESOLUTION_LOWPRECISION : COORD_RESOLUTION));
         }
         return sign ? -value : value;
@@ -97,24 +97,24 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeNormal(BitStream stream) {
-        boolean isNegative = stream.readBits(1) == 1;
-        int l = stream.readBits(NORMAL_FRACTIONAL_BITS);
+        boolean isNegative = stream.readUInt(1) == 1;
+        int l = stream.readUInt(NORMAL_FRACTIONAL_BITS);
         float v = (float) l * NORMAL_RESOLUTION;
         return isNegative ? -v : v;
     }
 
     public float decodeCellCoord(BitStream stream, int numBits) {
-        int v = stream.readBits(numBits);
-        return v + COORD_RESOLUTION * stream.readBits(COORD_FRACTIONAL_BITS);
+        int v = stream.readUInt(numBits);
+        return v + COORD_RESOLUTION * stream.readUInt(COORD_FRACTIONAL_BITS);
     }
 
     public float decodeCellCoordIntegral(BitStream stream, int numBits) {
-        int v = stream.readBits(numBits);
+        int v = stream.readUInt(numBits);
         return (float) v;
     }
 
     public float decodeDefault(BitStream stream, int numBits, float high, float low) {
-        int t = stream.readBits(numBits);
+        int t = stream.readUInt(numBits);
         float f = (float) t / ((1 << numBits) - 1);
         return f * (high - low) + low;
     }

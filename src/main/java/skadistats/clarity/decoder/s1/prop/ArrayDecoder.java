@@ -8,7 +8,7 @@ public class ArrayDecoder implements PropDecoder<Object[]> {
 
     @Override
     public Object[] decode(BitStream stream, SendProp prop) {
-        int count = stream.readBits(Util.calcBitsNeededFor(prop.getNumElements() - 1));
+        int count = stream.readUInt(Util.calcBitsNeededFor(prop.getNumElements() - 1));
         Object[] result = new Object[count];
         PropDecoder<?> decoder = prop.getTemplate().getType().getDecoder();
         int i = 0;

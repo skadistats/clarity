@@ -56,75 +56,6 @@ public class BitStream {
         pos = pos + n;
     }
 
-    public int readBits(int n) {
-        return (int) readULong(n);
-    }
-
-    public byte[] readBytes(int n) {
-        byte[] result = new byte[(n + 7) / 8];
-        int i = 0;
-        while (n > 7) {
-            n -= 8;
-            result[i] = (byte) readBits(8);
-            i++;
-        }
-        if (n != 0) {
-            result[i] = (byte) readBits(n);
-        }
-        return result;
-    }
-
-    public String readString(int n) {
-        StringBuilder buf = new StringBuilder();
-        while (n > 0) {
-            char c = (char) readBits(8);
-            if (c == 0) {
-                break;
-            }
-            buf.append(c);
-            n--;
-        }
-        return buf.toString();
-    }
-
-    public int readVarUInt32() {
-        int s = 0;
-        int v = 0;
-        int b;
-        while (true) {
-            b = readBits(8);
-            v |= (b & 0x7F) << s;
-            s += 7;
-            if ((b & 0x80) == 0 || s == 35) {
-                return v;
-            }
-        }
-    }
-
-    public long readVarUInt64() {
-        int s = 0;
-        long v = 0L;
-        long b;
-        while (true) {
-            b = readBits(8);
-            v |= (b & 0x7FL) << s;
-            s += 7;
-            if ((b & 0x80L) == 0L || s == 70) {
-                return v;
-            }
-        }
-    }
-
-    public int readVarSInt32() {
-        int v = readVarUInt32();
-        return (v >>> 1) ^ -(v & 1);
-    }
-
-    public long readVarSInt64() {
-        long v = readVarUInt64();
-        return (v >>> 1) ^ -(v & 1L);
-    }
-
     public long readULong(int n) {
         int start = pos >> 6;
         int end = (pos + n - 1) >> 6;
@@ -145,6 +76,73 @@ public class BitStream {
         return (v & (1L << (n - 1))) == 0 ? v : v | (masks[64 - n] << n);
     }
 
+    public byte[] readBytes(int n) {
+        byte[] result = new byte[(n + 7) / 8];
+        int i = 0;
+        while (n > 7) {
+            n -= 8;
+            result[i] = (byte) readUInt(8);
+            i++;
+        }
+        if (n != 0) {
+            result[i] = (byte) readUInt(n);
+        }
+        return result;
+    }
+
+    public String readString(int n) {
+        StringBuilder buf = new StringBuilder();
+        while (n > 0) {
+            char c = (char) readUInt(8);
+            if (c == 0) {
+                break;
+            }
+            buf.append(c);
+            n--;
+        }
+        return buf.toString();
+    }
+
+    private long readVarLength(int n) {
+        int s = 0;
+        long v = 0L;
+        long b;
+        while (true) {
+            b = readUInt(8);
+            v |= (b & 0x7FL) << s;
+            s += 7;
+            if ((b & 0x80L) == 0L || s == n) {
+                return v;
+            }
+        }
+    }
+
+    public long readVarULong() {
+        return readVarLength(70);
+    }
+
+    public long readVarSLong() {
+        long v = readVarLength(70);
+        return (v >>> 1) ^ -(v & 1L);
+    }
+
+    public int readVarUInt() {
+        return (int) readVarLength(35);
+    }
+
+    public int readVarSInt() {
+        int v = (int) readVarLength(35);
+        return (v >>> 1) ^ -(v & 1);
+    }
+
+    public int readUInt(int n) {
+        return (int) readULong(n);
+    }
+
+    public int readSInt(int n) {
+        return (int) readSLong(n);
+    }
+
     public int readUBitVar() {
         // Thanks to Robin Dietrich for providing a clean version of this code :-)
 
@@ -154,16 +152,16 @@ public class BitStream {
         // X set -> read 8
         // X + Y set -> read 28
 
-        int v = readBits(6);
+        int v = readUInt(6);
         switch (v & 48) {
             case 16:
-                v = (v & 15) | (readBits(4) << 4);
+                v = (v & 15) | (readUInt(4) << 4);
                 break;
             case 32:
-                v = (v & 15) | (readBits(8) << 4);
+                v = (v & 15) | (readUInt(8) << 4);
                 break;
             case 48:
-                v = (v & 15) | (readBits(28) << 4);
+                v = (v & 15) | (readUInt(28) << 4);
                 break;
         }
         return v;

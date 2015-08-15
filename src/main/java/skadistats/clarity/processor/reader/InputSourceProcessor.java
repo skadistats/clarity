@@ -138,7 +138,7 @@ public class InputSourceProcessor {
                 // this seems to happen with console recorded replays
                 break;
             }
-            int size = bs.readVarUInt32();
+            int size = bs.readVarUInt();
             Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 log.warn("unknown embedded message of kind {}", kind);

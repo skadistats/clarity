@@ -11,15 +11,15 @@ public class IntDecoder implements PropDecoder<Integer> {
         int flags = prop.getFlags();
         if ((flags & PropFlag.ENCODED_AS_VARINT) != 0) {
             if ((flags & PropFlag.UNSIGNED) != 0) {
-                return stream.readVarUInt32();
+                return stream.readVarUInt();
             } else {
-                return stream.readVarSInt32();
+                return stream.readVarSInt();
             }
         } else {
             if ((flags & PropFlag.UNSIGNED) != 0) {
-                return (int)stream.readULong(prop.getNumBits());
+                return stream.readUInt(prop.getNumBits());
             } else {
-                return (int)stream.readSLong(prop.getNumBits());
+                return stream.readSInt(prop.getNumBits());
             }
         }
     }

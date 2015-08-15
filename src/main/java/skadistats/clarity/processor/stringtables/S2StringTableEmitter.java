@@ -60,17 +60,17 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readBits(1) == 1) {
+            if (stream.readUInt(1) == 1) {
                 index++;
             } else {
-                index = stream.readVarUInt32() + 1;
+                index = stream.readVarUInt() + 1;
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readBits(1) == 1) {
-                if (stream.readBits(1) == 1) {
-                    int basis = stream.readBits(5);
-                    int length = stream.readBits(5);
+            if (stream.readUInt(1) == 1) {
+                if (stream.readUInt(1) == 1) {
+                    int basis = stream.readUInt(5);
+                    int length = stream.readUInt(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
                     nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
                 } else {
@@ -83,13 +83,13 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readBits(1) == 1) {
+            if (stream.readUInt(1) == 1) {
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
-                    bitLength = stream.readBits(14) * 8;
-                    int mysteryBits = stream.readBits(3);
+                    bitLength = stream.readUInt(14) * 8;
+                    int mysteryBits = stream.readUInt(3);
                     if (mysteryBits != 0) {
                         log.info("mystery bits are NOT zero, but " + mysteryBits);
                     }

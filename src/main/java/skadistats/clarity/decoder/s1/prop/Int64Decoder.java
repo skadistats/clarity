@@ -11,9 +11,9 @@ public class Int64Decoder implements PropDecoder<Long> {
         int flags = prop.getFlags();
         if ((flags & PropFlag.ENCODED_AS_VARINT) != 0) {
             if ((flags & PropFlag.UNSIGNED) != 0) {
-                return stream.readVarUInt64();
+                return stream.readVarULong();
             } else {
-                return stream.readVarSInt64();
+                return stream.readVarSLong();
             }
         } else {
             if ((flags & PropFlag.UNSIGNED) != 0) {
