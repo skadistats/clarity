@@ -17,9 +17,9 @@ public class IntDecoder implements PropDecoder<Integer> {
             }
         } else {
             if ((flags & PropFlag.UNSIGNED) != 0) {
-                return (int)stream.readUInt(prop.getNumBits());
+                return (int)stream.readULong(prop.getNumBits());
             } else {
-                return (int)stream.readSInt(prop.getNumBits());
+                return (int)stream.readSLong(prop.getNumBits());
             }
         }
     }

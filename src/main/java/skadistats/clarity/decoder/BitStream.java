@@ -57,7 +57,7 @@ public class BitStream {
     }
 
     public int readBits(int n) {
-        return (int) readUInt(n);
+        return (int) readULong(n);
     }
 
     public byte[] readBytes(int n) {
@@ -125,7 +125,7 @@ public class BitStream {
         return (v >>> 1) ^ -(v & 1L);
     }
 
-    public long readUInt(int n) {
+    public long readULong(int n) {
         int start = pos >> 6;
         int end = (pos + n - 1) >> 6;
         int s = pos & 63;
@@ -140,8 +140,8 @@ public class BitStream {
         return ret;
     }
 
-    public long readSInt(int n) {
-        long v = readUInt(n);
+    public long readSLong(int n) {
+        long v = readULong(n);
         return (v & (1L << (n - 1))) == 0 ? v : v | (masks[64 - n] << n);
     }
 
@@ -187,6 +187,5 @@ public class BitStream {
         long ret = (data[start] >>> s) & masks[1];
         return (int) ret;
     }
-
 
 }

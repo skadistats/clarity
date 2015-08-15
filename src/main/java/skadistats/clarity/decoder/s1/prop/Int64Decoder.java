@@ -17,9 +17,9 @@ public class Int64Decoder implements PropDecoder<Long> {
             }
         } else {
             if ((flags & PropFlag.UNSIGNED) != 0) {
-                return stream.readUInt(prop.getNumBits());
+                return stream.readULong(prop.getNumBits());
             } else {
-                return stream.readSInt(prop.getNumBits());
+                return stream.readSLong(prop.getNumBits());
             }
         }
     }
