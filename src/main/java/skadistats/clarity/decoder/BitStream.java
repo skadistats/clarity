@@ -9,20 +9,23 @@ import java.io.IOException;
 public class BitStream {
 
     private final long[] masks = {
-        0x0L,             0x1L,              0x3L,              0x7L,
-        0xfL,             0x1fL,             0x3fL,             0x7fL,
-        0xffL,            0x1ffL,            0x3ffL,            0x7ffL,
-        0xfffL,           0x1fffL,           0x3fffL,           0x7fffL,
-        0xffffL,          0x1ffffL,          0x3ffffL,          0x7ffffL,
-        0xfffffL,         0x1fffffL,         0x3fffffL,         0x7fffffL,
-        0xffffffL,        0x1ffffffL,        0x3ffffffL,        0x7ffffffL,
-        0xfffffffL,       0x1fffffffL,       0x3fffffffL,       0x7fffffffL,
-        0xffffffffL,      0x1ffffffffL,      0x3ffffffffL,      0x7ffffffffL,
-        0xfffffffffL,     0x1fffffffffL,     0x3fffffffffL,     0x7fffffffffL,
-        0xffffffffffL,    0x1ffffffffffL,    0x3ffffffffffL,    0x7ffffffffffL,
-        0xfffffffffffL,   0x1fffffffffffL,   0x3fffffffffffL,   0x7fffffffffffL,
-        0xffffffffffffL,  0x1ffffffffffffL,  0x3ffffffffffffL,  0x7ffffffffffffL,
-        0xfffffffffffffL, 0x1fffffffffffffL, 0x3fffffffffffffL, 0x7fffffffffffffL
+        0x0L,               0x1L,                0x3L,                0x7L,
+        0xfL,               0x1fL,               0x3fL,               0x7fL,
+        0xffL,              0x1ffL,              0x3ffL,              0x7ffL,
+        0xfffL,             0x1fffL,             0x3fffL,             0x7fffL,
+        0xffffL,            0x1ffffL,            0x3ffffL,            0x7ffffL,
+        0xfffffL,           0x1fffffL,           0x3fffffL,           0x7fffffL,
+        0xffffffL,          0x1ffffffL,          0x3ffffffL,          0x7ffffffL,
+        0xfffffffL,         0x1fffffffL,         0x3fffffffL,         0x7fffffffL,
+        0xffffffffL,        0x1ffffffffL,        0x3ffffffffL,        0x7ffffffffL,
+        0xfffffffffL,       0x1fffffffffL,       0x3fffffffffL,       0x7fffffffffL,
+        0xffffffffffL,      0x1ffffffffffL,      0x3ffffffffffL,      0x7ffffffffffL,
+        0xfffffffffffL,     0x1fffffffffffL,     0x3fffffffffffL,     0x7fffffffffffL,
+        0xffffffffffffL,    0x1ffffffffffffL,    0x3ffffffffffffL,    0x7ffffffffffffL,
+        0xfffffffffffffL,   0x1fffffffffffffL,   0x3fffffffffffffL,   0x7fffffffffffffL,
+        0xffffffffffffffL,  0x1ffffffffffffffL,  0x3ffffffffffffffL,  0x7ffffffffffffffL,
+        0xfffffffffffffffL, 0x1fffffffffffffffL, 0x3fffffffffffffffL, 0x7fffffffffffffffL,
+        0xffffffffffffffffL
     };
 
     final long[] data;
@@ -54,18 +57,7 @@ public class BitStream {
     }
 
     public int readBits(int n) {
-        int start = pos >> 6;
-        int end = (pos + n - 1) >> 6;
-        int s = pos & 63;
-        long ret;
-
-        if (start == end) {
-            ret = (data[start] >>> s) & masks[n];
-        } else { // wrap around
-            ret = ((data[start] >>> s) | (data[end] << (64 - s))) & masks[n];
-        }
-        pos += n;
-        return (int) ret;
+        return (int) readUInt(n);
     }
 
     public byte[] readBytes(int n) {
@@ -109,9 +101,48 @@ public class BitStream {
         }
     }
 
-    public int readVarInt32() {
+    public long readVarUInt64() {
+        int s = 0;
+        long v = 0L;
+        long b;
+        while (true) {
+            b = readBits(8);
+            v |= (b & 0x7FL) << s;
+            s += 7;
+            if ((b & 0x80L) == 0L || s == 70) {
+                return v;
+            }
+        }
+    }
+
+    public int readVarSInt32() {
         int v = readVarUInt32();
-        return (v >> 1) ^ -(v & 1);
+        return (v >>> 1) ^ -(v & 1);
+    }
+
+    public long readVarSInt64() {
+        long v = readVarUInt64();
+        return (v >>> 1) ^ -(v & 1L);
+    }
+
+    public long readUInt(int n) {
+        int start = pos >> 6;
+        int end = (pos + n - 1) >> 6;
+        int s = pos & 63;
+        long ret;
+
+        if (start == end) {
+            ret = (data[start] >>> s) & masks[n];
+        } else { // wrap around
+            ret = ((data[start] >>> s) | (data[end] << (64 - s))) & masks[n];
+        }
+        pos += n;
+        return ret;
+    }
+
+    public long readSInt(int n) {
+        long v = readUInt(n);
+        return (v & (1L << (n - 1))) == 0 ? v : v | (masks[64 - n] << n);
     }
 
     public int readUBitVar() {

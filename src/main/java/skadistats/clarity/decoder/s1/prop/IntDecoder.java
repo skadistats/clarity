@@ -8,25 +8,20 @@ public class IntDecoder implements PropDecoder<Integer> {
 
     @Override
     public Integer decode(BitStream stream, SendProp prop) {
-        int v = 0;
         int flags = prop.getFlags();
-        boolean isUnsigned = (flags & PropFlag.UNSIGNED) != 0;
-        int selfUnsigned = isUnsigned ? PropFlag.UNSIGNED : 0;
-        if ((flags & PropFlag.ENCODED_AGAINST_TICKCOUNT) != 0) {
-            // this integer is encoded against tick count (?)...
-            // in this case, we read a protobuf-style varint
-            v = stream.readVarUInt32();
-            if (isUnsigned) {
-                return v; // as is -- why?
+        if ((flags & PropFlag.ENCODED_AS_VARINT) != 0) {
+            if ((flags & PropFlag.UNSIGNED) != 0) {
+                return stream.readVarUInt32();
+            } else {
+                return stream.readVarSInt32();
             }
-
-            // ostensibly, this is the "decoding" part in signed cases
-            return (-(v & PropFlag.UNSIGNED)) ^ (v >>> PropFlag.UNSIGNED);
+        } else {
+            if ((flags & PropFlag.UNSIGNED) != 0) {
+                return (int)stream.readUInt(prop.getNumBits());
+            } else {
+                return (int)stream.readSInt(prop.getNumBits());
+            }
         }
-
-        v = stream.readBits(prop.getNumBits());
-        int s = (0x80000000 >>> (32 - prop.getNumBits())) & (selfUnsigned - PropFlag.UNSIGNED);
-        return (v ^ s) - s;
     }
 
 }

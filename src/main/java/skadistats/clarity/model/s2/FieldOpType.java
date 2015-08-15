@@ -140,7 +140,7 @@ public enum FieldOpType {
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
                 if (bs.readBits(1) == 1) {
-                    fp.path[i] += bs.readVarInt32();
+                    fp.path[i] += bs.readVarSInt32();
                 }
             }
         }
