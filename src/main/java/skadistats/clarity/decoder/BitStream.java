@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public class BitStream {
 
-    private final long[] masks = {
+    public static final long[] MASKS = {
         0x0L,               0x1L,                0x3L,                0x7L,
         0xfL,               0x1fL,               0x3fL,               0x7fL,
         0xffL,              0x1ffL,              0x3ffL,              0x7ffL,
@@ -44,6 +44,10 @@ public class BitStream {
         len = len * 8; // from now on size in bits
     }
 
+    public int len() {
+        return len;
+    }
+
     public int pos() {
         return pos;
     }
@@ -63,9 +67,9 @@ public class BitStream {
         long ret;
 
         if (start == end) {
-            ret = (data[start] >>> s) & masks[n];
+            ret = (data[start] >>> s) & MASKS[n];
         } else { // wrap around
-            ret = ((data[start] >>> s) | (data[end] << (64 - s))) & masks[n];
+            ret = ((data[start] >>> s) | (data[end] << (64 - s))) & MASKS[n];
         }
         pos += n;
         return ret;
@@ -73,7 +77,7 @@ public class BitStream {
 
     public long readSLong(int n) {
         long v = readULong(n);
-        return (v & (1L << (n - 1))) == 0 ? v : v | (masks[64 - n] << n);
+        return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
     }
 
     public byte[] readBytes(int n) {
@@ -167,6 +171,30 @@ public class BitStream {
         return v;
     }
 
+    public float readBitCoord() {
+        boolean hasInt = readUInt(1) == 1; // integer component present?
+        boolean hasFrac = readUInt(1) == 1; // fractional component present?
+        if (!(hasInt || hasFrac)) {
+            return 0.0f;
+        }
+        boolean sign = readUInt(1) == 1;
+        int i = 0;
+        int f = 0;
+        if (hasInt) {
+            i = readUInt(14) + 1;
+        }
+        if (hasFrac) {
+            f = readUInt(5);
+        }
+        float v = i + ((float) f * (1.0f/32.0f));
+        return sign ? -v : v;
+    }
+
+    public float readBitAngle(int n) {
+        return readULong(n) * 360.0f / (1 << n);
+    }
+
+
     public String toString() {
         StringBuilder buf = new StringBuilder();
 
@@ -182,7 +210,7 @@ public class BitStream {
     private int peekBit(int pos) {
         int start = pos >> 6;
         int s = pos & 63;
-        long ret = (data[start] >>> s) & masks[1];
+        long ret = (data[start] >>> s) & MASKS[1];
         return (int) ret;
     }
 

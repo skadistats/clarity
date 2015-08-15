@@ -257,7 +257,8 @@ public class TextTable {
     private Object[] getObjects(int row) {
         Object[] result = new Object[columns.length];
         for (int i = 0; i < columns.length; i++) {
-            result[i] = getData(row, i);
+            Object v = getData(row, i);
+            result[i] = v == null ? "-" : v;
         }
         return result;
     }
