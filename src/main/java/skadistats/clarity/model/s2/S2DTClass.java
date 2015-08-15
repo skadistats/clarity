@@ -59,4 +59,55 @@ public class S2DTClass implements DTClass {
         throw new UnsupportedOperationException();
     }
 
+    private void computeNameR(StringBuffer name, Serializer s, FieldPath fp, int i) {
+
+    }
+
+    public Field getNameForSerializer(StringBuilder name, Serializer s, FieldPath fp, int i) {
+        Field f = s.getFields()[fp.path[i]];
+        if (f == null) {
+            throw new RuntimeException("wtf1");
+        }
+
+        if (name.length() != 0) {
+            name.append('.');
+        }
+        if (!"(root)".equals(f.getSendNode())) {
+            name.append(f.getSendNode());
+            name.append('.');
+        }
+        name.append(f.getName());
+
+        if (fp.last == i) {
+            return f;
+        }
+
+        if (f.getType().getElementCount() != null) {
+            // array
+            name.append('[');
+            name.append(fp.path[++i]);
+            name.append(']');
+            if (fp.last == i) {
+                return f;
+            }
+        }
+
+        if (f.getSerializer() != null) {
+            return getNameForSerializer(name, f.getSerializer(), fp, ++i);
+        }
+
+        return f;
+    }
+
+
+    public String getNameForFieldPath(FieldPath fp) {
+        StringBuilder name = new StringBuilder();
+        getNameForSerializer(name, serializer, fp, 0);
+        return name.toString();
+    }
+
+    public Field getFieldForFieldPath(FieldPath fp) {
+        StringBuilder name = new StringBuilder();
+        return getNameForSerializer(name, serializer, fp, 0);
+    }
 }

@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class FieldPath {
 
-    final int[] path;
-    int last;
+    public final int[] path;
+    public int last;
 
     public FieldPath() {
         path = new int[6];

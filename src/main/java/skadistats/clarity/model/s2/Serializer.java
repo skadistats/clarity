@@ -13,4 +13,8 @@ public class Serializer {
     public SerializerId getId() {
         return id;
     }
+
+    public Field[] getFields() {
+        return fields;
+    }
 }

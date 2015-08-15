@@ -34,6 +34,7 @@ public class S2DTClassEmitter {
         ArrayList<Field> currentFields = new ArrayList<>(128);
         for (int si = 0; si < protoMessage.getSerializersCount(); si++) {
             S2NetMessages.ProtoFlattenedSerializer_t protoSerializer = protoMessage.getSerializers(si);
+            currentFields.clear();
             for (int fi : protoSerializer.getFieldsIndexList()) {
                 Field field = fields[fi];
                 if (field == null) {
@@ -54,6 +55,8 @@ public class S2DTClassEmitter {
                     }
                     field = new Field(
                         fieldType,
+                        protoMessage.getSymbols(protoField.getVarNameSym()),
+                        protoMessage.getSymbols(protoField.getSendNodeSym()),
                         protoField.getEncodeFlags(),
                         protoField.hasBitCount() ? protoField.getBitCount() : null,
                         protoField.hasLowValue() ? protoField.getLowValue() : null,

@@ -1,11 +1,16 @@
 package skadistats.clarity.model.s2;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class FieldType {
 
     private static final Pattern FIELD_TYPE_PATTERN = Pattern.compile("(.*?)(< (.*) >)?(\\*)?(\\[(.*?)\\])?");
+
+    private static final Set<String> ARRAY_OVERRIDE = new HashSet<>(Arrays.asList("DOTA_PlayerChallengeInfo", "m_SpeechBubbles"));
 
     private final String baseType;
     private final FieldType genericType;
@@ -20,7 +25,8 @@ public class FieldType {
         baseType = m.group(1);
         genericType = m.group(3) != null ? new FieldType(m.group(3)) : null;
         pointer = m.group(4) != null;
-        elementCount = m.group(6);
+        // TODO: dem hacks :(
+        elementCount = ARRAY_OVERRIDE.contains(baseType) ? "XXX" : m.group(6);
     }
 
     public String getBaseType() {
