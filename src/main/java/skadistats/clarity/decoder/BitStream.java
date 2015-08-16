@@ -107,7 +107,8 @@ public class BitStream {
         return buf.toString();
     }
 
-    private long readVarLength(int n) {
+    public long readVarU(int max) {
+        int m = ((max + 6) / 7) * 7;
         int s = 0;
         long v = 0L;
         long b;
@@ -115,28 +116,31 @@ public class BitStream {
             b = readUInt(8);
             v |= (b & 0x7FL) << s;
             s += 7;
-            if ((b & 0x80L) == 0L || s == n) {
+            if ((b & 0x80L) == 0L || s == m) {
                 return v;
             }
         }
     }
 
-    public long readVarULong() {
-        return readVarLength(70);
-    }
-
-    public long readVarSLong() {
-        long v = readVarLength(70);
+    public long readVarS(int max) {
+        long v = readVarU(max);
         return (v >>> 1) ^ -(v & 1L);
     }
 
+    public long readVarULong() {
+        return readVarU(64);
+    }
+
+    public long readVarSLong() {
+        return readVarS(64);
+    }
+
     public int readVarUInt() {
-        return (int) readVarLength(35);
+        return (int) readVarU(32);
     }
 
     public int readVarSInt() {
-        int v = (int) readVarLength(35);
-        return (v >>> 1) ^ -(v & 1);
+        return (int) readVarS(32);
     }
 
     public int readUInt(int n) {
@@ -204,6 +208,14 @@ public class BitStream {
             buf.append(peekBit(i));
         }
         buf.insert(pos - min, '*');
+        return buf.toString();
+    }
+
+    public String toString(int from, int to) {
+        StringBuilder buf = new StringBuilder();
+        for (int i = from; i < to; i++) {
+            buf.append(peekBit(i));
+        }
         return buf.toString();
     }
 
