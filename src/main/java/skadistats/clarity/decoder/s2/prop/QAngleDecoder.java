@@ -28,9 +28,9 @@ public class QAngleDecoder implements FieldDecoder<Vector> {
                 return new Vector(v);
             }
         } else {
-            boolean b0 = bs.readUInt(1) == 0;
-            boolean b1 = bs.readUInt(1) == 0;
-            boolean b2 = bs.readUInt(1) == 0;
+            boolean b0 = bs.readUInt(1) == 1;
+            boolean b1 = bs.readUInt(1) == 1;
+            boolean b2 = bs.readUInt(1) == 1;
             if (b0) v[0] = bs.readBitCoord();
             if (b1) v[1] = bs.readBitCoord();
             if (b2) v[2] = bs.readBitCoord();

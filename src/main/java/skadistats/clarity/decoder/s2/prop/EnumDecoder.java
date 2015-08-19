@@ -8,6 +8,6 @@ public class EnumDecoder implements FieldDecoder<Long> {
 
     @Override
     public Long decode(BitStream bs, Field f) {
-        return bs.readULong(8);
+        return bs.readVarS(64);
     }
 }

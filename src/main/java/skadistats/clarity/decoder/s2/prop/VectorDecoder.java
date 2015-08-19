@@ -9,7 +9,7 @@ public class VectorDecoder implements FieldDecoder<Vector> {
 
     @Override
     public Vector decode(BitStream bs, Field f) {
-        Float32Decoder fd = new Float32Decoder();
+        QFloatDecoder fd = new QFloatDecoder();
         return new Vector(
           new float[] {
               fd.decode(bs, f),
