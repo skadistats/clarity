@@ -18,7 +18,10 @@ public class QFloatDecoder implements FieldDecoder<Float> {
             if ((flags & 0x20) != 0 && bs.readUInt(1) == 1) {
                 return f.getHighValue();
             }
-            int bc = f.getBitCount() != null ? f.getBitCount() : 24; // assume 8, dunno if right, makes m_hOwnerEntity in CWorld baseline look correct ...
+            if ((flags & 0x40) != 0 && bs.readUInt(1) == 1) {
+                return 0.0f;
+            }
+            int bc = f.getBitCount();
             float v = (float) bs.readUInt(bc);
             float low = f.getLowValue() != null ? f.getLowValue() : 0.0f;
             float high = f.getHighValue() != null ? f.getHighValue() : 1.0f;
