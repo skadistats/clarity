@@ -61,8 +61,8 @@ public class S2DTClassEmitter {
                         protoField.hasBitCount() ? protoField.getBitCount() : null,
                         protoField.hasLowValue() ? protoField.getLowValue() : null,
                         protoField.hasHighValue() ? protoField.getHighValue() : null,
-                        fieldSerializer
-                    );
+                        fieldSerializer,
+                        protoField.hasVarEncoderSym() ? protoMessage.getSymbols(protoField.getVarEncoderSym()) : null);
                     fields[fi] = field;
                 }
                 currentFields.add(field);

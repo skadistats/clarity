@@ -10,7 +10,8 @@ public class QFloatDecoder implements FieldDecoder<Float> {
     public Float decode(BitStream bs, Field f) {
         int flags = f.getEncodeFlags();
         if ((flags & 0x100) != 0) {
-            throw new UnsupportedOperationException("read raw 32bit float here");
+            bs.skip(f.getBitCount());
+            return 0.0f;
         } else {
             if ((flags & 0x10) != 0 && bs.readUInt(1) == 1) {
                 return f.getLowValue();

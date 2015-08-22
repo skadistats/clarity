@@ -8,7 +8,12 @@ public class FloatDecoder implements FieldDecoder<Float> {
 
     @Override
     public Float decode(BitStream bs, Field f) {
-        return (float)(f.getBitCount() != null ? bs.readUInt(f.getBitCount()) : bs.readVarUInt());
-        //return (float)bs.readVarSInt();
+        if ("coord".equals(f.getEncoder())) {
+            return bs.readBitCoord();
+
+        } else {
+            return (float)(f.getBitCount() != null ? bs.readUInt(f.getBitCount()) : bs.readVarUInt());
+            //return (float)bs.readVarSInt();
+        }
     }
 }

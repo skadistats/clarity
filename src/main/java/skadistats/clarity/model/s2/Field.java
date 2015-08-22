@@ -10,8 +10,9 @@ public class Field {
     private final Float lowValue;
     private final Float highValue;
     private final Serializer serializer;
+    private final String encoder;
 
-    public Field(FieldType type, String name, String sendNode, int encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer) {
+    public Field(FieldType type, String name, String sendNode, int encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;
@@ -20,6 +21,7 @@ public class Field {
         this.lowValue = lowValue;
         this.highValue = highValue;
         this.serializer = serializer;
+        this.encoder = encoder;
     }
 
     public FieldType getType() {
@@ -52,5 +54,9 @@ public class Field {
 
     public Serializer getSerializer() {
         return serializer;
+    }
+
+    public String getEncoder() {
+        return encoder;
     }
 }
