@@ -8,6 +8,10 @@ import java.io.IOException;
 
 public class BitStream {
 
+    private static final int NORMAL_FRACTIONAL_BITS = 11;
+    private static final int NORMAL_DENOMINATOR = ((1 << NORMAL_FRACTIONAL_BITS) - 1);
+    private static final float NORMAL_RESOLUTION = (1.0f / NORMAL_DENOMINATOR);
+
     public static final long[] MASKS = {
         0x0L,               0x1L,                0x3L,                0x7L,
         0xfL,               0x1fL,               0x3fL,               0x7fL,
@@ -211,6 +215,37 @@ public class BitStream {
         return readUBitLong(n) * 360.0f / (1 << n);
     }
 
+
+    public float readBitNormal() {
+        boolean isNegative = readUBitInt(1) == 1;
+        int l = readUBitInt(NORMAL_FRACTIONAL_BITS);
+        float v = (float) l * NORMAL_RESOLUTION;
+        return isNegative ? -v : v;
+    }
+
+    public float[] read3BitNormal() {
+        float[] fa = new float[3];
+        boolean xflag = readUBitLong(1) == 1L;
+        boolean yflag = readUBitLong(1) == 1L;
+        if (xflag)
+            fa[0] = readBitNormal();
+        else
+            fa[0] = 0.0f;
+
+        if (yflag)
+            fa[1] = readBitNormal();
+        else
+            fa[1] = 0.0f;
+        boolean znegative = readUBitLong(1) == 1L;
+        float fafafbfb = fa[0] * fa[0] + fa[1] * fa[1];
+        if (fafafbfb < 1.0f)
+            fa[2] = (float) Math.sqrt(1.0f - fafafbfb);
+        else
+            fa[2] = 0.0f;
+        if (znegative)
+            fa[2] = -fa[2];
+        return fa;
+    }
 
     public String toString() {
         StringBuilder buf = new StringBuilder();

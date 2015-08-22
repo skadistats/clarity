@@ -9,13 +9,19 @@ public class VectorDecoder implements FieldDecoder<Vector> {
 
     @Override
     public Vector decode(BitStream bs, Field f) {
-        FloatDecoder fd = new FloatDecoder();
-        return new Vector(
-          new float[] {
-              fd.decode(bs, f),
-              fd.decode(bs, f),
-              fd.decode(bs, f)
-          }
-        );
+        if ("normal".equals(f.getEncoder())) {
+            return new Vector(
+                bs.read3BitNormal()
+            );
+        } else {
+            FloatDecoder fd = new FloatDecoder();
+            return new Vector(
+                new float[] {
+                    fd.decode(bs, f),
+                    fd.decode(bs, f),
+                    fd.decode(bs, f)
+                }
+            );
+        }
     }
 }
