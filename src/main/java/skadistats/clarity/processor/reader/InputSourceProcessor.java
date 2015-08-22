@@ -146,7 +146,7 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBytes(size * 8)));
+                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(bs.readBitsAsByteArray(size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }

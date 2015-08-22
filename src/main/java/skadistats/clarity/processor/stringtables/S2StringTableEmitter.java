@@ -94,7 +94,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                         log.info("mystery bits are NOT zero, but " + mysteryBits);
                     }
                 }
-                value = ByteString.copyFrom(stream.readBytes(bitLength));
+                value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

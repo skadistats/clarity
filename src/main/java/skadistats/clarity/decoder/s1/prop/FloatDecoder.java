@@ -4,9 +4,6 @@ import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.model.s1.SendProp;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 public class FloatDecoder implements PropDecoder<Float> {
 
     private static final int COORD_INTEGER_BITS = 14;
@@ -93,7 +90,7 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeNoScale(BitStream stream) {
-        return ByteBuffer.wrap(stream.readBytes(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+        return Float.intBitsToFloat(stream.readUBitInt(32));
     }
 
     public float decodeNormal(BitStream stream) {

@@ -80,7 +80,7 @@ public class BitStream {
         return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
     }
 
-    public byte[] readBytes(int n) {
+    public byte[] readBitsAsByteArray(int n) {
         byte[] result = new byte[(n + 7) / 8];
         int i = 0;
         while (n > 7) {

@@ -5,9 +5,6 @@ import skadistats.clarity.decoder.s2.FieldDecoder;
 import skadistats.clarity.model.Vector;
 import skadistats.clarity.model.s2.Field;
 
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-
 public class QAngleDecoder implements FieldDecoder<Vector> {
 
     @Override
@@ -39,9 +36,9 @@ public class QAngleDecoder implements FieldDecoder<Vector> {
         if (f.getBitCount() != null && f.getBitCount().intValue() != 0) {
             if (f.getBitCount() == 32) {
                 if (true) throw new RuntimeException("QAngle0 " + f.getBitCount());
-                v[0] = ByteBuffer.wrap(bs.readBytes(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                v[1] = ByteBuffer.wrap(bs.readBytes(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
-                v[2] = ByteBuffer.wrap(bs.readBytes(32)).order(ByteOrder.LITTLE_ENDIAN).getFloat();
+                v[0] = Float.intBitsToFloat(bs.readUBitInt(32));
+                v[1] = Float.intBitsToFloat(bs.readUBitInt(32));
+                v[2] = Float.intBitsToFloat(bs.readUBitInt(32));
                 return new Vector(v);
             } else {
                 //if (true) throw new RuntimeException("QAngle1 " + f.getBitCount());

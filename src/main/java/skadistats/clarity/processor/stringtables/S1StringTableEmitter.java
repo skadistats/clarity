@@ -86,7 +86,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                     bitLength = stream.readUBitInt(14) * 8;
                 }
 
-                value = ByteString.copyFrom(stream.readBytes(bitLength));
+                value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }
