@@ -13,6 +13,7 @@ public class VectorDecoder implements FieldDecoder<Vector> {
         return new Vector(
           new float[] {
               fd.decode(bs, f),
+              fd.decode(bs, f),
               fd.decode(bs, f)
           }
         );
