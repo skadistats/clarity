@@ -10,7 +10,7 @@ public class FieldType {
 
     private static final Pattern FIELD_TYPE_PATTERN = Pattern.compile("(.*?)(< (.*) >)?(\\*)?(\\[(.*?)\\])?");
 
-    private static final Set<String> ARRAY_OVERRIDE = new HashSet<>(Arrays.asList("DOTA_PlayerChallengeInfo", "m_SpeechBubbles"));
+    private static final Set<String> ARRAY_OVERRIDE = new HashSet<>(Arrays.asList("DOTA_PlayerChallengeInfo", "m_SpeechBubbles", "CUtlVector"));
 
     private final String baseType;
     private final FieldType genericType;

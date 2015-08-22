@@ -113,7 +113,7 @@ public class BitStream {
         long v = 0L;
         long b;
         while (true) {
-            b = readUInt(8);
+            b = readULong(8);
             v |= (b & 0x7FL) << s;
             s += 7;
             if ((b & 0x80L) == 0L || s == m) {
@@ -175,6 +175,19 @@ public class BitStream {
         return v;
     }
 
+    public int readUBitVarFieldPath() {
+        if (readUInt(1) == 1) {
+            return readUInt(2);
+        } else if (readUInt(1) == 1) {
+            return readUInt(4);
+        } else if (readUInt(1) == 1) {
+            return readUInt(10);
+        } else if (readUInt(1) == 1) {
+            return readUInt(17);
+        }
+        return readUInt(31);
+    }
+
     public float readBitCoord() {
         boolean hasInt = readUInt(1) == 1; // integer component present?
         boolean hasFrac = readUInt(1) == 1; // fractional component present?
@@ -190,7 +203,7 @@ public class BitStream {
         if (hasFrac) {
             f = readUInt(5);
         }
-        float v = i + ((float) f * (1.0f/32.0f));
+        float v = i + ((float) f * (1.0f / 32.0f));
         return sign ? -v : v;
     }
 

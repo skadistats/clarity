@@ -12,8 +12,8 @@ public class FloatDecoder implements FieldDecoder<Float> {
             return bs.readBitCoord();
 
         } else {
-            return (float)(f.getBitCount() != null ? bs.readUInt(f.getBitCount()) : bs.readVarUInt());
-            //return (float)bs.readVarSInt();
+            int v = (f.getBitCount() != null ? bs.readUInt(f.getBitCount()) : bs.readVarUInt());
+            return Float.intBitsToFloat(v);
         }
     }
 }

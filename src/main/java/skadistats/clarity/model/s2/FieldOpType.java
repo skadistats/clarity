@@ -31,11 +31,7 @@ public enum FieldOpType {
     PlusN(4128) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
-            for (int bc : BIT_COUNTS) {
-                if (bs.readUInt(1) == 1) {
-                    fp.path[fp.last] += bs.readUInt(bc) + 5;
-                }
-            }
+            fp.path[fp.last] += bs.readUBitVarFieldPath() + 5;
         }
     },
     PushOneLeftDeltaZeroRightZero(35) {
@@ -47,12 +43,7 @@ public enum FieldOpType {
     PushOneLeftDeltaZeroRightNonZero(3) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
-            for (int bc : BIT_COUNTS) {
-                if (bs.readUInt(1) == 1) {
-                    fp.path[++fp.last] = bs.readUInt(bc);
-                    return;
-                }
-            }
+            fp.path[++fp.last] = bs.readUBitVarFieldPath();
         }
     },
     PushOneLeftDeltaOneRightZero(521) {
@@ -66,12 +57,7 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             fp.path[fp.last]++;
-            for (int bc : BIT_COUNTS) {
-                if (bs.readUInt(1) == 1) {
-                    fp.path[++fp.last] = bs.readUInt(bc);
-                    return;
-                }
-            }
+            fp.path[++fp.last] = bs.readUBitVarFieldPath();
         }
     },
     PushOneLeftDeltaNRightZero(560),
@@ -124,17 +110,22 @@ public enum FieldOpType {
     PopNPlusOne(0) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
-            for (int bc : BIT_COUNTS) {
+            fp.last -= bs.readUBitVarFieldPath();
+            fp.path[fp.last]++;
+        }
+    },
+    PopNPlusN(0),
+    PopNAndNonTopographical(1) {
+        @Override
+        public void execute(FieldPath fp, BitStream bs) {
+            fp.last -= bs.readUBitVarFieldPath();
+            for (int i = 0; i <= fp.last; i++) {
                 if (bs.readUInt(1) == 1) {
-                    fp.last -= bs.readUInt(bc);
-                    fp.path[fp.last]++;
-                    return;
+                    fp.path[i] += bs.readVarSInt();
                 }
             }
         }
     },
-    PopNPlusN(0),
-    PopNAndNonTopographical(1),
     NonTopoComplex(76) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
@@ -161,8 +152,6 @@ public enum FieldOpType {
         public void execute(FieldPath fp, BitStream bs) {
         }
     };
-
-    private static final int[] BIT_COUNTS = {2, 4, 10, 17, 30};
 
     private final int weight;
 

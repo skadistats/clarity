@@ -17,4 +17,5 @@ public class Serializer {
     public Field[] getFields() {
         return fields;
     }
+
 }
