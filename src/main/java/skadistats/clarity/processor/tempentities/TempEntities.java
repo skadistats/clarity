@@ -30,9 +30,9 @@ public class TempEntities {
             ReceiveProp[] receiveProps = null;
             int count = message.getNumEntries();
             while (count-- > 0) {
-                stream.readUInt(1); // seems to be always 0
-                if (stream.readUInt(1) == 1) {
-                    cls = dtClasses.forClassId(stream.readUInt(dtClasses.getClassBits()) - 1);
+                stream.readUBitInt(1); // seems to be always 0
+                if (stream.readUBitInt(1) == 1) {
+                    cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
                 Object[] state = new Object[receiveProps.length];

@@ -97,11 +97,11 @@ public class Entities {
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
-            pvs = stream.readUInt(2);
+            pvs = stream.readUBitInt(2);
             if ((pvs & 1) == 0) {
                 if ((pvs & 2) != 0) {
-                    cls = dtClasses.forClassId(stream.readUInt(dtClasses.getClassBits()));
-                    serial = stream.readUInt(10);
+                    cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
+                    serial = stream.readUBitInt(10);
                     base = getBaseline(dtClasses, cls.getClassId());
                     state = Arrays.copyOf(base, base.length);
                     cIndices = Util.readS1EntityPropList(stream, indices);
@@ -139,8 +139,8 @@ public class Entities {
             }
         }
         if (message.getIsDelta()) {
-            while (stream.readUInt(1) == 1) {
-                entityIndex = stream.readUInt(11); // max is 2^11-1, or 2047
+            while (stream.readUBitInt(1) == 1) {
+                entityIndex = stream.readUBitInt(11); // max is 2^11-1, or 2047
                 if (evDeleted != null) {
                     evDeleted.raise(entities[entityIndex]);
                 }

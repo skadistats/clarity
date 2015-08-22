@@ -13,17 +13,17 @@ public class QFloatDecoder implements FieldDecoder<Float> {
             bs.skip(f.getBitCount());
             return 0.0f;
         } else {
-            if ((flags & 0x10) != 0 && bs.readUInt(1) == 1) {
+            if ((flags & 0x10) != 0 && bs.readUBitInt(1) == 1) {
                 return f.getLowValue();
             }
-            if ((flags & 0x20) != 0 && bs.readUInt(1) == 1) {
+            if ((flags & 0x20) != 0 && bs.readUBitInt(1) == 1) {
                 return f.getHighValue();
             }
-            if ((flags & 0x40) != 0 && bs.readUInt(1) == 1) {
+            if ((flags & 0x40) != 0 && bs.readUBitInt(1) == 1) {
                 return 0.0f;
             }
             int bc = f.getBitCount();
-            float v = (float) bs.readUInt(bc);
+            float v = (float) bs.readUBitInt(bc);
             float low = f.getLowValue() != null ? f.getLowValue() : 0.0f;
             float high = f.getHighValue() != null ? f.getHighValue() : 1.0f;
             return low + (v / BitStream.MASKS[bc]) * (high - low);

@@ -12,7 +12,7 @@ public class FloatDecoder implements FieldDecoder<Float> {
             return bs.readBitCoord();
 
         } else {
-            int v = (f.getBitCount() != null ? bs.readUInt(f.getBitCount()) : bs.readVarUInt());
+            int v = (f.getBitCount() != null ? bs.readUBitInt(f.getBitCount()) : bs.readVarUInt());
             return Float.intBitsToFloat(v);
         }
     }

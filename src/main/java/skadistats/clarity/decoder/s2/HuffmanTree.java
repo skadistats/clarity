@@ -26,7 +26,7 @@ public class HuffmanTree {
     public FieldOpType decodeOp(BitStream bs) {
         int i = 0;
         do {
-            i = tree[i][bs.readUInt(1)];
+            i = tree[i][bs.readUBitInt(1)];
         } while (i >= 0);
         return FieldOpType.values()[- i - 1];
     }

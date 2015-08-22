@@ -7,7 +7,7 @@ public class StringDecoder implements PropDecoder<String> {
 
     @Override
     public String decode(BitStream stream, SendProp prop) {
-        int len = stream.readUInt(9);
+        int len = stream.readUBitInt(9);
         return stream.readString(len);
     }
 

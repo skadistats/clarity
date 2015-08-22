@@ -60,7 +60,7 @@ public class BitStream {
         pos = pos + n;
     }
 
-    public long readULong(int n) {
+    public long readUBitLong(int n) {
         int start = pos >> 6;
         int end = (pos + n - 1) >> 6;
         int s = pos & 63;
@@ -75,8 +75,8 @@ public class BitStream {
         return ret;
     }
 
-    public long readSLong(int n) {
-        long v = readULong(n);
+    public long readSBitLong(int n) {
+        long v = readUBitLong(n);
         return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
     }
 
@@ -85,11 +85,11 @@ public class BitStream {
         int i = 0;
         while (n > 7) {
             n -= 8;
-            result[i] = (byte) readUInt(8);
+            result[i] = (byte) readUBitInt(8);
             i++;
         }
         if (n != 0) {
-            result[i] = (byte) readUInt(n);
+            result[i] = (byte) readUBitInt(n);
         }
         return result;
     }
@@ -97,7 +97,7 @@ public class BitStream {
     public String readString(int n) {
         StringBuilder buf = new StringBuilder();
         while (n > 0) {
-            char c = (char) readUInt(8);
+            char c = (char) readUBitInt(8);
             if (c == 0) {
                 break;
             }
@@ -113,7 +113,7 @@ public class BitStream {
         long v = 0L;
         long b;
         while (true) {
-            b = readULong(8);
+            b = readUBitLong(8);
             v |= (b & 0x7FL) << s;
             s += 7;
             if ((b & 0x80L) == 0L || s == m) {
@@ -143,12 +143,12 @@ public class BitStream {
         return (int) readVarS(32);
     }
 
-    public int readUInt(int n) {
-        return (int) readULong(n);
+    public int readUBitInt(int n) {
+        return (int) readUBitLong(n);
     }
 
-    public int readSInt(int n) {
-        return (int) readSLong(n);
+    public int readSBitInt(int n) {
+        return (int) readSBitLong(n);
     }
 
     public int readUBitVar() {
@@ -160,55 +160,55 @@ public class BitStream {
         // X set -> read 8
         // X + Y set -> read 28
 
-        int v = readUInt(6);
+        int v = readUBitInt(6);
         switch (v & 48) {
             case 16:
-                v = (v & 15) | (readUInt(4) << 4);
+                v = (v & 15) | (readUBitInt(4) << 4);
                 break;
             case 32:
-                v = (v & 15) | (readUInt(8) << 4);
+                v = (v & 15) | (readUBitInt(8) << 4);
                 break;
             case 48:
-                v = (v & 15) | (readUInt(28) << 4);
+                v = (v & 15) | (readUBitInt(28) << 4);
                 break;
         }
         return v;
     }
 
     public int readUBitVarFieldPath() {
-        if (readUInt(1) == 1) {
-            return readUInt(2);
-        } else if (readUInt(1) == 1) {
-            return readUInt(4);
-        } else if (readUInt(1) == 1) {
-            return readUInt(10);
-        } else if (readUInt(1) == 1) {
-            return readUInt(17);
+        if (readUBitInt(1) == 1) {
+            return readUBitInt(2);
+        } else if (readUBitInt(1) == 1) {
+            return readUBitInt(4);
+        } else if (readUBitInt(1) == 1) {
+            return readUBitInt(10);
+        } else if (readUBitInt(1) == 1) {
+            return readUBitInt(17);
         }
-        return readUInt(31);
+        return readUBitInt(31);
     }
 
     public float readBitCoord() {
-        boolean hasInt = readUInt(1) == 1; // integer component present?
-        boolean hasFrac = readUInt(1) == 1; // fractional component present?
+        boolean hasInt = readUBitInt(1) == 1; // integer component present?
+        boolean hasFrac = readUBitInt(1) == 1; // fractional component present?
         if (!(hasInt || hasFrac)) {
             return 0.0f;
         }
-        boolean sign = readUInt(1) == 1;
+        boolean sign = readUBitInt(1) == 1;
         int i = 0;
         int f = 0;
         if (hasInt) {
-            i = readUInt(14) + 1;
+            i = readUBitInt(14) + 1;
         }
         if (hasFrac) {
-            f = readUInt(5);
+            f = readUBitInt(5);
         }
         float v = i + ((float) f * (1.0f / 32.0f));
         return sign ? -v : v;
     }
 
     public float readBitAngle(int n) {
-        return readULong(n) * 360.0f / (1 << n);
+        return readUBitLong(n) * 360.0f / (1 << n);
     }
 
 

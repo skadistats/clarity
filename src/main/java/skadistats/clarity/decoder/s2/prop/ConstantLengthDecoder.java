@@ -14,6 +14,6 @@ public class ConstantLengthDecoder implements FieldDecoder<Long> {
 
     @Override
     public Long decode(BitStream bs, Field f) {
-        return bs.readULong(bits);
+        return bs.readUBitLong(bits);
     }
 }
