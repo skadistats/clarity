@@ -8,9 +8,12 @@ import java.io.IOException;
 
 public class BitStream {
 
+    private static final int COORD_INTEGER_BITS = 14;
+    private static final int COORD_FRACTIONAL_BITS = 5;
+    private static final float COORD_FRACTIONAL_RESOLUTION = (1.0f / (1 << COORD_FRACTIONAL_BITS));
+
     private static final int NORMAL_FRACTIONAL_BITS = 11;
-    private static final int NORMAL_DENOMINATOR = ((1 << NORMAL_FRACTIONAL_BITS) - 1);
-    private static final float NORMAL_RESOLUTION = (1.0f / NORMAL_DENOMINATOR);
+    private static final float NORMAL_FRACTIONAL_RESOLUTION = (1.0f / ((1 << NORMAL_FRACTIONAL_BITS) - 1));
 
     public static final long[] MASKS = {
         0x0L,               0x1L,                0x3L,                0x7L,
@@ -38,7 +41,7 @@ public class BitStream {
 
     public BitStream(ByteString input) {
         len = input.size();
-        data = new long[(len + 15) >> 3];
+        data = new long[(len + 15)  >> 3];
         pos = 0;
         try {
             Snappy.arrayCopy(ZeroCopy.extract(input), 0, len, data, 0);
@@ -62,6 +65,12 @@ public class BitStream {
 
     public void skip(int n) {
         pos = pos + n;
+    }
+
+    public boolean readBitFlag() {
+        boolean v = (data[pos >> 6] & (1 << (pos & 63))) != 0;
+        pos++;
+        return v;
     }
 
     public long readUBitLong(int n) {
@@ -180,71 +189,45 @@ public class BitStream {
     }
 
     public int readUBitVarFieldPath() {
-        if (readUBitInt(1) == 1) {
-            return readUBitInt(2);
-        } else if (readUBitInt(1) == 1) {
-            return readUBitInt(4);
-        } else if (readUBitInt(1) == 1) {
-            return readUBitInt(10);
-        } else if (readUBitInt(1) == 1) {
-            return readUBitInt(17);
-        }
+        if (readUBitLong(1) == 1L) return readUBitInt(2);
+        if (readUBitLong(1) == 1L) return readUBitInt(4);
+        if (readUBitLong(1) == 1L) return readUBitInt(10);
+        if (readUBitLong(1) == 1L) return readUBitInt(17);
         return readUBitInt(31);
     }
 
     public float readBitCoord() {
-        boolean hasInt = readUBitInt(1) == 1; // integer component present?
-        boolean hasFrac = readUBitInt(1) == 1; // fractional component present?
-        if (!(hasInt || hasFrac)) {
-            return 0.0f;
-        }
-        boolean sign = readUBitInt(1) == 1;
-        int i = 0;
-        int f = 0;
-        if (hasInt) {
-            i = readUBitInt(14) + 1;
-        }
-        if (hasFrac) {
-            f = readUBitInt(5);
-        }
-        float v = i + ((float) f * (1.0f / 32.0f));
-        return sign ? -v : v;
+        boolean i = readUBitLong(1) == 1L; // integer component present?
+        boolean f = readUBitLong(1) == 1L; // fractional component present?
+        float v = 0.0f;
+        if (!(i || f)) return v;
+        boolean s = readUBitLong(1) == 1L;
+        if (i) v = (float)(readUBitLong(COORD_INTEGER_BITS) + 1);
+        if (f) v += readUBitLong(COORD_FRACTIONAL_BITS) * COORD_FRACTIONAL_RESOLUTION;
+        return s ? -v : v;
     }
 
     public float readBitAngle(int n) {
         return readUBitLong(n) * 360.0f / (1 << n);
     }
 
-
     public float readBitNormal() {
-        boolean isNegative = readUBitInt(1) == 1;
-        int l = readUBitInt(NORMAL_FRACTIONAL_BITS);
-        float v = (float) l * NORMAL_RESOLUTION;
-        return isNegative ? -v : v;
+        boolean s = readUBitLong(1) == 1L;
+        float v = (float) readUBitLong(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
+        return s ? -v : v;
     }
 
     public float[] read3BitNormal() {
-        float[] fa = new float[3];
-        boolean xflag = readUBitLong(1) == 1L;
-        boolean yflag = readUBitLong(1) == 1L;
-        if (xflag)
-            fa[0] = readBitNormal();
-        else
-            fa[0] = 0.0f;
-
-        if (yflag)
-            fa[1] = readBitNormal();
-        else
-            fa[1] = 0.0f;
-        boolean znegative = readUBitLong(1) == 1L;
-        float fafafbfb = fa[0] * fa[0] + fa[1] * fa[1];
-        if (fafafbfb < 1.0f)
-            fa[2] = (float) Math.sqrt(1.0f - fafafbfb);
-        else
-            fa[2] = 0.0f;
-        if (znegative)
-            fa[2] = -fa[2];
-        return fa;
+        float[] v = new float[3];
+        boolean x = readUBitLong(1) == 1L;
+        boolean y = readUBitLong(1) == 1L;
+        if (x) v[0] = readBitNormal();
+        if (y) v[1] = readBitNormal();
+        boolean s = readUBitLong(1) == 1L;
+        float p = v[0] * v[0] + v[1] * v[1];
+        if (p < 1.0f) v[2] = (float) Math.sqrt(1.0f - p);
+        if (s) v[2] = -v[2];
+        return v;
     }
 
     public String toString() {

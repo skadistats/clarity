@@ -16,10 +16,6 @@ public class FloatDecoder implements PropDecoder<Float> {
     private static final int COORD_DENOMINATOR_LOWPRECISION = (1 << COORD_FRACTIONAL_BITS_MP_LOWPRECISION);
     private static final float COORD_RESOLUTION_LOWPRECISION = (1.0f / COORD_DENOMINATOR_LOWPRECISION);
 
-    private static final int NORMAL_FRACTIONAL_BITS = 11;
-    private static final int NORMAL_DENOMINATOR = ((1 << NORMAL_FRACTIONAL_BITS) - 1);
-    private static final float NORMAL_RESOLUTION = (1.0f / NORMAL_DENOMINATOR);
-    
     @Override
     public Float decode(BitStream stream, SendProp prop) {
         int flags = prop.getFlags();
@@ -45,23 +41,7 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeCoord(BitStream stream) {
-        boolean hasInt = stream.readUBitInt(1) == 1; // integer component present?
-        boolean hasFrac = stream.readUBitInt(1) == 1; // fractional component present?
-
-        if (!(hasInt || hasFrac)) {
-            return 0.0f;
-        }
-        boolean sign = stream.readUBitInt(1) == 1;
-        int i = 0;
-        int f = 0;
-        if (hasInt) {
-            i = stream.readUBitInt(COORD_INTEGER_BITS) + 1;
-        }
-        if (hasFrac) {
-            f = stream.readUBitInt(COORD_FRACTIONAL_BITS);
-        }
-        float v = i + ((float) f * COORD_RESOLUTION);
-        return sign ? -v : v;
+        return stream.readBitCoord();
     }
 
     public float decodeFloatCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
@@ -94,10 +74,7 @@ public class FloatDecoder implements PropDecoder<Float> {
     }
 
     public float decodeNormal(BitStream stream) {
-        boolean isNegative = stream.readUBitInt(1) == 1;
-        int l = stream.readUBitInt(NORMAL_FRACTIONAL_BITS);
-        float v = (float) l * NORMAL_RESOLUTION;
-        return isNegative ? -v : v;
+        return stream.readBitNormal();
     }
 
     public float decodeCellCoord(BitStream stream, int numBits) {
