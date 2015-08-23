@@ -50,16 +50,16 @@ public class FloatDecoder implements PropDecoder<Float> {
         boolean sign = false;
         float value = 0.0f;
 
-        boolean inBounds = stream.readUBitInt(1) == 1;
+        boolean inBounds = stream.readBitFlag();
         if (integral) {
             i = stream.readUBitInt(1);
             if (i != 0) {
-                sign = stream.readUBitInt(1) == 1;
+                sign = stream.readBitFlag();
                 value = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
             i = stream.readUBitInt(1);
-            sign = stream.readUBitInt(1) == 1;
+            sign = stream.readBitFlag();
             if (i != 0) {
                 i = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }

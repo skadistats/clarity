@@ -8,6 +8,6 @@ public class BoolDecoder implements FieldDecoder<Boolean> {
 
     @Override
     public Boolean decode(BitStream bs, Field f) {
-        return bs.readUBitInt(1) == 1;
+        return bs.readBitFlag();
     }
 }

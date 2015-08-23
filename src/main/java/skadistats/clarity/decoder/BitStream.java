@@ -68,7 +68,7 @@ public class BitStream {
     }
 
     public boolean readBitFlag() {
-        boolean v = (data[pos >> 6] & (1 << (pos & 63))) != 0;
+        boolean v = (data[pos >> 6] & (1L << (pos & 63))) != 0L;
         pos++;
         return v;
     }
@@ -189,19 +189,19 @@ public class BitStream {
     }
 
     public int readUBitVarFieldPath() {
-        if (readUBitLong(1) == 1L) return readUBitInt(2);
-        if (readUBitLong(1) == 1L) return readUBitInt(4);
-        if (readUBitLong(1) == 1L) return readUBitInt(10);
-        if (readUBitLong(1) == 1L) return readUBitInt(17);
+        if (readBitFlag()) return readUBitInt(2);
+        if (readBitFlag()) return readUBitInt(4);
+        if (readBitFlag()) return readUBitInt(10);
+        if (readBitFlag()) return readUBitInt(17);
         return readUBitInt(31);
     }
 
     public float readBitCoord() {
-        boolean i = readUBitLong(1) == 1L; // integer component present?
-        boolean f = readUBitLong(1) == 1L; // fractional component present?
+        boolean i = readBitFlag(); // integer component present?
+        boolean f = readBitFlag(); // fractional component present?
         float v = 0.0f;
         if (!(i || f)) return v;
-        boolean s = readUBitLong(1) == 1L;
+        boolean s = readBitFlag();
         if (i) v = (float)(readUBitLong(COORD_INTEGER_BITS) + 1);
         if (f) v += readUBitLong(COORD_FRACTIONAL_BITS) * COORD_FRACTIONAL_RESOLUTION;
         return s ? -v : v;
@@ -212,18 +212,18 @@ public class BitStream {
     }
 
     public float readBitNormal() {
-        boolean s = readUBitLong(1) == 1L;
+        boolean s = readBitFlag();
         float v = (float) readUBitLong(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
         return s ? -v : v;
     }
 
     public float[] read3BitNormal() {
         float[] v = new float[3];
-        boolean x = readUBitLong(1) == 1L;
-        boolean y = readUBitLong(1) == 1L;
+        boolean x = readBitFlag();
+        boolean y = readBitFlag();
         if (x) v[0] = readBitNormal();
         if (y) v[1] = readBitNormal();
-        boolean s = readUBitLong(1) == 1L;
+        boolean s = readBitFlag();
         float p = v[0] * v[0] + v[1] * v[1];
         if (p < 1.0f) v[2] = (float) Math.sqrt(1.0f - p);
         if (s) v[2] = -v[2];

@@ -120,7 +120,7 @@ public enum FieldOpType {
         public void execute(FieldPath fp, BitStream bs) {
             fp.last -= bs.readUBitVarFieldPath();
             for (int i = 0; i <= fp.last; i++) {
-                if (bs.readUBitInt(1) == 1) {
+                if (bs.readBitFlag()) {
                     fp.path[i] += bs.readVarSInt();
                 }
             }
@@ -130,7 +130,7 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
-                if (bs.readUBitInt(1) == 1) {
+                if (bs.readBitFlag()) {
                     fp.path[i] += bs.readVarSInt();
                 }
             }
@@ -141,7 +141,7 @@ public enum FieldOpType {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
             for (int i = 0; i <= fp.last; i++) {
-                if (bs.readUBitInt(1) == 1) {
+                if (bs.readBitFlag()) {
                     fp.path[i] += bs.readUBitInt(4) - 7;
                 }
             }

@@ -31,7 +31,7 @@ public class TempEntities {
             int count = message.getNumEntries();
             while (count-- > 0) {
                 stream.readUBitInt(1); // seems to be always 0
-                if (stream.readUBitInt(1) == 1) {
+                if (stream.readBitFlag()) {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }

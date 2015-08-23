@@ -139,7 +139,7 @@ public class Entities {
             }
         }
         if (message.getIsDelta()) {
-            while (stream.readUBitInt(1) == 1) {
+            while (stream.readBitFlag()) {
                 entityIndex = stream.readUBitInt(11); // max is 2^11-1, or 2047
                 if (evDeleted != null) {
                     evDeleted.raise(entities[entityIndex]);

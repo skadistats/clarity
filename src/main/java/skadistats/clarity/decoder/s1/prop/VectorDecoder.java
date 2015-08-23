@@ -17,7 +17,7 @@ public class VectorDecoder implements PropDecoder<Vector> {
         if ((prop.getFlags() & PropFlag.NORMAL) != 0) {
             float f = x * x + y * y;
             z = 1.0f >= f ? 0.0f : (float) Math.sqrt(1.0f - f);
-            z = stream.readUBitInt(1) == 1 ? -z : z;
+            z = stream.readBitFlag() ? -z : z;
         } else {
             z = fd.decode(stream, prop);
         }

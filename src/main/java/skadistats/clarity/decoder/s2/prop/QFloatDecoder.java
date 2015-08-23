@@ -13,13 +13,13 @@ public class QFloatDecoder implements FieldDecoder<Float> {
             bs.skip(f.getBitCount());
             return 0.0f;
         } else {
-            if ((flags & 0x10) != 0 && bs.readUBitInt(1) == 1) {
+            if ((flags & 0x10) != 0 && bs.readBitFlag()) {
                 return f.getLowValue();
             }
-            if ((flags & 0x20) != 0 && bs.readUBitInt(1) == 1) {
+            if ((flags & 0x20) != 0 && bs.readBitFlag()) {
                 return f.getHighValue();
             }
-            if ((flags & 0x40) != 0 && bs.readUBitInt(1) == 1) {
+            if ((flags & 0x40) != 0 && bs.readBitFlag()) {
                 return 0.0f;
             }
             int bc = f.getBitCount();

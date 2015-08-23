@@ -60,15 +60,15 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
                 index++;
             } else {
                 index = stream.readVarUInt() + 1;
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readUBitInt(1) == 1) {
-                if (stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
+                if (stream.readBitFlag()) {
                     int basis = stream.readUBitInt(5);
                     int length = stream.readUBitInt(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
@@ -83,7 +83,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();

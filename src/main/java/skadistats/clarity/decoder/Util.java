@@ -32,7 +32,7 @@ public class Util {
         int i = 0;
         int cursor = -1;
         while (true) {
-            if (bs.readUBitInt(1) == 1) {
+            if (bs.readBitFlag()) {
                 cursor += 1;
             } else {
                 int offset = bs.readVarUInt();

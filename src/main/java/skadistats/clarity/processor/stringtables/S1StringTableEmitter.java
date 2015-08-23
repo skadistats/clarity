@@ -47,23 +47,23 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
 
-        boolean mysteryFlag = stream.readUBitInt(1) == 1;
+        boolean mysteryFlag = stream.readBitFlag();
         int index = -1;
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
                 index++;
             } else {
                 index = stream.readUBitInt(bitsPerIndex);
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readUBitInt(1) == 1) {
-                if (mysteryFlag && stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
+                if (mysteryFlag && stream.readBitFlag()) {
                     throw new RuntimeException("mystery_flag assert failed!");
                 }
-                if (stream.readUBitInt(1) == 1) {
+                if (stream.readBitFlag()) {
                     int basis = stream.readUBitInt(5);
                     int length = stream.readUBitInt(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
@@ -78,7 +78,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readUBitInt(1) == 1) {
+            if (stream.readBitFlag()) {
                 int bitLength = 0;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
