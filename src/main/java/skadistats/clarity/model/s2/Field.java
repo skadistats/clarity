@@ -6,13 +6,13 @@ public class Field {
     private final String name;
     private final String sendNode;
     private final int encodeFlags;
-    private final Integer bitCount;
+    private final int bitCount;
     private final Float lowValue;
     private final Float highValue;
     private final Serializer serializer;
     private final String encoder;
 
-    public Field(FieldType type, String name, String sendNode, int encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
+    public Field(FieldType type, String name, String sendNode, int encodeFlags, int bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;
@@ -40,7 +40,7 @@ public class Field {
         return encodeFlags;
     }
 
-    public Integer getBitCount() {
+    public int getBitCount() {
         return bitCount;
     }
 
@@ -59,4 +59,5 @@ public class Field {
     public String getEncoder() {
         return encoder;
     }
+
 }

@@ -17,9 +17,6 @@ public class QAngleDecoder implements FieldDecoder<Vector> {
     }
 
     public Vector pitchYawOnly(BitStream bs, Field f) {
-        if (f.getBitCount() == null) {
-            throw new RuntimeException("bitcount expected!");
-        }
         if ((f.getBitCount() | 0x20) == 0x20) {
             throw new RuntimeException("implement me!");
         }
@@ -33,7 +30,7 @@ public class QAngleDecoder implements FieldDecoder<Vector> {
 
     public Vector normal(BitStream bs, Field f) {
         float[] v = new float[3];
-        if (f.getBitCount() != null && f.getBitCount().intValue() != 0) {
+        if (f.getBitCount() != 0) {
             if (f.getBitCount() == 32) {
                 if (true) throw new RuntimeException("QAngle0 " + f.getBitCount());
                 v[0] = Float.intBitsToFloat(bs.readUBitInt(32));
