@@ -4,7 +4,6 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
 
 import java.lang.annotation.Annotation;
-import java.lang.invoke.ConstantCallSite;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
@@ -41,7 +40,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     public void bind(Context ctx) throws IllegalAccessException {
         log.debug("bind {} to context", method);
         MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass)).bindTo(ctx);
-        methodHandle = new ConstantCallSite(boundHandle).dynamicInvoker();
+        methodHandle = boundHandle.asSpreader(Object[].class, arity);
     }
 
     @Override
@@ -70,7 +69,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
 
     @Override
     public void invoke(Object... args) throws Throwable {
-        methodHandle.invokeWithArguments(args);
+        methodHandle.invokeExact(args);
     }
 
 }
