@@ -26,7 +26,7 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
                 (flags & PropFlag.CELL_COORD_LOW_PRECISION) != 0
             );
         } else {
-            return new FloatDefaultUnpacker(prop.getNumBits(), 0, prop.getHighValue(), prop.getLowValue());
+            return new FloatDefaultUnpacker(prop.getVarName(), prop.getNumBits(), 0, prop.getHighValue(), prop.getLowValue());
         }
     }
 
