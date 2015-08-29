@@ -26,11 +26,11 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
         if (SIMULATION_TIME_PROPERTIES.contains(f.getName())) {
             return new FloatSimulationTimeUnpacker();
         }
-        int bc = f.getBitCount();
+        int bc = f.getBitCountOrDefault(0);
         if (bc <= 0 || bc >= 32) {
             return new FloatNoScaleUnpacker();
         }
-        return new FloatDefaultUnpacker(bc, f.getEncodeFlags(), f.getLowValue(), f.getHighValue());
+        return new FloatDefaultUnpacker(bc, f.getEncodeFlagsOrDefault(0), f.getLowValueOrDefault(0.0f), f.getHighValueOrDefault(1.0f));
     }
 
 }

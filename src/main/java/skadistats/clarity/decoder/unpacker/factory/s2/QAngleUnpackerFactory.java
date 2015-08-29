@@ -7,7 +7,7 @@ import skadistats.clarity.model.s2.Field;
 public class QAngleUnpackerFactory implements UnpackerFactory<Vector> {
 
     public static Unpacker<Vector> createUnpackerStatic(Field f) {
-        int bc = f.getBitCount();
+        int bc = f.getBitCountOrDefault(0);
         if ("qangle_pitch_yaw".equals(f.getEncoder())) {
             return new QAnglePitchYawOnlyUnpacker(bc);
         }

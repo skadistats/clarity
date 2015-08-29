@@ -5,14 +5,14 @@ public class Field {
     private final FieldType type;
     private final String name;
     private final String sendNode;
-    private final int encodeFlags;
-    private final int bitCount;
+    private final Integer encodeFlags;
+    private final Integer bitCount;
     private final Float lowValue;
     private final Float highValue;
     private final Serializer serializer;
     private final String encoder;
 
-    public Field(FieldType type, String name, String sendNode, int encodeFlags, int bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
+    public Field(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;
@@ -36,20 +36,36 @@ public class Field {
         return sendNode;
     }
 
-    public int getEncodeFlags() {
+    public Integer getEncodeFlags() {
         return encodeFlags;
     }
 
-    public int getBitCount() {
+    public int getEncodeFlagsOrDefault(int defaultValue) {
+        return encodeFlags != null ? encodeFlags.intValue() : defaultValue;
+    }
+
+    public Integer getBitCount() {
         return bitCount;
+    }
+
+    public int getBitCountOrDefault(int defaultValue) {
+        return bitCount != null ? bitCount.intValue() : defaultValue;
     }
 
     public Float getLowValue() {
         return lowValue;
     }
 
+    public float getLowValueOrDefault(float defaultValue) {
+        return lowValue != null ? lowValue.floatValue() : defaultValue;
+    }
+
     public Float getHighValue() {
         return highValue;
+    }
+
+    public float getHighValueOrDefault(float defaultValue) {
+        return highValue != null ? highValue.floatValue() : defaultValue;
     }
 
     public Serializer getSerializer() {
