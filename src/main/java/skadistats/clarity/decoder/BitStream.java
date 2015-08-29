@@ -10,10 +10,16 @@ public class BitStream {
 
     private static final int COORD_INTEGER_BITS = 14;
     private static final int COORD_FRACTIONAL_BITS = 5;
-    private static final float COORD_FRACTIONAL_RESOLUTION = (1.0f / (1 << COORD_FRACTIONAL_BITS));
+    private static final float COORD_RESOLUTION = (1.0f / (1 << COORD_FRACTIONAL_BITS));
+
+    private static final int COORD_INTEGER_BITS_MP = 11;
+    private static final int COORD_FRACTIONAL_BITS_MP_LOWPRECISION = 3;
+    private static final int COORD_DENOMINATOR_LOWPRECISION = (1 << COORD_FRACTIONAL_BITS_MP_LOWPRECISION);
+    private static final float COORD_RESOLUTION_LOWPRECISION = (1.0f / COORD_DENOMINATOR_LOWPRECISION);
 
     private static final int NORMAL_FRACTIONAL_BITS = 11;
     private static final float NORMAL_FRACTIONAL_RESOLUTION = (1.0f / ((1 << NORMAL_FRACTIONAL_BITS) - 1));
+
 
     public static final long[] MASKS = {
         0x0L,               0x1L,                0x3L,                0x7L,
@@ -203,12 +209,49 @@ public class BitStream {
         if (!(i || f)) return v;
         boolean s = readBitFlag();
         if (i) v = (float)(readUBitLong(COORD_INTEGER_BITS) + 1);
-        if (f) v += readUBitLong(COORD_FRACTIONAL_BITS) * COORD_FRACTIONAL_RESOLUTION;
+        if (f) v += readUBitLong(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
         return s ? -v : v;
     }
 
+    public float readCellCoord(int n, boolean integral, boolean lowPrecision) {
+        float v = (float)(readUBitLong(n));
+        if (integral) {
+            // TODO: something weird is going on here in alice, we might need to adjust the sign?
+            return v;
+        }
+        if (lowPrecision) {
+            throw new RuntimeException("implement me!");
+        }
+        return v + readUBitLong(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
+    }
+
+    public float readCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
+        int i = 0;
+        int f = 0;
+        boolean sign = false;
+        float value = 0.0f;
+
+        boolean inBounds = stream.readBitFlag();
+        if (integral) {
+            i = stream.readUBitInt(1);
+            if (i != 0) {
+                sign = stream.readBitFlag();
+                value = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+            }
+        } else {
+            i = stream.readUBitInt(1);
+            sign = stream.readBitFlag();
+            if (i != 0) {
+                i = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+            }
+            f = stream.readUBitInt(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
+            value = i + ((float) f * (lowPrecision ? COORD_RESOLUTION_LOWPRECISION : COORD_RESOLUTION));
+        }
+        return sign ? -value : value;
+    }
+
     public float readBitAngle(int n) {
-        return readUBitLong(n) * 360.0f / (1 << n);
+        return readUBitLong(n) * 360.0f / MASKS[n];
     }
 
     public float readBitNormal() {

@@ -2,18 +2,15 @@ package skadistats.clarity.model.s1;
 
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.decoder.s1.prop.PropDecoder;
 
 public class ReceiveProp {
 
     private final SendProp sendProp;
     private final String name;
-    private final PropDecoder propDecoder;
 
     public ReceiveProp(SendProp sendProp, String name) {
         this.sendProp = sendProp;
         this.name = name;
-        this.propDecoder = sendProp.getType().getDecoder();
     }
 
     public SendProp getSendProp() {
@@ -25,7 +22,7 @@ public class ReceiveProp {
     }
 
     public Object decode(BitStream stream) {
-        return propDecoder.decode(stream, sendProp);
+        return sendProp.getUnpacker().unpack(stream);
     }
 
     @Override

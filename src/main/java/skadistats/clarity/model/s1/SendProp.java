@@ -1,6 +1,9 @@
 package skadistats.clarity.model.s1;
 
 
+import skadistats.clarity.decoder.s1.S1UnpackerFactory;
+import skadistats.clarity.decoder.unpacker.Unpacker;
+
 public class SendProp {
 
     private final SendTable table;
@@ -17,6 +20,8 @@ public class SendProp {
     private final int numBits;
 
     private final SendTableExclusion excludeIdentifier;
+    private final Unpacker unpacker;
+
 
     public SendProp(SendTable table, SendProp template, int type, String varName, int flags, int priority, String dtName, int numElements, float lowValue, float highValue, int numBits) {
         this.table = table;
@@ -31,6 +36,7 @@ public class SendProp {
         this.highValue = highValue;
         this.numBits = numBits;
         this.excludeIdentifier = new SendTableExclusion(dtName, varName);
+        this.unpacker = S1UnpackerFactory.createUnpacker(this);
     }
 
     public SendTableExclusion getExcludeIdentifier() {
@@ -79,6 +85,10 @@ public class SendProp {
 
     public int getFlags() {
         return flags;
+    }
+
+    public Unpacker getUnpacker() {
+        return unpacker;
     }
 
     @Override
