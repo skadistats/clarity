@@ -13,13 +13,14 @@ public class QAnglePitchYawOnlyUnpacker implements Unpacker<Vector> {
 
     @Override
     public Vector unpack(BitStream bs) {
-        if ((nBits | 0x20) == 0x20) {
-            throw new RuntimeException("implement me!");
-        }
         float[] v = new float[3];
-        v[0] = bs.readBitAngle(nBits);
-        v[1] = bs.readBitAngle(nBits);
-        v[2] = 0.0f;
+        if ((nBits | 0x20) == 0x20) {
+            v[0] = Float.intBitsToFloat(bs.readUBitInt(32));
+            v[1] = Float.intBitsToFloat(bs.readUBitInt(32));
+        } else {
+            v[0] = bs.readBitAngle(nBits);
+            v[1] = bs.readBitAngle(nBits);
+        }
         return new Vector(v);
     }
     
