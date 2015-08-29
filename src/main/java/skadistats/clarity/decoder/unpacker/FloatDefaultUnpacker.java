@@ -11,148 +11,125 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
     private static final int QFE_ROUNDUP = 0x2;
     private static final int QFE_ENCODE_ZERO_EXACTLY = 0x4;
     private static final int QFE_ENCODE_INTEGERS_EXACTLY = 0x8;
-    private static final int BITNUM_ENCODE_BIT_COUNT = 3;
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
-    private String m_pFieldName;
-    private int m_nBitCount;
-    private float m_flMinValue;
-    private float m_flMaxValue;
-    private int m_nFlags;
-    private int m_nEncodeFlags;
+    private String fieldName;
+    private int bitCount;
+    private float minValue;
+    private float maxValue;
+    private int flags;
+    private int encodeFlags;
 
-    private float m_flHighLowMul;
-    private float m_flDecodeMul;
+    private float highLowMultiplier;
+    private float decodeMultiplier;
 
-    public FloatDefaultUnpacker(String m_pFieldName, int m_nBitCount, int m_nFlags, float m_flMinValue, float m_flMaxValue) {
-        this.m_pFieldName = m_pFieldName;
-        this.m_nBitCount = m_nBitCount;
-        this.m_flMinValue = m_flMinValue;
-        this.m_flMaxValue = m_flMaxValue;
-        this.m_nFlags = m_nFlags;
-        this.m_nEncodeFlags = validateFlags(this.m_nFlags);
+    public FloatDefaultUnpacker(String fieldName, int bitCount, int flags, float minValue, float maxValue) {
+        this.fieldName = fieldName;
+        this.bitCount = bitCount;
+        this.minValue = minValue;
+        this.maxValue = maxValue;
+        this.flags = flags;
+        this.encodeFlags = computeEncodeFlags(flags);
         initialize();
-        if (this.m_nFlags != this.m_nEncodeFlags) {
-            log.info("Flags changed for Field {}, [{}->{}]", m_pFieldName, this.m_nFlags, this.m_nEncodeFlags);
+        if (this.flags != this.encodeFlags) {
+            log.info("flags changed for Field {}, [{}->{}]", fieldName, this.flags, this.encodeFlags);
         }
     }
+
+    private int computeEncodeFlags(int f) {
+        // If the min or max value is exactly zero and we are encoding min or max exactly, then don't need zero flag
+        if ((minValue == 0.0f && (f & QFE_ROUNDDOWN) != 0) || (maxValue == 0.0f && (f & QFE_ROUNDUP) != 0)) {
+            f &= ~QFE_ENCODE_ZERO_EXACTLY;
+        }
+
+        // If specified encode zero but min or max actual value is zero, then convert that encode directive to be encode min or max exactly instead
+        if (minValue == 0.0f && (f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
+            f |= QFE_ROUNDDOWN;
+            f &= ~QFE_ENCODE_ZERO_EXACTLY;
+        }
+        if (maxValue == 0.0f && (f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
+            f |= QFE_ROUNDUP;
+            f &= ~QFE_ENCODE_ZERO_EXACTLY;
+        }
+
+        // If the range doesn't span across zero, then also don't need the zero flag
+        boolean bActuallyNeedToTestZero = (minValue < 0.0f && maxValue > 0.0f);
+        if (!bActuallyNeedToTestZero) {
+            if ((f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
+                log.warn("Field {} was flagged to encode zero exactly, but min/max range doesn't span zero [{}->{}]", fieldName, minValue, maxValue);
+            }
+            f &= ~QFE_ENCODE_ZERO_EXACTLY;
+        }
+
+        if ((f & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
+            // Wipes out all other flags
+            f &= ~(QFE_ROUNDUP | QFE_ROUNDDOWN | QFE_ENCODE_ZERO_EXACTLY);
+        }
+
+        return f;
+    }
+
 
     private void initialize() {
-        float m_flOffset;
-        int nQuanta = (1 << m_nBitCount);
+        float offset;
+        int quanta = (1 << bitCount);
 
-        if ((m_nFlags & (QFE_ROUNDDOWN | QFE_ROUNDUP)) == (QFE_ROUNDDOWN | QFE_ROUNDUP)) {
-            log.warn("Field {} was flagged to both round up and down, these m_nFlags are mutually exclusive [{}->{}]\n", m_pFieldName, m_flMinValue, m_flMaxValue);
+        if ((flags & (QFE_ROUNDDOWN | QFE_ROUNDUP)) == (QFE_ROUNDDOWN | QFE_ROUNDUP)) {
+            log.warn("Field {} was flagged to both round up and down, these flags are mutually exclusive [{}->{}]\n", fieldName, minValue, maxValue);
         }
 
-        if ((m_nFlags & QFE_ROUNDDOWN) != 0) {
-            float flFullRange = m_flMaxValue - m_flMinValue;
-            m_flOffset = (flFullRange / nQuanta);
-            m_flMaxValue -= m_flOffset;
-        } else if ((m_nFlags & QFE_ROUNDUP) != 0) {
-            float flFullRange = m_flMaxValue - m_flMinValue;
-            m_flOffset = (flFullRange / nQuanta);
-            m_flMinValue += m_flOffset;
+        if ((flags & QFE_ROUNDDOWN) != 0) {
+            offset = ((maxValue - minValue) / quanta);
+            maxValue -= offset;
+        } else if ((flags & QFE_ROUNDUP) != 0) {
+            offset = ((maxValue - minValue) / quanta);
+            minValue += offset;
         }
 
-        if ((m_nFlags & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
-            int delta = ((int) m_flMinValue) - ((int) m_flMaxValue);
-            int nTrueRange = (1 << Util.calcBitsNeededFor(Math.max(delta, 1)));
+        if ((flags & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
+            int delta = ((int) minValue) - ((int) maxValue);
+            int trueRange = (1 << Util.calcBitsNeededFor(Math.max(delta, 1)));
 
-            int nBits = this.m_nBitCount;
-            while ((1 << nBits) < nTrueRange) {
+            int nBits = this.bitCount;
+            while ((1 << nBits) < trueRange) {
                 ++nBits;
             }
-            if (nBits > m_nBitCount) {
-                log.warn("Field {} was flagged QFE_ENCODE_INTEGERS_EXACTLY, but didn't specify enough bits, upping bitcount from {}to {} for range [{}->{}]", m_pFieldName, m_nBitCount, nBits, m_flMinValue, m_flMaxValue);
-                m_nBitCount = nBits;
-                nQuanta = (1 << m_nBitCount);
+            if (nBits > bitCount) {
+                log.warn("Field {} was flagged QFE_ENCODE_INTEGERS_EXACTLY, but didn't specify enough bits, upping bitcount from {}to {} for range [{}->{}]", fieldName, bitCount, nBits, minValue, maxValue);
+                bitCount = nBits;
+                quanta = (1 << bitCount);
             }
 
-            float flTrueRange = (float) nTrueRange;
-            m_flOffset = (flTrueRange / (float) nQuanta);
-            m_flMaxValue = m_flMinValue + flTrueRange - m_flOffset;
+            float floatRange = (float) trueRange;
+            offset = (floatRange / (float) quanta);
+            maxValue = minValue + floatRange - offset;
         }
 
-        if (!assignMultipliers(nQuanta)) {
-            throw new RuntimeException("oops, assignMultipliers failed.");
+        highLowMultiplier = assignRangeMultiplier(bitCount, maxValue - minValue);
+        decodeMultiplier = 1.0f / (quanta - 1);
+        if (highLowMultiplier == 0.0f) {
+            throw new RuntimeException("Assert failed: highLowMultiplier is zero!");
         }
 
-        // On the wire we might not need special bits
-        for (int bit = 0; bit < BITNUM_ENCODE_BIT_COUNT; bit++) {
-            if ((m_nEncodeFlags & (1 << bit)) != 0) {
-                float test = GetExactEncodeTestCase(bit);
-                if (QuantizedFloatIsUnchanged(test)) {
-                    m_nEncodeFlags &= ~(1 << bit);
-                }
+        if ((encodeFlags & QFE_ROUNDDOWN) != 0) {
+            if (quantize(minValue) == minValue) {
+                encodeFlags &= ~QFE_ROUNDDOWN;
             }
         }
-
-    }
-
-    private float GetExactEncodeTestCase(int bit) {
-        int nFlags = (1 << bit);
-
-        if ((nFlags & QFE_ROUNDDOWN) != 0)
-            return m_flMinValue;
-        if ((nFlags & QFE_ROUNDUP) != 0)
-            return m_flMaxValue;
-        if ((nFlags & QFE_ENCODE_ZERO_EXACTLY) != 0)
-            return 0.0f;
-        throw new RuntimeException("oooops!");
-    }
-
-
-    private float QuantizeFloat(float flValue) {
-        boolean bValidate = true;
-
-        int ulVal;
-        if (flValue < m_flMinValue) {
-            // clamp < 0
-            ulVal = 0;
-
-            if (bValidate && (m_nFlags & QFE_ROUNDUP) == 0) {
-                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}), clamping.", m_pFieldName, flValue, m_flMinValue, m_flMaxValue);
+        if ((encodeFlags & QFE_ROUNDUP) != 0) {
+            if (quantize(maxValue) == maxValue) {
+                encodeFlags &= ~QFE_ROUNDUP;
             }
-            return m_flMinValue;
-        } else if (flValue > m_flMaxValue) {
-            // clamp > 1
-            ulVal = ((1 << m_nBitCount) - 1);
-
-            if (bValidate && (m_nFlags & QFE_ROUNDDOWN) == 0) {
-                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}) clamping.", m_pFieldName, flValue, m_flMinValue, m_flMaxValue);
-            }
-            return m_flMaxValue;
         }
-
-        // Actually quantize
-        float fRangeVal = (flValue - m_flMinValue) * m_flHighLowMul;
-        ulVal = (int) fRangeVal;
-        float out = (float) ulVal * m_flDecodeMul;
-        out = m_flMinValue + (m_flMaxValue - m_flMinValue) * out;
-        return out;
+        if ((encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0) {
+            if (quantize(0.0f) == 0.0f) {
+                encodeFlags &= ~QFE_ENCODE_ZERO_EXACTLY;
+            }
+        }
     }
 
-
-    private boolean QuantizedFloatIsUnchanged(float flInput) {
-        float flOutput;
-        //QuantizeFloat< true, false >( flInput, &flOutput );
-        return flInput == QuantizeFloat(flInput);
-    }
-
-
-    private boolean assignMultipliers(int nQuanta) {
-        m_flHighLowMul = AssignRangeMultiplier(m_nBitCount, m_flMaxValue - m_flMinValue);
-        m_flDecodeMul = 1.0f / (nQuanta - 1);
-        return (m_flHighLowMul != 0.0f);
-    }
-
-    private boolean CloseEnough(float a, float b) {
-        return Math.abs(a - b) <= 0.001;
-    }
-
-    private float AssignRangeMultiplier(int nBits, float range) {
+    private float assignRangeMultiplier(int nBits, float range) {
         int iHighValue;
         if (nBits == 32) {
             iHighValue = 0xFFFFFFFE;
@@ -161,7 +138,7 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
         }
 
         float fHighLowMul;
-        if (CloseEnough(range, 0.0f)) {
+        if (Math.abs(range) <= 0.001) {
             fHighLowMul = (float) iHighValue;
         } else {
             fHighLowMul = iHighValue / range;
@@ -188,54 +165,35 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
         return fHighLowMul;
     }
 
-
-    private int validateFlags(int nFlags) {
-        // If the min or max value is exactly zero and we are encoding min or max exactly, then don't need zero flag
-        if ((m_flMinValue == 0.0f && (nFlags & QFE_ROUNDDOWN) != 0) || (m_flMaxValue == 0.0f && (nFlags & QFE_ROUNDUP) != 0)) {
-            nFlags &= ~QFE_ENCODE_ZERO_EXACTLY;
-        }
-
-        // If specified encode zero but min or max actual value is zero, then convert that encode directive to be encode min or max exactly instead
-        if (m_flMinValue == 0.0f && (nFlags & QFE_ENCODE_ZERO_EXACTLY) != 0) {
-            nFlags |= QFE_ROUNDDOWN;
-            nFlags &= ~QFE_ENCODE_ZERO_EXACTLY;
-        }
-        if (m_flMaxValue == 0.0f && (nFlags & QFE_ENCODE_ZERO_EXACTLY) != 0) {
-            nFlags |= QFE_ROUNDUP;
-            nFlags &= ~QFE_ENCODE_ZERO_EXACTLY;
-        }
-
-        // If the range doesn't span across zero, then also don't need the zero flag
-        boolean bActuallyNeedToTestZero = (m_flMinValue < 0.0f && m_flMaxValue > 0.0f);
-        if (!bActuallyNeedToTestZero) {
-            if ((nFlags & QFE_ENCODE_ZERO_EXACTLY) != 0) {
-                log.warn("Field {} was flagged to encode zero exactly, but min/max range doesn't span zero [{}->{}]", m_pFieldName, m_flMinValue, m_flMaxValue);
+    private float quantize(float value) {
+        if (value < minValue) {
+            if ((flags & QFE_ROUNDUP) == 0) {
+                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}), clamping.", fieldName, value, minValue, maxValue);
             }
-            nFlags &= ~QFE_ENCODE_ZERO_EXACTLY;
+            return minValue;
+        } else if (value > maxValue) {
+            if ((flags & QFE_ROUNDDOWN) == 0) {
+                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}) clamping.", fieldName, value, minValue, maxValue);
+            }
+            return maxValue;
         }
-
-        if ((nFlags & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
-            // Wipes out all other falgs
-            nFlags &= ~(QFE_ROUNDUP | QFE_ROUNDDOWN | QFE_ENCODE_ZERO_EXACTLY);
-        }
-
-        return nFlags;
+        int i = (int) ((value - minValue) * highLowMultiplier);
+        return minValue + (maxValue - minValue) * ((float) i * decodeMultiplier);
     }
-
 
     @Override
     public Float unpack(BitStream bs) {
-        if ((m_nEncodeFlags & 0x1) != 0 && bs.readBitFlag()) {
-            return m_flMinValue;
+        if ((encodeFlags & 0x1) != 0 && bs.readBitFlag()) {
+            return minValue;
         }
-        if ((m_nEncodeFlags & 0x2) != 0 && bs.readBitFlag()) {
-            return m_flMaxValue;
+        if ((encodeFlags & 0x2) != 0 && bs.readBitFlag()) {
+            return maxValue;
         }
-        if ((m_nEncodeFlags & 0x4) != 0 && bs.readBitFlag()) {
+        if ((encodeFlags & 0x4) != 0 && bs.readBitFlag()) {
             return 0.0f;
         }
-        float v = bs.readUBitInt(m_nBitCount) * m_flDecodeMul;
-        return m_flMinValue + ( m_flMaxValue - m_flMinValue ) * v;
+        float v = bs.readUBitInt(bitCount) * decodeMultiplier;
+        return minValue + (maxValue - minValue) * v;
     }
 
 }
