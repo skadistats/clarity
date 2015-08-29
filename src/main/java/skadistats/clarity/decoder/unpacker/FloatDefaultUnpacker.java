@@ -54,8 +54,7 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
         }
 
         // If the range doesn't span across zero, then also don't need the zero flag
-        boolean bActuallyNeedToTestZero = (minValue < 0.0f && maxValue > 0.0f);
-        if (!bActuallyNeedToTestZero) {
+        if (!(minValue < 0.0f && maxValue > 0.0f)) {
             if ((f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
                 log.warn("Field {} was flagged to encode zero exactly, but min/max range doesn't span zero [{}->{}]", fieldName, minValue, maxValue);
             }
