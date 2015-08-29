@@ -33,7 +33,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
         this.encodeFlags = computeEncodeFlags(flags);
         initialize();
         if (this.flags != this.encodeFlags) {
-            log.info("flags changed for Field {}, [{}->{}]", fieldName, this.flags, this.encodeFlags);
+            log.debug("flags changed for Field {}, [{}->{}]", fieldName, this.flags, this.encodeFlags);
         }
     }
 
