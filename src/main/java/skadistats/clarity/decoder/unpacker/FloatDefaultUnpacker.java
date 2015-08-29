@@ -130,39 +130,39 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
     }
 
     private float assignRangeMultiplier(int nBits, float range) {
-        int iHighValue;
+        long highValue;
+
         if (nBits == 32) {
-            iHighValue = 0xFFFFFFFE;
+            highValue = 0xFFFFFFFEL;
         } else {
-            iHighValue = ((1 << nBits) - 1);
+            highValue = BitStream.MASKS[nBits];
         }
 
-        float fHighLowMul;
+        float highLowMul;
         if (Math.abs(range) <= 0.001) {
-            fHighLowMul = (float) iHighValue;
+            highLowMul = (float) highValue;
         } else {
-            fHighLowMul = iHighValue / range;
+            highLowMul = highValue / range;
         }
 
         // If the precision is messing us up, then adjust it so it won't.
-        if ((int) (fHighLowMul * range) > iHighValue || (fHighLowMul * range) > (double) iHighValue) {
+        if ((long) (highLowMul * range) > highValue || (highLowMul * range) > (double) highValue) {
             // Squeeze it down smaller and smaller until it's going to produce an integer
             // in the valid range when given the highest value.
             float multipliers[] = {0.9999f, 0.99f, 0.9f, 0.8f, 0.7f};
             int i;
             for (i = 0; i < multipliers.length; i++) {
-                fHighLowMul = (float) (iHighValue / range) * multipliers[i];
-                if ((int) (fHighLowMul * range) > iHighValue || (fHighLowMul * range) > (double) iHighValue)
+                highLowMul = (highValue / range) * multipliers[i];
+                if ((long) (highLowMul * range) > highValue || (highLowMul * range) > (double) highValue)
                     continue;
                 break;
             }
-
             if (i == multipliers.length) {
                 throw new RuntimeException("Doh! We seem to be unable to represent this range.");
             }
         }
 
-        return fHighLowMul;
+        return highLowMul;
     }
 
     private float quantize(float value) {
@@ -183,13 +183,13 @@ public class FloatDefaultUnpacker implements Unpacker<Float> {
 
     @Override
     public Float unpack(BitStream bs) {
-        if ((encodeFlags & 0x1) != 0 && bs.readBitFlag()) {
+        if ((encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) {
             return minValue;
         }
-        if ((encodeFlags & 0x2) != 0 && bs.readBitFlag()) {
+        if ((encodeFlags & QFE_ROUNDUP) != 0 && bs.readBitFlag()) {
             return maxValue;
         }
-        if ((encodeFlags & 0x4) != 0 && bs.readBitFlag()) {
+        if ((encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0 && bs.readBitFlag()) {
             return 0.0f;
         }
         float v = bs.readUBitInt(bitCount) * decodeMultiplier;
