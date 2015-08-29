@@ -251,7 +251,7 @@ public class BitStream {
     }
 
     public float readBitAngle(int n) {
-        return readUBitLong(n) * 360.0f / MASKS[n];
+        return readUBitLong(n) * 360.0f / (1 << n);
     }
 
     public float readBitNormal() {
