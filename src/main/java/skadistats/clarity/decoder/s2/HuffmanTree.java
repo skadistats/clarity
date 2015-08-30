@@ -1,7 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.s2.FieldOpType;
 
 import java.util.ArrayList;
 import java.util.List;
