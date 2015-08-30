@@ -62,16 +62,16 @@ public class S1DTClassEmitter {
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         Iterator<DTClass> iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            DTClass dtc = iter.next();
+            S1DTClass dtc = (S1DTClass) iter.next();
             List<ReceiveProp> rps = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
             dtc.setReceiveProps(rps.toArray(new ReceiveProp[] {}));
         }
         iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            DTClass dtc = iter.next();
+            S1DTClass dtc = (S1DTClass) iter.next();
             String superClassName = dtc.getSendTable().getBaseClass();
             if (superClassName != null) {
-                dtc.setSuperClass(dtClasses.forDtName(superClassName));
+                dtc.setSuperClass((S1DTClass) dtClasses.forDtName(superClassName));
             }
         }
     }

@@ -1,8 +1,6 @@
 package skadistats.clarity.model.s2;
 
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.model.s1.SendTable;
 
 public class S2DTClass implements DTClass {
 
@@ -35,37 +33,8 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public void setSuperClass(DTClass dtClass) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public DTClass getSuperClass() {
-        return null;
-    }
-
-    @Override
-    public void setReceiveProps(ReceiveProp[] receiveProps) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public ReceiveProp[] getReceiveProps() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Integer getPropertyIndex(String property) {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public SendTable getSendTable() {
-        throw new UnsupportedOperationException();
-    }
-
-    private void computeNameR(StringBuffer name, Serializer s, FieldPath fp, int i) {
-
     }
 
     public Field getNameForSerializer(StringBuilder name, Serializer s, FieldPath fp, int i) {

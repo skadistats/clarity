@@ -1,5 +1,6 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.util.TextTable;
 
 import java.lang.reflect.Array;
@@ -110,7 +111,11 @@ public class Entity {
             .build();
         for (int i = 0; i < state.length; i++) {
             t.setData(i, 0, i);
-            t.setData(i, 1, dtClass.getReceiveProps()[i].getVarName());
+            if (dtClass instanceof S1DTClass) {
+                t.setData(i, 1, ((S1DTClass)dtClass).getReceiveProps()[i].getVarName());
+            } else {
+                t.setData(i, 1, "TODO");
+            }
             t.setData(i, 2, state[i]);
         }
         return t.toString();

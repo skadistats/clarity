@@ -6,9 +6,9 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.s1.ReceiveProp;
+import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
@@ -32,13 +32,13 @@ public class TempEntities {
         if (ev.isListenedTo()) {
             BitStream stream = new BitStream(message.getEntityData());
             DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
-            DTClass cls = null;
+            S1DTClass cls = null;
             ReceiveProp[] receiveProps = null;
             int count = message.getNumEntries();
             while (count-- > 0) {
                 stream.readUBitInt(1); // seems to be always 0
                 if (stream.readBitFlag()) {
-                    cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
+                    cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
                 Object[] state = new Object[receiveProps.length];

@@ -20,7 +20,8 @@ public class SendTableFlattener {
     }
 
     private SendTable sendTableForDtName(String dtName) {
-        return dtClasses.forDtName(dtName).getSendTable();
+        S1DTClass dtClass = (S1DTClass) dtClasses.forDtName(dtName);
+        return dtClass.getSendTable();
     }
 
     private void aggregateExclusions(SendTable table) {

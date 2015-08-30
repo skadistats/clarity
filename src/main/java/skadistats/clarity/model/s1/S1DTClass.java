@@ -12,7 +12,7 @@ public class S1DTClass implements DTClass {
     private int classId = -1;
     private ReceiveProp[] receiveProps;
     private Map<String, Integer> propsByName;
-    private DTClass superClass;
+    private S1DTClass superClass;
 
     public S1DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
@@ -34,11 +34,11 @@ public class S1DTClass implements DTClass {
         return receiveProps.length;
     }
 
-    public DTClass getSuperClass() {
+    public S1DTClass getSuperClass() {
         return superClass;
     }
 
-    public void setSuperClass(DTClass superClass) {
+    public void setSuperClass(S1DTClass superClass) {
         this.superClass = superClass;
     }
 
@@ -47,7 +47,7 @@ public class S1DTClass implements DTClass {
     }
     
     public boolean instanceOf(String dtName) {
-        DTClass s = this;
+        S1DTClass s = this;
         while (s != null) {
             if (s.getDtName().equals(dtName)) {
                 return true;
