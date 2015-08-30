@@ -49,6 +49,34 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
 
     @Override
     public void readFields(BitStream bs, S2DTClass dtClass, Object[] state, boolean debug) {
+        if (debug) {
+            readFieldsDebug(bs, dtClass, state);
+            return;
+        }
+        FieldPath fp = new FieldPath();
+        int n = 0;
+        while (true) {
+            FieldOpType op = HUFFMAN_TREE.decodeOp(bs);
+            op.execute(fp, bs);
+            if (op == FieldOpType.FieldPathEncodeFinish) {
+                break;
+            }
+            fieldPaths[n++] = fp;
+            fp = new FieldPath(fp);
+        }
+        for (int r = 0; r < n; r++) {
+            fp = fieldPaths[r];
+            Field f = dtClass.getFieldForFieldPath(fp);
+            Unpacker unpacker = f.getUnpacker();
+            if (unpacker == null) {
+                throw new RuntimeException(String.format("no unpacker for field %s with type %s!", f.getName(), f.getType()));
+            }
+            Object data = unpacker.unpack(bs);
+        }
+    }
+
+
+    public void readFieldsDebug(BitStream bs, S2DTClass dtClass, Object[] state) {
         TextTable.Builder b = new TextTable.Builder();
         b.setTitle(dtClass.getDtName());
         b.setFrame(TextTable.FRAME_COMPAT);
@@ -100,11 +128,9 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
             t.setData(r, 9, bs.pos() - offsBefore);
             t.setData(r, 10, bs.toString(offsBefore, bs.pos()));
         }
-        if (debug) {
-            t.print(System.out);
-            System.out.println("");
-            System.out.println("");
-        }
+        t.print(System.out);
+        System.out.println("");
+        System.out.println("");
     }
 
 }
