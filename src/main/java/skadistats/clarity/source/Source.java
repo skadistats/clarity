@@ -174,7 +174,8 @@ public abstract class Source {
         int backup = getPosition();
         PacketPosition wanted = new PacketPosition(wantedTick, 0);
         if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
-            setPosition(fullPacketPositions.floor(wanted).getOffset());
+            PacketPosition basePos = fullPacketPositions.floor(wanted);
+            setPosition(basePos != null ? basePos.getOffset() : 16);
             try {
                 while (true) {
                     int at = getPosition();
