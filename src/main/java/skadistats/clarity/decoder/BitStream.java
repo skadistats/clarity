@@ -275,13 +275,19 @@ public class BitStream {
 
     public String toString() {
         StringBuilder buf = new StringBuilder();
-
+        buf.append('[');
+        buf.append(pos);
+        buf.append('/');
+        buf.append(len);
+        buf.append(']');
+        buf.append(' ');
+        int prefixLen = buf.length();
         int min = Math.max(0, (pos - 32));
         int max = Math.min(data.length * 64 - 1, pos + 64);
         for (int i = min; i <= max; i++) {
             buf.append(peekBit(i));
         }
-        buf.insert(pos - min, '*');
+        buf.insert(pos - min + prefixLen, '*');
         return buf.toString();
     }
 

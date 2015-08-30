@@ -1,5 +1,8 @@
 package skadistats.clarity.model.s2;
 
+import skadistats.clarity.decoder.s2.S2UnpackerFactory;
+import skadistats.clarity.decoder.unpacker.Unpacker;
+
 public class Field {
 
     private final FieldType type;
@@ -11,6 +14,7 @@ public class Field {
     private final Float highValue;
     private final Serializer serializer;
     private final String encoder;
+    private final Unpacker unpacker;
 
     public Field(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
@@ -22,6 +26,7 @@ public class Field {
         this.highValue = highValue;
         this.serializer = serializer;
         this.encoder = encoder;
+        this.unpacker = S2UnpackerFactory.createUnpacker(this);
     }
 
     public FieldType getType() {
@@ -74,6 +79,10 @@ public class Field {
 
     public String getEncoder() {
         return encoder;
+    }
+
+    public Unpacker getUnpacker() {
+        return unpacker;
     }
 
 }

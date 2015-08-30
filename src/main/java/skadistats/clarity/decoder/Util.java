@@ -1,7 +1,6 @@
 package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.processor.entities.Entities;
 
 import java.io.UnsupportedEncodingException;
 
@@ -26,24 +25,6 @@ public class Util {
             n = n - 1;
         }
         return n;
-    }
-
-    public static int readS1EntityPropList(BitStream bs, int[] indices) {
-        int i = 0;
-        int cursor = -1;
-        while (true) {
-            if (bs.readBitFlag()) {
-                cursor += 1;
-            } else {
-                int offset = bs.readVarUInt();
-                if (offset == Entities.MAX_PROPERTIES) {
-                    return i;
-                } else {
-                    cursor += offset + 1;
-                }
-            }
-            indices[i++] = cursor;
-        }
     }
 
     public static String convertByteString(ByteString s, String charsetName) {

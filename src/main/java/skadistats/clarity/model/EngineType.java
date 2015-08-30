@@ -2,6 +2,9 @@ package skadistats.clarity.model;
 
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.s1.S1FieldReader;
+import skadistats.clarity.decoder.s2.S2FieldReader;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -14,7 +17,8 @@ public enum EngineType {
         "PBUFDEM\0",
         Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
         false, // has 4 extra header bytes
-        true   // CDemoSendTables is container
+        true,   // CDemoSendTables is container
+        10
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -32,13 +36,18 @@ public enum EngineType {
         public int readEmbeddedKind(BitStream bs) {
             return bs.readVarUInt();
         }
+        @Override
+        public FieldReader getNewFieldReader() {
+            return new S1FieldReader();
+        }
     },
 
     SOURCE2(
         "PBDEMS2\0",
         Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
         true, // has 4 extra header bytes
-        false // CDemoSendTables is container
+        false, // CDemoSendTables is container
+        25
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -57,19 +66,25 @@ public enum EngineType {
         public int readEmbeddedKind(BitStream bs) {
             return bs.readUBitVar();
         }
+        @Override
+        public FieldReader getNewFieldReader() {
+            return new S2FieldReader();
+        }
     };
 
     private final String magic;
     private final int compressedFlag;
     private final boolean extraHeaderInt32;
     private final boolean sendTablesContainer;
+    private final int serialBitCount;
 
 
-    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer) {
+    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int serialBitCount) {
         this.magic = magic;
         this.compressedFlag = compressedFlag;
         this.extraHeaderInt32 = extraHeaderInt32;
         this.sendTablesContainer = sendTablesContainer;
+        this.serialBitCount = serialBitCount;
     }
 
     public String getMagic() {
@@ -96,6 +111,7 @@ public enum EngineType {
     public abstract Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     public abstract boolean isUserMessage(Class<? extends GeneratedMessage> clazz);
     public abstract int readEmbeddedKind(BitStream bs);
+    public abstract FieldReader getNewFieldReader();
 
     public static EngineType forMagic(String magic) {
         for (EngineType et : values()) {
@@ -106,4 +122,7 @@ public enum EngineType {
         return null;
     }
 
+    public int getSerialBitCount() {
+        return serialBitCount;
+    }
 }

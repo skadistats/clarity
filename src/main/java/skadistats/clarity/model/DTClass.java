@@ -10,6 +10,9 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
+    int getFieldNum();
+
+
     @Deprecated
     void setSuperClass(DTClass dtClass);
     @Deprecated

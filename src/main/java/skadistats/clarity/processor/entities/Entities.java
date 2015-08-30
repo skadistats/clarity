@@ -2,13 +2,9 @@ package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.decoder.Util;
-import skadistats.clarity.event.Event;
-import skadistats.clarity.event.EventListener;
-import skadistats.clarity.event.Initializer;
-import skadistats.clarity.event.Provides;
+import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.event.*;
 import skadistats.clarity.model.*;
-import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
@@ -30,11 +26,10 @@ import java.util.Map;
 @UsesDTClasses
 public class Entities {
 
-    public static final int MAX_PROPERTIES = 0x3fff;
-
     private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
-    private final int[] indices = new int[MAX_PROPERTIES];
+    private FieldReader fieldReader;
+    private int serialBitCount;
 
     private Event<OnEntityCreated> evCreated;
     private Event<OnEntityUpdated> evUpdated;
@@ -49,19 +44,34 @@ public class Entities {
         }
     }
 
+    @Initializer(UsesEntities.class)
+    public void initUsesEntities(final Context ctx, final UsagePoint<UsesEntities> usagePoint) {
+        initFieldReader(ctx);
+    }
+
     @Initializer(OnEntityCreated.class)
     public void initOnEntityCreated(final Context ctx, final EventListener<OnEntityCreated> eventListener) {
+        initFieldReader(ctx);
         evCreated = ctx.createEvent(OnEntityCreated.class, Entity.class);
     }
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
+        initFieldReader(ctx);
         evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, int[].class, int.class);
     }
 
     @Initializer(OnEntityDeleted.class)
     public void initOnEntityDeleted(final Context ctx, final EventListener<OnEntityDeleted> eventListener) {
+        initFieldReader(ctx);
         evDeleted = ctx.createEvent(OnEntityDeleted.class, Entity.class);
+    }
+
+    private void initFieldReader(Context ctx) {
+        if (fieldReader == null) {
+            fieldReader = ctx.getEngineType().getNewFieldReader();
+            serialBitCount = ctx.getEngineType().getSerialBitCount();
+        }
     }
 
     @OnReset
@@ -92,8 +102,6 @@ public class Entities {
         Object[] base;
         Object[] state;
         Entity entity;
-        int cIndices;
-        ReceiveProp[] receiveProps;
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
@@ -101,15 +109,10 @@ public class Entities {
             if ((pvs & 1) == 0) {
                 if ((pvs & 2) != 0) {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
-                    serial = stream.readUBitInt(10);
+                    serial = stream.readUBitInt(serialBitCount);
                     base = getBaseline(dtClasses, cls.getClassId());
                     state = Arrays.copyOf(base, base.length);
-                    cIndices = Util.readS1EntityPropList(stream, indices);
-                    receiveProps = cls.getReceiveProps();
-                    for (int ci = 0; ci < cIndices; ci++) {
-                        int o = indices[ci];
-                        state[o] = receiveProps[o].decode(stream);
-                    }
+                    fieldReader.readFields(stream, cls, state, false);
                     entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
@@ -120,14 +123,9 @@ public class Entities {
                     cls = entity.getDtClass();
                     entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
-                    cIndices = Util.readS1EntityPropList(stream, indices);
-                    receiveProps = cls.getReceiveProps();
-                    for (int ci = 0; ci < cIndices; ci++) {
-                        int o = indices[ci];
-                        state[o] = receiveProps[o].decode(stream);
-                    }
+                    fieldReader.readFields(stream, cls, state, false);
                     if (evUpdated != null) {
-                        evUpdated.raise(entity, indices, cIndices);
+                        //evUpdated.raise(entity, indices, cIndices);
                     }
                 }
             } else if ((pvs & 2) != 0) {
@@ -153,14 +151,9 @@ public class Entities {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
-            ReceiveProp[] receiveProps = cls.getReceiveProps();
             BitStream stream = new BitStream(be.rawBaseline);
-            be.baseline = new Object[receiveProps.length];
-            int cIndices = Util.readS1EntityPropList(stream, indices);
-            for (int ci = 0; ci < cIndices; ci++) {
-                int o = indices[ci];
-                be.baseline[o] = receiveProps[o].decode(stream);
-            }
+            be.baseline = new Object[cls.getFieldNum()];
+            fieldReader.readFields(stream, cls, be.baseline, false);
         }
         return be.baseline;
     }

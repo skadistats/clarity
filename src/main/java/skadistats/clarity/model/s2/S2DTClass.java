@@ -15,6 +15,21 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
+    public int getClassId() {
+        return classId;
+    }
+
+    @Override
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
+    @Override
+    public int getFieldNum() {
+        return serializer.getFields().length;
+    }
+
+    @Override
     public String getDtName() {
         return serializer.getId().getName();
     }
@@ -27,16 +42,6 @@ public class S2DTClass implements DTClass {
     @Override
     public DTClass getSuperClass() {
         return null;
-    }
-
-    @Override
-    public int getClassId() {
-        return classId;
-    }
-
-    @Override
-    public void setClassId(int classId) {
-        this.classId = classId;
     }
 
     @Override

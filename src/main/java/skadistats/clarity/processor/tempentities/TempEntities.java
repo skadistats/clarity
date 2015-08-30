@@ -1,13 +1,14 @@
 package skadistats.clarity.processor.tempentities;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.event.Event;
+import skadistats.clarity.event.EventListener;
+import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.processor.entities.Entities;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;
@@ -18,7 +19,12 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 @UsesDTClasses
 public class TempEntities {
 
-    private final int[] indices = new int[Entities.MAX_PROPERTIES];
+    private FieldReader fieldReader;
+
+    @Initializer(OnTempEntity.class)
+    public void initOnEntityUpdated(final Context ctx, final EventListener<OnTempEntity> eventListener) {
+        fieldReader = ctx.getEngineType().getNewFieldReader();
+    }
 
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
     public void onTempEntities(Context ctx, S1NetMessages.CSVCMsg_TempEntities message) {
@@ -36,11 +42,7 @@ public class TempEntities {
                     receiveProps = cls.getReceiveProps();
                 }
                 Object[] state = new Object[receiveProps.length];
-                int cIndices = Util.readS1EntityPropList(stream, indices);
-                for (int ci = 0; ci < cIndices; ci++) {
-                    int o = indices[ci];
-                    state[o] = receiveProps[o].decode(stream);
-                }
+                fieldReader.readFields(stream, cls, state, false);
                 ev.raise(new Entity(0, 0, cls, null, state));
             }
         }

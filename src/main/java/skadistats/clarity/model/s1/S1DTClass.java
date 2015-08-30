@@ -19,14 +19,21 @@ public class S1DTClass implements DTClass {
         this.sendTable = sendTable;
     }
 
+    @Override
     public int getClassId() {
         return classId;
     }
 
+    @Override
     public void setClassId(int classId) {
         this.classId = classId;
     }
-    
+
+    @Override
+    public int getFieldNum() {
+        return receiveProps.length;
+    }
+
     public DTClass getSuperClass() {
         return superClass;
     }

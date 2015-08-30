@@ -55,12 +55,14 @@ public class S2UnpackerFactory {
         UNPACKERS.put("MoveCollide_t", new IntVarUnsignedUnpacker());
         UNPACKERS.put("MoveType_t", new IntVarUnsignedUnpacker());
         UNPACKERS.put("SolidType_t", new IntVarUnsignedUnpacker());
+        UNPACKERS.put("ShopItemViewMode_t", new IntVarUnsignedUnpacker());
         UNPACKERS.put("SurroundingBoundsType_t", new IntVarUnsignedUnpacker());
         UNPACKERS.put("DOTA_SHOP_TYPE", new IntVarUnsignedUnpacker());
         UNPACKERS.put("DOTA_HeroPickState", new IntVarUnsignedUnpacker());
 
-        // UNPACKERS
+        // Handles
         UNPACKERS.put("CHandle", new IntVarUnsignedUnpacker());
+        UNPACKERS.put("CEntityHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CGameSceneNodeHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CStrongHandle", new LongVarUnsignedUnpacker());
 
@@ -96,9 +98,9 @@ public class S2UnpackerFactory {
             return unpackerFactory.createUnpacker(f);
         }
         Unpacker unpacker = UNPACKERS.get(type);
-        if (unpacker == null) {
-            throw new RuntimeException("don't know how to create unpacker for " + type);
-        }
+//        if (unpacker == null) {
+//            throw new RuntimeException("don't know how to create unpacker for " + type);
+//        }
         return unpacker;
     }
 }

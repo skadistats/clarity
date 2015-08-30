@@ -15,8 +15,8 @@ Current status regarding Source 2:
 - processing gameevents: working
 - stringtables: working
 - combat log: working
-- DT-classes: in progress
-- entities: not at all
+- DT-classes: working
+- entities: working, in a way (yay!)
 - temp entities: well, no
 - modifiers: nope
 
