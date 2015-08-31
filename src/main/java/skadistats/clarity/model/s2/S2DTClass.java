@@ -23,11 +23,6 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public int getFieldNum() {
-        return serializer.getFields().length;
-    }
-
-    @Override
     public String getDtName() {
         return serializer.getId().getName();
     }
@@ -35,6 +30,11 @@ public class S2DTClass implements DTClass {
     @Override
     public Integer getPropertyIndex(String property) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public Object[] getEmptyStateArray() {
+        return serializer.getEmptyStateArray();
     }
 
     public Field getNameForSerializer(StringBuilder name, Serializer s, FieldPath fp, int i) {
@@ -56,7 +56,7 @@ public class S2DTClass implements DTClass {
             return f;
         }
 
-        if (f.getType().getElementCount() != null) {
+        if (f.getType().isFixedArray() || f.getType().isVariableArray()) {
             // array
             name.append('[');
             name.append(fp.path[++i]);

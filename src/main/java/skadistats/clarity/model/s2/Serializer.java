@@ -18,4 +18,15 @@ public class Serializer {
         return fields;
     }
 
+    public Object[] getEmptyStateArray() {
+        Object[] result = new Object[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            Serializer serializer = fields[i].getSerializer();
+            if (serializer != null) {
+                result[i] = new Object[] { null, serializer.getEmptyStateArray() };
+            }
+        }
+        return result;
+    }
+
 }

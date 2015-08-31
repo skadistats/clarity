@@ -3,6 +3,7 @@ package skadistats.clarity.processor.entities;
 import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.*;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -17,7 +18,6 @@ import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -99,7 +99,6 @@ public class Entities {
         int pvs;
         DTClass cls;
         int serial;
-        Object[] base;
         Object[] state;
         Entity entity;
 
@@ -110,8 +109,7 @@ public class Entities {
                 if ((pvs & 2) != 0) {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
                     serial = stream.readUBitInt(serialBitCount);
-                    base = getBaseline(dtClasses, cls.getClassId());
-                    state = Arrays.copyOf(base, base.length);
+                    state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
                     fieldReader.readFields(stream, cls, state, false);
                     entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
                     entities[entityIndex] = entity;
@@ -152,7 +150,7 @@ public class Entities {
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
             BitStream stream = new BitStream(be.rawBaseline);
-            be.baseline = new Object[cls.getFieldNum()];
+            be.baseline = cls.getEmptyStateArray();
             fieldReader.readFields(stream, cls, be.baseline, false);
         }
         return be.baseline;

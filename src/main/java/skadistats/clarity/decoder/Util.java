@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
+import com.rits.cloning.Cloner;
 
 import java.io.UnsupportedEncodingException;
 
@@ -33,6 +34,12 @@ public class Util {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private static final Cloner CLONER = new Cloner();
+
+    public static Object[] clone(Object[] src) {
+        return CLONER.deepClone(src);
     }
 
 }

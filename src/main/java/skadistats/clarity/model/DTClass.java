@@ -7,7 +7,7 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
-    int getFieldNum();
+    Object[] getEmptyStateArray();
 
     @Deprecated
     Integer getPropertyIndex(String property);

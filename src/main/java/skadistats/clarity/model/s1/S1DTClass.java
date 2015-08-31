@@ -30,8 +30,8 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public int getFieldNum() {
-        return receiveProps.length;
+    public Object[] getEmptyStateArray() {
+        return new Object[receiveProps.length];
     }
 
     public S1DTClass getSuperClass() {
