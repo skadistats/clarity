@@ -2,7 +2,7 @@ package skadistats.clarity.processor.modifiers;
 
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointType;
-import skadistats.clarity.wire.s1.proto.S1DotaModifiers;
+import skadistats.clarity.wire.common.proto.DotaModifiers;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.METHOD })
-@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { S1DotaModifiers.CDOTAModifierBuffTableEntry.class })
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { DotaModifiers.CDOTAModifierBuffTableEntry.class })
 public @interface OnModifierTableEntry {
 }
