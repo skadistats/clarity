@@ -14,7 +14,8 @@ public class Field {
     private final Float highValue;
     private final Serializer serializer;
     private final String encoder;
-    private final Unpacker unpacker;
+    private final Unpacker baseUnpacker;
+    private final Unpacker elementUnpacker;
 
     public Field(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
@@ -26,7 +27,12 @@ public class Field {
         this.highValue = highValue;
         this.serializer = serializer;
         this.encoder = encoder;
-        this.unpacker = S2UnpackerFactory.createUnpacker(this);
+        this.baseUnpacker = S2UnpackerFactory.createUnpacker(this, type.getBaseType());
+        if (type.isGenericArray()) {
+            this.elementUnpacker = S2UnpackerFactory.createUnpacker(this, type.getGenericType().getBaseType());
+        } else {
+            this.elementUnpacker = null;
+        }
     }
 
     public FieldType getType() {
@@ -81,8 +87,12 @@ public class Field {
         return encoder;
     }
 
-    public Unpacker getUnpacker() {
-        return unpacker;
+    public Unpacker getBaseUnpacker() {
+        return baseUnpacker;
+    }
+
+    public Unpacker getElementUnpacker() {
+        return elementUnpacker;
     }
 
 }

@@ -1,5 +1,6 @@
 package skadistats.clarity.model.s2;
 
+import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 
 public class S2DTClass implements DTClass {
@@ -37,51 +38,85 @@ public class S2DTClass implements DTClass {
         return serializer.getEmptyStateArray();
     }
 
-    public Field getNameForSerializer(StringBuilder name, Serializer s, FieldPath fp, int i) {
-        Field f = s.getFields()[fp.path[i]];
-        if (f == null) {
-            throw new RuntimeException("wtf1");
-        }
-
-        if (name.length() != 0) {
-            name.append('.');
-        }
-        if (!"(root)".equals(f.getSendNode())) {
-            name.append(f.getSendNode());
-            name.append('.');
-        }
-        name.append(f.getName());
-
-        if (fp.last == i) {
-            return f;
-        }
-
-        if (f.getType().isFixedArray() || f.getType().isVariableArray()) {
-            // array
-            name.append('[');
-            name.append(fp.path[++i]);
-            name.append(']');
-            if (fp.last == i) {
-                return f;
+    public Unpacker getUnpackerForFieldPath(FieldPath fp)  {
+        Serializer s = serializer;
+        Field f = null;
+        Unpacker u = null;
+        boolean generic = false;
+        boolean fixed = false;
+        for (int i = 0; i <= fp.last; i++) {
+            if (generic || fixed) {
+                if (generic) {
+                    u = f.getElementUnpacker();
+                }
+                generic = false;
+                fixed = false;
+                continue;
+            }
+            if (f != null) {
+                s = f.getSerializer();
+            }
+            f = s.getFields()[fp.path[i]];
+            u = f.getBaseUnpacker();
+            if (f.getType().isGenericArray()) {
+                generic = true;
+            } else if (f.getType().isFixedArray()) {
+                fixed = true;
             }
         }
+        return u;
+    }
 
-        if (f.getSerializer() != null) {
-            return getNameForSerializer(name, f.getSerializer(), fp, ++i);
+    public Field getFieldForFieldPath(FieldPath fp)  {
+        Serializer s = serializer;
+        Field f = null;
+        boolean array = false;
+        for (int i = 0; i <= fp.last; i++) {
+            if (array) {
+                array = false;
+                continue;
+            }
+            if (f != null) {
+                s = f.getSerializer();
+            }
+            f = s.getFields()[fp.path[i]];
+            if (f.getType().isGenericArray() || f.getType().isFixedArray()) {
+                array = true;
+            }
         }
-
         return f;
     }
 
-
-    public String getNameForFieldPath(FieldPath fp) {
+    public String getNameForFieldPath(FieldPath fp)  {
         StringBuilder name = new StringBuilder();
-        getNameForSerializer(name, serializer, fp, 0);
+        Serializer s = serializer;
+        Field f = null;
+        boolean array = false;
+        for (int i = 0; i <= fp.last; i++) {
+            if (array) {
+                name.append('[');
+                name.append(fp.path[i]);
+                name.append(']');
+                array = false;
+                continue;
+            }
+            if (f != null) {
+                s = f.getSerializer();
+            }
+            f = s.getFields()[fp.path[i]];
+            if (name.length() != 0) {
+                name.append('.');
+            }
+            if (!"(root)".equals(f.getSendNode())) {
+                name.append(f.getSendNode());
+                name.append('.');
+            }
+            name.append(f.getName());
+            if (f.getType().isGenericArray() || f.getType().isFixedArray()) {
+                array = true;
+            }
+        }
         return name.toString();
     }
 
-    public Field getFieldForFieldPath(FieldPath fp) {
-        StringBuilder name = new StringBuilder();
-        return getNameForSerializer(name, serializer, fp, 0);
-    }
 }

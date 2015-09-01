@@ -91,8 +91,7 @@ public class S2UnpackerFactory {
     }
     
 
-    public static Unpacker createUnpacker(Field f) {
-        String type = f.getType().getBaseType();
+    public static Unpacker createUnpacker(Field f, String type) {
         UnpackerFactory unpackerFactory = FACTORIES.get(type);
         if (unpackerFactory != null) {
             return unpackerFactory.createUnpacker(f);

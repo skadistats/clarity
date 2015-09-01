@@ -65,9 +65,9 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         }
         for (int r = 0; r < n; r++) {
             fp = fieldPaths[r];
-            Field f = dtClass.getFieldForFieldPath(fp);
-            Unpacker unpacker = f.getUnpacker();
+            Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
             if (unpacker == null) {
+                Field f = dtClass.getFieldForFieldPath(fp);
                 throw new RuntimeException(String.format("no unpacker for field %s with type %s!", f.getName(), f.getType()));
             }
             Object data = unpacker.unpack(bs);
@@ -116,7 +116,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
             t.setData(r, 7, String.format("%s%s%s", f.getType().getBaseType(), (f.getType().isPointer() ? "*" : ""), f.getEncoder() != null ? String.format(" (%s)", f.getEncoder()) : ""));
 
             int offsBefore = bs.pos();
-            Unpacker unpacker = f.getUnpacker();
+            Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
             if (unpacker == null) {
                 System.out.format("no unpacker for field %s with type %s!", f.getName(), f.getType());
                 System.exit(1);
