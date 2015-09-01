@@ -80,6 +80,10 @@ public class FieldType {
 
     @Override
     public String toString() {
+        return toString(false);
+    }
+
+    public String toString(boolean omitElementCount) {
         final StringBuilder sb = new StringBuilder();
         sb.append(baseType);
         if (genericType != null) {
@@ -90,11 +94,12 @@ public class FieldType {
         if (pointer) {
             sb.append('*');
         }
-        if (fixedElementCount != null) {
+        if (!omitElementCount && fixedElementCount != null) {
             sb.append('[');
             sb.append(fixedElementCount.toString());
             sb.append(']');
         }
         return sb.toString();
     }
+
 }

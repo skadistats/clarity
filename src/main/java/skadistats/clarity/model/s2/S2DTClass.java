@@ -67,6 +67,35 @@ public class S2DTClass implements DTClass {
         return u;
     }
 
+    public FieldType getTypeForFieldPath(FieldPath fp)  {
+        Serializer s = serializer;
+        Field f = null;
+        FieldType t = null;
+        boolean generic = false;
+        boolean fixed = false;
+        for (int i = 0; i <= fp.last; i++) {
+            if (generic || fixed) {
+                if (generic) {
+                    t = f.getType().getGenericType();
+                }
+                generic = false;
+                fixed = false;
+                continue;
+            }
+            if (f != null) {
+                s = f.getSerializer();
+            }
+            f = s.getFields()[fp.path[i]];
+            t = f.getType();
+            if (f.getType().isGenericArray()) {
+                generic = true;
+            } else if (f.getType().isFixedArray()) {
+                fixed = true;
+            }
+        }
+        return t;
+    }
+
     public Field getFieldForFieldPath(FieldPath fp)  {
         Serializer s = serializer;
         Field f = null;

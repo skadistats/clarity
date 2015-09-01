@@ -5,6 +5,7 @@ import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldPath;
+import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.util.TextTable;
 
@@ -107,13 +108,14 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         for (int r = 0; r < n; r++) {
             fp = fieldPaths[r];
             Field f = dtClass.getFieldForFieldPath(fp);
+            FieldType ft = dtClass.getTypeForFieldPath(fp);
             t.setData(r, 0, fp);
             t.setData(r, 1, dtClass.getNameForFieldPath(fp));
             t.setData(r, 2, f.getLowValue());
             t.setData(r, 3, f.getHighValue());
             t.setData(r, 4, f.getBitCount());
             t.setData(r, 5, f.getEncodeFlags() != null ? Integer.toHexString(f.getEncodeFlags()) : "-");
-            t.setData(r, 7, String.format("%s%s%s", f.getType().getBaseType(), (f.getType().isPointer() ? "*" : ""), f.getEncoder() != null ? String.format(" (%s)", f.getEncoder()) : ""));
+            t.setData(r, 7, String.format("%s%s", ft.toString(true), f.getEncoder() != null ? String.format(" {%s}", f.getEncoder()) : ""));
 
             int offsBefore = bs.pos();
             Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
