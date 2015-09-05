@@ -1,7 +1,7 @@
 package skadistats.clarity.model.s2.field;
 
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.s2.FieldPath;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.Serializer;
 
 import java.util.List;

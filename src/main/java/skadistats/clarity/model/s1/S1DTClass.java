@@ -1,6 +1,7 @@
 package skadistats.clarity.model.s1;
 
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.FieldPath;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,6 +33,17 @@ public class S1DTClass implements DTClass {
     @Override
     public Object[] getEmptyStateArray() {
         return new Object[receiveProps.length];
+    }
+
+    @Override
+    public FieldPath getFieldPathForName(String name){
+        Integer idx = this.propsByName.get(name);
+        return idx != null ? new FieldPath(idx.intValue()) : null;
+    }
+
+    @Override
+    public <T> T getValueForFieldPath(Object[] state, FieldPath fieldPath) {
+        return (T) state[fieldPath.path[0]];
     }
 
     public S1DTClass getSuperClass() {
@@ -67,14 +79,10 @@ public class S1DTClass implements DTClass {
 
     public void setReceiveProps(ReceiveProp[] receiveProps) {
         this.receiveProps = receiveProps;
-        this.propsByName = new HashMap<String, Integer>();
+        this.propsByName = new HashMap<>();
         for(int i = 0; i < receiveProps.length; ++i) {
             this.propsByName.put(receiveProps[i].getVarName(), i);
         }
-    }
-    
-    public Integer getPropertyIndex(String name){
-        return this.propsByName.get(name);
     }
 
 }

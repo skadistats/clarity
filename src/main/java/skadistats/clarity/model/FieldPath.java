@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s2;
+package skadistats.clarity.model;
 
 import java.util.Arrays;
 
@@ -12,6 +12,13 @@ public class FieldPath {
         path[0] = -1;
         last = 0;
     }
+
+    public FieldPath(int... elements) {
+        path = new int[6];
+        last = Math.min(6, elements.length) - 1;
+        System.arraycopy(elements, 0, path, 0, last + 1);
+    }
+
 
     public FieldPath(FieldPath other) {
         path = Arrays.copyOf(other.path, 6);

@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s2;
 
 import skadistats.clarity.decoder.BitStream;
-import skadistats.clarity.model.s2.FieldPath;
+import skadistats.clarity.model.FieldPath;
 
 public enum FieldOpType {
 

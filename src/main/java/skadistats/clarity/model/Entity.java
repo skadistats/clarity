@@ -3,10 +3,6 @@ package skadistats.clarity.model;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.util.TextTable;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Entity {
 
     private final int index;
@@ -58,7 +54,7 @@ public class Entity {
      * @return True, if and only if the given property is present in this entity
      */
     public boolean hasProperty(String property) {
-        return dtClass.getPropertyIndex(property) != null;
+        return dtClass.getFieldPathForName(property) != null;
     }
 
     /**
@@ -78,26 +74,15 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        Integer index = dtClass.getPropertyIndex(property);
-        if (index == null) {
+        FieldPath fp = dtClass.getFieldPathForName(property);
+        if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
-        return (T) state[index.intValue()];
+        return getPropertyForFieldPath(fp);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T[] getArrayProperty(Class<T> clazz, String property) {
-        List<T> result = new ArrayList<T>();
-        int i = 0;
-        while (true) {
-            Integer idx = dtClass.getPropertyIndex(property + String.format(".%04d", i));
-            if (idx == null) {
-                break;
-            }
-            result.add((T) state[idx.intValue()]);
-            i++;
-        }
-        return (T[]) result.toArray((T[]) Array.newInstance(clazz, 0));
+    public <T> T getPropertyForFieldPath(FieldPath fp) {
+        return (T) dtClass.getValueForFieldPath(state, fp);
     }
 
     @Override

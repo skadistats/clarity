@@ -9,8 +9,8 @@ public interface DTClass {
 
     Object[] getEmptyStateArray();
 
-    @Deprecated
-    Integer getPropertyIndex(String property);
+    FieldPath getFieldPathForName(String property);
+    <T> T getValueForFieldPath(Object[] state, FieldPath fieldPath);
 
 }
 

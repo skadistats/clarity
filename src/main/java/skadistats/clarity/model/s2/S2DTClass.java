@@ -2,6 +2,7 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.field.Field;
 import skadistats.clarity.model.s2.field.FieldType;
 
@@ -34,7 +35,12 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public Integer getPropertyIndex(String property) {
+    public FieldPath getFieldPathForName(String property) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public <T> T getValueForFieldPath(Object[] state, FieldPath fp) {
         throw new UnsupportedOperationException();
     }
 
@@ -67,7 +73,6 @@ public class S2DTClass implements DTClass {
     public FieldType getTypeForFieldPath(FieldPath fp) {
         return serializer.getFields()[fp.path[0]].queryType(fp, 0);
     }
-
 
     public void setValueForFieldPath(FieldPath fp, Object[] state, Object data) {
         serializer.getFields()[fp.path[0]].setValueForFieldPath(fp, state, data, 0);

@@ -3,7 +3,7 @@ package skadistats.clarity.model.s2.field;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.s2.FieldPath;
+import skadistats.clarity.model.FieldPath;
 
 import java.util.List;
 
