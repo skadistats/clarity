@@ -74,10 +74,12 @@ public class VarSubTableField extends Field {
         return properties.getSerializer().getFields()[fp.path[pos]].queryType(fp, pos);
     }
 
-    private void ensureLength(List<Object> state, int wanted) {
+    private void ensureLength(List<Object> state, int wanted, boolean shorten) {
         int cur = state.size();
-        while (cur > wanted) {
-            state.remove(--cur);
+        if (shorten) {
+            while (cur > wanted) {
+                state.remove(--cur);
+            }
         }
         while (cur < wanted) {
             state.add(properties.getSerializer().getInitialState());
@@ -90,10 +92,10 @@ public class VarSubTableField extends Field {
         int i = fp.path[pos];
         List<Object> myState = (List<Object>) state[i];
         if (pos == fp.last) {
-            ensureLength(myState, ((Integer) data).intValue());
+            ensureLength(myState, ((Integer) data).intValue(), true);
         } else {
             int j = fp.path[pos + 1];
-            ensureLength(myState, j + 1);
+            ensureLength(myState, j + 1, false);
             pos += 2;
             properties.getSerializer().getFields()[fp.path[pos]].setValueForFieldPath(fp, (Object[]) myState.get(j), data, pos);
         }
