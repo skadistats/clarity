@@ -1,5 +1,7 @@
 package skadistats.clarity.decoder.s2;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.unpacker.*;
 import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
@@ -11,6 +13,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class S2UnpackerFactory {
+
+    private static final Logger log = LoggerFactory.getLogger(S2UnpackerFactory.class);
+
+    private static final Unpacker DEFAULT_UNPACKER = new IntVarUnsignedUnpacker();
 
     private static final Map<String, UnpackerFactory> FACTORIES = new HashMap<>();
     static {
@@ -45,21 +51,6 @@ public class S2UnpackerFactory {
         UNPACKERS.put("char", new StringZeroTerminatedUnpacker());
         UNPACKERS.put("CUtlStringToken", new IntVarUnsignedUnpacker());
 
-        // Enums
-        UNPACKERS.put("gender_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("DamageOptions_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("RenderMode_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("RenderFx_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("attributeprovidertypes_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("CourierState_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("MoveCollide_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("MoveType_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("SolidType_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("ShopItemViewMode_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("SurroundingBoundsType_t", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("DOTA_SHOP_TYPE", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("DOTA_HeroPickState", new IntVarUnsignedUnpacker());
-
         // Handles
         UNPACKERS.put("CHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CEntityHandle", new IntVarUnsignedUnpacker());
@@ -81,9 +72,10 @@ public class S2UnpackerFactory {
             return unpackerFactory.createUnpacker(fieldProperties);
         }
         Unpacker unpacker = UNPACKERS.get(type);
-//        if (unpacker == null) {
-//            throw new RuntimeException("don't know how to create unpacker for " + type);
-//        }
+        if (unpacker == null) {
+            log.debug("don't know how to create unpacker for {}, assuming int.", type);
+            unpacker = DEFAULT_UNPACKER;
+        }
         return unpacker;
     }
 }
