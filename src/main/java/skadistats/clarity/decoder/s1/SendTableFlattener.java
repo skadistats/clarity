@@ -75,11 +75,10 @@ public class SendTableFlattener {
         for (ReceiveProp rp : sorted) {
             priorities.add(rp.getSendProp().getPriority());
         }
-        int offset = 0;
+        int hole = 0;
 
         for (Integer priority : priorities) {
-            int hole = offset;
-            int cursor = offset;
+            int cursor = hole;
             while (cursor < sorted.size()) {
                 ReceiveProp rp = sorted.get(cursor);
                 SendProp sp = rp.getSendProp();
@@ -87,7 +86,6 @@ public class SendTableFlattener {
                 if (changesOften || sp.getPriority() == priority) {
                     Collections.swap(sorted, cursor, hole);
                     hole++;
-                    offset++;
                 }
                 cursor++;
             }
