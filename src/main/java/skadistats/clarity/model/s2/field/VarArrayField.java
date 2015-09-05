@@ -20,7 +20,7 @@ public class VarArrayField extends Field {
 
     @Override
     public Object getInitialState() {
-        return new Object[] { 0, new Object[0] };
+        return null;
     }
 
     @Override
@@ -61,5 +61,27 @@ public class VarArrayField extends Field {
             return properties.getType().getGenericType();
         }
     }
+
+    @Override
+    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
+        int i = fp.path[pos];
+        Object[] myState = (Object[]) state[i];
+        if (pos == fp.last) {
+            int size = ((Integer) data).intValue();
+            int curSize = myState == null ? 0 : myState.length;
+            if (myState == null && size > 0) {
+                state[i] = new Object[size];
+            } else if (myState != null && size == 0) {
+                state[i] = null;
+            } else if (curSize != size) {
+                state[i] = new Object[size];
+                System.arraycopy(myState, 0, state[i], 0, Math.min(myState.length, size));
+            }
+        } else {
+            assertFieldPathEnd(fp, pos + 1);
+            myState[fp.path[pos + 1]] = data;
+        }
+    }
+
 
 }

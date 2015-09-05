@@ -23,10 +23,7 @@ public class Serializer {
     public Object[] getInitialState() {
         Object[] result = new Object[fields.length];
         for (int i = 0; i < fields.length; i++) {
-            Serializer serializer = fields[i].getSerializer();
-            if (serializer != null) {
-                result[i] = new Object[] { null, serializer.getInitialState() };
-            }
+            result[i] = fields[i].getInitialState();
         }
         return result;
     }

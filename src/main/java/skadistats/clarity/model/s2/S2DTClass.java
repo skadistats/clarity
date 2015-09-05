@@ -70,6 +70,7 @@ public class S2DTClass implements DTClass {
 
 
     public void setValueForFieldPath(FieldPath fp, Object[] state, Object data) {
+        serializer.getFields()[fp.path[0]].setValueForFieldPath(fp, state, data, 0);
     }
 
 }

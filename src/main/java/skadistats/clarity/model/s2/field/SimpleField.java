@@ -44,4 +44,10 @@ public class SimpleField extends Field {
         return properties.getType();
     }
 
+    @Override
+    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
+        assertFieldPathEnd(fp, pos);
+        state[fp.path[pos]] = data;
+    }
+
 }

@@ -17,7 +17,7 @@ public class FixedSubTableField extends Field {
 
     @Override
     public Object getInitialState() {
-        return new Object[] { false, null };
+        return properties.getSerializer().getInitialState();
     }
 
     @Override
@@ -59,4 +59,19 @@ public class FixedSubTableField extends Field {
         }
     }
 
+    @Override
+    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
+        int i = fp.path[pos];
+        Object[] myState = (Object[]) state[i];
+        if (pos == fp.last) {
+            boolean amThere = ((Boolean) data).booleanValue();
+            if (myState == null && amThere) {
+                state[i] = properties.getSerializer().getInitialState();
+            } else if (myState != null && !amThere) {
+                state[i] = null;
+            }
+        } else {
+            properties.getSerializer().getFields()[fp.path[pos + 1]].setValueForFieldPath(fp, myState, data, pos + 1);
+        }
+    }
 }

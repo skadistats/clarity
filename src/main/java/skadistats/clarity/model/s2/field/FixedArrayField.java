@@ -50,5 +50,10 @@ public class FixedArrayField extends Field {
         return properties.getType();
     }
 
-
+    @Override
+    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
+        assertFieldPathEnd(fp, pos + 1);
+        Object[] myState = (Object[]) state[fp.path[pos]];
+        myState[fp.path[pos + 1]] = data;
+    }
 }
