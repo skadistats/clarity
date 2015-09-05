@@ -2,7 +2,6 @@ package skadistats.clarity.model.s2.field;
 
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.Serializer;
 
 import java.util.List;
 
@@ -37,60 +36,6 @@ public abstract class Field {
 
     public FieldProperties getProperties() {
         return properties;
-    }
-
-
-
-    public FieldType getType() {
-        return properties.getType();
-    }
-
-    public String getSendNode() {
-        return properties.getSendNode();
-    }
-
-    public Integer getBitCount() {
-        return properties.getBitCount();
-    }
-
-    public String getName() {
-        return properties.getName();
-    }
-
-    public int getBitCountOrDefault(int defaultValue) {
-        return properties.getBitCountOrDefault(defaultValue);
-    }
-
-    public Float getLowValue() {
-        return properties.getLowValue();
-    }
-
-    public int getEncodeFlagsOrDefault(int defaultValue) {
-        return properties.getEncodeFlagsOrDefault(defaultValue);
-    }
-
-    public float getHighValueOrDefault(float defaultValue) {
-        return properties.getHighValueOrDefault(defaultValue);
-    }
-
-    public Float getHighValue() {
-        return properties.getHighValue();
-    }
-
-    public Serializer getSerializer() {
-        return properties.getSerializer();
-    }
-
-    public String getEncoder() {
-        return properties.getEncoder();
-    }
-
-    public float getLowValueOrDefault(float defaultValue) {
-        return properties.getLowValueOrDefault(defaultValue);
-    }
-
-    public Integer getEncodeFlags() {
-        return properties.getEncodeFlags();
     }
 
 }

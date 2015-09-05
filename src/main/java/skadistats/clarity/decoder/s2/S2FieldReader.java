@@ -5,7 +5,7 @@ import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2DTClass;
-import skadistats.clarity.model.s2.field.Field;
+import skadistats.clarity.model.s2.field.FieldProperties;
 import skadistats.clarity.model.s2.field.FieldType;
 import skadistats.clarity.util.TextTable;
 
@@ -68,7 +68,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
             fp = fieldPaths[r];
             Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
             if (unpacker == null) {
-                Field f = dtClass.getFieldForFieldPath(fp);
+                FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();
                 throw new RuntimeException(String.format("no unpacker for field %s with type %s!", f.getName(), f.getType()));
             }
             Object data = unpacker.unpack(bs);
@@ -108,7 +108,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         }
         for (int r = 0; r < n; r++) {
             fp = fieldPaths[r];
-            Field f = dtClass.getFieldForFieldPath(fp);
+            FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();
             FieldType ft = dtClass.getTypeForFieldPath(fp);
             t.setData(r, 0, fp);
             t.setData(r, 1, dtClass.getNameForFieldPath(fp));
