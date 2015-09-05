@@ -3,10 +3,10 @@ package skadistats.clarity.decoder.s2;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldPath;
-import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2DTClass;
+import skadistats.clarity.model.s2.field.Field;
+import skadistats.clarity.model.s2.field.FieldType;
 import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader implements FieldReader<S2DTClass> {

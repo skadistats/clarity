@@ -1,5 +1,7 @@
 package skadistats.clarity.model.s2;
 
+import skadistats.clarity.model.s2.field.Field;
+
 public class Serializer {
 
     private final SerializerId id;
@@ -18,12 +20,12 @@ public class Serializer {
         return fields;
     }
 
-    public Object[] getEmptyStateArray() {
+    public Object[] getInitialState() {
         Object[] result = new Object[fields.length];
         for (int i = 0; i < fields.length; i++) {
             Serializer serializer = fields[i].getSerializer();
             if (serializer != null) {
-                result[i] = new Object[] { null, serializer.getEmptyStateArray() };
+                result[i] = new Object[] { null, serializer.getInitialState() };
             }
         }
         return result;

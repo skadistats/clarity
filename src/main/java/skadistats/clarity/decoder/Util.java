@@ -42,4 +42,8 @@ public class Util {
         return CLONER.deepClone(src);
     }
 
+    public static String arrayIdxToString(int idx) {
+        return String.format("%04d", idx);
+    }
+
 }

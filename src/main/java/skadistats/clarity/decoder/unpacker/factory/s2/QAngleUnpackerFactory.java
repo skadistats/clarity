@@ -2,11 +2,11 @@ package skadistats.clarity.decoder.unpacker.factory.s2;
 
 import skadistats.clarity.decoder.unpacker.*;
 import skadistats.clarity.model.Vector;
-import skadistats.clarity.model.s2.Field;
+import skadistats.clarity.model.s2.field.FieldProperties;
 
 public class QAngleUnpackerFactory implements UnpackerFactory<Vector> {
 
-    public static Unpacker<Vector> createUnpackerStatic(Field f) {
+    public static Unpacker<Vector> createUnpackerStatic(FieldProperties f) {
         int bc = f.getBitCountOrDefault(0);
         if ("qangle_pitch_yaw".equals(f.getEncoder())) {
             return new QAnglePitchYawOnlyUnpacker(bc);
@@ -21,7 +21,7 @@ public class QAngleUnpackerFactory implements UnpackerFactory<Vector> {
     }
 
     @Override
-    public Unpacker<Vector> createUnpacker(Field f) {
+    public Unpacker<Vector> createUnpacker(FieldProperties f) {
         return createUnpackerStatic(f);
     }
 

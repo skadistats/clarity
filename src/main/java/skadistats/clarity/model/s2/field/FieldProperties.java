@@ -1,9 +1,8 @@
-package skadistats.clarity.model.s2;
+package skadistats.clarity.model.s2.field;
 
-import skadistats.clarity.decoder.s2.S2UnpackerFactory;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.s2.Serializer;
 
-public class Field {
+public class FieldProperties {
 
     private final FieldType type;
     private final String name;
@@ -14,10 +13,8 @@ public class Field {
     private final Float highValue;
     private final Serializer serializer;
     private final String encoder;
-    private final Unpacker baseUnpacker;
-    private final Unpacker elementUnpacker;
 
-    public Field(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
+    public FieldProperties(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;
@@ -27,12 +24,6 @@ public class Field {
         this.highValue = highValue;
         this.serializer = serializer;
         this.encoder = encoder;
-        this.baseUnpacker = S2UnpackerFactory.createUnpacker(this, type.getBaseType());
-        if (type.isGenericArray()) {
-            this.elementUnpacker = S2UnpackerFactory.createUnpacker(this, type.getGenericType().getBaseType());
-        } else {
-            this.elementUnpacker = null;
-        }
     }
 
     public FieldType getType() {
@@ -85,14 +76,6 @@ public class Field {
 
     public String getEncoder() {
         return encoder;
-    }
-
-    public Unpacker getBaseUnpacker() {
-        return baseUnpacker;
-    }
-
-    public Unpacker getElementUnpacker() {
-        return elementUnpacker;
     }
 
 }

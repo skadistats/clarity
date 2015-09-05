@@ -5,7 +5,10 @@ import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.s2.*;
+import skadistats.clarity.model.s2.S2DTClass;
+import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.model.s2.SerializerId;
+import skadistats.clarity.model.s2.field.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
@@ -13,12 +16,54 @@ import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Provides(value = OnDTClass.class, engine = EngineType.SOURCE2)
 public class S2DTClassEmitter {
+
+    private static final Set<String> POINTERS = new HashSet<>();
+    static {
+        POINTERS.add("CBodyComponent");
+        POINTERS.add("CEntityIdentity");
+        POINTERS.add("CPhysicsComponent");
+        POINTERS.add("CRenderComponent");
+        POINTERS.add("CDOTAGamerules");
+        POINTERS.add("CDOTAGameManager");
+        POINTERS.add("CDOTASpectatorGraphManager");
+        POINTERS.add("CPlayerLocalData");
+    }
+
+    private static final Map<String, Integer> ITEM_COUNTS = new HashMap<>();
+    static {
+        ITEM_COUNTS.put("MAX_ITEM_STOCKS", 8);
+        ITEM_COUNTS.put("MAX_ABILITY_DRAFT_ABILITIES", 48);
+    }
+
+    private FieldType createFieldType(String type) {
+        return new FieldType(type);
+    }
+
+    private Field createField(FieldProperties properties) {
+        if (properties.getSerializer() != null) {
+            if (POINTERS.contains(properties.getType().getBaseType())) {
+                return new FixedSubTableField(properties);
+            } else {
+                return new VarSubTableField(properties);
+            }
+        }
+        String elementCount = properties.getType().getElementCount();
+        if (elementCount != null && !"char".equals(properties.getType().getBaseType())) {
+            Integer countAsInt = ITEM_COUNTS.get(elementCount);
+            if (countAsInt == null) {
+                countAsInt = Integer.valueOf(elementCount);
+            }
+            return new FixedArrayField(properties, countAsInt);
+        }
+        if ("CUtlVector".equals(properties.getType().getBaseType())) {
+            return new VarArrayField(properties);
+        }
+        return new SimpleField(properties);
+    }
 
     @OnMessage(Demo.CDemoSendTables.class)
     public void onSendTables(Context ctx, Demo.CDemoSendTables sendTables) throws IOException {
@@ -41,7 +86,7 @@ public class S2DTClassEmitter {
                     S2NetMessages.ProtoFlattenedSerializerField_t protoField = protoMessage.getFields(fi);
                     FieldType fieldType = fieldTypes.get(protoField.getVarTypeSym());
                     if (fieldType == null) {
-                        fieldType = new FieldType(protoMessage.getSymbols(protoField.getVarTypeSym()));
+                        fieldType = createFieldType(protoMessage.getSymbols(protoField.getVarTypeSym()));
                         fieldTypes.put(protoField.getVarTypeSym(), fieldType);
                     }
                     Serializer fieldSerializer = null;
@@ -53,16 +98,18 @@ public class S2DTClassEmitter {
                             )
                         );
                     }
-                    field = new Field(
+                    String sendNode = protoMessage.getSymbols(protoField.getSendNodeSym());
+                    FieldProperties fieldProperties = new FieldProperties(
                         fieldType,
                         protoMessage.getSymbols(protoField.getVarNameSym()),
-                        protoMessage.getSymbols(protoField.getSendNodeSym()),
+                        !"(root)".equals(sendNode) ? sendNode : null,
                         protoField.hasEncodeFlags() ? protoField.getEncodeFlags() : null,
                         protoField.hasBitCount() ? protoField.getBitCount() : null,
                         protoField.hasLowValue() ? protoField.getLowValue() : null,
                         protoField.hasHighValue() ? protoField.getHighValue() : null,
                         fieldSerializer,
                         protoField.hasVarEncoderSym() ? protoMessage.getSymbols(protoField.getVarEncoderSym()) : null);
+                    field = createField(fieldProperties);
                     fields[fi] = field;
                 }
                 currentFields.add(field);

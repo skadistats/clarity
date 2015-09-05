@@ -5,7 +5,7 @@ import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
-import skadistats.clarity.model.s2.Field;
+import skadistats.clarity.model.s2.field.FieldProperties;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,31 +70,15 @@ public class S2UnpackerFactory {
         UNPACKERS.put("Color", new IntVarUnsignedUnpacker());
         UNPACKERS.put("color32", new IntVarUnsignedUnpacker());
 
-        // Pointers type subs
-        UNPACKERS.put("CBodyComponent", new BoolUnpacker());
-        UNPACKERS.put("CEntityIdentity", new BoolUnpacker());
-        UNPACKERS.put("CPhysicsComponent", new BoolUnpacker());
-        UNPACKERS.put("CRenderComponent", new BoolUnpacker());
-        UNPACKERS.put("CDOTAGamerules", new BoolUnpacker());
-        UNPACKERS.put("CDOTAGameManager", new BoolUnpacker());
-        UNPACKERS.put("CDOTASpectatorGraphManager", new BoolUnpacker());
-
-        // Array type subs
-        UNPACKERS.put("CDOTA_AbilityDraftAbilityState", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("C_DOTA_ItemStockInfo", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("CUtlVector", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("DOTA_PlayerChallengeInfo", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("m_SpeechBubbles", new IntVarUnsignedUnpacker());
-
         // Specials
         UNPACKERS.put("HSequence", new IntMinusOneUnpacker());
     }
     
 
-    public static Unpacker createUnpacker(Field f, String type) {
+    public static Unpacker createUnpacker(FieldProperties fieldProperties, String type) {
         UnpackerFactory unpackerFactory = FACTORIES.get(type);
         if (unpackerFactory != null) {
-            return unpackerFactory.createUnpacker(f);
+            return unpackerFactory.createUnpacker(fieldProperties);
         }
         Unpacker unpacker = UNPACKERS.get(type);
 //        if (unpacker == null) {

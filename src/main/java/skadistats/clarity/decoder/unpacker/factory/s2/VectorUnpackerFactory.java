@@ -4,11 +4,11 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.decoder.unpacker.VectorDefaultUnpacker;
 import skadistats.clarity.decoder.unpacker.VectorNormalUnpacker;
 import skadistats.clarity.model.Vector;
-import skadistats.clarity.model.s2.Field;
+import skadistats.clarity.model.s2.field.FieldProperties;
 
 public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
 
-    public static Unpacker<Vector> createUnpackerStatic(Field f) {
+    public static Unpacker<Vector> createUnpackerStatic(FieldProperties f) {
         if ("normal".equals(f.getEncoder())) {
             return new VectorNormalUnpacker();
         }
@@ -16,7 +16,7 @@ public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
     }
 
     @Override
-    public Unpacker<Vector> createUnpacker(Field f) {
+    public Unpacker<Vector> createUnpacker(FieldProperties f) {
         return createUnpackerStatic(f);
     }
 

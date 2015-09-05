@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.unpacker.factory.s2;
 
 import skadistats.clarity.decoder.unpacker.*;
-import skadistats.clarity.model.s2.Field;
+import skadistats.clarity.model.s2.field.FieldProperties;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -15,11 +15,11 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
     }
 
     @Override
-    public Unpacker<Float> createUnpacker(Field f) {
+    public Unpacker<Float> createUnpacker(FieldProperties f) {
         return createUnpackerStatic(f);
     }
 
-    public static Unpacker<Float> createUnpackerStatic(Field f) {
+    public static Unpacker<Float> createUnpackerStatic(FieldProperties f) {
         if ("coord".equals(f.getEncoder())) {
             return new FloatCoordUnpacker();
         }
