@@ -148,4 +148,8 @@ public class S2DTClass implements DTClass {
         return name.toString();
     }
 
+    public void setValueForFieldPath(FieldPath fp, Object[] state, Object value)  {
+    }
+
+
 }

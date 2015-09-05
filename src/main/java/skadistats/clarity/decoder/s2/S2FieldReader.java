@@ -72,6 +72,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
                 throw new RuntimeException(String.format("no unpacker for field %s with type %s!", f.getName(), f.getType()));
             }
             Object data = unpacker.unpack(bs);
+            dtClass.setValueForFieldPath(fp, state, data);
         }
     }
 
@@ -124,6 +125,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
                 System.exit(1);
             }
             Object data = unpacker.unpack(bs);
+            dtClass.setValueForFieldPath(fp, state, data);
             t.setData(r, 6, unpacker.getClass().getSimpleName().toString());
             t.setData(r, 8, data);
             t.setData(r, 9, bs.pos() - offsBefore);
