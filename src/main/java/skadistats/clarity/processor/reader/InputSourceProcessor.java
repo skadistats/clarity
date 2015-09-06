@@ -173,8 +173,16 @@ public class InputSourceProcessor {
     public void processServerInfo(Context ctx, S2NetMessages.CSVCMsg_ServerInfo serverInfo) {
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
         if (matcher.find()) {
-            ctx.setBuildNumber(Integer.valueOf(matcher.group(1)));
-            log.warn("build: {}", ctx.getBuildNumber());
+            int num = Integer.valueOf(matcher.group(1));
+            ctx.setBuildNumber(num);
+            if (num < 983) {
+                log.warn("This replay is from an early beta version of Dota 2 Reborn (build number {}).", ctx.getBuildNumber());
+                log.warn("Entities in this replay probably cannot be read.");
+                if (num > 962) {
+                    log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
+                    log.warn("If you wanna help, send it to clarity@martin.schrodt.org, or contact me on github.");
+                }
+            }
         } else {
             log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '{}')", serverInfo.getGameDir());
         }

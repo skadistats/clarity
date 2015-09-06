@@ -170,13 +170,13 @@ public class S2DTClassEmitter {
             this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
             this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
             this.highValue = field.hasHighValue() ? field.getHighValue() : null;
-            if (encoder != null) {
-                System.out.format(
-                    "encoders.put(\"%s\", \"%s\");\n",
-                    parent + (sendNode != null ? "." + sendNode : "") + "." + varName,
-                    encoder
-                );
-            }
+//            if (encoder != null) {
+//                System.out.format(
+//                    "encoders.put(\"%s\", \"%s\");\n",
+//                    parent + "." + varName,
+//                    encoder
+//                );
+//            }
         }
     }
 
@@ -188,33 +188,40 @@ public class S2DTClassEmitter {
     static {
         PATCHES.put(new BuildNumberRange(null, 990), new PatchFunc() {
             Map<String, String> encoders = new HashMap<>(); {
-
-                encoders.put("m_flElasticity", "coord");
-                encoders.put("m_viewtarget", "coord");
-                encoders.put("dirPrimary", "coord");
-                encoders.put("origin", "coord");
-                encoders.put("localSound", "coord");
-                encoders.put("m_location", "coord");
-                encoders.put("m_poolOrigin", "coord");
-                encoders.put("m_vecLadderDir", "coord");
-                encoders.put("m_vecPlayerMountPositionTop", "coord");
-                encoders.put("m_vecPlayerMountPositionBottom", "coord");
-                encoders.put("m_ragPos", "coord");
-                encoders.put("vecLocalOrigin", "coord");
-                encoders.put("m_WorldMins", "coord");
-                encoders.put("m_WorldMaxs", "coord");
-                encoders.put("m_vecEndPos", "coord");
-
-                encoders.put("m_vecLadderNormal", "normal");
-
+                encoders.put("CBodyComponentBaseAnimating.m_angRotation", "QAngle");
+                encoders.put("CBaseAnimating.m_flElasticity", "coord");
+                encoders.put("CBaseAttributableItem.m_viewtarget", "coord");
+                encoders.put("CBodyComponentPoint.m_angRotation", "QAngle");
+                encoders.put("CPlayerLocalData.dirPrimary", "coord");
+                encoders.put("CPlayerLocalData.origin", "coord");
+                encoders.put("CPlayerLocalData.localSound", "coord");
+                encoders.put("CBasePlayer.m_vecLadderNormal", "normal");
+                encoders.put("CBeam.m_vecEndPos", "coord");
                 encoders.put("CBodyComponentBaseAnimatingOverlay.m_angRotation", "qangle_pitch_yaw");
+                encoders.put("CDOTA_BaseNPC_Barracks.m_angInitialAngles", "QAngle");
+                encoders.put("CEnvDeferredLight.m_vLightDirection", "QAngle");
+                encoders.put("CEnvWind.m_location", "coord");
+                encoders.put("CFish.m_poolOrigin", "coord");
+                encoders.put("CFogController.dirPrimary", "coord");
+                encoders.put("CFuncLadder.m_vecLadderDir", "coord");
+                encoders.put("CFuncLadder.m_vecPlayerMountPositionTop", "coord");
+                encoders.put("CFuncLadder.m_vecPlayerMountPositionBottom", "coord");
+                encoders.put("CPropVehicleDriveable.m_vecEyeExitEndpoint", "coord");
+                encoders.put("CPropVehicleDriveable.m_vecGunCrosshair", "coord");
+                encoders.put("CRagdollProp.m_ragPos", "coord");
+                encoders.put("CRagdollProp.m_ragAngles", "QAngle");
+                encoders.put("CRagdollPropAttached.m_attachmentPointBoneSpace", "coord");
+                encoders.put("CRagdollPropAttached.m_attachmentPointRagdollSpace", "coord");
+                encoders.put("CShowcaseSlot.vecLocalOrigin", "coord");
+                encoders.put("CShowcaseSlot.angLocalAngles", "QAngle");
+                encoders.put("CShowcaseSlot.vecExtraLocalOrigin", "coord");
+                encoders.put("CShowcaseSlot.angExtraLocalAngles", "QAngle");
+                encoders.put("CWorld.m_WorldMins", "coord");
+                encoders.put("CWorld.m_WorldMaxs", "coord");
             }
             @Override
             public void execute(SerializerField field) {
-                field.encoder = encoders.get(field.varName);
-                if (field.encoder == null) {
-                    field.encoder = encoders.get(field.parent + "." + field.varName);
-                }
+                field.encoder = encoders.get(field.parent + "." + field.varName);
             }
         });
         PATCHES.put(new BuildNumberRange(1016, null), new PatchFunc() {
