@@ -92,8 +92,8 @@ public enum FieldOpType {
     PushTwoLeftDeltaZero(0) {
         @Override
         public void execute(FieldPath fp, BitStream bs) {
-            fp.path[++fp.last] = 0;
-            fp.path[++fp.last] = 0;
+            fp.path[++fp.last] += bs.readUBitVarFieldPath();
+            fp.path[++fp.last] += bs.readUBitVarFieldPath();
         }
     },
     PushTwoPack5LeftDeltaZero(0) {
