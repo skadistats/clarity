@@ -185,6 +185,10 @@ public class Entities {
 
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
+        if (be == null) {
+
+            throw new RuntimeException("oops, no baseline for this class? " + dtClasses.forClassId(clsId).getDtName());
+        }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
             BitStream stream = new BitStream(be.rawBaseline);

@@ -84,7 +84,7 @@ public class S2DTClassEmitter {
             for (int fi : protoSerializer.getFieldsIndexList()) {
                 Field field = fields[fi];
                 if (field == null) {
-                    SerializerField protoField = new SerializerField(protoMessage, protoMessage.getFields(fi));
+                    SerializerField protoField = new SerializerField(protoMessage.getSymbols(protoSerializer.getSerializerNameSym()), protoMessage, protoMessage.getFields(fi));
                     for (Map.Entry<BuildNumberRange, PatchFunc> patchEntry : PATCHES.entrySet()) {
                         if (patchEntry.getKey().appliesTo(ctx.getBuildNumber())) {
                             patchEntry.getValue().execute(protoField);
@@ -146,6 +146,7 @@ public class S2DTClassEmitter {
     }
 
     private static class SerializerField {
+        private String parent;
         private String varName;
         private String varType;
         private String sendNode;
@@ -156,7 +157,8 @@ public class S2DTClassEmitter {
         private Integer bitCount;
         private Float lowValue;
         private Float highValue;
-        public SerializerField(S2NetMessages.CSVCMsg_FlattenedSerializer serializer, S2NetMessages.ProtoFlattenedSerializerField_t field) {
+        public SerializerField(String parent, S2NetMessages.CSVCMsg_FlattenedSerializer serializer, S2NetMessages.ProtoFlattenedSerializerField_t field) {
+            this.parent = parent;
             this.varName = serializer.getSymbols(field.getVarNameSym());
             this.varType = serializer.getSymbols(field.getVarTypeSym());
             String sn = serializer.getSymbols(field.getSendNodeSym());
@@ -168,6 +170,13 @@ public class S2DTClassEmitter {
             this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
             this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
             this.highValue = field.hasHighValue() ? field.getHighValue() : null;
+            if (encoder != null) {
+                System.out.format(
+                    "encoders.put(\"%s\", \"%s\");\n",
+                    parent + (sendNode != null ? "." + sendNode : "") + "." + varName,
+                    encoder
+                );
+            }
         }
     }
 
@@ -177,6 +186,45 @@ public class S2DTClassEmitter {
 
     private static final Map<BuildNumberRange, PatchFunc> PATCHES = new LinkedHashMap<>();
     static {
+        PATCHES.put(new BuildNumberRange(null, 990), new PatchFunc() {
+            Map<String, String> encoders = new HashMap<>(); {
+                encoders.put("CBaseAnimating.m_flElasticity", "coord");
+                encoders.put("CBaseAttributableItem.m_viewtarget", "coord");
+                encoders.put("CBasePlayer.m_vecLadderNormal", "normal");
+                encoders.put("CBeam.m_vecEndPos", "coord");
+                encoders.put("CBodyComponentBaseAnimating.m_skeletonInstance.m_angRotation", "QAngle");
+                encoders.put("CBodyComponentBaseAnimatingOverlay.m_skeletonInstance.m_angRotation", "qangle_pitch_yaw");
+                encoders.put("CBodyComponentPoint.m_sceneNode.m_angRotation", "QAngle");
+                encoders.put("CDOTA_BaseNPC_Barracks.m_angInitialAngles", "QAngle");
+                encoders.put("CEnvDeferredLight.m_vLightDirection", "QAngle");
+                encoders.put("CEnvWind.m_EnvWindShared.m_location", "coord");
+                encoders.put("CFish.m_poolOrigin", "coord");
+                encoders.put("CFogController.m_fog.dirPrimary", "coord");
+                encoders.put("CFuncLadder.m_vecLadderDir", "coord");
+                encoders.put("CFuncLadder.m_vecPlayerMountPositionBottom", "coord");
+                encoders.put("CFuncLadder.m_vecPlayerMountPositionTop", "coord");
+                encoders.put("CPlayerLocalData.m_audio.localSound", "coord");
+                encoders.put("CPlayerLocalData.m_skybox3d.fog.dirPrimary", "coord");
+                encoders.put("CPlayerLocalData.m_skybox3d.origin", "coord");
+                encoders.put("CPropVehicleDriveable.m_vecEyeExitEndpoint", "coord");
+                encoders.put("CPropVehicleDriveable.m_vecGunCrosshair", "coord");
+                encoders.put("CRagdollProp.m_ragAngles", "QAngle");
+                encoders.put("CRagdollProp.m_ragPos", "coord");
+                encoders.put("CRagdollPropAttached.m_attachmentPointBoneSpace", "coord");
+                encoders.put("CRagdollPropAttached.m_attachmentPointRagdollSpace", "coord");
+                encoders.put("CShowcaseSlot.angExtraLocalAngles", "QAngle");
+                encoders.put("CShowcaseSlot.angLocalAngles", "QAngle");
+                encoders.put("CShowcaseSlot.vecExtraLocalOrigin", "coord");
+                encoders.put("CShowcaseSlot.vecLocalOrigin", "coord");
+                encoders.put("CWorld.m_WorldMaxs", "coord");
+                encoders.put("CWorld.m_WorldMins", "coord");
+            }
+            @Override
+            public void execute(SerializerField field) {
+                String key = field.parent + (field.sendNode != null ? "." + field.sendNode : "") + "." + field.varName;
+                field.encoder = encoders.get(key);
+            }
+        });
         PATCHES.put(new BuildNumberRange(1016, null), new PatchFunc() {
             private final Set<String> fixed = new HashSet<>(Arrays.asList(
                 "m_bWorldTreeState",
