@@ -26,16 +26,18 @@ import java.util.Map;
 @UsesDTClasses
 public class Entities {
 
-    private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
+    private  Entity[] entities;
     private FieldReader fieldReader;
-    private int serialBitCount;
+    private EngineType engineType;
 
     private final FieldPath[] fieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
     private Event<OnEntityCreated> evCreated;
     private Event<OnEntityUpdated> evUpdated;
     private Event<OnEntityDeleted> evDeleted;
+    private Event<OnEntityEntered> evEntered;
+    private Event<OnEntityLeft> evLeft;
 
     private class BaselineEntry {
         private ByteString rawBaseline;
@@ -48,31 +50,44 @@ public class Entities {
 
     @Initializer(UsesEntities.class)
     public void initUsesEntities(final Context ctx, final UsagePoint<UsesEntities> usagePoint) {
-        initFieldReader(ctx);
+        initEngineDependentFields(ctx);
     }
 
     @Initializer(OnEntityCreated.class)
     public void initOnEntityCreated(final Context ctx, final EventListener<OnEntityCreated> eventListener) {
-        initFieldReader(ctx);
+        initEngineDependentFields(ctx);
         evCreated = ctx.createEvent(OnEntityCreated.class, Entity.class);
     }
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
-        initFieldReader(ctx);
+        initEngineDependentFields(ctx);
         evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, FieldPath[].class, int.class);
     }
 
     @Initializer(OnEntityDeleted.class)
     public void initOnEntityDeleted(final Context ctx, final EventListener<OnEntityDeleted> eventListener) {
-        initFieldReader(ctx);
+        initEngineDependentFields(ctx);
         evDeleted = ctx.createEvent(OnEntityDeleted.class, Entity.class);
     }
 
-    private void initFieldReader(Context ctx) {
+    @Initializer(OnEntityEntered.class)
+    public void initOnEntityEntered(final Context ctx, final EventListener<OnEntityEntered> eventListener) {
+        initEngineDependentFields(ctx);
+        evEntered = ctx.createEvent(OnEntityEntered.class, Entity.class);
+    }
+
+    @Initializer(OnEntityLeft.class)
+    public void initOnEntityLeft(final Context ctx, final EventListener<OnEntityLeft> eventListener) {
+        initEngineDependentFields(ctx);
+        evLeft = ctx.createEvent(OnEntityLeft.class, Entity.class);
+    }
+
+    private void initEngineDependentFields(Context ctx) {
         if (fieldReader == null) {
+            engineType = ctx.getEngineType();
             fieldReader = ctx.getEngineType().getNewFieldReader();
-            serialBitCount = ctx.getEngineType().getSerialBitCount();
+            entities = new Entity[1 << engineType.getIndexBits()];
         }
     }
 
@@ -98,7 +113,7 @@ public class Entities {
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
 
-        int pvs;
+        int cmd;
         DTClass cls;
         int serial;
         Object[] state;
@@ -106,39 +121,59 @@ public class Entities {
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
-            pvs = stream.readUBitInt(2);
-            if ((pvs & 1) == 0) {
-                if ((pvs & 2) != 0) {
+            cmd = stream.readUBitInt(2);
+            if ((cmd & 1) == 0) {
+                if ((cmd & 2) != 0) {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
-                    serial = stream.readUBitInt(serialBitCount);
+                    serial = stream.readUBitInt(engineType.getSerialBits());
+                    if (engineType.getSerialExtraBits() != 0) {
+                        // TODO: there is an extra byte encoded here for S2, figure out what it is
+                        stream.skip(engineType.getSerialExtraBits());
+                    }
                     state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
                     fieldReader.readFields(stream, cls, fieldPaths, state, false);
-                    entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
+                    entity = new Entity(ctx.getEngineType(), entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
                         evCreated.raise(entity);
                     }
+                    if (evEntered != null) {
+                        evEntered.raise(entity);
+                    }
                 } else {
                     entity = entities[entityIndex];
                     cls = entity.getDtClass();
-                    entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);
                     if (evUpdated != null) {
                         evUpdated.raise(entity, fieldPaths, nChanged);
                     }
+                    if (!entity.isActive()) {
+                        entity.setActive(true);
+                        if (evEntered != null) {
+                            evEntered.raise(entity);
+                        }
+                    }
                 }
-            } else if ((pvs & 2) != 0) {
+            } else {
                 entity = entities[entityIndex];
-                entities[entityIndex] = null;
-                if (evDeleted != null) {
-                    evDeleted.raise(entity);
+                if (entity.isActive()) {
+                    entity.setActive(false);
+                    if (evLeft != null) {
+                        evLeft.raise(entity);
+                    }
+                }
+                if ((cmd & 2) != 0) {
+                    entities[entityIndex] = null;
+                    if (evDeleted != null) {
+                        evDeleted.raise(entity);
+                    }
                 }
             }
         }
         if (message.getIsDelta()) {
             while (stream.readBitFlag()) {
-                entityIndex = stream.readUBitInt(11); // max is 2^11-1, or 2047
+                entityIndex = stream.readUBitInt(engineType.getIndexBits());
                 if (evDeleted != null) {
                     evDeleted.raise(entities[entityIndex]);
                 }
@@ -163,8 +198,8 @@ public class Entities {
     }
 
     public Entity getByHandle(int handle) {
-        Entity e = entities[Handle.indexForHandle(handle)];
-        return e == null || e.getSerial() != Handle.serialForHandle(handle) ? null : e;
+        Entity e = entities[engineType.indexForHandle(handle)];
+        return e == null || e.getSerial() != engineType.serialForHandle(handle) ? null : e;
     }
 
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {

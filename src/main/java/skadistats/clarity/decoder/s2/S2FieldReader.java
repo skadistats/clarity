@@ -11,36 +11,6 @@ import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader implements FieldReader<S2DTClass> {
 
-    public static final int MAX_EDICT_BITS = 14; // # of bits needed to represent max edicts
-
-    // Max # of edicts in a level
-    public static final int MAX_EDICTS = (1 << MAX_EDICT_BITS);
-
-    public static final int MAX_NETWORKABLE_ENTITY_BITS = MAX_EDICT_BITS; // # of bits needed to represent max networkable entities
-    public static final int MAX_NETWORKABLE_ENTITY_COUNT = (1 << MAX_NETWORKABLE_ENTITY_BITS);
-
-    public static final int MAX_NONNETWORKABLE_ENTITY_BITS = 14;
-    public static final int MAX_NONNETWORKABLE_ENTITY_COUNT = (1 << MAX_NONNETWORKABLE_ENTITY_BITS);
-
-    public static final int MAX_SNAPSHOT_ENTITIES = (MAX_NETWORKABLE_ENTITY_COUNT);
-    public static final int MAX_ENTITY_BITS = ((MAX_NETWORKABLE_ENTITY_BITS >= MAX_NONNETWORKABLE_ENTITY_BITS) ? MAX_NETWORKABLE_ENTITY_BITS : MAX_NONNETWORKABLE_ENTITY_BITS);
-
-    // Adding one here because we need to be able to store both networkable + non-networkable entities
-    public static final int ENTITY_HANDLE_ENTRY_BITS = (MAX_ENTITY_BITS + 1);
-    public static final int ENTITY_HANDLE_ENTRY_COUNT = (1 << ENTITY_HANDLE_ENTRY_BITS);
-    public static final int ENTITY_HANDLE_MAX_INDEX = (ENTITY_HANDLE_ENTRY_COUNT - 1);
-    public static final int ENTITY_HANDLE_INVALID_ENTRY_INDEX = -1;
-
-    public static final int INVALID_EHANDLE_INDEX = (0xFFFFFFFF);
-    public static final int ENTITY_SERIAL_NUMBER_BITS = (32 - ENTITY_HANDLE_ENTRY_BITS);
-    public static final int ENTITY_SERIAL_NUM_SHIFT_BITS = (ENTITY_HANDLE_ENTRY_BITS);
-    public static final int ENTITY_HANDLE_ENTRY_MASK = ENTITY_HANDLE_MAX_INDEX;
-    public static final int ENTITY_HANDLE_SERIAL_MASK = ((1 << ENTITY_SERIAL_NUMBER_BITS) - 1);
-
-    // ID of zero, serial number of one
-    public static final int ENTITY_ID_WORLD_ENTITY = (0 + (1 << ENTITY_SERIAL_NUM_SHIFT_BITS));
-
-
     public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
 
     @Override

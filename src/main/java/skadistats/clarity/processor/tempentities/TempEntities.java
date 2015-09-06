@@ -46,7 +46,7 @@ public class TempEntities {
                 }
                 Object[] state = new Object[receiveProps.length];
                 fieldReader.readFields(stream, cls, fieldPaths, state, false);
-                ev.raise(new Entity(0, 0, cls, null, state));
+                ev.raise(new Entity(ctx.getEngineType(), 0, 0, cls, true, state));
             }
         }
     }

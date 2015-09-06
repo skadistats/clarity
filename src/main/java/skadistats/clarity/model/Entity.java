@@ -5,17 +5,19 @@ import skadistats.clarity.util.TextTable;
 
 public class Entity {
 
+    private final EngineType engineType;
     private final int index;
     private final int serial;
     private final DTClass dtClass;
-    private PVS pvs;
+    private boolean active;
     private final Object[] state;
 
-    public Entity(int index, int serial, DTClass dtClass, PVS pvs, Object[] state) {
+    public Entity(EngineType engineType, int index, int serial, DTClass dtClass, boolean active, Object[] state) {
+        this.engineType = engineType;
         this.index = index;
         this.serial = serial;
         this.dtClass = dtClass;
-        this.pvs = pvs;
+        this.active = active;
         this.state = state;
     }
 
@@ -28,19 +30,19 @@ public class Entity {
     }
     
     public int getHandle() {
-        return Handle.forIndexAndSerial(index, serial);
+        return engineType.handleForIndexAndSerial(index, serial);
     }
 
     public DTClass getDtClass() {
         return dtClass;
     }
 
-    public PVS getPvs() {
-        return pvs;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setPvs(PVS pvs) {
-        this.pvs = pvs;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Object[] getState() {

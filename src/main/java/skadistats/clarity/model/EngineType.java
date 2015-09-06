@@ -18,7 +18,7 @@ public enum EngineType {
         Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
         false, // has 4 extra header bytes
         true,   // CDemoSendTables is container
-        10
+        11, 10, 0
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -47,7 +47,7 @@ public enum EngineType {
         Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
         true, // has 4 extra header bytes
         false, // CDemoSendTables is container
-        25
+        14, 10, 15
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -76,15 +76,22 @@ public enum EngineType {
     private final int compressedFlag;
     private final boolean extraHeaderInt32;
     private final boolean sendTablesContainer;
-    private final int serialBitCount;
+    private final int indexBits;
+    private final int serialBits;
+    private final int serialExtraBits;
+    private final int indexMask;
 
 
-    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int serialBitCount) {
+
+    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int indexBits, int serialBits, int serialExtraBits) {
         this.magic = magic;
         this.compressedFlag = compressedFlag;
         this.extraHeaderInt32 = extraHeaderInt32;
         this.sendTablesContainer = sendTablesContainer;
-        this.serialBitCount = serialBitCount;
+        this.indexBits = indexBits;
+        this.serialBits = serialBits;
+        this.serialExtraBits = serialExtraBits;
+        this.indexMask = (1 << indexBits) - 1;
     }
 
     public String getMagic() {
@@ -122,7 +129,29 @@ public enum EngineType {
         return null;
     }
 
-    public int getSerialBitCount() {
-        return serialBitCount;
+    public int getIndexBits() {
+        return indexBits;
     }
+
+    public int getSerialBits() {
+        return serialBits;
+    }
+
+    public int getSerialExtraBits() {
+        return serialExtraBits;
+    }
+
+    public int indexForHandle(int handle) {
+        return handle & indexMask;
+    }
+
+    public int serialForHandle(int handle) {
+        return handle >> indexBits;
+    }
+
+    public int handleForIndexAndSerial(int index, int serial) {
+        return serial << indexBits | index;
+    }
+
+
 }
