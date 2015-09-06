@@ -3,10 +3,7 @@ package skadistats.clarity.decoder.s2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.unpacker.*;
-import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
-import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
-import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
-import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.*;
 import skadistats.clarity.model.s2.field.FieldProperties;
 
 import java.util.HashMap;
@@ -20,6 +17,9 @@ public class S2UnpackerFactory {
 
     private static final Map<String, UnpackerFactory> FACTORIES = new HashMap<>();
     static {
+        // Unsigned ints
+        FACTORIES.put("uint64", new LongUnsignedUnpackerFactory());
+
         // Floats
         FACTORIES.put("float32", new FloatUnpackerFactory());
         FACTORIES.put("CNetworkedQuantizedFloat", new FloatUnpackerFactory());
@@ -38,7 +38,6 @@ public class S2UnpackerFactory {
         UNPACKERS.put("uint8", new IntVarUnsignedUnpacker());
         UNPACKERS.put("uint16", new IntVarUnsignedUnpacker());
         UNPACKERS.put("uint32", new IntVarUnsignedUnpacker());
-        UNPACKERS.put("uint64", new LongVarUnsignedUnpacker());
 
         // Signed ints
         UNPACKERS.put("int8", new IntVarSignedUnpacker());

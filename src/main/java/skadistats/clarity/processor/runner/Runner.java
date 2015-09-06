@@ -10,5 +10,4 @@ public interface Runner<T extends Runner> {
 
     T runWith(Object... processors);
 
-
 }

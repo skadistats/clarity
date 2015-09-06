@@ -74,7 +74,7 @@ public class S2DTClassEmitter {
         );
 
         Map<SerializerId, Serializer> serializers = new HashMap<>();
-        Map<Integer, FieldType> fieldTypes = new HashMap<>();
+        Map<String, FieldType> fieldTypes = new HashMap<>();
         Field[] fields = new Field[protoMessage.getFieldsCount()];
         ArrayList<Field> currentFields = new ArrayList<>(128);
         for (int si = 0; si < protoMessage.getSerializersCount(); si++) {
@@ -83,32 +83,34 @@ public class S2DTClassEmitter {
             for (int fi : protoSerializer.getFieldsIndexList()) {
                 Field field = fields[fi];
                 if (field == null) {
-                    S2NetMessages.ProtoFlattenedSerializerField_t protoField = protoMessage.getFields(fi);
-                    FieldType fieldType = fieldTypes.get(protoField.getVarTypeSym());
+                    SerializerField protoField = new SerializerField(protoMessage, protoMessage.getFields(fi));
+                    for (Map.Entry<BuildNumberRange, PatchFunc> patchEntry : PATCHES.entrySet()) {
+                        if (patchEntry.getKey().appliesTo(ctx.getBuildNumber())) {
+                            patchEntry.getValue().execute(protoField);
+                        }
+                    }
+                    FieldType fieldType = fieldTypes.get(protoField.varType);
                     if (fieldType == null) {
-                        fieldType = createFieldType(protoMessage.getSymbols(protoField.getVarTypeSym()));
-                        fieldTypes.put(protoField.getVarTypeSym(), fieldType);
+                        fieldType = createFieldType(protoField.varType);
+                        fieldTypes.put(protoField.varType, fieldType);
                     }
                     Serializer fieldSerializer = null;
-                    if (protoField.hasFieldSerializerNameSym()) {
+                    if (protoField.serializerName != null) {
                         fieldSerializer = serializers.get(
-                            new SerializerId(
-                                protoMessage.getSymbols(protoField.getFieldSerializerNameSym()),
-                                protoField.getFieldSerializerVersion()
-                            )
+                            new SerializerId(protoField.serializerName, protoField.serializerVersion)
                         );
                     }
-                    String sendNode = protoMessage.getSymbols(protoField.getSendNodeSym());
                     FieldProperties fieldProperties = new FieldProperties(
                         fieldType,
-                        protoMessage.getSymbols(protoField.getVarNameSym()),
-                        !"(root)".equals(sendNode) ? sendNode : null,
-                        protoField.hasEncodeFlags() ? protoField.getEncodeFlags() : null,
-                        protoField.hasBitCount() ? protoField.getBitCount() : null,
-                        protoField.hasLowValue() ? protoField.getLowValue() : null,
-                        protoField.hasHighValue() ? protoField.getHighValue() : null,
+                        protoField.varName,
+                        protoField.sendNode,
+                        protoField.encodeFlags,
+                        protoField.bitCount,
+                        protoField.lowValue,
+                        protoField.highValue,
                         fieldSerializer,
-                        protoField.hasVarEncoderSym() ? protoMessage.getSymbols(protoField.getVarEncoderSym()) : null);
+                        protoField.encoder
+                    );
                     field = createField(fieldProperties);
                     fields[fi] = field;
                 }
@@ -142,6 +144,67 @@ public class S2DTClassEmitter {
         }
     }
 
+    private static class SerializerField {
+        private String varName;
+        private String varType;
+        private String sendNode;
+        private String serializerName;
+        private Integer serializerVersion;
+        private String encoder;
+        private Integer encodeFlags;
+        private Integer bitCount;
+        private Float lowValue;
+        private Float highValue;
+        public SerializerField(S2NetMessages.CSVCMsg_FlattenedSerializer serializer, S2NetMessages.ProtoFlattenedSerializerField_t field) {
+            this.varName = serializer.getSymbols(field.getVarNameSym());
+            this.varType = serializer.getSymbols(field.getVarTypeSym());
+            String sn = serializer.getSymbols(field.getSendNodeSym());
+            this.sendNode = !"(root)".equals(sn) ? sn : null;
+            this.serializerName = field.hasFieldSerializerNameSym() ? serializer.getSymbols(field.getFieldSerializerNameSym()) : null;
+            this.serializerVersion = field.hasFieldSerializerVersion() ? field.getFieldSerializerVersion() : null;
+            this.encoder = field.hasVarEncoderSym() ? serializer.getSymbols(field.getVarEncoderSym()) : null;
+            this.encodeFlags = field.hasEncodeFlags() ? field.getEncodeFlags() : null;
+            this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
+            this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
+            this.highValue = field.hasHighValue() ? field.getHighValue() : null;
+        }
+    }
 
+    private static class BuildNumberRange {
+        private final Integer start;
+        private final Integer end;
+        public BuildNumberRange(Integer start, Integer end) {
+            this.start = start;
+            this.end = end;
+        }
+        public boolean appliesTo(int buildNumber) {
+            return (start == null || start <= buildNumber) && (end == null || end >= buildNumber);
+        }
+    }
+
+    private interface PatchFunc {
+        void execute(SerializerField field);
+    }
+
+    private static final Map<BuildNumberRange, PatchFunc> PATCHES = new LinkedHashMap<>();
+    static {
+        PATCHES.put(new BuildNumberRange(1016, null), new PatchFunc() {
+            private final Set<String> fixed = new HashSet<>(Arrays.asList(
+                "m_bWorldTreeState",
+                "m_ulTeamLogo",
+                "m_ulTeamBaseLogo",
+                "m_ulTeamBannerLogo",
+                "m_iPlayerIDsInControl",
+                "m_bItemWhiteList",
+                "m_iPlayerSteamID"
+            ));
+            @Override
+            public void execute(SerializerField field) {
+                if (fixed.contains(field.varName)) {
+                    field.encoder = "fixed64";
+                }
+            }
+        });
+    }
 
 }

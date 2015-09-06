@@ -142,6 +142,9 @@ public class Entities {
                     }
                 } else {
                     entity = entities[entityIndex];
+                    if (entity == null) {
+                        throw new RuntimeException("oops, update command for non existing entity?");
+                    }
                     cls = entity.getDtClass();
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);

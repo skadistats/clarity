@@ -20,10 +20,13 @@ import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class, OnReset.class, OnFullPacket.class })
 public class InputSourceProcessor {
@@ -163,6 +166,17 @@ public class InputSourceProcessor {
                     bs.skip(size * 8);
                 }
             }
+        }
+    }
+
+    @OnMessage(S2NetMessages.CSVCMsg_ServerInfo.class)
+    public void processServerInfo(Context ctx, S2NetMessages.CSVCMsg_ServerInfo serverInfo) {
+        Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
+        if (matcher.find()) {
+            ctx.setBuildNumber(Integer.valueOf(matcher.group(1)));
+            log.warn("build: {}", ctx.getBuildNumber());
+        } else {
+            log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '{}')", serverInfo.getGameDir());
         }
     }
 
