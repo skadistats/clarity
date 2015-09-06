@@ -2,18 +2,15 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.model.s1.S1DTClass;
 
 public class S1FieldReader implements FieldReader<S1DTClass> {
 
-    public static final int MAX_PROPERTIES = 0x3fff;
-
-    private final int[] indices = new int[MAX_PROPERTIES];
-
     @Override
-    public void readFields(BitStream bs, S1DTClass dtClass, Object[] state, boolean debug) {
-        int cIndices = 0;
+    public int readFields(BitStream bs, S1DTClass dtClass, FieldPath[] fieldPaths, Object[] state, boolean debug) {
+        int n = 0;
         int cursor = -1;
         while (true) {
             if (bs.readBitFlag()) {
@@ -26,13 +23,14 @@ public class S1FieldReader implements FieldReader<S1DTClass> {
                     cursor += offset + 1;
                 }
             }
-            indices[cIndices++] = cursor;
+            fieldPaths[n++] = new FieldPath(cursor);
         }
         ReceiveProp[] receiveProps = dtClass.getReceiveProps();
-        for (int ci = 0; ci < cIndices; ci++) {
-            int o = indices[ci];
+        for (int ci = 0; ci < n; ci++) {
+            int o = fieldPaths[ci].path[0];
             state[o] = receiveProps[o].decode(bs);
         }
+        return n;
     }
 
 }

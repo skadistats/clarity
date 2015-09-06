@@ -31,6 +31,8 @@ public class Entities {
     private FieldReader fieldReader;
     private int serialBitCount;
 
+    private final FieldPath[] fieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
+
     private Event<OnEntityCreated> evCreated;
     private Event<OnEntityUpdated> evUpdated;
     private Event<OnEntityDeleted> evDeleted;
@@ -58,7 +60,7 @@ public class Entities {
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
         initFieldReader(ctx);
-        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, int[].class, int.class);
+        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, FieldPath[].class, int.class);
     }
 
     @Initializer(OnEntityDeleted.class)
@@ -110,7 +112,7 @@ public class Entities {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
                     serial = stream.readUBitInt(serialBitCount);
                     state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
-                    fieldReader.readFields(stream, cls, state, false);
+                    fieldReader.readFields(stream, cls, fieldPaths, state, false);
                     entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
@@ -121,9 +123,9 @@ public class Entities {
                     cls = entity.getDtClass();
                     entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
-                    fieldReader.readFields(stream, cls, state, false);
+                    int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);
                     if (evUpdated != null) {
-                        //evUpdated.raise(entity, indices, cIndices);
+                        evUpdated.raise(entity, fieldPaths, nChanged);
                     }
                 }
             } else if ((pvs & 2) != 0) {
@@ -151,7 +153,7 @@ public class Entities {
             DTClass cls = dtClasses.forClassId(clsId);
             BitStream stream = new BitStream(be.rawBaseline);
             be.baseline = cls.getEmptyStateArray();
-            fieldReader.readFields(stream, cls, be.baseline, false);
+            fieldReader.readFields(stream, cls, fieldPaths, be.baseline, false);
         }
         return be.baseline;
     }

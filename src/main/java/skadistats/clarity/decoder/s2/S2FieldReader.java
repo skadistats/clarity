@@ -11,8 +11,6 @@ import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader implements FieldReader<S2DTClass> {
 
-    public static final int MAX_PROPERTIES = 0x3fff;
-
     public static final int MAX_EDICT_BITS = 14; // # of bits needed to represent max edicts
 
     // Max # of edicts in a level
@@ -45,13 +43,10 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
 
     public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
 
-    private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
-
     @Override
-    public void readFields(BitStream bs, S2DTClass dtClass, Object[] state, boolean debug) {
+    public int readFields(BitStream bs, S2DTClass dtClass, FieldPath[] fieldPaths, Object[] state, boolean debug) {
         if (debug) {
-            readFieldsDebug(bs, dtClass, state);
-            return;
+            return readFieldsDebug(bs, dtClass, fieldPaths, state);
         }
         FieldPath fp = new FieldPath();
         int n = 0;
@@ -74,10 +69,11 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
             Object data = unpacker.unpack(bs);
             dtClass.setValueForFieldPath(fp, state, data);
         }
+        return n;
     }
 
 
-    public void readFieldsDebug(BitStream bs, S2DTClass dtClass, Object[] state) {
+    public int readFieldsDebug(BitStream bs, S2DTClass dtClass, FieldPath[] fieldPaths, Object[] state) {
         TextTable.Builder b = new TextTable.Builder();
         b.setTitle(dtClass.getDtName());
         b.setFrame(TextTable.FRAME_COMPAT);
@@ -134,6 +130,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         t.print(System.out);
         System.out.println("");
         System.out.println("");
+        return n;
     }
 
 }
