@@ -5,18 +5,44 @@ import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.util.LZSS;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class}, engine = EngineType.SOURCE2)
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
+
+    private interface UncompressorFunc {
+        byte[] uncompress(byte[] src, int size) throws IOException;
+    }
+
+    private static final Map<BuildNumberRange, UncompressorFunc> UNCOMPRESSORS = new HashMap<>();
+    static {
+        UNCOMPRESSORS.put(new BuildNumberRange(null, 962), new UncompressorFunc() {
+            @Override
+            public byte[] uncompress(byte[] src, int size) throws IOException {
+                byte[] dst = new byte[size];
+                LZSS.unpack(src, dst);
+                return dst;
+            }
+        });
+        UNCOMPRESSORS.put(new BuildNumberRange(963, null), new UncompressorFunc() {
+            @Override
+            public byte[] uncompress(byte[] src, int size) throws IOException {
+                return Snappy.uncompress(src);
+            }
+        });
+    }
 
     @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(Context ctx, S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
@@ -32,10 +58,13 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
 
             ByteString data = message.getStringData();
             if (message.getDataCompressed()) {
-                data = ZeroCopy.wrap(Snappy.uncompress(ZeroCopy.extract(data)));
-                //byte[] unp = new byte[message.getUncompressedSize()];
-                //LZSS.unpack(ZeroCopy.extract(data), unp);
-                //data = ZeroCopy.wrap(unp);
+                byte[] src = ZeroCopy.extract(data);
+                for (Map.Entry<BuildNumberRange, UncompressorFunc> funcEntry : UNCOMPRESSORS.entrySet()) {
+                    if (funcEntry.getKey().appliesTo(ctx.getBuildNumber())) {
+                        src = funcEntry.getValue().uncompress(src, message.getUncompressedSize());
+                    }
+                }
+                data = ZeroCopy.wrap(src);
             }
             decodeEntries(ctx, table, 3, data, message.getNumEntries());
             ctx.createEvent(OnStringTableCreated.class, int.class, StringTable.class).raise(numTables, table);
