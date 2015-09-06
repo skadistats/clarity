@@ -127,7 +127,7 @@ public class Entities {
                     cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
                     serial = stream.readUBitInt(engineType.getSerialBits());
                     if (engineType.getSerialExtraBits() != 0) {
-                        // TODO: there is an extra byte encoded here for S2, figure out what it is
+                        // TODO: there is an extra 15 bits encoded here for S2, figure out what it is
                         stream.skip(engineType.getSerialExtraBits());
                     }
                     state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
@@ -142,6 +142,9 @@ public class Entities {
                     }
                 } else {
                     entity = entities[entityIndex];
+                    if (entity == null) {
+                        throw new RuntimeException("oops, entity to update not found (" + entityIndex + ")");
+                    }
                     cls = entity.getDtClass();
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);
