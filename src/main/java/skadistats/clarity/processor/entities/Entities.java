@@ -142,9 +142,6 @@ public class Entities {
                     }
                 } else {
                     entity = entities[entityIndex];
-                    if (entity == null) {
-                        throw new RuntimeException("oops, update command for non existing entity?");
-                    }
                     cls = entity.getDtClass();
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);
@@ -174,15 +171,16 @@ public class Entities {
                 }
             }
         }
-        if (message.getIsDelta()) {
-            while (stream.readBitFlag()) {
-                entityIndex = stream.readUBitInt(engineType.getIndexBits());
-                if (evDeleted != null) {
-                    evDeleted.raise(entities[entityIndex]);
-                }
-                entities[entityIndex] = null;
-            }
-        }
+
+//        if (message.getIsDelta()) {
+//            while (stream.readBitFlag()) {
+//                entityIndex = stream.readUBitInt(engineType.getIndexBits());
+//                if (evDeleted != null) {
+//                    evDeleted.raise(entities[entityIndex]);
+//                }
+//                entities[entityIndex] = null;
+//            }
+//        }
     }
 
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
