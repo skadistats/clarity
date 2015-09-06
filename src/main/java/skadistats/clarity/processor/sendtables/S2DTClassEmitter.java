@@ -3,6 +3,7 @@ package skadistats.clarity.processor.sendtables;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.s2.S2DTClass;
@@ -167,18 +168,6 @@ public class S2DTClassEmitter {
             this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
             this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
             this.highValue = field.hasHighValue() ? field.getHighValue() : null;
-        }
-    }
-
-    private static class BuildNumberRange {
-        private final Integer start;
-        private final Integer end;
-        public BuildNumberRange(Integer start, Integer end) {
-            this.start = start;
-            this.end = end;
-        }
-        public boolean appliesTo(int buildNumber) {
-            return (start == null || start <= buildNumber) && (end == null || end >= buildNumber);
         }
     }
 
