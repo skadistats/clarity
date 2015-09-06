@@ -35,6 +35,7 @@ public class TextTable {
         private int paddingRight = 1;
         private boolean framed = true;
         private char[] frame = FRAME_UNICODE;
+        private Integer minWidth = null;
         public Builder setPadding(int paddingLeft, int paddingRight) {
             this.paddingLeft = paddingLeft;
             this.paddingRight = paddingRight;
@@ -52,6 +53,10 @@ public class TextTable {
             this.frame = frame;
             return this;
         }
+        public Builder setMinWidth(Integer minWidth) {
+            this.minWidth = minWidth;
+            return this;
+        }
         public Builder addColumn() {
             return addColumn("");
         }
@@ -63,7 +68,7 @@ public class TextTable {
             return this;
         }
         public TextTable build() {
-            return new TextTable(title, columns, paddingLeft, paddingRight, framed, frame);
+            return new TextTable(title, columns, paddingLeft, paddingRight, framed, frame, minWidth);
         }
     }
 
@@ -73,10 +78,12 @@ public class TextTable {
     private final String paddingRight;
     private final boolean framed;
     private final char[] frame;
+    private final Integer minWidth;
     private final TreeMap<Integer, TreeMap<Integer, Object>> data = new TreeMap<>();
 
-    private TextTable(String title, List<ColDef> columns, int paddingLeft, int paddingRight, boolean framed, char[] frame) {
+    private TextTable(String title, List<ColDef> columns, int paddingLeft, int paddingRight, boolean framed, char[] frame, Integer minWidth) {
         this.title = title;
+        this.minWidth = minWidth;
         this.columns = columns.toArray(new ColDef[] {});
         this.paddingLeft = repeat(paddingLeft, ' ');
         this.paddingRight = repeat(paddingRight, ' ');
@@ -237,6 +244,17 @@ public class TextTable {
         int complete = framed ? 1 : 0;
         for (int i = 0; i < columns.length; i++) {
             complete += widths[i] + paddingLeft.length() + paddingRight.length() + (framed ? 1 : 0);
+        }
+        if (minWidth != null && minWidth.intValue() > complete) {
+            float p = ((float)(minWidth - complete)) / columns.length;
+            float c = 0.01f;
+            for (int i = 0; i < columns.length; i++) {
+                c += p;
+                int x = (int) Math.floor(c);
+                widths[i] += x;
+                c -= x;
+            }
+            complete = minWidth;
         }
         widths[columns.length] = complete;
         return widths;
