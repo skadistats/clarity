@@ -109,4 +109,13 @@ public class VarSubTableField extends Field {
         return properties.getSerializer().getFields()[fp.path[pos + 2]].getValueForFieldPath(fp, myState, pos + 2);
     }
 
+    @Override
+    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+        String idx = property.substring(0, 4);
+        fp.path[fp.last] = Integer.valueOf(idx);
+        fp.last++;
+        return properties.getSerializer().getFieldPathForName(fp, property.substring(5));
+    }
+
+
 }

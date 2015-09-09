@@ -36,12 +36,13 @@ public class S2DTClass implements DTClass {
 
     @Override
     public FieldPath getFieldPathForName(String property) {
-        throw new UnsupportedOperationException();
+        FieldPath fp = new FieldPath();
+        return serializer.getFieldPathForName(fp, property);
     }
 
     @Override
     public <T> T getValueForFieldPath(Object[] state, FieldPath fp) {
-        throw new UnsupportedOperationException();
+        return (T) serializer.getFields()[fp.path[0]].getValueForFieldPath(fp, state, 0);
     }
 
     @Override

@@ -64,4 +64,11 @@ public class FixedArrayField extends Field {
         return myState[fp.path[pos + 1]];
     }
 
+    @Override
+    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+        throw new UnsupportedOperationException();
+    }
+
+
+
 }

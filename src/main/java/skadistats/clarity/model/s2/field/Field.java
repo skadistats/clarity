@@ -18,10 +18,9 @@ public abstract class Field {
     public abstract Unpacker queryUnpacker(FieldPath fp, int pos);
     public abstract Field queryField(FieldPath fp, int pos);
     public abstract FieldType queryType(FieldPath fp, int pos);
-
     public abstract Object getValueForFieldPath(FieldPath fp, Object[] state, int pos);
-
     public abstract void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos);
+    public abstract FieldPath getFieldPathForName(FieldPath fp, String property);
 
 
     protected void assertFieldLeft(FieldPath fp, int pos, int left) {

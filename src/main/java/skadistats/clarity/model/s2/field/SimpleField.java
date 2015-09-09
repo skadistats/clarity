@@ -56,4 +56,9 @@ public class SimpleField extends Field {
         return state[fp.path[pos]];
     }
 
+    @Override
+    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+        throw new UnsupportedOperationException();
+    }
+
 }
