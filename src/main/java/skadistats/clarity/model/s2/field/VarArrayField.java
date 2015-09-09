@@ -83,5 +83,11 @@ public class VarArrayField extends Field {
         }
     }
 
-
+    @Override
+    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
+        assertFieldPathEnd(fp, pos + 1);
+        Object[] myState = (Object[]) state[fp.path[pos]];
+        return myState[fp.path[pos + 1]];
+    }
+    
 }

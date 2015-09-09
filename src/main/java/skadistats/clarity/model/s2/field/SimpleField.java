@@ -50,4 +50,10 @@ public class SimpleField extends Field {
         state[fp.path[pos]] = data;
     }
 
+    @Override
+    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
+        assertFieldPathEnd(fp, pos);
+        return state[fp.path[pos]];
+    }
+
 }

@@ -18,7 +18,17 @@ public abstract class Field {
     public abstract Unpacker queryUnpacker(FieldPath fp, int pos);
     public abstract Field queryField(FieldPath fp, int pos);
     public abstract FieldType queryType(FieldPath fp, int pos);
+
+    public abstract Object getValueForFieldPath(FieldPath fp, Object[] state, int pos);
+
     public abstract void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos);
+
+
+    protected void assertFieldLeft(FieldPath fp, int pos, int left) {
+        if (pos + left < fp.last) {
+            throw new RuntimeException(String.format("Assert failed: FieldPath %s has less than %s left as %s.", fp, left, pos));
+        }
+    }
 
     protected void assertFieldPathEnd(FieldPath fp, int pos) {
         if (fp.last != pos) {

@@ -74,4 +74,11 @@ public class FixedSubTableField extends Field {
             properties.getSerializer().getFields()[fp.path[pos + 1]].setValueForFieldPath(fp, myState, data, pos + 1);
         }
     }
+
+    @Override
+    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
+        assertFieldLeft(fp, pos, 2);
+        Object[] myState = (Object[]) state[fp.path[pos]];
+        return properties.getSerializer().getFields()[fp.path[pos + 1]].getValueForFieldPath(fp, myState, pos + 1);
+    }
 }

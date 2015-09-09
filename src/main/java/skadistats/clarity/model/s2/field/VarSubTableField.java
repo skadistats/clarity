@@ -100,4 +100,13 @@ public class VarSubTableField extends Field {
             properties.getSerializer().getFields()[fp.path[pos]].setValueForFieldPath(fp, (Object[]) myState.get(j), data, pos);
         }
     }
+
+    @Override
+    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
+        assertFieldLeft(fp, pos, 3);
+        List<Object> myList = (List<Object>) state[fp.path[pos]];
+        Object[] myState = (Object[]) myList.get(fp.path[pos + 1]);
+        return properties.getSerializer().getFields()[fp.path[pos + 2]].getValueForFieldPath(fp, myState, pos + 2);
+    }
+
 }
