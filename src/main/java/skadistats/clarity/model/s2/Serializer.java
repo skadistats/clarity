@@ -3,6 +3,7 @@ package skadistats.clarity.model.s2;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.field.Field;
 
+import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -16,7 +17,13 @@ public class Serializer {
         this.id = id;
         this.fields = fields;
 
-        sendNodePrefixes = new TreeSet<>();
+        sendNodePrefixes = new TreeSet<>(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                int result = Integer.compare(o2.length(), o1.length());
+                return result != 0 ? result : o1.compareTo(o2);
+            }
+        });
         for (Field field : fields) {
             if (field.getProperties().getSendNode() != null) {
                 sendNodePrefixes.add(field.getProperties().getSendNode());
@@ -51,7 +58,7 @@ public class Serializer {
                 } else {
                     property = property.substring(fieldName.length());
                     if (property.charAt(0) != '.') {
-                        throw new RuntimeException("sry, but no");
+                        throw new RuntimeException("unresolvable fieldpath");
                     }
                     property = property.substring(1);
                     fp.last++;
