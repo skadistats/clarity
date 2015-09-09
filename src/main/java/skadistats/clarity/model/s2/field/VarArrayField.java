@@ -92,7 +92,11 @@ public class VarArrayField extends Field {
 
     @Override
     public FieldPath getFieldPathForName(FieldPath fp, String property) {
-        throw new UnsupportedOperationException();
+        if (property.length() != 4) {
+            throw new RuntimeException("unresolvable fieldpath");
+        }
+        fp.path[fp.last] = Integer.valueOf(property);
+        return fp;
     }
 
     

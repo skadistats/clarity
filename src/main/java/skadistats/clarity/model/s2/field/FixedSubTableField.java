@@ -84,7 +84,9 @@ public class FixedSubTableField extends Field {
 
     @Override
     public FieldPath getFieldPathForName(FieldPath fp, String property) {
-        throw new UnsupportedOperationException();
+        return properties.getSerializer().getFieldPathForName(fp, property);
     }
+
+
 
 }
