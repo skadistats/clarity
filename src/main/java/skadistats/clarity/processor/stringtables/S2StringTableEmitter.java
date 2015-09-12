@@ -73,7 +73,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
     }
 
     @OnMessage(S2NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, S2NetMessages.CSVCMsg_UpdateStringTable message) {
+    public void onUpdateStringTable(Context ctx, S2NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
@@ -81,7 +81,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         }
     }
 
-    private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
+    private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) throws IOException {
         BitStream stream = new BitStream(data);
         LinkedList<String> keyHistory = new LinkedList<>();
 
@@ -113,17 +113,21 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             // read value
             ByteString value = null;
             if (stream.readBitFlag()) {
+                boolean isCompressed = false;
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
                     if ((table.getFlags() & 0x1) != 0) {
                         // this is the case for the instancebaseline for console recorded replays
-                        stream.skip(1);
+                        isCompressed = stream.readBitFlag();
                     }
                     bitLength = stream.readUBitInt(17) * 8;
                 }
                 value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
+                if (isCompressed) {
+                    value = ZeroCopy.wrap(Snappy.uncompress(ZeroCopy.extract(value)));
+                }
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }
