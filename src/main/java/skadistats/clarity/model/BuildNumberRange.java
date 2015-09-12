@@ -10,6 +10,6 @@ public class BuildNumberRange {
     }
 
     public boolean appliesTo(int buildNumber) {
-        return (start == null || start <= buildNumber) && (end == null || end >= buildNumber);
+        return buildNumber != -1 && (start == null || start <= buildNumber) && (end == null || end >= buildNumber);
     }
 }
