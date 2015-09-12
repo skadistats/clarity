@@ -97,8 +97,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 if (resetPhase == null && diff >= 0 && diff <= 200) {
                                     continue;
                                 }
-                                resetPhase = ResetPhase.CLEAR;
                                 seekPositions = source.getFullPacketsBeforeTick(engineType, wantedTick, fullPacketPositions);
+                                if (seekPositions.size() == 0) {
+                                    continue;
+                                }
+                                resetPhase = ResetPhase.CLEAR;
                             }
                             resetPosition = seekPositions.pollFirst();
                             upcomingTick = resetPosition.getTick();
