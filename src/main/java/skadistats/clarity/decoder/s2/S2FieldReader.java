@@ -33,7 +33,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
     public int readFields(BitStream bs, S2DTClass dtClass, FieldPath[] fieldPaths, Object[] state, boolean debug) {
         try {
             if (debug) {
-                debugTable.setTitle(dtClass.getDtName());
+                debugTable.setTitle(dtClass.toString());
                 debugTable.clear();
             }
 
@@ -41,6 +41,9 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
             int n = 0;
             while (true) {
                 FieldOpType op = HUFFMAN_TREE.decodeOp(bs);
+                if (debug) {
+                    System.out.println(op);
+                }
                 op.execute(fp, bs);
                 if (op == FieldOpType.FieldPathEncodeFinish) {
                     break;

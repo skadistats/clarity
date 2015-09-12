@@ -118,24 +118,34 @@ public class Entities {
         int entityIndex = -1;
 
         int cmd;
+        int clsId;
         DTClass cls;
         int serial;
         Object[] state;
         Entity entity;
+
+        boolean debug = false;
+        if (debug) {
+            System.out.println(ctx.getBuildNumber());
+        }
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
             cmd = stream.readUBitInt(2);
             if ((cmd & 1) == 0) {
                 if ((cmd & 2) != 0) {
-                    cls = dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()));
+                    clsId = stream.readUBitInt(dtClasses.getClassBits());
+                    cls = dtClasses.forClassId(clsId);
+                    if (cls == null) {
+                        throw new RuntimeException(String.format("class for new entity %d is %d, but no dtClass found!.", entityIndex, clsId));
+                    }
                     serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType.getSerialExtraBits() != 0) {
-                        // TODO: there is an extra 15 bits encoded here for S2, figure out what it is
-                        stream.skip(engineType.getSerialExtraBits());
+                    if (engineType == EngineType.SOURCE2) {
+                        // TODO: there is an extra VarInt encoded here for S2, figure out what it is
+                        stream.readVarUInt();
                     }
                     state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
-                    fieldReader.readFields(stream, cls, fieldPaths, state, false);
+                    fieldReader.readFields(stream, cls, fieldPaths, state, debug);
                     entity = new Entity(ctx.getEngineType(), entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
@@ -151,7 +161,7 @@ public class Entities {
                     }
                     cls = entity.getDtClass();
                     state = entity.getState();
-                    int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, false);
+                    int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, debug);
                     if (evUpdated != null) {
                         evUpdated.raise(entity, fieldPaths, nChanged);
                     }
@@ -165,7 +175,7 @@ public class Entities {
             } else {
                 entity = entities[entityIndex];
                 if (entity == null) {
-                    log.debug("entity at index {} was not found when ordered to leave.", entityIndex);
+                    log.warn("entity at index {} was not found when ordered to leave.", entityIndex);
                 } else {
                     if (entity.isActive()) {
                         entity.setActive(false);

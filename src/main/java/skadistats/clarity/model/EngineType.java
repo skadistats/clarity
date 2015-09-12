@@ -18,7 +18,7 @@ public enum EngineType {
         Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
         false, // has 4 extra header bytes
         true,   // CDemoSendTables is container
-        11, 10, 0
+        11, 10
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -47,7 +47,7 @@ public enum EngineType {
         Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
         true, // has 4 extra header bytes
         false, // CDemoSendTables is container
-        14, 10, 15
+        14, 17
     ) {
         @Override
         public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
@@ -78,19 +78,17 @@ public enum EngineType {
     private final boolean sendTablesContainer;
     private final int indexBits;
     private final int serialBits;
-    private final int serialExtraBits;
     private final int indexMask;
 
 
 
-    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int indexBits, int serialBits, int serialExtraBits) {
+    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.magic = magic;
         this.compressedFlag = compressedFlag;
         this.extraHeaderInt32 = extraHeaderInt32;
         this.sendTablesContainer = sendTablesContainer;
         this.indexBits = indexBits;
         this.serialBits = serialBits;
-        this.serialExtraBits = serialExtraBits;
         this.indexMask = (1 << indexBits) - 1;
     }
 
@@ -135,10 +133,6 @@ public enum EngineType {
 
     public int getSerialBits() {
         return serialBits;
-    }
-
-    public int getSerialExtraBits() {
-        return serialExtraBits;
     }
 
     public int indexForHandle(int handle) {
