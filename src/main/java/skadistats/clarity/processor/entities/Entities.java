@@ -1,6 +1,8 @@
 package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
@@ -25,6 +27,8 @@ import java.util.Map;
 @Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class })
 @UsesDTClasses
 public class Entities {
+
+    private static final Logger log = LoggerFactory.getLogger(Entities.class);
 
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
     private  Entity[] entities;
@@ -143,7 +147,7 @@ public class Entities {
                 } else {
                     entity = entities[entityIndex];
                     if (entity == null) {
-                        throw new RuntimeException("oops, entity to update not found (" + entityIndex + ")");
+                        throw new RuntimeException(String.format("entity at index %d was not found for update.", entityIndex));
                     }
                     cls = entity.getDtClass();
                     state = entity.getState();
@@ -160,16 +164,20 @@ public class Entities {
                 }
             } else {
                 entity = entities[entityIndex];
-                if (entity.isActive()) {
-                    entity.setActive(false);
-                    if (evLeft != null) {
-                        evLeft.raise(entity);
+                if (entity == null) {
+                    log.debug("entity at index {} was not found when ordered to leave.", entityIndex);
+                } else {
+                    if (entity.isActive()) {
+                        entity.setActive(false);
+                        if (evLeft != null) {
+                            evLeft.raise(entity);
+                        }
                     }
-                }
-                if ((cmd & 2) != 0) {
-                    entities[entityIndex] = null;
-                    if (evDeleted != null) {
-                        evDeleted.raise(entity);
+                    if ((cmd & 2) != 0) {
+                        entities[entityIndex] = null;
+                        if (evDeleted != null) {
+                            evDeleted.raise(entity);
+                        }
                     }
                 }
             }
