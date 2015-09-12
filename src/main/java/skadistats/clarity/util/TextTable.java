@@ -72,7 +72,7 @@ public class TextTable {
         }
     }
 
-    private final String title;
+    private String title;
     private final ColDef[] columns;
     private final String paddingLeft;
     private final String paddingRight;
@@ -89,6 +89,14 @@ public class TextTable {
         this.paddingRight = repeat(paddingRight, ' ');
         this.framed = framed;
         this.frame = frame;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void clear() {
+        data.clear();
     }
 
     public void setData(int row, int column, Object value) {
