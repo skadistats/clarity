@@ -224,7 +224,7 @@ public class S2DTClassEmitter {
                 field.encoder = encoders.get(field.parent + "." + field.varName);
             }
         });
-        PATCHES.put(new BuildNumberRange(1016, null), new PatchFunc() {
+        PATCHES.put(new BuildNumberRange(1016, 1026), new PatchFunc() {
             private final Set<String> fixed = new HashSet<>(Arrays.asList(
                 "m_bWorldTreeState",
                 "m_ulTeamLogo",
