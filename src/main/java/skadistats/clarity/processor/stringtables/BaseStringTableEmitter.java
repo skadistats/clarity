@@ -8,6 +8,7 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.UsagePoint;
 import skadistats.clarity.model.StringTable;
+import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
@@ -105,5 +106,22 @@ public class BaseStringTableEmitter {
             }
         }
     }
+
+    @OnMessage(Demo.CDemoStringTables.class)
+    public void onStringTables(Context ctx, Demo.CDemoStringTables packet) {
+        StringTables stringTables = ctx.getProcessor(StringTables.class);
+        for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
+            StringTable table = stringTables.byName.get(tt.getTableName());
+            if (table == null) {
+                continue;
+            }
+            for (int i = 0; i < tt.getItemsCount(); i++) {
+                Demo.CDemoStringTables.items_t it = tt.getItems(i);
+                setSingleEntry(ctx, table, 2, i, it.getStr(), it.getData());
+            }
+        }
+
+    }
+
 
 }
