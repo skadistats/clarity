@@ -79,4 +79,8 @@ public class S2DTClass implements DTClass {
         serializer.getFields()[fp.path[0]].setValueForFieldPath(fp, state, data, 0);
     }
 
+    @Override
+    public String toString() {
+        return String.format("%s (%s)", serializer.getId(), classId);
+    }
 }
