@@ -117,11 +117,11 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
-                    bitLength = stream.readUBitInt(14) * 8;
-                    int mysteryBits = stream.readUBitInt(3);
-                    if (mysteryBits != 0) {
-                        log.info("mystery bits are NOT zero, but " + mysteryBits);
+                    if ((table.getFlags() & 0x1) != 0) {
+                        // this is the case for the instancebaseline for console recorded replays
+                        stream.skip(1);
                     }
+                    bitLength = stream.readUBitInt(17) * 8;
                 }
                 value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
             }
