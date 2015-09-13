@@ -49,11 +49,11 @@ public class Util {
         return String.format("%04d", idx);
     }
 
-    public static <T> Class<T> unpackerClass(Unpacker<T> unpacker) {
+    public static <T> Class<T> valueClassForUnpacker(Unpacker<T> unpacker) {
         try {
-            ParameterizedType pt = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
-            Type type = pt.getActualTypeArguments()[0];
-            return (Class<T>) Class.forName(type.getTypeName());
+            ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
+            Type valueType = interfaceType.getActualTypeArguments()[0];
+            return (Class<T>) Class.forName(valueType.getTypeName());
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
