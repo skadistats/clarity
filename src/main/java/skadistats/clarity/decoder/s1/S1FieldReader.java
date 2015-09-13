@@ -79,4 +79,13 @@ public class S1FieldReader implements FieldReader<S1DTClass> {
         }
     }
 
+    @Override
+    public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
+        int n = 0;
+        while (bs.readBitFlag()) {
+            deletions[n++]= bs.readUBitInt(indexBits);
+        }
+        return n;
+    }
+
 }

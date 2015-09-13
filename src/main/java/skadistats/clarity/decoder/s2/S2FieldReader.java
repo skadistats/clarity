@@ -87,4 +87,17 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         }
     }
 
+
+    @Override
+    public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
+        int n = bs.readUBitVar();
+        int c = 0;
+        int idx = -1;
+        while (c < n) {
+            idx += bs.readUBitVar();
+            deletions[c++] = idx;
+        }
+        return n;
+    }
+
 }

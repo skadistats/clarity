@@ -31,7 +31,8 @@ public class Entities {
     private static final Logger log = LoggerFactory.getLogger(Entities.class);
 
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
-    private  Entity[] entities;
+    private Entity[] entities;
+    private int[] deletions;
     private FieldReader fieldReader;
     private EngineType engineType;
 
@@ -92,6 +93,7 @@ public class Entities {
             engineType = ctx.getEngineType();
             fieldReader = ctx.getEngineType().getNewFieldReader();
             entities = new Entity[1 << engineType.getIndexBits()];
+            deletions = new int[1 << engineType.getIndexBits()];
         }
     }
 
@@ -193,22 +195,34 @@ public class Entities {
             }
         }
 
-//        if (message.getIsDelta()) {
-//            while (stream.readBitFlag()) {
-//                entityIndex = stream.readUBitInt(engineType.getIndexBits());
-//                if (evDeleted != null) {
-//                    evDeleted.raise(entities[entityIndex]);
-//                }
-//                entities[entityIndex] = null;
-//            }
-//        }
+        if (message.getIsDelta()) {
+            int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
+            for (int i = 0; i < n; i++) {
+                entityIndex = deletions[i];
+                entity = entities[entityIndex];
+                if (entity != null) {
+                    log.warn("entity at index {} was ACTUALLY found when ordered to delete, tell the press!", entityIndex);
+                    if (entity.isActive()) {
+                        entity.setActive(false);
+                        if (evLeft != null) {
+                            evLeft.raise(entity);
+                        }
+                    }
+                    if (evDeleted != null) {
+                        evDeleted.raise(entity);
+                    }
+                } else {
+                    //log.warn("entity at index {} was not found when ordered to delete.", entityIndex);
+                }
+                entities[entityIndex] = null;
+            }
+        }
     }
 
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
-
-            throw new RuntimeException("oops, no baseline for this class? " + dtClasses.forClassId(clsId).getDtName());
+            throw new RuntimeException(String.format("Baseline for class {} ({}) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
         }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
