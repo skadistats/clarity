@@ -101,6 +101,7 @@ public class S1DTClass implements DTClass {
         DEBUG_LOCK.lock();
         try {
             DEBUG_DUMPER.clear();
+            DEBUG_DUMPER.setTitle(title);
             for (int i = 0; i < state.length; i++) {
                 DEBUG_DUMPER.setData(i, 0, i);
                 DEBUG_DUMPER.setData(i, 1, receiveProps[i].getVarName());

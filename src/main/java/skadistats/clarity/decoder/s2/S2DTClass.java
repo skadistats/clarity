@@ -102,6 +102,7 @@ public class S2DTClass implements DTClass {
         DEBUG_LOCK.lock();
         try {
             DEBUG_DUMPER.clear();
+            DEBUG_DUMPER.setTitle(title);
             int r = 0;
             for (DumpEntry entry : entries) {
                 DEBUG_DUMPER.setData(r, 0, entry.fieldPath);
