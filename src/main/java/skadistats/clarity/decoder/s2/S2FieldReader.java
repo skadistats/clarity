@@ -9,13 +9,13 @@ import skadistats.clarity.model.s2.field.FieldProperties;
 import skadistats.clarity.model.s2.field.FieldType;
 import skadistats.clarity.util.TextTable;
 
-public class S2FieldReader implements FieldReader<S2DTClass> {
+public class S2FieldReader extends FieldReader<S2DTClass> {
 
     public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
 
     private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
 
-    private final TextTable debugTable = new TextTable.Builder()
+    private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)
         .addColumn("FP")
@@ -31,22 +31,37 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         .addColumn("read")
         .build();
 
+    private final TextTable opDebugTable = new TextTable.Builder()
+        .setFrame(TextTable.FRAME_COMPAT)
+        .setTitle("FieldPath Operations")
+        .setPadding(0, 0)
+        .addColumn("OP")
+        .addColumn("FP")
+        .addColumn("#", TextTable.Alignment.RIGHT)
+        .addColumn("read")
+        .build();
+
     @Override
     public int readFields(BitStream bs, S2DTClass dtClass, Object[] state, boolean debug) {
         try {
             if (debug) {
-                debugTable.setTitle(dtClass.toString());
-                debugTable.clear();
+                dataDebugTable.setTitle(dtClass.toString());
+                dataDebugTable.clear();
+                opDebugTable.clear();
             }
 
-            FieldPath fp = new FieldPath();
             int n = 0;
+            FieldPath fp = new FieldPath();
             while (true) {
+                int offsBefore = bs.pos();
                 FieldOpType op = HUFFMAN_TREE.decodeOp(bs);
-                if (debug) {
-                    System.out.println(op);
-                }
                 op.execute(fp, bs);
+                if (debug) {
+                    opDebugTable.setData(n, 0, op);
+                    opDebugTable.setData(n, 1, fp);
+                    opDebugTable.setData(n, 2, bs.pos() - offsBefore);
+                    opDebugTable.setData(n, 3, bs.toString(offsBefore, bs.pos()));
+                }
                 if (op == FieldOpType.FieldPathEncodeFinish) {
                     break;
                 }
@@ -68,23 +83,24 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
                 if (debug) {
                     FieldProperties props = dtClass.getFieldForFieldPath(fp).getProperties();
                     FieldType type = dtClass.getTypeForFieldPath(fp);
-                    debugTable.setData(r, 0, fp);
-                    debugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
-                    debugTable.setData(r, 2, props.getLowValue());
-                    debugTable.setData(r, 3, props.getHighValue());
-                    debugTable.setData(r, 4, props.getBitCount());
-                    debugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
-                    debugTable.setData(r, 6, unpacker.getClass().getSimpleName().toString());
-                    debugTable.setData(r, 7, String.format("%s%s", type.toString(true), props.getEncoder() != null ? String.format(" {%s}", props.getEncoder()) : ""));
-                    debugTable.setData(r, 8, data);
-                    debugTable.setData(r, 9, bs.pos() - offsBefore);
-                    debugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
+                    dataDebugTable.setData(r, 0, fp);
+                    dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
+                    dataDebugTable.setData(r, 2, props.getLowValue());
+                    dataDebugTable.setData(r, 3, props.getHighValue());
+                    dataDebugTable.setData(r, 4, props.getBitCount());
+                    dataDebugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
+                    dataDebugTable.setData(r, 6, unpacker.getClass().getSimpleName().toString());
+                    dataDebugTable.setData(r, 7, String.format("%s%s", type.toString(true), props.getEncoder() != null ? String.format(" {%s}", props.getEncoder()) : ""));
+                    dataDebugTable.setData(r, 8, data);
+                    dataDebugTable.setData(r, 9, bs.pos() - offsBefore);
+                    dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
                 }
             }
             return n;
         } finally {
             if (debug) {
-                debugTable.print(System.out);
+                dataDebugTable.print(DEBUG_STREAM);
+                opDebugTable.print(DEBUG_STREAM);
             }
         }
     }

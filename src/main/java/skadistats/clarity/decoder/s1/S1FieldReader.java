@@ -9,7 +9,7 @@ import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.SendProp;
 import skadistats.clarity.util.TextTable;
 
-public class S1FieldReader implements FieldReader<S1DTClass> {
+public class S1FieldReader extends FieldReader<S1DTClass> {
 
     private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
 
@@ -76,7 +76,7 @@ public class S1FieldReader implements FieldReader<S1DTClass> {
             return n;
         } finally {
             if (debug) {
-                debugTable.print(System.out);
+                debugTable.print(DEBUG_STREAM);
             }
         }
     }
