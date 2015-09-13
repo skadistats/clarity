@@ -35,6 +35,10 @@ public class S2DTClass implements DTClass {
         return serializer.getId().getName();
     }
 
+    public Serializer getSerializer() {
+        return serializer;
+    }
+
     @Override
     public Object[] getEmptyStateArray() {
         return serializer.getInitialState();
