@@ -42,8 +42,8 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public <T> T getValueForFieldPath(Object[] state, FieldPath fieldPath) {
-        return (T) state[fieldPath.path[0]];
+    public <T> T getValueForFieldPath(FieldPath fp, Object[] state) {
+        return (T) state[fp.path[0]];
     }
 
     public S1DTClass getSuperClass() {

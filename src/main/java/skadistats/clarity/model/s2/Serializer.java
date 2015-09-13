@@ -1,9 +1,12 @@
 package skadistats.clarity.model.s2;
 
+import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.field.Field;
+import skadistats.clarity.model.s2.field.FieldType;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -47,6 +50,31 @@ public class Serializer {
         return result;
     }
 
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
+        fields[fp.path[pos]].accumulateName(fp, pos + 1, parts);
+    }
+
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        return fields[fp.path[pos]].getUnpackerForFieldPath(fp, pos + 1);
+    }
+
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        return fields[fp.path[pos]].getFieldForFieldPath(fp, pos + 1);
+    }
+
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        return fields[fp.path[pos]].getTypeForFieldPath(fp, pos + 1);
+    }
+
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        return fields[fp.path[pos]].getValueForFieldPath(fp, pos + 1, state);
+    }
+
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data) {
+        fields[fp.path[pos]].setValueForFieldPath(fp, pos + 1, state, data);
+    }
+
+
     private FieldPath getFieldPathForNameInternal(FieldPath fp, String property) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -77,5 +105,6 @@ public class Serializer {
         }
         return getFieldPathForNameInternal(fp, property);
     }
+
 
 }

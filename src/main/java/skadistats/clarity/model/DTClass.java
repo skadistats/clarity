@@ -10,7 +10,7 @@ public interface DTClass {
     Object[] getEmptyStateArray();
 
     FieldPath getFieldPathForName(String property);
-    <T> T getValueForFieldPath(Object[] state, FieldPath fieldPath);
+    <T> T getValueForFieldPath(FieldPath fp, Object[] state);
 
 }
 

@@ -105,7 +105,6 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         }
     }
 
-
     @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
         int n = bs.readUBitVar();

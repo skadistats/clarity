@@ -24,44 +24,44 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void accumulateName(List<String> parts, FieldPath fp, int pos) {
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
+        assert fp.last == pos || fp.last == pos - 1;
         addBasePropertyName(parts);
-        if (fp.last != pos) {
-            assertFieldPathEnd(fp, pos + 1);
-            parts.add(Util.arrayIdxToString(fp.path[++pos]));
+        if (fp.last == pos) {
+            parts.add(Util.arrayIdxToString(fp.path[pos]));
         }
     }
 
     @Override
-    public Unpacker queryUnpacker(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos;
         return elementUnpacker;
     }
 
     @Override
-    public Field queryField(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos;
         return this;
     }
 
     @Override
-    public FieldType queryType(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos;
         return properties.getType();
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
-        Object[] myState = (Object[]) state[fp.path[pos]];
-        myState[fp.path[pos + 1]] = data;
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+        assert fp.last == pos;
+        Object[] subState = (Object[]) state[fp.path[pos - 1]];
+        subState[fp.path[pos]] = value;
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
-        Object[] myState = (Object[]) state[fp.path[pos]];
-        return myState[fp.path[pos + 1]];
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        assert fp.last == pos;
+        Object[] subState = (Object[]) state[fp.path[pos - 1]];
+        return subState[fp.path[pos]];
     }
 
     @Override
@@ -72,7 +72,5 @@ public class FixedArrayField extends Field {
         fp.path[fp.last] = Integer.valueOf(property);
         return fp;
     }
-
-
 
 }

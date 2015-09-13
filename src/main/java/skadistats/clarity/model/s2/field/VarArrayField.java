@@ -24,70 +24,66 @@ public class VarArrayField extends Field {
     }
 
     @Override
-    public void accumulateName(List<String> parts, FieldPath fp, int pos) {
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
+        assert fp.last == pos || fp.last == pos - 1;
         addBasePropertyName(parts);
-        if (fp.last != pos) {
-            assertFieldPathEnd(fp, pos + 1);
-            parts.add(Util.arrayIdxToString(fp.path[++pos]));
+        if (fp.last == pos) {
+            parts.add(Util.arrayIdxToString(fp.path[pos]));
         }
     }
 
     @Override
-    public Unpacker queryUnpacker(FieldPath fp, int pos) {
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos || fp.last == pos - 1;
         if (pos == fp.last) {
-            return baseUnpacker;
-        } else {
-            assertFieldPathEnd(fp, pos + 1);
             return elementUnpacker;
+        } else {
+            return baseUnpacker;
         }
     }
 
     @Override
-    public Field queryField(FieldPath fp, int pos) {
-        if (pos == fp.last) {
-            return this;
-        } else {
-            assertFieldPathEnd(fp, pos + 1);
-            return this;
-        }
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos || fp.last == pos - 1;
+        return this;
     }
 
     @Override
-    public FieldType queryType(FieldPath fp, int pos) {
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos || fp.last == pos - 1;
         if (pos == fp.last) {
-            return properties.getType();
-        } else {
-            assertFieldPathEnd(fp, pos + 1);
             return properties.getType().getGenericType();
+        } else {
+            return properties.getType();
         }
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
-        int i = fp.path[pos];
-        Object[] myState = (Object[]) state[i];
-        if (pos == fp.last) {
-            int size = ((Integer) data).intValue();
-            int curSize = myState == null ? 0 : myState.length;
-            if (myState == null && size > 0) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        assert fp.last == pos;
+        Object[] subState = (Object[]) state[fp.path[pos - 1]];
+        return subState[fp.path[pos]];
+    }
+
+    @Override
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+        assert fp.last == pos || fp.last == pos - 1;
+        int i = fp.path[pos - 1];
+        Object[] subState = (Object[]) state[i];
+        if (fp.last == pos) {
+            subState[fp.path[pos]] = value;
+        } else {
+            int size = ((Integer) value).intValue();
+            int curSize = subState == null ? 0 : subState.length;
+            if (subState == null && size > 0) {
                 state[i] = new Object[size];
-            } else if (myState != null && size == 0) {
+            } else if (subState != null && size == 0) {
                 state[i] = null;
             } else if (curSize != size) {
                 state[i] = new Object[size];
-                System.arraycopy(myState, 0, state[i], 0, Math.min(myState.length, size));
+                System.arraycopy(subState, 0, state[i], 0, Math.min(subState.length, size));
             }
-        } else {
-            assertFieldPathEnd(fp, pos + 1);
-            myState[fp.path[pos + 1]] = data;
         }
-    }
-
-    @Override
-    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
-        assertFieldPathEnd(fp, pos + 1);
-        Object[] myState = (Object[]) state[fp.path[pos]];
-        return myState[fp.path[pos + 1]];
     }
 
     @Override
@@ -99,5 +95,4 @@ public class VarArrayField extends Field {
         return fp;
     }
 
-    
 }

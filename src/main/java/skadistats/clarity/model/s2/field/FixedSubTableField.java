@@ -21,72 +21,66 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void accumulateName(List<String> parts, FieldPath fp, int pos) {
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
         addBasePropertyName(parts);
-        if (fp.last != pos) {
-            pos++;
-            properties.getSerializer().getFields()[fp.path[pos]].accumulateName(parts, fp, pos);
+        if (fp.last >= pos) {
+            properties.getSerializer().accumulateName(fp, pos, parts);
         }
     }
 
     @Override
-    public Unpacker queryUnpacker(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        if (fp.last == pos - 1) {
             return baseUnpacker;
         } else {
-            pos++;
-            return properties.getSerializer().getFields()[fp.path[pos]].queryUnpacker(fp, pos);
+            return properties.getSerializer().getUnpackerForFieldPath(fp, pos);
         }
     }
 
     @Override
-    public Field queryField(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        if (fp.last == pos - 1) {
             return this;
         } else {
-            pos++;
-            return properties.getSerializer().getFields()[fp.path[pos]].queryField(fp, pos);
+            return properties.getSerializer().getFieldForFieldPath(fp, pos);
         }
     }
 
     @Override
-    public FieldType queryType(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        if (fp.last == pos - 1) {
             return properties.getType();
         } else {
-            pos++;
-            return properties.getSerializer().getFields()[fp.path[pos]].queryType(fp, pos);
+            return properties.getSerializer().getTypeForFieldPath(fp, pos);
         }
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
-        int i = fp.path[pos];
-        Object[] myState = (Object[]) state[i];
-        if (pos == fp.last) {
-            boolean amThere = ((Boolean) data).booleanValue();
-            if (myState == null && amThere) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        int i = fp.path[pos - 1];
+        Object[] subState = (Object[]) state[i];
+        return properties.getSerializer().getValueForFieldPath(fp, pos, subState);
+    }
+
+    @Override
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+        int i = fp.path[pos - 1];
+        Object[] subState = (Object[]) state[i];
+        if (fp.last == pos - 1) {
+            boolean existing = ((Boolean) value).booleanValue();
+            if (subState == null && existing) {
                 state[i] = properties.getSerializer().getInitialState();
-            } else if (myState != null && !amThere) {
+            } else if (subState != null && !existing) {
                 state[i] = null;
             }
         } else {
-            properties.getSerializer().getFields()[fp.path[pos + 1]].setValueForFieldPath(fp, myState, data, pos + 1);
+            properties.getSerializer().setValueForFieldPath(fp, pos, subState, value);
         }
-    }
-
-    @Override
-    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
-        assertFieldLeft(fp, pos, 2);
-        Object[] myState = (Object[]) state[fp.path[pos]];
-        return properties.getSerializer().getFields()[fp.path[pos + 1]].getValueForFieldPath(fp, myState, pos + 1);
     }
 
     @Override
     public FieldPath getFieldPathForName(FieldPath fp, String property) {
         return properties.getSerializer().getFieldPathForName(fp, property);
     }
-
-
 
 }

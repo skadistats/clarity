@@ -21,43 +21,43 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public void accumulateName(List<String> parts, FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos);
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
+        assert fp.last == pos - 1;
         addBasePropertyName(parts);
     }
 
     @Override
-    public Unpacker queryUnpacker(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos);
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos - 1;
         return unpacker;
     }
 
     @Override
-    public Field queryField(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos);
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos - 1;
         return this;
     }
 
     @Override
-    public FieldType queryType(FieldPath fp, int pos) {
-        assertFieldPathEnd(fp, pos);
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        assert fp.last == pos - 1;
         return properties.getType();
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
-        assertFieldPathEnd(fp, pos);
-        state[fp.path[pos]] = data;
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        assert fp.last == pos - 1;
+        return state[fp.path[pos - 1]];
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
-        assertFieldPathEnd(fp, pos);
-        return state[fp.path[pos]];
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+        assert fp.last == pos - 1;
+        state[fp.path[pos - 1]] = value;
     }
 
     @Override
-    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+    public FieldPath getFieldPathForName(FieldPath fp, String name) {
         throw new UnsupportedOperationException();
     }
 

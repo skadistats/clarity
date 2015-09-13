@@ -23,58 +23,51 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void accumulateName(List<String> parts, FieldPath fp, int pos) {
+    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
         addBasePropertyName(parts);
-        if (fp.last != pos) {
-            pos++;
+        if (fp.last != pos - 1) {
             parts.add(Util.arrayIdxToString(fp.path[pos]));
             if (fp.last != pos) {
-                pos++;
-                properties.getSerializer().getFields()[fp.path[pos]].accumulateName(parts, fp, pos);
+                properties.getSerializer().accumulateName(fp, pos + 1, parts);
             }
         }
     }
 
     @Override
-    public Unpacker queryUnpacker(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+        if (fp.last >= pos + 1) {
+            return properties.getSerializer().getUnpackerForFieldPath(fp, pos + 1);
+        } else {
             return baseUnpacker;
         }
-        pos++;
-        if (pos == fp.last) {
-            return baseUnpacker;
-        }
-        pos++;
-        return properties.getSerializer().getFields()[fp.path[pos]].queryUnpacker(fp, pos);
     }
 
     @Override
-    public Field queryField(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+        if (fp.last >= pos + 1) {
+            return properties.getSerializer().getFieldForFieldPath(fp, pos + 1);
+        } else {
             return this;
         }
-        pos++;
-        if (pos == fp.last) {
-            return this;
-        }
-        pos++;
-        return properties.getSerializer().getFields()[fp.path[pos]].queryField(fp, pos);
     }
 
     @Override
-    public FieldType queryType(FieldPath fp, int pos) {
-        if (pos == fp.last) {
+    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+        if (fp.last >= pos + 1) {
+            return properties.getSerializer().getTypeForFieldPath(fp, pos + 1);
+        } else {
             return properties.getType();
         }
-        pos++;
-        if (pos == fp.last) {
-            return properties.getType();
-        }
-        pos++;
-        return properties.getSerializer().getFields()[fp.path[pos]].queryType(fp, pos);
     }
 
-    private void ensureLength(List<Object> state, int wanted, boolean shorten) {
+    @Override
+    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+        assert fp.last >= pos + 1;
+        List<Object[]> subState = (List<Object[]>) state[fp.path[pos - 1]];
+        return properties.getSerializer().getValueForFieldPath(fp, pos + 1, subState.get(fp.path[pos]));
+    }
+
+    private void ensureLength(List<Object[]> state, int wanted, boolean shorten) {
         int cur = state.size();
         if (shorten) {
             while (cur > wanted) {
@@ -88,25 +81,15 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object data, int pos) {
-        int i = fp.path[pos];
-        List<Object> myState = (List<Object>) state[i];
-        if (pos == fp.last) {
-            ensureLength(myState, ((Integer) data).intValue(), true);
+    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+        List<Object[]> subState = (List<Object[]>) state[fp.path[pos - 1]];
+        int j = fp.path[pos];
+        if (fp.last >= pos + 1) {
+            ensureLength(subState, j + 1, false);
+            properties.getSerializer().setValueForFieldPath(fp, pos + 1, subState.get(j), value);
         } else {
-            int j = fp.path[pos + 1];
-            ensureLength(myState, j + 1, false);
-            pos += 2;
-            properties.getSerializer().getFields()[fp.path[pos]].setValueForFieldPath(fp, (Object[]) myState.get(j), data, pos);
+            ensureLength(subState, ((Integer) value).intValue(), true);
         }
-    }
-
-    @Override
-    public Object getValueForFieldPath(FieldPath fp, Object[] state, int pos) {
-        assertFieldLeft(fp, pos, 3);
-        List<Object> myList = (List<Object>) state[fp.path[pos]];
-        Object[] myState = (Object[]) myList.get(fp.path[pos + 1]);
-        return properties.getSerializer().getFields()[fp.path[pos + 2]].getValueForFieldPath(fp, myState, pos + 2);
     }
 
     @Override

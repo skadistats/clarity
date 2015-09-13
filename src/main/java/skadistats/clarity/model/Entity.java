@@ -84,7 +84,7 @@ public class Entity {
     }
 
     public <T> T getPropertyForFieldPath(FieldPath fp) {
-        return (T) dtClass.getValueForFieldPath(state, fp);
+        return (T) dtClass.getValueForFieldPath(fp, state);
     }
 
     @Override
