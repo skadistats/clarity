@@ -253,8 +253,9 @@ public class TextTable {
         for (int i = 0; i < columns.length; i++) {
             complete += widths[i] + paddingLeft.length() + paddingRight.length() + (framed ? 1 : 0);
         }
-        if (minWidth != null && minWidth.intValue() > complete) {
-            float p = ((float)(minWidth - complete)) / columns.length;
+        int usedMin = Math.max(minWidth != null ? minWidth : 0, (title != null ? title.length() : 0) + paddingLeft.length() + paddingRight.length() + (framed ? 2 : 0));
+        if (usedMin > complete) {
+            float p = ((float)(usedMin - complete)) / columns.length;
             float c = 0.01f;
             for (int i = 0; i < columns.length; i++) {
                 c += p;
@@ -262,7 +263,7 @@ public class TextTable {
                 widths[i] += x;
                 c -= x;
             }
-            complete = minWidth;
+            complete = usedMin;
         }
         widths[columns.length] = complete;
         return widths;
