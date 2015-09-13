@@ -6,18 +6,9 @@ Version 2 offers a new event based interface to replay data, which will make usa
 
 ##### News
 
-Today (09.09.2015) Dota 2 Reborn was released by Valve - clarity is still rough around the egdes, but should be usable.
-Have a look at the matchend example to get a general idea on how to query entity data.
-
-- reading info: working
-- processing gameevents: working
-- stringtables: working
-- combat log: working
-- DT-classes: working
-- entities: working
-- temp entities: is anyone interested?
-- modifiers: should work
-
+Dota 2 Reborn is now the main client - and Clarity 2.1 is able to process all contents from new replays.
+Even console recorded replays now work.
+I will wait a bit until the dust settles, and then release this.
 
 # Replay Data
 
