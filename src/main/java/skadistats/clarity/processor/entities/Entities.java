@@ -147,7 +147,7 @@ public class Entities {
                         stream.readVarUInt();
                     }
                     state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
-                    fieldReader.readFields(stream, cls, fieldPaths, state, debug);
+                    fieldReader.readFields(stream, cls, state, debug);
                     entity = new Entity(ctx.getEngineType(), entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
@@ -163,7 +163,7 @@ public class Entities {
                     }
                     cls = entity.getDtClass();
                     state = entity.getState();
-                    int nChanged = fieldReader.readFields(stream, cls, fieldPaths, state, debug);
+                    int nChanged = fieldReader.readFields(stream, cls, state, debug);
                     if (evUpdated != null) {
                         evUpdated.raise(entity, fieldPaths, nChanged);
                     }
@@ -228,7 +228,7 @@ public class Entities {
             DTClass cls = dtClasses.forClassId(clsId);
             BitStream stream = new BitStream(be.rawBaseline);
             be.baseline = cls.getEmptyStateArray();
-            fieldReader.readFields(stream, cls, fieldPaths, be.baseline, false);
+            fieldReader.readFields(stream, cls, be.baseline, false);
         }
         return be.baseline;
     }

@@ -7,7 +7,6 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -19,8 +18,6 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 @Provides({ OnTempEntity.class })
 @UsesDTClasses
 public class TempEntities {
-
-    private final FieldPath[] fieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
     private FieldReader fieldReader;
 
@@ -45,7 +42,7 @@ public class TempEntities {
                     receiveProps = cls.getReceiveProps();
                 }
                 Object[] state = new Object[receiveProps.length];
-                fieldReader.readFields(stream, cls, fieldPaths, state, false);
+                fieldReader.readFields(stream, cls, state, false);
                 ev.raise(new Entity(ctx.getEngineType(), 0, 0, cls, true, state));
             }
         }

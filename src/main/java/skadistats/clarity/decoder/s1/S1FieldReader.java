@@ -11,6 +11,8 @@ import skadistats.clarity.util.TextTable;
 
 public class S1FieldReader implements FieldReader<S1DTClass> {
 
+    private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
+
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)
@@ -27,7 +29,7 @@ public class S1FieldReader implements FieldReader<S1DTClass> {
         .build();
 
     @Override
-    public int readFields(BitStream bs, S1DTClass dtClass, FieldPath[] fieldPaths, Object[] state, boolean debug) {
+    public int readFields(BitStream bs, S1DTClass dtClass, Object[] state, boolean debug) {
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());

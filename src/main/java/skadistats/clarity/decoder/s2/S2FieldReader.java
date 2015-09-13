@@ -13,6 +13,8 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
 
     public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
 
+    private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
+
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)
@@ -30,7 +32,7 @@ public class S2FieldReader implements FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public int readFields(BitStream bs, S2DTClass dtClass, FieldPath[] fieldPaths, Object[] state, boolean debug) {
+    public int readFields(BitStream bs, S2DTClass dtClass, Object[] state, boolean debug) {
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.toString());
