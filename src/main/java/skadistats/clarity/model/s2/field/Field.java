@@ -36,9 +36,9 @@ public abstract class Field {
     }
 
     protected void addBasePropertyName(List<String> parts) {
-        if (properties.getSendNode() != null) {
-            parts.add(properties.getSendNode());
-        }
+//        if (properties.getSendNode() != null) {
+//            parts.add(properties.getSendNode());
+//        }
         parts.add(properties.getName());
     }
 
