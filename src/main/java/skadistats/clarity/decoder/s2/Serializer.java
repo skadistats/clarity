@@ -1,9 +1,9 @@
-package skadistats.clarity.model.s2;
+package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.decoder.s2.field.Field;
+import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.field.Field;
-import skadistats.clarity.model.s2.field.FieldType;
 
 import java.util.Comparator;
 import java.util.List;

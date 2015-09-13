@@ -1,8 +1,8 @@
 package skadistats.clarity.decoder.unpacker.factory.s1;
 
+import skadistats.clarity.decoder.s1.SendProp;
 import skadistats.clarity.decoder.unpacker.*;
 import skadistats.clarity.model.s1.PropFlag;
-import skadistats.clarity.model.s1.SendProp;
 
 public class FloatUnpackerFactory implements UnpackerFactory<Float> {
 

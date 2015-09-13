@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s1;
+package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
@@ -85,4 +85,8 @@ public class S1DTClass implements DTClass {
         }
     }
 
+    @Override
+    public String dumpState(String title, Object[] state) {
+        return "TODO";
+    }
 }

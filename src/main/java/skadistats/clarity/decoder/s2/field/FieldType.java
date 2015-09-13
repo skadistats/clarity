@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s2.field;
+package skadistats.clarity.decoder.s2.field;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

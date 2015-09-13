@@ -1,6 +1,6 @@
-package skadistats.clarity.model.s2.field;
+package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.decoder.s2.Serializer;
 
 public class FieldProperties {
 

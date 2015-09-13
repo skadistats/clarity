@@ -12,5 +12,7 @@ public interface DTClass {
     FieldPath getFieldPathForName(String property);
     <T> T getValueForFieldPath(FieldPath fp, Object[] state);
 
+    String dumpState(String title, Object[] state);
+
 }
 

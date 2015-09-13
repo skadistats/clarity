@@ -2,9 +2,9 @@ package skadistats.clarity.decoder.unpacker.factory.s1;
 
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s1.S1UnpackerFactory;
+import skadistats.clarity.decoder.s1.SendProp;
 import skadistats.clarity.decoder.unpacker.ArrayUnpacker;
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.s1.SendProp;
 
 public class ArrayUnpackerFactory<T> implements UnpackerFactory<T> {
 

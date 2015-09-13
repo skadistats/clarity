@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s2.field;
+package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;

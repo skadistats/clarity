@@ -2,9 +2,9 @@ package skadistats.clarity.decoder.s2;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.unpacker.*;
 import skadistats.clarity.decoder.unpacker.factory.s2.*;
-import skadistats.clarity.model.s2.field.FieldProperties;
 
 import java.util.HashMap;
 import java.util.Map;

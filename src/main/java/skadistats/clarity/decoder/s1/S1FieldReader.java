@@ -4,9 +4,6 @@ import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.PropFlag;
-import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.model.s1.S1DTClass;
-import skadistats.clarity.model.s1.SendProp;
 import skadistats.clarity.util.TextTable;
 
 public class S1FieldReader extends FieldReader<S1DTClass> {

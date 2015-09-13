@@ -1,10 +1,10 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.decoder.s1.SendTableFlattener;
+import skadistats.clarity.decoder.s1.*;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.s1.*;
+import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;

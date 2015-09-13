@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s1;
+package skadistats.clarity.decoder.s1;
 
 public class SendTableExclusion {
 

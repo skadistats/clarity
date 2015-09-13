@@ -1,8 +1,5 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.s1.S1DTClass;
-import skadistats.clarity.util.TextTable;
-
 public class Entity {
 
     private final EngineType engineType;
@@ -89,23 +86,8 @@ public class Entity {
 
     @Override
     public String toString() {
-        TextTable t = new TextTable.Builder()
-            .setTitle("idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName())
-            .setFrame(TextTable.FRAME_COMPAT)
-            .addColumn("Index", TextTable.Alignment.RIGHT)
-            .addColumn("Property")
-            .addColumn("Value")
-            .build();
-        for (int i = 0; i < state.length; i++) {
-            t.setData(i, 0, i);
-            if (dtClass instanceof S1DTClass) {
-                t.setData(i, 1, ((S1DTClass)dtClass).getReceiveProps()[i].getVarName());
-            } else {
-                t.setData(i, 1, "TODO");
-            }
-            t.setData(i, 2, state[i]);
-        }
-        return t.toString();
+        String title = "idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName();
+        return dtClass.dumpState(title, state);
     }
 
 }

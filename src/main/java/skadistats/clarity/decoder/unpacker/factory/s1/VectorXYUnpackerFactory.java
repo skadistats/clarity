@@ -1,9 +1,9 @@
 package skadistats.clarity.decoder.unpacker.factory.s1;
 
+import skadistats.clarity.decoder.s1.SendProp;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.decoder.unpacker.VectorXYUnpacker;
 import skadistats.clarity.model.Vector;
-import skadistats.clarity.model.s1.SendProp;
 
 public class VectorXYUnpackerFactory implements UnpackerFactory<Vector> {
 

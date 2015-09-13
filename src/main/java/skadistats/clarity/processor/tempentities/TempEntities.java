@@ -2,13 +2,13 @@ package skadistats.clarity.processor.tempentities;
 
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.s1.ReceiveProp;
+import skadistats.clarity.decoder.s1.S1DTClass;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.sendtables.DTClasses;

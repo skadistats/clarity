@@ -1,8 +1,8 @@
-package skadistats.clarity.model.s1;
+package skadistats.clarity.decoder.s1;
 
 
-import skadistats.clarity.decoder.s1.S1UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.s1.PropType;
 
 public class SendProp {
 

@@ -2,14 +2,14 @@ package skadistats.clarity.processor.sendtables;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.decoder.s2.S2DTClass;
+import skadistats.clarity.decoder.s2.Serializer;
+import skadistats.clarity.decoder.s2.SerializerId;
+import skadistats.clarity.decoder.s2.field.*;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.s2.S2DTClass;
-import skadistats.clarity.model.s2.Serializer;
-import skadistats.clarity.model.s2.SerializerId;
-import skadistats.clarity.model.s2.field.*;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;

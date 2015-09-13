@@ -1,4 +1,4 @@
-package skadistats.clarity.model.s2;
+package skadistats.clarity.decoder.s2;
 
 public class SerializerId {
 

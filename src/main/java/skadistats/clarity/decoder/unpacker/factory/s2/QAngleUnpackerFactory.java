@@ -1,8 +1,8 @@
 package skadistats.clarity.decoder.unpacker.factory.s2;
 
+import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.unpacker.*;
 import skadistats.clarity.model.Vector;
-import skadistats.clarity.model.s2.field.FieldProperties;
 
 public class QAngleUnpackerFactory implements UnpackerFactory<Vector> {
 

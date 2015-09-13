@@ -1,10 +1,10 @@
-package skadistats.clarity.model.s2;
+package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.decoder.s2.field.Field;
+import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.field.Field;
-import skadistats.clarity.model.s2.field.FieldType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,8 +79,14 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
+    public String dumpState(String title, Object[] state) {
+        return "TODO";
+    }
+
+    @Override
     public String toString() {
         return String.format("%s (%s)", serializer.getId(), classId);
     }
+
 
 }
