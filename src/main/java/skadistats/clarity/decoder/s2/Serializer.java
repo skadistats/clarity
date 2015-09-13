@@ -106,5 +106,13 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
+        for (int i = 0; i < fields.length; i++) {
+            if (state[i] != null) {
+                fp.path[fp.last] = i;
+                fields[i].collectDump(fp, namePrefix, entries, state);
+            }
+        }
+    }
 
 }

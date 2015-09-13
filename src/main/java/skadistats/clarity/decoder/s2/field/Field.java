@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2.field;
 
+import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 
@@ -21,12 +22,21 @@ public abstract class Field {
     public abstract Object getValueForFieldPath(FieldPath fp, int pos, Object[] state);
     public abstract void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data);
     public abstract FieldPath getFieldPathForName(FieldPath fp, String property);
+    public abstract void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state);
 
     protected void addBasePropertyName(List<String> parts) {
-//        if (properties.getSendNode() != null) {
-//            parts.add(properties.getSendNode());
-//        }
         parts.add(properties.getName());
+    }
+
+    protected String joinPropertyName(String... parts) {
+        StringBuilder b = new StringBuilder();
+        for (String part : parts) {
+            if (b.length() != 0) {
+                b.append('.');
+            }
+            b.append(part);
+        }
+        return b.toString();
     }
 
     public FieldProperties getProperties() {

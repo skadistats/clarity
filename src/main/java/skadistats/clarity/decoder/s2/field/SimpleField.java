@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2.field;
 
+import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
@@ -59,6 +60,11 @@ public class SimpleField extends Field {
     @Override
     public FieldPath getFieldPathForName(FieldPath fp, String name) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
+        entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName()), state[fp.path[fp.last]]));
     }
 
 }

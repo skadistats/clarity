@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2.field;
 
+import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
@@ -81,6 +82,17 @@ public class FixedSubTableField extends Field {
     @Override
     public FieldPath getFieldPathForName(FieldPath fp, String property) {
         return properties.getSerializer().getFieldPathForName(fp, property);
+    }
+
+    @Override
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
+        String name = joinPropertyName(namePrefix, properties.getName());
+        if (subState != null) {
+            fp.last++;
+            properties.getSerializer().collectDump(fp, name, entries, subState);
+            fp.last--;
+        }
     }
 
 }

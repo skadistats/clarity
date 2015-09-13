@@ -5,9 +5,11 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class S2DTClass implements DTClass {
 
@@ -79,13 +81,38 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public String dumpState(String title, Object[] state) {
-        return "TODO";
-    }
-
-    @Override
     public String toString() {
         return String.format("%s (%s)", serializer.getId(), classId);
+    }
+
+
+    private static final ReentrantLock DEBUG_LOCK = new ReentrantLock();
+    private static final TextTable DEBUG_DUMPER = new TextTable.Builder()
+        .setFrame(TextTable.FRAME_COMPAT)
+        .addColumn("FP")
+        .addColumn("Property")
+        .addColumn("Value")
+        .build();
+
+    @Override
+    public String dumpState(String title, Object[] state) {
+        FieldPath fp = new FieldPath();
+        List<DumpEntry> entries = new ArrayList<>();
+        serializer.collectDump(fp, "", entries, state);
+        DEBUG_LOCK.lock();
+        try {
+            DEBUG_DUMPER.clear();
+            int r = 0;
+            for (DumpEntry entry : entries) {
+                DEBUG_DUMPER.setData(r, 0, entry.fieldPath);
+                DEBUG_DUMPER.setData(r, 1, entry.name);
+                DEBUG_DUMPER.setData(r, 2, entry.value);
+                r++;
+            }
+            return DEBUG_DUMPER.toString();
+        } finally {
+            DEBUG_LOCK.unlock();
+        }
     }
 
 

@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
@@ -71,6 +72,19 @@ public class FixedArrayField extends Field {
         }
         fp.path[fp.last] = Integer.valueOf(property);
         return fp;
+    }
+
+    @Override
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
+        fp.last++;
+        for (int i = 0; i < subState.length; i++) {
+            if (subState[i] != null) {
+                fp.path[fp.last] = i;
+                entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName(), Util.arrayIdxToString(i)), subState[i]));
+            }
+        }
+        fp.last--;
     }
 
 }

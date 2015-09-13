@@ -2,9 +2,11 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.util.TextTable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class S1DTClass implements DTClass {
 
@@ -85,8 +87,29 @@ public class S1DTClass implements DTClass {
         }
     }
 
+
+    private static final ReentrantLock DEBUG_LOCK = new ReentrantLock();
+    private static final TextTable DEBUG_DUMPER = new TextTable.Builder()
+        .setFrame(TextTable.FRAME_COMPAT)
+        .addColumn("Idx", TextTable.Alignment.RIGHT)
+        .addColumn("Property")
+        .addColumn("Value")
+        .build();
+
     @Override
     public String dumpState(String title, Object[] state) {
-        return "TODO";
+        DEBUG_LOCK.lock();
+        try {
+            DEBUG_DUMPER.clear();
+            for (int i = 0; i < state.length; i++) {
+                DEBUG_DUMPER.setData(i, 0, i);
+                DEBUG_DUMPER.setData(i, 1, receiveProps[i].getVarName());
+                DEBUG_DUMPER.setData(i, 2, state[i]);
+            }
+            return DEBUG_DUMPER.toString();
+        } finally {
+            DEBUG_LOCK.unlock();
+        }
     }
+
 }
