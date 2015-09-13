@@ -6,7 +6,7 @@ Version 2 offers a new event based interface to replay data, which will make usa
 
 ##### News
 
-Dota 2 Reborn is now the main client - and Clarity 2.1 is able to process all contents from new replays.
+Dota 2 Reborn is now the main client - and Clarity 2.1-SNAPSHOT is able to process all contents from new replays.
 Even console recorded replays now work.
 I will wait a bit until the dust settles, and then release this.
 
