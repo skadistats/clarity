@@ -11,6 +11,7 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
@@ -19,8 +20,8 @@ import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
-import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,7 +34,8 @@ public class InputSourceProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
 
-    private boolean unpackUserMessages = false;
+    // TODO: set to false when issue #58 is closed.
+    private boolean unpackUserMessages = true;
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
@@ -58,6 +60,10 @@ public class InputSourceProcessor {
             data = Snappy.uncompress(data);
         }
         return ZeroCopy.wrap(data);
+    }
+
+    private void logUnknownMessage(Context ctx, String where, int type) {
+        log.warn("unknown {} message of kind {}/{}. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, ctx.getEngineType(), type);
     }
 
     @OnInputSource
@@ -89,7 +95,7 @@ public class InputSourceProcessor {
             }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
             if (messageClass == null) {
-                log.warn("unknown top level message of kind {}", kind);
+                logUnknownMessage(ctx, "top level", kind);
                 src.skipBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
                 Demo.CDemoPacket message = (Demo.CDemoPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
@@ -144,7 +150,7 @@ public class InputSourceProcessor {
             int size = bs.readVarUInt();
             Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
-                log.warn("unknown embedded message of kind {}", kind);
+                logUnknownMessage(ctx, "embedded", kind);
                 bs.skip(size * 8);
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
@@ -157,7 +163,7 @@ public class InputSourceProcessor {
                         NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
                         Class<? extends GeneratedMessage> umClazz = ctx.getEngineType().userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
-                            log.warn("unknown usermessage of kind {}", userMessage.getMsgType());
+                            logUnknownMessage(ctx, "usermessage", userMessage.getMsgType());
                         } else {
                             ctx.createEvent(OnMessage.class, umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
                         }
@@ -169,8 +175,11 @@ public class InputSourceProcessor {
         }
     }
 
-    @OnMessage(S2NetMessages.CSVCMsg_ServerInfo.class)
-    public void processServerInfo(Context ctx, S2NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
+    public void processServerInfo(Context ctx, NetMessages.CSVCMsg_ServerInfo serverInfo) {
+        if (ctx.getEngineType() == EngineType.SOURCE1) {
+            return;
+        }
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
         if (matcher.find()) {
             int num = Integer.valueOf(matcher.group(1));

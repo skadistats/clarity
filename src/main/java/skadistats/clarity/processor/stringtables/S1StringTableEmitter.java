@@ -8,6 +8,7 @@ import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.LinkedList;
@@ -33,8 +34,8 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         numTables++;
     }
 
-    @OnMessage(S1NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, S1NetMessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, NetMessages.CSVCMsg_UpdateStringTable message) {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {

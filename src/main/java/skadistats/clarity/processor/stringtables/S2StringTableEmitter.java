@@ -10,6 +10,7 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.LZSS;
+import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
@@ -49,8 +50,8 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
         numTables++;
     }
 
-    @OnMessage(S2NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, S2NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
+    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
