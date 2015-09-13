@@ -2,8 +2,11 @@ package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
 import com.rits.cloning.Cloner;
+import skadistats.clarity.decoder.unpacker.Unpacker;
 
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 public class Util {
 
@@ -44,6 +47,16 @@ public class Util {
 
     public static String arrayIdxToString(int idx) {
         return String.format("%04d", idx);
+    }
+
+    public static <T> Class<T> unpackerClass(Unpacker<T> unpacker) {
+        try {
+            ParameterizedType pt = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
+            Type type = pt.getActualTypeArguments()[0];
+            return (Class<T>) Class.forName(type.getTypeName());
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
