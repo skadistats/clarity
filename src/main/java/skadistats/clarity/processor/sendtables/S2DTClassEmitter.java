@@ -259,6 +259,23 @@ public class S2DTClassEmitter {
             }
         });
 
+        PATCHES.put(new BuildNumberRange(null, 954), new PatchFunc() {
+            private final Set<String> manaProps = new HashSet<>(Arrays.asList(
+                "m_flMana",
+                "m_flMaxMana"
+            ));
+            @Override
+            public void execute(SerializerField field) {
+                if (manaProps.contains(field.varName)) {
+                    if (field.highValue == 3.4028235E38f) {
+                        field.lowValue = null;
+                        field.highValue = 65536.0f;
+                    }
+                }
+            }
+        });
+
+
     }
 
 }

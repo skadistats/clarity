@@ -184,7 +184,7 @@ public class InputSourceProcessor {
         if (matcher.find()) {
             int num = Integer.valueOf(matcher.group(1));
             ctx.setBuildNumber(num);
-            if (num < 955) {
+            if (num < 928) {
                 log.warn("This replay is from an early beta version of Dota 2 Reborn (build number {}).", ctx.getBuildNumber());
                 log.warn("Entities in this replay probably cannot be read.");
                 log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
