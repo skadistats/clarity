@@ -74,7 +74,6 @@ public class Serializer {
         fields[fp.path[pos]].setValueForFieldPath(fp, pos + 1, state, data);
     }
 
-
     private FieldPath getFieldPathForNameInternal(FieldPath fp, String property) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
@@ -84,11 +83,10 @@ public class Serializer {
                 if (property.length() == fieldName.length()) {
                     return fp;
                 } else {
-                    property = property.substring(fieldName.length());
-                    if (property.charAt(0) != '.') {
-                        throw new RuntimeException("unresolvable fieldpath");
+                    if (property.charAt(fieldName.length()) != '.') {
+                        continue;
                     }
-                    property = property.substring(1);
+                    property = property.substring(fieldName.length() + 1);
                     fp.last++;
                     return field.getFieldPathForName(fp, property);
                 }
