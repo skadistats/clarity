@@ -12,9 +12,10 @@ public class FieldProperties {
     private final Float lowValue;
     private final Float highValue;
     private final Serializer serializer;
-    private final String encoder;
+    private final String encoderType;
+    private final String serializerType;
 
-    public FieldProperties(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoder) {
+    public FieldProperties(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;
@@ -23,7 +24,8 @@ public class FieldProperties {
         this.lowValue = lowValue;
         this.highValue = highValue;
         this.serializer = serializer;
-        this.encoder = encoder;
+        this.encoderType = encoderType;
+        this.serializerType = serializerType;
     }
 
     public FieldType getType() {
@@ -74,8 +76,12 @@ public class FieldProperties {
         return serializer;
     }
 
-    public String getEncoder() {
-        return encoder;
+    public String getEncoderType() {
+        return encoderType;
+    }
+
+    public String getSerializerType() {
+        return serializerType;
     }
 
 }

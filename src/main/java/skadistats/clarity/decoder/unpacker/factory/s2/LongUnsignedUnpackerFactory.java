@@ -8,7 +8,7 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 public class LongUnsignedUnpackerFactory implements UnpackerFactory<Long> {
 
     public static Unpacker<Long> createUnpackerStatic(FieldProperties f) {
-        if ("fixed64".equals(f.getEncoder())) {
+        if ("fixed64".equals(f.getEncoderType())) {
             return new LongUnsignedUnpacker(64);
         }
         return new LongVarUnsignedUnpacker();

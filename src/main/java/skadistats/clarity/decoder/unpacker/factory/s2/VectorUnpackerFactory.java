@@ -9,7 +9,7 @@ import skadistats.clarity.model.Vector;
 public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
 
     public static Unpacker<Vector> createUnpackerStatic(FieldProperties f) {
-        if ("normal".equals(f.getEncoder())) {
+        if ("normal".equals(f.getEncoderType())) {
             return new VectorNormalUnpacker();
         }
         return new VectorDefaultUnpacker(FloatUnpackerFactory.createUnpackerStatic(f));

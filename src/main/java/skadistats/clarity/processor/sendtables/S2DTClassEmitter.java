@@ -110,7 +110,8 @@ public class S2DTClassEmitter {
                         protoField.lowValue,
                         protoField.highValue,
                         fieldSerializer,
-                        protoField.encoder
+                        protoField.encoderType,
+                        protoField.serializerType
                     );
                     field = createField(fieldProperties);
                     fields[fi] = field;
@@ -152,11 +153,13 @@ public class S2DTClassEmitter {
         private String sendNode;
         private String serializerName;
         private Integer serializerVersion;
-        private String encoder;
+        private String encoderType;
+        public String serializerType;
         private Integer encodeFlags;
         private Integer bitCount;
         private Float lowValue;
         private Float highValue;
+
         public SerializerField(String parent, S2NetMessages.CSVCMsg_FlattenedSerializer serializer, S2NetMessages.ProtoFlattenedSerializerField_t field) {
             this.parent = parent;
             this.varName = serializer.getSymbols(field.getVarNameSym());
@@ -165,7 +168,8 @@ public class S2DTClassEmitter {
             this.sendNode = !"(root)".equals(sn) ? sn : null;
             this.serializerName = field.hasFieldSerializerNameSym() ? serializer.getSymbols(field.getFieldSerializerNameSym()) : null;
             this.serializerVersion = field.hasFieldSerializerVersion() ? field.getFieldSerializerVersion() : null;
-            this.encoder = field.hasVarEncoderSym() ? serializer.getSymbols(field.getVarEncoderSym()) : null;
+            this.encoderType = field.hasVarEncoderSym() ? serializer.getSymbols(field.getVarEncoderSym()) : null;
+            this.serializerType = null; // TODO: we hope to get this from the replay in the future
             this.encodeFlags = field.hasEncodeFlags() ? field.getEncodeFlags() : null;
             this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
             this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
@@ -221,7 +225,7 @@ public class S2DTClassEmitter {
             }
             @Override
             public void execute(SerializerField field) {
-                field.encoder = encoders.get(field.parent + "." + field.varName);
+                field.encoderType = encoders.get(field.parent + "." + field.varName);
             }
         });
         PATCHES.put(new BuildNumberRange(1016, 1026), new PatchFunc() {
@@ -237,10 +241,24 @@ public class S2DTClassEmitter {
             @Override
             public void execute(SerializerField field) {
                 if (fixed.contains(field.varName)) {
-                    field.encoder = "fixed64";
+                    field.encoderType = "fixed64";
                 }
             }
         });
+
+        PATCHES.put(new BuildNumberRange(null, null), new PatchFunc() {
+            private final Set<String> simTime = new HashSet<>(Arrays.asList(
+                "m_flSimulationTime",
+                "m_flAnimTime"
+            ));
+            @Override
+            public void execute(SerializerField field) {
+                if (simTime.contains(field.varName)) {
+                    field.serializerType = "simulationtime";
+                }
+            }
+        });
+
     }
 
 }

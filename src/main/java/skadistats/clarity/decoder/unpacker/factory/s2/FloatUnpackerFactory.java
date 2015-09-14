@@ -3,16 +3,7 @@ package skadistats.clarity.decoder.unpacker.factory.s2;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.unpacker.*;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class FloatUnpackerFactory implements UnpackerFactory<Float> {
-
-    private static final Set<String> SIMULATION_TIME_PROPERTIES = new HashSet<>();
-    static {
-        SIMULATION_TIME_PROPERTIES.add("m_flSimulationTime");
-        SIMULATION_TIME_PROPERTIES.add("m_flAnimTime");
-    }
 
     @Override
     public Unpacker<Float> createUnpacker(FieldProperties f) {
@@ -20,10 +11,10 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
     }
 
     public static Unpacker<Float> createUnpackerStatic(FieldProperties f) {
-        if ("coord".equals(f.getEncoder())) {
+        if ("coord".equals(f.getEncoderType())) {
             return new FloatCoordUnpacker();
         }
-        if (SIMULATION_TIME_PROPERTIES.contains(f.getName())) {
+        if ("simulationtime".equals(f.getSerializerType())) {
             return new FloatSimulationTimeUnpacker();
         }
         int bc = f.getBitCountOrDefault(0);
@@ -32,7 +23,5 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
         }
         return new FloatQuantizedUnpacker(f.getName(), bc, f.getEncodeFlagsOrDefault(0) & 0xF, f.getLowValueOrDefault(0.0f), f.getHighValueOrDefault(1.0f));
     }
-
-
 
 }

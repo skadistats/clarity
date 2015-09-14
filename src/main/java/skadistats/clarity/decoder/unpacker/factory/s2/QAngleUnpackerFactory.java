@@ -8,7 +8,7 @@ public class QAngleUnpackerFactory implements UnpackerFactory<Vector> {
 
     public static Unpacker<Vector> createUnpackerStatic(FieldProperties f) {
         int bc = f.getBitCountOrDefault(0);
-        if ("qangle_pitch_yaw".equals(f.getEncoder())) {
+        if ("qangle_pitch_yaw".equals(f.getEncoderType())) {
             return new QAnglePitchYawOnlyUnpacker(bc);
         }
         if (bc == 0) {
