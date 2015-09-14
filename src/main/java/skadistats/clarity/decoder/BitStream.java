@@ -73,10 +73,14 @@ public class BitStream {
         pos = pos + n;
     }
 
-    public boolean readBitFlag() {
-        boolean v = (data[pos >> 6] & (1L << (pos & 63))) != 0L;
+    public int readBit() {
+        int v = (int)((data[pos >> 6] >> (pos & 63)) & 1L);
         pos++;
         return v;
+    }
+
+    public boolean readBitFlag() {
+        return readBit() != 0;
     }
 
     public long readUBitLong(int n) {
