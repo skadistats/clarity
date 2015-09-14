@@ -184,13 +184,11 @@ public class InputSourceProcessor {
         if (matcher.find()) {
             int num = Integer.valueOf(matcher.group(1));
             ctx.setBuildNumber(num);
-            if (num < 976) {
+            if (num < 955) {
                 log.warn("This replay is from an early beta version of Dota 2 Reborn (build number {}).", ctx.getBuildNumber());
                 log.warn("Entities in this replay probably cannot be read.");
-                if (num > 962) {
-                    log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
-                    log.warn("If you wanna help, send it to clarity@martin.schrodt.org, or contact me on github.");
-                }
+                log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
+                log.warn("If you wanna help, send it to clarity@martin.schrodt.org, or contact me on github.");
             }
         } else {
             log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '{}')", serverInfo.getGameDir());
