@@ -269,7 +269,7 @@ public class S2DTClassEmitter {
                 if (manaProps.contains(field.varName)) {
                     if (field.highValue == 3.4028235E38f) {
                         field.lowValue = null;
-                        field.highValue = 65536.0f;
+                        field.highValue = 8192.0f;
                     }
                 }
             }
