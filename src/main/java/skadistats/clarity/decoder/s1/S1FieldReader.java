@@ -8,8 +8,6 @@ import skadistats.clarity.util.TextTable;
 
 public class S1FieldReader extends FieldReader<S1DTClass> {
 
-    private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
-
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)

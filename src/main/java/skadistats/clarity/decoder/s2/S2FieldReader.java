@@ -12,8 +12,6 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
 
     public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
 
-    private final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
-
     private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)

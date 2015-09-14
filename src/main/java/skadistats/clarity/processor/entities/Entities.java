@@ -36,8 +36,6 @@ public class Entities {
     private FieldReader fieldReader;
     private EngineType engineType;
 
-    private final FieldPath[] fieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
-
     private Event<OnEntityCreated> evCreated;
     private Event<OnEntityUpdated> evUpdated;
     private Event<OnEntityDeleted> evDeleted;
@@ -165,7 +163,7 @@ public class Entities {
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, state, debug);
                     if (evUpdated != null) {
-                        evUpdated.raise(entity, fieldPaths, nChanged);
+                        evUpdated.raise(entity, fieldReader.getFieldPaths(), nChanged);
                     }
                     if (!entity.isActive()) {
                         entity.setActive(true);
