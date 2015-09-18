@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 
 public class Util {
 
@@ -50,13 +49,8 @@ public class Util {
     }
 
     public static <T> Class<T> valueClassForUnpacker(Unpacker<T> unpacker) {
-        try {
-            ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
-            Type valueType = interfaceType.getActualTypeArguments()[0];
-            return (Class<T>) Class.forName(valueType.getTypeName());
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
+        return (Class<T>)interfaceType.getActualTypeArguments()[0];
     }
 
 }
