@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
@@ -87,7 +88,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                     bitLength = stream.readUBitInt(14) * 8;
                 }
 
-                value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
+                value = ZeroCopy.wrap(stream.readBitsAsByteArray(bitLength));
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

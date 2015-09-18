@@ -102,7 +102,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     }
                     bitLength = stream.readUBitInt(17) * 8;
                 }
-                value = ByteString.copyFrom(stream.readBitsAsByteArray(bitLength));
+                value = ZeroCopy.wrap(stream.readBitsAsByteArray(bitLength));
                 if (isCompressed) {
                     value = ZeroCopy.wrap(Snappy.uncompress(ZeroCopy.extract(value)));
                 }
