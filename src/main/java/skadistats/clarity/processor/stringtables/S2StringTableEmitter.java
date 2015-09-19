@@ -111,7 +111,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     stream.readBitsIntoByteArray(tempBuf, bitLength);
                     int byteLengthUncompressed = Snappy.uncompressedLength(tempBuf, 0, byteLength);
                     valueBuf = new byte[byteLengthUncompressed];
-                    Snappy.rawUncompress(tempBuf, 0, byteLength, valueBuf, byteLengthUncompressed);
+                    Snappy.rawUncompress(tempBuf, 0, byteLength, valueBuf, 0);
                 } else {
                     valueBuf = new byte[byteLength];
                     stream.readBitsIntoByteArray(valueBuf, bitLength);
