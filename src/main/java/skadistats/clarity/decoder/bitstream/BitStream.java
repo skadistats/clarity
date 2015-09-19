@@ -2,6 +2,8 @@ package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
 
+import java.lang.reflect.Constructor;
+
 public abstract class BitStream {
 
     private static final int COORD_INTEGER_BITS = 14;
@@ -15,7 +17,6 @@ public abstract class BitStream {
 
     private static final int NORMAL_FRACTIONAL_BITS = 11;
     private static final float NORMAL_FRACTIONAL_RESOLUTION = (1.0f / ((1 << NORMAL_FRACTIONAL_BITS) - 1));
-
 
     public static final long[] MASKS = {
         0x0L,               0x1L,                0x3L,                0x7L,
@@ -40,12 +41,20 @@ public abstract class BitStream {
     protected int len;
     protected int pos;
 
+    private static final Constructor<BitStream> bitStreamConstructor = BitStreamImplementations.determineConstructor();
+
     public static BitStream createBitStream(ByteString input) {
-        return new LongBitStream(input);
+        try {
+            return bitStreamConstructor.newInstance(input);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     protected abstract int peekBit(int pos);
+    public abstract int readUBitInt(int n);
     public abstract long readUBitLong(int n);
+    public abstract byte[] readBitsAsByteArray(int n);
 
     public int len() {
         return len;
@@ -63,13 +72,12 @@ public abstract class BitStream {
         pos = pos + n;
     }
 
-
-    public int peekBit() {
+    public int readBit() {
         return peekBit(pos++);
     }
 
     public boolean readBitFlag() {
-        return peekBit() != 0;
+        return peekBit(pos++) != 0;
     }
 
     public long readSBitLong(int n) {
@@ -77,18 +85,9 @@ public abstract class BitStream {
         return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
     }
 
-    public byte[] readBitsAsByteArray(int n) {
-        byte[] result = new byte[(n + 7) / 8];
-        int i = 0;
-        while (n > 7) {
-            n -= 8;
-            result[i] = (byte) readUBitInt(8);
-            i++;
-        }
-        if (n != 0) {
-            result[i] = (byte) readUBitInt(n);
-        }
-        return result;
+    public int readSBitInt(int n) {
+        int v = readUBitInt(n);
+        return (v & (1 << (n - 1))) == 0 ? v : v | ((int)MASKS[32 - n] << n);
     }
 
     public String readString(int n) {
@@ -110,7 +109,7 @@ public abstract class BitStream {
         long v = 0L;
         long b;
         while (true) {
-            b = readUBitLong(8);
+            b = readUBitInt(8);
             v |= (b & 0x7FL) << s;
             s += 7;
             if ((b & 0x80L) == 0L || s == m) {
@@ -138,14 +137,6 @@ public abstract class BitStream {
 
     public int readVarSInt() {
         return (int) readVarS(32);
-    }
-
-    public int readUBitInt(int n) {
-        return (int) readUBitLong(n);
-    }
-
-    public int readSBitInt(int n) {
-        return (int) readSBitLong(n);
     }
 
     public int readUBitVar() {
@@ -186,13 +177,13 @@ public abstract class BitStream {
         float v = 0.0f;
         if (!(i || f)) return v;
         boolean s = readBitFlag();
-        if (i) v = (float)(readUBitLong(COORD_INTEGER_BITS) + 1);
-        if (f) v += readUBitLong(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
+        if (i) v = (float)(readUBitInt(COORD_INTEGER_BITS) + 1);
+        if (f) v += readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
         return s ? -v : v;
     }
 
     public float readCellCoord(int n, boolean integral, boolean lowPrecision) {
-        float v = (float)(readUBitLong(n));
+        float v = (float)(readUBitInt(n));
         if (integral) {
             // TODO: something weird is going on here in alice, we might need to adjust the sign?
             return v;
@@ -200,7 +191,7 @@ public abstract class BitStream {
         if (lowPrecision) {
             throw new RuntimeException("implement me!");
         }
-        return v + readUBitLong(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
+        return v + readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
     }
 
     public float readCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
@@ -211,16 +202,16 @@ public abstract class BitStream {
 
         boolean inBounds = stream.readBitFlag();
         if (integral) {
-            i = stream.readUBitInt(1);
-            if (i != 0) {
+            if (readBitFlag()) {
                 sign = stream.readBitFlag();
                 value = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
             }
         } else {
-            i = stream.readUBitInt(1);
-            sign = stream.readBitFlag();
-            if (i != 0) {
+            if (readBitFlag()) {
+                sign = stream.readBitFlag();
                 i = stream.readUBitInt(inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS) + 1;
+            } else {
+                sign = stream.readBitFlag();
             }
             f = stream.readUBitInt(lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS);
             value = i + ((float) f * (lowPrecision ? COORD_RESOLUTION_LOWPRECISION : COORD_RESOLUTION));
@@ -229,12 +220,12 @@ public abstract class BitStream {
     }
 
     public float readBitAngle(int n) {
-        return readUBitLong(n) * 360.0f / (1 << n);
+        return readUBitInt(n) * 360.0f / (1 << n);
     }
 
     public float readBitNormal() {
         boolean s = readBitFlag();
-        float v = (float) readUBitLong(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
+        float v = (float) readUBitInt(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
         return s ? -v : v;
     }
 

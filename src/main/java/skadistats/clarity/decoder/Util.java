@@ -2,8 +2,10 @@ package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
 import com.rits.cloning.Cloner;
+import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 
@@ -51,6 +53,14 @@ public class Util {
     public static <T> Class<T> valueClassForUnpacker(Unpacker<T> unpacker) {
         ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
         return (Class<T>)interfaceType.getActualTypeArguments()[0];
+    }
+
+    public static void byteCopy(Object src, int srcOffset, Object dst, int dstOffset, int n) {
+        try {
+            Snappy.arrayCopy(src, srcOffset, n, dst, dstOffset);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
