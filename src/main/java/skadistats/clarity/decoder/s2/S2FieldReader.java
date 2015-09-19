@@ -10,8 +10,6 @@ import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader extends FieldReader<S2DTClass> {
 
-    public static final HuffmanTree HUFFMAN_TREE = new HuffmanTree();
-
     private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
         .setPadding(0, 0)
@@ -51,7 +49,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             FieldPath fp = new FieldPath();
             while (true) {
                 int offsBefore = bs.pos();
-                FieldOpType op = HUFFMAN_TREE.decodeOp(bs);
+                FieldOpType op = bs.readFieldOp();
                 op.execute(fp, bs);
                 if (debug) {
                     opDebugTable.setData(n, 0, op);

@@ -1,38 +1,23 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.bitstream.BitStream;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.PriorityQueue;
 
-public class HuffmanTree {
+public class FieldOpHuffmanTree {
 
-    private static final FieldOpType[] ops = FieldOpType.values();
+    public static final Node root;
+    public static final int[][] tree;
+    public static final FieldOpType[] ops = FieldOpType.values();
 
-    final Node root;
-    private final int[][] tree;
-
-    public HuffmanTree() {
+    static {
         root = buildTree();
-
         List<int[]> akku = new ArrayList<>();
         buildFixedTreeR(akku, root);
-
         tree = reverseTree(akku);
-
-        //dump(0, "");
     }
 
-    public FieldOpType decodeOp(BitStream bs) {
-        int i = 0;
-        do {
-            i = tree[i][bs.readBit()];
-        } while (i >= 0);
-        return ops[- i - 1];
-    }
-
-    private Node buildTree() {
+    private static Node buildTree() {
         PriorityQueue<Node> queue = new PriorityQueue<>();
         int n = 0;
         for (FieldOpType op : ops) {
@@ -44,7 +29,7 @@ public class HuffmanTree {
         return queue.peek();
     }
 
-    private int buildFixedTreeR(List<int[]> akku, Node n) {
+    private static int buildFixedTreeR(List<int[]> akku, Node n) {
         akku.add(
             new int[] {
                 (n.left  instanceof LeafNode) ? - n.left.op.ordinal() - 1 : buildFixedTreeR(akku, n.left),
@@ -54,7 +39,7 @@ public class HuffmanTree {
         return akku.size() - 1;
     }
 
-    private int[][] reverseTree(List<int[]> akku) {
+    private static int[][] reverseTree(List<int[]> akku) {
         int r = akku.size() - 1;
         int[][] reverse = new int[r + 1][2];
         for (int i = 0; i <= r; i++) {

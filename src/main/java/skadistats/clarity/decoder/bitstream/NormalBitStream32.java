@@ -3,6 +3,8 @@ package skadistats.clarity.decoder.bitstream;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.s2.FieldOpHuffmanTree;
+import skadistats.clarity.decoder.s2.FieldOpType;
 
 public class NormalBitStream32 extends BitStream {
 
@@ -66,6 +68,24 @@ public class NormalBitStream32 extends BitStream {
         return result;
     }
 
+    @Override
+    public FieldOpType readFieldOp() {
+        int offs = pos >> 5;
+        int b = 1 << (pos & 31);
+        int i = 0;
+        while (true) {
+            pos++;
+            i = FieldOpHuffmanTree.tree[i][(data[offs] & b) != 0 ? 1 : 0];
+            if (i < 0) {
+                return FieldOpHuffmanTree.ops[-i - 1];
+            }
+            b = b << 1;
+            if (b == 0) {
+                offs++;
+                b = 1;
+            }
+        }
+    }
 
 
 }

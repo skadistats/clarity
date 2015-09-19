@@ -1,26 +1,24 @@
 package skadistats.clarity.decoder.s2;
 
-public class HuffmanGraph {
+public class FieldOpHuffmanGraph {
 
-    private final HuffmanTree.Node root;
     private final StringBuilder g;
 
-    public HuffmanGraph(HuffmanTree tree) {
-        this.root = tree.root;
+    public FieldOpHuffmanGraph(FieldOpHuffmanTree tree) {
         this.g = new StringBuilder();
     }
 
     public String generate() {
         g.append("digraph G {\n");
         g.append("graph [ranksep=0];\n");
-        genNodesRecursive(root, "");
-        genEdgesRecursive(root);
+        genNodesRecursive(FieldOpHuffmanTree.root, "");
+        genEdgesRecursive(FieldOpHuffmanTree.root);
         g.append("}");
         return g.toString();
     }
 
-    public void genNodesRecursive(HuffmanTree.Node node, String path) {
-        if (node instanceof HuffmanTree.InternalNode) {
+    public void genNodesRecursive(FieldOpHuffmanTree.Node node, String path) {
+        if (node instanceof FieldOpHuffmanTree.InternalNode) {
             g.append(String.format("%s [label=%s];\n", node.num, node.weight));
             if (node.left != null)
                 genNodesRecursive(node.left, path + "0");
@@ -31,8 +29,8 @@ public class HuffmanGraph {
         }
     }
 
-    public void genEdgesRecursive(HuffmanTree.Node node) {
-        if (node instanceof HuffmanTree.InternalNode) {
+    public void genEdgesRecursive(FieldOpHuffmanTree.Node node) {
+        if (node instanceof FieldOpHuffmanTree.InternalNode) {
             if (node.left != null) {
                 g.append(String.format("%s -> %s [label=0];\n", node.num, node.left.num));
                 genEdgesRecursive(node.left);

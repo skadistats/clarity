@@ -2,6 +2,8 @@ package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.decoder.s2.FieldOpHuffmanTree;
+import skadistats.clarity.decoder.s2.FieldOpType;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
@@ -96,5 +98,25 @@ public class UnsafeBitStream64 extends BitStream {
         return result;
     }
 
+    @Override
+    public FieldOpType readFieldOp() {
+        long offs = base + ((pos >> 3) & 0xFFFFFFF8);
+        long v = unsafe.getLong(data, offs);
+        long s = 1L << (pos & 63);
+        int i = 0;
+        while (true) {
+            pos++;
+            i = FieldOpHuffmanTree.tree[i][(v & s) != 0 ? 1 : 0];
+            if (i < 0) {
+                return FieldOpHuffmanTree.ops[-i - 1];
+            }
+            s = s << 1;
+            if (s == 0) {
+                offs += 8;
+                v = unsafe.getLong(data, offs);
+                s = 1;
+            }
+        }
+    }
 
 }

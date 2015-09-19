@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
+import skadistats.clarity.decoder.s2.FieldOpType;
 
 import java.lang.reflect.Constructor;
 
@@ -55,6 +56,7 @@ public abstract class BitStream {
     public abstract int readUBitInt(int n);
     public abstract long readUBitLong(int n);
     public abstract byte[] readBitsAsByteArray(int n);
+    public abstract FieldOpType readFieldOp();
 
     public int len() {
         return len;

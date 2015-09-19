@@ -1,7 +1,5 @@
 package skadistats.clarity.model;
 
-import java.util.Arrays;
-
 public class FieldPath {
 
     public final int[] path;
@@ -21,8 +19,9 @@ public class FieldPath {
 
 
     public FieldPath(FieldPath other) {
-        path = Arrays.copyOf(other.path, 6);
+        path = new int[6];
         last = other.last;
+        System.arraycopy(other.path, 0, path, 0, last + 1);
     }
 
     @Override
