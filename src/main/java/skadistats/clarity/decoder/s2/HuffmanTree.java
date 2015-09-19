@@ -8,6 +8,8 @@ import java.util.PriorityQueue;
 
 public class HuffmanTree {
 
+    private static final FieldOpType[] ops = FieldOpType.values();
+
     final Node root;
     private final int[][] tree;
 
@@ -27,13 +29,13 @@ public class HuffmanTree {
         do {
             i = tree[i][bs.readBit()];
         } while (i >= 0);
-        return FieldOpType.values()[- i - 1];
+        return ops[- i - 1];
     }
 
     private Node buildTree() {
         PriorityQueue<Node> queue = new PriorityQueue<>();
         int n = 0;
-        for (FieldOpType op : FieldOpType.values()) {
+        for (FieldOpType op : ops) {
             queue.offer(new LeafNode(op, n++));
         }
         while (queue.size() > 1) {
@@ -67,7 +69,7 @@ public class HuffmanTree {
     private void dump(int i, String prefix) {
         for (int s = 0; s < 2; s++) {
             if (tree[i][s] < 0) {
-                System.out.println(FieldOpType.values()[- tree[i][s] - 1] + ": " + prefix + s);
+                System.out.println(ops[- tree[i][s] - 1] + ": " + prefix + s);
             } else {
                 dump(tree[i][s], prefix + s);
             }
