@@ -65,13 +65,12 @@ public class UnsafeBitStream32 extends BitStream {
     }
 
     @Override
-    public byte[] readBitsAsByteArray(int n) {
+    public void readBitsIntoByteArray(byte[] dest, int n) {
         int nBytes = (n + 7) / 8;
-        byte[] result = new byte[nBytes];
         if ((pos & 7) == 0) {
-            unsafe.copyMemory(data, base + (pos >> 3), result, base, nBytes);
+            unsafe.copyMemory(data, base + (pos >> 3), dest, base, nBytes);
             pos += n;
-            return result;
+            return;
         }
         long src = base + ((pos >> 3) & 0xFFFFFFFC);
         long dst = base;
@@ -82,7 +81,7 @@ public class UnsafeBitStream32 extends BitStream {
             v = unsafe.getInt(data, src) >>> s;
             src += 4;
             v |= unsafe.getInt(data, src) << (32 - s);
-            unsafe.putLong(result, dst, v);
+            unsafe.putLong(dest, dst, v);
             dst += 4;
             n -= 32;
         }
@@ -92,10 +91,9 @@ public class UnsafeBitStream32 extends BitStream {
             src += 4;
             v |= unsafe.getInt(data, src) << (32 - s);
             v &= m;
-            v |= unsafe.getInt(result, dst) & ~m;
-            unsafe.putInt(result, dst, v);
+            v |= unsafe.getInt(dest, dst) & ~m;
+            unsafe.putInt(dest, dst, v);
         }
-        return result;
     }
 
     @Override

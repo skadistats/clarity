@@ -49,23 +49,21 @@ public class NormalBitStream32 extends BitStream {
     }
 
     @Override
-    public byte[] readBitsAsByteArray(int n) {
+    public void readBitsIntoByteArray(byte[] dest, int n) {
         int nBytes = (n + 7) / 8;
-        byte[] result = new byte[nBytes];
         if ((pos & 7) == 0) {
-            Util.byteCopy(data, pos >> 3, result, 0, nBytes);
+            Util.byteCopy(data, pos >> 3, dest, 0, nBytes);
             pos += n;
-            return result;
+            return;
         }
         int i = 0;
         while (n > 7) {
-            result[i++] = (byte) readUBitInt(8);
+            dest[i++] = (byte) readUBitInt(8);
             n -= 8;
         }
         if (n != 0) {
-            result[i] = (byte) readUBitInt(n);
+            dest[i] = (byte) readUBitInt(n);
         }
-        return result;
     }
 
     @Override
@@ -86,6 +84,5 @@ public class NormalBitStream32 extends BitStream {
             }
         }
     }
-
 
 }

@@ -55,7 +55,7 @@ public abstract class BitStream {
     protected abstract int peekBit(int pos);
     public abstract int readUBitInt(int n);
     public abstract long readUBitLong(int n);
-    public abstract byte[] readBitsAsByteArray(int n);
+    public abstract void readBitsIntoByteArray(byte[] dest, int n);
     public abstract FieldOpType readFieldOp();
 
     public int len() {

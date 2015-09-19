@@ -81,14 +81,15 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             // read value
             ByteString value = null;
             if (stream.readBitFlag()) {
-                int bitLength = 0;
+                int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
                     bitLength = stream.readUBitInt(14) * 8;
                 }
-
-                value = ZeroCopy.wrap(stream.readBitsAsByteArray(bitLength));
+                byte[] valueBuf = new byte[(bitLength + 7) / 8];
+                stream.readBitsIntoByteArray(valueBuf, bitLength);
+                value = ZeroCopy.wrap(valueBuf);
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

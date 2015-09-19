@@ -20,6 +20,8 @@ import java.util.LinkedList;
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 
+    private final byte[] tempBuf = new byte[0x4000];
+
     @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(Context ctx, S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
         if (isProcessed(message.getName())) {
@@ -102,10 +104,20 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     }
                     bitLength = stream.readUBitInt(17) * 8;
                 }
-                value = ZeroCopy.wrap(stream.readBitsAsByteArray(bitLength));
+
+                int byteLength = (bitLength + 7) / 8;
+                byte[] valueBuf;
                 if (isCompressed) {
-                    value = ZeroCopy.wrap(Snappy.uncompress(ZeroCopy.extract(value)));
+                    stream.readBitsIntoByteArray(tempBuf, bitLength);
+                    int byteLengthUncompressed = Snappy.uncompressedLength(tempBuf, 0, byteLength);
+                    valueBuf = new byte[byteLengthUncompressed];
+                    Snappy.rawUncompress(tempBuf, 0, byteLength, valueBuf, byteLengthUncompressed);
+                } else {
+                    valueBuf = new byte[byteLength];
+                    stream.readBitsIntoByteArray(valueBuf, bitLength);
                 }
+
+                value = ZeroCopy.wrap(valueBuf);
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }
