@@ -9,7 +9,9 @@ public interface DTClass {
 
     Object[] getEmptyStateArray();
 
+    String getNameForFieldPath(FieldPath fp);
     FieldPath getFieldPathForName(String property);
+
     <T> T getValueForFieldPath(FieldPath fp, Object[] state);
 
     String dumpState(String title, Object[] state);
