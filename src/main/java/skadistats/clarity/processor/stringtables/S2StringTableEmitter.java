@@ -3,7 +3,7 @@ package skadistats.clarity.processor.stringtables;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
@@ -60,7 +60,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
     }
 
     private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) throws IOException {
-        BitStream stream = new BitStream(data);
+        BitStream stream = BitStream.createBitStream(data);
         LinkedList<String> keyHistory = new LinkedList<>();
 
         int index = -1;

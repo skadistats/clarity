@@ -2,8 +2,8 @@ package skadistats.clarity.decoder.unpacker;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.bitstream.BitStream;
 
 public class FloatQuantizedUnpacker implements Unpacker<Float> {
 

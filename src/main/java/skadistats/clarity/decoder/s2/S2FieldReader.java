@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;

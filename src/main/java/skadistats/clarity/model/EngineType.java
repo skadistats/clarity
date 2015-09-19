@@ -1,8 +1,8 @@
 package skadistats.clarity.model;
 
 import com.google.protobuf.GeneratedMessage;
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.decoder.s2.S2FieldReader;
 import skadistats.clarity.source.Source;

@@ -3,9 +3,9 @@ package skadistats.clarity.processor.entities;
 import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.*;
 import skadistats.clarity.model.*;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -112,7 +112,7 @@ public class Entities {
 
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(Context ctx, NetMessages.CSVCMsg_PacketEntities message) {
-        BitStream stream = new BitStream(message.getEntityData());
+        BitStream stream = BitStream.createBitStream(message.getEntityData());
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
@@ -224,7 +224,7 @@ public class Entities {
         }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
-            BitStream stream = new BitStream(be.rawBaseline);
+            BitStream stream = BitStream.createBitStream(be.rawBaseline);
             be.baseline = cls.getEmptyStateArray();
             fieldReader.readFields(stream, cls, be.baseline, false);
         }

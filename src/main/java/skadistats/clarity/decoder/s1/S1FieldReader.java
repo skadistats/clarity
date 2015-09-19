@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s1;
 
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;

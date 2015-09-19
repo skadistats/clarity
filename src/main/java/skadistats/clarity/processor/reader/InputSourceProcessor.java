@@ -6,7 +6,7 @@ import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -140,7 +140,7 @@ public class InputSourceProcessor {
 
     @OnMessageContainer
     public void processEmbedded(Context ctx, Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
-        BitStream bs = new BitStream(bytes);
+        BitStream bs = BitStream.createBitStream(bytes);
         while (bs.remaining() >= 8) {
             int kind = ctx.getEngineType().readEmbeddedKind(bs);
             if (kind == 0) {

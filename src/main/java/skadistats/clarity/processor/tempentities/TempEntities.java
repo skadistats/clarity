@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.tempentities;
 
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.ReceiveProp;
 import skadistats.clarity.decoder.s1.S1DTClass;
 import skadistats.clarity.event.Event;
@@ -30,7 +30,7 @@ public class TempEntities {
     public void onTempEntities(Context ctx, S1NetMessages.CSVCMsg_TempEntities message) {
         Event<OnTempEntity> ev = ctx.createEvent(OnTempEntity.class, Entity.class);
         if (ev.isListenedTo()) {
-            BitStream stream = new BitStream(message.getEntityData());
+            BitStream stream = BitStream.createBitStream(message.getEntityData());
             DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
             S1DTClass cls = null;
             ReceiveProp[] receiveProps = null;

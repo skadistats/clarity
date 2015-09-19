@@ -1,6 +1,6 @@
 package skadistats.clarity.decoder.unpacker;
 
-import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
 
 public class VectorNormalUnpacker implements Unpacker<Vector> {

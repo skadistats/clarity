@@ -2,8 +2,8 @@ package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.decoder.BitStream;
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
@@ -45,7 +45,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
     }
 
     private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
-        BitStream stream = new BitStream(data);
+        BitStream stream = BitStream.createBitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
 

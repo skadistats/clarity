@@ -1,6 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.BitStream;
+import skadistats.clarity.decoder.bitstream.BitStream;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class HuffmanTree {
     public FieldOpType decodeOp(BitStream bs) {
         int i = 0;
         do {
-            i = tree[i][bs.readBit()];
+            i = tree[i][bs.peekBit()];
         } while (i >= 0);
         return FieldOpType.values()[- i - 1];
     }

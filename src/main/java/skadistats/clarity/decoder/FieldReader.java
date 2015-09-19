@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder;
 
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 
