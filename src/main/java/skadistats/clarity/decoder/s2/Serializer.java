@@ -113,4 +113,14 @@ public class Serializer {
         }
     }
 
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+        for (int i = 0; i < fields.length; i++) {
+            if (state[i] != null) {
+                fp.path[fp.last] = i;
+                fields[i].collectFieldPaths(fp, entries, state);
+            }
+        }
+    }
+
+
 }

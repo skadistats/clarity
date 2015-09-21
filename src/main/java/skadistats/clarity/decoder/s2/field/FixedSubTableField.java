@@ -95,4 +95,14 @@ public class FixedSubTableField extends Field {
         }
     }
 
+    @Override
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
+        if (subState != null) {
+            fp.last++;
+            properties.getSerializer().collectFieldPaths(fp, entries, subState);
+            fp.last--;
+        }
+
+    }
 }

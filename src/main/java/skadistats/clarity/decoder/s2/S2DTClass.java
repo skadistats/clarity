@@ -120,5 +120,11 @@ public class S2DTClass implements DTClass {
         }
     }
 
+    @Override
+    public List<FieldPath> collectFieldPaths(Object[] state) {
+        List<FieldPath> result = new ArrayList<>(state.length);
+        serializer.collectFieldPaths(new FieldPath(), result, state);
+        return result;
+    }
 
 }

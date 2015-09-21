@@ -23,6 +23,7 @@ public abstract class Field {
     public abstract void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data);
     public abstract FieldPath getFieldPathForName(FieldPath fp, String property);
     public abstract void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state);
+    public abstract void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state);
 
     protected void addBasePropertyName(List<String> parts) {
         parts.add(properties.getName());

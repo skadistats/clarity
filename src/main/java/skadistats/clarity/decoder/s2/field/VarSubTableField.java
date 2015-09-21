@@ -116,4 +116,17 @@ public class VarSubTableField extends Field {
         }
     }
 
+    @Override
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+        List<Object[]> subState = (List<Object[]>) state[fp.path[fp.last]];
+        if (subState.size() > 0) {
+            fp.last += 2;
+            for (int i = 0; i < subState.size(); i++) {
+                fp.path[fp.last - 1] = i;
+                properties.getSerializer().collectFieldPaths(fp, entries, subState.get(i));
+            }
+            fp.last -= 2;
+        }
+    }
+
 }

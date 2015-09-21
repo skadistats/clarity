@@ -67,4 +67,8 @@ public class SimpleField extends Field {
         entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName()), state[fp.path[fp.last]]));
     }
 
+    @Override
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+        entries.add(new FieldPath(fp));
+    }
 }

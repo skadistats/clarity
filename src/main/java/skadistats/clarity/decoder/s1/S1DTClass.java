@@ -4,7 +4,9 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.util.TextTable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -116,6 +118,15 @@ public class S1DTClass implements DTClass {
         } finally {
             DEBUG_LOCK.unlock();
         }
+    }
+
+    @Override
+    public List<FieldPath> collectFieldPaths(Object[] state) {
+        ArrayList<FieldPath> result = new ArrayList<>(state.length);
+        for (int i = 0; i < state.length; i++) {
+            result.add(new FieldPath(i));
+        }
+        return result;
     }
 
 }

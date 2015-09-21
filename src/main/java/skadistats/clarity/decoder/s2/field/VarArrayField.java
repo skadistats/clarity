@@ -109,4 +109,17 @@ public class VarArrayField extends Field {
         fp.last--;
     }
 
+    @Override
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
+        fp.last++;
+        for (int i = 0; i < subState.length; i++) {
+            if (subState[i] != null) {
+                fp.path[fp.last] = i;
+                entries.add(new FieldPath(fp));
+            }
+        }
+        fp.last--;
+
+    }
 }
