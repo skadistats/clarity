@@ -96,11 +96,11 @@ public class Serializer {
     }
 
     public FieldPath getFieldPathForName(FieldPath fp, String property) {
-        for (String sendNodePrefix : sendNodePrefixes) {
-            if (property.length() > sendNodePrefix.length() && property.startsWith(sendNodePrefix)) {
-                return getFieldPathForNameInternal(fp, property.substring(sendNodePrefix.length() + 1));
-            }
-        }
+//        for (String sendNodePrefix : sendNodePrefixes) {
+//            if (property.length() > sendNodePrefix.length() && property.startsWith(sendNodePrefix)) {
+//                return getFieldPathForNameInternal(fp, property.substring(sendNodePrefix.length() + 1));
+//            }
+//        }
         return getFieldPathForNameInternal(fp, property);
     }
 
