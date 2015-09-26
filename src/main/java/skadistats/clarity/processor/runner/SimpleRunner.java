@@ -8,7 +8,6 @@ public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
     public SimpleRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        engineType.skipHeaderOffsets(source);
         this.loopController = new LoopController() {
             @Override
             public LoopController.Command doLoopControl(Context ctx, int upcomingTick) {

@@ -76,7 +76,7 @@ public class BaseStringTableEmitter {
     }
 
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         if (phase == ResetPhase.CLEAR) {
             resetStringTables.clear();
@@ -84,7 +84,7 @@ public class BaseStringTableEmitter {
                 table.reset();
             }
         } else if (phase == ResetPhase.STRINGTABLE_ACCUMULATION) {
-            for (Demo.CDemoStringTables.table_t tt : packet.getStringTable().getTablesList()) {
+            for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
                 if (!stringTables.byName.containsKey(tt.getTableName())) {
                     continue;
                 }

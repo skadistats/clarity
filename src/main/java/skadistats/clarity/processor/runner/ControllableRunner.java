@@ -29,9 +29,9 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     private Integer lastTick;
 
     /* tick the processor is waiting at to be signaled to continue further processing */
-    private int upcomingTick = -1;
+    private int upcomingTick;
     /* tick we want to be at the end of */
-    private int wantedTick = -1;
+    private int wantedTick;
     /* tick the user wanted to be at the end of */
     private Integer demandedTick;
 
@@ -39,7 +39,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public ControllableRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        engineType.skipHeaderOffsets(source);
+        upcomingTick = tick;
+        wantedTick = tick;
         this.loopController = new LoopController() {
             @Override
             public Command doLoopControl(Context ctx, int nextTick) {
@@ -73,9 +74,9 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                             }
                             return Command.FALLTHROUGH;
                         } else {
-                            if (tick == -1) {
+                            if (tick < 0) {
                                 wantedTick = 0;
-                                setTick(0);
+                                setTick(tick + 1);
                                 return Command.FALLTHROUGH;
                             }
                             if (demandedTick == null && resetPhase == ResetPhase.FORWARD_TO_WANTED) {
@@ -98,9 +99,6 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                     continue;
                                 }
                                 seekPositions = source.getFullPacketsBeforeTick(engineType, wantedTick, fullPacketPositions);
-                                if (seekPositions.size() == 0) {
-                                    continue;
-                                }
                                 resetPhase = ResetPhase.CLEAR;
                             }
                             resetPosition = seekPositions.pollFirst();
@@ -120,11 +118,22 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             }
 
             @Override
-            public Iterator<ResetPhase> evaluateResetPhases(int tick, int offset) throws IOException {
+            public void markCDemoStringTables(int tick, int offset) throws IOException {
                 lock.lock();
                 try {
                     if (resetPhase == null) {
                         fullPacketPositions.add(new PacketPosition(tick, offset));
+                    }
+                } finally {
+                    lock.unlock();
+                }
+            }
+
+            @Override
+            public Iterator<ResetPhase> evaluateResetPhases() throws IOException {
+                lock.lock();
+                try {
+                    if (seekPositions == null) {
                         return Iterators.emptyIterator();
                     }
                     List<ResetPhase> phaseList = new LinkedList<>();

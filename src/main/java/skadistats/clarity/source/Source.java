@@ -175,14 +175,14 @@ public abstract class Source {
         PacketPosition wanted = new PacketPosition(wantedTick, 0);
         if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
             PacketPosition basePos = fullPacketPositions.floor(wanted);
-            setPosition(basePos != null ? basePos.getOffset() : 16);
+            setPosition(basePos.getOffset());
             try {
                 while (true) {
                     int at = getPosition();
                     int kind = readVarInt32() & ~engineType.getCompressedFlag();
                     int tick = readVarInt32();
                     int size = readVarInt32();
-                    if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
+                    if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE || kind == Demo.EDemoCommands.DEM_StringTables_VALUE || kind == Demo.EDemoCommands.DEM_SyncTick_VALUE) {
                         fullPacketPositions.add(new PacketPosition(tick, at));
                     }
                     if (tick >= wantedTick) {

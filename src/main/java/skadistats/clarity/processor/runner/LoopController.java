@@ -14,7 +14,10 @@ public abstract class LoopController {
 
     abstract public Command doLoopControl(Context ctx, int nextTickWithData);
 
-    public Iterator<ResetPhase> evaluateResetPhases(int tick, int offset) throws IOException {
+    public void markCDemoStringTables(int tick, int offset) throws IOException {
+    }
+
+    public Iterator<ResetPhase> evaluateResetPhases() throws IOException {
         return Iterators.emptyIterator();
     }
 

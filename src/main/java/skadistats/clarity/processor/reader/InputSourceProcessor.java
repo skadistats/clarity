@@ -39,10 +39,23 @@ public class InputSourceProcessor {
     // TODO: set to false when issue #58 is closed.
     private boolean unpackUserMessages = true;
 
+    private Event<OnReset> evReset = null;
+    private Event<OnFullPacket> evFull = null;
+
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
         unpackUserMessages |= ctx.getEngineType().isUserMessage(listener.getAnnotation().value());
+    }
+
+    @Initializer(OnReset.class)
+    public void initOnResetListener(final Context ctx, final EventListener<OnReset> listener) {
+        evReset = ctx.createEvent(OnReset.class, Demo.CDemoStringTables.class, ResetPhase.class);
+    }
+
+    @Initializer(OnFullPacket.class)
+    public void initOnFullPacketListener(final Context ctx, final EventListener<OnFullPacket> listener) {
+        evFull = ctx.createEvent(OnFullPacket.class, Demo.CDemoFullPacket.class);
     }
 
     @Initializer(OnMessageContainer.class)
@@ -98,6 +111,8 @@ public class InputSourceProcessor {
                 break;
             }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
+            Demo.CDemoFullPacket fullPacket = null;
+            Demo.CDemoStringTables stringTables = null;
             if (messageClass == null) {
                 logUnknownMessage(ctx, "top level", kind);
                 src.skipBytes(size);
@@ -108,35 +123,46 @@ public class InputSourceProcessor {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
-                Event<OnFullPacket> evFull = ctx.createEvent(OnFullPacket.class, messageClass);
-                Event<OnReset> evReset = ctx.createEvent(OnReset.class, messageClass, ResetPhase.class);
-                Demo.CDemoFullPacket message = null;
-                if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                    message = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                if (evFull != null || evReset != null) {
+                    fullPacket = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 } else {
                     src.skipBytes(size);
                 }
-                Iterator<ResetPhase> phases = ctl.evaluateResetPhases(tick, offset);
-                if (evFull.isListenedTo()) {
-                    evFull.raise(message);
+                if (evFull != null) {
+                    evFull.raise(fullPacket);
                 }
-                if (evReset.isListenedTo() && phases.hasNext()) {
-                    ResetPhase phase = null;
-                    while (phases.hasNext()) {
-                        phase = phases.next();
-                        evReset.raise(message, phase);
-                    }
-                    if (phase == ResetPhase.STRINGTABLE_APPLY) {
-                        ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, message.getPacket().getData());
-                    }
+                if (evReset != null) {
+                    ctl.markCDemoStringTables(tick, offset);
+                    stringTables = fullPacket.getStringTable();
                 }
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                if (ev.isListenedTo()) {
-                    GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                    ev.raise(message);
+                boolean markStringTables = evReset != null && messageClass == Demo.CDemoStringTables.class;
+                GeneratedMessage message = null;
+                if (ev.isListenedTo() || markStringTables) {
+                    message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
                 } else {
                     src.skipBytes(size);
+                }
+                if (ev.isListenedTo()) {
+                    ev.raise(message);
+                }
+                if (markStringTables) {
+                    ctl.markCDemoStringTables(tick, offset);
+                    stringTables = (Demo.CDemoStringTables) message;
+                }
+            }
+            if (stringTables != null) {
+                Iterator<ResetPhase> phases = ctl.evaluateResetPhases();
+                if (evReset != null && phases.hasNext()) {
+                    ResetPhase phase = null;
+                    while (phases.hasNext()) {
+                        phase = phases.next();
+                        evReset.raise(stringTables, phase);
+                    }
+                    if (phase == ResetPhase.STRINGTABLE_APPLY && fullPacket != null) {
+                        ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, fullPacket.getPacket().getData());
+                    }
                 }
             }
         }

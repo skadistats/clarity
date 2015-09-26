@@ -96,7 +96,7 @@ public class Entities {
     }
 
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
             baselineEntries.clear();
             for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
