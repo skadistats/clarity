@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-public class FieldPath {
+public class FieldPath implements Comparable<FieldPath> {
 
     public final int[] path;
     public int last;
@@ -59,4 +59,16 @@ public class FieldPath {
         return result;
     }
 
+    @Override
+    public int compareTo(FieldPath o) {
+        if (this == o) return 0;
+        int n = Math.min(last, o.last);
+        for (int i = 0; i <= n; i++) {
+            int r = Integer.compare(path[i], o.path[i]);
+            if (r != 0) {
+                return r;
+            }
+        }
+        return Integer.compare(last, o.last);
+    }
 }
