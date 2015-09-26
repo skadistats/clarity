@@ -86,7 +86,7 @@ public class InputSourceProcessor {
     @OnInputSource
     public void processSource(Context ctx, Source src, LoopController ctl) throws IOException {
         int compressedFlag = ctx.getEngineType().getCompressedFlag();
-        while (true) {
+        outer: while (true) {
             int offset = src.getPosition();
             int kind;
             try {
@@ -104,11 +104,19 @@ public class InputSourceProcessor {
             kind &= ~compressedFlag;
             int tick = src.readVarInt32();
             int size = src.readVarInt32();
-            LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
-            if (loopCtl == LoopController.Command.CONTINUE) {
-                continue;
-            } else if (loopCtl == LoopController.Command.BREAK) {
-                break;
+            while (true) {
+                LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
+                if (loopCtl == LoopController.Command.FALLTHROUGH) {
+                    break;
+                } else if (loopCtl == LoopController.Command.CONTINUE) {
+                    continue outer;
+                } else if (loopCtl == LoopController.Command.BREAK) {
+                    break outer;
+                } else if (loopCtl == LoopController.Command.RESET_COMPLETE) {
+                    if (evReset != null) {
+                        evReset.raise(null, ResetPhase.COMPLETE);
+                    }
+                }
             }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
             Demo.CDemoFullPacket fullPacket = null;

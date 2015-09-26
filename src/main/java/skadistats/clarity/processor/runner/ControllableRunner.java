@@ -86,7 +86,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                                 resetPhase = null;
                                 tick = wantedTick - 1;
                                 startNewTick(ctx, upcomingTick);
-                                continue;
+                                return Command.RESET_COMPLETE;
                             }
                             if (resetPhase == null && wantedTick != tick) {
                                 endTicksUntil(ctx, tick);

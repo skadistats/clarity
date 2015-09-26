@@ -9,7 +9,7 @@ import java.util.Iterator;
 public abstract class LoopController {
 
     public enum Command {
-        CONTINUE, BREAK, FALLTHROUGH
+        CONTINUE, BREAK, FALLTHROUGH, RESET_COMPLETE
     }
 
     abstract public Command doLoopControl(Context ctx, int nextTickWithData);
