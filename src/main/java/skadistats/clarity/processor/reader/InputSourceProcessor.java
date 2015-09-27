@@ -88,16 +88,22 @@ public class InputSourceProcessor {
         int compressedFlag = ctx.getEngineType().getCompressedFlag();
         outer: while (true) {
             int offset = src.getPosition();
-            int kind;
+            int kind = 0;
             try {
                 kind = src.readVarInt32();
             } catch (EOFException e) {
                 LoopController.Command loopCtl = ctl.doLoopControl(ctx, Integer.MAX_VALUE);
-                if (loopCtl == LoopController.Command.CONTINUE) {
+                if (loopCtl == LoopController.Command.FALLTHROUGH) {
                     continue;
-                } else {
-                    // FALLTHROUGH at end of stream means to break also.
-                    break;
+                } else if (loopCtl == LoopController.Command.CONTINUE) {
+                    continue;
+                } else if (loopCtl == LoopController.Command.BREAK) {
+                    break outer;
+                } else if (loopCtl == LoopController.Command.RESET_COMPLETE) {
+                    if (evReset != null) {
+                        evReset.raise(null, ResetPhase.COMPLETE);
+                    }
+                    continue;
                 }
             }
             boolean isCompressed = (kind & compressedFlag) == compressedFlag;
