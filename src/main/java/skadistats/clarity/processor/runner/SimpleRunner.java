@@ -6,22 +6,24 @@ import java.io.IOException;
 
 public class SimpleRunner extends AbstractRunner<SimpleRunner> {
 
+    private final LoopController.Func controllerFunc = new LoopController.Func() {
+        @Override
+        public LoopController.Command doLoopControl(Context ctx, int upcomingTick) {
+            if (upcomingTick != tick) {
+                if (upcomingTick != Integer.MAX_VALUE) {
+                    endTicksUntil(ctx, upcomingTick - 1);
+                    startNewTick(ctx, upcomingTick);
+                } else {
+                    endTicksUntil(ctx, tick);
+                }
+            }
+            return LoopController.Command.FALLTHROUGH;
+        }
+    };
+
     public SimpleRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        this.loopController = new LoopController() {
-            @Override
-            public LoopController.Command doLoopControl(Context ctx, int upcomingTick) {
-                if (upcomingTick != tick) {
-                    if (upcomingTick != Integer.MAX_VALUE) {
-                        endTicksUntil(ctx, upcomingTick - 1);
-                        startNewTick(ctx, upcomingTick);
-                    } else {
-                        endTicksUntil(ctx, tick);
-                    }
-                }
-                return LoopController.Command.FALLTHROUGH;
-            }
-        };
+        this.loopController = new LoopController(controllerFunc);
     }
 
 }

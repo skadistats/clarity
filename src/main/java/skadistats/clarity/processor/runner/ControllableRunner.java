@@ -1,14 +1,11 @@
 package skadistats.clarity.processor.runner;
 
-import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.source.PacketPosition;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.util.Iterators;
+import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -21,10 +18,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     private Thread runnerThread;
 
-    private TreeSet<PacketPosition> fullPacketPositions = new TreeSet<>();
-    private ResetPhase resetPhase;
-    private PacketPosition resetPosition;
-    private TreeSet<PacketPosition> seekPositions;
+    private TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
+    private LinkedList<ResetStep> resetSteps;
 
     private Integer lastTick;
 
@@ -37,125 +32,170 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     private long t0;
 
+    private final LoopController.Func normalLoopControl = new LoopController.Func() {
+        @Override
+        public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
+            try {
+                upcomingTick = nextTickWithData;
+                if (upcomingTick == tick) {
+                    return LoopController.Command.FALLTHROUGH;
+                }
+                if (demandedTick != null) {
+                    handleDemandedTick();
+                    return LoopController.Command.AGAIN;
+                }
+                endTicksUntil(ctx, tick);
+                if (tick == wantedTick) {
+                    if (log.isDebugEnabled() && t0 != 0) {
+                        log.debug("now at {}. Took {} microns.", tick, (System.nanoTime() - t0) / 1000);
+                        t0 = 0;
+                    }
+                    wantedTickReached.signalAll();
+                    moreProcessingNeeded.await();
+                    if (demandedTick != null) {
+                        handleDemandedTick();
+                        return LoopController.Command.AGAIN;
+                    }
+                }
+                startNewTick(ctx, upcomingTick);
+                if (wantedTick < upcomingTick) {
+                    return LoopController.Command.AGAIN;
+                }
+                return LoopController.Command.FALLTHROUGH;
+            } catch (InterruptedException e) {
+                return LoopController.Command.BREAK;
+            } catch (IOException e) {
+                log.error("IO error in runner thread", e);
+                return LoopController.Command.BREAK;
+            }
+        }
+
+        private void handleDemandedTick() throws IOException {
+            if (tick < 0) {
+                wantedTick = 0;
+                setTick(tick + 1);
+            } else {
+                wantedTick = demandedTick;
+                demandedTick = null;
+                int diff = wantedTick - tick;
+                if (diff < 0 || diff > 200) {
+                    calculateResetSteps();
+                    loopController.controllerFunc = seekLoopControl;
+                }
+            }
+        }
+    };
+
+    private final LoopController.Func seekLoopControl = new LoopController.Func() {
+        @Override
+        public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
+            try {
+                upcomingTick = nextTickWithData;
+                ResetStep step = resetSteps.peekFirst();
+                switch (step.command) {
+                    case CONTINUE:
+                        resetSteps.pollFirst();
+                        source.setPosition(step.offset);
+                        return step.command;
+                    case RESET_FORWARD:
+                        if (wantedTick >= upcomingTick) {
+                            return LoopController.Command.FALLTHROUGH;
+                        }
+                        resetSteps.pollFirst();
+                        return LoopController.Command.AGAIN;
+                    case RESET_COMPLETE:
+                        resetSteps = null;
+                        loopController.controllerFunc = normalLoopControl;
+                        tick = wantedTick - 1;
+                        startNewTick(ctx, upcomingTick);
+                        return LoopController.Command.RESET_COMPLETE;
+                    default:
+                        resetSteps.pollFirst();
+                        return step.command;
+                }
+            } catch (IOException e) {
+                log.error("IO error in runner thread", e);
+                return LoopController.Command.BREAK;
+            }
+        }
+    };
+
+    private void calculateResetSteps() throws IOException {
+        TreeSet<PacketPosition> seekPositions = source.getResetPacketsBeforeTick(engineType, wantedTick, resetRelevantPackets);
+        seekPositions.pollFirst();
+
+        resetSteps = new LinkedList<>();
+        resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
+        while (seekPositions.size() > 0) {
+            PacketPosition pp = seekPositions.pollFirst();
+            switch (pp.getKind()) {
+                case STRINGTABLE:
+                case FULL_PACKET:
+                    resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
+                    resetSteps.add(new ResetStep(LoopController.Command.RESET_ACCUMULATE, null));
+                    if (seekPositions.size() == 0) {
+                        resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
+                    }
+                    break;
+                case SYNC:
+                    if (seekPositions.size() == 0) {
+                        resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
+                        resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
+                    }
+                    break;
+            }
+        }
+        resetSteps.add(new ResetStep(LoopController.Command.RESET_FORWARD, null));
+        resetSteps.add(new ResetStep(LoopController.Command.RESET_COMPLETE, null));
+    }
+
+
+    public class LockingLoopController extends LoopController {
+
+        public LockingLoopController(Func controllerFunc) {
+            super(controllerFunc);
+        }
+
+        @Override
+        public Command doLoopControl(Context ctx, int nextTick) {
+            try {
+                lock.lockInterruptibly();
+            } catch (InterruptedException e) {
+                return Command.BREAK;
+            }
+            try {
+                return super.doLoopControl(ctx, nextTick);
+            } finally {
+                lock.unlock();
+            }
+        }
+
+        @Override
+        public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {
+            lock.lock();
+            try {
+                resetRelevantPackets.add(PacketPosition.createPacketPosition(tick, kind, offset));
+            } finally {
+                lock.unlock();
+            }
+        }
+    }
+
+    public static class ResetStep {
+        private final LoopController.Command command;
+        private final Integer offset;
+        public ResetStep(LoopController.Command command, Integer offset) {
+            this.command = command;
+            this.offset = offset;
+        }
+    }
+
     public ControllableRunner(Source s) throws IOException {
         super(s, s.readEngineType());
+        resetRelevantPackets.add(PacketPosition.createPacketPosition(engineType.getInitialTick(), Demo.EDemoCommands.DEM_SyncTick_VALUE, s.getPosition()));
         upcomingTick = tick;
         wantedTick = tick;
-        this.loopController = new LoopController() {
-            @Override
-            public Command doLoopControl(Context ctx, int nextTick) {
-                try {
-                    lock.lockInterruptibly();
-                } catch (InterruptedException e) {
-                    return Command.BREAK;
-                }
-                try {
-                    upcomingTick = nextTick;
-                    if ((resetPhase == null && upcomingTick == tick) || resetPosition != null) {
-                        return Command.FALLTHROUGH;
-                    }
-                    while (true) {
-                        if ((demandedTick == null && resetPhase == null)) {
-                            endTicksUntil(ctx, tick);
-                            if (tick == wantedTick) {
-                                if (log.isDebugEnabled() && t0 != 0) {
-                                    log.debug("now at {}. Took {} microns.", tick, (System.nanoTime() - t0) / 1000);
-                                    t0 = 0;
-                                }
-                                wantedTickReached.signalAll();
-                                moreProcessingNeeded.await();
-                            }
-                            if (demandedTick != null) {
-                                continue;
-                            }
-                            startNewTick(ctx, upcomingTick);
-                            if (wantedTick < upcomingTick) {
-                                continue;
-                            }
-                            return Command.FALLTHROUGH;
-                        } else {
-                            if (tick < 0) {
-                                wantedTick = 0;
-                                setTick(tick + 1);
-                                return Command.FALLTHROUGH;
-                            }
-                            if (demandedTick == null && resetPhase == ResetPhase.FORWARD_TO_WANTED) {
-                                if (wantedTick >= upcomingTick) {
-                                    return Command.FALLTHROUGH;
-                                }
-                                resetPhase = null;
-                                tick = wantedTick - 1;
-                                startNewTick(ctx, upcomingTick);
-                                return Command.RESET_COMPLETE;
-                            }
-                            if (resetPhase == null && wantedTick != tick) {
-                                endTicksUntil(ctx, tick);
-                            }
-                            if (demandedTick != null) {
-                                wantedTick = demandedTick;
-                                demandedTick = null;
-                                int diff = wantedTick - tick;
-                                if (resetPhase == null && diff >= 0 && diff <= 200) {
-                                    continue;
-                                }
-                                seekPositions = source.getFullPacketsBeforeTick(engineType, wantedTick, fullPacketPositions);
-                                resetPhase = ResetPhase.CLEAR;
-                            }
-                            resetPosition = seekPositions.pollFirst();
-                            upcomingTick = resetPosition.getTick();
-                            source.setPosition(resetPosition.getOffset());
-                            return Command.CONTINUE;
-                        }
-                    }
-                } catch (IOException e) {
-                    log.error("IO error in runner thread", e);
-                    return Command.BREAK;
-                } catch (InterruptedException e) {
-                    return Command.BREAK;
-                } finally {
-                    lock.unlock();
-                }
-            }
-
-            @Override
-            public void markCDemoStringTables(int tick, int offset) throws IOException {
-                lock.lock();
-                try {
-                    if (resetPhase == null) {
-                        fullPacketPositions.add(new PacketPosition(tick, offset));
-                    }
-                } finally {
-                    lock.unlock();
-                }
-            }
-
-            @Override
-            public Iterator<ResetPhase> evaluateResetPhases() throws IOException {
-                lock.lock();
-                try {
-                    if (seekPositions == null) {
-                        return Iterators.emptyIterator();
-                    }
-                    List<ResetPhase> phaseList = new LinkedList<>();
-                    if (resetPhase == ResetPhase.CLEAR) {
-                        resetPhase = ResetPhase.STRINGTABLE_ACCUMULATION;
-                        phaseList.add(ResetPhase.CLEAR);
-                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
-                    } else if (!seekPositions.isEmpty()) {
-                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
-                    }
-                    if (seekPositions.isEmpty()) {
-                        resetPhase = ResetPhase.FORWARD_TO_WANTED;
-                        phaseList.add(ResetPhase.STRINGTABLE_ACCUMULATION);
-                        phaseList.add(ResetPhase.STRINGTABLE_APPLY);
-                    }
-                    resetPosition = null;
-                    return phaseList.iterator();
-                } finally {
-                    lock.unlock();
-                }
-            }
-        };
+        this.loopController = new LockingLoopController(normalLoopControl);
     }
 
     @Override
@@ -177,7 +217,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     public boolean isResetting() {
         lock.lock();
         try {
-            return resetPhase != null;
+            return loopController.controllerFunc == seekLoopControl;
         } finally {
             lock.unlock();
         }

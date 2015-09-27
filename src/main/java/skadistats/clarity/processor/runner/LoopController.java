@@ -1,24 +1,36 @@
 package skadistats.clarity.processor.runner;
 
-import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.util.Iterators;
-
 import java.io.IOException;
-import java.util.Iterator;
 
-public abstract class LoopController {
+public class LoopController {
 
     public enum Command {
-        CONTINUE, BREAK, FALLTHROUGH, RESET_COMPLETE
+        CONTINUE,
+        BREAK,
+        FALLTHROUGH,
+        AGAIN,
+
+        RESET_CLEAR,
+        RESET_ACCUMULATE,
+        RESET_APPLY,
+        RESET_FORWARD, RESET_COMPLETE
     }
 
-    abstract public Command doLoopControl(Context ctx, int nextTickWithData);
-
-    public void markCDemoStringTables(int tick, int offset) throws IOException {
+    public interface Func {
+        Command doLoopControl(Context ctx, int nextTickWithData);
     }
 
-    public Iterator<ResetPhase> evaluateResetPhases() throws IOException {
-        return Iterators.emptyIterator();
+    public LoopController(Func controllerFunc) {
+        this.controllerFunc = controllerFunc;
     }
+
+    protected Func controllerFunc;
+
+    public Command doLoopControl(Context ctx, int nextTickWithData) {
+        return controllerFunc.doLoopControl(ctx, nextTickWithData);
+    }
+
+    public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {}
+
 
 }

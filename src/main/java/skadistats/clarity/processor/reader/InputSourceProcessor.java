@@ -25,7 +25,6 @@ import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -86,47 +85,71 @@ public class InputSourceProcessor {
     @OnInputSource
     public void processSource(Context ctx, Source src, LoopController ctl) throws IOException {
         int compressedFlag = ctx.getEngineType().getCompressedFlag();
-        outer: while (true) {
-            int offset = src.getPosition();
-            int kind = 0;
+
+        ByteString resetFullPacketData = null;
+
+        int offset;
+        int kind;
+        boolean isCompressed;
+        int tick;
+        int size;
+        LoopController.Command loopCtl;
+
+        main: while (true) {
+            offset = src.getPosition();
             try {
                 kind = src.readVarInt32();
+                isCompressed = (kind & compressedFlag) == compressedFlag;
+                kind &= ~compressedFlag;
+                tick = src.readVarInt32();
+                size = src.readVarInt32();
             } catch (EOFException e) {
-                LoopController.Command loopCtl = ctl.doLoopControl(ctx, Integer.MAX_VALUE);
-                if (loopCtl == LoopController.Command.FALLTHROUGH) {
-                    continue;
-                } else if (loopCtl == LoopController.Command.CONTINUE) {
-                    continue;
-                } else if (loopCtl == LoopController.Command.BREAK) {
-                    break outer;
-                } else if (loopCtl == LoopController.Command.RESET_COMPLETE) {
-                    if (evReset != null) {
-                        evReset.raise(null, ResetPhase.COMPLETE);
-                    }
-                    continue;
-                }
+                kind = -1;
+                isCompressed = false;
+                tick = Integer.MAX_VALUE;
+                size = 0;
             }
-            boolean isCompressed = (kind & compressedFlag) == compressedFlag;
-            kind &= ~compressedFlag;
-            int tick = src.readVarInt32();
-            int size = src.readVarInt32();
-            while (true) {
-                LoopController.Command loopCtl = ctl.doLoopControl(ctx, tick);
-                if (loopCtl == LoopController.Command.FALLTHROUGH) {
-                    break;
-                } else if (loopCtl == LoopController.Command.CONTINUE) {
-                    continue outer;
-                } else if (loopCtl == LoopController.Command.BREAK) {
-                    break outer;
-                } else if (loopCtl == LoopController.Command.RESET_COMPLETE) {
-                    if (evReset != null) {
-                        evReset.raise(null, ResetPhase.COMPLETE);
-                    }
+            loopctl: while (true) {
+                loopCtl = ctl.doLoopControl(ctx, tick);
+                switch(loopCtl) {
+                    case RESET_CLEAR:
+                        if (evReset != null) {
+                            evReset.raise(null, ResetPhase.CLEAR);
+                        }
+                        continue loopctl;
+                    case RESET_ACCUMULATE:
+                        // accumulate a single string table change
+                        break loopctl;
+                    case RESET_APPLY:
+                        if (evReset != null) {
+                            // apply string table changes
+                            evReset.raise(null, ResetPhase.APPLY);
+                        }
+                        if (resetFullPacketData != null) {
+                            // apply full packet for entities
+                            ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, resetFullPacketData);
+                            resetFullPacketData = null;
+                        }
+                        continue loopctl;
+                    case RESET_COMPLETE:
+                        if (evReset != null) {
+                            evReset.raise(null, ResetPhase.COMPLETE);
+                        }
+                        continue loopctl;
+                    case FALLTHROUGH:
+                        if (tick != Integer.MAX_VALUE) {
+                            break loopctl;
+                        }
+                        // if at end, fallthrough is a break from main
+                    case BREAK:
+                        break main;
+                    case CONTINUE:
+                        continue main;
+                    case AGAIN:
+                        continue loopctl;
                 }
             }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
-            Demo.CDemoFullPacket fullPacket = null;
-            Demo.CDemoStringTables stringTables = null;
             if (messageClass == null) {
                 logUnknownMessage(ctx, "top level", kind);
                 src.skipBytes(size);
@@ -138,45 +161,43 @@ public class InputSourceProcessor {
                 ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 if (evFull != null || evReset != null) {
-                    fullPacket = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                    Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                    if (evFull != null) {
+                        evFull.raise(message);
+                    }
+                    if (evReset != null) {
+                        ctl.markResetRelevantPacket(tick, kind, offset);
+                        switch (loopCtl) {
+                            case RESET_ACCUMULATE:
+                                evReset.raise(message.getStringTable(), ResetPhase.ACCUMULATE);
+                                resetFullPacketData = message.getPacket().getData();
+                                break;
+                        }
+                    }
                 } else {
                     src.skipBytes(size);
-                }
-                if (evFull != null) {
-                    evFull.raise(fullPacket);
-                }
-                if (evReset != null) {
-                    ctl.markCDemoStringTables(tick, offset);
-                    stringTables = fullPacket.getStringTable();
                 }
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                boolean markStringTables = evReset != null && messageClass == Demo.CDemoStringTables.class;
-                GeneratedMessage message = null;
-                if (ev.isListenedTo() || markStringTables) {
-                    message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                boolean stringTables = messageClass == Demo.CDemoStringTables.class;
+                boolean resetRelevant = evReset != null && (stringTables || messageClass == Demo.CDemoSyncTick.class);
+                if (ev.isListenedTo() || resetRelevant) {
+                    GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                    if (ev.isListenedTo()) {
+                        ev.raise(message);
+                    }
+                    if (resetRelevant) {
+                        ctl.markResetRelevantPacket(tick, kind, offset);
+                        if (stringTables) {
+                            switch (loopCtl) {
+                                case RESET_ACCUMULATE:
+                                    evReset.raise(message, ResetPhase.ACCUMULATE);
+                                    break;
+                            }
+                        }
+                    }
                 } else {
                     src.skipBytes(size);
-                }
-                if (ev.isListenedTo()) {
-                    ev.raise(message);
-                }
-                if (markStringTables) {
-                    ctl.markCDemoStringTables(tick, offset);
-                    stringTables = (Demo.CDemoStringTables) message;
-                }
-            }
-            if (stringTables != null) {
-                Iterator<ResetPhase> phases = ctl.evaluateResetPhases();
-                if (evReset != null && phases.hasNext()) {
-                    ResetPhase phase = null;
-                    while (phases.hasNext()) {
-                        phase = phases.next();
-                        evReset.raise(stringTables, phase);
-                    }
-                    if (phase == ResetPhase.STRINGTABLE_APPLY && fullPacket != null) {
-                        ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, fullPacket.getPacket().getData());
-                    }
                 }
             }
         }

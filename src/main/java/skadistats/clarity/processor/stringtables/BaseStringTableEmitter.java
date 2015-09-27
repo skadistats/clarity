@@ -83,14 +83,14 @@ public class BaseStringTableEmitter {
             for (StringTable table : stringTables.byName.values()) {
                 table.reset();
             }
-        } else if (phase == ResetPhase.STRINGTABLE_ACCUMULATION) {
+        } else if (phase == ResetPhase.ACCUMULATE) {
             for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
                 if (!stringTables.byName.containsKey(tt.getTableName())) {
                     continue;
                 }
                 resetStringTables.put(tt.getTableName(), tt);
             }
-        } else if (phase == ResetPhase.STRINGTABLE_APPLY) {
+        } else if (phase == ResetPhase.APPLY) {
             for (StringTable table : stringTables.byName.values()) {
                 Demo.CDemoStringTables.table_t tt = resetStringTables.get(table.getName());
                 if (tt != null) {
