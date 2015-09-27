@@ -174,6 +174,15 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
         return this;
     }
 
+    public boolean isResetting() {
+        lock.lock();
+        try {
+            return resetPhase != null;
+        } finally {
+            lock.unlock();
+        }
+    }
+
     public void setDemandedTick(int demandedTick) {
         lock.lock();
         try {
