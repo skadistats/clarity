@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class })
+@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class })
 @UsesDTClasses
 public class Entities {
 
@@ -41,6 +41,7 @@ public class Entities {
     private Event<OnEntityDeleted> evDeleted;
     private Event<OnEntityEntered> evEntered;
     private Event<OnEntityLeft> evLeft;
+    private Event<OnEntityUpdatesCompleted> evUpdatesCompleted;
 
     private class BaselineEntry {
         private ByteString rawBaseline;
@@ -84,6 +85,12 @@ public class Entities {
     public void initOnEntityLeft(final Context ctx, final EventListener<OnEntityLeft> eventListener) {
         initEngineDependentFields(ctx);
         evLeft = ctx.createEvent(OnEntityLeft.class, Entity.class);
+    }
+
+    @Initializer(OnEntityUpdatesCompleted.class)
+    public void initOnEntityUpdatesCompleted(final Context ctx, final EventListener<OnEntityUpdatesCompleted> eventListener) {
+        initEngineDependentFields(ctx);
+        evUpdatesCompleted = ctx.createEvent(OnEntityUpdatesCompleted.class);
     }
 
     private void initEngineDependentFields(Context ctx) {
@@ -215,6 +222,11 @@ public class Entities {
                 entities[entityIndex] = null;
             }
         }
+
+        if (evUpdatesCompleted != null) {
+            evUpdatesCompleted.raise();
+        }
+
     }
 
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
