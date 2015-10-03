@@ -44,7 +44,7 @@ public class S1FieldReader extends FieldReader<S1DTClass> {
                         cursor += offset + 1;
                     }
                 }
-                fieldPaths[n++] = new FieldPath(cursor);
+                fieldPaths[n++] = new FieldPath(dtClass.getIndexMapping()[cursor]);
             }
 
             ReceiveProp[] receiveProps = dtClass.getReceiveProps();

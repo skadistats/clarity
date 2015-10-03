@@ -16,6 +16,7 @@ public class S1DTClass implements DTClass {
     private final SendTable sendTable;
     private int classId = -1;
     private ReceiveProp[] receiveProps;
+    private int[] indexMapping;
     private Map<String, Integer> propsByName;
     private S1DTClass superClass;
 
@@ -94,6 +95,13 @@ public class S1DTClass implements DTClass {
         }
     }
 
+    public int[] getIndexMapping() {
+        return indexMapping;
+    }
+
+    public void setIndexMapping(int[] indexMapping) {
+        this.indexMapping = indexMapping;
+    }
 
     private static final ReentrantLock DEBUG_LOCK = new ReentrantLock();
     private static final TextTable DEBUG_DUMPER = new TextTable.Builder()

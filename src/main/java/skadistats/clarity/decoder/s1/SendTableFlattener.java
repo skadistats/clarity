@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder.s1;
 
-import skadistats.clarity.model.s1.*;
+import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.sendtables.DTClasses;
 
 import java.util.*;
@@ -68,35 +69,49 @@ public class SendTableFlattener {
         }
     }
 
-    private List<ReceiveProp> sort() {
-        List<ReceiveProp> sorted = new ArrayList<>(receiveProps);
+    private int[] computeIndexMapping() {
+        int[] mapping =  new int[receiveProps.size()];
+        for (int i = 0; i < mapping.length; i++) {
+            mapping[i] = i;
+        }
+
         Set<Integer> priorities = new TreeSet<>();
         priorities.add(64);
-        for (ReceiveProp rp : sorted) {
+        for (ReceiveProp rp : receiveProps) {
             priorities.add(rp.getSendProp().getPriority());
         }
         int hole = 0;
 
         for (Integer priority : priorities) {
             int cursor = hole;
-            while (cursor < sorted.size()) {
-                ReceiveProp rp = sorted.get(cursor);
+            while (cursor < mapping.length) {
+                ReceiveProp rp = receiveProps.get(mapping[cursor]);
                 SendProp sp = rp.getSendProp();
                 boolean changesOften = (sp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
                 if (changesOften || sp.getPriority() == priority) {
-                    Collections.swap(sorted, cursor, hole);
+                    int temp = mapping[cursor];
+                    mapping[cursor] = mapping[hole];
+                    mapping[hole] = temp;
                     hole++;
                 }
                 cursor++;
             }
         }
-        return sorted;
+        return mapping;
     }
 
-    public List<ReceiveProp> flatten() {
+    public Result flatten() {
         aggregateExclusions(table);
         gather(table, new LinkedList<SendProp>(), new StringBuilder());
-        return sort();
+        Result r = new Result();
+        r.receiveProps = receiveProps.toArray(new ReceiveProp[] {});
+        r.indexMapping = computeIndexMapping();
+        return r;
+    }
+
+    public static class Result {
+        public ReceiveProp[] receiveProps;
+        public int[] indexMapping;
     }
 
 }
