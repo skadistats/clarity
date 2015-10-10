@@ -98,7 +98,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public boolean isAttackerHero() {
-        return e.getProperty(indices.attackerHeroIdx);
+        return indices.attackerHeroIdx != null ? (boolean) e.getProperty(indices.attackerHeroIdx) : true;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public boolean isTargetHero() {
-        return e.getProperty(indices.targetHeroIdx);
+        return indices.targetHeroIdx != null ? (boolean) e.getProperty(indices.targetHeroIdx) : true;
     }
 
     @Override
@@ -203,7 +203,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public boolean isAbilityToggleOn() {
-        return e.getProperty(indices.abilityToggleOnIdx);
+        return indices.abilityToggleOnIdx != null ? (boolean) e.getProperty(indices.abilityToggleOnIdx) : false;
     }
 
     @Override
@@ -213,7 +213,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public boolean isAbilityToggleOff() {
-        return e.getProperty(indices.abilityToggleOffIdx);
+        return indices.abilityToggleOffIdx != null ? (boolean) e.getProperty(indices.abilityToggleOffIdx) : false;
     }
 
     @Override
@@ -223,7 +223,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public int getAbilityLevel() {
-        return e.getProperty(indices.abilityLevelIdx);
+        return indices.abilityLevelIdx != null ? (int) e.getProperty(indices.abilityLevelIdx) : 0;
     }
 
     @Override
@@ -253,7 +253,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public int getGoldReason() {
-        return e.getProperty(indices.goldReasonIdx);
+        return indices.goldReasonIdx != null ? (int) e.getProperty(indices.goldReasonIdx) : 0;
     }
 
     @Override
@@ -263,7 +263,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public float getTimestampRaw() {
-        return e.getProperty(indices.timestampRawIdx);
+        return indices.timestampRawIdx == null ? (float) e.getProperty(indices.timestampRawIdx) : 0.0f;
     }
 
     @Override
@@ -283,7 +283,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public int getXpReason() {
-        return e.getProperty(indices.xpReasonIdx);
+        return indices.xpReasonIdx != null ? (int) e.getProperty(indices.xpReasonIdx) : 0;
     }
 
     @Override
