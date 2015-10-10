@@ -5,6 +5,9 @@ import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.wire.common.proto.DotaUserMessages;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class S1CombatLogEntry implements CombatLogEntry {
 
     private final S1CombatLogIndices indices;
@@ -327,43 +330,13 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public boolean hasAssistPlayer0() {
+    public boolean hasAssistPlayers() {
         return false;
     }
 
     @Override
-    public int getAssistPlayer0() {
-        return 0;
-    }
-
-    @Override
-    public boolean hasAssistPlayer1() {
-        return false;
-    }
-
-    @Override
-    public int getAssistPlayer1() {
-        return 0;
-    }
-
-    @Override
-    public boolean hasAssistPlayer2() {
-        return false;
-    }
-
-    @Override
-    public int getAssistPlayer2() {
-        return 0;
-    }
-
-    @Override
-    public boolean hasAssistPlayer3() {
-        return false;
-    }
-
-    @Override
-    public int getAssistPlayer3() {
-        return 0;
+    public List<Integer> getAssistPlayers() {
+        return new ArrayList<>();
     }
 
     @Override

@@ -4,6 +4,8 @@ import skadistats.clarity.model.CombatLogEntry;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.wire.common.proto.DotaUserMessages;
 
+import java.util.List;
+
 public class S2CombatLogEntry implements CombatLogEntry {
 
     private final StringTable combatLogNames;
@@ -324,43 +326,13 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public boolean hasAssistPlayer0() {
-        return e.hasAssistPlayer0();
+    public boolean hasAssistPlayers() {
+        return e.getAssistPlayersCount() != 0;
     }
 
     @Override
-    public int getAssistPlayer0() {
-        return e.getAssistPlayer0();
-    }
-
-    @Override
-    public boolean hasAssistPlayer1() {
-        return e.hasAssistPlayer1();
-    }
-
-    @Override
-    public int getAssistPlayer1() {
-        return e.getAssistPlayer1();
-    }
-
-    @Override
-    public boolean hasAssistPlayer2() {
-        return e.hasAssistPlayer2();
-    }
-
-    @Override
-    public int getAssistPlayer2() {
-        return e.getAssistPlayer2();
-    }
-
-    @Override
-    public boolean hasAssistPlayer3() {
-        return e.hasAssistPlayer3();
-    }
-
-    @Override
-    public int getAssistPlayer3() {
-        return e.getAssistPlayer3();
+    public List<Integer> getAssistPlayers() {
+        return e.getAssistPlayersList();
     }
 
     @Override

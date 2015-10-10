@@ -1,6 +1,8 @@
 package skadistats.clarity.model;
 import skadistats.clarity.wire.common.proto.DotaUserMessages;
 
+import java.util.List;
+
 public interface CombatLogEntry {
     boolean hasType();
     DotaUserMessages.DOTA_COMBATLOG_TYPES getType();
@@ -63,14 +65,8 @@ public interface CombatLogEntry {
     int getTargetTeam();
     boolean hasObsWardsPlaced();
     int getObsWardsPlaced();
-    boolean hasAssistPlayer0();
-    int getAssistPlayer0();
-    boolean hasAssistPlayer1();
-    int getAssistPlayer1();
-    boolean hasAssistPlayer2();
-    int getAssistPlayer2();
-    boolean hasAssistPlayer3();
-    int getAssistPlayer3();
+    boolean hasAssistPlayers();
+    List<Integer> getAssistPlayers();
     boolean hasStackCount();
     int getStackCount();
     boolean hasHiddenModifier();
