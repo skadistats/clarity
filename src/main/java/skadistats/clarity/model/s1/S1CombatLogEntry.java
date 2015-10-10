@@ -63,12 +63,12 @@ public class S1CombatLogEntry implements CombatLogEntry {
 
     @Override
     public boolean hasDamageSourceName() {
-        return false;
+        return (int) e.getProperty(indices.sourceNameIdx) != 0;
     }
 
     @Override
     public String getDamageSourceName() {
-        return null;
+        return readCombatLogName((int) e.getProperty(indices.sourceNameIdx));
     }
 
     @Override
