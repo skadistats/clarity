@@ -36,13 +36,11 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
 
             ByteString data = message.getStringData();
             if (message.getDataCompressed()) {
-                byte[] src = ZeroCopy.extract(data);
                 byte[] dst;
                 if (ctx.getBuildNumber() != -1 && ctx.getBuildNumber() <= 962) {
-                    dst = new byte[message.getUncompressedSize()];
-                    LZSS.unpack(src, dst);
+                    dst = LZSS.unpack(data);
                 } else {
-                    dst = Snappy.uncompress(src);
+                    dst = Snappy.uncompress(ZeroCopy.extract(data));
                 }
                 data = ZeroCopy.wrap(dst);
             }
