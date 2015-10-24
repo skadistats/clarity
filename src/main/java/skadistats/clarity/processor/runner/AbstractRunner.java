@@ -87,4 +87,8 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
         return context;
     }
 
+    public Source getSource() {
+        return source;
+    }
+
 }

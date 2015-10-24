@@ -29,6 +29,7 @@ public abstract class Source {
 
     protected Integer lastTick;
 
+
     /**
      * returns the current position
      *
@@ -214,6 +215,14 @@ public abstract class Source {
             lastTick = readVarInt32();
         }
         return lastTick.intValue();
+    }
+
+    /**
+     * closes the source
+     *
+     * @throws IOException if closing the source fails
+     */
+    public void close() throws IOException {
     }
 
 }
