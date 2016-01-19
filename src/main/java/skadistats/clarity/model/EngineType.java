@@ -16,7 +16,6 @@ public enum EngineType {
     SOURCE1(
         "PBUFDEM\0",
         Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
-        -1,
         false, // has 4 extra header bytes
         true,   // CDemoSendTables is container
         11, 10
@@ -46,7 +45,6 @@ public enum EngineType {
     SOURCE2(
         "PBDEMS2\0",
         Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
-        -2,
         true, // has 4 extra header bytes
         false, // CDemoSendTables is container
         14, 17
@@ -76,7 +74,6 @@ public enum EngineType {
 
     private final String magic;
     private final int compressedFlag;
-    private final int initialTick;
     private final boolean extraHeaderInt32;
     private final boolean sendTablesContainer;
     private final int indexBits;
@@ -85,10 +82,9 @@ public enum EngineType {
 
 
 
-    EngineType(String magic, int compressedFlag, int initialTick, boolean extraHeaderInt32, boolean sendTablesContainer, int indexBits, int serialBits) {
+    EngineType(String magic, int compressedFlag, boolean extraHeaderInt32, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.magic = magic;
         this.compressedFlag = compressedFlag;
-        this.initialTick = initialTick;
         this.extraHeaderInt32 = extraHeaderInt32;
         this.sendTablesContainer = sendTablesContainer;
         this.indexBits = indexBits;
@@ -102,10 +98,6 @@ public enum EngineType {
 
     public int getCompressedFlag() {
         return compressedFlag;
-    }
-
-    public int getInitialTick() {
-        return initialTick;
     }
 
     public boolean isSendTablesContainer() {

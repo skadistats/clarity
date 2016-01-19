@@ -179,7 +179,7 @@ public class InputSourceProcessor {
                 }
             } else {
                 if (messageClass == Demo.CDemoSyncTick.class) {
-                    ctl.markSyncTickSeen();
+                    ctl.setSyncTickSeen(true);
                 }
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 boolean stringTables = messageClass == Demo.CDemoStringTables.class;

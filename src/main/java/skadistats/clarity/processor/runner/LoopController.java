@@ -25,6 +25,7 @@ public class LoopController {
     }
 
     protected Func controllerFunc;
+    protected boolean syncTickSeen = false;
 
     public Command doLoopControl(Context ctx, int nextTickWithData) {
         return controllerFunc.doLoopControl(ctx, nextTickWithData);
@@ -32,6 +33,12 @@ public class LoopController {
 
     public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {}
 
-    public void markSyncTickSeen() {}
+    public boolean isSyncTickSeen() {
+        return syncTickSeen;
+    }
+
+    public void setSyncTickSeen(boolean syncTickSeen) {
+        this.syncTickSeen = syncTickSeen;
+    }
 
 }

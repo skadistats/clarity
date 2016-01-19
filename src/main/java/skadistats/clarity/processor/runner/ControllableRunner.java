@@ -30,20 +30,25 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     /* tick the user wanted to be at the end of */
     private Integer demandedTick;
 
-    private boolean syncTickSeen = false;
-
     private long t0;
 
     private final LoopController.Func normalLoopControl = new LoopController.Func() {
         @Override
         public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
             try {
+                if (!loopController.isSyncTickSeen()) {
+                    if (tick == -1) {
+                        startNewTick(ctx, 0);
+                    }
+                    return LoopController.Command.FALLTHROUGH;
+                }
                 upcomingTick = nextTickWithData;
                 if (upcomingTick == tick) {
                     return LoopController.Command.FALLTHROUGH;
                 }
                 if (demandedTick != null) {
-                    return handleDemandedTick();
+                    handleDemandedTick();
+                    return LoopController.Command.AGAIN;
                 }
                 endTicksUntil(ctx, tick);
                 if (tick == wantedTick) {
@@ -71,20 +76,13 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             }
         }
 
-        private LoopController.Command handleDemandedTick() throws IOException {
-            if (!syncTickSeen) {
-                wantedTick = upcomingTick;
-                setTick(upcomingTick);
-                return LoopController.Command.FALLTHROUGH;
-            } else {
-                wantedTick = demandedTick;
-                demandedTick = null;
-                int diff = wantedTick - tick;
-                if (diff < 0 || diff > 200) {
-                    calculateResetSteps();
-                    loopController.controllerFunc = seekLoopControl;
-                }
-                return LoopController.Command.AGAIN;
+        private void handleDemandedTick() throws IOException {
+            wantedTick = demandedTick;
+            demandedTick = null;
+            int diff = wantedTick - tick;
+            if (diff < 0 || diff > 200) {
+                calculateResetSteps();
+                loopController.controllerFunc = seekLoopControl;
             }
         }
     };
@@ -182,11 +180,6 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                 lock.unlock();
             }
         }
-
-        @Override
-        public void markSyncTickSeen() {
-            syncTickSeen = true;
-        }
     }
 
     public static class ResetStep {
@@ -200,7 +193,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
 
     public ControllableRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        resetRelevantPackets.add(PacketPosition.createPacketPosition(engineType.getInitialTick(), Demo.EDemoCommands.DEM_SyncTick_VALUE, s.getPosition()));
+        resetRelevantPackets.add(PacketPosition.createPacketPosition(-1, Demo.EDemoCommands.DEM_SyncTick_VALUE, s.getPosition()));
         upcomingTick = tick;
         wantedTick = tick;
         this.loopController = new LockingLoopController(normalLoopControl);

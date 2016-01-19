@@ -27,7 +27,7 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     public AbstractRunner(Source source, EngineType engineType) throws IOException {
         this.source = source;
         this.engineType = engineType;
-        this.tick = engineType.getInitialTick();
+        this.tick = -1;
         engineType.skipHeaderOffsets(source);
     }
 
@@ -41,17 +41,13 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     protected void endTicksUntil(Context ctx, int untilTick) {
         while (tick < untilTick) {
-            if (tick != engineType.getInitialTick()) {
-                ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
-            }
+            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
             setTick(tick + 1);
             synthetic = true;
             ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
         }
-        if (tick != engineType.getInitialTick()) {
-            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
-            synthetic = false;
-        }
+        ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
+        synthetic = false;
     }
 
     protected void startNewTick(Context ctx, int upcomingTick) {
