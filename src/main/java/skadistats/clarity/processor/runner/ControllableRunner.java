@@ -30,6 +30,8 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
     /* tick the user wanted to be at the end of */
     private Integer demandedTick;
 
+    private boolean syncTickSeen = false;
+
     private long t0;
 
     private final LoopController.Func normalLoopControl = new LoopController.Func() {
@@ -41,8 +43,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                     return LoopController.Command.FALLTHROUGH;
                 }
                 if (demandedTick != null) {
-                    handleDemandedTick();
-                    return LoopController.Command.AGAIN;
+                    return handleDemandedTick();
                 }
                 endTicksUntil(ctx, tick);
                 if (tick == wantedTick) {
@@ -70,10 +71,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             }
         }
 
-        private void handleDemandedTick() throws IOException {
-            if (tick < 0) {
-                wantedTick = 0;
-                setTick(tick + 1);
+        private LoopController.Command handleDemandedTick() throws IOException {
+            if (!syncTickSeen) {
+                wantedTick = upcomingTick;
+                setTick(upcomingTick);
+                return LoopController.Command.FALLTHROUGH;
             } else {
                 wantedTick = demandedTick;
                 demandedTick = null;
@@ -82,6 +84,7 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
                     calculateResetSteps();
                     loopController.controllerFunc = seekLoopControl;
                 }
+                return LoopController.Command.AGAIN;
             }
         }
     };
@@ -178,6 +181,11 @@ public class ControllableRunner extends AbstractRunner<ControllableRunner> {
             } finally {
                 lock.unlock();
             }
+        }
+
+        @Override
+        public void markSyncTickSeen() {
+            syncTickSeen = true;
         }
     }
 

@@ -32,5 +32,6 @@ public class LoopController {
 
     public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {}
 
+    public void markSyncTickSeen() {}
 
 }
