@@ -33,7 +33,7 @@ public class InputSourceProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
 
-    private final byte[][] buffer = new byte[][] { new byte[512*1024], new byte[512*1024], new byte[512*1024] };
+    private final byte[][] buffer = new byte[][] { new byte[128*1024], new byte[256*1024], new byte[128*1024] };
 
     // TODO: set to false when issue #58 is closed.
     private boolean unpackUserMessages = true;
@@ -68,10 +68,19 @@ public class InputSourceProcessor {
         });
     }
 
+    private void ensureBufferCapacity(int n, int capacity) {
+        if (buffer[n].length < capacity) {
+            buffer[n] = new byte[capacity];
+        }
+    }
+
     private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
+        ensureBufferCapacity(0, size);
         source.readBytes(buffer[0], 0, size);
         if (isCompressed) {
-            int sizeUncompressed = Snappy.rawUncompress(buffer[0], 0, size, buffer[1], 0);
+            int sizeUncompressed = Snappy.uncompressedLength(buffer[0], 0, size);
+            ensureBufferCapacity(1, sizeUncompressed);
+            Snappy.rawUncompress(buffer[0], 0, size, buffer[1], 0);
             return ZeroCopy.wrapBounded(buffer[1], 0, sizeUncompressed);
         } else {
             return ZeroCopy.wrapBounded(buffer[0], 0, size);
@@ -223,6 +232,7 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                    ensureBufferCapacity(2, size);
                     bs.readBitsIntoByteArray(buffer[2], size * 8);
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrapBounded(buffer[2], 0, size));
                     if (ev.isListenedTo()) {
