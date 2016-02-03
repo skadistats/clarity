@@ -77,4 +77,29 @@ public interface CombatLogEntry {
     int getNeutralCampType();
     boolean hasRuneType();
     int getRuneType();
+    boolean hasHealSave();
+    boolean isHealSave();
+    boolean hasUltimateAbility();
+    boolean isUltimateAbility();
+    boolean hasAttackerHeroLevel();
+    int getAttackerHeroLevel();
+    boolean hasTargetHeroLevel();
+    int getTargetHeroLevel();
+    boolean hasXpm();
+    int getXpm();
+    boolean hasGpm();
+    int getGpm();
+    boolean hasEventLocation();
+    int getEventLocation();
+    boolean hasTargetSelf();
+    boolean isTargetSelf();
+    boolean hasDamageType();
+    int getDamageType();
+    boolean hasInvisibilityModifier();
+    boolean isInvisibilityModifier();
+    boolean hasDamageCategory();
+    int getDamageCategory();
+    boolean hasNetworth();
+    int getNetworth();
+
 }

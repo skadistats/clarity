@@ -389,6 +389,126 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return 0;
     }
 
+    @Override
+    public boolean hasHealSave() {
+        return false;
+    }
+
+    @Override
+    public boolean isHealSave() {
+        return false;
+    }
+
+    @Override
+    public boolean hasUltimateAbility() {
+        return false;
+    }
+
+    @Override
+    public boolean isUltimateAbility() {
+        return false;
+    }
+
+    @Override
+    public boolean hasAttackerHeroLevel() {
+        return false;
+    }
+
+    @Override
+    public int getAttackerHeroLevel() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasTargetHeroLevel() {
+        return false;
+    }
+
+    @Override
+    public int getTargetHeroLevel() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasXpm() {
+        return false;
+    }
+
+    @Override
+    public int getXpm() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasGpm() {
+        return false;
+    }
+
+    @Override
+    public int getGpm() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasEventLocation() {
+        return false;
+    }
+
+    @Override
+    public int getEventLocation() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasTargetSelf() {
+        return false;
+    }
+
+    @Override
+    public boolean isTargetSelf() {
+        return false;
+    }
+
+    @Override
+    public boolean hasDamageType() {
+        return false;
+    }
+
+    @Override
+    public int getDamageType() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasInvisibilityModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isInvisibilityModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasDamageCategory() {
+        return false;
+    }
+
+    @Override
+    public int getDamageCategory() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasNetworth() {
+        return false;
+    }
+
+    @Override
+    public int getNetworth() {
+        return 0;
+    }
+
     public String toString() {
         return e.toString();
     }

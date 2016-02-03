@@ -385,6 +385,126 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getRuneType();
     }
 
+    @Override
+    public boolean hasHealSave() {
+        return e.hasIsHealSave();
+    }
+
+    @Override
+    public boolean isHealSave() {
+        return e.getIsHealSave();
+    }
+
+    @Override
+    public boolean hasUltimateAbility() {
+        return e.hasIsUltimateAbility();
+    }
+
+    @Override
+    public boolean isUltimateAbility() {
+        return e.getIsUltimateAbility();
+    }
+
+    @Override
+    public boolean hasAttackerHeroLevel() {
+        return e.hasAttackerHeroLevel();
+    }
+
+    @Override
+    public int getAttackerHeroLevel() {
+        return e.getAttackerHeroLevel();
+    }
+
+    @Override
+    public boolean hasTargetHeroLevel() {
+        return e.hasTargetHeroLevel();
+    }
+
+    @Override
+    public int getTargetHeroLevel() {
+        return e.getTargetHeroLevel();
+    }
+
+    @Override
+    public boolean hasXpm() {
+        return e.hasXpm();
+    }
+
+    @Override
+    public int getXpm() {
+        return e.getXpm();
+    }
+
+    @Override
+    public boolean hasGpm() {
+        return e.hasGpm();
+    }
+
+    @Override
+    public int getGpm() {
+        return e.getGpm();
+    }
+
+    @Override
+    public boolean hasEventLocation() {
+        return e.hasEventLocation();
+    }
+
+    @Override
+    public int getEventLocation() {
+        return e.getEventLocation();
+    }
+
+    @Override
+    public boolean hasTargetSelf() {
+        return e.hasTargetIsSelf();
+    }
+
+    @Override
+    public boolean isTargetSelf() {
+        return e.getTargetIsSelf();
+    }
+
+    @Override
+    public boolean hasDamageType() {
+        return e.hasDamageType();
+    }
+
+    @Override
+    public int getDamageType() {
+        return e.getDamageType();
+    }
+
+    @Override
+    public boolean hasInvisibilityModifier() {
+        return e.hasInvisibilityModifier();
+    }
+
+    @Override
+    public boolean isInvisibilityModifier() {
+        return e.getInvisibilityModifier();
+    }
+
+    @Override
+    public boolean hasDamageCategory() {
+        return e.hasDamageCategory();
+    }
+
+    @Override
+    public int getDamageCategory() {
+        return e.getDamageCategory();
+    }
+
+    @Override
+    public boolean hasNetworth() {
+        return e.hasNetworth();
+    }
+
+    @Override
+    public int getNetworth() {
+        return e.getNetworth();
+    }
+
     public String toString() {
         return e.toString();
     }
