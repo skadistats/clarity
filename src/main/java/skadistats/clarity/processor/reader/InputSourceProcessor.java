@@ -158,6 +158,9 @@ public class InputSourceProcessor {
                         continue loopctl;
                 }
             }
+            if (size < 0) {
+                throw new IOException(String.format("invalid negative demo packet size (%d).", size));
+            }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
             if (messageClass == null) {
                 logUnknownMessage(ctx, "top level", kind);
