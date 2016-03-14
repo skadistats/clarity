@@ -225,6 +225,11 @@ public class InputSourceProcessor {
                 break;
             }
             int size = bs.readVarUInt();
+            if (size <= 0 || bs.remaining() < size * 8) {
+                throw new IOException(
+                        String.format("invalid embedded packet size: got %d remaining bits, but size is %d bits.", bs.remaining(), size * 8)
+                );
+            }
             Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 logUnknownMessage(ctx, "embedded", kind);
