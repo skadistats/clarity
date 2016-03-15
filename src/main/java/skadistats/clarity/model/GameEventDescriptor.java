@@ -36,5 +36,14 @@ public class GameEventDescriptor {
     public Integer getIndexForKey(String key) {
         return indexByKey.get(key);
     }
-    
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("GameEventDescriptor [");
+        sb.append("eventId=").append(eventId);
+        sb.append(", name='").append(name).append('\'');
+        sb.append(']');
+        return sb.toString();
+    }
+
 }
