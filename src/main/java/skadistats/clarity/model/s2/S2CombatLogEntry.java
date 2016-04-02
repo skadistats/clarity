@@ -17,7 +17,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     private String readCombatLogName(int idx) {
-        return idx == 0 ? null : combatLogNames.getNameByIndex(idx);
+        return idx <= 0 ? null : combatLogNames.getNameByIndex(idx);
     }
 
     @Override
