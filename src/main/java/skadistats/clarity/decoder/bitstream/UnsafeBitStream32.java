@@ -1,39 +1,19 @@
 package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.s2.FieldOpHuffmanTree;
 import skadistats.clarity.decoder.s2.FieldOpType;
-import sun.misc.Unsafe;
 
-import java.lang.reflect.Constructor;
+public class UnsafeBitStream32 extends UnsafeBitStreamBase {
 
-public class UnsafeBitStream32 extends BitStream {
-
-    private static final Unsafe unsafe;
-    private static final long base;
-
-    static {
-        try {
-            Constructor<Unsafe> unsafeConstructor = Unsafe.class.getDeclaredConstructor();
-            unsafeConstructor.setAccessible(true);
-            unsafe = unsafeConstructor.newInstance();
-            base = unsafe.arrayBaseOffset(byte[].class);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private final byte[] data;
-
-    protected UnsafeBitStream32(ByteString input) {
-        data = ZeroCopy.extract(input);
-        pos = 0;
-        len = data.length * 8;
+    public UnsafeBitStream32(ByteString input) {
+        super(input);
     }
 
     protected int peekBit(int pos) {
-        return (unsafe.getByte(data, base + (pos >> 3)) >> (pos & 7)) & 1;
+        int pb = pos >> 3;
+        checkAccessRelative(pb, 1);
+        return (unsafe.getByte(data, base + pb) >> (pos & 7)) & 1;
     }
 
     @Override
@@ -44,8 +24,10 @@ public class UnsafeBitStream32 extends BitStream {
         int s = pos & 31;
         pos += n;
         if (start == end) {
+            checkAccessRelative(start, 4);
             return (unsafe.getInt(data, base + start) >>> s) & (int)MASKS[n];
         } else { // wrap around
+            checkAccessRelative(start, 8);
             return ((unsafe.getInt(data, base + start) >>> s) | (unsafe.getInt(data, base + end) << (32 - s))) & (int)MASKS[n];
         }
     }
@@ -58,21 +40,25 @@ public class UnsafeBitStream32 extends BitStream {
         int s = pos & 63;
         pos += n;
         if (start == end) {
+            checkAccessRelative(start, 8);
             return (unsafe.getLong(data, base + start) >>> s) & MASKS[n];
         } else { // wrap around
+            checkAccessRelative(start, 16);
             return ((unsafe.getLong(data, base + start) >>> s) | (unsafe.getLong(data, base + end) << (64 - s))) & MASKS[n];
         }
     }
 
     @Override
     public void readBitsIntoByteArray(byte[] dest, int n) {
-        int nBytes = (n + 7) / 8;
+        int pb = pos >> 3;
+        int nBytes = (n + 7) >> 3;
+        checkAccessRelative(pb, nBytes);
         if ((pos & 7) == 0) {
-            unsafe.copyMemory(data, base + (pos >> 3), dest, base, nBytes);
+            unsafe.copyMemory(data, base + pb, dest, base, nBytes);
             pos += n;
             return;
         }
-        long src = base + ((pos >> 3) & 0xFFFFFFFC);
+        long src = base + (pb & 0xFFFFFFFC);
         long dst = base;
         int s = pos & 31;
         pos += n;
@@ -99,6 +85,7 @@ public class UnsafeBitStream32 extends BitStream {
     @Override
     public FieldOpType readFieldOp() {
         long offs = base + ((pos >> 3) & 0xFFFFFFFC);
+        checkAccessAbsolute(offs, 4);
         int v = unsafe.getInt(data, offs);
         int s = 1 << (pos & 31);
         int i = 0;
@@ -111,6 +98,7 @@ public class UnsafeBitStream32 extends BitStream {
             s = s << 1;
             if (s == 0) {
                 offs += 4;
+                checkAccessAbsolute(offs, 4);
                 v = unsafe.getInt(data, offs);
                 s = 1;
             }
