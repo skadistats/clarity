@@ -71,7 +71,7 @@ public class NormalBitStream64 extends BitStream {
     @Override
     public FieldOpType readFieldOp() {
         int offs = pos >> 6;
-        int b = 1 << (pos & 63);
+        long b = 1L << (pos & 63);
         int i = 0;
         while (true) {
             pos++;
