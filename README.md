@@ -6,20 +6,9 @@ Version 2 offers a new event based interface to replay data, which will make usa
 
 ##### News
 
-I made a formal 2.0 release from the latest snapshot. There have not been bug reports for quite some time, so I decided
-to mark the current state as 2.0. Work on version 2.1, with Source 2 support, has started.
-
-Current status regarding Source 2:
-
-- reading info: working
-- processing gameevents: working
-- stringtables: working
-- combat log: working
-- DT-classes: in progress
-- entities: not at all
-- temp entities: well, no
-- modifiers: nope
-
+Dota 2 Reborn is now the main client - and Clarity 2.1-SNAPSHOT is able to process all contents from new replays.
+Even console recorded replays now work.
+I will wait a bit until the dust settles, and then release this.
 
 # Replay Data
 

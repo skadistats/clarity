@@ -1,24 +1,20 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.util.TextTable;
-
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-
 public class Entity {
 
+    private final EngineType engineType;
     private final int index;
     private final int serial;
     private final DTClass dtClass;
-    private PVS pvs;
+    private boolean active;
     private final Object[] state;
 
-    public Entity(int index, int serial, DTClass dtClass, PVS pvs, Object[] state) {
+    public Entity(EngineType engineType, int index, int serial, DTClass dtClass, boolean active, Object[] state) {
+        this.engineType = engineType;
         this.index = index;
         this.serial = serial;
         this.dtClass = dtClass;
-        this.pvs = pvs;
+        this.active = active;
         this.state = state;
     }
 
@@ -31,19 +27,19 @@ public class Entity {
     }
     
     public int getHandle() {
-        return Handle.forIndexAndSerial(index, serial);
+        return engineType.handleForIndexAndSerial(index, serial);
     }
 
     public DTClass getDtClass() {
         return dtClass;
     }
 
-    public PVS getPvs() {
-        return pvs;
+    public boolean isActive() {
+        return active;
     }
 
-    public void setPvs(PVS pvs) {
-        this.pvs = pvs;
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     public Object[] getState() {
@@ -57,7 +53,7 @@ public class Entity {
      * @return True, if and only if the given property is present in this entity
      */
     public boolean hasProperty(String property) {
-        return dtClass.getPropertyIndex(property) != null;
+        return dtClass.getFieldPathForName(property) != null;
     }
 
     /**
@@ -77,43 +73,21 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        Integer index = dtClass.getPropertyIndex(property);
-        if (index == null) {
+        FieldPath fp = dtClass.getFieldPathForName(property);
+        if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
-        return (T) state[index.intValue()];
+        return getPropertyForFieldPath(fp);
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T[] getArrayProperty(Class<T> clazz, String property) {
-        List<T> result = new ArrayList<T>();
-        int i = 0;
-        while (true) {
-            Integer idx = dtClass.getPropertyIndex(property + String.format(".%04d", i));
-            if (idx == null) {
-                break;
-            }
-            result.add((T) state[idx.intValue()]);
-            i++;
-        }
-        return (T[]) result.toArray((T[]) Array.newInstance(clazz, 0));
+    public <T> T getPropertyForFieldPath(FieldPath fp) {
+        return (T) dtClass.getValueForFieldPath(fp, state);
     }
 
     @Override
     public String toString() {
-        TextTable t = new TextTable.Builder()
-            .setTitle("idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName())
-            .setFrame(TextTable.FRAME_COMPAT)
-            .addColumn("Index", TextTable.Alignment.RIGHT)
-            .addColumn("Property")
-            .addColumn("Value")
-            .build();
-        for (int i = 0; i < state.length; i++) {
-            t.setData(i, 0, i);
-            t.setData(i, 1, dtClass.getReceiveProps()[i].getVarName());
-            t.setData(i, 2, state[i]);
-        }
-        return t.toString();
+        String title = "idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName();
+        return dtClass.dumpState(title, state);
     }
 
 }

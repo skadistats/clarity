@@ -1,10 +1,13 @@
 package skadistats.clarity.processor.sendtables;
 
+import skadistats.clarity.decoder.s1.S1DTClass;
+import skadistats.clarity.decoder.s1.SendProp;
+import skadistats.clarity.decoder.s1.SendTable;
 import skadistats.clarity.decoder.s1.SendTableFlattener;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.s1.*;
+import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -12,7 +15,6 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.List;
 
 @Provides(value = OnDTClass.class, engine = EngineType.SOURCE1)
 public class S1DTClassEmitter {
@@ -62,16 +64,17 @@ public class S1DTClassEmitter {
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         Iterator<DTClass> iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            DTClass dtc = iter.next();
-            List<ReceiveProp> rps = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
-            dtc.setReceiveProps(rps.toArray(new ReceiveProp[] {}));
+            S1DTClass dtc = (S1DTClass) iter.next();
+            SendTableFlattener.Result flattened = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
+            dtc.setReceiveProps(flattened.receiveProps);
+            dtc.setIndexMapping(flattened.indexMapping);
         }
         iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            DTClass dtc = iter.next();
+            S1DTClass dtc = (S1DTClass) iter.next();
             String superClassName = dtc.getSendTable().getBaseClass();
             if (superClassName != null) {
-                dtc.setSuperClass(dtClasses.forDtName(superClassName));
+                dtc.setSuperClass((S1DTClass) dtClasses.forDtName(superClassName));
             }
         }
     }

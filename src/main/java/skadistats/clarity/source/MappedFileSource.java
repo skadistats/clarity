@@ -1,5 +1,7 @@
 package skadistats.clarity.source;
 
+import sun.nio.ch.DirectBuffer;
+
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,7 @@ public class MappedFileSource extends Source {
         this.file = file;
         raf = new RandomAccessFile(file, "r");
         buf = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, raf.length());
+        raf.close();
     }
 
     @Override
@@ -59,4 +62,9 @@ public class MappedFileSource extends Source {
         return lastTick;
     }
 
+    @Override
+    public void close() throws IOException {
+        // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
+        ((DirectBuffer) buf).cleaner().clean();
+    }
 }

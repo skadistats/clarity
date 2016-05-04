@@ -1,14 +1,13 @@
 package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.decoder.BitStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.event.Event;
-import skadistats.clarity.event.EventListener;
-import skadistats.clarity.event.Initializer;
-import skadistats.clarity.event.Provides;
+import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.event.*;
 import skadistats.clarity.model.*;
-import skadistats.clarity.model.s1.ReceiveProp;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
@@ -21,24 +20,28 @@ import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class })
+@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class })
 @UsesDTClasses
 public class Entities {
 
-    public static final int MAX_PROPERTIES = 0x3fff;
+    private static final Logger log = LoggerFactory.getLogger(Entities.class);
 
-    private final Entity[] entities = new Entity[1 << Handle.INDEX_BITS];
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
-    private final int[] indices = new int[MAX_PROPERTIES];
+    private Entity[] entities;
+    private int[] deletions;
+    private FieldReader fieldReader;
+    private EngineType engineType;
 
     private Event<OnEntityCreated> evCreated;
     private Event<OnEntityUpdated> evUpdated;
     private Event<OnEntityDeleted> evDeleted;
+    private Event<OnEntityEntered> evEntered;
+    private Event<OnEntityLeft> evLeft;
+    private Event<OnEntityUpdatesCompleted> evUpdatesCompleted;
 
     private class BaselineEntry {
         private ByteString rawBaseline;
@@ -49,23 +52,58 @@ public class Entities {
         }
     }
 
+    @Initializer(UsesEntities.class)
+    public void initUsesEntities(final Context ctx, final UsagePoint<UsesEntities> usagePoint) {
+        initEngineDependentFields(ctx);
+    }
+
     @Initializer(OnEntityCreated.class)
     public void initOnEntityCreated(final Context ctx, final EventListener<OnEntityCreated> eventListener) {
+        initEngineDependentFields(ctx);
         evCreated = ctx.createEvent(OnEntityCreated.class, Entity.class);
     }
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
-        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, int[].class, int.class);
+        initEngineDependentFields(ctx);
+        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, FieldPath[].class, int.class);
     }
 
     @Initializer(OnEntityDeleted.class)
     public void initOnEntityDeleted(final Context ctx, final EventListener<OnEntityDeleted> eventListener) {
+        initEngineDependentFields(ctx);
         evDeleted = ctx.createEvent(OnEntityDeleted.class, Entity.class);
     }
 
+    @Initializer(OnEntityEntered.class)
+    public void initOnEntityEntered(final Context ctx, final EventListener<OnEntityEntered> eventListener) {
+        initEngineDependentFields(ctx);
+        evEntered = ctx.createEvent(OnEntityEntered.class, Entity.class);
+    }
+
+    @Initializer(OnEntityLeft.class)
+    public void initOnEntityLeft(final Context ctx, final EventListener<OnEntityLeft> eventListener) {
+        initEngineDependentFields(ctx);
+        evLeft = ctx.createEvent(OnEntityLeft.class, Entity.class);
+    }
+
+    @Initializer(OnEntityUpdatesCompleted.class)
+    public void initOnEntityUpdatesCompleted(final Context ctx, final EventListener<OnEntityUpdatesCompleted> eventListener) {
+        initEngineDependentFields(ctx);
+        evUpdatesCompleted = ctx.createEvent(OnEntityUpdatesCompleted.class);
+    }
+
+    private void initEngineDependentFields(Context ctx) {
+        if (fieldReader == null) {
+            engineType = ctx.getEngineType();
+            fieldReader = ctx.getEngineType().getNewFieldReader();
+            entities = new Entity[1 << engineType.getIndexBits()];
+            deletions = new int[1 << engineType.getIndexBits()];
+        }
+    }
+
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
             baselineEntries.clear();
             for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
@@ -81,86 +119,126 @@ public class Entities {
 
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(Context ctx, NetMessages.CSVCMsg_PacketEntities message) {
-        BitStream stream = new BitStream(message.getEntityData());
+        BitStream stream = BitStream.createBitStream(message.getEntityData());
         DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
 
-        int pvs;
+        int cmd;
+        int clsId;
         DTClass cls;
         int serial;
-        Object[] base;
         Object[] state;
         Entity entity;
-        int cIndices;
-        ReceiveProp[] receiveProps;
+
+        boolean debug = false;
+        if (debug) {
+            System.out.println(ctx.getBuildNumber());
+        }
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
-            pvs = stream.readBits(2);
-            if ((pvs & 1) == 0) {
-                if ((pvs & 2) != 0) {
-                    cls = dtClasses.forClassId(stream.readBits(dtClasses.getClassBits()));
-                    serial = stream.readBits(10);
-                    base = getBaseline(dtClasses, cls.getClassId());
-                    state = Arrays.copyOf(base, base.length);
-                    cIndices = Util.readS1EntityPropList(stream, indices);
-                    receiveProps = cls.getReceiveProps();
-                    for (int ci = 0; ci < cIndices; ci++) {
-                        int o = indices[ci];
-                        state[o] = receiveProps[o].decode(stream);
+            cmd = stream.readUBitInt(2);
+            if ((cmd & 1) == 0) {
+                if ((cmd & 2) != 0) {
+                    clsId = stream.readUBitInt(dtClasses.getClassBits());
+                    cls = dtClasses.forClassId(clsId);
+                    if (cls == null) {
+                        throw new RuntimeException(String.format("class for new entity %d is %d, but no dtClass found!.", entityIndex, clsId));
                     }
-                    entity = new Entity(entityIndex, serial, cls, PVS.values()[pvs], state);
+                    serial = stream.readUBitInt(engineType.getSerialBits());
+                    if (engineType == EngineType.SOURCE2) {
+                        // TODO: there is an extra VarInt encoded here for S2, figure out what it is
+                        stream.readVarUInt();
+                    }
+                    state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
+                    fieldReader.readFields(stream, cls, state, debug);
+                    entity = new Entity(ctx.getEngineType(), entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
                     if (evCreated != null) {
                         evCreated.raise(entity);
                     }
+                    if (evEntered != null) {
+                        evEntered.raise(entity);
+                    }
                 } else {
                     entity = entities[entityIndex];
+                    if (entity == null) {
+                        throw new RuntimeException(String.format("entity at index %d was not found for update.", entityIndex));
+                    }
                     cls = entity.getDtClass();
-                    entity.setPvs(PVS.values()[pvs]);
                     state = entity.getState();
-                    cIndices = Util.readS1EntityPropList(stream, indices);
-                    receiveProps = cls.getReceiveProps();
-                    for (int ci = 0; ci < cIndices; ci++) {
-                        int o = indices[ci];
-                        state[o] = receiveProps[o].decode(stream);
-                    }
+                    int nChanged = fieldReader.readFields(stream, cls, state, debug);
                     if (evUpdated != null) {
-                        evUpdated.raise(entity, indices, cIndices);
+                        evUpdated.raise(entity, fieldReader.getFieldPaths(), nChanged);
+                    }
+                    if (!entity.isActive()) {
+                        entity.setActive(true);
+                        if (evEntered != null) {
+                            evEntered.raise(entity);
+                        }
                     }
                 }
-            } else if ((pvs & 2) != 0) {
+            } else {
                 entity = entities[entityIndex];
-                entities[entityIndex] = null;
-                if (evDeleted != null) {
-                    evDeleted.raise(entity);
+                if (entity == null) {
+                    log.warn("entity at index {} was not found when ordered to leave.", entityIndex);
+                } else {
+                    if (entity.isActive()) {
+                        entity.setActive(false);
+                        if (evLeft != null) {
+                            evLeft.raise(entity);
+                        }
+                    }
+                    if ((cmd & 2) != 0) {
+                        entities[entityIndex] = null;
+                        if (evDeleted != null) {
+                            evDeleted.raise(entity);
+                        }
+                    }
                 }
             }
         }
+
         if (message.getIsDelta()) {
-            while (stream.readBits(1) == 1) {
-                entityIndex = stream.readBits(11); // max is 2^11-1, or 2047
-                if (evDeleted != null) {
-                    evDeleted.raise(entities[entityIndex]);
+            int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
+            for (int i = 0; i < n; i++) {
+                entityIndex = deletions[i];
+                entity = entities[entityIndex];
+                if (entity != null) {
+                    log.debug("entity at index {} was ACTUALLY found when ordered to delete, tell the press!", entityIndex);
+                    if (entity.isActive()) {
+                        entity.setActive(false);
+                        if (evLeft != null) {
+                            evLeft.raise(entity);
+                        }
+                    }
+                    if (evDeleted != null) {
+                        evDeleted.raise(entity);
+                    }
+                } else {
+                    log.debug("entity at index {} was not found when ordered to delete.", entityIndex);
                 }
                 entities[entityIndex] = null;
             }
         }
+
+        if (evUpdatesCompleted != null) {
+            evUpdatesCompleted.raise();
+        }
+
     }
 
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
+        if (be == null) {
+            throw new RuntimeException(String.format("Baseline for class {} ({}) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
+        }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
-            ReceiveProp[] receiveProps = cls.getReceiveProps();
-            BitStream stream = new BitStream(be.rawBaseline);
-            be.baseline = new Object[receiveProps.length];
-            int cIndices = Util.readS1EntityPropList(stream, indices);
-            for (int ci = 0; ci < cIndices; ci++) {
-                int o = indices[ci];
-                be.baseline[o] = receiveProps[o].decode(stream);
-            }
+            BitStream stream = BitStream.createBitStream(be.rawBaseline);
+            be.baseline = cls.getEmptyStateArray();
+            fieldReader.readFields(stream, cls, be.baseline, false);
         }
         return be.baseline;
     }
@@ -170,8 +248,8 @@ public class Entities {
     }
 
     public Entity getByHandle(int handle) {
-        Entity e = entities[Handle.indexForHandle(handle)];
-        return e == null || e.getSerial() != Handle.serialForHandle(handle) ? null : e;
+        Entity e = entities[engineType.indexForHandle(handle)];
+        return e == null || e.getSerial() != engineType.serialForHandle(handle) ? null : e;
     }
 
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {

@@ -1,7 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.s1.ReceiveProp;
-import skadistats.clarity.model.s1.SendTable;
+import java.util.List;
 
 public interface DTClass {
 
@@ -10,21 +9,15 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
-    @Deprecated
-    void setSuperClass(DTClass dtClass);
-    @Deprecated
-    DTClass getSuperClass();
+    Object[] getEmptyStateArray();
 
-    @Deprecated
-    void setReceiveProps(ReceiveProp[] receiveProps);
-    @Deprecated
-    ReceiveProp[] getReceiveProps();
+    String getNameForFieldPath(FieldPath fp);
+    FieldPath getFieldPathForName(String property);
 
-    @Deprecated
-    Integer getPropertyIndex(String property);
+    <T> T getValueForFieldPath(FieldPath fp, Object[] state);
 
-    @Deprecated
-    SendTable getSendTable();
+    List<FieldPath> collectFieldPaths(Object[] state);
+    String dumpState(String title, Object[] state);
 
 }
 

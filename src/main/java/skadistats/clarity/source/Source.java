@@ -29,6 +29,7 @@ public abstract class Source {
 
     protected Integer lastTick;
 
+
     /**
      * returns the current position
      *
@@ -162,27 +163,28 @@ public abstract class Source {
     }
 
     /**
-     * gets the positions of all full packets up to a given tick
-     *
+     * gets the positions of all packets containing full string tables up to a given tick
      *
      * @param engineType
      * @param wantedTick the tick
-     * @param fullPacketPositions a set of positions found in previous runs
+     * @param packetPositions a set of positions found in previous runs
      * @throws IOException if the underlying data is invalid
      */
-    public TreeSet<PacketPosition> getFullPacketsBeforeTick(EngineType engineType, int wantedTick, TreeSet<PacketPosition> fullPacketPositions) throws IOException {
+    public TreeSet<PacketPosition> getResetPacketsBeforeTick(EngineType engineType, int wantedTick, TreeSet<PacketPosition> packetPositions) throws IOException {
         int backup = getPosition();
-        PacketPosition wanted = new PacketPosition(wantedTick, 0);
-        if (fullPacketPositions.tailSet(wanted, true).size() == 0) {
-            setPosition(fullPacketPositions.floor(wanted).getOffset());
+        PacketPosition wanted = PacketPosition.createPacketPosition(wantedTick, Demo.EDemoCommands.DEM_FullPacket_VALUE, 0);
+        if (packetPositions.tailSet(wanted, true).size() == 0) {
+            PacketPosition basePos = packetPositions.floor(wanted);
+            setPosition(basePos.getOffset());
             try {
                 while (true) {
                     int at = getPosition();
                     int kind = readVarInt32() & ~engineType.getCompressedFlag();
                     int tick = readVarInt32();
                     int size = readVarInt32();
-                    if (kind == Demo.EDemoCommands.DEM_FullPacket_VALUE) {
-                        fullPacketPositions.add(new PacketPosition(tick, at));
+                    PacketPosition pp = PacketPosition.createPacketPosition(tick, kind, at);
+                    if (pp != null) {
+                        packetPositions.add(pp);
                     }
                     if (tick >= wantedTick) {
                         break;
@@ -193,7 +195,7 @@ public abstract class Source {
             }
         }
         setPosition(backup);
-        return new TreeSet<>(fullPacketPositions.headSet(wanted, true));
+        return new TreeSet<>(packetPositions.headSet(wanted, true));
     }
 
     /**
@@ -213,6 +215,14 @@ public abstract class Source {
             lastTick = readVarInt32();
         }
         return lastTick.intValue();
+    }
+
+    /**
+     * closes the source
+     *
+     * @throws IOException if closing the source fails
+     */
+    public void close() throws IOException {
     }
 
 }

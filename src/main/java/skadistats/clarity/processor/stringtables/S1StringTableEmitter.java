@@ -1,13 +1,15 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.decoder.BitStream;
+import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.Util;
+import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.LinkedList;
@@ -33,8 +35,8 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         numTables++;
     }
 
-    @OnMessage(S1NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, S1NetMessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(Context ctx, NetMessages.CSVCMsg_UpdateStringTable message) {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
@@ -43,29 +45,29 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
     }
 
     private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
-        BitStream stream = new BitStream(data);
+        BitStream stream = BitStream.createBitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
 
-        boolean mysteryFlag = stream.readBits(1) == 1;
+        boolean mysteryFlag = stream.readBitFlag();
         int index = -1;
         StringBuilder nameBuf = new StringBuilder();
         while (numEntries-- > 0) {
             // read index
-            if (stream.readBits(1) == 1) {
+            if (stream.readBitFlag()) {
                 index++;
             } else {
-                index = stream.readBits(bitsPerIndex);
+                index = stream.readUBitInt(bitsPerIndex);
             }
             // read name
             nameBuf.setLength(0);
-            if (stream.readBits(1) == 1) {
-                if (mysteryFlag && stream.readBits(1) == 1) {
+            if (stream.readBitFlag()) {
+                if (mysteryFlag && stream.readBitFlag()) {
                     throw new RuntimeException("mystery_flag assert failed!");
                 }
-                if (stream.readBits(1) == 1) {
-                    int basis = stream.readBits(5);
-                    int length = stream.readBits(5);
+                if (stream.readBitFlag()) {
+                    int basis = stream.readUBitInt(5);
+                    int length = stream.readUBitInt(5);
                     nameBuf.append(keyHistory.get(basis).substring(0, length));
                     nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
                 } else {
@@ -78,15 +80,16 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             }
             // read value
             ByteString value = null;
-            if (stream.readBits(1) == 1) {
-                int bitLength = 0;
+            if (stream.readBitFlag()) {
+                int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
                 } else {
-                    bitLength = stream.readBits(14) * 8;
+                    bitLength = stream.readUBitInt(14) * 8;
                 }
-
-                value = ByteString.copyFrom(stream.readBytes(bitLength));
+                byte[] valueBuf = new byte[(bitLength + 7) / 8];
+                stream.readBitsIntoByteArray(valueBuf, bitLength);
+                value = ZeroCopy.wrap(valueBuf);
             }
             setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
         }

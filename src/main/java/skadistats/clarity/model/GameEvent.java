@@ -46,7 +46,7 @@ public class GameEvent {
             buf.append("=");
             buf.append(state[i]);
         }
-        return String.format("GameEvent [name=%s, %s]", descriptor.getName(), buf.toString());
+        return String.format("GameEvent [name=%s, id=%s, %s]", descriptor.getName(), descriptor.getEventId(), buf.toString());
     }
     
 }

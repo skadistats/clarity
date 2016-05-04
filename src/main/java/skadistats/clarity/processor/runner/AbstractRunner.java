@@ -20,13 +20,15 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
     private Context context;
 
     /* tick the user is at the end of */
-    protected int tick = -1;
+    protected int tick;
     /* tick is synthetic (does not contain replay data) */
     protected boolean synthetic = true;
 
     public AbstractRunner(Source source, EngineType engineType) throws IOException {
         this.source = source;
         this.engineType = engineType;
+        this.tick = -1;
+        engineType.skipHeaderOffsets(source);
     }
 
     protected ExecutionModel createExecutionModel(Object... processors) {
@@ -39,17 +41,13 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     protected void endTicksUntil(Context ctx, int untilTick) {
         while (tick < untilTick) {
-            if (tick != -1) {
-                ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
-            }
+            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
             setTick(tick + 1);
             synthetic = true;
             ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
         }
-        if (tick != -1) {
-            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
-            synthetic = false;
-        }
+        ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
+        synthetic = false;
     }
 
     protected void startNewTick(Context ctx, int upcomingTick) {
@@ -83,6 +81,10 @@ public abstract class AbstractRunner<T extends Runner> implements Runner<Abstrac
 
     public Context getContext() {
         return context;
+    }
+
+    public Source getSource() {
+        return source;
     }
 
 }

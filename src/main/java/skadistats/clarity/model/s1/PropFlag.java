@@ -21,7 +21,7 @@ public class PropFlag {
     public static final int CELL_COORD_LOW_PRECISION = 1 << 16;
     public static final int CELL_COORD_INTEGRAL = 1 << 17;
     public static final int CHANGES_OFTEN = 1 << 18;
-    public static final int ENCODED_AGAINST_TICKCOUNT = 1 << 19;
+    public static final int ENCODED_AS_VARINT = 1 << 19;
 
     private static final String[] NAMES = {
         "UNSIGNED",
@@ -43,7 +43,7 @@ public class PropFlag {
         "CELL_COORD_LOW_PRECISION",
         "CELL_COORD_INTEGRAL",
         "CHANGES_OFTEN",
-        "ENCODED_AGAINST_TICKCOUNT"
+        "ENCODED_AS_VARINT"
     };
 
     public static String descriptionForFlags(int flags) {

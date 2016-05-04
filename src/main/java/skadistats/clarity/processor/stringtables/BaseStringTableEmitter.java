@@ -8,6 +8,7 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.UsagePoint;
 import skadistats.clarity.model.StringTable;
+import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
@@ -75,21 +76,21 @@ public class BaseStringTableEmitter {
     }
 
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoFullPacket packet, ResetPhase phase) {
+    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
         StringTables stringTables = ctx.getProcessor(StringTables.class);
         if (phase == ResetPhase.CLEAR) {
             resetStringTables.clear();
             for (StringTable table : stringTables.byName.values()) {
                 table.reset();
             }
-        } else if (phase == ResetPhase.STRINGTABLE_ACCUMULATION) {
-            for (Demo.CDemoStringTables.table_t tt : packet.getStringTable().getTablesList()) {
+        } else if (phase == ResetPhase.ACCUMULATE) {
+            for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
                 if (!stringTables.byName.containsKey(tt.getTableName())) {
                     continue;
                 }
                 resetStringTables.put(tt.getTableName(), tt);
             }
-        } else if (phase == ResetPhase.STRINGTABLE_APPLY) {
+        } else if (phase == ResetPhase.APPLY) {
             for (StringTable table : stringTables.byName.values()) {
                 Demo.CDemoStringTables.table_t tt = resetStringTables.get(table.getName());
                 if (tt != null) {
@@ -105,5 +106,22 @@ public class BaseStringTableEmitter {
             }
         }
     }
+
+    @OnMessage(Demo.CDemoStringTables.class)
+    public void onStringTables(Context ctx, Demo.CDemoStringTables packet) {
+        StringTables stringTables = ctx.getProcessor(StringTables.class);
+        for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
+            StringTable table = stringTables.byName.get(tt.getTableName());
+            if (table == null) {
+                continue;
+            }
+            for (int i = 0; i < tt.getItemsCount(); i++) {
+                Demo.CDemoStringTables.items_t it = tt.getItems(i);
+                setSingleEntry(ctx, table, 2, i, it.getStr(), it.getData());
+            }
+        }
+
+    }
+
 
 }
