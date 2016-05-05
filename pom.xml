@@ -34,6 +34,17 @@
 		<developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
 	</scm>
 
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.7.6.201602180812</version>
+            </plugin>
+        </plugins>
+    </build>
+
 	<developers>
 		<developer>
 			<id>spheenik</id>
@@ -81,5 +92,4 @@
         	<scope>test</scope>
         </dependency>
 	</dependencies>
-
 </project>
