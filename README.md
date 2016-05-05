@@ -1,4 +1,5 @@
-# Clarity 2
+# Clarity 2 
+[![Build Status](https://travis-ci.org/robertsmieja/clarity.svg?branch=master)](https://travis-ci.org/robertsmieja/clarity)
 
 Clarity is a parser for Dota 2 replay files written in Java.
 
