@@ -4,6 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import skadistats.clarity.model.EngineType;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -36,7 +37,7 @@ public class SourceTest {
         }
     }
 
-    Source source;
+    public Source source;
 
     @Before
     public void setUp() throws Exception {
@@ -84,7 +85,6 @@ public class SourceTest {
         int actual = sourceSpy.readFixedInt32();
 
         assertEquals(expected.getInt(), actual);
-        ;
     }
 
     @Test
@@ -120,8 +120,15 @@ public class SourceTest {
 
 
     @Test
-    public void testReadVarInt32_negativeInt() {
-        fail("Not yet implemented");
+    public void testReadVarInt32_negativeInt() throws IOException {
+        int expectedResult = -12;
+
+        Source sourceSpy = spy(source);
+        doReturn((byte) expectedResult).when(sourceSpy).readByte();
+
+        int result = sourceSpy.readVarInt32();
+
+        assertEquals(expectedResult, result);
     }
 
     @Test
@@ -217,13 +224,52 @@ public class SourceTest {
     }
 
     @Test
-    public void testReadEngineType() {
-        fail("Not yet implemented");
+    public void testReadEngineType_source1() throws IOException {
+        Source sourceSpy = spy(source);
+        byte[] source1ByteArray = EngineType.SOURCE1.getMagic().getBytes();
+        when(sourceSpy.readBytes(8)).thenReturn(source1ByteArray);
+
+        EngineType result = sourceSpy.readEngineType();
+
+        assertEquals(EngineType.SOURCE1, result);
     }
 
     @Test
-    public void testGetFullPacketsBeforeTick() {
-        fail("Not yet implemented");
+    public void testReadEngineType_source2() throws IOException {
+        Source sourceSpy = spy(source);
+        byte[] source2ByteArray = EngineType.SOURCE2.getMagic().getBytes();
+        when(sourceSpy.readBytes(8)).thenReturn(source2ByteArray);
+
+        EngineType result = sourceSpy.readEngineType();
+
+        assertEquals(EngineType.SOURCE2, result);
+    }
+
+    @Test
+    public void testReadEngineType_noEngineType() throws IOException {
+        Source sourceSpy = spy(source);
+        when(sourceSpy.readBytes(8)).thenReturn(new byte[8]);
+
+        try {
+            EngineType result = sourceSpy.readEngineType();
+            fail("exception should have been thrown");
+        } catch (IOException exception){
+            assertEquals("given stream does not seem to contain a valid replay", exception.getMessage());
+        }
+    }
+
+    @Test
+    public void testReadEngineType_exceptionFromGetBytes() throws IOException {
+        Source sourceSpy = spy(source);
+        IOException ioException = new IOException("test exception");
+        when(sourceSpy.readBytes(8)).thenThrow(ioException);
+
+        try {
+            EngineType result = sourceSpy.readEngineType();
+            fail("exception should have been thrown");
+        } catch (IOException exception){
+            assertSame(ioException, exception);
+        }
     }
 
     @Test

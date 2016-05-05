@@ -151,15 +151,11 @@ public abstract class Source {
      * @throws IOException if there is not enough data or the if no valid magic was found
      */
     public EngineType readEngineType() throws IOException {
-        try {
-            EngineType et = EngineType.forMagic(new String(readBytes(8)));
-            if (et == null) {
-                throw new IOException();
-            }
-            return et;
-        } catch (IOException e) {
+        EngineType et = EngineType.forMagic(new String(readBytes(8)));
+        if (et == null) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }
+        return et;
     }
 
     /**
