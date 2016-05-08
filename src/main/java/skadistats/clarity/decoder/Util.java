@@ -36,7 +36,8 @@ public class Util {
         try {
             return s.toString(charsetName);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
+            Exception et = e;
+            throw (RuntimeException) et;
         }
     }
 
@@ -59,7 +60,8 @@ public class Util {
         try {
             Snappy.arrayCopy(src, srcOffset, n, dst, dstOffset);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            Exception et = e;
+            throw (RuntimeException) et;
         }
     }
 

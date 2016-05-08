@@ -22,7 +22,7 @@ public class Event<A extends Annotation> {
                 try {
                     listener.invoke(args);
                 } catch (Throwable throwable) {
-                    throw new RuntimeException(throwable);
+                    throw (RuntimeException) throwable;
                 }
             }
         }

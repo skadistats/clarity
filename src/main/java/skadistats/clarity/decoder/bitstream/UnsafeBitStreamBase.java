@@ -18,7 +18,7 @@ public abstract class UnsafeBitStreamBase extends BitStream {
             unsafe = unsafeConstructor.newInstance();
             base = unsafe.arrayBaseOffset(byte[].class);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw (RuntimeException) e;
         }
     }
 

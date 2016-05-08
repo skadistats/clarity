@@ -48,7 +48,7 @@ public abstract class BitStream {
         try {
             return bitStreamConstructor.newInstance(input);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw (RuntimeException) e;
         }
     }
 
@@ -191,7 +191,7 @@ public abstract class BitStream {
             return v;
         }
         if (lowPrecision) {
-            throw new RuntimeException("implement me!");
+            throw new UnsupportedOperationException("implement me!");
         }
         return v + readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
     }

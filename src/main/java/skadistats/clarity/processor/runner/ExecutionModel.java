@@ -109,7 +109,8 @@ public class ExecutionModel {
                 try {
                     entry.setValue(entry.getKey().newInstance());
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    Exception et = e;
+                    throw (RuntimeException) et;
                 }
             }
         }
@@ -121,7 +122,8 @@ public class ExecutionModel {
                 try {
                     ((InvocationPoint)up).bind(context);
                 } catch (IllegalAccessException e) {
-                    throw new RuntimeException(e);
+                    Exception et = e;
+                    throw (RuntimeException) et;
                 }
 
             }
@@ -138,7 +140,8 @@ public class ExecutionModel {
                 try {
                     im.invoke(up);
                 } catch (Throwable e) {
-                    throw new RuntimeException(e);
+                    Throwable et = e;
+                    throw (RuntimeException) et;
                 }
             }
         }
