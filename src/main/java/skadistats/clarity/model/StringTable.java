@@ -64,6 +64,10 @@ public class StringTable {
         }
     }
 
+    public boolean hasIndex(int index) {
+        return index >= 0 && names.length > index;
+    }
+
     public ByteString getValueByIndex(int index) {
         return values[index][1];
     }
