@@ -232,7 +232,7 @@ public class Entities {
     private Object[] getBaseline(DTClasses dtClasses, int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
-            throw new RuntimeException(String.format("Baseline for class {} ({}) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
+            throw new RuntimeException(String.format("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
         }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
