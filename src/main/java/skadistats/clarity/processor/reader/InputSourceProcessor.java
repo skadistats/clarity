@@ -190,12 +190,13 @@ public class InputSourceProcessor {
                     src.skipBytes(size);
                 }
             } else {
-                if (messageClass == Demo.CDemoSyncTick.class) {
+                boolean isStringTables = messageClass == Demo.CDemoStringTables.class;
+                boolean isSyncTick = messageClass == Demo.CDemoSyncTick.class;
+                boolean resetRelevant = evReset != null && (isStringTables || isSyncTick);
+                if (isSyncTick) {
                     ctl.setSyncTickSeen(true);
                 }
                 Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
-                boolean stringTables = messageClass == Demo.CDemoStringTables.class;
-                boolean resetRelevant = evReset != null && (stringTables || messageClass == Demo.CDemoSyncTick.class);
                 if (ev.isListenedTo() || resetRelevant) {
                     GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
                     if (ev.isListenedTo()) {
@@ -203,7 +204,7 @@ public class InputSourceProcessor {
                     }
                     if (resetRelevant) {
                         ctl.markResetRelevantPacket(tick, kind, offset);
-                        if (stringTables) {
+                        if (isStringTables) {
                             switch (loopCtl) {
                                 case RESET_ACCUMULATE:
                                     evReset.raise(message, ResetPhase.ACCUMULATE);
