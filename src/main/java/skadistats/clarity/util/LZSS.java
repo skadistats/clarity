@@ -1,7 +1,6 @@
 package skadistats.clarity.util;
 
 import com.google.protobuf.ByteString;
-import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.bitstream.BitStream;
 
 import java.io.IOException;
@@ -32,12 +31,15 @@ public class LZSS {
             } else {
                 int a = bs.readUBitInt(8);
                 int b = bs.readUBitInt(8);
-                int position = (a << 4) | (b >> 4);
-                int count = (b & 0x0F) + 1;
+                int offset = 1 + ((a << 4) | (b >> 4));
+                int count = 1 + (b & 0x0F);
                 if (count == 1) {
                     break;
                 }
-                Snappy.arrayCopy(dst, di - position - 1, count, dst, di);
+                int end = di + count;
+                for (int i = di; i < end; i++) {
+                    dst[i] = dst[i - offset];
+                }
                 di += count;
             }
             bit = bit << 1;
