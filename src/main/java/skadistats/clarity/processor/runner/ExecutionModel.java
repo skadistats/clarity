@@ -2,6 +2,7 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.*;
 import skadistats.clarity.event.EventListener;
 
@@ -109,8 +110,7 @@ public class ExecutionModel {
                 try {
                     entry.setValue(entry.getKey().newInstance());
                 } catch (Exception e) {
-                    Exception et = e;
-                    throw (RuntimeException) et;
+                    throw Util.toRuntimeException(e);
                 }
             }
         }
@@ -122,8 +122,7 @@ public class ExecutionModel {
                 try {
                     ((InvocationPoint)up).bind(context);
                 } catch (IllegalAccessException e) {
-                    Exception et = e;
-                    throw (RuntimeException) et;
+                    throw Util.toRuntimeException(e);
                 }
 
             }
@@ -140,8 +139,7 @@ public class ExecutionModel {
                 try {
                     im.invoke(up);
                 } catch (Throwable e) {
-                    Throwable et = e;
-                    throw (RuntimeException) et;
+                    throw Util.toRuntimeException(e);
                 }
             }
         }

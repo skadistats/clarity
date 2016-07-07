@@ -2,6 +2,7 @@ package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.decoder.Util;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Constructor;
@@ -18,7 +19,7 @@ public abstract class UnsafeBitStreamBase extends BitStream {
             unsafe = unsafeConstructor.newInstance();
             base = unsafe.arrayBaseOffset(byte[].class);
         } catch (Exception e) {
-            throw (RuntimeException) e;
+            throw Util.toRuntimeException(e);
         }
     }
 

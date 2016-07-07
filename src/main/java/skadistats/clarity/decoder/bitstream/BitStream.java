@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.FieldOpType;
 
 import java.lang.reflect.Constructor;
@@ -48,7 +49,7 @@ public abstract class BitStream {
         try {
             return bitStreamConstructor.newInstance(input);
         } catch (Exception e) {
-            throw (RuntimeException) e;
+            throw Util.toRuntimeException(e);
         }
     }
 
@@ -191,7 +192,7 @@ public abstract class BitStream {
             return v;
         }
         if (lowPrecision) {
-            throw new UnsupportedOperationException("implement me!");
+            throw new RuntimeException("implement me!");
         }
         return v + readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
     }

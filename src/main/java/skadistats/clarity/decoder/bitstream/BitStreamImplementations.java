@@ -1,6 +1,7 @@
 package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
+import skadistats.clarity.decoder.Util;
 
 import java.lang.reflect.Constructor;
 
@@ -32,7 +33,7 @@ public class BitStreamImplementations {
             Class<?> implClass = classForName(bitStreamClasses[implementation]);
             return (Constructor<BitStream>) implClass.getDeclaredConstructor(ByteString.class);
         } catch (Exception e) {
-            throw (RuntimeException) e;
+            throw Util.toRuntimeException(e);
         }
     }
 

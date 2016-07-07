@@ -36,8 +36,7 @@ public class Util {
         try {
             return s.toString(charsetName);
         } catch (UnsupportedEncodingException e) {
-            Exception et = e;
-            throw (RuntimeException) et;
+            throw Util.toRuntimeException(e);
         }
     }
 
@@ -60,8 +59,15 @@ public class Util {
         try {
             Snappy.arrayCopy(src, srcOffset, n, dst, dstOffset);
         } catch (IOException e) {
-            Exception et = e;
-            throw (RuntimeException) et;
+            throw Util.toRuntimeException(e);
+        }
+    }
+
+    public static RuntimeException toRuntimeException(Throwable throwable) {
+        if (throwable instanceof RuntimeException) {
+            return (RuntimeException) throwable;
+        } else {
+            return new RuntimeException(throwable);
         }
     }
 
