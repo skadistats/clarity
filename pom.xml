@@ -1,63 +1,65 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>com.skadistats</groupId>
-	<artifactId>clarity</artifactId>
-	<version>2.1-SNAPSHOT</version>
-	<packaging>jar</packaging>
-	<name>clarity</name>
-	<description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
-	<url>https://github.com/skadistats/clarity</url>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.skadistats</groupId>
+    <artifactId>clarity</artifactId>
+    <version>2.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>clarity</name>
+    <description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
+    <url>https://github.com/skadistats/clarity</url>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+    <properties>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 
-	<properties>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+    <licenses>
+        <license>
+            <name>BSD style license</name>
+            <url>https://github.com/skadistats/clarity/blob/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
-	<licenses>
-		<license>
-			<name>BSD style license</name>
-			<url>https://github.com/skadistats/clarity/blob/master/LICENSE</url>
-			<distribution>repo</distribution>
-		</license>
-	</licenses>
+    <scm>
+        <url>https://github.com/skadistats/clarity</url>
+        <connection>scm:git:git@github.com:skadistats/clarity.git</connection>
+        <developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
+    </scm>
 
-	<scm>
-		<url>https://github.com/skadistats/clarity</url>
-		<connection>scm:git:git@github.com:skadistats/clarity.git</connection>
-		<developerConnection>scm:git:git@github.com:skadistats/clarity.git</developerConnection>
-	</scm>
+    <developers>
+        <developer>
+            <id>spheenik</id>
+            <name>Martin Schrodt</name>
+            <email>clarity@martin.schrodt.org</email>
+        </developer>
+    </developers>
 
-	<developers>
-		<developer>
-			<id>spheenik</id>
-			<name>Martin Schrodt</name>
-			<email>clarity@martin.schrodt.org</email>
-		</developer>
-	</developers>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
 
-	<dependencies>
-		<dependency>
-			<groupId>com.skadistats</groupId>
-			<artifactId>clarity-protobuf</artifactId>
-			<version>3-SNAPSHOT</version>
-		</dependency>
-		<dependency>
-			<groupId>org.xerial.snappy</groupId>
-			<artifactId>snappy-java</artifactId>
-			<version>1.1.1.6</version>
-		</dependency>
-		<dependency>
-			<groupId>ch.qos.logback</groupId>
-			<artifactId>logback-classic</artifactId>
-			<version>1.1.2</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>com.skadistats</groupId>
+            <artifactId>clarity-protobuf</artifactId>
+            <version>3-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>1.1.1.6</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.1.2</version>
+        </dependency>
         <dependency>
             <groupId>uk.com.robust-it</groupId>
             <artifactId>cloning</artifactId>
@@ -68,6 +70,68 @@
             <artifactId>classindex</artifactId>
             <version>3.3</version>
         </dependency>
-	</dependencies>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.1</version>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <docencoding>UTF-8</docencoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.6</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                        <configuration>
+                            <keyname>2DAD9425307EC268</keyname>
+                            <passphraseServerId>clarity.gpg</passphraseServerId>
+                            <gpgArguments>--pinentry-mode=loopback</gpgArguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.7</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>false</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
