@@ -4,7 +4,7 @@ import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 
-public class SimpleRunner extends AbstractRunner<SimpleRunner> {
+public class SimpleRunner extends AbstractFileRunner<SimpleRunner> {
 
     private final LoopController.Func controllerFunc = new LoopController.Func() {
         @Override

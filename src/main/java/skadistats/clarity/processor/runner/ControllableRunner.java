@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ControllableRunner extends AbstractRunner<ControllableRunner> {
+public class ControllableRunner extends AbstractFileRunner<ControllableRunner> {
 
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition wantedTickReached = lock.newCondition();
