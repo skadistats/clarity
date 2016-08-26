@@ -2,10 +2,12 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 
+@Provides({OnTickStart.class, OnTickEnd.class, })
 public abstract class AbstractRunner implements Runner {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

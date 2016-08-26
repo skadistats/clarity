@@ -13,6 +13,7 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.FileRunner;
 import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
@@ -28,7 +29,7 @@ import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Provides({OnMessageContainer.class, OnMessage.class, OnTickStart.class, OnTickEnd.class, OnReset.class, OnFullPacket.class })
+@Provides(value = {OnMessageContainer.class, OnMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 public class InputSourceProcessor {
 
     private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);

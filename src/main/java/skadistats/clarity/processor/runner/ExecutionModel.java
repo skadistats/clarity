@@ -3,12 +3,26 @@ package skadistats.clarity.processor.runner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.event.*;
+import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
+import skadistats.clarity.event.InitializerMethod;
+import skadistats.clarity.event.InvocationPoint;
+import skadistats.clarity.event.Provides;
+import skadistats.clarity.event.UsagePoint;
+import skadistats.clarity.event.UsagePointMarker;
+import skadistats.clarity.event.UsagePointProvider;
+import skadistats.clarity.event.UsagePointType;
+import skadistats.clarity.event.UsagePoints;
+import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class ExecutionModel {
 
@@ -31,6 +45,7 @@ public class ExecutionModel {
     }
 
     public <T> T getProcessor(Class<T> processorClass) {
+        //noinspection unchecked
         return (T) processors.get(processorClass);
     }
 
@@ -38,12 +53,21 @@ public class ExecutionModel {
         return runner;
     }
 
+    private boolean hasProcessorForClass(Class<?> processorClass) {
+        for (Class<?> existingClass : processors.keySet()) {
+            if (processorClass.isAssignableFrom(existingClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void requireProcessorClass(Class<?> processorClass) {
-        if (!processors.containsKey(processorClass)) {
+        if (!hasProcessorForClass(processorClass)) {
             log.debug("require processor {}", processorClass.getName());
             processors.put(processorClass, null);
-            List<UsagePoint> ups = findUsagePoints(processorClass);
-            for (UsagePoint up : ups) {
+            List<UsagePoint<? extends Annotation>> ups = findUsagePoints(processorClass);
+            for (UsagePoint<? extends Annotation> up : ups) {
                 usagePoints.add(up);
                 if (up instanceof EventListener) {
                     requireEventListener((EventListener) up);
@@ -56,16 +80,43 @@ public class ExecutionModel {
         }
     }
 
-    private void requireProvider(UsagePoint up) {
-        if (OnInputSource.class.equals(up.getUsagePointClass())) {
-            return;
+    private boolean supportsRunner(Provides provides) {
+        for (Class<? extends Runner> supportedRunner : provides.runnerClass()) {
+            if (supportedRunner.isAssignableFrom(runner.getClass())) {
+                return true;
+            }
         }
-        UsagePointProvider provider = UsagePoints.getProviderFor(up.getUsagePointClass(), runner.getEngineType());
-        if (provider == null) {
-            throw new RuntimeException("oops. no provider found for required usage point " + up.getUsagePointClass());
-        }
-        requireProcessorClass(provider.getProviderClass());
+        return false;
     }
+
+    private boolean supportsEngineType(Provides provides) {
+        for (EngineType engineType : provides.engine()) {
+            if (engineType == runner.getEngineType()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void requireProvider(UsagePoint<? extends Annotation> up) {
+        Class<? extends Annotation> usagePointClass = up.getUsagePointClass();
+        List<UsagePointProvider> providers = UsagePoints.getProvidersFor(usagePointClass);
+        if (providers != null) {
+            for (UsagePointProvider usagePointProvider : providers) {
+                Provides a = usagePointProvider.getProvidesAnnotation();
+                if (a.runnerClass().length > 0 && !supportsRunner(a)) {
+                    continue;
+                }
+                if (a.engine().length > 0 && !supportsEngineType(a)) {
+                    continue;
+                }
+                requireProcessorClass(usagePointProvider.getProviderClass());
+                return;
+            }
+        }
+        throw new RuntimeException("oops. no provider found for required usage point " + usagePointClass);
+    }
+
 
     private void requireEventListener(EventListener eventListener) {
         log.debug("require event listener {}", eventListener.getUsagePointClass());
@@ -87,8 +138,8 @@ public class ExecutionModel {
         initializers.put(initializer.getUsagePointClass(), initializer);
     }
 
-    private List<UsagePoint> findUsagePoints(Class<?> searchedClass) {
-        List<UsagePoint> ups = new ArrayList<>();
+    private List<UsagePoint<? extends Annotation>> findUsagePoints(Class<?> searchedClass) {
+        List<UsagePoint<? extends Annotation>> ups = new ArrayList<>();
         for (Annotation classAnnotation : searchedClass.getAnnotations()) {
             if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
                 ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));

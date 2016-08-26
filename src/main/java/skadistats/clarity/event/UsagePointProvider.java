@@ -6,10 +6,12 @@ public class UsagePointProvider {
 
     private final Class<? extends Annotation> eventClass;
     private final Class<?> providerClass;
+    private final Provides providesAnnotation;
 
-    public UsagePointProvider(Class<? extends Annotation> eventClass, Class<?> providerClass) {
+    public UsagePointProvider(Class<? extends Annotation> eventClass, Class<?> providerClass, Provides providesAnnotation) {
         this.eventClass = eventClass;
         this.providerClass = providerClass;
+        this.providesAnnotation = providesAnnotation;
     }
 
     public Class<? extends Annotation> getEventClass() {
@@ -18,6 +20,10 @@ public class UsagePointProvider {
 
     public Class<?> getProviderClass() {
         return providerClass;
+    }
+
+    public Provides getProvidesAnnotation() {
+        return providesAnnotation;
     }
 
     @Override
@@ -29,6 +35,7 @@ public class UsagePointProvider {
 
         if (!eventClass.equals(that.eventClass)) return false;
         if (!providerClass.equals(that.providerClass)) return false;
+        if (!providesAnnotation.equals(that.providesAnnotation)) return false;
 
         return true;
     }
@@ -37,6 +44,8 @@ public class UsagePointProvider {
     public int hashCode() {
         int result = eventClass.hashCode();
         result = 31 * result + providerClass.hashCode();
+        result = 31 * result + providesAnnotation.hashCode();
         return result;
     }
+
 }

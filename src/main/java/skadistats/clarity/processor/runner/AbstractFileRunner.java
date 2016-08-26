@@ -1,10 +1,12 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 
+@Provides({OnInputSource.class})
 public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
 
     protected final Source source;
