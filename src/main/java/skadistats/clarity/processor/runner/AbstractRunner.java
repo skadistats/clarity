@@ -8,7 +8,7 @@ import skadistats.clarity.processor.reader.OnTickStart;
 
 import java.io.IOException;
 
-public abstract class AbstractRunner<T extends AbstractRunner<? super T>> implements Runner<T> {
+public abstract class AbstractRunner implements Runner {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 

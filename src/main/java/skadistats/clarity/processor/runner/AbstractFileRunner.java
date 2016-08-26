@@ -5,7 +5,7 @@ import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 
-public abstract class AbstractFileRunner<T extends AbstractFileRunner<? super T>> extends AbstractRunner<AbstractFileRunner<T>> implements FileRunner<AbstractFileRunner<T>> {
+public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
 
     protected final Source source;
     protected LoopController loopController;
@@ -16,11 +16,9 @@ public abstract class AbstractFileRunner<T extends AbstractFileRunner<? super T>
         engineType.skipHeaderOffsets(source);
     }
 
-    @Override
-    public AbstractFileRunner<T> runWith(Object... processors) {
+    protected void initAndRunWith(Object... processors) {
         initWithProcessors(processors);
         context.createEvent(OnInputSource.class, Source.class, LoopController.class).raise(source, loopController);
-        return this;
     }
 
     @Override

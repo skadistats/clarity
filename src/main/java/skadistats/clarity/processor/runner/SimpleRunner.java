@@ -4,7 +4,7 @@ import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 
-public class SimpleRunner extends AbstractFileRunner<SimpleRunner> {
+public class SimpleRunner extends AbstractFileRunner {
 
     private final LoopController.Func controllerFunc = new LoopController.Func() {
         @Override
@@ -30,6 +30,11 @@ public class SimpleRunner extends AbstractFileRunner<SimpleRunner> {
     public SimpleRunner(Source s) throws IOException {
         super(s, s.readEngineType());
         this.loopController = new LoopController(controllerFunc);
+    }
+
+    public SimpleRunner runWith(final Object... processors) {
+        initAndRunWith(processors);
+        return this;
     }
 
 }

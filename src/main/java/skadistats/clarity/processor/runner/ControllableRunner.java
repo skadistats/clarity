@@ -10,7 +10,7 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
-public class ControllableRunner extends AbstractFileRunner<ControllableRunner> {
+public class ControllableRunner extends AbstractFileRunner {
 
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition wantedTickReached = lock.newCondition();
@@ -199,13 +199,12 @@ public class ControllableRunner extends AbstractFileRunner<ControllableRunner> {
         this.loopController = new LockingLoopController(normalLoopControl);
     }
 
-    @Override
     public ControllableRunner runWith(final Object... processors) {
         runnerThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 log.debug("runner started");
-                ControllableRunner.super.runWith(processors);
+                initAndRunWith(processors);
                 log.debug("runner finished");
             }
         });
