@@ -6,8 +6,6 @@ import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 
-import java.io.IOException;
-
 public abstract class AbstractRunner implements Runner {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -20,7 +18,7 @@ public abstract class AbstractRunner implements Runner {
     /* tick is synthetic (does not contain replay data) */
     protected boolean synthetic = true;
 
-    public AbstractRunner(EngineType engineType) throws IOException {
+    public AbstractRunner(EngineType engineType) {
         this.engineType = engineType;
         this.tick = -1;
     }
