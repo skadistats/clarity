@@ -36,8 +36,7 @@ public class InputSourceProcessor {
 
     private final byte[][] buffer = new byte[][] { new byte[128*1024], new byte[256*1024], new byte[128*1024] };
 
-    // TODO: set to false when issue #58 is closed.
-    private boolean unpackUserMessages = true;
+    private boolean unpackUserMessages = false;
 
     private Event<OnReset> evReset = null;
     private Event<OnFullPacket> evFull = null;

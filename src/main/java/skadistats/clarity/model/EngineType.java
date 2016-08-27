@@ -30,7 +30,8 @@ public enum EngineType {
         }
         @Override
         public boolean isUserMessage(Class<? extends GeneratedMessage> clazz) {
-            return skadistats.clarity.wire.s1.UserMessagePackets.isKnownClass(clazz);
+            return clazz.equals(GeneratedMessage.class)
+                || skadistats.clarity.wire.s1.UserMessagePackets.isKnownClass(clazz);
         }
         @Override
         public int readEmbeddedKind(BitStream bs) {
