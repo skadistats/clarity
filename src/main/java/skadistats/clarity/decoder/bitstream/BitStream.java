@@ -67,6 +67,13 @@ public abstract class BitStream {
         return pos;
     }
 
+    public void pos(int pos) {
+        if (pos >= len) {
+            throw new UnsupportedOperationException("pos >= len");
+        }
+        this.pos = pos;
+    }
+
     public int remaining() {
         return len - pos;
     }
