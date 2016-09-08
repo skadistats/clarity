@@ -115,7 +115,9 @@
                         <configuration>
                             <keyname>2DAD9425307EC268</keyname>
                             <passphraseServerId>clarity.gpg</passphraseServerId>
-                            <gpgArguments>--pinentry-mode=loopback</gpgArguments>
+                            <gpgArguments>
+                                <arg>--pinentry-mode=loopback</arg>
+                            </gpgArguments>
                         </configuration>
                     </execution>
                 </executions>
