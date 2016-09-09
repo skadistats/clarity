@@ -145,11 +145,19 @@ public class ExecutionModel {
                 ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
             }
         }
-        for (Method method : searchedClass.getMethods()) {
-            for (Annotation methodAnnotation : method.getAnnotations()) {
-                if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
-                    ups.add(UsagePointType.newInstance(methodAnnotation, searchedClass, method));
+        Class<?> c = searchedClass;
+        while (true) {
+            for (Method method : c.getDeclaredMethods()) {
+                for (Annotation methodAnnotation : method.getAnnotations()) {
+                    if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
+                        method.setAccessible(true);
+                        ups.add(UsagePointType.newInstance(methodAnnotation, searchedClass, method));
+                    }
                 }
+            }
+            c = c.getSuperclass();
+            if (c == Object.class) {
+                break;
             }
         }
         return ups;
