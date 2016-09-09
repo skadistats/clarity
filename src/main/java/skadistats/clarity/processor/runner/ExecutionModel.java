@@ -145,10 +145,9 @@ public class ExecutionModel {
                 ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
             }
         }
-        for (Method method : searchedClass.getDeclaredMethods()) {
+        for (Method method : searchedClass.getMethods()) {
             for (Annotation methodAnnotation : method.getAnnotations()) {
                 if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
-                    method.setAccessible(true);
                     ups.add(UsagePointType.newInstance(methodAnnotation, searchedClass, method));
                 }
             }
