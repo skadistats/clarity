@@ -7,6 +7,7 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.InitializerMethod;
 import skadistats.clarity.event.InvocationPoint;
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.event.UsagePoint;
 import skadistats.clarity.event.UsagePointMarker;
@@ -16,6 +17,7 @@ import skadistats.clarity.event.UsagePoints;
 import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,7 +177,7 @@ public class ExecutionModel {
         }
     }
 
-    private void bindInvocationPoints(Context context) {
+    private void bindInvocationPoints(skadistats.clarity.processor.runner.Context context) {
         for (UsagePoint up : usagePoints) {
             if (up instanceof InvocationPoint){
                 try {
@@ -185,6 +187,68 @@ public class ExecutionModel {
                 }
 
             }
+        }
+    }
+
+    private void processInjections() {
+        for (Object processor : processors.values()) {
+            Class<?> c = processor.getClass();
+            while (true) {
+                for (Field field : c.getDeclaredFields()) {
+                    for (Annotation fieldAnnotation : field.getAnnotations()) {
+                        if (fieldAnnotation instanceof Insert) {
+                            if (field.getType().isAssignableFrom(Context.class)) {
+                                injectContext(processor, field);
+                            } else {
+                                injectProcessor(processor, field);
+                            }
+                        }
+                    }
+                }
+                c = c.getSuperclass();
+                if (c == Object.class) {
+                    break;
+                }
+            }
+        }
+    }
+
+    private void injectContext(Object processor, Field field) {
+        injectValue(processor, field, runner.getContext(), "cannot inject context");
+    }
+
+    private void injectProcessor(Object processor, Field field) {
+        Object injectedValue = null;
+        for (Object p : processors.values()) {
+            if (field.getType().isAssignableFrom(p.getClass())) {
+                injectedValue = p;
+                break;
+            }
+        }
+        if (injectedValue == null) {
+            throw new RuntimeException(String.format(
+                    "cannot inject processor of type %s into processor of type %s: not found!",
+                    field.getType().getName(),
+                    processor.getClass().getName()
+            ));
+        }
+        injectValue(processor, field, injectedValue, "cannot inject processor");
+    }
+
+    private void injectValue(Object processor, Field field, Object value, String errMessage) {
+        try {
+            field.setAccessible(true);
+            field.set(processor, value);
+        } catch (Exception e) {
+            throw new RuntimeException(
+                    String.format(
+                            "%s, field is class %s, value is class %s",
+                            errMessage,
+                            field.getClass().getName(),
+                            runner.getContext().getClass().getName()
+                    ),
+                    e
+            );
         }
     }
 
@@ -204,9 +268,10 @@ public class ExecutionModel {
         }
     }
 
-    public void initialize(Context context) {
+    public void initialize(skadistats.clarity.processor.runner.Context context) {
         instantiateMissingProcessors();
         bindInvocationPoints(context);
+        processInjections();
         callInitializers();
     }
 

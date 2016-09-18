@@ -36,11 +36,24 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
         this.invocationPredicate = invocationPredicate;
     }
 
+    private boolean hasContextParameter() {
+        if (method.getParameterCount() == 0) {
+            return false;
+        }
+        if (method.getParameters()[0].getType().isAssignableFrom(Context.class)) {
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void bind(Context ctx) throws IllegalAccessException {
         log.debug("bind {} to context", method);
-        MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass)).bindTo(ctx);
-        methodHandle = boundHandle.asSpreader(Object[].class, arity);
+        MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass));
+        if (hasContextParameter()) {
+            boundHandle = boundHandle.bindTo(ctx);
+        }
+        this.methodHandle = boundHandle.asSpreader(Object[].class, arity);
     }
 
     @Override
