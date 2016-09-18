@@ -148,5 +148,4 @@ public enum EngineType {
         return serial << indexBits | index;
     }
 
-
 }

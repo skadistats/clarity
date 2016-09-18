@@ -69,7 +69,7 @@ public class Entities {
     }
 
     @OnInit
-    public void onInitRun() {
+    public void onInit() {
         fieldReader = engineType.getNewFieldReader();
         entities = new Entity[1 << engineType.getIndexBits()];
         deletions = new int[1 << engineType.getIndexBits()];

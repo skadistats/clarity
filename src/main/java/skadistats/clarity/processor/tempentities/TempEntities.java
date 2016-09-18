@@ -31,7 +31,7 @@ public class TempEntities {
     private FieldReader fieldReader;
 
     @OnInit
-    public void initOnEntityUpdated() {
+    public void onInit() {
         fieldReader = engineType.getNewFieldReader();
     }
 
