@@ -1,12 +1,13 @@
 package skadistats.clarity.processor.gameevents;
 
+import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
@@ -20,8 +21,13 @@ public class GameEvents {
     private final Map<Integer, GameEventDescriptor> byId = new TreeMap<>();
     private final Map<String, GameEventDescriptor> byName = new TreeMap<>();
 
+    @InsertEvent
+    private Event<OnGameEventDescriptor> evGameEventDescriptor;
+    @InsertEvent
+    private Event<OnGameEvent> evGameEvent;
+
     @Initializer(OnGameEventDescriptor.class)
-    public void initOnGameEventDescriptor(final Context ctx, final EventListener<OnGameEventDescriptor> eventListener) {
+    public void initOnGameEventDescriptor(final EventListener<OnGameEventDescriptor> eventListener) {
         eventListener.setInvocationPredicate(new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] args) {
@@ -33,7 +39,7 @@ public class GameEvents {
     }
 
     @Initializer(OnGameEvent.class)
-    public void initOnGameEvent(final Context ctx, final EventListener<OnGameEvent> eventListener) {
+    public void initOnGameEvent(final EventListener<OnGameEvent> eventListener) {
         eventListener.setInvocationPredicate(new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] args) {
@@ -45,7 +51,7 @@ public class GameEvents {
     }
 
     @OnMessage(NetMessages.CSVCMsg_GameEventList.class)
-    public void onGameEventList(Context ctx, NetMessages.CSVCMsg_GameEventList message) {
+    public void onGameEventList(NetMessages.CSVCMsg_GameEventList message) {
         for (NetMessages.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
             String[] keys = new String[d.getKeysCount()];
             for (int i = 0; i < d.getKeysCount(); i++) {
@@ -59,17 +65,17 @@ public class GameEvents {
             );
             byName.put(gev.getName(), gev);
             byId.put(gev.getEventId(), gev);
-            ctx.createEvent(OnGameEventDescriptor.class, GameEventDescriptor.class).raise(gev);
+            evGameEventDescriptor.raise(gev);
         }
     }
 
     @OnMessage(NetworkBaseTypes.CSVCMsg_GameEvent.class)
-    public void onGameEvent(Context ctx, NetworkBaseTypes.CSVCMsg_GameEvent message) {
+    public void onGameEvent(NetworkBaseTypes.CSVCMsg_GameEvent message) {
         GameEventDescriptor desc = byId.get(message.getEventid());
         GameEvent e = new GameEvent(desc);
         for (int i = 0; i < message.getKeysCount(); i++) {
             NetworkBaseTypes.CSVCMsg_GameEvent.key_t key = message.getKeys(i);
-            Object value = null;
+            Object value;
             switch (key.getType()) {
                 case 1:
                     value = key.getValString();
@@ -97,7 +103,7 @@ public class GameEvents {
             }
             e.set(i, value);
         }
-        ctx.createEvent(OnGameEvent.class, GameEvent.class).raise(e);
+        evGameEvent.raise(e);
     }
 
 }
