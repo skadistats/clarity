@@ -4,7 +4,6 @@ import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.Demo;
 
 import java.util.Iterator;
@@ -19,12 +18,12 @@ public class DTClasses {
     private int classBits;
 
     @OnDTClass
-    public void onDTClass(Context ctx, DTClass dtClass) {
+    public void onDTClass(DTClass dtClass) {
         byDtName.put(dtClass.getDtName(), dtClass);
     }
 
     @OnMessage(Demo.CDemoSyncTick.class)
-    public void onSyncTick(Context ctx, Demo.CDemoSyncTick message) {
+    public void onSyncTick(Demo.CDemoSyncTick message) {
         classBits = Util.calcBitsNeededFor(byClassId.size() - 1);
     }
 

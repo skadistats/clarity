@@ -6,6 +6,9 @@ import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
 import skadistats.clarity.decoder.s2.field.*;
+import skadistats.clarity.event.Event;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.model.DTClass;
@@ -40,6 +43,14 @@ public class S2DTClassEmitter {
         ITEM_COUNTS.put("MAX_ABILITY_DRAFT_ABILITIES", 48);
     }
 
+    @Insert
+    private Context ctx;
+    @Insert
+    private DTClasses dtClasses;
+
+    @InsertEvent
+    private Event<OnDTClass> evDtClass;
+
     private FieldType createFieldType(String type) {
         return new FieldType(type);
     }
@@ -67,7 +78,7 @@ public class S2DTClassEmitter {
     }
 
     @OnMessage(Demo.CDemoSendTables.class)
-    public void onSendTables(Context ctx, Demo.CDemoSendTables sendTables) throws IOException {
+    public void onSendTables(Demo.CDemoSendTables sendTables) throws IOException {
         CodedInputStream cis = CodedInputStream.newInstance(ZeroCopy.extract(sendTables.getData()));
         S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage = Packet.parse(
             S2NetMessages.CSVCMsg_FlattenedSerializer.class,
@@ -131,14 +142,13 @@ public class S2DTClassEmitter {
 
         for (Serializer serializer : serializers.values()) {
             DTClass dtClass = new S2DTClass(serializer);
-            ctx.createEvent(OnDTClass.class, DTClass.class).raise(dtClass);
+            evDtClass.raise(dtClass);
         }
 
     }
 
     @OnMessage(Demo.CDemoClassInfo.class)
-    public void onClassInfo(Context ctx, Demo.CDemoClassInfo message) {
-        DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
+    public void onClassInfo(Demo.CDemoClassInfo message) {
         for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
             DTClass dt = dtClasses.forDtName(ct.getNetworkName());
             dt.setClassId(ct.getClassId());
