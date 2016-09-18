@@ -5,12 +5,13 @@ import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.ReceiveProp;
 import skadistats.clarity.decoder.s1.S1DTClass;
 import skadistats.clarity.event.Event;
-import skadistats.clarity.event.EventListener;
-import skadistats.clarity.event.Initializer;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
@@ -19,19 +20,25 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 @UsesDTClasses
 public class TempEntities {
 
+    @Insert
+    private EngineType engineType;
+    @Insert
+    private DTClasses dtClasses;
+
+    @InsertEvent
+    private Event<OnTempEntity> evTempEntity;
+
     private FieldReader fieldReader;
 
-    @Initializer(OnTempEntity.class)
-    public void initOnEntityUpdated(final Context ctx, final EventListener<OnTempEntity> eventListener) {
-        fieldReader = ctx.getEngineType().getNewFieldReader();
+    @OnInit
+    public void initOnEntityUpdated() {
+        fieldReader = engineType.getNewFieldReader();
     }
 
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
-    public void onTempEntities(Context ctx, S1NetMessages.CSVCMsg_TempEntities message) {
-        Event<OnTempEntity> ev = ctx.createEvent(OnTempEntity.class, Entity.class);
-        if (ev.isListenedTo()) {
+    public void onTempEntities(S1NetMessages.CSVCMsg_TempEntities message) {
+        if (evTempEntity.isListenedTo()) {
             BitStream stream = BitStream.createBitStream(message.getEntityData());
-            DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
             S1DTClass cls = null;
             ReceiveProp[] receiveProps = null;
             int count = message.getNumEntries();
@@ -43,7 +50,7 @@ public class TempEntities {
                 }
                 Object[] state = new Object[receiveProps.length];
                 fieldReader.readFields(stream, cls, state, false);
-                ev.raise(new Entity(ctx.getEngineType(), 0, 0, cls, true, state));
+                evTempEntity.raise(new Entity(engineType, 0, 0, cls, true, state));
             }
         }
     }
