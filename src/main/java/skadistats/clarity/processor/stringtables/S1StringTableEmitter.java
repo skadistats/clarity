@@ -8,7 +8,6 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
@@ -19,7 +18,7 @@ import java.util.LinkedList;
 public class S1StringTableEmitter extends BaseStringTableEmitter {
 
     @OnMessage(S1NetMessages.CSVCMsg_CreateStringTable.class)
-    public void onCreateStringTable(Context ctx, S1NetMessages.CSVCMsg_CreateStringTable message) {
+    public void onCreateStringTable(S1NetMessages.CSVCMsg_CreateStringTable message) {
         if (isProcessed(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
@@ -29,22 +28,21 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 message.getUserDataSizeBits(),
                 message.getFlags()
             );
-            decodeEntries(ctx, table, 3, message.getStringData(), message.getNumEntries());
-            ctx.createEvent(OnStringTableCreated.class, int.class, StringTable.class).raise(numTables, table);
+            decodeEntries(table, 3, message.getStringData(), message.getNumEntries());
+            evCreated.raise(numTables, table);
         }
         numTables++;
     }
 
     @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, NetMessages.CSVCMsg_UpdateStringTable message) {
-        StringTables stringTables = ctx.getProcessor(StringTables.class);
+    public void onUpdateStringTable(NetMessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
-            decodeEntries(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
+            decodeEntries(table, 2, message.getStringData(), message.getNumChangedEntries());
         }
     }
 
-    private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) {
+    private void decodeEntries(StringTable table, int mode, ByteString data, int numEntries) {
         BitStream stream = BitStream.createBitStream(data);
         int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
         LinkedList<String> keyHistory = new LinkedList<>();
@@ -91,7 +89,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 stream.readBitsIntoByteArray(valueBuf, bitLength);
                 value = ZeroCopy.wrap(valueBuf);
             }
-            setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
+            setSingleEntry(table, mode, index, nameBuf.toString(), value);
         }
     }
 

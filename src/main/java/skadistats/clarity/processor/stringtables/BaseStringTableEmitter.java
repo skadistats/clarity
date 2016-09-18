@@ -6,6 +6,8 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.UsagePoint;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -34,15 +36,21 @@ public class BaseStringTableEmitter {
 
     private final Map<String, Demo.CDemoStringTables.table_t> resetStringTables = new TreeMap<>();
 
-    private Event<OnStringTableEntry> updateEvent = null;
+    @Insert
+    protected StringTables stringTables;
+
+    @InsertEvent
+    private Event<OnStringTableEntry> updateEvent;
+    @InsertEvent
+    protected Event<OnStringTableCreated> evCreated;
 
     @Initializer(UsesStringTable.class)
-    public void initStringTableUsage(final Context ctx, final UsagePoint<UsesStringTable> usagePoint) {
+    public void initStringTableUsage(final UsagePoint<UsesStringTable> usagePoint) {
         requestedTables.add(usagePoint.getAnnotation().value());
     }
 
     @Initializer(OnStringTableEntry.class)
-    public void initStringTableEntryEvent(final Context ctx, final EventListener<OnStringTableEntry> eventListener) {
+    public void initStringTableEntryEvent(final EventListener<OnStringTableEntry> eventListener) {
         final String tableName = eventListener.getAnnotation().value();
         requestedTables.add(tableName);
         if ("*".equals(tableName)) {
@@ -50,7 +58,6 @@ public class BaseStringTableEmitter {
         } else {
             updateEventTables.add(tableName);
         }
-        updateEvent = ctx.createEvent(OnStringTableEntry.class, StringTable.class, int.class, String.class, ByteString.class);
         eventListener.setInvocationPredicate(new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] args) {
@@ -64,20 +71,17 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void setSingleEntry(Context ctx, StringTable table, int mode, int index, String key, ByteString value) {
+    protected void setSingleEntry(StringTable table, int mode, int index, String key, ByteString value) {
         table.set(mode, index, key, value);
         raise(table, index, key, value);
     }
 
     protected void raise(StringTable table, int index, String key, ByteString value) {
-        if (updateEvent != null) {
-            updateEvent.raise(table, index, key, value);
-        }
+        updateEvent.raise(table, index, key, value);
     }
 
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
-        StringTables stringTables = ctx.getProcessor(StringTables.class);
+    public void onReset(Demo.CDemoStringTables packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
             resetStringTables.clear();
             for (StringTable table : stringTables.byName.values()) {
@@ -96,7 +100,7 @@ public class BaseStringTableEmitter {
                 if (tt != null) {
                     for (int i = 0; i < tt.getItemsCount(); i++) {
                         Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                        setSingleEntry(ctx, table, 2, i, it.getStr(), it.getData());
+                        setSingleEntry(table, 2, i, it.getStr(), it.getData());
                     }
                 } else {
                     for (int i = 0; i < table.getEntryCount(); i++) {
@@ -108,8 +112,7 @@ public class BaseStringTableEmitter {
     }
 
     @OnMessage(Demo.CDemoStringTables.class)
-    public void onStringTables(Context ctx, Demo.CDemoStringTables packet) {
-        StringTables stringTables = ctx.getProcessor(StringTables.class);
+    public void onStringTables(Demo.CDemoStringTables packet) {
         for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
             StringTable table = stringTables.byName.get(tt.getTableName());
             if (table == null) {
@@ -117,11 +120,9 @@ public class BaseStringTableEmitter {
             }
             for (int i = 0; i < tt.getItemsCount(); i++) {
                 Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                setSingleEntry(ctx, table, 2, i, it.getStr(), it.getData());
+                setSingleEntry(table, 2, i, it.getStr(), it.getData());
             }
         }
-
     }
-
 
 }

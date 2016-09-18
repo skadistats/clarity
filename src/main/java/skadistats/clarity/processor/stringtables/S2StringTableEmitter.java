@@ -4,6 +4,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
@@ -20,10 +21,13 @@ import java.util.LinkedList;
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 
+    @Insert
+    private Context context;
+
     private final byte[] tempBuf = new byte[0x4000];
 
     @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
-    public void onCreateStringTable(Context ctx, S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
+    public void onCreateStringTable(S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
         if (isProcessed(message.getName())) {
             StringTable table = new StringTable(
                 message.getName(),
@@ -37,29 +41,28 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             ByteString data = message.getStringData();
             if (message.getDataCompressed()) {
                 byte[] dst;
-                if (ctx.getBuildNumber() != -1 && ctx.getBuildNumber() <= 962) {
+                if (context.getBuildNumber() != -1 && context.getBuildNumber() <= 962) {
                     dst = LZSS.unpack(data);
                 } else {
                     dst = Snappy.uncompress(ZeroCopy.extract(data));
                 }
                 data = ZeroCopy.wrap(dst);
             }
-            decodeEntries(ctx, table, 3, data, message.getNumEntries());
-            ctx.createEvent(OnStringTableCreated.class, int.class, StringTable.class).raise(numTables, table);
+            decodeEntries(table, 3, data, message.getNumEntries());
+            evCreated.raise(numTables, table);
         }
         numTables++;
     }
 
     @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(Context ctx, NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
-        StringTables stringTables = ctx.getProcessor(StringTables.class);
+    public void onUpdateStringTable(NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
-            decodeEntries(ctx, table, 2, message.getStringData(), message.getNumChangedEntries());
+            decodeEntries(table, 2, message.getStringData(), message.getNumChangedEntries());
         }
     }
 
-    private void decodeEntries(Context ctx, StringTable table, int mode, ByteString data, int numEntries) throws IOException {
+    private void decodeEntries(StringTable table, int mode, ByteString data, int numEntries) throws IOException {
         BitStream stream = BitStream.createBitStream(data);
         LinkedList<String> keyHistory = new LinkedList<>();
 
@@ -117,7 +120,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
 
                 value = ZeroCopy.wrap(valueBuf);
             }
-            setSingleEntry(ctx, table, mode, index, nameBuf.toString(), value);
+            setSingleEntry(table, mode, index, nameBuf.toString(), value);
         }
     }
 
