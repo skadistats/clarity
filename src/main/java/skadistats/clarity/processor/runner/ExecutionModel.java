@@ -6,6 +6,7 @@ import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.InitializerMethod;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.InvocationPoint;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
@@ -19,6 +20,8 @@ import skadistats.clarity.model.EngineType;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -198,10 +201,14 @@ public class ExecutionModel {
                     for (Annotation fieldAnnotation : field.getAnnotations()) {
                         if (fieldAnnotation instanceof Insert) {
                             if (field.getType().isAssignableFrom(Context.class)) {
-                                injectContext(processor, field);
+                                injectValue(processor, field, runner.getContext(), "cannot inject context");
+                            } else if (field.getType().isAssignableFrom(EngineType.class)) {
+                                injectValue(processor, field, runner.getContext().getEngineType(), "cannot inject engine type");
                             } else {
                                 injectProcessor(processor, field);
                             }
+                        } else if (fieldAnnotation instanceof InsertEvent) {
+                            injectEvent(processor, field, (InsertEvent) fieldAnnotation);
                         }
                     }
                 }
@@ -213,8 +220,21 @@ public class ExecutionModel {
         }
     }
 
-    private void injectContext(Object processor, Field field) {
-        injectValue(processor, field, runner.getContext(), "cannot inject context");
+    private void injectEvent(Object processor, Field field, InsertEvent fieldAnnotation) {
+        Class<? extends Annotation> eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        Class<?>[] parameterTypes;
+        if (fieldAnnotation.override()) {
+            parameterTypes = fieldAnnotation.parameterTypes();
+        } else {
+            UsagePointMarker marker = eventType.getAnnotation(UsagePointMarker.class);
+            parameterTypes = marker.parameterClasses();
+        }
+        Set<EventListener<Annotation>> listeners = computeListenersForEvent((Class<Annotation>) eventType, parameterTypes);
+        Event<?> injectedValue = null;
+        if (listeners.size() != 0) {
+            injectedValue = new Event<>(listeners);
+        }
+        injectValue(processor, field, injectedValue, "cannot inject event");
     }
 
     private void injectProcessor(Object processor, Field field) {
@@ -276,16 +296,21 @@ public class ExecutionModel {
     }
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
+        Set<EventListener<A>> listeners = computeListenersForEvent(eventType, parameterTypes);
+        return new Event<>(listeners);
+    }
+
+    private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {
         Set<EventListener<A>> listeners = new HashSet<>();
         Set<EventListener> eventListeners = processedEvents.get(eventType);
         if(eventListeners != null) {
-            for (EventListener<A> listener : eventListeners) {
+            for (@SuppressWarnings("unchecked") EventListener<A> listener : eventListeners) {
                 if (listener.isInvokedForParameterClasses(parameterTypes)) {
                     listeners.add(listener);
                 }
             }
         }
-        return new Event<>(listeners);
+        return listeners;
     }
 
 }

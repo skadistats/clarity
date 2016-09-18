@@ -12,6 +12,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
@@ -34,13 +35,21 @@ public class Entities {
     private Entity[] entities;
     private int[] deletions;
     private FieldReader fieldReader;
+
+    @Insert
     private EngineType engineType;
 
+    @InsertEvent
     private Event<OnEntityCreated> evCreated;
+    @InsertEvent
     private Event<OnEntityUpdated> evUpdated;
+    @InsertEvent
     private Event<OnEntityDeleted> evDeleted;
+    @InsertEvent
     private Event<OnEntityEntered> evEntered;
+    @InsertEvent
     private Event<OnEntityLeft> evLeft;
+    @InsertEvent
     private Event<OnEntityUpdatesCompleted> evUpdatesCompleted;
 
     private class BaselineEntry {
@@ -52,54 +61,11 @@ public class Entities {
         }
     }
 
-    @Initializer(UsesEntities.class)
-    public void initUsesEntities(final Context ctx, final UsagePoint<UsesEntities> usagePoint) {
-        initEngineDependentFields(ctx);
-    }
-
-    @Initializer(OnEntityCreated.class)
-    public void initOnEntityCreated(final Context ctx, final EventListener<OnEntityCreated> eventListener) {
-        initEngineDependentFields(ctx);
-        evCreated = ctx.createEvent(OnEntityCreated.class, Entity.class);
-    }
-
-    @Initializer(OnEntityUpdated.class)
-    public void initOnEntityUpdated(final Context ctx, final EventListener<OnEntityUpdated> eventListener) {
-        initEngineDependentFields(ctx);
-        evUpdated = ctx.createEvent(OnEntityUpdated.class, Entity.class, FieldPath[].class, int.class);
-    }
-
-    @Initializer(OnEntityDeleted.class)
-    public void initOnEntityDeleted(final Context ctx, final EventListener<OnEntityDeleted> eventListener) {
-        initEngineDependentFields(ctx);
-        evDeleted = ctx.createEvent(OnEntityDeleted.class, Entity.class);
-    }
-
-    @Initializer(OnEntityEntered.class)
-    public void initOnEntityEntered(final Context ctx, final EventListener<OnEntityEntered> eventListener) {
-        initEngineDependentFields(ctx);
-        evEntered = ctx.createEvent(OnEntityEntered.class, Entity.class);
-    }
-
-    @Initializer(OnEntityLeft.class)
-    public void initOnEntityLeft(final Context ctx, final EventListener<OnEntityLeft> eventListener) {
-        initEngineDependentFields(ctx);
-        evLeft = ctx.createEvent(OnEntityLeft.class, Entity.class);
-    }
-
-    @Initializer(OnEntityUpdatesCompleted.class)
-    public void initOnEntityUpdatesCompleted(final Context ctx, final EventListener<OnEntityUpdatesCompleted> eventListener) {
-        initEngineDependentFields(ctx);
-        evUpdatesCompleted = ctx.createEvent(OnEntityUpdatesCompleted.class);
-    }
-
-    private void initEngineDependentFields(Context ctx) {
-        if (fieldReader == null) {
-            engineType = ctx.getEngineType();
-            fieldReader = ctx.getEngineType().getNewFieldReader();
-            entities = new Entity[1 << engineType.getIndexBits()];
-            deletions = new int[1 << engineType.getIndexBits()];
-        }
+    @OnInit
+    public void onInitRun() {
+        fieldReader = engineType.getNewFieldReader();
+        entities = new Entity[1 << engineType.getIndexBits()];
+        deletions = new int[1 << engineType.getIndexBits()];
     }
 
     @OnReset

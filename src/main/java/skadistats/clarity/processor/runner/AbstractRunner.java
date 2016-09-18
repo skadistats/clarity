@@ -2,13 +2,18 @@ package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import skadistats.clarity.event.Event;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 
-@Provides({OnTickStart.class, OnTickEnd.class, })
+@Provides({OnTickStart.class, OnTickEnd.class, OnInit.class})
 public abstract class AbstractRunner implements Runner {
+
+    @InsertEvent
+    private Event<OnInit> evInitRun;
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -37,6 +42,9 @@ public abstract class AbstractRunner implements Runner {
         ExecutionModel em = createExecutionModel(processors);
         context = new Context(em);
         em.initialize(context);
+        if (evInitRun != null) {
+            evInitRun.raise();
+        }
     }
 
     protected void endTicksUntil(Context ctx, int untilTick) {
