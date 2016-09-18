@@ -229,12 +229,7 @@ public class ExecutionModel {
             UsagePointMarker marker = eventType.getAnnotation(UsagePointMarker.class);
             parameterTypes = marker.parameterClasses();
         }
-        Set<EventListener<Annotation>> listeners = computeListenersForEvent((Class<Annotation>) eventType, parameterTypes);
-        Event<?> injectedValue = null;
-        if (listeners.size() != 0) {
-            injectedValue = new Event<>(listeners);
-        }
-        injectValue(processor, field, injectedValue, "cannot inject event");
+        injectValue(processor, field, createEvent(eventType, parameterTypes), "cannot inject event");
     }
 
     private void injectProcessor(Object processor, Field field) {

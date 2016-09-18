@@ -12,10 +12,14 @@ import skadistats.clarity.processor.reader.OnTickStart;
 @Provides({OnTickStart.class, OnTickEnd.class, OnInit.class})
 public abstract class AbstractRunner implements Runner {
 
+    protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    @InsertEvent
+    private Event<OnTickStart> evTickStart;
+    @InsertEvent
+    private Event<OnTickEnd> evTickEnd;
     @InsertEvent
     private Event<OnInit> evInitRun;
-
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     protected final EngineType engineType;
     protected Context context;
@@ -47,21 +51,21 @@ public abstract class AbstractRunner implements Runner {
         }
     }
 
-    protected void endTicksUntil(Context ctx, int untilTick) {
+    protected void endTicksUntil(int untilTick) {
         while (tick < untilTick) {
-            ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
+            evTickEnd.raise(synthetic);
             setTick(tick + 1);
             synthetic = true;
-            ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
+            evTickStart.raise(synthetic);
         }
-        ctx.createEvent(OnTickEnd.class, boolean.class).raise(synthetic);
+        evTickEnd.raise(synthetic);
         synthetic = false;
     }
 
-    protected void startNewTick(Context ctx, int upcomingTick) {
+    protected void startNewTick(int upcomingTick) {
         setTick(tick + 1);
         synthetic = tick != upcomingTick;
-        ctx.createEvent(OnTickStart.class, boolean.class).raise(synthetic);
+        evTickStart.raise(synthetic);
     }
 
     protected void setTick(int tick) {

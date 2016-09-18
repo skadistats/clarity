@@ -17,7 +17,7 @@ public class LoopController {
     }
 
     public interface Func {
-        Command doLoopControl(Context ctx, int nextTickWithData);
+        Command doLoopControl(int nextTickWithData);
     }
 
     public LoopController(Func controllerFunc) {
@@ -27,8 +27,8 @@ public class LoopController {
     protected Func controllerFunc;
     protected boolean syncTickSeen = false;
 
-    public Command doLoopControl(Context ctx, int nextTickWithData) {
-        return controllerFunc.doLoopControl(ctx, nextTickWithData);
+    public Command doLoopControl(int nextTickWithData) {
+        return controllerFunc.doLoopControl(nextTickWithData);
     }
 
     public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {}

@@ -8,19 +8,19 @@ public class SimpleRunner extends AbstractFileRunner {
 
     private final LoopController.Func controllerFunc = new LoopController.Func() {
         @Override
-        public LoopController.Command doLoopControl(Context ctx, int upcomingTick) {
+        public LoopController.Command doLoopControl(int upcomingTick) {
             if (!loopController.isSyncTickSeen()) {
                 if (tick == -1) {
-                    startNewTick(ctx, 0);
+                    startNewTick(0);
                 }
                 return LoopController.Command.FALLTHROUGH;
             }
             if (upcomingTick != tick) {
                 if (upcomingTick != Integer.MAX_VALUE) {
-                    endTicksUntil(ctx, upcomingTick - 1);
-                    startNewTick(ctx, upcomingTick);
+                    endTicksUntil(upcomingTick - 1);
+                    startNewTick(upcomingTick);
                 } else {
-                    endTicksUntil(ctx, tick);
+                    endTicksUntil(tick);
                 }
             }
             return LoopController.Command.FALLTHROUGH;

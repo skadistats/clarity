@@ -34,11 +34,11 @@ public class ControllableRunner extends AbstractFileRunner {
 
     private final LoopController.Func normalLoopControl = new LoopController.Func() {
         @Override
-        public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
+        public LoopController.Command doLoopControl(int nextTickWithData) {
             try {
                 if (!loopController.isSyncTickSeen()) {
                     if (tick == -1) {
-                        startNewTick(ctx, 0);
+                        startNewTick(0);
                     }
                     return LoopController.Command.FALLTHROUGH;
                 }
@@ -50,7 +50,7 @@ public class ControllableRunner extends AbstractFileRunner {
                     handleDemandedTick();
                     return LoopController.Command.AGAIN;
                 }
-                endTicksUntil(ctx, tick);
+                endTicksUntil(tick);
                 if (tick == wantedTick) {
                     if (log.isDebugEnabled() && t0 != 0) {
                         log.debug("now at {}. Took {} microns.", tick, (System.nanoTime() - t0) / 1000);
@@ -63,7 +63,7 @@ public class ControllableRunner extends AbstractFileRunner {
                         return LoopController.Command.AGAIN;
                     }
                 }
-                startNewTick(ctx, upcomingTick);
+                startNewTick(upcomingTick);
                 if (wantedTick < upcomingTick) {
                     return LoopController.Command.AGAIN;
                 }
@@ -89,7 +89,7 @@ public class ControllableRunner extends AbstractFileRunner {
 
     private final LoopController.Func seekLoopControl = new LoopController.Func() {
         @Override
-        public LoopController.Command doLoopControl(Context ctx, int nextTickWithData) {
+        public LoopController.Command doLoopControl(int nextTickWithData) {
             try {
                 upcomingTick = nextTickWithData;
                 ResetStep step = resetSteps.peekFirst();
@@ -108,7 +108,7 @@ public class ControllableRunner extends AbstractFileRunner {
                         resetSteps = null;
                         loopController.controllerFunc = normalLoopControl;
                         tick = wantedTick - 1;
-                        startNewTick(ctx, upcomingTick);
+                        startNewTick(upcomingTick);
                         return LoopController.Command.RESET_COMPLETE;
                     default:
                         resetSteps.pollFirst();
@@ -158,14 +158,14 @@ public class ControllableRunner extends AbstractFileRunner {
         }
 
         @Override
-        public Command doLoopControl(Context ctx, int nextTick) {
+        public Command doLoopControl(int nextTick) {
             try {
                 lock.lockInterruptibly();
             } catch (InterruptedException e) {
                 return Command.BREAK;
             }
             try {
-                return super.doLoopControl(ctx, nextTick);
+                return super.doLoopControl(nextTick);
             } finally {
                 lock.unlock();
             }

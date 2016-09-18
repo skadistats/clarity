@@ -10,6 +10,8 @@ import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
@@ -26,6 +28,8 @@ import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -38,27 +42,28 @@ public class InputSourceProcessor {
 
     private boolean unpackUserMessages = false;
 
-    private Event<OnReset> evReset = null;
-    private Event<OnFullPacket> evFull = null;
+    @Insert
+    private Context ctx;
+    @Insert
+    private EngineType engineType;
+
+    @InsertEvent
+    private Event<OnReset> evReset;
+    @InsertEvent
+    private Event<OnFullPacket> evFull;
+    @InsertEvent
+    private Event<OnMessageContainer> evMessageContainer;
+
+    private Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
 
     @Initializer(OnMessage.class)
-    public void initOnMessageListener(final Context ctx, final EventListener<OnMessage> listener) {
+    public void initOnMessageListener(final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
-        unpackUserMessages |= ctx.getEngineType().isUserMessage(listener.getAnnotation().value());
-    }
-
-    @Initializer(OnReset.class)
-    public void initOnResetListener(final Context ctx, final EventListener<OnReset> listener) {
-        evReset = ctx.createEvent(OnReset.class, Demo.CDemoStringTables.class, ResetPhase.class);
-    }
-
-    @Initializer(OnFullPacket.class)
-    public void initOnFullPacketListener(final Context ctx, final EventListener<OnFullPacket> listener) {
-        evFull = ctx.createEvent(OnFullPacket.class, Demo.CDemoFullPacket.class);
+        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
     }
 
     @Initializer(OnMessageContainer.class)
-    public void initOnMessageContainerListener(final Context ctx, final EventListener<OnMessageContainer> listener) {
+    public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
         listener.setInvocationPredicate(new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] args) {
@@ -74,6 +79,15 @@ public class InputSourceProcessor {
         }
     }
 
+    private Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
+        Event<OnMessage> ev = evOnMessages.get(messageClass);
+        if (ev == null) {
+            ev = ctx.createEvent(OnMessage.class, messageClass);
+            evOnMessages.put(messageClass, ev);
+        }
+        return ev;
+    }
+
     private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
         ensureBufferCapacity(0, size);
         source.readBytes(buffer[0], 0, size);
@@ -87,13 +101,13 @@ public class InputSourceProcessor {
         }
     }
 
-    private void logUnknownMessage(Context ctx, String where, int type) {
-        log.warn("unknown {} message of kind {}/{}. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, ctx.getEngineType(), type);
+    private void logUnknownMessage(String where, int type) {
+        log.warn("unknown {} message of kind {}/{}. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
     }
 
     @OnInputSource
-    public void processSource(Context ctx, Source src, LoopController ctl) throws IOException {
-        int compressedFlag = ctx.getEngineType().getCompressedFlag();
+    public void processSource(Source src, LoopController ctl) throws IOException {
+        int compressedFlag = engineType.getCompressedFlag();
 
         ByteString resetFullPacketData = null;
 
@@ -119,31 +133,25 @@ public class InputSourceProcessor {
                 size = 0;
             }
             loopctl: while (true) {
-                loopCtl = ctl.doLoopControl(ctx, tick);
+                loopCtl = ctl.doLoopControl(tick);
                 switch(loopCtl) {
                     case RESET_CLEAR:
-                        if (evReset != null) {
-                            evReset.raise(null, ResetPhase.CLEAR);
-                        }
+                        evReset.raise(null, ResetPhase.CLEAR);
                         continue loopctl;
                     case RESET_ACCUMULATE:
                         // accumulate a single string table change
                         break loopctl;
                     case RESET_APPLY:
-                        if (evReset != null) {
-                            // apply string table changes
-                            evReset.raise(null, ResetPhase.APPLY);
-                        }
+                        // apply string table changes
+                        evReset.raise(null, ResetPhase.APPLY);
                         if (resetFullPacketData != null) {
                             // apply full packet for entities
-                            ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoFullPacket.class, resetFullPacketData);
+                            evMessageContainer.raise(Demo.CDemoFullPacket.class, resetFullPacketData);
                             resetFullPacketData = null;
                         }
                         continue loopctl;
                     case RESET_COMPLETE:
-                        if (evReset != null) {
-                            evReset.raise(null, ResetPhase.COMPLETE);
-                        }
+                        evReset.raise(null, ResetPhase.COMPLETE);
                         continue loopctl;
                     case FALLTHROUGH:
                         if (tick != Integer.MAX_VALUE) {
@@ -163,21 +171,19 @@ public class InputSourceProcessor {
             }
             Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
             if (messageClass == null) {
-                logUnknownMessage(ctx, "top level", kind);
+                logUnknownMessage("top level", kind);
                 src.skipBytes(size);
             } else if (messageClass == Demo.CDemoPacket.class) {
                 Demo.CDemoPacket message = (Demo.CDemoPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoPacket.class, message.getData());
-            } else if (ctx.getEngineType().isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
+                evMessageContainer.raise(Demo.CDemoPacket.class, message.getData());
+            } else if (engineType.isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
                 Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                ctx.createEvent(OnMessageContainer.class, Class.class, ByteString.class).raise(Demo.CDemoSendTables.class, message.getData());
+                evMessageContainer.raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
-                if (evFull != null || evReset != null) {
+                if (evFull.isListenedTo() || evReset.isListenedTo()) {
                     Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                    if (evFull != null) {
-                        evFull.raise(message);
-                    }
-                    if (evReset != null) {
+                    evFull.raise(message);
+                    if (evReset.isListenedTo()) {
                         ctl.markResetRelevantPacket(tick, kind, offset);
                         switch (loopCtl) {
                             case RESET_ACCUMULATE:
@@ -196,12 +202,10 @@ public class InputSourceProcessor {
                 if (isSyncTick) {
                     ctl.setSyncTickSeen(true);
                 }
-                Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
+                Event<OnMessage> ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || resetRelevant) {
                     GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
-                    if (ev.isListenedTo()) {
-                        ev.raise(message);
-                    }
+                    ev.raise(message);
                     if (resetRelevant) {
                         ctl.markResetRelevantPacket(tick, kind, offset);
                         if (isStringTables) {
@@ -220,10 +224,10 @@ public class InputSourceProcessor {
     }
 
     @OnMessageContainer
-    public void processEmbedded(Context ctx, Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
+    public void processEmbedded(Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
         BitStream bs = BitStream.createBitStream(bytes);
         while (bs.remaining() >= 8) {
-            int kind = ctx.getEngineType().readEmbeddedKind(bs);
+            int kind = engineType.readEmbeddedKind(bs);
             if (kind == 0) {
                 // this seems to happen with console recorded replays
                 break;
@@ -234,26 +238,24 @@ public class InputSourceProcessor {
                         String.format("invalid embedded packet size: got %d remaining bits, but size is %d bits.", bs.remaining(), size * 8)
                 );
             }
-            Class<? extends GeneratedMessage> messageClass = ctx.getEngineType().embeddedPacketClassForKind(kind);
+            Class<? extends GeneratedMessage> messageClass = engineType.embeddedPacketClassForKind(kind);
             if (messageClass == null) {
-                logUnknownMessage(ctx, "embedded", kind);
+                logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
             } else {
-                Event<OnMessage> ev = ctx.createEvent(OnMessage.class, messageClass);
+                Event<OnMessage> ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
                     ensureBufferCapacity(2, size);
                     bs.readBitsIntoByteArray(buffer[2], size * 8);
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrapBounded(buffer[2], 0, size));
-                    if (ev.isListenedTo()) {
-                        ev.raise(subMessage);
-                    }
+                    ev.raise(subMessage);
                     if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
                         NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
-                        Class<? extends GeneratedMessage> umClazz = ctx.getEngineType().userMessagePacketClassForKind(userMessage.getMsgType());
+                        Class<? extends GeneratedMessage> umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
-                            logUnknownMessage(ctx, "usermessage", userMessage.getMsgType());
+                            logUnknownMessage("usermessage", userMessage.getMsgType());
                         } else {
-                            ctx.createEvent(OnMessage.class, umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
+                            evOnMessage(umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
                         }
                     }
                 } else {
@@ -264,8 +266,8 @@ public class InputSourceProcessor {
     }
 
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    public void processServerInfo(Context ctx, NetMessages.CSVCMsg_ServerInfo serverInfo) {
-        if (ctx.getEngineType() == EngineType.SOURCE1) {
+    public void processServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
+        if (engineType == EngineType.SOURCE1) {
             return;
         }
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
@@ -276,7 +278,7 @@ public class InputSourceProcessor {
                 log.warn("This replay is from an early beta version of Dota 2 Reborn (build number {}).", ctx.getBuildNumber());
                 log.warn("Entities in this replay probably cannot be read.");
                 log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
-                log.warn("If you wanna help, send it to clarity@martin.schrodt.org, or contact me on github.");
+                log.warn("If you wanna help, send it to github@martin.schrodt.org, or contact me on github.");
             }
         } else {
             log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '{}')", serverInfo.getGameDir());
