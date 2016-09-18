@@ -6,12 +6,17 @@ import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.event.*;
-import skadistats.clarity.model.*;
+import skadistats.clarity.event.Event;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
+import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.Entity;
+import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
@@ -38,6 +43,8 @@ public class Entities {
 
     @Insert
     private EngineType engineType;
+    @Insert
+    private DTClasses dtClasses;
 
     @InsertEvent
     private Event<OnEntityCreated> evCreated;
@@ -69,7 +76,7 @@ public class Entities {
     }
 
     @OnReset
-    public void onReset(Context ctx, Demo.CDemoStringTables packet, ResetPhase phase) {
+    public void onReset(Demo.CDemoStringTables packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
             baselineEntries.clear();
             for (int entityIndex = 0; entityIndex < entities.length; entityIndex++) {
@@ -79,14 +86,13 @@ public class Entities {
     }
 
     @OnStringTableEntry("instancebaseline")
-    public void onBaselineEntry(Context ctx, StringTable table, int index, String key, ByteString value) {
+    public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
         baselineEntries.put(Integer.valueOf(key), new BaselineEntry(value));
     }
 
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
-    public void onPacketEntities(Context ctx, NetMessages.CSVCMsg_PacketEntities message) {
+    public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
         BitStream stream = BitStream.createBitStream(message.getEntityData());
-        DTClasses dtClasses = ctx.getProcessor(DTClasses.class);
         int updateCount = message.getUpdatedEntries();
         int entityIndex = -1;
 
@@ -98,9 +104,6 @@ public class Entities {
         Entity entity;
 
         boolean debug = false;
-        if (debug) {
-            System.out.println(ctx.getBuildNumber());
-        }
 
         while (updateCount-- != 0) {
             entityIndex += stream.readUBitVar() + 1;
@@ -117,16 +120,12 @@ public class Entities {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
-                    state = Util.clone(getBaseline(dtClasses, cls.getClassId()));
+                    state = Util.clone(getBaseline(cls.getClassId()));
                     fieldReader.readFields(stream, cls, state, debug);
-                    entity = new Entity(ctx.getEngineType(), entityIndex, serial, cls, true, state);
+                    entity = new Entity(engineType, entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
-                    if (evCreated != null) {
-                        evCreated.raise(entity);
-                    }
-                    if (evEntered != null) {
-                        evEntered.raise(entity);
-                    }
+                    evCreated.raise(entity);
+                    evEntered.raise(entity);
                 } else {
                     entity = entities[entityIndex];
                     if (entity == null) {
@@ -135,14 +134,10 @@ public class Entities {
                     cls = entity.getDtClass();
                     state = entity.getState();
                     int nChanged = fieldReader.readFields(stream, cls, state, debug);
-                    if (evUpdated != null) {
-                        evUpdated.raise(entity, fieldReader.getFieldPaths(), nChanged);
-                    }
+                    evUpdated.raise(entity, fieldReader.getFieldPaths(), nChanged);
                     if (!entity.isActive()) {
                         entity.setActive(true);
-                        if (evEntered != null) {
-                            evEntered.raise(entity);
-                        }
+                        evEntered.raise(entity);
                     }
                 }
             } else {
@@ -152,15 +147,11 @@ public class Entities {
                 } else {
                     if (entity.isActive()) {
                         entity.setActive(false);
-                        if (evLeft != null) {
-                            evLeft.raise(entity);
-                        }
+                        evLeft.raise(entity);
                     }
                     if ((cmd & 2) != 0) {
                         entities[entityIndex] = null;
-                        if (evDeleted != null) {
-                            evDeleted.raise(entity);
-                        }
+                        evDeleted.raise(entity);
                     }
                 }
             }
@@ -175,13 +166,9 @@ public class Entities {
                     log.debug("entity at index {} was ACTUALLY found when ordered to delete, tell the press!", entityIndex);
                     if (entity.isActive()) {
                         entity.setActive(false);
-                        if (evLeft != null) {
-                            evLeft.raise(entity);
-                        }
+                        evLeft.raise(entity);
                     }
-                    if (evDeleted != null) {
-                        evDeleted.raise(entity);
-                    }
+                    evDeleted.raise(entity);
                 } else {
                     log.debug("entity at index {} was not found when ordered to delete.", entityIndex);
                 }
@@ -189,13 +176,11 @@ public class Entities {
             }
         }
 
-        if (evUpdatesCompleted != null) {
-            evUpdatesCompleted.raise();
-        }
+        evUpdatesCompleted.raise();
 
     }
 
-    private Object[] getBaseline(DTClasses dtClasses, int clsId) {
+    private Object[] getBaseline(int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
             throw new RuntimeException(String.format("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
