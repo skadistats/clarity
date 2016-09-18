@@ -6,11 +6,11 @@ import java.nio.ByteOrder;
 
 public final class MurmurHash {
 
-	public static long hash64(String which) {
+	public static long hash64(String which, int seed) {
 		int m = 0x5bd1e995;
 		int r = 24;
 
-		int h1 = 0xEDABCDEF ^ which.length();
+		int h1 = seed ^ which.length();
 		int h2 = 0;
 
 		ByteBuffer buf = ByteBuffer.wrap(which.getBytes()).order(ByteOrder.LITTLE_ENDIAN);
