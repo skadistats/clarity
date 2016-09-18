@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.LZSS;
 import skadistats.clarity.util.MurmurHash;
 import skadistats.clarity.wire.common.proto.NetMessages;
@@ -34,13 +33,13 @@ public class Resources {
     private final Map<Long, Entry> resourceHandles = new HashMap<>();
 
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    public void onServerInfo(Context ctx, NetMessages.CSVCMsg_ServerInfo message) throws IOException {
+    public void onServerInfo(NetMessages.CSVCMsg_ServerInfo message) throws IOException {
         gameSessionManifest = new GameSessionManifest();
         addManifestData(gameSessionManifest, message.getGameSessionManifest());
     }
 
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_Load.class)
-    public void onLoad(Context ctx, NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
+    public void onLoad(NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
         if (spawnGroupManifests.containsKey(message.getSpawngrouphandle())) {
             throw new RuntimeException("CNETMsg_SpawnGroup_Load for an already existing handle: " + message.getSpawngrouphandle());
         }
@@ -53,7 +52,7 @@ public class Resources {
     }
 
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate.class)
-    public void onManifestUpdate(Context ctx, NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
+    public void onManifestUpdate(NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
         SpawnGroupManifest m = spawnGroupManifests.get(message.getSpawngrouphandle());
         if (m == null) {
             throw new RuntimeException("CNETMsg_SpawnGroup_ManifestUpdate for an unknown handle: " + message.getSpawngrouphandle());
@@ -64,15 +63,15 @@ public class Resources {
     }
 
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted.class)
-    public void onLoadCompleted(Context ctx, NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted message) {
+    public void onLoadCompleted(NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted message) {
     }
 
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick.class)
-    public void onSetCreationTick(Context ctx, NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick message) {
+    public void onSetCreationTick(NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick message) {
     }
 
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_Unload.class)
-    public void onUnload(Context ctx, NetworkBaseTypes.CNETMsg_SpawnGroup_Unload message) {
+    public void onUnload(NetworkBaseTypes.CNETMsg_SpawnGroup_Unload message) {
     }
 
     public Entry getEntryForResourceHandle(long resourceHandle) {
