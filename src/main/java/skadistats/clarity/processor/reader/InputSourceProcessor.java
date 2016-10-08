@@ -3,9 +3,8 @@ package skadistats.clarity.processor.reader;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.xerial.snappy.Snappy;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
@@ -13,6 +12,8 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.FileRunner;
@@ -36,7 +37,7 @@ import java.util.regex.Pattern;
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 public class InputSourceProcessor {
 
-    private static final Logger log = LoggerFactory.getLogger(InputSourceProcessor.class);
+    private static final Logger log = Logging.getLogger(LogChannel.runner);
 
     private final byte[][] buffer = new byte[][] { new byte[128*1024], new byte[256*1024], new byte[128*1024] };
 
@@ -102,7 +103,7 @@ public class InputSourceProcessor {
     }
 
     private void logUnknownMessage(String where, int type) {
-        log.warn("unknown {} message of kind {}/{}. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
+        log.warn("unknown %s message of kind %s/%d. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
     }
 
     @OnInputSource

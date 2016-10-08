@@ -2,6 +2,7 @@ package skadistats.clarity.decoder.bitstream;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import sun.misc.Unsafe;
 
@@ -19,7 +20,7 @@ public abstract class UnsafeBitStreamBase extends BitStream {
             unsafe = unsafeConstructor.newInstance();
             base = unsafe.arrayBaseOffset(byte[].class);
         } catch (Exception e) {
-            throw Util.toRuntimeException(e);
+            throw Util.toClarityException(e);
         }
     }
 
@@ -39,13 +40,13 @@ public abstract class UnsafeBitStreamBase extends BitStream {
 
     protected void checkAccessRelative(long offs, long n) {
         if (offs < 0L) {
-            throw new RuntimeException(
-                String.format("Invalid memory access: Tried to access array of length %d at offset %d", data.length, offs)
+            throw new ClarityException(
+                "Invalid memory access: Tried to access array of length %d at offset %d", data.length, offs
             );
         }
         if (offs + n > bound) {
-            throw new RuntimeException(
-                String.format("Invalid memory access: Tried to access array of length %d at offset %d", data.length, offs + n)
+            throw new ClarityException(
+                "Invalid memory access: Tried to access array of length %d at offset %d", data.length, offs + n
             );
         }
     }

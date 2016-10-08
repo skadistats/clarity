@@ -1,5 +1,7 @@
 package skadistats.clarity.decoder.s2.field;
 
+import skadistats.clarity.ClarityException;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,7 +17,7 @@ public class FieldType {
     public FieldType(String typeString) {
         Matcher m = FIELD_TYPE_PATTERN.matcher(typeString);
         if (!m.matches()) {
-            throw new RuntimeException("cannot parse field type");
+            throw new ClarityException("cannot parse field type");
         }
         baseType = m.group(1);
         genericType = m.group(3) != null ? new FieldType(m.group(3)) : null;

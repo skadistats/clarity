@@ -2,6 +2,7 @@ package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
@@ -61,7 +62,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             nameBuf.setLength(0);
             if (stream.readBitFlag()) {
                 if (mysteryFlag && stream.readBitFlag()) {
-                    throw new RuntimeException("mystery_flag assert failed!");
+                    throw new ClarityException("mystery_flag assert failed!");
                 }
                 if (stream.readBitFlag()) {
                     int basis = stream.readUBitInt(5);

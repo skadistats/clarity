@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.gameevents;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -99,7 +100,7 @@ public class GameEvents {
                     value = key.getValUint64();
                     break;
                 default:
-                    throw new RuntimeException("cannot handle game event key type " + key.getType());
+                    throw new ClarityException("cannot handle game event key type %s", key.getType());
             }
             e.set(i, value);
         }

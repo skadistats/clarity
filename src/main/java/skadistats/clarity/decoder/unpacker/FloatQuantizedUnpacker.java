@@ -1,9 +1,12 @@
 package skadistats.clarity.decoder.unpacker;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
+
+import static skadistats.clarity.LogChannel.unpacker;
 
 public class FloatQuantizedUnpacker implements Unpacker<Float> {
 
@@ -12,7 +15,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
     private static final int QFE_ENCODE_ZERO_EXACTLY = 0x4;
     private static final int QFE_ENCODE_INTEGERS_EXACTLY = 0x8;
 
-    private final Logger log = LoggerFactory.getLogger(getClass());
+    private static final Logger log = Logging.getLogger(unpacker);
 
     private String fieldName;
     private int bitCount;
@@ -33,7 +36,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
         this.encodeFlags = computeEncodeFlags(flags);
         initialize();
         if (this.flags != this.encodeFlags) {
-            log.debug("flags changed for Field {}, [{}->{}]", fieldName, this.flags, this.encodeFlags);
+            log.debug("flags changed for Field %s, [%d->%d]", fieldName, this.flags, this.encodeFlags);
         }
     }
 
@@ -56,7 +59,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
         // If the range doesn't span across zero, then also don't need the zero flag
         if (!(minValue < 0.0f && maxValue > 0.0f)) {
             if ((f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
-                log.warn("Field {} was flagged to encode zero exactly, but min/max range doesn't span zero [{}->{}]", fieldName, minValue, maxValue);
+                log.warn("Field %s was flagged to encode zero exactly, but min/max range doesn't span zero [%f->%f]", fieldName, minValue, maxValue);
             }
             f &= ~QFE_ENCODE_ZERO_EXACTLY;
         }
@@ -74,7 +77,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
         int quanta = (1 << bitCount);
 
         if ((flags & (QFE_ROUNDDOWN | QFE_ROUNDUP)) == (QFE_ROUNDDOWN | QFE_ROUNDUP)) {
-            log.warn("Field {} was flagged to both round up and down, these flags are mutually exclusive [{}->{}]\n", fieldName, minValue, maxValue);
+            log.warn("Field %s was flagged to both round up and down, these flags are mutually exclusive [%f->%f]\n", fieldName, minValue, maxValue);
         }
 
         if ((flags & QFE_ROUNDDOWN) != 0) {
@@ -94,7 +97,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
                 ++nBits;
             }
             if (nBits > bitCount) {
-                log.warn("Field {} was flagged QFE_ENCODE_INTEGERS_EXACTLY, but didn't specify enough bits, upping bitcount from {}to {} for range [{}->{}]", fieldName, bitCount, nBits, minValue, maxValue);
+                log.warn("Field %s was flagged QFE_ENCODE_INTEGERS_EXACTLY, but didn't specify enough bits, upping bitcount from %d to %d for range [%f->%f]", fieldName, bitCount, nBits, minValue, maxValue);
                 bitCount = nBits;
                 quanta = (1 << bitCount);
             }
@@ -107,7 +110,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
         highLowMultiplier = assignRangeMultiplier(bitCount, maxValue - minValue);
         decodeMultiplier = 1.0f / (quanta - 1);
         if (highLowMultiplier == 0.0f) {
-            throw new RuntimeException("Assert failed: highLowMultiplier is zero!");
+            throw new ClarityException("Assert failed: highLowMultiplier is zero!");
         }
 
         if ((encodeFlags & QFE_ROUNDDOWN) != 0) {
@@ -156,7 +159,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
                 break;
             }
             if (i == multipliers.length) {
-                throw new RuntimeException("Doh! We seem to be unable to represent this range.");
+                throw new ClarityException("Doh! We seem to be unable to represent this range.");
             }
         }
 
@@ -166,12 +169,12 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
     private float quantize(float value) {
         if (value < minValue) {
             if ((flags & QFE_ROUNDUP) == 0) {
-                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}), clamping.", fieldName, value, minValue, maxValue);
+                log.warn("Field %s tried to quantize an out-of-range value (%f, range is %f->%f), clamping.", fieldName, value, minValue, maxValue);
             }
             return minValue;
         } else if (value > maxValue) {
             if ((flags & QFE_ROUNDDOWN) == 0) {
-                log.warn("Field {} tried to quantize an out-of-range value ({}, range is {}->{}) clamping.", fieldName, value, minValue, maxValue);
+                log.warn("Field %s tried to quantize an out-of-range value (%f, range is %f->%f) clamping.", fieldName, value, minValue, maxValue);
             }
             return maxValue;
         }

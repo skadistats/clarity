@@ -1,27 +1,28 @@
 package skadistats.clarity.processor.runner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.ClarityException;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.InitializerMethod;
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.InvocationPoint;
-import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.event.UsagePoint;
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointProvider;
 import skadistats.clarity.event.UsagePointType;
 import skadistats.clarity.event.UsagePoints;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ import java.util.Set;
 
 public class ExecutionModel {
 
-    private static final Logger log = LoggerFactory.getLogger(ExecutionModel.class);
+    private static final Logger log = Logging.getLogger(LogChannel.executionModel);
 
     private final Runner runner;
     private final Map<Class<?>, Object> processors = new HashMap<>();
@@ -69,7 +70,7 @@ public class ExecutionModel {
 
     private void requireProcessorClass(Class<?> processorClass) {
         if (!hasProcessorForClass(processorClass)) {
-            log.debug("require processor {}", processorClass.getName());
+            log.debug("require processor %s", processorClass.getName());
             processors.put(processorClass, null);
             List<UsagePoint<? extends Annotation>> ups = findUsagePoints(processorClass);
             for (UsagePoint<? extends Annotation> up : ups) {
@@ -119,12 +120,12 @@ public class ExecutionModel {
                 return;
             }
         }
-        throw new RuntimeException("oops. no provider found for required usage point " + usagePointClass);
+        throw new ClarityException("oops. no provider found for required usage point %s", usagePointClass);
     }
 
 
     private void requireEventListener(EventListener eventListener) {
-        log.debug("require event listener {}", eventListener.getUsagePointClass());
+        log.debug("require event listener %s", eventListener.getUsagePointClass());
         Set<EventListener> eventListeners = processedEvents.get(eventListener.getUsagePointClass());
         if (eventListeners == null) {
             eventListeners = new HashSet<>();
@@ -135,9 +136,9 @@ public class ExecutionModel {
     }
 
     private void registerInitializer(InitializerMethod initializer) {
-        log.debug("register initializer {}", initializer.getUsagePointClass());
+        log.debug("register initializer %s", initializer.getUsagePointClass());
         if (initializers.containsKey(initializer.getUsagePointClass())) {
-            log.warn("ignoring duplicate initializer for event {} found in {}, already provided by {}", initializer.getUsagePointClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getUsagePointClass()).getProcessorClass().getName());
+            log.warn("ignoring duplicate initializer for event %s found in %s, already provided by %s", initializer.getUsagePointClass().getName(), initializer.getProcessorClass().getName(), initializers.get(initializer.getUsagePointClass()).getProcessorClass().getName());
             return;
         }
         initializers.put(initializer.getUsagePointClass(), initializer);
@@ -174,7 +175,7 @@ public class ExecutionModel {
                 try {
                     entry.setValue(entry.getKey().newInstance());
                 } catch (Exception e) {
-                    throw Util.toRuntimeException(e);
+                    throw Util.toClarityException(e);
                 }
             }
         }
@@ -186,7 +187,7 @@ public class ExecutionModel {
                 try {
                     ((InvocationPoint)up).bind(context);
                 } catch (IllegalAccessException e) {
-                    throw Util.toRuntimeException(e);
+                    throw Util.toClarityException(e);
                 }
 
             }
@@ -241,11 +242,11 @@ public class ExecutionModel {
             }
         }
         if (injectedValue == null) {
-            throw new RuntimeException(String.format(
+            throw new ClarityException(
                     "cannot inject processor of type %s into processor of type %s: not found!",
                     field.getType().getName(),
                     processor.getClass().getName()
-            ));
+            );
         }
         injectValue(processor, field, injectedValue, "cannot inject processor");
     }
@@ -255,14 +256,12 @@ public class ExecutionModel {
             field.setAccessible(true);
             field.set(processor, value);
         } catch (Exception e) {
-            throw new RuntimeException(
-                    String.format(
-                            "%s, field is class %s, value is class %s",
-                            errMessage,
-                            field.getClass().getName(),
-                            runner.getContext().getClass().getName()
-                    ),
-                    e
+            throw new ClarityException(
+                    e,
+                    "%s, field is class %s, value is class %s",
+                    errMessage,
+                    field.getClass().getName(),
+                    runner.getContext().getClass().getName()
             );
         }
     }
@@ -277,7 +276,7 @@ public class ExecutionModel {
                 try {
                     im.invoke(up);
                 } catch (Throwable e) {
-                    throw Util.toRuntimeException(e);
+                    throw Util.toClarityException(e);
                 }
             }
         }

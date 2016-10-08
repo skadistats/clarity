@@ -53,7 +53,7 @@ public class ControllableRunner extends AbstractFileRunner {
                 endTicksUntil(tick);
                 if (tick == wantedTick) {
                     if (log.isDebugEnabled() && t0 != 0) {
-                        log.debug("now at {}. Took {} microns.", tick, (System.nanoTime() - t0) / 1000);
+                        log.debug("now at %d. Took %d microns.", tick, (System.nanoTime() - t0) / 1000);
                         t0 = 0;
                     }
                     wantedTickReached.signalAll();

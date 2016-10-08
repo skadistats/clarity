@@ -5,7 +5,14 @@ import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
-import skadistats.clarity.decoder.s2.field.*;
+import skadistats.clarity.decoder.s2.field.Field;
+import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.FieldType;
+import skadistats.clarity.decoder.s2.field.FixedArrayField;
+import skadistats.clarity.decoder.s2.field.FixedSubTableField;
+import skadistats.clarity.decoder.s2.field.SimpleField;
+import skadistats.clarity.decoder.s2.field.VarArrayField;
+import skadistats.clarity.decoder.s2.field.VarSubTableField;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
@@ -20,7 +27,13 @@ import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 @Provides(value = OnDTClass.class, engine = EngineType.SOURCE2)
 public class S2DTClassEmitter {
@@ -184,13 +197,6 @@ public class S2DTClassEmitter {
             this.bitCount = field.hasBitCount() ? field.getBitCount() : null;
             this.lowValue = field.hasLowValue() ? field.getLowValue() : null;
             this.highValue = field.hasHighValue() ? field.getHighValue() : null;
-//            if (encoder != null) {
-//                System.out.format(
-//                    "encoders.put(\"%s\", \"%s\");\n",
-//                    parent + "." + varName,
-//                    encoder
-//                );
-//            }
         }
     }
 

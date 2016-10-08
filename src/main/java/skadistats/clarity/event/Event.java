@@ -1,6 +1,8 @@
 package skadistats.clarity.event;
 
 
+import skadistats.clarity.decoder.Util;
+
 import java.lang.annotation.Annotation;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class Event<A extends Annotation> {
                 try {
                     listener.invoke(args);
                 } catch (Throwable throwable) {
-                    throw new RuntimeException(throwable);
+                    throw Util.toClarityException(throwable);
                 }
             }
         }

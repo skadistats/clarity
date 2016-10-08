@@ -1,5 +1,7 @@
 package skadistats.clarity.event;
 
+import skadistats.clarity.ClarityException;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
@@ -19,7 +21,7 @@ public enum UsagePointType {
             case INITIALIZER:
                 return (UsagePoint<A>) new InitializerMethod((Initializer) annotation, processorClass, method, marker);
             default:
-                throw new RuntimeException("don't know how to create a newInstance for a UsagePoint of type "+ marker.value());
+                throw new ClarityException("don't know how to create a newInstance for a UsagePoint of type %s", marker.value());
         }
     }
 

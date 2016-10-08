@@ -48,7 +48,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
 
     @Override
     public void bind(Context ctx) throws IllegalAccessException {
-        log.debug("bind {} to context", method);
+        log.debug("bind %s to context", method);
         MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass));
         if (hasContextParameter()) {
             boundHandle = boundHandle.bindTo(ctx);

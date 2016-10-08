@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
@@ -69,7 +70,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
                     FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();
-                    throw new RuntimeException(String.format("no unpacker for field %s with type %s!", f.getName(), f.getType()));
+                    throw new ClarityException("no unpacker for field %s with type %s!", f.getName(), f.getType());
                 }
                 int offsBefore = bs.pos();
                 Object data = unpacker.unpack(bs);

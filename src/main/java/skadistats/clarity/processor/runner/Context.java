@@ -1,15 +1,11 @@
 package skadistats.clarity.processor.runner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 
 public class Context {
-
-    protected final Logger log = LoggerFactory.getLogger(this.getClass().getName());
 
     private final ExecutionModel executionModel;
     private int buildNumber = -1;

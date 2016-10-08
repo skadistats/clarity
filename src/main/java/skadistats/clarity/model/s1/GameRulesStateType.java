@@ -1,6 +1,8 @@
 package skadistats.clarity.model.s1;
 
 
+import skadistats.clarity.ClarityException;
+
 public enum GameRulesStateType {
 
     WAITING_FOR_LOADERS(1),
@@ -12,7 +14,7 @@ public enum GameRulesStateType {
     
     private int id;
 
-    private GameRulesStateType(int id) {
+    GameRulesStateType(int id) {
         this.id = id;
     }
     
@@ -22,7 +24,7 @@ public enum GameRulesStateType {
                 return t;
             }
         }
-        throw new RuntimeException("unknown GamerulesState " + id);
+        throw new ClarityException("unknown GamerulesState %d", id);
     }
     
 }

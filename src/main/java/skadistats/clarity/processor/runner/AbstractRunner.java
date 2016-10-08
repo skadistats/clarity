@@ -1,16 +1,17 @@
 package skadistats.clarity.processor.runner;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 import skadistats.clarity.model.EngineType;
 
 @Provides({OnInit.class})
 public abstract class AbstractRunner implements Runner {
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    protected static final Logger log = Logging.getLogger(LogChannel.runner);
 
     @InsertEvent
     private Event<OnInit> evInitRun;

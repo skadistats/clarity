@@ -2,6 +2,7 @@ package skadistats.clarity.processor.resources;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
@@ -41,7 +42,7 @@ public class Resources {
     @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_Load.class)
     public void onLoad(NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
         if (spawnGroupManifests.containsKey(message.getSpawngrouphandle())) {
-            throw new RuntimeException("CNETMsg_SpawnGroup_Load for an already existing handle: " + message.getSpawngrouphandle());
+            throw new ClarityException("CNETMsg_SpawnGroup_Load for an already existing handle: %d", message.getSpawngrouphandle());
         }
         SpawnGroupManifest m = new SpawnGroupManifest();
         m.spawnGroupHandle = message.getSpawngrouphandle();
@@ -55,7 +56,7 @@ public class Resources {
     public void onManifestUpdate(NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
         SpawnGroupManifest m = spawnGroupManifests.get(message.getSpawngrouphandle());
         if (m == null) {
-            throw new RuntimeException("CNETMsg_SpawnGroup_ManifestUpdate for an unknown handle: " + message.getSpawngrouphandle());
+            throw new ClarityException("CNETMsg_SpawnGroup_ManifestUpdate for an unknown handle: %d", message.getSpawngrouphandle());
         }
 
         m.incomplete = message.getManifestincomplete();
@@ -139,7 +140,7 @@ public class Resources {
         String existingValue = map.get(hash);
         if (existingValue != null) {
             if (!existingValue.equals(value)) {
-                throw new RuntimeException("hash collision for value " + value);
+                throw new ClarityException("hash collision for value %s", value);
             }
         } else {
             map.put(hash, value);

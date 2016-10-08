@@ -1,8 +1,8 @@
 package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.ClarityException;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
@@ -10,6 +10,8 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
@@ -34,7 +36,7 @@ import java.util.Map;
 @UsesDTClasses
 public class Entities {
 
-    private static final Logger log = LoggerFactory.getLogger(Entities.class);
+    private static final Logger log = Logging.getLogger(LogChannel.entities);
 
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
     private Entity[] entities;
@@ -113,7 +115,7 @@ public class Entities {
                     clsId = stream.readUBitInt(dtClasses.getClassBits());
                     cls = dtClasses.forClassId(clsId);
                     if (cls == null) {
-                        throw new RuntimeException(String.format("class for new entity %d is %d, but no dtClass found!.", entityIndex, clsId));
+                        throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", entityIndex, clsId);
                     }
                     serial = stream.readUBitInt(engineType.getSerialBits());
                     if (engineType == EngineType.SOURCE2) {
@@ -129,7 +131,7 @@ public class Entities {
                 } else {
                     entity = entities[entityIndex];
                     if (entity == null) {
-                        throw new RuntimeException(String.format("entity at index %d was not found for update.", entityIndex));
+                        throw new ClarityException("entity at index %d was not found for update.", entityIndex);
                     }
                     cls = entity.getDtClass();
                     state = entity.getState();
@@ -143,7 +145,7 @@ public class Entities {
             } else {
                 entity = entities[entityIndex];
                 if (entity == null) {
-                    log.warn("entity at index {} was not found when ordered to leave.", entityIndex);
+                    log.warn("entity at index %d was not found when ordered to leave.", entityIndex);
                 } else {
                     if (entity.isActive()) {
                         entity.setActive(false);
@@ -163,14 +165,14 @@ public class Entities {
                 entityIndex = deletions[i];
                 entity = entities[entityIndex];
                 if (entity != null) {
-                    log.debug("entity at index {} was ACTUALLY found when ordered to delete, tell the press!", entityIndex);
+                    log.debug("entity at index %d was ACTUALLY found when ordered to delete, tell the press!", entityIndex);
                     if (entity.isActive()) {
                         entity.setActive(false);
                         evLeft.raise(entity);
                     }
                     evDeleted.raise(entity);
                 } else {
-                    log.debug("entity at index {} was not found when ordered to delete.", entityIndex);
+                    log.debug("entity at index %d was not found when ordered to delete.", entityIndex);
                 }
                 entities[entityIndex] = null;
             }
@@ -183,7 +185,7 @@ public class Entities {
     private Object[] getBaseline(int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
-            throw new RuntimeException(String.format("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId));
+            throw new ClarityException("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId);
         }
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);

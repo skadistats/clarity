@@ -1,8 +1,6 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
@@ -13,7 +11,6 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.Demo;
 
@@ -26,8 +23,6 @@ public class BaseStringTableEmitter {
 
     protected static final int MAX_NAME_LENGTH = 0x400;
     protected static final int KEY_HISTORY_SIZE = 32;
-
-    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     protected int numTables = 0;
 

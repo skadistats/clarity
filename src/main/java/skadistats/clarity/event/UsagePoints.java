@@ -1,8 +1,10 @@
 package skadistats.clarity.event;
 
 import org.atteo.classindex.ClassIndex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.ClarityException;
+import skadistats.clarity.LogChannel;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -14,13 +16,13 @@ import java.util.Map;
 
 public class UsagePoints {
 
-    private static final Logger log = LoggerFactory.getLogger(UsagePoints.class);
+    private static final Logger log = Logging.getLogger(LogChannel.executionModel);
 
     private static Map<Class<? extends Annotation>, List<UsagePointProvider>> PROVIDERS = new HashMap<>();
 
     static {
         for (Class<?> providerClass : ClassIndex.getAnnotated(Provides.class)) {
-            log.debug("provider found on ClassIndex: {}", providerClass.getName());
+            log.debug("provider found on ClassIndex: %s", providerClass.getName());
             Provides provideAnnotation = providerClass.getAnnotation(Provides.class);
             if (provideAnnotation == null) {
                 // ClassIndex does not reflect real class. Can sometimes happen when working in the IDE.
@@ -29,7 +31,7 @@ public class UsagePoints {
 
             for (Class<? extends Annotation> usagePointClass : provideAnnotation.value()) {
                 if (!usagePointClass.isAnnotationPresent(UsagePointMarker.class)) {
-                    throw new RuntimeException(String.format("Class %s provides %s, which is not marked as a usage point.", providerClass.getName(), usagePointClass.getName()));
+                    throw new ClarityException("Class %s provides %s, which is not marked as a usage point.", providerClass.getName(), usagePointClass.getName());
                 }
                 List<UsagePointProvider> providersForClass = PROVIDERS.get(usagePointClass);
                 if (providersForClass == null) {

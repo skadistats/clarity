@@ -1,14 +1,16 @@
 package skadistats.clarity.event;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
+import static skadistats.clarity.LogChannel.executionModel;
+
 public class UsagePoint<A extends Annotation> {
 
-    protected final Logger log;
+    protected static final Logger log = Logging.getLogger(executionModel);
 
     protected final A annotation;
     protected final Class<?> processorClass;
@@ -16,7 +18,6 @@ public class UsagePoint<A extends Annotation> {
     protected final UsagePointMarker usagePointMarker;
 
     public UsagePoint(A annotation, Class<?> processorClass, Method method, UsagePointMarker usagePointMarker) {
-        this.log = LoggerFactory.getLogger(getClass());
         this.annotation = annotation;
         this.processorClass = processorClass;
         this.method = method;

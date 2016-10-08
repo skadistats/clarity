@@ -1,17 +1,30 @@
 package skadistats.clarity.decoder.s2;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
-import skadistats.clarity.decoder.unpacker.*;
-import skadistats.clarity.decoder.unpacker.factory.s2.*;
+import skadistats.clarity.decoder.unpacker.BoolUnpacker;
+import skadistats.clarity.decoder.unpacker.IntMinusOneUnpacker;
+import skadistats.clarity.decoder.unpacker.IntVarSignedUnpacker;
+import skadistats.clarity.decoder.unpacker.IntVarUnsignedUnpacker;
+import skadistats.clarity.decoder.unpacker.LongVarSignedUnpacker;
+import skadistats.clarity.decoder.unpacker.LongVarUnsignedUnpacker;
+import skadistats.clarity.decoder.unpacker.StringZeroTerminatedUnpacker;
+import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.LongUnsignedUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
+import skadistats.clarity.logger.Logger;
+import skadistats.clarity.logger.Logging;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static skadistats.clarity.LogChannel.unpacker;
+
 public class S2UnpackerFactory {
 
-    private static final Logger log = LoggerFactory.getLogger(S2UnpackerFactory.class);
+    private static final Logger log = Logging.getLogger(unpacker);
 
     private static final Unpacker DEFAULT_UNPACKER = new IntVarUnsignedUnpacker();
 
@@ -72,7 +85,7 @@ public class S2UnpackerFactory {
         }
         Unpacker unpacker = UNPACKERS.get(type);
         if (unpacker == null) {
-            log.debug("don't know how to create unpacker for {}, assuming int.", type);
+            log.debug("don't know how to create unpacker for %s, assuming int.", type);
             unpacker = DEFAULT_UNPACKER;
         }
         return unpacker;
