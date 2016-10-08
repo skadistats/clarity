@@ -14,6 +14,8 @@ import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,6 +35,10 @@ public class Resources {
     private final Map<Integer, SpawnGroupManifest> spawnGroupManifests = new HashMap<>();
     private final Map<Long, Entry> resourceHandles = new HashMap<>();
 
+    public Collection<SpawnGroupManifest> getManifests() {
+        return Collections.unmodifiableCollection(spawnGroupManifests.values());
+    }
+
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
     public void onServerInfo(NetMessages.CSVCMsg_ServerInfo message) throws IOException {
         gameSessionManifest = new GameSessionManifest();
@@ -46,6 +52,7 @@ public class Resources {
         }
         SpawnGroupManifest m = new SpawnGroupManifest();
         m.spawnGroupHandle = message.getSpawngrouphandle();
+        m.creationSequence = message.getCreationsequence();
         m.incomplete = message.getManifestincomplete();
         spawnGroupManifests.put(m.spawnGroupHandle, m);
 
@@ -158,7 +165,20 @@ public class Resources {
 
     public class SpawnGroupManifest extends Manifest {
         private int spawnGroupHandle;
+        private int creationSequence;
         private boolean incomplete;
+
+        public int getSpawnGroupHandle() {
+            return spawnGroupHandle;
+        }
+
+        public int getCreationSequence() {
+            return creationSequence;
+        }
+
+        public boolean isIncomplete() {
+            return incomplete;
+        }
     }
 
     public class GameSessionManifest extends Manifest {
