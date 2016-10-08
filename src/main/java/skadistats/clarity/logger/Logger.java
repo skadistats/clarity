@@ -1,8 +1,11 @@
 package skadistats.clarity.logger;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 public class Logger {
 
-    public enum Level { DEBUG, INFO, WARN, ERROR }
+    public enum Level { TRACE, DEBUG, INFO, WARN, ERROR }
 
     private final LoggerSink sink;
     private final String category;
@@ -17,12 +20,22 @@ public class Logger {
 
     public void log(Level level, String format, Object... parameters) {
         if (level.compareTo(this.level) >= 0) {
-            sink.log(String.format(
-                    "[%6d] %s",
-                    (System.nanoTime() - Logging.START_TIME) / 1000000L,
-                    String.format(format, parameters)
-            ));
+            String prefix = String.format(
+                    "[%9.2fms] %-15s | ",
+                    (float)(System.nanoTime() - Logging.START_TIME) / 1000000.0f,
+                    category
+            );
+
+            String payload = String.format(format, parameters);
+            payload = payload.replaceAll("\\n$", "");
+            if (!payload.isEmpty()) {
+                sink.log(prefix + payload.replaceAll("(?<=\n)", String.format("%" + prefix.length() + "s", " ")));
+            }
         }
+    }
+
+    public void trace(String format, Object... parameters) {
+        log(Level.TRACE, format, parameters);
     }
 
     public void debug(String format, Object... parameters) {
@@ -41,8 +54,38 @@ public class Logger {
         log(Level.ERROR, format, parameters);
     }
 
+    public void exception(Throwable e) {
+        StringWriter w = new StringWriter();
+        e.printStackTrace(new PrintWriter(w));
+        log(Level.ERROR, w.toString());
+    }
+
+    public boolean isLevelEnabled(Level level) {
+        return level.compareTo(this.level) >= 0;
+    }
+
+    public boolean isTraceEnabled() {
+        return isLevelEnabled(Level.TRACE);
+    }
+
     public boolean isDebugEnabled() {
-        return Level.DEBUG.compareTo(this.level) >= 0;
+        return isLevelEnabled(Level.DEBUG);
+    }
+
+    public boolean isInfoEnabled() {
+        return isLevelEnabled(Level.INFO);
+    }
+
+    public boolean isWarnEnabled() {
+        return isLevelEnabled(Level.WARN);
+    }
+
+    public boolean isErrorEnabled() {
+        return isLevelEnabled(Level.ERROR);
+    }
+
+    public String getName() {
+        return category;
     }
 
 }
