@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class VarSubTableField extends Field {
@@ -20,7 +19,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public Object getInitialState() {
-        return new ArrayList<>();
+        return null;
     }
 
     @Override
@@ -64,32 +63,19 @@ public class VarSubTableField extends Field {
     @Override
     public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
         assert fp.last >= pos + 1;
-        List<Object[]> subState = (List<Object[]>) state[fp.path[pos - 1]];
-        return properties.getSerializer().getValueForFieldPath(fp, pos + 1, subState.get(fp.path[pos]));
-    }
-
-    private void ensureLength(List<Object[]> state, int wanted, boolean shorten) {
-        int cur = state.size();
-        if (shorten) {
-            while (cur > wanted) {
-                state.remove(--cur);
-            }
-        }
-        while (cur < wanted) {
-            state.add(properties.getSerializer().getInitialState());
-            cur++;
-        }
+        Object[] subState = (Object[]) state[fp.path[pos - 1]];
+        return properties.getSerializer().getValueForFieldPath(fp, pos + 1, (Object[]) subState[fp.path[pos]]);
     }
 
     @Override
     public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
-        List<Object[]> subState = (List<Object[]>) state[fp.path[pos - 1]];
+        int i = fp.path[pos - 1];
         int j = fp.path[pos];
         if (fp.last >= pos + 1) {
-            ensureLength(subState, j + 1, false);
-            properties.getSerializer().setValueForFieldPath(fp, pos + 1, subState.get(j), value);
+            Object[] subState = ensureSubStateCapacity(state, i, j + 1, false);
+            properties.getSerializer().setValueForFieldPath(fp, pos + 1, (Object[]) subState[j], value);
         } else {
-            ensureLength(subState, ((Integer) value).intValue(), true);
+            ensureSubStateCapacity(state, i, (Integer) value, true);
         }
     }
 
@@ -103,14 +89,14 @@ public class VarSubTableField extends Field {
 
     @Override
     public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
-        List<Object[]> subState = (List<Object[]>) state[fp.path[fp.last]];
+        Object[][] subState = (Object[][]) state[fp.path[fp.last]];
         String name = joinPropertyName(namePrefix, properties.getName());
-        if (subState.size() > 0) {
-            entries.add(new DumpEntry(fp, name, subState.size()));
+        if (subState.length > 0) {
+            entries.add(new DumpEntry(fp, name, subState.length));
             fp.last += 2;
-            for (int i = 0; i < subState.size(); i++) {
+            for (int i = 0; i < subState.length; i++) {
                 fp.path[fp.last - 1] = i;
-                properties.getSerializer().collectDump(fp, joinPropertyName(name, Util.arrayIdxToString(i)), entries, subState.get(i));
+                properties.getSerializer().collectDump(fp, joinPropertyName(name, Util.arrayIdxToString(i)), entries, subState[i]);
             }
             fp.last -= 2;
         }
@@ -118,12 +104,12 @@ public class VarSubTableField extends Field {
 
     @Override
     public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
-        List<Object[]> subState = (List<Object[]>) state[fp.path[fp.last]];
-        if (subState.size() > 0) {
+        Object[][] subState = (Object[][]) state[fp.path[fp.last]];
+        if (subState.length > 0) {
             fp.last += 2;
-            for (int i = 0; i < subState.size(); i++) {
+            for (int i = 0; i < subState.length; i++) {
                 fp.path[fp.last - 1] = i;
-                properties.getSerializer().collectFieldPaths(fp, entries, subState.get(i));
+                properties.getSerializer().collectFieldPaths(fp, entries, subState[i]);
             }
             fp.last -= 2;
         }

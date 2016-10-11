@@ -72,28 +72,11 @@ public class VarArrayField extends Field {
         assert fp.last == pos || fp.last == pos - 1;
         int i = fp.path[pos - 1];
         if (fp.last == pos) {
-            Object[] subState = ensureArrayCapacity(state, i, fp.path[pos] + 1, false);
+            Object[] subState = ensureSubStateCapacity(state, i, fp.path[pos] + 1, false);
             subState[fp.path[pos]] = value;
         } else {
-            ensureArrayCapacity(state, i, (Integer) value, true);
+            ensureSubStateCapacity(state, i, (Integer) value, true);
         }
-    }
-
-    private Object[] ensureArrayCapacity(Object[] state, int i, int wantedSize, boolean shrinkIfNeeded) {
-        Object[] subState = (Object[]) state[i];
-        int curSize = subState == null ? 0 : subState.length;
-        if (subState == null && wantedSize > 0) {
-            state[i] = new Object[wantedSize];
-        } else if (shrinkIfNeeded && wantedSize == 0) {
-            state[i] = null;
-        } else if (wantedSize != curSize) {
-            if (shrinkIfNeeded || wantedSize > curSize) {
-                state[i] = new Object[wantedSize];
-                curSize = wantedSize;
-            }
-            System.arraycopy(subState, 0, state[i], 0, Math.min(subState.length, curSize));
-        }
-        return (Object[]) state[i];
     }
 
     @Override

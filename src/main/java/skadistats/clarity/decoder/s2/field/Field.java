@@ -44,4 +44,31 @@ public abstract class Field {
         return properties;
     }
 
+    protected Object[] ensureSubStateCapacity(Object[] state, int i, int wantedSize, boolean shrinkIfNeeded) {
+        Object[] subState = (Object[]) state[i];
+        int growth = 0;
+        int curSize = subState == null ? 0 : subState.length;
+        if (subState == null && wantedSize > 0) {
+            state[i] = new Object[wantedSize];
+            growth = wantedSize;
+        } else if (shrinkIfNeeded && wantedSize == 0) {
+            state[i] = null;
+        } else if (wantedSize != curSize) {
+            if (shrinkIfNeeded || wantedSize > curSize) {
+                state[i] = new Object[wantedSize];
+                curSize = wantedSize;
+            }
+            System.arraycopy(subState, 0, state[i], 0, Math.min(subState.length, curSize));
+            growth = Math.max(0, curSize - subState.length);
+        }
+        if (growth > 0 && properties.getSerializer() != null) {
+            subState = (Object[]) state[i];
+            int j = subState.length;
+            while (growth-- > 0) {
+                subState[--j] = properties.getSerializer().getInitialState();
+            }
+        }
+        return (Object[]) state[i];
+    }
+
 }
