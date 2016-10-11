@@ -43,7 +43,7 @@ public class Util {
 
     private static final Cloner CLONER = new Cloner();
 
-    public static Object[] clone(Object[] src) {
+    public static <T> T clone(T src) {
         return CLONER.deepClone(src);
     }
 
