@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s1.S1DTClass;
 import skadistats.clarity.decoder.s1.SendProp;
 import skadistats.clarity.decoder.s1.SendTable;
@@ -18,12 +19,14 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@Provides(value = OnDTClass.class, engine = EngineType.SOURCE1)
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineType.SOURCE1)
 public class S1DTClassEmitter {
 
     @Insert
     private DTClasses dtClasses;
 
+    @InsertEvent
+    private Event<OnDTClassesComplete> evClassesComplete;
     @InsertEvent
     private Event<OnDTClass> evDtClass;
 
@@ -64,6 +67,8 @@ public class S1DTClassEmitter {
             dt.setClassId(ct.getClassId());
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
+        dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
+        evClassesComplete.raise();
     }
 
     @OnMessage(Demo.CDemoSyncTick.class)

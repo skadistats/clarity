@@ -2,6 +2,7 @@ package skadistats.clarity.processor.sendtables;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
@@ -24,6 +25,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
@@ -35,7 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Provides(value = OnDTClass.class, engine = EngineType.SOURCE2)
+@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineType.SOURCE2)
 public class S2DTClassEmitter {
 
     private static final Set<String> POINTERS = new HashSet<>();
@@ -61,6 +63,8 @@ public class S2DTClassEmitter {
     @Insert
     private DTClasses dtClasses;
 
+    @InsertEvent
+    private Event<OnDTClassesComplete> evClassesComplete;
     @InsertEvent
     private Event<OnDTClass> evDtClass;
 
@@ -94,10 +98,14 @@ public class S2DTClassEmitter {
     public void onSendTables(Demo.CDemoSendTables sendTables) throws IOException {
         CodedInputStream cis = CodedInputStream.newInstance(ZeroCopy.extract(sendTables.getData()));
         S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage = Packet.parse(
-            S2NetMessages.CSVCMsg_FlattenedSerializer.class,
-            ZeroCopy.wrap(cis.readRawBytes(cis.readRawVarint32()))
+                S2NetMessages.CSVCMsg_FlattenedSerializer.class,
+                ZeroCopy.wrap(cis.readRawBytes(cis.readRawVarint32()))
         );
+        onFlattenedSerializers(protoMessage);
+    }
 
+    @OnMessage(S2NetMessages.CSVCMsg_FlattenedSerializer.class)
+    public void onFlattenedSerializers(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage) throws IOException {
         Map<SerializerId, Serializer> serializers = new HashMap<>();
         Map<String, FieldType> fieldTypes = new HashMap<>();
         Field[] fields = new Field[protoMessage.getFieldsCount()];
@@ -157,16 +165,28 @@ public class S2DTClassEmitter {
             DTClass dtClass = new S2DTClass(serializer);
             evDtClass.raise(dtClass);
         }
-
     }
 
     @OnMessage(Demo.CDemoClassInfo.class)
-    public void onClassInfo(Demo.CDemoClassInfo message) {
+    public void onDemoClassInfo(Demo.CDemoClassInfo message) {
         for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
             DTClass dt = dtClasses.forDtName(ct.getNetworkName());
             dt.setClassId(ct.getClassId());
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
+        dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
+        evClassesComplete.raise();
+    }
+
+    @OnMessage(NetMessages.CSVCMsg_ClassInfo.class)
+    public void onServerClassInfo(NetMessages.CSVCMsg_ClassInfo message) {
+        for (NetMessages.CSVCMsg_ClassInfo.class_t ct : message.getClassesList()) {
+            DTClass dt = dtClasses.forDtName(ct.getClassName());
+            dt.setClassId(ct.getClassId());
+            dtClasses.byClassId.put(ct.getClassId(), dt);
+        }
+        dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
+        evClassesComplete.raise();
     }
 
     private static class SerializerField {
