@@ -34,6 +34,12 @@ public class Logger {
         }
     }
 
+    public void logException(Level level, Throwable e) {
+        StringWriter w = new StringWriter();
+        e.printStackTrace(new PrintWriter(w));
+        log(level, w.toString());
+    }
+
     public void trace(String format, Object... parameters) {
         log(Level.TRACE, format, parameters);
     }
@@ -54,10 +60,24 @@ public class Logger {
         log(Level.ERROR, format, parameters);
     }
 
-    public void exception(Throwable e) {
-        StringWriter w = new StringWriter();
-        e.printStackTrace(new PrintWriter(w));
-        log(Level.ERROR, w.toString());
+    public void trace(Throwable e) {
+        logException(Level.TRACE, e);
+    }
+
+    public void debug(Throwable e) {
+        logException(Level.DEBUG, e);
+    }
+
+    public void info(Throwable e) {
+        logException(Level.INFO, e);
+    }
+
+    public void warn(Throwable e) {
+        logException(Level.WARN, e);
+    }
+
+    public void error(Throwable e) {
+        logException(Level.ERROR, e);
     }
 
     public boolean isLevelEnabled(Level level) {
