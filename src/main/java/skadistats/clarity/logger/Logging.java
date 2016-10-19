@@ -9,11 +9,12 @@ public class Logging {
 
     public static Logger.Level LEVEL = Logger.Level.INFO;
 
+    private static final Map<String, LoggerSink> SINK_MAP = new ConcurrentHashMap<>();
     private static final Map<String, Logger> LOGGER_MAP = new ConcurrentHashMap<>();
 
     public static LoggerSinkFactory SINK_FACTORY = new LoggerSinkFactory() {
         @Override
-        public LoggerSink getLoggerSink(String category) {
+        public LoggerSink getLoggerSink(Map<String, LoggerSink> sinkMap, String category) {
             return new LoggerSink() {
                 @Override
                 public void log(String message) {
@@ -26,7 +27,7 @@ public class Logging {
     public static Logger getLogger(String category) {
         Logger logger = LOGGER_MAP.get(category);
         if (logger == null) {
-            logger = new Logger(category, SINK_FACTORY.getLoggerSink(category), LEVEL);
+            logger = new Logger(category, SINK_FACTORY.getLoggerSink(SINK_MAP, category), LEVEL);
             LOGGER_MAP.put(category, logger);
         }
         return logger;

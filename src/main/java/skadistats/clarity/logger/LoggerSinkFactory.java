@@ -1,7 +1,9 @@
 package skadistats.clarity.logger;
 
+import java.util.Map;
+
 public interface LoggerSinkFactory {
 
-    LoggerSink getLoggerSink(String category);
+    LoggerSink getLoggerSink(Map<String, LoggerSink> sinkMap, String category);
 
 }
