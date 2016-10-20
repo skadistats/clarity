@@ -9,6 +9,7 @@ public class Logger {
 
     private final LoggerSink sink;
     private final String category;
+    private final String prefixFormat;
 
     private Level level;
 
@@ -16,12 +17,21 @@ public class Logger {
         this.sink = sink;
         this.category = category;
         this.level = level;
+
+        StringBuffer fmt = new StringBuffer("[%9.2fms]");
+        if (category.length() != 0) {
+            fmt.append(" %-15s | ");
+        }
+        fmt.append(" ");
+        this.prefixFormat = fmt.toString();
     }
 
     public void log(Level level, String format, Object... parameters) {
         if (level.compareTo(this.level) >= 0) {
+
+
             String prefix = String.format(
-                    "[%9.2fms] %-15s | ",
+                    prefixFormat,
                     (float)(System.nanoTime() - Logging.START_TIME) / 1000000.0f,
                     category
             );
