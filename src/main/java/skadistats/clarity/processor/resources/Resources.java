@@ -39,8 +39,17 @@ public class Resources {
         return Collections.unmodifiableCollection(spawnGroupManifests.values());
     }
 
+    private void clear() {
+        dirs.clear();
+        exts.clear();
+        gameSessionManifest = null;
+        spawnGroupManifests.clear();
+        resourceHandles.clear();
+    }
+
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
     public void onServerInfo(NetMessages.CSVCMsg_ServerInfo message) throws IOException {
+        clear();
         gameSessionManifest = new GameSessionManifest();
         addManifestData(gameSessionManifest, message.getGameSessionManifest());
     }
