@@ -38,6 +38,8 @@ public class BaseStringTableEmitter {
     private Event<OnStringTableEntry> updateEvent;
     @InsertEvent
     protected Event<OnStringTableCreated> evCreated;
+    @InsertEvent
+    protected Event<OnStringTableClear> evClear;
 
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final UsagePoint<UsesStringTable> usagePoint) {

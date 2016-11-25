@@ -14,7 +14,7 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.LinkedList;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class}, engine = EngineType.SOURCE1)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineType.SOURCE1)
 @StringTableEmitter
 public class S1StringTableEmitter extends BaseStringTableEmitter {
 

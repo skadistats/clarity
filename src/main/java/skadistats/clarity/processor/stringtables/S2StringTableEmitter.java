@@ -17,7 +17,7 @@ import skadistats.clarity.wire.s2.proto.S2NetMessages;
 import java.io.IOException;
 import java.util.LinkedList;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class}, engine = EngineType.SOURCE2)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineType.SOURCE2)
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 
@@ -25,6 +25,12 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
     private Context context;
 
     private final byte[] tempBuf = new byte[0x4000];
+
+    @OnMessage(S2NetMessages.CSVCMsg_ClearAllStringTables.class)
+    public void clearAllStringTables(S2NetMessages.CSVCMsg_ClearAllStringTables msg) {
+        numTables = 0;
+        evClear.raise();
+    }
 
     @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
