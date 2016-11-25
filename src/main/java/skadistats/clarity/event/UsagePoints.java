@@ -1,10 +1,10 @@
 package skadistats.clarity.event;
 
 import org.atteo.classindex.ClassIndex;
+import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Collections;
@@ -16,7 +16,7 @@ import java.util.Map;
 
 public class UsagePoints {
 
-    private static final Logger log = Logging.getLogger(LogChannel.executionModel);
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.executionModel);
 
     private static Map<Class<? extends Annotation>, List<UsagePointProvider>> PROVIDERS = new HashMap<>();
 

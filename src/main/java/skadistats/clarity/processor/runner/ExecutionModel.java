@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.runner;
 
+import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.Util;
@@ -15,8 +16,7 @@ import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointProvider;
 import skadistats.clarity.event.UsagePointType;
 import skadistats.clarity.event.UsagePoints;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
@@ -32,7 +32,7 @@ import java.util.Set;
 
 public class ExecutionModel {
 
-    private static final Logger log = Logging.getLogger(LogChannel.executionModel);
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.executionModel);
 
     private final Runner runner;
     private final Map<Class<?>, Object> processors = new HashMap<>();
@@ -183,9 +183,9 @@ public class ExecutionModel {
 
     private void bindInvocationPoints(skadistats.clarity.processor.runner.Context context) {
         for (UsagePoint up : usagePoints) {
-            if (up instanceof InvocationPoint){
+            if (up instanceof InvocationPoint) {
                 try {
-                    ((InvocationPoint)up).bind(context);
+                    ((InvocationPoint) up).bind(context);
                 } catch (IllegalAccessException e) {
                     throw Util.toClarityException(e);
                 }
@@ -272,7 +272,7 @@ public class ExecutionModel {
                 continue;
             }
             InitializerMethod im = initializers.get(up.getUsagePointClass());
-            if (im != null){
+            if (im != null) {
                 try {
                     im.invoke(up);
                 } catch (Throwable e) {
@@ -297,7 +297,7 @@ public class ExecutionModel {
     private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {
         Set<EventListener<A>> listeners = new HashSet<>();
         Set<EventListener> eventListeners = processedEvents.get(eventType);
-        if(eventListeners != null) {
+        if (eventListeners != null) {
             for (@SuppressWarnings("unchecked") EventListener<A> listener : eventListeners) {
                 if (listener.isInvokedForParameterClasses(parameterTypes)) {
                     listeners.add(listener);

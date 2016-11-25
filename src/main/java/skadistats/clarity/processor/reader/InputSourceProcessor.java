@@ -3,6 +3,7 @@ package skadistats.clarity.processor.reader;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
+import org.slf4j.Logger;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.bitstream.BitStream;
@@ -12,8 +13,7 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.FileRunner;
@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 public class InputSourceProcessor {
 
-    private static final Logger log = Logging.getLogger(LogChannel.runner);
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
-    private final byte[][] buffer = new byte[][] { new byte[128*1024], new byte[256*1024], new byte[128*1024] };
+    private final byte[][] buffer = new byte[][]{new byte[128 * 1024], new byte[256 * 1024], new byte[128 * 1024]};
 
     private boolean unpackUserMessages = false;
 
@@ -119,7 +119,8 @@ public class InputSourceProcessor {
         int size;
         LoopController.Command loopCtl;
 
-        main: while (true) {
+        main:
+        while (true) {
             offset = src.getPosition();
             try {
                 kind = src.readVarInt32();
@@ -133,9 +134,10 @@ public class InputSourceProcessor {
                 tick = Integer.MAX_VALUE;
                 size = 0;
             }
-            loopctl: while (true) {
+            loopctl:
+            while (true) {
                 loopCtl = ctl.doLoopControl(tick);
-                switch(loopCtl) {
+                switch (loopCtl) {
                     case RESET_CLEAR:
                         evReset.raise(null, ResetPhase.CLEAR);
                         continue loopctl;

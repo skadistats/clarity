@@ -1,7 +1,7 @@
 package skadistats.clarity.event;
 
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import org.slf4j.Logger;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -10,7 +10,7 @@ import static skadistats.clarity.LogChannel.executionModel;
 
 public class UsagePoint<A extends Annotation> {
 
-    protected static final Logger log = Logging.getLogger(executionModel);
+    protected static final Logger log = PrintfLoggerFactory.getLogger(executionModel);
 
     protected final A annotation;
     protected final Class<?> processorClass;

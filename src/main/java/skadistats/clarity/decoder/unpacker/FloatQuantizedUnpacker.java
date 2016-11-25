@@ -1,10 +1,10 @@
 package skadistats.clarity.decoder.unpacker;
 
+import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import static skadistats.clarity.LogChannel.unpacker;
 
@@ -15,7 +15,7 @@ public class FloatQuantizedUnpacker implements Unpacker<Float> {
     private static final int QFE_ENCODE_ZERO_EXACTLY = 0x4;
     private static final int QFE_ENCODE_INTEGERS_EXACTLY = 0x8;
 
-    private static final Logger log = Logging.getLogger(unpacker);
+    private static final Logger log = PrintfLoggerFactory.getLogger(unpacker);
 
     private String fieldName;
     private int bitCount;

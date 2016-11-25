@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
+import org.slf4j.Logger;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.unpacker.BoolUnpacker;
 import skadistats.clarity.decoder.unpacker.IntMinusOneUnpacker;
@@ -14,8 +15,7 @@ import skadistats.clarity.decoder.unpacker.factory.s2.LongUnsignedUnpackerFactor
 import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,11 +24,12 @@ import static skadistats.clarity.LogChannel.unpacker;
 
 public class S2UnpackerFactory {
 
-    private static final Logger log = Logging.getLogger(unpacker);
+    private static final Logger log = PrintfLoggerFactory.getLogger(unpacker);
 
     private static final Unpacker DEFAULT_UNPACKER = new IntVarUnsignedUnpacker();
 
     private static final Map<String, UnpackerFactory> FACTORIES = new HashMap<>();
+
     static {
         // Unsigned ints
         FACTORIES.put("uint64", new LongUnsignedUnpackerFactory());
@@ -43,6 +44,7 @@ public class S2UnpackerFactory {
     }
 
     private static final Map<String, Unpacker> UNPACKERS = new HashMap<>();
+
     static {
         // Booleans
         UNPACKERS.put("bool", new BoolUnpacker());
@@ -76,7 +78,7 @@ public class S2UnpackerFactory {
         // Specials
         UNPACKERS.put("HSequence", new IntMinusOneUnpacker());
     }
-    
+
 
     public static Unpacker createUnpacker(FieldProperties fieldProperties, String type) {
         UnpackerFactory unpackerFactory = FACTORIES.get(type);

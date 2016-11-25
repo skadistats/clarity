@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
+import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.FieldReader;
@@ -10,8 +11,7 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.logger.Logger;
-import skadistats.clarity.logger.Logging;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
@@ -32,11 +32,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-@Provides({ UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class })
+@Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
 @UsesDTClasses
 public class Entities {
 
-    private static final Logger log = Logging.getLogger(LogChannel.entities);
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private final Map<Integer, BaselineEntry> baselineEntries = new HashMap<>();
     private Entity[] entities;
@@ -64,6 +64,7 @@ public class Entities {
     private class BaselineEntry {
         private ByteString rawBaseline;
         private Object[] baseline;
+
         public BaselineEntry(ByteString rawBaseline) {
             this.rawBaseline = rawBaseline;
             this.baseline = null;
@@ -208,9 +209,10 @@ public class Entities {
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
         return new SimpleIterator<Entity>() {
             int i = -1;
+
             @Override
             public Entity readNext() {
-                while(++i < entities.length) {
+                while (++i < entities.length) {
                     Entity e = entities[i];
                     if (e != null && predicate.apply(e)) {
                         return e;
@@ -228,12 +230,12 @@ public class Entities {
 
     public Iterator<Entity> getAllByDtName(final String dtClassName) {
         return getAllByPredicate(
-            new Predicate<Entity>() {
-                @Override
-                public boolean apply(Entity e) {
-                    return dtClassName.equals(e.getDtClass().getDtName());
-                }
-            });
+                new Predicate<Entity>() {
+                    @Override
+                    public boolean apply(Entity e) {
+                        return dtClassName.equals(e.getDtClass().getDtName());
+                    }
+                });
     }
 
     public Entity getByDtName(final String dtClassName) {
