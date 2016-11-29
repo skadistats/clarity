@@ -89,14 +89,14 @@ public class VarSubTableField extends Field {
 
     @Override
     public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
-        Object[][] subState = (Object[][]) state[fp.path[fp.last]];
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
         String name = joinPropertyName(namePrefix, properties.getName());
         if (subState.length > 0) {
             entries.add(new DumpEntry(fp, name, subState.length));
             fp.last += 2;
             for (int i = 0; i < subState.length; i++) {
                 fp.path[fp.last - 1] = i;
-                properties.getSerializer().collectDump(fp, joinPropertyName(name, Util.arrayIdxToString(i)), entries, subState[i]);
+                properties.getSerializer().collectDump(fp, joinPropertyName(name, Util.arrayIdxToString(i)), entries, (Object[])subState[i]);
             }
             fp.last -= 2;
         }
@@ -104,12 +104,12 @@ public class VarSubTableField extends Field {
 
     @Override
     public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
-        Object[][] subState = (Object[][]) state[fp.path[fp.last]];
+        Object[] subState = (Object[]) state[fp.path[fp.last]];
         if (subState.length > 0) {
             fp.last += 2;
             for (int i = 0; i < subState.length; i++) {
                 fp.path[fp.last - 1] = i;
-                properties.getSerializer().collectFieldPaths(fp, entries, subState[i]);
+                properties.getSerializer().collectFieldPaths(fp, entries, (Object[])subState[i]);
             }
             fp.last -= 2;
         }
