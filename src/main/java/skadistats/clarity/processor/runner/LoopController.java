@@ -17,7 +17,7 @@ public class LoopController {
     }
 
     public interface Func {
-        Command doLoopControl(int nextTickWithData);
+        Command doLoopControl(int nextTickWithData) throws Exception;
     }
 
     public LoopController(Func controllerFunc) {
@@ -27,7 +27,7 @@ public class LoopController {
     protected Func controllerFunc;
     protected boolean syncTickSeen = false;
 
-    public Command doLoopControl(int nextTickWithData) {
+    public Command doLoopControl(int nextTickWithData) throws Exception {
         return controllerFunc.doLoopControl(nextTickWithData);
     }
 

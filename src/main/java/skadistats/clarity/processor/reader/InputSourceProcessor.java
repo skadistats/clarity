@@ -107,7 +107,7 @@ public class InputSourceProcessor {
     }
 
     @OnInputSource
-    public void processSource(Source src, LoopController ctl) throws IOException {
+    public void processSource(Source src, LoopController ctl) throws Exception {
         int compressedFlag = engineType.getCompressedFlag();
 
         ByteString resetFullPacketData = null;

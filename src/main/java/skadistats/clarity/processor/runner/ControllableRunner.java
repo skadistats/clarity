@@ -17,6 +17,7 @@ public class ControllableRunner extends AbstractFileRunner {
     private final Condition moreProcessingNeeded = lock.newCondition();
 
     private Thread runnerThread;
+    private Exception runnerException;
 
     private TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
     private LinkedList<ResetStep> resetSteps;
@@ -34,46 +35,39 @@ public class ControllableRunner extends AbstractFileRunner {
 
     private final LoopController.Func normalLoopControl = new LoopController.Func() {
         @Override
-        public LoopController.Command doLoopControl(int nextTickWithData) {
-            try {
-                if (!loopController.isSyncTickSeen()) {
-                    if (tick == -1) {
-                        startNewTick(0);
-                    }
-                    return LoopController.Command.FALLTHROUGH;
+        public LoopController.Command doLoopControl(int nextTickWithData) throws Exception {
+            if (!loopController.isSyncTickSeen()) {
+                if (tick == -1) {
+                    startNewTick(0);
                 }
-                upcomingTick = nextTickWithData;
-                if (upcomingTick == tick) {
-                    return LoopController.Command.FALLTHROUGH;
+                return LoopController.Command.FALLTHROUGH;
+            }
+            upcomingTick = nextTickWithData;
+            if (upcomingTick == tick) {
+                return LoopController.Command.FALLTHROUGH;
+            }
+            if (demandedTick != null) {
+                handleDemandedTick();
+                return LoopController.Command.AGAIN;
+            }
+            endTicksUntil(tick);
+            if (tick == wantedTick) {
+                if (log.isDebugEnabled() && t0 != 0) {
+                    log.debug("now at %d. Took %d microns.", tick, (System.nanoTime() - t0) / 1000);
+                    t0 = 0;
                 }
+                wantedTickReached.signalAll();
+                moreProcessingNeeded.await();
                 if (demandedTick != null) {
                     handleDemandedTick();
                     return LoopController.Command.AGAIN;
                 }
-                endTicksUntil(tick);
-                if (tick == wantedTick) {
-                    if (log.isDebugEnabled() && t0 != 0) {
-                        log.debug("now at %d. Took %d microns.", tick, (System.nanoTime() - t0) / 1000);
-                        t0 = 0;
-                    }
-                    wantedTickReached.signalAll();
-                    moreProcessingNeeded.await();
-                    if (demandedTick != null) {
-                        handleDemandedTick();
-                        return LoopController.Command.AGAIN;
-                    }
-                }
-                startNewTick(upcomingTick);
-                if (wantedTick < upcomingTick) {
-                    return LoopController.Command.AGAIN;
-                }
-                return LoopController.Command.FALLTHROUGH;
-            } catch (InterruptedException e) {
-                return LoopController.Command.BREAK;
-            } catch (IOException e) {
-                log.error("IO error in runner thread", e);
-                return LoopController.Command.BREAK;
             }
+            startNewTick(upcomingTick);
+            if (wantedTick < upcomingTick) {
+                return LoopController.Command.AGAIN;
+            }
+            return LoopController.Command.FALLTHROUGH;
         }
 
         private void handleDemandedTick() throws IOException {
@@ -89,34 +83,29 @@ public class ControllableRunner extends AbstractFileRunner {
 
     private final LoopController.Func seekLoopControl = new LoopController.Func() {
         @Override
-        public LoopController.Command doLoopControl(int nextTickWithData) {
-            try {
-                upcomingTick = nextTickWithData;
-                ResetStep step = resetSteps.peekFirst();
-                switch (step.command) {
-                    case CONTINUE:
-                        resetSteps.pollFirst();
-                        source.setPosition(step.offset);
-                        return step.command;
-                    case RESET_FORWARD:
-                        if (wantedTick >= upcomingTick) {
-                            return LoopController.Command.FALLTHROUGH;
-                        }
-                        resetSteps.pollFirst();
-                        return LoopController.Command.AGAIN;
-                    case RESET_COMPLETE:
-                        resetSteps = null;
-                        loopController.controllerFunc = normalLoopControl;
-                        tick = wantedTick - 1;
-                        startNewTick(upcomingTick);
-                        return LoopController.Command.RESET_COMPLETE;
-                    default:
-                        resetSteps.pollFirst();
-                        return step.command;
-                }
-            } catch (IOException e) {
-                log.error("IO error in runner thread", e);
-                return LoopController.Command.BREAK;
+        public LoopController.Command doLoopControl(int nextTickWithData) throws Exception {
+            upcomingTick = nextTickWithData;
+            ResetStep step = resetSteps.peekFirst();
+            switch (step.command) {
+                case CONTINUE:
+                    resetSteps.pollFirst();
+                    source.setPosition(step.offset);
+                    return step.command;
+                case RESET_FORWARD:
+                    if (wantedTick >= upcomingTick) {
+                        return LoopController.Command.FALLTHROUGH;
+                    }
+                    resetSteps.pollFirst();
+                    return LoopController.Command.AGAIN;
+                case RESET_COMPLETE:
+                    resetSteps = null;
+                    loopController.controllerFunc = normalLoopControl;
+                    tick = wantedTick - 1;
+                    startNewTick(upcomingTick);
+                    return LoopController.Command.RESET_COMPLETE;
+                default:
+                    resetSteps.pollFirst();
+                    return step.command;
             }
         }
     };
@@ -158,7 +147,7 @@ public class ControllableRunner extends AbstractFileRunner {
         }
 
         @Override
-        public Command doLoopControl(int nextTick) {
+        public Command doLoopControl(int nextTick) throws Exception {
             try {
                 lock.lockInterruptibly();
             } catch (InterruptedException e) {
@@ -204,7 +193,17 @@ public class ControllableRunner extends AbstractFileRunner {
             @Override
             public void run() {
                 log.debug("runner started");
-                initAndRunWith(processors);
+                try {
+                    initAndRunWith(processors);
+                } catch (Exception e) {
+                    lock.lock();
+                    try {
+                        runnerException = e;
+                        wantedTickReached.signal();
+                    } finally {
+                        lock.unlock();
+                    }
+                }
                 log.debug("runner finished");
             }
         });
@@ -234,28 +233,44 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
-    public void seek(int demandedTick) {
+    private void waitForTickReached() throws InterruptedException {
+        wantedTickReached.await();
+        if (runnerException != null) {
+            throw new InterruptedException() {
+                @Override
+                public String getMessage() {
+                    return "Runner thread was terminated by an exception";
+                }
+                @Override
+                public synchronized Throwable getCause() {
+                    return runnerException;
+                }
+            };
+        }
+    }
+
+    public void seek(int demandedTick) throws InterruptedException {
         lock.lock();
         try {
             this.demandedTick = demandedTick;
             t0 = System.nanoTime();
             moreProcessingNeeded.signal();
-            wantedTickReached.awaitUninterruptibly();
+            waitForTickReached();
         } finally {
             lock.unlock();
         }
     }
 
-    public void tick() {
+    public void tick() throws InterruptedException {
         lock.lock();
         try {
             if (tick != wantedTick) {
-                wantedTickReached.awaitUninterruptibly();
+                waitForTickReached();
             }
             wantedTick++;
             t0 = System.nanoTime();
             moreProcessingNeeded.signal();
-            wantedTickReached.awaitUninterruptibly();
+            waitForTickReached();
         } finally {
             lock.unlock();
         }
