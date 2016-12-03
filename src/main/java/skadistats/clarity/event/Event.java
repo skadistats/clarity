@@ -24,7 +24,7 @@ public class Event<A extends Annotation> {
                 try {
                     listener.invoke(args);
                 } catch (Throwable throwable) {
-                    throw Util.toClarityException(throwable);
+                    Util.uncheckedThrow(throwable);
                 }
             }
         }

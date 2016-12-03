@@ -175,7 +175,7 @@ public class ExecutionModel {
                 try {
                     entry.setValue(entry.getKey().newInstance());
                 } catch (Exception e) {
-                    throw Util.toClarityException(e);
+                    Util.uncheckedThrow(e);
                 }
             }
         }
@@ -187,9 +187,8 @@ public class ExecutionModel {
                 try {
                     ((InvocationPoint) up).bind(context);
                 } catch (IllegalAccessException e) {
-                    throw Util.toClarityException(e);
+                    Util.uncheckedThrow(e);
                 }
-
             }
         }
     }
@@ -276,7 +275,7 @@ public class ExecutionModel {
                 try {
                     im.invoke(up);
                 } catch (Throwable e) {
-                    throw Util.toClarityException(e);
+                    Util.uncheckedThrow(e);
                 }
             }
         }

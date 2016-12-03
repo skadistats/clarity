@@ -49,7 +49,8 @@ public abstract class BitStream {
         try {
             return bitStreamConstructor.newInstance(input);
         } catch (Exception e) {
-            throw Util.toClarityException(e);
+            Util.uncheckedThrow(e);
+            return null;
         }
     }
 

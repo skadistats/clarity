@@ -14,14 +14,16 @@ public abstract class UnsafeBitStreamBase extends BitStream {
     protected static final long base;
 
     static {
+        Unsafe u = null;
         try {
             Constructor<Unsafe> unsafeConstructor = Unsafe.class.getDeclaredConstructor();
             unsafeConstructor.setAccessible(true);
-            unsafe = unsafeConstructor.newInstance();
-            base = unsafe.arrayBaseOffset(byte[].class);
+            u = unsafeConstructor.newInstance();
         } catch (Exception e) {
-            throw Util.toClarityException(e);
+            Util.uncheckedThrow(e);
         }
+        unsafe = u;
+        base = unsafe.arrayBaseOffset(byte[].class);
     }
 
     protected final byte[] data;

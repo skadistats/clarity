@@ -33,7 +33,8 @@ public class BitStreamImplementations {
             Class<?> implClass = classForName(bitStreamClasses[implementation]);
             return (Constructor<BitStream>) implClass.getDeclaredConstructor(ByteString.class);
         } catch (Exception e) {
-            throw Util.toClarityException(e);
+            Util.uncheckedThrow(e);
+            return null;
         }
     }
 

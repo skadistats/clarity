@@ -3,7 +3,6 @@ package skadistats.clarity.decoder;
 import com.google.protobuf.ByteString;
 import com.rits.cloning.Cloner;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 
 import java.io.IOException;
@@ -37,7 +36,8 @@ public class Util {
         try {
             return s.toString(charsetName);
         } catch (UnsupportedEncodingException e) {
-            throw Util.toClarityException(e);
+            Util.uncheckedThrow(e);
+            return null;
         }
     }
 
@@ -60,16 +60,17 @@ public class Util {
         try {
             Snappy.arrayCopy(src, srcOffset, n, dst, dstOffset);
         } catch (IOException e) {
-            throw Util.toClarityException(e);
+            Util.uncheckedThrow(e);
         }
     }
 
-    public static ClarityException toClarityException(Throwable throwable) {
-        if (throwable instanceof ClarityException) {
-            return (ClarityException) throwable;
-        } else {
-            return new ClarityException(throwable);
-        }
+    public static void uncheckedThrow(Throwable e) {
+        Util.<RuntimeException>uncheckedThrow0(e);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <E extends Throwable> void uncheckedThrow0(Throwable e) throws E {
+        throw (E) e;
     }
 
 }
