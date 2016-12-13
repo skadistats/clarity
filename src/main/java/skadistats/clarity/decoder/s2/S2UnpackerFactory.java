@@ -3,8 +3,20 @@ package skadistats.clarity.decoder.s2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
-import skadistats.clarity.decoder.unpacker.*;
-import skadistats.clarity.decoder.unpacker.factory.s2.*;
+import skadistats.clarity.decoder.unpacker.BoolUnpacker;
+import skadistats.clarity.decoder.unpacker.IntMinusOneUnpacker;
+import skadistats.clarity.decoder.unpacker.IntVarSignedUnpacker;
+import skadistats.clarity.decoder.unpacker.IntVarUnsignedUnpacker;
+import skadistats.clarity.decoder.unpacker.LongVarSignedUnpacker;
+import skadistats.clarity.decoder.unpacker.LongVarUnsignedUnpacker;
+import skadistats.clarity.decoder.unpacker.StringZeroTerminatedUnpacker;
+import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.LongUnsignedUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.Vector2DUnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +39,7 @@ public class S2UnpackerFactory {
 
         // Specials
         FACTORIES.put("Vector", new VectorUnpackerFactory());
+        FACTORIES.put("Vector2D", new Vector2DUnpackerFactory());
     }
 
     private static final Map<String, Unpacker> UNPACKERS = new HashMap<>();
