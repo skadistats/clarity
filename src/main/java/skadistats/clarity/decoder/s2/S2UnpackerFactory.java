@@ -14,6 +14,7 @@ import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.LongUnsignedUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
+import skadistats.clarity.decoder.unpacker.factory.s2.Vector2DUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 
@@ -41,6 +42,7 @@ public class S2UnpackerFactory {
 
         // Specials
         FACTORIES.put("Vector", new VectorUnpackerFactory());
+        FACTORIES.put("Vector2D", new Vector2DUnpackerFactory());
     }
 
     private static final Map<String, Unpacker> UNPACKERS = new HashMap<>();
