@@ -509,8 +509,109 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return 0;
     }
 
+    @Override
+    public boolean hasBuildingType() {
+        return false;
+    }
+
+    @Override
+    public int getBuildingType() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasModifierElapsedDuration() {
+        return false;
+    }
+
+    @Override
+    public float getModifierElapsedDuration() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasSilenceModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isSilenceModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasHealFromLifesteal() {
+        return false;
+    }
+
+    @Override
+    public boolean isHealFromLifesteal() {
+        return false;
+    }
+
+    @Override
+    public boolean hasModifierPurged() {
+        return false;
+    }
+
+    @Override
+    public boolean isModifierPurged() {
+        return false;
+    }
+
+    @Override
+    public boolean hasSpellEvaded() {
+        return false;
+    }
+
+    @Override
+    public boolean isSpellEvaded() {
+        return false;
+    }
+
+    @Override
+    public boolean hasMotionControllerModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isMotionControllerModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasLongRangeKill() {
+        return false;
+    }
+
+    @Override
+    public boolean isLongRangeKill() {
+        return false;
+    }
+
+    @Override
+    public boolean hasModifierPurgeAbility() {
+        return false;
+    }
+
+    @Override
+    public int getModifierPurgeAbility() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasModifierPurgeNpc() {
+        return false;
+    }
+
+    @Override
+    public int getModifierPurgeNpc() {
+        return 0;
+    }
+
     public String toString() {
         return e.toString();
     }
+
 }
 
