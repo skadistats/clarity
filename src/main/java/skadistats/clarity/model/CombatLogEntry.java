@@ -101,5 +101,25 @@ public interface CombatLogEntry {
     int getDamageCategory();
     boolean hasNetworth();
     int getNetworth();
+    boolean hasBuildingType();
+    int getBuildingType();
+    boolean hasModifierElapsedDuration();
+    float getModifierElapsedDuration();
+    boolean hasSilenceModifier();
+    boolean isSilenceModifier();
+    boolean hasHealFromLifesteal();
+    boolean isHealFromLifesteal();
+    boolean hasModifierPurged();
+    boolean isModifierPurged();
+    boolean hasSpellEvaded();
+    boolean isSpellEvaded();
+    boolean hasMotionControllerModifier();
+    boolean isMotionControllerModifier();
+    boolean hasLongRangeKill();
+    boolean isLongRangeKill();
+    boolean hasModifierPurgeAbility();
+    int getModifierPurgeAbility();
+    boolean hasModifierPurgeNpc();
+    int getModifierPurgeNpc();
 
 }

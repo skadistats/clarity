@@ -505,6 +505,106 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getNetworth();
     }
 
+    @Override
+    public boolean hasBuildingType() {
+        return e.hasBuildingType();
+    }
+
+    @Override
+    public int getBuildingType() {
+        return e.getBuildingType();
+    }
+
+    @Override
+    public boolean hasModifierElapsedDuration() {
+        return e.hasModifierElapsedDuration();
+    }
+
+    @Override
+    public float getModifierElapsedDuration() {
+        return e.getModifierElapsedDuration();
+    }
+
+    @Override
+    public boolean hasSilenceModifier() {
+        return e.hasSilenceModifier();
+    }
+
+    @Override
+    public boolean isSilenceModifier() {
+        return e.getSilenceModifier();
+    }
+
+    @Override
+    public boolean hasHealFromLifesteal() {
+        return e.hasHealFromLifesteal();
+    }
+
+    @Override
+    public boolean isHealFromLifesteal() {
+        return e.getHealFromLifesteal();
+    }
+
+    @Override
+    public boolean hasModifierPurged() {
+        return e.hasModifierPurged();
+    }
+
+    @Override
+    public boolean isModifierPurged() {
+        return e.getModifierPurged();
+    }
+
+    @Override
+    public boolean hasSpellEvaded() {
+        return e.hasSpellEvaded();
+    }
+
+    @Override
+    public boolean isSpellEvaded() {
+        return e.getSpellEvaded();
+    }
+
+    @Override
+    public boolean hasMotionControllerModifier() {
+        return e.hasMotionControllerModifier();
+    }
+
+    @Override
+    public boolean isMotionControllerModifier() {
+        return e.getMotionControllerModifier();
+    }
+
+    @Override
+    public boolean hasLongRangeKill() {
+        return e.hasLongRangeKill();
+    }
+
+    @Override
+    public boolean isLongRangeKill() {
+        return e.getLongRangeKill();
+    }
+
+    @Override
+    public boolean hasModifierPurgeAbility() {
+        return e.hasModifierPurgeAbility();
+    }
+
+    @Override
+    public int getModifierPurgeAbility() {
+        return e.getModifierPurgeAbility();
+    }
+
+    @Override
+    public boolean hasModifierPurgeNpc() {
+        return e.hasModifierPurgeNpc();
+    }
+
+    @Override
+    public int getModifierPurgeNpc() {
+        return e.getModifierPurgeAbility();
+    }
+
     public String toString() {
         return e.toString();
     }
