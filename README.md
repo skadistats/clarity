@@ -5,7 +5,7 @@ Clarity is a parser for Dota 2 replay files written in Java.
 # Attention: New Journey update
 
 Breakage occurs with the new 7.00 update. I already pushed a new 2.2-SNAPSHOT, as well as a 
-2.1.1-SNAPSHOT which should fix it. Please update and report any remaining issues!
+2.1.1 release which should fix it. Please update and report any remaining issues!
 
 
 # Replay Data
@@ -31,12 +31,12 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Fetch the current stable version (2.1) from Maven Central with
+Fetch the current stable version (2.1.1) from Maven Central with
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.1</version>
+	<version>2.1.1</version>
 </dependency>
 ```
 
