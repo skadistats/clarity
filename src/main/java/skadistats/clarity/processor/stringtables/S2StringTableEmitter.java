@@ -2,10 +2,12 @@ package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
+import org.slf4j.Logger;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -17,9 +19,13 @@ import skadistats.clarity.wire.s2.proto.S2NetMessages;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import static skadistats.clarity.LogChannel.stringtables;
+
 @Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineType.SOURCE2)
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
+
+    private final Logger log = PrintfLoggerFactory.getLogger(stringtables);
 
     @Insert
     private Context context;
@@ -87,8 +93,13 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 if (stream.readBitFlag()) {
                     int basis = stream.readUBitInt(5);
                     int length = stream.readUBitInt(5);
-                    nameBuf.append(keyHistory.get(basis).substring(0, length));
-                    nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
+                    if (basis >= keyHistory.size()) {
+                        nameBuf.append(stream.readString(MAX_NAME_LENGTH));
+                        log.warn("Working around keyHistory underflow. Key '%s' in table '%s' is incomplete.", nameBuf.toString(), table.getName());
+                    } else {
+                        nameBuf.append(keyHistory.get(basis).substring(0, length));
+                        nameBuf.append(stream.readString(MAX_NAME_LENGTH - length));
+                    }
                 } else {
                     nameBuf.append(stream.readString(MAX_NAME_LENGTH));
                 }
