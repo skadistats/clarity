@@ -37,10 +37,11 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     }
 
     private boolean hasContextParameter() {
-        if (method.getParameterCount() == 0) {
+        Class<?>[] parameterTypes = method.getParameterTypes();
+        if (parameterTypes.length == 0) {
             return false;
         }
-        if (method.getParameters()[0].getType().isAssignableFrom(Context.class)) {
+        if (parameterTypes[0].isAssignableFrom(Context.class)) {
             return true;
         }
         return false;
