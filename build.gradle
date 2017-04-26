@@ -1,0 +1,25 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group = 'com.skadistats'
+version = '2.1-SNAPSHOT'
+
+description = """clarity"""
+
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+configurations.all {
+}
+
+repositories {
+     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+     maven { url "http://repo.maven.apache.org/maven2" }
+}
+
+dependencies {
+    compile group: 'com.skadistats', name: 'clarity-protobuf', version:'3-SNAPSHOT'
+    compile group: 'org.xerial.snappy', name: 'snappy-java', version:'1.1.1.6'
+    compile group: 'ch.qos.logback', name: 'logback-classic', version:'1.1.2'
+    compile group: 'org.atteo.classindex', name: 'classindex', version:'3.3'
+}

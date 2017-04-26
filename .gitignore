@@ -5,3 +5,7 @@
 /.idea
 /*.iml
 /release.bat
+
+#Gradle
+.gradle
+/build/
