@@ -11,7 +11,8 @@ import java.util.TreeMap;
 
 public class TextTable {
 
-    public static final char[] FRAME_UNICODE = { '│', '─', '┌', '├', '└', '┬', '┼', '┴', '┐', '┤', '┘'};
+    //public static final char[] FRAME_UNICODE = { '│', '─', '┌', '├', '└', '┬', '┼', '┴', '┐', '┤', '┘'};
+    public static final char[] FRAME_UNICODE = { '\u2502', '\u2500', '\u250C', '\u251C', '\u2514', '\u252C', '\u253C', '\u2534', '\u2510', '\u2524', '\u2518'};
     public static final char[] FRAME_COMPAT  = { '|', '-', '+', '+', '+', '+', '+', '+', '+', '+', '+'};
 
     public enum Alignment {
