@@ -605,6 +605,56 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getModifierPurgeAbility();
     }
 
+    @Override
+    public boolean hasRootModifier() {
+        return e.hasRootModifier();
+    }
+
+    @Override
+    public boolean isRootModifier() {
+        return e.getRootModifier();
+    }
+
+    @Override
+    public boolean hasTotalUnitDeathCount() {
+        return e.hasTotalUnitDeathCount();
+    }
+
+    @Override
+    public int getTotalUnitDeathCount() {
+        return e.getTotalUnitDeathCount();
+    }
+
+    @Override
+    public boolean hasAuraModifier() {
+        return e.hasAuraModifier();
+    }
+
+    @Override
+    public boolean isAuraModifier() {
+        return e.getAuraModifier();
+    }
+
+    @Override
+    public boolean hasArmorDebuffModifier() {
+        return e.hasArmorDebuffModifier();
+    }
+
+    @Override
+    public boolean isArmorDebuffModifier() {
+        return e.getArmorDebuffModifier();
+    }
+
+    @Override
+    public boolean hasNoPhysicalDamageModifier() {
+        return e.hasNoPhysicalDamageModifier();
+    }
+
+    @Override
+    public boolean isNoPhysicalDamageModifier() {
+        return e.getNoPhysicalDamageModifier();
+    }
+
     public String toString() {
         return e.toString();
     }

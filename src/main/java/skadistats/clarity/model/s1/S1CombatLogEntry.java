@@ -609,6 +609,56 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return 0;
     }
 
+    @Override
+    public boolean hasRootModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isRootModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasTotalUnitDeathCount() {
+        return false;
+    }
+
+    @Override
+    public int getTotalUnitDeathCount() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasAuraModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isAuraModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasArmorDebuffModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isArmorDebuffModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean hasNoPhysicalDamageModifier() {
+        return false;
+    }
+
+    @Override
+    public boolean isNoPhysicalDamageModifier() {
+        return false;
+    }
+
     public String toString() {
         return e.toString();
     }

@@ -121,5 +121,14 @@ public interface CombatLogEntry {
     int getModifierPurgeAbility();
     boolean hasModifierPurgeNpc();
     int getModifierPurgeNpc();
-
+    boolean hasRootModifier();
+    boolean isRootModifier();
+    boolean hasTotalUnitDeathCount();
+    int getTotalUnitDeathCount();
+    boolean hasAuraModifier();
+    boolean isAuraModifier();
+    boolean hasArmorDebuffModifier();
+    boolean isArmorDebuffModifier();
+    boolean hasNoPhysicalDamageModifier();
+    boolean isNoPhysicalDamageModifier();
 }
