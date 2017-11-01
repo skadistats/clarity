@@ -14,7 +14,6 @@ import skadistats.clarity.decoder.unpacker.factory.s2.FloatUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.LongUnsignedUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.QAngleUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.UnpackerFactory;
-import skadistats.clarity.decoder.unpacker.factory.s2.Vector2DUnpackerFactory;
 import skadistats.clarity.decoder.unpacker.factory.s2.VectorUnpackerFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 
@@ -41,8 +40,9 @@ public class S2UnpackerFactory {
         FACTORIES.put("QAngle", new QAngleUnpackerFactory());
 
         // Specials
-        FACTORIES.put("Vector", new VectorUnpackerFactory());
-        FACTORIES.put("Vector2D", new Vector2DUnpackerFactory());
+        FACTORIES.put("Vector2D", new VectorUnpackerFactory(2));
+        FACTORIES.put("Vector", new VectorUnpackerFactory(3));
+        FACTORIES.put("Quaternion", new VectorUnpackerFactory(4));
     }
 
     private static final Map<String, Unpacker> UNPACKERS = new HashMap<>();
@@ -73,6 +73,7 @@ public class S2UnpackerFactory {
         UNPACKERS.put("CHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CEntityHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CGameSceneNodeHandle", new IntVarUnsignedUnpacker());
+        UNPACKERS.put("CBaseVRHandAttachmentHandle", new IntVarUnsignedUnpacker());
         UNPACKERS.put("CStrongHandle", new LongVarUnsignedUnpacker());
 
         // Colors

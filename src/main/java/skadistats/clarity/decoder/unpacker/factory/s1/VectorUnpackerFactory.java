@@ -9,15 +9,22 @@ import skadistats.clarity.model.s1.PropFlag;
 
 public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
 
-    public static Unpacker<Vector> createUnpackerStatic(SendProp prop) {
+    private final int dim;
+
+    public VectorUnpackerFactory(int dim) {
+        this.dim = dim;
+    }
+
+    public static Unpacker<Vector> createUnpackerStatic(int dim, SendProp prop) {
         if ((prop.getFlags() & PropFlag.NORMAL) != 0) {
             return new VectorNormalUnpacker();
         }
-        return new VectorDefaultUnpacker(FloatUnpackerFactory.createUnpackerStatic(prop));
+        return new VectorDefaultUnpacker(dim, FloatUnpackerFactory.createUnpackerStatic(prop));
     }
 
     @Override
     public Unpacker<Vector> createUnpacker(SendProp prop) {
-        return createUnpackerStatic(prop);
+        return createUnpackerStatic(dim, prop);
     }
+
 }

@@ -15,8 +15,8 @@ public class S1UnpackerFactory {
         FACTORIES.put(PropType.INT, new IntUnpackerFactory());
         FACTORIES.put(PropType.INT64, new LongUnpackerFactory());
         FACTORIES.put(PropType.FLOAT, new FloatUnpackerFactory());
-        FACTORIES.put(PropType.VECTOR, new VectorUnpackerFactory());
-        FACTORIES.put(PropType.VECTOR_XY, new VectorXYUnpackerFactory());
+        FACTORIES.put(PropType.VECTOR, new VectorUnpackerFactory(3));
+        FACTORIES.put(PropType.VECTOR_XY, new VectorUnpackerFactory(2));
         FACTORIES.put(PropType.ARRAY, new ArrayUnpackerFactory());
     }
 

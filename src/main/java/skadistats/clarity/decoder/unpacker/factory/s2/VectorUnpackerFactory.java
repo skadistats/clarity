@@ -8,16 +8,22 @@ import skadistats.clarity.model.Vector;
 
 public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
 
-    public static Unpacker<Vector> createUnpackerStatic(FieldProperties f) {
-        if ("normal".equals(f.getEncoderType())) {
+    private final int dim;
+
+    public VectorUnpackerFactory(int dim) {
+        this.dim = dim;
+    }
+
+    public static Unpacker<Vector> createUnpackerStatic(int dim, FieldProperties f) {
+        if (dim == 3 && "normal".equals(f.getEncoderType())) {
             return new VectorNormalUnpacker();
         }
-        return new VectorDefaultUnpacker(FloatUnpackerFactory.createUnpackerStatic(f));
+        return new VectorDefaultUnpacker(dim, FloatUnpackerFactory.createUnpackerStatic(f));
     }
 
     @Override
     public Unpacker<Vector> createUnpacker(FieldProperties f) {
-        return createUnpackerStatic(f);
+        return createUnpackerStatic(dim, f);
     }
 
 }
