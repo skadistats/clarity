@@ -65,6 +65,8 @@ public class S2UnpackerFactory {
         // Strings
         UNPACKERS.put("CUtlSymbolLarge", new StringZeroTerminatedUnpacker());
         UNPACKERS.put("char", new StringZeroTerminatedUnpacker());
+        UNPACKERS.put("CUtlString", new StringZeroTerminatedUnpacker());
+
         UNPACKERS.put("CUtlStringToken", new IntVarUnsignedUnpacker());
 
         // Handles
