@@ -131,4 +131,8 @@ public interface CombatLogEntry {
     boolean isArmorDebuffModifier();
     boolean hasNoPhysicalDamageModifier();
     boolean isNoPhysicalDamageModifier();
+    boolean hasModifierAbility();
+    int getModifierAbility();
+    boolean hasModifierHidden();
+    boolean isModifierHidden();
 }

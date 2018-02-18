@@ -655,6 +655,26 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getNoPhysicalDamageModifier();
     }
 
+    @Override
+    public boolean hasModifierAbility() {
+        return e.hasModifierAbility();
+    }
+
+    @Override
+    public int getModifierAbility() {
+        return e.getModifierAbility();
+    }
+
+    @Override
+    public boolean hasModifierHidden() {
+        return e.hasModifierHidden();
+    }
+
+    @Override
+    public boolean isModifierHidden() {
+        return e.getModifierHidden();
+    }
+
     public String toString() {
         return e.toString();
     }

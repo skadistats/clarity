@@ -659,6 +659,26 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return false;
     }
 
+    @Override
+    public boolean hasModifierAbility() {
+        return false;
+    }
+
+    @Override
+    public int getModifierAbility() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasModifierHidden() {
+        return false;
+    }
+
+    @Override
+    public boolean isModifierHidden() {
+        return false;
+    }
+
     public String toString() {
         return e.toString();
     }
