@@ -45,6 +45,11 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getTargetNameInt() {
+        return (int) e.getProperty(indices.targetNameIdx);
+    }
+
+    @Override
     public boolean hasTargetSourceName() {
         return (int) e.getProperty(indices.targetSourceNameIdx) != 0;
     }
@@ -52,6 +57,11 @@ public class S1CombatLogEntry implements CombatLogEntry {
     @Override
     public String getTargetSourceName() {
         return readCombatLogName((int) e.getProperty(indices.targetSourceNameIdx));
+    }
+
+    @Override
+    public int getTargetSourceNameInt() {
+        return (int) e.getProperty(indices.targetSourceNameIdx);
     }
 
     @Override
@@ -65,6 +75,11 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getAttackerNameInt() {
+        return (int) e.getProperty(indices.attackerNameIdx);
+    }
+
+    @Override
     public boolean hasDamageSourceName() {
         return (int) e.getProperty(indices.sourceNameIdx) != 0;
     }
@@ -75,6 +90,11 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getDamageSourceNameInt() {
+        return (int) e.getProperty(indices.sourceNameIdx);
+    }
+
+    @Override
     public boolean hasInflictorName() {
         return (int) e.getProperty(indices.inflictorNameIdx) != 0;
     }
@@ -82,6 +102,11 @@ public class S1CombatLogEntry implements CombatLogEntry {
     @Override
     public String getInflictorName() {
         return readCombatLogName((int) e.getProperty(indices.inflictorNameIdx));
+    }
+
+    @Override
+    public int getInflictorNameInt() {
+        return (int) e.getProperty(indices.inflictorNameIdx);
     }
 
     @Override

@@ -41,6 +41,11 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getTargetNameInt() {
+        return e.getTargetName();
+    }
+
+    @Override
     public boolean hasTargetSourceName() {
         return e.hasTargetSourceName();
     }
@@ -48,6 +53,11 @@ public class S2CombatLogEntry implements CombatLogEntry {
     @Override
     public String getTargetSourceName() {
         return readCombatLogName(e.getTargetSourceName());
+    }
+
+    @Override
+    public int getTargetSourceNameInt() {
+        return e.getTargetSourceName();
     }
 
     @Override
@@ -61,6 +71,11 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getAttackerNameInt() {
+        return e.getAttackerName();
+    }
+
+    @Override
     public boolean hasDamageSourceName() {
         return e.hasDamageSourceName();
     }
@@ -71,6 +86,11 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
+    public int getDamageSourceNameInt() {
+        return e.getDamageSourceName();
+    }
+
+    @Override
     public boolean hasInflictorName() {
         return e.hasInflictorName();
     }
@@ -78,6 +98,11 @@ public class S2CombatLogEntry implements CombatLogEntry {
     @Override
     public String getInflictorName() {
         return readCombatLogName(e.getInflictorName());
+    }
+
+    @Override
+    public int getInflictorNameInt() {
+        return e.getInflictorName();
     }
 
     @Override
