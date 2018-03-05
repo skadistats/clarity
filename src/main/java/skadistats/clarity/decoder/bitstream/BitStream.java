@@ -4,7 +4,9 @@ import com.google.protobuf.ByteString;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.FieldOpType;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
+import java.nio.charset.Charset;
 
 public abstract class BitStream {
 
@@ -43,6 +45,7 @@ public abstract class BitStream {
     protected int len;
     protected int pos;
 
+    private static final byte[] stringTemp = new byte[32768];
     private static final Constructor<BitStream> bitStreamConstructor = BitStreamImplementations.determineConstructor();
 
     public static BitStream createBitStream(ByteString input) {
@@ -102,16 +105,21 @@ public abstract class BitStream {
     }
 
     public String readString(int n) {
-        StringBuilder buf = new StringBuilder();
-        while (n > 0) {
-            char c = (char) readUBitInt(8);
+        int o = 0;
+        while (o < n) {
+            byte c = (byte) readUBitInt(8);
             if (c == 0) {
                 break;
             }
-            buf.append(c);
-            n--;
+            stringTemp[o] = c;
+            o++;
         }
-        return buf.toString();
+        try {
+            return new String(stringTemp, 0, o, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Util.uncheckedThrow(e);
+            return null;
+        }
     }
 
     public long readVarU(int max) {
