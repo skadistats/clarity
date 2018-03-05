@@ -41,7 +41,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getTargetNameInt() {
+    public int getTargetNameIdx() {
         return e.getTargetName();
     }
 
@@ -56,7 +56,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getTargetSourceNameInt() {
+    public int getTargetSourceNameIdx() {
         return e.getTargetSourceName();
     }
 
@@ -71,7 +71,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getAttackerNameInt() {
+    public int getAttackerNameIdx() {
         return e.getAttackerName();
     }
 
@@ -86,7 +86,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getDamageSourceNameInt() {
+    public int getDamageSourceNameIdx() {
         return e.getDamageSourceName();
     }
 
@@ -101,7 +101,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getInflictorNameInt() {
+    public int getInflictorNameIdx() {
         return e.getInflictorName();
     }
 

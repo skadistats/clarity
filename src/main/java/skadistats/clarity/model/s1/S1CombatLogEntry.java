@@ -45,7 +45,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getTargetNameInt() {
+    public int getTargetNameIdx() {
         return (int) e.getProperty(indices.targetNameIdx);
     }
 
@@ -60,7 +60,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getTargetSourceNameInt() {
+    public int getTargetSourceNameIdx() {
         return (int) e.getProperty(indices.targetSourceNameIdx);
     }
 
@@ -75,7 +75,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getAttackerNameInt() {
+    public int getAttackerNameIdx() {
         return (int) e.getProperty(indices.attackerNameIdx);
     }
 
@@ -90,7 +90,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getDamageSourceNameInt() {
+    public int getDamageSourceNameIdx() {
         return (int) e.getProperty(indices.sourceNameIdx);
     }
 
@@ -105,7 +105,7 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public int getInflictorNameInt() {
+    public int getInflictorNameIdx() {
         return (int) e.getProperty(indices.inflictorNameIdx);
     }
 
