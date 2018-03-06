@@ -44,8 +44,8 @@ public abstract class BitStream {
 
     protected int len;
     protected int pos;
+    private final byte[] stringTemp = new byte[32768];
 
-    private static final byte[] stringTemp = new byte[32768];
     private static final Constructor<BitStream> bitStreamConstructor = BitStreamImplementations.determineConstructor();
 
     public static BitStream createBitStream(ByteString input) {
