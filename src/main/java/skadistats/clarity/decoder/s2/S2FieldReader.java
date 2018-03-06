@@ -86,7 +86,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     dataDebugTable.setData(r, 4, props.getBitCount());
                     dataDebugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
                     dataDebugTable.setData(r, 6, unpacker.getClass().getSimpleName());
-                    dataDebugTable.setData(r, 7, String.format("%s%s", type.toString(true), props.getEncoderType() != null ? String.format(" {%s}", props.getEncoderType()) : ""));
+                    dataDebugTable.setData(r, 7, String.format("%s%s", type, props.getEncoderType() != null ? String.format(" {%s}", props.getEncoderType()) : ""));
                     dataDebugTable.setData(r, 8, data);
                     dataDebugTable.setData(r, 9, bs.pos() - offsBefore);
                     dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));

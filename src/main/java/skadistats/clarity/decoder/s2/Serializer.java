@@ -51,27 +51,27 @@ public class Serializer {
     }
 
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        fields[fp.path[pos]].accumulateName(fp, pos + 1, parts);
+        fields[fp.path[pos]].accumulateName(fp, pos, parts);
     }
 
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getUnpackerForFieldPath(fp, pos + 1);
+        return fields[fp.path[pos]].getUnpackerForFieldPath(fp, pos);
     }
 
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getFieldForFieldPath(fp, pos + 1);
+        return fields[fp.path[pos]].getFieldForFieldPath(fp, pos);
     }
 
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getTypeForFieldPath(fp, pos + 1);
+        return fields[fp.path[pos]].getTypeForFieldPath(fp, pos);
     }
 
     public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
-        return fields[fp.path[pos]].getValueForFieldPath(fp, pos + 1, state);
+        return fields[fp.path[pos]].getValueForFieldPath(fp, pos, state);
     }
 
     public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data) {
-        fields[fp.path[pos]].setValueForFieldPath(fp, pos + 1, state, data);
+        fields[fp.path[pos]].setValueForFieldPath(fp, pos, state, data);
     }
 
     private FieldPath getFieldPathForNameInternal(FieldPath fp, String property) {

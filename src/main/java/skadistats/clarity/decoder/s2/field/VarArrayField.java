@@ -27,55 +27,60 @@ public class VarArrayField extends Field {
 
     @Override
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last == pos || fp.last == pos - 1;
+        assert fp.last == pos || fp.last == pos + 1;
         addBasePropertyName(parts);
-        if (fp.last == pos) {
-            parts.add(Util.arrayIdxToString(fp.path[pos]));
+        if (fp.last > pos) {
+            parts.add(Util.arrayIdxToString(fp.path[pos + 1]));
         }
     }
 
     @Override
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos - 1;
+        assert fp.last == pos || fp.last == pos + 1;
         if (pos == fp.last) {
-            return elementUnpacker;
-        } else {
             return baseUnpacker;
+        } else {
+            return elementUnpacker;
         }
     }
 
     @Override
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos - 1;
+        assert fp.last == pos || fp.last == pos + 1;
         return this;
     }
 
     @Override
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos - 1;
-        if (pos == fp.last) {
-            return properties.getType().getGenericType();
-        } else {
+        assert fp.last == pos || fp.last == pos + 1;
+        if (fp.last == pos) {
             return properties.getType();
+        } else {
+            return properties.getType().getGenericType();
         }
     }
 
     @Override
     public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
-        assert fp.last == pos;
-        Object[] subState = (Object[]) state[fp.path[pos - 1]];
-        return subState[fp.path[pos]];
+        assert fp.last == pos || fp.last == pos + 1;
+        Object[] subState = (Object[]) state[fp.path[pos]];
+        if (fp.last == pos) {
+            return subState.length;
+        } else {
+            return subState[fp.path[pos + 1]];
+        }
     }
 
     @Override
     public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
-        assert fp.last == pos || fp.last == pos - 1;
-        int i = fp.path[pos - 1];
+        assert fp.last == pos || fp.last == pos + 1;
+        int i = fp.path[pos];
         if (fp.last == pos) {
-            Object[] subState = ensureSubStateCapacity(state, i, fp.path[pos] + 1, false);
-            subState[fp.path[pos]] = value;
-        } else {
             ensureSubStateCapacity(state, i, (Integer) value, true);
+        } else {
+            int j = fp.path[pos + 1];
+            Object[] subState = ensureSubStateCapacity(state, i, j + 1, false);
+            subState[j] = value;
         }
     }
 

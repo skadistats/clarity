@@ -13,6 +13,7 @@ public class FieldType {
     private final FieldType genericType;
     private final boolean pointer;
     private final String elementCount;
+    private final FieldType elementType;
 
     public FieldType(String typeString) {
         Matcher m = FIELD_TYPE_PATTERN.matcher(typeString);
@@ -23,6 +24,11 @@ public class FieldType {
         genericType = m.group(3) != null ? new FieldType(m.group(3)) : null;
         pointer = m.group(4) != null;
         elementCount = m.group(6);
+        if (elementCount == null) {
+            elementType = null;
+        } else {
+            elementType = new FieldType(toString(true));
+        }
     }
 
     public String getBaseType() {
@@ -41,12 +47,16 @@ public class FieldType {
         return elementCount;
     }
 
+    public FieldType getElementType() {
+        return elementType;
+    }
+
     @Override
     public String toString() {
         return toString(false);
     }
 
-    public String toString(boolean omitElementCount) {
+    private String toString(boolean omitElementCount) {
         final StringBuilder sb = new StringBuilder();
         sb.append(baseType);
         if (genericType != null) {
