@@ -30,7 +30,9 @@ import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 import java.io.EOFException;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -56,6 +58,7 @@ public class InputSourceProcessor {
     private Event<OnMessageContainer> evMessageContainer;
 
     private Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
+    private Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
@@ -103,7 +106,11 @@ public class InputSourceProcessor {
     }
 
     private void logUnknownMessage(String where, int type) {
-        log.warn("unknown %s message of kind %s/%d. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
+        int hash = (where.hashCode() * 31 + engineType.hashCode()) * 31 + type;
+        if (!alreadyLoggedUnknowns.contains(hash)) {
+            alreadyLoggedUnknowns.add(hash);
+            log.warn("unknown %s message of kind %s/%d. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
+        }
     }
 
     @OnInputSource
