@@ -1,9 +1,12 @@
 package skadistats.clarity.processor.gameevents;
 
+import org.slf4j.Logger;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.CombatLogEntry;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
@@ -21,6 +24,8 @@ import java.util.List;
 
 @Provides({OnCombatLogEntry.class})
 public class CombatLog {
+
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
     public static final String STRING_TABLE_NAME = "CombatLogNames";
     public static final String GAME_EVENT_NAME = "dota_combatlog";
@@ -49,8 +54,18 @@ public class CombatLog {
         ));
     }
 
+    private boolean logBulkData = true;
+
+    @OnMessage(DotaUserMessages.CDOTAUserMsg_CombatLogBulkData.class)
+    public void onCombatLogBulkData(DotaUserMessages.CDOTAUserMsg_CombatLogBulkData message) {
+        if (logBulkData) {
+            log.warn("This replay contains a CDOTAUserMsg_CombatLogBulkData message. I need one of those replays to analyze. Please report the match id: https://github.com/skadistats/clarity/issues/58");
+            logBulkData = false;
+        }
+    }
+
     @OnMessage(DotaUserMessages.CMsgDOTACombatLogEntry.class)
-    public void onNewCombatLogMessage(DotaUserMessages.CMsgDOTACombatLogEntry message) {
+    public void onCombatLogEntry(DotaUserMessages.CMsgDOTACombatLogEntry message) {
         logEntries.add(new S2CombatLogEntry(
             stringTables.forName(STRING_TABLE_NAME),
             message
