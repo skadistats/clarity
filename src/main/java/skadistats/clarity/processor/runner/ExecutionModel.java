@@ -42,7 +42,6 @@ public class ExecutionModel {
 
     public ExecutionModel(Runner runner) {
         this.runner = runner;
-        addProcessor(runner);
     }
 
     public void addProcessor(Object processor) {

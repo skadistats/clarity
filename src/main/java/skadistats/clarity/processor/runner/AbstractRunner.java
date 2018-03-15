@@ -25,10 +25,18 @@ public abstract class AbstractRunner implements Runner {
 
     private ExecutionModel createExecutionModel(Object... processors) {
         ExecutionModel executionModel = new ExecutionModel(this);
-        for (Object p : processors) {
-            executionModel.addProcessor(p);
-        }
+        addProcessorsToModel(executionModel, processors);
         return executionModel;
+    }
+
+    private void addProcessorsToModel(ExecutionModel executionModel, Object[] processors) {
+        for (Object p : processors) {
+            if (p instanceof Object[]) {
+                addProcessorsToModel(executionModel, (Object[]) p);
+            } else {
+                executionModel.addProcessor(p);
+            }
+        }
     }
 
     protected void initWithProcessors(Object... processors) {
