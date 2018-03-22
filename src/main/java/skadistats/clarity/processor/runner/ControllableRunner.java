@@ -36,6 +36,7 @@ public class ControllableRunner extends AbstractFileRunner {
         public LoopController.Command doLoopControl(int nextTickWithData) throws Exception {
             if (!loopController.isSyncTickSeen()) {
                 if (tick == -1) {
+                    wantedTick = 0;
                     startNewTick(0);
                 }
                 return LoopController.Command.FALLTHROUGH;
@@ -203,6 +204,7 @@ public class ControllableRunner extends AbstractFileRunner {
                     }
                 }
                 log.debug("runner finished");
+                runnerThread = null;
             }
         });
         runnerThread.setName("clarity-runner");
@@ -218,6 +220,10 @@ public class ControllableRunner extends AbstractFileRunner {
         } finally {
             lock.unlock();
         }
+    }
+
+    public boolean isRunning() {
+        return runnerThread != null;
     }
 
     public void setDemandedTick(int demandedTick) {

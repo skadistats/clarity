@@ -7,16 +7,16 @@ import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.Demo;
+import sun.nio.ch.DirectBuffer;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.channels.SeekableByteChannel;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
@@ -36,20 +36,20 @@ public class LiveSource extends Source {
 
     private final Path filePath;
 
-    private SeekableByteChannel fileChannel;
+    private FileChannel channel;
+    private MappedByteBuffer file;
+
     private boolean demoStopSeen;
     private boolean aborted;
     private boolean timeoutForced;
     private boolean blockingEnabled = true;
 
-    private long currentSize;
-    private long lastTickOffset;
-    private long nextTickOffset;
+    private int lastTickOffset;
+    private int nextTickOffset;
 
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition fileChanged = lock.newCondition();
 
-    private final byte[] singleByteBuffer = new byte[1];
     private WatchKey watchKey;
 
     public LiveSource(String fileName, long timeout, TimeUnit timeUnit) {
@@ -73,38 +73,31 @@ public class LiveSource extends Source {
 
     @Override
     public int getPosition() {
-        if (fileChannel == null) {
-            return 0;
-        } else {
-            try {
-                return (int) fileChannel.position();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+        return file == null ? 0 : file.position();
     }
 
     @Override
     public void setPosition(int position) throws IOException {
-        if (fileChannel == null) {
+        if (file == null) {
             throw new IOException("file is not existing");
         }
-        if (demoStopSeen && position < fileChannel.position()) {
+        if (demoStopSeen && position < file.position()) {
             demoStopSeen = false;
         }
-        fileChannel.position(position);
+        blockUntilDataAvailable(position - file.position());
+        file.position(position);
     }
 
     @Override
     public byte readByte() throws IOException {
-        readBytes(singleByteBuffer, 0, 1);
-        return singleByteBuffer[0];
+        blockUntilDataAvailable(1);
+        return file.get();
     }
 
     @Override
     public void readBytes(byte[] dest, int offset, int length) throws IOException {
         blockUntilDataAvailable(length);
-        fileChannel.read(ByteBuffer.wrap(dest, offset, length));
+        file.get(dest, offset, length);
     }
 
     @Override
@@ -114,6 +107,24 @@ public class LiveSource extends Source {
             return super.getLastTick();
         } finally {
             lock.unlock();
+        }
+    }
+
+    private void open() throws IOException {
+        close();
+        channel = FileChannel.open(filePath);
+        file = channel.map(FileChannel.MapMode.READ_ONLY, 0L, Files.size(filePath));
+    }
+
+    @Override
+    public void close() throws IOException {
+        if (channel != null) {
+            channel.close();
+            channel = null;
+        }
+        if (file != null) {
+            ((DirectBuffer) file).cleaner().clean();
+            file = null;
         }
     }
 
@@ -178,23 +189,20 @@ public class LiveSource extends Source {
         lock.lock();
         try {
             boolean nowExisting = Files.isReadable(filePath);
-            if (nowExisting ^ (fileChannel != null)) {
+            if (nowExisting ^ (file != null)) {
                 demoStopSeen = false;
                 resetLastTick();
-                if (nowExisting) {
-                    fileChannel = Files.newByteChannel(filePath, StandardOpenOption.READ);
-                } else {
-                    fileChannel.close();
-                    fileChannel = null;
+                if (!nowExisting) {
+                    close();
                 }
             }
-            if (fileChannel != null) {
-                currentSize = fileChannel.size();
+            if (nowExisting) {
+                int pos = getPosition();
+                open();
+                setPosition(Math.min(pos, file.capacity() - 1));
                 scanForLastTick();
-            } else {
-                currentSize = 0L;
             }
-            log.info("file change  for %s, existing: %s, fileSize: %d", filePath, fileChannel != null, currentSize);
+            log.debug("file change  for %s, existing: %s, fileSize: %d", filePath, file != null, file.capacity());
             fileChanged.signalAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -204,33 +212,33 @@ public class LiveSource extends Source {
     }
 
     private void resetLastTick() {
-        lastTickOffset = -1L;
-        nextTickOffset = 0L;
+        lastTickOffset = -1;
+        nextTickOffset = 0;
         setLastTick(0);
     }
 
     private void scanForLastTick() {
-        if (lastTickOffset >= currentSize) {
+        if (lastTickOffset >= file.capacity()) {
             // file size decreased
             resetLastTick();
         }
-        if (nextTickOffset > currentSize) {
+        if (nextTickOffset > file.capacity()) {
             // nothing to do
             return;
         }
         blockingEnabled = false;
-        Long backupPosition = null;
+        Integer backupPosition = null;
         try {
-            backupPosition = fileChannel.position();
-            while (nextTickOffset <= currentSize) {
-                if (nextTickOffset == 0L) {
-                    fileChannel.position(0L);
+            backupPosition = file.position();
+            while (nextTickOffset <= file.capacity()) {
+                if (nextTickOffset == 0) {
+                    file.position(0);
                     EngineType engineType = readEngineType();
                     engineType.skipHeaderOffsets(this);
                     skipVarInt32(); // kind
-                    nextTickOffset = fileChannel.position();
+                    nextTickOffset = file.position();
                 } else {
-                    fileChannel.position(nextTickOffset);
+                    file.position(nextTickOffset);
                     if (lastTickOffset < nextTickOffset) {
                         setLastTick(readVarInt32());
                         lastTickOffset = nextTickOffset;
@@ -239,24 +247,20 @@ public class LiveSource extends Source {
                     }
                     skipBytes(readVarInt32()); // size + packet
                     skipVarInt32(); // kind
-                    nextTickOffset = fileChannel.position();
+                    nextTickOffset = file.position();
                 }
             }
         } catch (IOException e) {
             //e.printStackTrace();
         } finally {
             try {
-                log.warn("last tick determined to be %d", getLastTick());
+                log.debug("last tick determined to be %d", getLastTick());
             } catch (IOException e) {
                 // should not happen
             }
             blockingEnabled = true;
             if (backupPosition != null) {
-                try {
-                    fileChannel.position(backupPosition);
-                } catch (IOException e) {
-                    throw new ClarityException("failed to restore position backup", e);
-                }
+                file.position(backupPosition);
             }
         }
     }
@@ -272,12 +276,12 @@ public class LiveSource extends Source {
                 if (timeoutForced) {
                     throw new TimeoutException("forced timeout");
                 }
-                if (demoStopSeen) {
-                    throw new EOFException();
-                }
-                if (fileChannel != null && fileChannel.position() + length < currentSize) {
+                if (file != null && file.remaining() >= length) {
                     dispose = false;
                     return;
+                }
+                if (demoStopSeen) {
+                    throw new EOFException();
                 }
                 if (blockingEnabled) {
                     if (!fileChanged.await(timeout, timeUnit)) {
