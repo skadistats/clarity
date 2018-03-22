@@ -27,8 +27,12 @@ import java.util.TreeSet;
  */
 public abstract class Source {
 
-    protected Integer lastTick;
+    private Runnable onLastTickChanged;
+    private Integer lastTick;
 
+    public void notifyOnLastTickChanged(Runnable onLastTickChanged) {
+        this.onLastTickChanged = onLastTickChanged;
+    }
 
     /**
      * returns the current position
@@ -198,6 +202,20 @@ public abstract class Source {
         return new TreeSet<>(packetPositions.headSet(wanted, true));
     }
 
+    protected void setLastTick(int lastTick) {
+        this.lastTick = lastTick;
+        if (onLastTickChanged != null) {
+            onLastTickChanged.run();
+        }
+    }
+
+    protected void determineLastTick() throws IOException {
+        setPosition(8);
+        setPosition(readFixedInt32());
+        skipVarInt32();
+        setLastTick(readVarInt32());
+    }
+
     /**
      * gets the number of the last tick
      *
@@ -209,10 +227,7 @@ public abstract class Source {
      */
     public int getLastTick() throws IOException {
         if (lastTick == null) {
-            setPosition(8);
-            setPosition(readFixedInt32());
-            skipVarInt32();
-            lastTick = readVarInt32();
+            determineLastTick();
         }
         return lastTick.intValue();
     }

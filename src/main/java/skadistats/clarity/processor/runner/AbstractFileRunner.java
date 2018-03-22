@@ -69,4 +69,8 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         return source;
     }
 
+    public int getLastTick() throws IOException {
+        return source.getLastTick();
+    }
+
 }

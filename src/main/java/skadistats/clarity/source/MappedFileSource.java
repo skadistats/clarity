@@ -53,13 +53,10 @@ public class MappedFileSource extends Source {
     }
 
     @Override
-    public int getLastTick() throws IOException {
-        if (lastTick == null) {
-            int backup = getPosition();
-            super.getLastTick();
-            setPosition(backup);
-        }
-        return lastTick;
+    protected void determineLastTick() throws IOException {
+        int backup = getPosition();
+        super.determineLastTick();
+        setPosition(backup);
     }
 
     @Override
@@ -67,4 +64,5 @@ public class MappedFileSource extends Source {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
         ((DirectBuffer) buf).cleaner().clean();
     }
+
 }

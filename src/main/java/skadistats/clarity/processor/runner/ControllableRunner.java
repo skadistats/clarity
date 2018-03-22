@@ -22,8 +22,6 @@ public class ControllableRunner extends AbstractFileRunner {
     private TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
     private LinkedList<ResetStep> resetSteps;
 
-    private Integer lastTick;
-
     /* tick the processor is waiting at to be signaled to continue further processing */
     private int upcomingTick;
     /* tick we want to be at the end of */
@@ -286,16 +284,18 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
-    public int getLastTick() throws IOException {
-        if (lastTick == null) {
-            lock.lock();
+    @Override
+    public int getLastTick() {
+        lock.lock();
+        try {
             try {
-                lastTick = source.getLastTick();
-            } finally {
-                lock.unlock();
+                return source.getLastTick();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
+        } finally {
+            lock.unlock();
         }
-        return lastTick;
     }
 
 }
