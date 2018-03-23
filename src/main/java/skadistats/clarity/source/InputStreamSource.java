@@ -1,14 +1,26 @@
 package skadistats.clarity.source;
 
+import java.io.BufferedInputStream;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Paths;
 
 public class InputStreamSource extends Source {
 
     private final InputStream stream;
     private int position;
-    private byte[] dummy = new byte[32768];
+    private byte[] dummy = new byte[65536];
+
+    public InputStreamSource(String fileName) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(fileName)));
+    }
+
+    public InputStreamSource(File file) throws IOException {
+        this(new BufferedInputStream(new FileInputStream(file)));
+    }
 
     public InputStreamSource(InputStream stream) {
         this.stream = stream;
@@ -52,6 +64,11 @@ public class InputStreamSource extends Source {
             offset += r;
             length -= r;
         }
+    }
+
+    @Override
+    public void close() throws IOException {
+        stream.close();
     }
 
 }

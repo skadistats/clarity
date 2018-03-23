@@ -10,6 +10,7 @@ import skadistats.clarity.wire.common.proto.Demo;
 import sun.nio.ch.DirectBuffer;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -53,10 +54,18 @@ public class LiveSource extends Source {
     private WatchKey watchKey;
 
     public LiveSource(String fileName, long timeout, TimeUnit timeUnit) {
+        this(Paths.get(fileName), timeout, timeUnit);
+    }
+
+    public LiveSource(File file, long timeout, TimeUnit timeUnit) {
+        this(file.toPath(), timeout, timeUnit);
+    }
+
+    public LiveSource(Path filePath, long timeout, TimeUnit timeUnit) {
         this.timeout = timeout;
         this.timeUnit = timeUnit;
 
-        filePath = Paths.get(fileName).toAbsolutePath();
+        this.filePath = filePath.toAbsolutePath();
         resetLastTick();
         handleFileChange();
 

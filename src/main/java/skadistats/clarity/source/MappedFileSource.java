@@ -5,25 +5,28 @@ import sun.nio.ch.DirectBuffer;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class MappedFileSource extends Source {
 
-    private final File file;
-    private final RandomAccessFile raf;
-    private final MappedByteBuffer buf;
+    private FileChannel channel;
+    private MappedByteBuffer buf;
 
     public MappedFileSource(String fileName) throws IOException {
-        this(new File(fileName));
+        this(Paths.get(fileName));
     }
 
     public MappedFileSource(File file) throws IOException {
-        this.file = file;
-        raf = new RandomAccessFile(file, "r");
-        buf = raf.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, raf.length());
-        raf.close();
+        this(file.toPath());
+    }
+
+    public MappedFileSource(Path file) throws IOException {
+        channel = FileChannel.open(file);
+        buf = channel.map(FileChannel.MapMode.READ_ONLY, 0L, Files.size(file));
     }
 
     @Override
@@ -62,7 +65,14 @@ public class MappedFileSource extends Source {
     @Override
     public void close() throws IOException {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
-        ((DirectBuffer) buf).cleaner().clean();
+        if (channel != null) {
+            channel.close();
+            channel = null;
+        }
+        if (buf != null) {
+            ((DirectBuffer) buf).cleaner().clean();
+            buf = null;
+        }
     }
 
 }
