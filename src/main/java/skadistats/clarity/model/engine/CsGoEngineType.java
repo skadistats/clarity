@@ -7,8 +7,8 @@ import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.wire.csgo.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.UserMessagePackets;
-import skadistats.clarity.wire.s1.EmbeddedPackets;
 
 import java.io.IOException;
 
