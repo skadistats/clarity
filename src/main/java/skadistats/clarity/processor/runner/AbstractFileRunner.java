@@ -34,7 +34,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     }
 
     protected void initAndRunWith(Object... processors) {
-        initWithProcessors(this, source, processors);
+        initWithProcessors(this, getEngineType(), source, processors);
         context.createEvent(OnInputSource.class, Source.class, LoopController.class).raise(source, loopController);
     }
 

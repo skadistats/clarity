@@ -13,6 +13,7 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.StringTable;
@@ -119,7 +120,7 @@ public class Entities {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", entityIndex, clsId);
                     }
                     serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType == EngineType.SOURCE2) {
+                    if (engineType.getId() == EngineId.SOURCE2) {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }

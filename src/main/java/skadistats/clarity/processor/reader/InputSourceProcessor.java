@@ -14,6 +14,7 @@ import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.FileRunner;
@@ -280,7 +281,7 @@ public class InputSourceProcessor {
 
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
     public void processServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
-        if (engineType == EngineType.SOURCE1) {
+        if (engineType.getId() != EngineId.SOURCE2) {
             return;
         }
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());

@@ -8,7 +8,7 @@ import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
@@ -21,7 +21,7 @@ import java.util.LinkedList;
 
 import static skadistats.clarity.LogChannel.stringtables;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineType.SOURCE2)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.SOURCE2)
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 

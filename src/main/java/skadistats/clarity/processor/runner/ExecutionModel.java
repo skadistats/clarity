@@ -17,6 +17,7 @@ import skadistats.clarity.event.UsagePointProvider;
 import skadistats.clarity.event.UsagePointType;
 import skadistats.clarity.event.UsagePoints;
 import skadistats.clarity.logger.PrintfLoggerFactory;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
@@ -95,8 +96,8 @@ public class ExecutionModel {
     }
 
     private boolean supportsEngineType(Provides provides) {
-        for (EngineType engineType : provides.engine()) {
-            if (engineType == runner.getEngineType()) {
+        for (EngineId id : provides.engine()) {
+            if (id == runner.getEngineType().getId()) {
                 return true;
             }
         }
@@ -201,8 +202,6 @@ public class ExecutionModel {
                         if (fieldAnnotation instanceof Insert) {
                             if (field.getType().isAssignableFrom(Context.class)) {
                                 injectValue(processor, field, runner.getContext(), "cannot inject context");
-                            } else if (field.getType().isAssignableFrom(EngineType.class)) {
-                                injectValue(processor, field, runner.getContext().getEngineType(), "cannot inject engine type");
                             } else {
                                 injectProcessor(processor, field);
                             }

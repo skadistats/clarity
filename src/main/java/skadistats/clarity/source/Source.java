@@ -1,5 +1,6 @@
 package skadistats.clarity.source;
 
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.wire.common.proto.Demo;
 
@@ -156,7 +157,7 @@ public abstract class Source {
      */
     public EngineType readEngineType() throws IOException {
         try {
-            EngineType et = EngineType.forMagic(new String(readBytes(8)));
+            EngineType et = EngineId.typeForMagic(new String(readBytes(8)));
             if (et == null) {
                 throw new IOException();
             }

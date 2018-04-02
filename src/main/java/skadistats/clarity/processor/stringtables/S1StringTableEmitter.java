@@ -6,7 +6,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.NetMessages;
@@ -14,7 +14,7 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.LinkedList;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineType.SOURCE1)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.SOURCE1)
 @StringTableEmitter
 public class S1StringTableEmitter extends BaseStringTableEmitter {
 

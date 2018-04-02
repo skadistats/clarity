@@ -1,7 +1,7 @@
 package skadistats.clarity.event;
 
 import org.atteo.classindex.IndexAnnotated;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.runner.Runner;
 
 import java.lang.annotation.Annotation;
@@ -16,7 +16,7 @@ import java.lang.annotation.Target;
 public @interface Provides {
 
     Class<? extends Annotation>[] value();
-    EngineType[] engine() default {};
+    EngineId[] engine() default {};
     Class<? extends Runner>[] runnerClass() default {};
     int precedence() default 0;
 

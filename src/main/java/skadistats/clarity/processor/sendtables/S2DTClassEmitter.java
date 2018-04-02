@@ -20,7 +20,7 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
@@ -37,7 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineType.SOURCE2)
+@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineId.SOURCE2)
 public class S2DTClassEmitter {
 
     private static final Set<String> POINTERS = new HashSet<>();
