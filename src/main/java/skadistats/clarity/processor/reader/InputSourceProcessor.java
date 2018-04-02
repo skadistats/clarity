@@ -123,6 +123,7 @@ public class InputSourceProcessor {
         int kind;
         boolean isCompressed;
         int tick;
+        int playerSlot;
         int size;
         LoopController.Command loopCtl;
 
@@ -130,15 +131,17 @@ public class InputSourceProcessor {
         while (true) {
             offset = src.getPosition();
             try {
-                kind = src.readVarInt32();
+                kind = engineType.readKind(src);
                 isCompressed = (kind & compressedFlag) == compressedFlag;
                 kind &= ~compressedFlag;
-                tick = src.readVarInt32();
-                size = src.readVarInt32();
+                tick = engineType.readTick(src);
+                playerSlot = engineType.readPlayerSlot(src);
+                size = engineType.readSize(src);
             } catch (EOFException e) {
                 kind = -1;
                 isCompressed = false;
                 tick = Integer.MAX_VALUE;
+                playerSlot = -1;
                 size = 0;
             }
             loopctl:

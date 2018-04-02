@@ -30,7 +30,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         super(engineType);
         this.source = source;
         this.tick = -1;
-        engineType.skipHeaderOffsets(source);
+        engineType.readHeader(source);
     }
 
     protected void initAndRunWith(Object... processors) {

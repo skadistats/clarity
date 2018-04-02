@@ -251,7 +251,7 @@ public class LiveSource extends Source {
                 if (nextTickOffset == 0) {
                     file.position(0);
                     EngineType engineType = readEngineType();
-                    engineType.skipHeaderOffsets(this);
+                    engineType.readHeader(this);
                     skipVarInt32(); // kind
                     nextTickOffset = file.position();
                 } else {
