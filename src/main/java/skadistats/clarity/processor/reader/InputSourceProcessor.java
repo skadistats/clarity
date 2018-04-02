@@ -23,7 +23,6 @@ import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.common.DemoPackets;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
@@ -116,38 +115,25 @@ public class InputSourceProcessor {
 
     @OnInputSource
     public void processSource(Source src, LoopController ctl) throws Exception {
-        int compressedFlag = engineType.getCompressedFlag();
 
         ByteString resetFullPacketData = null;
 
         int offset;
-        int kind;
-        boolean isCompressed;
-        int tick;
-        int playerSlot;
-        int size;
+
+        PacketInstance<?> pi;
         LoopController.Command loopCtl;
 
         main:
         while (true) {
             offset = src.getPosition();
             try {
-                kind = engineType.readKind(src);
-                isCompressed = (kind & compressedFlag) == compressedFlag;
-                kind &= ~compressedFlag;
-                tick = engineType.readTick(src);
-                playerSlot = engineType.readPlayerSlot(src);
-                size = engineType.readSize(src);
+                pi = engineType.getNextPacketInstance(src);
             } catch (EOFException e) {
-                kind = -1;
-                isCompressed = false;
-                tick = Integer.MAX_VALUE;
-                playerSlot = -1;
-                size = 0;
+                pi = PacketInstance.EOF;
             }
             loopctl:
             while (true) {
-                loopCtl = ctl.doLoopControl(tick);
+                loopCtl = ctl.doLoopControl(pi.getTick());
                 switch (loopCtl) {
                     case RESET_CLEAR:
                         evReset.raise(null, ResetPhase.CLEAR);
@@ -168,7 +154,7 @@ public class InputSourceProcessor {
                         evReset.raise(null, ResetPhase.COMPLETE);
                         continue loopctl;
                     case FALLTHROUGH:
-                        if (tick != Integer.MAX_VALUE) {
+                        if (pi.getTick() != Integer.MAX_VALUE) {
                             break loopctl;
                         }
                         // if at end, fallthrough is a break from main
@@ -180,25 +166,23 @@ public class InputSourceProcessor {
                         continue loopctl;
                 }
             }
-            if (size < 0) {
-                throw new IOException(String.format("invalid negative demo packet size (%d).", size));
-            }
-            Class<? extends GeneratedMessage> messageClass = DemoPackets.classForKind(kind);
+
+            Class<? extends GeneratedMessage> messageClass = pi.getMessageClass();
             if (messageClass == null) {
-                logUnknownMessage("top level", kind);
-                src.skipBytes(size);
+                logUnknownMessage("top level", pi.getKind());
+                pi.skip();
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                Demo.CDemoPacket message = (Demo.CDemoPacket) pi.parse();
                 evMessageContainer.raise(Demo.CDemoPacket.class, message.getData());
             } else if (engineType.isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                Demo.CDemoSendTables message = (Demo.CDemoSendTables) pi.parse();
                 evMessageContainer.raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                    Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                    Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) pi.parse();
                     evFull.raise(message);
                     if (evReset.isListenedTo()) {
-                        ctl.markResetRelevantPacket(tick, kind, offset);
+                        ctl.markResetRelevantPacket(pi.getTick(), pi.getKind(), offset);
                         switch (loopCtl) {
                             case RESET_ACCUMULATE:
                                 evReset.raise(message.getStringTable(), ResetPhase.ACCUMULATE);
@@ -207,7 +191,7 @@ public class InputSourceProcessor {
                         }
                     }
                 } else {
-                    src.skipBytes(size);
+                    pi.skip();
                 }
             } else {
                 boolean isStringTables = messageClass == Demo.CDemoStringTables.class;
@@ -218,10 +202,10 @@ public class InputSourceProcessor {
                 }
                 Event<OnMessage> ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || resetRelevant) {
-                    GeneratedMessage message = Packet.parse(messageClass, readPacket(src, size, isCompressed));
+                    GeneratedMessage message = pi.parse();
                     ev.raise(message);
                     if (resetRelevant) {
-                        ctl.markResetRelevantPacket(tick, kind, offset);
+                        ctl.markResetRelevantPacket(pi.getTick(), pi.getKind(), offset);
                         if (isStringTables) {
                             switch (loopCtl) {
                                 case RESET_ACCUMULATE:
@@ -231,7 +215,7 @@ public class InputSourceProcessor {
                         }
                     }
                 } else {
-                    src.skipBytes(size);
+                    pi.skip();
                 }
             }
         }

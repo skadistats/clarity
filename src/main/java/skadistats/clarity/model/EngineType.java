@@ -3,6 +3,7 @@ package skadistats.clarity.model;
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;
@@ -35,5 +36,6 @@ public interface EngineType {
     int readEmbeddedKind(BitStream bs);
 
     void readCommandInfo(Source source) throws IOException;
+    <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException;
 
 }

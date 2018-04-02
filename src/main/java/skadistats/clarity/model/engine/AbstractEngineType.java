@@ -7,15 +7,15 @@ import skadistats.clarity.wire.common.DemoPackets;
 
 public abstract class AbstractEngineType implements EngineType {
 
-    private final EngineId identifier;
+    private final EngineId id;
     private final int compressedFlag;
     private final boolean sendTablesContainer;
     private final int indexBits;
     private final int serialBits;
     private final int indexMask;
 
-    AbstractEngineType(EngineId identifier, int compressedFlag, boolean sendTablesContainer, int indexBits, int serialBits) {
-        this.identifier = identifier;
+    AbstractEngineType(EngineId id, int compressedFlag, boolean sendTablesContainer, int indexBits, int serialBits) {
+        this.id = id;
         this.compressedFlag = compressedFlag;
         this.sendTablesContainer = sendTablesContainer;
         this.indexBits = indexBits;
@@ -25,7 +25,7 @@ public abstract class AbstractEngineType implements EngineType {
 
     @Override
     public EngineId getId() {
-        return identifier;
+        return id;
     }
 
     @Override
@@ -68,4 +68,8 @@ public abstract class AbstractEngineType implements EngineType {
         return serial << indexBits | index;
     }
 
+    @Override
+    public String toString() {
+        return id.toString();
+    }
 }
