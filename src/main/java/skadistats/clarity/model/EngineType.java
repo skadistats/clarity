@@ -37,5 +37,4 @@ public interface EngineType {
 
     void readCommandInfo(Source source) throws IOException;
     <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException;
-
 }

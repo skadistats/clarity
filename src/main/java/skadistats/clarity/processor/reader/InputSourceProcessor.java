@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@Provides(value = {OnMessageContainer.class, OnMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
+@Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 public class InputSourceProcessor {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
@@ -58,11 +58,18 @@ public class InputSourceProcessor {
     private Event<OnMessageContainer> evMessageContainer;
 
     private Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
+    private Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
     private Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
         listener.setParameterClasses(listener.getAnnotation().value());
+        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
+    }
+
+    @Initializer(OnPostEmbeddedMessage.class)
+    public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
+        listener.setParameterClasses(listener.getAnnotation().value(), BitStream.class);
         unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
     }
 
@@ -83,11 +90,20 @@ public class InputSourceProcessor {
         }
     }
 
-    private Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
+    public Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
         Event<OnMessage> ev = evOnMessages.get(messageClass);
         if (ev == null) {
             ev = ctx.createEvent(OnMessage.class, messageClass);
             evOnMessages.put(messageClass, ev);
+        }
+        return ev;
+    }
+
+    private Event<OnPostEmbeddedMessage> evOnPostEmbeddedMessage(Class<? extends GeneratedMessage> messageClass) {
+        Event<OnPostEmbeddedMessage> ev = evOnPostEmbeddedMessages.get(messageClass);
+        if (ev == null) {
+            ev = ctx.createEvent(OnPostEmbeddedMessage.class, messageClass, BitStream.class);
+            evOnPostEmbeddedMessages.put(messageClass, ev);
         }
         return ev;
     }
@@ -247,6 +263,10 @@ public class InputSourceProcessor {
                     bs.readBitsIntoByteArray(buffer[2], size * 8);
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrapBounded(buffer[2], 0, size));
                     ev.raise(subMessage);
+                    Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
+                    if (evPost.isListenedTo()) {
+                        evPost.raise(subMessage, bs);
+                    }
                     if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
                         NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
                         Class<? extends GeneratedMessage> umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());

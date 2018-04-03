@@ -5,19 +5,26 @@ import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.S1FieldReader;
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
+import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
+import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.csgo.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.UserMessagePackets;
+import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.io.IOException;
-import java.util.function.Consumer;
 
 public class CsGoEngineType extends AbstractEngineType {
+
+    @Insert
+    private Context ctx;
+
     public CsGoEngineType(EngineId identifier) {
         super(identifier,
                 0x100,
@@ -193,5 +200,27 @@ public class CsGoEngineType extends AbstractEngineType {
             }
         };
     }
+
+
+
+    @OnPostEmbeddedMessage(S1NetMessages.CSVCMsg_SendTable.class)
+    public void onPostSendTable(S1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
+        if (message.getIsEnd()) {
+            Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
+            int n = bs.readSBitInt(16);
+            for (int i = 0; i < n; i++) {
+                Demo.CDemoClassInfo.class_t.Builder cb = Demo.CDemoClassInfo.class_t.newBuilder();
+                b.addClasses(cb
+                        .setClassId(bs.readSBitInt(16))
+                        .setNetworkName(bs.readString(255))
+                        .setTableName(bs.readString(255))
+                        .build()
+                );
+            }
+            ctx.createEvent(OnMessage.class, Demo.CDemoClassInfo.class).raise(b.build());
+        }
+    }
+
+
 
 }

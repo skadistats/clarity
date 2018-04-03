@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s1.S1DTClass;
 import skadistats.clarity.decoder.s1.SendProp;
@@ -11,6 +12,7 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
+import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -19,11 +21,13 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineId.SOURCE1)
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = { EngineId.SOURCE1, EngineId.CSGO })
 public class S1DTClassEmitter {
 
     @Insert
     private DTClasses dtClasses;
+    @Insert
+    private EngineType engineType;
 
     @InsertEvent
     private Event<OnDTClassesComplete> evClassesComplete;
@@ -32,6 +36,10 @@ public class S1DTClassEmitter {
 
     @OnMessage(S1NetMessages.CSVCMsg_SendTable.class)
     public void onSendTable(S1NetMessages.CSVCMsg_SendTable message) {
+
+        if (message.getIsEnd()) {
+            return;
+        }
 
         LinkedList<SendProp> props = new LinkedList<SendProp>();
         SendTable st = new SendTable(
@@ -64,6 +72,9 @@ public class S1DTClassEmitter {
     public void onClassInfo(Demo.CDemoClassInfo message) {
         for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
             DTClass dt = dtClasses.forDtName(ct.getTableName());
+            if (dt == null) {
+                throw new ClarityException("DTClass for '%s' not found.", ct.getTableName());
+            }
             dt.setClassId(ct.getClassId());
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
