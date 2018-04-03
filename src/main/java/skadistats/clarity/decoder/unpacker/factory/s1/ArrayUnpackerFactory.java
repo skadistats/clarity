@@ -11,7 +11,7 @@ public class ArrayUnpackerFactory<T> implements UnpackerFactory<T> {
     public static Unpacker<?> createUnpackerStatic(SendProp prop) {
         return new ArrayUnpacker(
             S1UnpackerFactory.createUnpacker(prop.getTemplate()),
-            Util.calcBitsNeededFor(prop.getNumElements() - 1)
+            Util.calcBitsNeededFor(prop.getNumElements())
         );
     }
 
