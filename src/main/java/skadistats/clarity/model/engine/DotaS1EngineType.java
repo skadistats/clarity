@@ -3,6 +3,7 @@ package skadistats.clarity.model.engine;
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.decoder.s1.DotaS1FieldReader;
 import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
@@ -41,7 +42,7 @@ public class DotaS1EngineType extends AbstractDotaEngineType {
 
     @Override
     public FieldReader getNewFieldReader() {
-        return new S1FieldReader();
+        return new DotaS1FieldReader();
     }
 
     @Override

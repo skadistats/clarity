@@ -4,6 +4,7 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.decoder.s1.CsGoFieldReader;
 import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.model.DemoHeader;
@@ -50,7 +51,7 @@ public class CsGoEngineType extends AbstractEngineType {
 
     @Override
     public FieldReader getNewFieldReader() {
-        return new S1FieldReader();
+        return new CsGoFieldReader();
     }
 
     @Override

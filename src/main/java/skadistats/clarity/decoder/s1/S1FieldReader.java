@@ -2,11 +2,10 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;
 
-public class S1FieldReader extends FieldReader<S1DTClass> {
+public abstract class S1FieldReader extends FieldReader<S1DTClass> {
 
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -23,6 +22,8 @@ public class S1FieldReader extends FieldReader<S1DTClass> {
         .addColumn("read")
         .build();
 
+    protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
+
     @Override
     public int readFields(BitStream bs, S1DTClass dtClass, Object[] state, boolean debug) {
         try {
@@ -31,21 +32,7 @@ public class S1FieldReader extends FieldReader<S1DTClass> {
                 debugTable.clear();
             }
 
-            int n = 0;
-            int cursor = -1;
-            while (true) {
-                if (bs.readBitFlag()) {
-                    cursor += 1;
-                } else {
-                    int offset = bs.readVarUInt();
-                    if (offset == MAX_PROPERTIES) {
-                        break;
-                    } else {
-                        cursor += offset + 1;
-                    }
-                }
-                fieldPaths[n++] = new FieldPath(dtClass.getIndexMapping()[cursor]);
-            }
+            int n = readIndices(bs, dtClass);
 
             ReceiveProp[] receiveProps = dtClass.getReceiveProps();
             for (int ci = 0; ci < n; ci++) {
