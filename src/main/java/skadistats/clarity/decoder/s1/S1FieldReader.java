@@ -5,6 +5,8 @@ import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;
 
+import java.util.Arrays;
+
 public abstract class S1FieldReader extends FieldReader<S1DTClass> {
 
     private final TextTable debugTable = new TextTable.Builder()
@@ -49,7 +51,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                     debugTable.setData(ci, 4, sp.getNumBits());
                     debugTable.setData(ci, 5, PropFlag.descriptionForFlags(sp.getFlags()));
                     debugTable.setData(ci, 6, sp.getUnpacker().getClass().getSimpleName());
-                    debugTable.setData(ci, 7, state[o]);
+                    debugTable.setData(ci, 7, state[o].getClass().isArray() ? Arrays.toString((Object[]) state[o]) : state[o]);
                     debugTable.setData(ci, 8, bs.pos() - offsBefore);
                     debugTable.setData(ci, 9, bs.toString(offsBefore, bs.pos()));
                 }
