@@ -24,11 +24,12 @@ public interface PacketInstance<T extends GeneratedMessage> {
 
         @Override
         public GeneratedMessage parse() throws IOException {
-            return null;
+            throw new UnsupportedOperationException("cannot parse EOF");
         }
 
         @Override
         public void skip() {
+            throw new UnsupportedOperationException("cannot skip EOF");
         }
     };
 

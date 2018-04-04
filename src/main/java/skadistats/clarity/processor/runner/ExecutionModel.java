@@ -146,13 +146,20 @@ public class ExecutionModel {
 
     private List<UsagePoint<? extends Annotation>> findUsagePoints(Class<?> searchedClass) {
         List<UsagePoint<? extends Annotation>> ups = new ArrayList<>();
-        for (Annotation classAnnotation : searchedClass.getAnnotations()) {
-            if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
-                ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
+        Class<?> c;
+
+        c = searchedClass;
+        while (c != Object.class) {
+            for (Annotation classAnnotation : c.getAnnotations()) {
+                if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
+                    ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
+                }
             }
+            c = c.getSuperclass();
         }
-        Class<?> c = searchedClass;
-        while (true) {
+
+        c = searchedClass;
+        while (c != Object.class) {
             for (Method method : c.getDeclaredMethods()) {
                 for (Annotation methodAnnotation : method.getAnnotations()) {
                     if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
@@ -162,10 +169,8 @@ public class ExecutionModel {
                 }
             }
             c = c.getSuperclass();
-            if (c == Object.class) {
-                break;
-            }
         }
+
         return ups;
     }
 

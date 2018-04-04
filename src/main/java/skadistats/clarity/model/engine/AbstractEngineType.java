@@ -1,11 +1,18 @@
 package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.processor.packet.PacketReader;
+import skadistats.clarity.processor.packet.UsesPacketReader;
 import skadistats.clarity.wire.common.DemoPackets;
 
+@UsesPacketReader
 public abstract class AbstractEngineType implements EngineType {
+
+    @Insert
+    protected PacketReader packetReader;
 
     private final EngineId id;
     private final int compressedFlag;
@@ -77,4 +84,5 @@ public abstract class AbstractEngineType implements EngineType {
     public String toString() {
         return id.toString();
     }
+
 }
