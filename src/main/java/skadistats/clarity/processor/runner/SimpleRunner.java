@@ -32,7 +32,7 @@ public class SimpleRunner extends AbstractFileRunner {
         this.loopController = new LoopController(controllerFunc);
     }
 
-    public SimpleRunner runWith(final Object... processors) {
+    public SimpleRunner runWith(final Object... processors) throws IOException {
         initAndRunWith(processors);
         return this;
     }

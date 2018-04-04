@@ -15,6 +15,7 @@ import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.csgo.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.UserMessagePackets;
+import skadistats.clarity.wire.csgo.proto.CsGoClarityMessages;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.io.IOException;
@@ -56,28 +57,29 @@ public class CsGoEngineType extends AbstractEngineType {
         return new CsGoFieldReader();
     }
 
+    private String readHeaderString(Source source) throws IOException {
+        byte[] buf = new byte[260];
+        source.readBytes(buf, 0, 260);
+        int i = 0;
+        while (buf[i] != 0) i++;
+        return new String(buf, 0, i, "UTF-8");
+    }
+
     @Override
     public void readHeader(Source source) throws IOException {
-//            int32	demoprotocol;					// Should be DEMO_PROTOCOL
-        source.skipBytes(4);
-//            int32	networkprotocol;				// Should be PROTOCOL_VERSION
-        source.skipBytes(4);
-//            char	servername[ MAX_OSPATH ];		// Name of server
-        source.skipBytes(260);
-//            char	clientname[ MAX_OSPATH ];		// Name of client who recorded the game
-        source.skipBytes(260);
-//            char	mapname[ MAX_OSPATH ];			// Name of map
-        source.skipBytes(260);
-//            char	gamedirectory[ MAX_OSPATH ];	// Name of game directory (com_gamedir)
-        source.skipBytes(260);
-//            float	playback_time;					// Time of track
-        source.skipBytes(4);
-//            int32   playback_ticks;					// # of ticks in track
-        source.skipBytes(4);
-//            int32   playback_frames;				// # of frames in track
-        source.skipBytes(4);
-//            int32	signonlength;					// length of sigondata in bytes
-        source.skipBytes(4);
+        CsGoClarityMessages.CsGoDemoHeader header = CsGoClarityMessages.CsGoDemoHeader.newBuilder()
+                .setDemoprotocol(source.readFixedInt32())
+                .setNetworkprotocol(source.readFixedInt32())
+                .setServername(readHeaderString(source))
+                .setClientname(readHeaderString(source))
+                .setMapname(readHeaderString(source))
+                .setGamedirectory(readHeaderString(source))
+                .setPlaybackTime(Float.intBitsToFloat(source.readFixedInt32()))
+                .setPlaybackTicks(source.readFixedInt32())
+                .setPlaybackFrames(source.readFixedInt32())
+                .setSignonlength(source.readFixedInt32())
+                .build();
+        ctx.createEvent(OnMessage.class, CsGoClarityMessages.CsGoDemoHeader.class).raise(header);
     }
 
     @Override
