@@ -20,12 +20,11 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
 
     @Override
     public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(final Source source) throws IOException {
-        int k = source.readVarInt32();
-        final boolean isCompressed = (k & getCompressedFlag()) == getCompressedFlag();
-        k &= ~getCompressedFlag();
+        int rawKind = source.readVarInt32();
+        final boolean isCompressed = (rawKind & getCompressedFlag()) == getCompressedFlag();
+        final int kind = rawKind &~ getCompressedFlag();
         final int tick = source.readVarInt32();
         final int size = source.readVarInt32();
-        final int kind = k;
         final Class<T> messageClass = (Class<T>) DemoPackets.classForKind(kind);
         return new PacketInstance<T>() {
             @Override
