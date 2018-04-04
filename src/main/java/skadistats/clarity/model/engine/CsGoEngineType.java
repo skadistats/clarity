@@ -130,13 +130,10 @@ public class CsGoEngineType extends AbstractEngineType {
             Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
             int n = bs.readSBitInt(16);
             for (int i = 0; i < n; i++) {
-                Demo.CDemoClassInfo.class_t.Builder cb = Demo.CDemoClassInfo.class_t.newBuilder();
-                b.addClasses(cb
+                b.addClassesBuilder()
                         .setClassId(bs.readSBitInt(16))
                         .setNetworkName(bs.readString(255))
-                        .setTableName(bs.readString(255))
-                        .build()
-                );
+                        .setTableName(bs.readString(255));
             }
             ctx.createEvent(OnMessage.class, Demo.CDemoClassInfo.class).raise(b.build());
         }
@@ -218,11 +215,13 @@ public class CsGoEngineType extends AbstractEngineType {
             new Handler<Demo.CDemoConsoleCmd>(Demo.CDemoConsoleCmd.class) {
                 @Override
                 public Demo.CDemoConsoleCmd parse(Source source) throws IOException {
-                    throw new UnsupportedOperationException("implement me");
+                    return Demo.CDemoConsoleCmd.newBuilder()
+                            .setCmdstringBytes(ZeroCopy.wrap(readPacket(source)))
+                            .build();
                 }
                 @Override
                 public void skip(Source source) throws IOException {
-                    throw new UnsupportedOperationException("implement me");
+                    skipPacket(source);
                 }
             },
             //(5) dem_usercmd
@@ -268,21 +267,47 @@ public class CsGoEngineType extends AbstractEngineType {
             new Handler<Demo.CDemoCustomData>(Demo.CDemoCustomData.class) {
                 @Override
                 public Demo.CDemoCustomData parse(Source source) throws IOException {
-                    throw new UnsupportedOperationException("implement me");
+                    return Demo.CDemoCustomData.newBuilder()
+                            .setData(ZeroCopy.wrap(readPacket(source)))
+                            .build();
                 }
                 @Override
                 public void skip(Source source) throws IOException {
-                    throw new UnsupportedOperationException("implement me");
+                    skipPacket(source);
                 }
             },
             //(9) dem_stringtables
             new Handler<Demo.CDemoStringTables>(Demo.CDemoStringTables.class) {
                 @Override
                 public Demo.CDemoStringTables parse(Source source) throws IOException {
-                    // TODO implement
-                    skipPacket(source);
-                    return Demo.CDemoStringTables.newBuilder()
-                            .build();
+                    BitStream bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));
+                    Demo.CDemoStringTables.Builder b = Demo.CDemoStringTables.newBuilder();
+                    int nTables = bs.readUBitInt(8);
+                    for (int t = 0; t < nTables; t++) {
+                        Demo.CDemoStringTables.table_t.Builder tb = b.addTablesBuilder();
+                        tb.setTableName(bs.readString(4095));
+                        int nStrings = bs.readUBitInt(16);
+                        for (int s = 0; s < nStrings; s++) {
+                            Demo.CDemoStringTables.items_t.Builder ib = tb.addItemsBuilder();
+                            ib.setStr(bs.readString(255));
+                            if (bs.readBitFlag()) {
+                                byte[] data = new byte[bs.readUBitInt(16)];
+                                bs.readBitsIntoByteArray(data, data.length * 8);
+                                ib.setData(ZeroCopy.wrap(data));
+                            }
+                        }
+                        if (bs.readBitFlag()) {
+                            Demo.CDemoStringTables.items_t.Builder ib = tb.addItemsClientsideBuilder();
+                            ib.setStr(bs.readString(4095));
+                            if (bs.readBitFlag()) {
+                                byte[] data = new byte[bs.readUBitInt(16)];
+                                bs.readBitsIntoByteArray(data, data.length * 8);
+                                ib.setData(ZeroCopy.wrap(data));
+                            }
+
+                        }
+                    }
+                    return b.build();
                 }
                 @Override
                 public void skip(Source source) throws IOException {
