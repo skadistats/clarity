@@ -4,7 +4,6 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
-import org.xerial.snappy.Snappy;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
@@ -16,6 +15,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.processor.packet.PacketReader;
+import skadistats.clarity.processor.packet.UsesPacketReader;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.FileRunner;
 import skadistats.clarity.processor.runner.LoopController;
@@ -37,11 +38,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
+@UsesPacketReader
 public class InputSourceProcessor {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
-
-    private final byte[][] buffer = new byte[][]{new byte[128 * 1024], new byte[256 * 1024], new byte[128 * 1024]};
 
     private boolean unpackUserMessages = false;
 
@@ -49,6 +49,8 @@ public class InputSourceProcessor {
     private Context ctx;
     @Insert
     private EngineType engineType;
+    @Insert
+    private PacketReader packetReader;
 
     @InsertEvent
     private Event<OnReset> evReset;
@@ -84,12 +86,6 @@ public class InputSourceProcessor {
         });
     }
 
-    private void ensureBufferCapacity(int n, int capacity) {
-        if (buffer[n].length < capacity) {
-            buffer[n] = new byte[capacity];
-        }
-    }
-
     public Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
         Event<OnMessage> ev = evOnMessages.get(messageClass);
         if (ev == null) {
@@ -106,19 +102,6 @@ public class InputSourceProcessor {
             evOnPostEmbeddedMessages.put(messageClass, ev);
         }
         return ev;
-    }
-
-    private ByteString readPacket(Source source, int size, boolean isCompressed) throws IOException {
-        ensureBufferCapacity(0, size);
-        source.readBytes(buffer[0], 0, size);
-        if (isCompressed) {
-            int sizeUncompressed = Snappy.uncompressedLength(buffer[0], 0, size);
-            ensureBufferCapacity(1, sizeUncompressed);
-            Snappy.rawUncompress(buffer[0], 0, size, buffer[1], 0);
-            return ZeroCopy.wrapBounded(buffer[1], 0, sizeUncompressed);
-        } else {
-            return ZeroCopy.wrapBounded(buffer[0], 0, size);
-        }
     }
 
     private void logUnknownMessage(String where, int type) {
@@ -259,9 +242,7 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
-                    ensureBufferCapacity(2, size);
-                    bs.readBitsIntoByteArray(buffer[2], size * 8);
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrapBounded(buffer[2], 0, size));
+                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
                     ev.raise(subMessage);
                     Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
                     if (evPost.isListenedTo()) {
