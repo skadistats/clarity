@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.CsGoFieldReader;
 import skadistats.clarity.event.Insert;
-import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
@@ -58,7 +57,7 @@ public class CsGoEngineType extends AbstractEngineType {
     }
 
     @Override
-    public DemoHeader readHeader(Source source) throws IOException {
+    public void readHeader(Source source) throws IOException {
 //            int32	demoprotocol;					// Should be DEMO_PROTOCOL
         source.skipBytes(4);
 //            int32	networkprotocol;				// Should be PROTOCOL_VERSION
@@ -79,7 +78,11 @@ public class CsGoEngineType extends AbstractEngineType {
         source.skipBytes(4);
 //            int32	signonlength;					// length of sigondata in bytes
         source.skipBytes(4);
-        return null;
+    }
+
+    @Override
+    public void skipHeader(Source source) throws IOException {
+        source.skipBytes(1064);
     }
 
     @Override

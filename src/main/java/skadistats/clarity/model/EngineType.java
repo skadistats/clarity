@@ -26,7 +26,8 @@ public interface EngineType {
 
     FieldReader getNewFieldReader();
 
-    DemoHeader readHeader(Source source) throws IOException;
+    void readHeader(Source source) throws IOException;
+    void skipHeader(Source source) throws IOException;
 
     int readEmbeddedKind(BitStream bs);
 

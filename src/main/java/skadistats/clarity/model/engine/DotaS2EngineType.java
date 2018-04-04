@@ -4,7 +4,6 @@ import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s2.S2FieldReader;
-import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.proto.Demo;
@@ -48,9 +47,13 @@ public class DotaS2EngineType extends AbstractDotaEngineType {
     }
 
     @Override
-    public DemoHeader readHeader(Source source) throws IOException {
+    public void readHeader(Source source) throws IOException {
         source.skipBytes(8);
-        return null;
+    }
+
+    @Override
+    public void skipHeader(Source source) throws IOException {
+        source.skipBytes(8);
     }
 
     @Override
