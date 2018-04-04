@@ -39,6 +39,11 @@ public abstract class AbstractEngineType implements EngineType {
     }
 
     @Override
+    public boolean handleDeletions() {
+        return true;
+    }
+
+    @Override
     public Class<? extends GeneratedMessage> demoPacketClassForKind(int kind) {
         return DemoPackets.classForKind(kind);
     }

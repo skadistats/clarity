@@ -13,6 +13,7 @@ public interface EngineType {
     EngineId getId();
     int getCompressedFlag();
     boolean isSendTablesContainer();
+    boolean handleDeletions();
 
     int getIndexBits();
     int getSerialBits();

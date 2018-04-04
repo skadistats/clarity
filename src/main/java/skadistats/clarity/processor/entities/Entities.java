@@ -161,7 +161,7 @@ public class Entities {
             }
         }
 
-        if (message.getIsDelta()) {
+        if (engineType.handleDeletions() && message.getIsDelta()) {
             int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
             for (int i = 0; i < n; i++) {
                 entityIndex = deletions[i];

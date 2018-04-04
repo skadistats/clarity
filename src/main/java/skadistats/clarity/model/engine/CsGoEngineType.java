@@ -5,7 +5,6 @@ import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.CsGoFieldReader;
-import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
@@ -32,6 +31,11 @@ public class CsGoEngineType extends AbstractEngineType {
                 true,   // CDemoSendTables is container
                 11, 10
         );
+    }
+
+    @Override
+    public boolean handleDeletions() {
+        return false;
     }
 
     @Override
@@ -122,6 +126,9 @@ public class CsGoEngineType extends AbstractEngineType {
             case 3:
                 cls = (Class<T>) Demo.CDemoSyncTick.class;
                 break;
+            case 5:
+                cls = (Class<T>) Demo.CDemoUserCmd.class;
+                break;
             case 6:
                 cls = (Class<T>) Demo.CDemoSendTables.class;
                 break;
@@ -166,6 +173,14 @@ public class CsGoEngineType extends AbstractEngineType {
                     case 3:
                         return (T) Demo.CDemoSyncTick.newBuilder()
                                 .build();
+                    case 5:
+                        source.skipBytes(4);
+                        size = readSize(source);
+                        buf = new byte[size];
+                        source.readBytes(buf, 0, size);
+                        return (T) Demo.CDemoUserCmd.newBuilder()
+                                .setData(ZeroCopy.wrap(buf))
+                                .build();
                     case 6:
                         size = readSize(source);
                         buf = new byte[size];
@@ -187,10 +202,17 @@ public class CsGoEngineType extends AbstractEngineType {
                     case 2:
                         readCommandInfo(source);
                         source.skipBytes(8);
+                        source.skipBytes(readSize(source));
+                        break;
+                    case 5:
+                        source.skipBytes(4);
+                        source.skipBytes(readSize(source));
+                        break;
                     case 6:
+                        source.skipBytes(readSize(source));
+                        break;
                     case 9:
-                        int size = readSize(source);
-                        source.skipBytes(size);
+                        source.skipBytes(readSize(source));
                         break;
                     case 3:
                     case 7:
