@@ -1,29 +1,25 @@
 package skadistats.clarity.model.engine;
 
-import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.packet.PacketReader;
 import skadistats.clarity.processor.packet.UsesPacketReader;
-import skadistats.clarity.wire.common.DemoPackets;
 
 @UsesPacketReader
 public abstract class AbstractEngineType implements EngineType {
 
     @Insert
-    protected PacketReader packetReader;
+    protected PacketReader packetReader = new PacketReader(); // HACK: create one if we do not get one injected
 
     private final EngineId id;
-    private final int compressedFlag;
     private final boolean sendTablesContainer;
     private final int indexBits;
     private final int serialBits;
     private final int indexMask;
 
-    AbstractEngineType(EngineId id, int compressedFlag, boolean sendTablesContainer, int indexBits, int serialBits) {
+    AbstractEngineType(EngineId id, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.id = id;
-        this.compressedFlag = compressedFlag;
         this.sendTablesContainer = sendTablesContainer;
         this.indexBits = indexBits;
         this.serialBits = serialBits;
@@ -36,11 +32,6 @@ public abstract class AbstractEngineType implements EngineType {
     }
 
     @Override
-    public int getCompressedFlag() {
-        return compressedFlag;
-    }
-
-    @Override
     public boolean isSendTablesContainer() {
         return sendTablesContainer;
     }
@@ -48,11 +39,6 @@ public abstract class AbstractEngineType implements EngineType {
     @Override
     public boolean handleDeletions() {
         return true;
-    }
-
-    @Override
-    public Class<? extends GeneratedMessage> demoPacketClassForKind(int kind) {
-        return DemoPackets.classForKind(kind);
     }
 
     @Override

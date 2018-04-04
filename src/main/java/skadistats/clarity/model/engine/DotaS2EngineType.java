@@ -16,12 +16,15 @@ public class DotaS2EngineType extends AbstractDotaEngineType {
 
     public DotaS2EngineType(EngineId identifier) {
         super(identifier,
-                Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE,
                 false, // CDemoSendTables is container
                 14,
                 17
-
         );
+    }
+
+    @Override
+    protected int getCompressedFlag() {
+        return Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE;
     }
 
     @Override

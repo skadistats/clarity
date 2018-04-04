@@ -27,7 +27,6 @@ public class CsGoEngineType extends AbstractEngineType {
 
     public CsGoEngineType(EngineId identifier) {
         super(identifier,
-                0x100,
                 true,   // CDemoSendTables is container
                 11, 10
         );
@@ -84,33 +83,8 @@ public class CsGoEngineType extends AbstractEngineType {
     }
 
     @Override
-    public int readKind(Source source) throws IOException {
-        return source.readByte() & 0xFF;
-    }
-
-    @Override
-    public int readTick(Source source) throws IOException {
-        return source.readFixedInt32();
-    }
-
-    @Override
-    public int readPlayerSlot(Source source) throws IOException {
-        return source.readByte() & 0xFF;
-    }
-
-    @Override
-    public int readSize(Source source) throws IOException {
-        return source.readFixedInt32();
-    }
-
-    @Override
     public int readEmbeddedKind(BitStream bs) {
         return bs.readVarUInt();
-    }
-
-    @Override
-    public void readCommandInfo(Source source) throws IOException {
-        source.skipBytes(152);
     }
 
     public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(final Source source) throws IOException {
@@ -186,6 +160,14 @@ public class CsGoEngineType extends AbstractEngineType {
         source.skipBytes(source.readFixedInt32());
     }
 
+    public void readCommandInfo(Source source) throws IOException {
+        source.skipBytes(152);
+    }
+
+    public void skipCommandInfo(Source source) throws IOException {
+        source.skipBytes(152);
+    }
+
     private abstract static class Handler<T extends GeneratedMessage> {
         private final Class<T> clazz;
         protected Handler(Class<T> clazz) {
@@ -212,7 +194,7 @@ public class CsGoEngineType extends AbstractEngineType {
 
                 @Override
                 public void skip(Source source) throws IOException {
-                    readCommandInfo(source);
+                    skipCommandInfo(source);
                     skipPacket(source);
                 }
             },

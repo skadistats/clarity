@@ -4,7 +4,6 @@ import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.DotaS1FieldReader;
-import skadistats.clarity.decoder.s1.S1FieldReader;
 import skadistats.clarity.model.DemoHeader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.source.Source;
@@ -18,11 +17,15 @@ public class DotaS1EngineType extends AbstractDotaEngineType {
 
     public DotaS1EngineType(EngineId identifier) {
         super(identifier,
-                Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE,
                 true,   // CDemoSendTables is container
                 11,
                 10
         );
+    }
+
+    @Override
+    protected int getCompressedFlag() {
+        return Demo.EDemoCommands.DEM_IsCompressed_S1_VALUE;
     }
 
     @Override

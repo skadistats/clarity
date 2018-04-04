@@ -1,7 +1,9 @@
 package skadistats.clarity.source;
 
+import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.EOFException;
@@ -184,17 +186,15 @@ public abstract class Source {
             try {
                 while (true) {
                     int at = getPosition();
-                    int kind = readVarInt32() & ~engineType.getCompressedFlag();
-                    int tick = readVarInt32();
-                    int size = readVarInt32();
-                    PacketPosition pp = PacketPosition.createPacketPosition(tick, kind, at);
+                    PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(this);
+                    PacketPosition pp = PacketPosition.createPacketPosition(pi.getTick(), pi.getKind(), at);
                     if (pp != null) {
                         packetPositions.add(pp);
                     }
-                    if (tick >= wantedTick) {
+                    if (pi.getTick() >= wantedTick) {
                         break;
                     }
-                    skipBytes(size);
+                    pi.skip();
                 }
             } catch (EOFException e) {
             }

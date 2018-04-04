@@ -1,9 +1,9 @@
 package skadistats.clarity;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.ZeroCopy;
-import org.xerial.snappy.Snappy;
+import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
@@ -50,15 +50,8 @@ public class Clarity {
     public static Demo.CDemoFileInfo infoForSource(final Source source) throws IOException {
         EngineType engineType = source.readEngineType();
         source.setPosition(source.readFixedInt32());
-        int kind = source.readVarInt32();
-        boolean isCompressed = (kind & engineType.getCompressedFlag()) == engineType.getCompressedFlag();
-        source.skipVarInt32();
-        int size = source.readVarInt32();
-        byte[] data = source.readBytes(size);
-        if (isCompressed) {
-            data = Snappy.uncompress(data);
-        }
-        return Packet.parse(Demo.CDemoFileInfo.class, ZeroCopy.wrap(data));
+        PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
+        return (Demo.CDemoFileInfo) pi.parse();
     }
 
     /**
