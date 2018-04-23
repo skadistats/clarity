@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.reader;
 
 import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.ClarityException;
 
 import java.io.IOException;
 
@@ -24,12 +25,12 @@ public interface PacketInstance<T extends GeneratedMessage> {
 
         @Override
         public GeneratedMessage parse() throws IOException {
-            throw new UnsupportedOperationException("cannot parse EOF");
+            throw new ClarityException("cannot parse EOF");
         }
 
         @Override
         public void skip() {
-            throw new UnsupportedOperationException("cannot skip EOF");
+            throw new ClarityException("cannot skip EOF");
         }
     };
 
