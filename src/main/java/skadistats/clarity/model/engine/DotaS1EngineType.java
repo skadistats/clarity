@@ -58,6 +58,10 @@ public class DotaS1EngineType extends AbstractDotaEngineType {
     }
 
     @Override
+    public void emitHeader() {
+    }
+
+    @Override
     public int readEmbeddedKind(BitStream bs) {
         return bs.readVarUInt();
     }

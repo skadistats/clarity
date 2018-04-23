@@ -20,6 +20,15 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
 
     protected abstract int getCompressedFlag();
 
+    public int determineLastTick(Source source) throws IOException {
+        int backup = source.getPosition();
+        source.setPosition(source.readFixedInt32());
+        source.skipVarInt32();
+        int lastTick = source.readVarInt32();
+        source.setPosition(backup);
+        return lastTick;
+    }
+
     @Override
     public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(final Source source) throws IOException {
         int rawKind = source.readVarInt32();

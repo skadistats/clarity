@@ -25,6 +25,7 @@ public class CsGoEngineType extends AbstractEngineType {
 
     @Insert
     private Context ctx;
+    private CsGoClarityMessages.CsGoDemoHeader header;
 
     public CsGoEngineType(EngineId identifier) {
         super(identifier,
@@ -68,7 +69,7 @@ public class CsGoEngineType extends AbstractEngineType {
 
     @Override
     public void readHeader(Source source) throws IOException {
-        CsGoClarityMessages.CsGoDemoHeader header = CsGoClarityMessages.CsGoDemoHeader.newBuilder()
+        header = CsGoClarityMessages.CsGoDemoHeader.newBuilder()
                 .setDemoprotocol(source.readFixedInt32())
                 .setNetworkprotocol(source.readFixedInt32())
                 .setServername(readHeaderString(source))
@@ -80,12 +81,21 @@ public class CsGoEngineType extends AbstractEngineType {
                 .setPlaybackFrames(source.readFixedInt32())
                 .setSignonlength(source.readFixedInt32())
                 .build();
-        ctx.createEvent(OnMessage.class, CsGoClarityMessages.CsGoDemoHeader.class).raise(header);
     }
 
     @Override
     public void skipHeader(Source source) throws IOException {
         source.skipBytes(1064);
+    }
+
+    @Override
+    public void emitHeader() {
+        ctx.createEvent(OnMessage.class, CsGoClarityMessages.CsGoDemoHeader.class).raise(header);
+    }
+
+    @Override
+    public int determineLastTick(Source source) throws IOException {
+        return header.getPlaybackTicks();
     }
 
     @Override

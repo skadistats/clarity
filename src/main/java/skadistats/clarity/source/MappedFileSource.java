@@ -56,13 +56,6 @@ public class MappedFileSource extends Source {
     }
 
     @Override
-    protected void determineLastTick() throws IOException {
-        int backup = getPosition();
-        super.determineLastTick();
-        setPosition(backup);
-    }
-
-    @Override
     public void close() throws IOException {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
         if (channel != null) {

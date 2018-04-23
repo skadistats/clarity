@@ -26,15 +26,16 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     /* tick is synthetic (does not contain replay data) */
     protected boolean synthetic = true;
 
-    public AbstractFileRunner(Source source, EngineType engineType)  {
+    public AbstractFileRunner(Source source, EngineType engineType) throws IOException {
         super(engineType);
+        engineType.readHeader(source);
         this.source = source;
         this.tick = -1;
     }
 
     protected void initAndRunWith(Object... processors) throws IOException {
         initWithProcessors(this, getEngineType(), source, processors);
-        engineType.readHeader(source);
+        engineType.emitHeader();
         context.createEvent(OnInputSource.class, Source.class, LoopController.class).raise(source, loopController);
     }
 

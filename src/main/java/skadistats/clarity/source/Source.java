@@ -1,5 +1,6 @@
 package skadistats.clarity.source;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 
@@ -26,6 +27,7 @@ import java.nio.ByteOrder;
 public abstract class Source {
 
     private Runnable onLastTickChanged;
+    private EngineType engineType;
     private Integer lastTick;
 
     public void notifyOnLastTickChanged(Runnable onLastTickChanged) {
@@ -154,11 +156,11 @@ public abstract class Source {
      */
     public EngineType readEngineType() throws IOException {
         try {
-            EngineType et = EngineId.typeForMagic(new String(readBytes(8)));
-            if (et == null) {
+            engineType = EngineId.typeForMagic(new String(readBytes(8)));
+            if (engineType == null) {
                 throw new IOException();
             }
-            return et;
+            return engineType;
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }
@@ -172,10 +174,10 @@ public abstract class Source {
     }
 
     protected void determineLastTick() throws IOException {
-        setPosition(8);
-        setPosition(readFixedInt32());
-        skipVarInt32();
-        setLastTick(readVarInt32());
+        if (engineType == null) {
+            throw new ClarityException("cannot determine last tick before engine type is known");
+        }
+        lastTick = engineType.determineLastTick(this);
     }
 
     /**
