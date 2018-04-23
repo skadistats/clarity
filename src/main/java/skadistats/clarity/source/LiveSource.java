@@ -36,6 +36,7 @@ public class LiveSource extends Source {
     private final TimeUnit timeUnit;
 
     private WatchService watchService = null;
+    private WatchKey watchKey;
 
     private final Path filePath;
 
@@ -49,12 +50,11 @@ public class LiveSource extends Source {
 
     private int lastTickOffset;
     private int nextTickOffset;
+    private EngineType engineType;
 
     private final ReentrantLock lock = new ReentrantLock();
     private final Condition fileChanged = lock.newCondition();
 
-    private WatchKey watchKey;
-    private EngineType engineType;
 
     public LiveSource(String fileName, long timeout, TimeUnit timeUnit) {
         this(Paths.get(fileName), timeout, timeUnit);

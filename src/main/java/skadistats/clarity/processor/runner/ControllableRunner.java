@@ -1,9 +1,13 @@
 package skadistats.clarity.processor.runner;
 
+import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.ClarityException;
+import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.PacketPosition;
+import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.Demo;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.TreeSet;
@@ -20,6 +24,7 @@ public class ControllableRunner extends AbstractFileRunner {
     private Exception runnerException;
 
     private TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
+    private int resetRelevantOffset = -1;
     private LinkedList<ResetStep> resetSteps;
 
     /* tick the processor is waiting at to be signaled to continue further processing */
@@ -75,6 +80,7 @@ public class ControllableRunner extends AbstractFileRunner {
             int diff = wantedTick - tick;
             if (diff < 0 || diff > 200) {
                 calculateResetSteps();
+                //loopController.setSyncTickSeen(false);
                 loopController.controllerFunc = seekLoopControl;
             }
         }
@@ -110,8 +116,7 @@ public class ControllableRunner extends AbstractFileRunner {
     };
 
     private void calculateResetSteps() throws IOException {
-        TreeSet<PacketPosition> seekPositions = source.getResetPacketsBeforeTick(engineType, wantedTick, resetRelevantPackets);
-        seekPositions.pollFirst();
+        TreeSet<PacketPosition> seekPositions = getResetPacketsBeforeTick(wantedTick);
 
         resetSteps = new LinkedList<>();
         resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
@@ -160,14 +165,55 @@ public class ControllableRunner extends AbstractFileRunner {
         }
 
         @Override
-        public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {
+        public void markResetRelevantPacket(int tick, ResetRelevantKind kind, int offset) throws IOException {
             lock.lock();
             try {
-                resetRelevantPackets.add(PacketPosition.createPacketPosition(tick, kind, offset));
+                PacketPosition pp = newResetRelevantPacketPosition(tick, kind, offset);
+                if (pp == null) {
+                    throw new ClarityException("tried to mark non reset relevant packet");
+                }
+                addResetRelevant(pp);
             } finally {
                 lock.unlock();
             }
         }
+    }
+
+    private void addResetRelevant(PacketPosition pp) {
+        if (pp.getOffset() > resetRelevantOffset) {
+            resetRelevantPackets.add(pp);
+            resetRelevantOffset = pp.getOffset();
+        }
+    }
+
+    private PacketPosition newResetRelevantPacketPosition(int tick, ResetRelevantKind kind, int offset) {
+        return kind == null ? null : PacketPosition.createPacketPosition(loopController.isSyncTickSeen() ? tick : -1, kind, offset);
+    }
+
+    private TreeSet<PacketPosition> getResetPacketsBeforeTick(int wantedTick) throws IOException {
+        int backup = source.getPosition();
+        PacketPosition wanted = PacketPosition.createPacketPosition(wantedTick, ResetRelevantKind.FULL_PACKET, 0);
+        if (resetRelevantPackets.tailSet(wanted, true).size() == 0) {
+            PacketPosition basePos = resetRelevantPackets.floor(wanted);
+            source.setPosition(basePos.getOffset());
+            try {
+                while (true) {
+                    int at = source.getPosition();
+                    PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
+                    PacketPosition pp = newResetRelevantPacketPosition(pi.getTick(), pi.getResetRelevantKind(), at);
+                    if (pp != null) {
+                        addResetRelevant(pp);
+                    }
+                    if (pi.getTick() >= wantedTick) {
+                        break;
+                    }
+                    pi.skip();
+                }
+            } catch (EOFException e) {
+            }
+        }
+        source.setPosition(backup);
+        return new TreeSet<>(resetRelevantPackets.headSet(wanted, true));
     }
 
     public static class ResetStep {
@@ -181,7 +227,6 @@ public class ControllableRunner extends AbstractFileRunner {
 
     public ControllableRunner(Source s) throws IOException {
         super(s, s.readEngineType());
-        resetRelevantPackets.add(PacketPosition.createPacketPosition(-1, Demo.EDemoCommands.DEM_SyncTick_VALUE, s.getPosition()));
         upcomingTick = tick;
         wantedTick = tick;
         this.loopController = new LockingLoopController(normalLoopControl);

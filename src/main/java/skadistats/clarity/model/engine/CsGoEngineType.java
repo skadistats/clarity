@@ -11,6 +11,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.csgo.EmbeddedPackets;
@@ -114,6 +115,10 @@ public class CsGoEngineType extends AbstractEngineType {
                 return handler.clazz;
             }
             @Override
+            public ResetRelevantKind getResetRelevantKind() {
+                return handler.resetRelevantKind;
+            }
+            @Override
             public T parse() throws IOException {
                 return handler.parse(source);
             }
@@ -172,8 +177,10 @@ public class CsGoEngineType extends AbstractEngineType {
 
     private abstract static class Handler<T extends GeneratedMessage> {
         private final Class<T> clazz;
-        protected Handler(Class<T> clazz) {
+        private final ResetRelevantKind resetRelevantKind;
+        protected Handler(Class<T> clazz, ResetRelevantKind resetRelevantKind) {
             this.clazz = clazz;
+            this.resetRelevantKind = resetRelevantKind;
         }
         public abstract T parse(Source source) throws IOException;
         public abstract void skip(Source source) throws IOException;
@@ -183,7 +190,7 @@ public class CsGoEngineType extends AbstractEngineType {
             //(1) dem_signon (will be set below)
             null,
             //(2) dem_packet
-            new Handler<Demo.CDemoPacket>(Demo.CDemoPacket.class) {
+            new Handler<Demo.CDemoPacket>(Demo.CDemoPacket.class, null) {
                 @Override
                 public Demo.CDemoPacket parse(Source source) throws IOException {
                     readCommandInfo(source);
@@ -202,7 +209,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(3) dem_synctick
-            new Handler<Demo.CDemoSyncTick>(Demo.CDemoSyncTick.class) {
+            new Handler<Demo.CDemoSyncTick>(Demo.CDemoSyncTick.class, ResetRelevantKind.SYNC) {
                 @Override
                 public Demo.CDemoSyncTick parse(Source source) throws IOException {
                     return Demo.CDemoSyncTick.newBuilder().build();
@@ -213,7 +220,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(4) dem_consolecmd
-            new Handler<Demo.CDemoConsoleCmd>(Demo.CDemoConsoleCmd.class) {
+            new Handler<Demo.CDemoConsoleCmd>(Demo.CDemoConsoleCmd.class, null) {
                 @Override
                 public Demo.CDemoConsoleCmd parse(Source source) throws IOException {
                     return Demo.CDemoConsoleCmd.newBuilder()
@@ -226,7 +233,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(5) dem_usercmd
-            new Handler<Demo.CDemoUserCmd>(Demo.CDemoUserCmd.class) {
+            new Handler<Demo.CDemoUserCmd>(Demo.CDemoUserCmd.class, null) {
                 @Override
                 public Demo.CDemoUserCmd parse(Source source) throws IOException {
                     return Demo.CDemoUserCmd.newBuilder()
@@ -241,7 +248,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(6) dem_datatables
-            new Handler<Demo.CDemoSendTables>(Demo.CDemoSendTables.class) {
+            new Handler<Demo.CDemoSendTables>(Demo.CDemoSendTables.class, null) {
                 @Override
                 public Demo.CDemoSendTables parse(Source source) throws IOException {
                     return Demo.CDemoSendTables.newBuilder()
@@ -254,7 +261,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(7) dem_stop
-            new Handler<Demo.CDemoStop>(Demo.CDemoStop.class) {
+            new Handler<Demo.CDemoStop>(Demo.CDemoStop.class, null) {
                 @Override
                 public Demo.CDemoStop parse(Source source) throws IOException {
                     return Demo.CDemoStop.newBuilder().build();
@@ -265,7 +272,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(8) dem_customdata
-            new Handler<Demo.CDemoCustomData>(Demo.CDemoCustomData.class) {
+            new Handler<Demo.CDemoCustomData>(Demo.CDemoCustomData.class, null) {
                 @Override
                 public Demo.CDemoCustomData parse(Source source) throws IOException {
                     return Demo.CDemoCustomData.newBuilder()
@@ -278,7 +285,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 }
             },
             //(9) dem_stringtables
-            new Handler<Demo.CDemoStringTables>(Demo.CDemoStringTables.class) {
+            new Handler<Demo.CDemoStringTables>(Demo.CDemoStringTables.class, ResetRelevantKind.STRINGTABLE) {
                 @Override
                 public Demo.CDemoStringTables parse(Source source) throws IOException {
                     BitStream bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));

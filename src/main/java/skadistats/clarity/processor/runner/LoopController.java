@@ -1,5 +1,7 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.source.ResetRelevantKind;
+
 import java.io.IOException;
 
 public class LoopController {
@@ -13,7 +15,8 @@ public class LoopController {
         RESET_CLEAR,
         RESET_ACCUMULATE,
         RESET_APPLY,
-        RESET_FORWARD, RESET_COMPLETE
+        RESET_FORWARD,
+        RESET_COMPLETE
     }
 
     public interface Func {
@@ -31,7 +34,7 @@ public class LoopController {
         return controllerFunc.doLoopControl(nextTickWithData);
     }
 
-    public void markResetRelevantPacket(int tick, int kind, int offset) throws IOException {}
+    public void markResetRelevantPacket(int tick, ResetRelevantKind kind, int offset) throws IOException {}
 
     public boolean isSyncTickSeen() {
         return syncTickSeen;

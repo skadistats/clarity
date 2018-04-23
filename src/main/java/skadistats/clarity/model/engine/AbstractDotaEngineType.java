@@ -4,9 +4,11 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.PacketInstance;
+import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.DemoPackets;
+import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.IOException;
 
@@ -27,6 +29,7 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
         final int size = source.readVarInt32();
         final Class<T> messageClass = (Class<T>) DemoPackets.classForKind(kind);
         return new PacketInstance<T>() {
+
             @Override
             public int getKind() {
                 return kind;
@@ -40,6 +43,20 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
             @Override
             public Class<T> getMessageClass() {
                 return messageClass;
+            }
+
+            @Override
+            public ResetRelevantKind getResetRelevantKind() {
+                switch(kind) {
+                    case Demo.EDemoCommands.DEM_SyncTick_VALUE:
+                        return ResetRelevantKind.SYNC;
+                    case Demo.EDemoCommands.DEM_StringTables_VALUE:
+                        return ResetRelevantKind.STRINGTABLE;
+                    case Demo.EDemoCommands.DEM_FullPacket_VALUE:
+                        return ResetRelevantKind.FULL_PACKET;
+                    default:
+                        return null;
+                }
             }
 
             @Override

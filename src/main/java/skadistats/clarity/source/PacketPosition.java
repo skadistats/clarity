@@ -1,34 +1,22 @@
 package skadistats.clarity.source;
 
 
-import skadistats.clarity.wire.common.proto.Demo;
-
 public class PacketPosition implements Comparable<PacketPosition> {
 
-    public enum Kind {
-        SYNC,
-        STRINGTABLE,
-        FULL_PACKET
-    }
-
     private final int tick;
-    private final Kind kind;
+    private final ResetRelevantKind kind;
     private final int offset;
 
-    public static PacketPosition createPacketPosition(int tick, int kind, int offset) {
-        switch(kind) {
-            case Demo.EDemoCommands.DEM_SyncTick_VALUE:
-                return new PacketPosition(tick, Kind.SYNC, offset);
-            case Demo.EDemoCommands.DEM_StringTables_VALUE:
-                return new PacketPosition(tick, Kind.STRINGTABLE, offset);
-            case Demo.EDemoCommands.DEM_FullPacket_VALUE:
-                return new PacketPosition(tick, Kind.FULL_PACKET, offset);
-            default:
-                return null;
+    public static PacketPosition createPacketPosition(int tick, ResetRelevantKind kind, int offset) {
+        if (kind != null) {
+            return new PacketPosition(tick, kind, offset);
+        }
+        else {
+            return null;
         }
     }
 
-    private PacketPosition(int tick, Kind kind, int offset) {
+    private PacketPosition(int tick, ResetRelevantKind kind, int offset) {
         this.tick = tick;
         this.kind = kind;
         this.offset = offset;
@@ -38,7 +26,7 @@ public class PacketPosition implements Comparable<PacketPosition> {
         return tick;
     }
 
-    public Kind getKind() {
+    public ResetRelevantKind getKind() {
         return kind;
     }
 
@@ -49,7 +37,7 @@ public class PacketPosition implements Comparable<PacketPosition> {
     @Override
     public int compareTo(PacketPosition o) {
         int r = Integer.compare(tick, o.tick);
-        return r != 0 ? r : o.kind.compareTo(kind);
+        return r != 0 ? r : kind.compareTo(o.kind);
     }
 
     @Override
@@ -68,4 +56,13 @@ public class PacketPosition implements Comparable<PacketPosition> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PacketPosition{");
+        sb.append("tick=").append(tick);
+        sb.append(", kind=").append(kind);
+        sb.append(", offset=").append(offset);
+        sb.append('}');
+        return sb.toString();
+    }
 }

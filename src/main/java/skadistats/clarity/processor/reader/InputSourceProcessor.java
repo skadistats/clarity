@@ -181,7 +181,7 @@ public class InputSourceProcessor {
                     Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) pi.parse();
                     evFull.raise(message);
                     if (evReset.isListenedTo()) {
-                        ctl.markResetRelevantPacket(pi.getTick(), pi.getKind(), offset);
+                        ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
                         switch (loopCtl) {
                             case RESET_ACCUMULATE:
                                 evReset.raise(message.getStringTable(), ResetPhase.ACCUMULATE);
@@ -204,7 +204,7 @@ public class InputSourceProcessor {
                     GeneratedMessage message = pi.parse();
                     ev.raise(message);
                     if (resetRelevant) {
-                        ctl.markResetRelevantPacket(pi.getTick(), pi.getKind(), offset);
+                        ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
                         if (isStringTables) {
                             switch (loopCtl) {
                                 case RESET_ACCUMULATE:

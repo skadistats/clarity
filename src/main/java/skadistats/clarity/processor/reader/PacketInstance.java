@@ -2,6 +2,7 @@ package skadistats.clarity.processor.reader;
 
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.source.ResetRelevantKind;
 
 import java.io.IOException;
 
@@ -24,6 +25,11 @@ public interface PacketInstance<T extends GeneratedMessage> {
         }
 
         @Override
+        public ResetRelevantKind getResetRelevantKind() {
+            return null;
+        }
+
+        @Override
         public GeneratedMessage parse() throws IOException {
             throw new ClarityException("cannot parse EOF");
         }
@@ -37,6 +43,7 @@ public interface PacketInstance<T extends GeneratedMessage> {
     int getKind();
     int getTick();
     Class<T> getMessageClass();
+    ResetRelevantKind getResetRelevantKind();
     T parse() throws IOException;
     void skip() throws IOException;
 

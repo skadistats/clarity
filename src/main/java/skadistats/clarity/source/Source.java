@@ -1,16 +1,11 @@
 package skadistats.clarity.source;
 
-import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
-import skadistats.clarity.processor.reader.PacketInstance;
-import skadistats.clarity.wire.common.proto.Demo;
 
-import java.io.EOFException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.util.TreeSet;
 
 /**
  * A Source provides clarity with raw replay data.
@@ -167,40 +162,6 @@ public abstract class Source {
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }
-    }
-
-    /**
-     * gets the positions of all packets containing full string tables up to a given tick
-     *
-     * @param engineType
-     * @param wantedTick the tick
-     * @param packetPositions a set of positions found in previous runs
-     * @throws IOException if the underlying data is invalid
-     */
-    public TreeSet<PacketPosition> getResetPacketsBeforeTick(EngineType engineType, int wantedTick, TreeSet<PacketPosition> packetPositions) throws IOException {
-        int backup = getPosition();
-        PacketPosition wanted = PacketPosition.createPacketPosition(wantedTick, Demo.EDemoCommands.DEM_FullPacket_VALUE, 0);
-        if (packetPositions.tailSet(wanted, true).size() == 0) {
-            PacketPosition basePos = packetPositions.floor(wanted);
-            setPosition(basePos.getOffset());
-            try {
-                while (true) {
-                    int at = getPosition();
-                    PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(this);
-                    PacketPosition pp = PacketPosition.createPacketPosition(pi.getTick(), pi.getKind(), at);
-                    if (pp != null) {
-                        packetPositions.add(pp);
-                    }
-                    if (pi.getTick() >= wantedTick) {
-                        break;
-                    }
-                    pi.skip();
-                }
-            } catch (EOFException e) {
-            }
-        }
-        setPosition(backup);
-        return new TreeSet<>(packetPositions.headSet(wanted, true));
     }
 
     protected void setLastTick(int lastTick) {
