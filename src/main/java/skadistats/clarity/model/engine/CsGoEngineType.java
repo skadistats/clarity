@@ -197,6 +197,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 @Override
                 public void skip(Source source) throws IOException {
                     skipCommandInfo(source);
+                    source.skipBytes(8);
                     skipPacket(source);
                 }
             },

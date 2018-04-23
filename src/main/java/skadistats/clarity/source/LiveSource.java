@@ -1,11 +1,13 @@
 package skadistats.clarity.source;
 
+import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.wire.common.proto.Demo;
 import sun.nio.ch.DirectBuffer;
 
@@ -52,6 +54,7 @@ public class LiveSource extends Source {
     private final Condition fileChanged = lock.newCondition();
 
     private WatchKey watchKey;
+    private EngineType engineType;
 
     public LiveSource(String fileName, long timeout, TimeUnit timeUnit) {
         this(Paths.get(fileName), timeout, timeUnit);
@@ -250,22 +253,19 @@ public class LiveSource extends Source {
             while (nextTickOffset <= file.capacity()) {
                 if (nextTickOffset == 0) {
                     file.position(0);
-                    EngineType engineType = readEngineType();
+                    engineType = readEngineType();
                     engineType.skipHeader(this);
-                    skipVarInt32(); // kind
                     nextTickOffset = file.position();
                 } else {
                     file.position(nextTickOffset);
-                    if (lastTickOffset < nextTickOffset) {
-                        setLastTick(readVarInt32());
-                        lastTickOffset = nextTickOffset;
-                    } else {
-                        skipVarInt32();
-                    }
-                    skipBytes(readVarInt32()); // size + packet
-                    skipVarInt32(); // kind
-                    nextTickOffset = file.position();
                 }
+                PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(this);
+                if (lastTickOffset < nextTickOffset) {
+                    setLastTick(pi.getTick());
+                    lastTickOffset = nextTickOffset;
+                }
+                pi.skip();
+                nextTickOffset = file.position();
             }
         } catch (IOException e) {
             //e.printStackTrace();
