@@ -169,7 +169,15 @@ public class LiveSource extends Source {
             );
             boolean stillValid = true;
             while (stillValid) {
-                watchService.take();
+                if (watchService.poll(250, TimeUnit.MILLISECONDS) == null) {
+                    try {
+                        // workaround Windows not detecting modified events
+                        filePath.toFile().length();
+                    } catch (Exception e) {
+                        // ignore any errors
+                    }
+                    continue;
+                }
                 for (WatchEvent<?> event : watchKey.pollEvents()) {
                     WatchEvent.Kind<?> kind = event.kind();
                     if (Path.class.isAssignableFrom(kind.type())) {
