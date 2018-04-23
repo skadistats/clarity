@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LiveSourceTest {
 
-    @Test
+    @Test(enabled = false)
     @Parameters({"srcFile", "dstFile"})
     public void demoLiveSource(final String srcFile, final String dstFile) throws Exception {
         createWriterThread(srcFile, dstFile);
@@ -34,7 +34,7 @@ public class LiveSourceTest {
         });
     }
 
-    @Test
+    @Test(enabled = false)
     @Parameters({"srcFile", "dstFile"})
     public void testLiveSourceMMap(final String srcFile, final String dstFile) throws Exception {
         createWriterThread(srcFile, dstFile);
