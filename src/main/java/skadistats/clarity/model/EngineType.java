@@ -20,6 +20,8 @@ public interface EngineType {
     int serialForHandle(int handle);
     int handleForIndexAndSerial(int index, int serial);
 
+    float getMillisPerTick();
+
     Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind);
     Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     boolean isUserMessage(Class<? extends GeneratedMessage> clazz);

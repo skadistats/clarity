@@ -27,12 +27,18 @@ public class CsGoEngineType extends AbstractEngineType {
     @Insert
     private Context ctx;
     private CsGoClarityMessages.CsGoDemoHeader header;
+    private float millisPerTick;
 
     public CsGoEngineType(EngineId identifier) {
         super(identifier,
                 true,   // CDemoSendTables is container
                 11, 10
         );
+    }
+
+    @Override
+    public float getMillisPerTick() {
+        return millisPerTick;
     }
 
     @Override
@@ -78,6 +84,7 @@ public class CsGoEngineType extends AbstractEngineType {
                 .setPlaybackFrames(source.readFixedInt32())
                 .setSignonlength(source.readFixedInt32())
                 .build();
+        millisPerTick = header.getPlaybackTime() * 1000.0f / header.getPlaybackTicks();
     }
 
     @Override

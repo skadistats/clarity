@@ -20,6 +20,11 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
 
     protected abstract int getCompressedFlag();
 
+    @Override
+    public float getMillisPerTick() {
+        return 1000.0f / 30.0f;
+    }
+
     public int determineLastTick(Source source) throws IOException {
         int backup = source.getPosition();
         source.setPosition(source.readFixedInt32());
