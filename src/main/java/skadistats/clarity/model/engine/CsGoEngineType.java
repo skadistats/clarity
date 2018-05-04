@@ -3,6 +3,7 @@ package skadistats.clarity.model.engine;
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.decoder.FieldReader;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s1.CsGoFieldReader;
 import skadistats.clarity.event.Insert;
@@ -60,11 +61,7 @@ public class CsGoEngineType extends AbstractEngineType {
     }
 
     private String readHeaderString(Source source) throws IOException {
-        byte[] buf = new byte[260];
-        source.readBytes(buf, 0, 260);
-        int i = 0;
-        while (buf[i] != 0) i++;
-        return new String(buf, 0, i, "UTF-8");
+        return Util.readFixedZeroTerminated(source, 260);
     }
 
     @Override
