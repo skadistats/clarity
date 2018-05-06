@@ -14,11 +14,7 @@ public enum EngineId {
     public static EngineType typeForMagic(String magic) {
         for (EngineId et : values()) {
             if (et.magic.equals(magic)) {
-                try {
-                    return et.implClass.getDeclaredConstructor(EngineId.class).newInstance(et);
-                } catch (Exception e) {
-                    Util.uncheckedThrow(e);
-                }
+                return et.newInstance();
             }
         }
         return null;
@@ -30,6 +26,15 @@ public enum EngineId {
     EngineId(String magic, Class<? extends EngineType> implClass) {
         this.magic = magic;
         this.implClass = implClass;
+    }
+
+    public EngineType newInstance() {
+        try {
+            return implClass.getDeclaredConstructor(EngineId.class).newInstance(this);
+        } catch (Exception e) {
+            Util.uncheckedThrow(e);
+            return null;
+        }
     }
 
 }
