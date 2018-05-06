@@ -134,6 +134,9 @@ public class InputSourceProcessor {
             while (true) {
                 loopCtl = ctl.doLoopControl(pi.getTick());
                 switch (loopCtl) {
+                    case RESET_START:
+                        evReset.raise(null, ResetPhase.START);
+                        continue loopctl;
                     case RESET_CLEAR:
                         evReset.raise(null, ResetPhase.CLEAR);
                         continue loopctl;

@@ -42,6 +42,11 @@ public class CsGoEngineType extends AbstractEngineType {
     }
 
     @Override
+    public boolean isFullPacketSeekAllowed() {
+        return false;
+    }
+
+    @Override
     public boolean handleDeletions() {
         return false;
     }

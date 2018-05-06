@@ -22,6 +22,8 @@ public interface EngineType {
 
     float getMillisPerTick();
 
+    boolean isFullPacketSeekAllowed();
+
     Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind);
     Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     boolean isUserMessage(Class<? extends GeneratedMessage> clazz);

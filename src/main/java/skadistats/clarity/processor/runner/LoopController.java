@@ -12,6 +12,7 @@ public class LoopController {
         FALLTHROUGH,
         AGAIN,
 
+        RESET_START,
         RESET_CLEAR,
         RESET_ACCUMULATE,
         RESET_APPLY,

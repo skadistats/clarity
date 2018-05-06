@@ -78,11 +78,39 @@ public class ControllableRunner extends AbstractFileRunner {
             wantedTick = demandedTick;
             demandedTick = null;
             int diff = wantedTick - tick;
-            if (diff < 0 || diff > 200) {
-                calculateResetSteps();
-                //loopController.setSyncTickSeen(false);
-                loopController.controllerFunc = seekLoopControl;
+
+            if (diff >= 0 && diff <= 5) {
+                return;
             }
+
+            resetSteps = new LinkedList<>();
+            resetSteps.add(new ResetStep(LoopController.Command.RESET_START, null));
+            if (diff < 0 || !engineType.isFullPacketSeekAllowed()) {
+                TreeSet<PacketPosition> seekPositions = getResetPacketsBeforeTick(wantedTick);
+                resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
+                while (seekPositions.size() > 0) {
+                    PacketPosition pp = seekPositions.pollFirst();
+                    switch (pp.getKind()) {
+                        case STRINGTABLE:
+                        case FULL_PACKET:
+                            resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
+                            resetSteps.add(new ResetStep(LoopController.Command.RESET_ACCUMULATE, null));
+                            if (seekPositions.size() == 0) {
+                                resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
+                            }
+                            break;
+                        case SYNC:
+                            if (seekPositions.size() == 0) {
+                                resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
+                                resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
+                            }
+                            break;
+                    }
+                }
+            }
+            resetSteps.add(new ResetStep(LoopController.Command.RESET_FORWARD, null));
+            resetSteps.add(new ResetStep(LoopController.Command.RESET_COMPLETE, null));
+            loopController.controllerFunc = seekLoopControl;
         }
     };
 
@@ -114,35 +142,6 @@ public class ControllableRunner extends AbstractFileRunner {
             }
         }
     };
-
-    private void calculateResetSteps() throws IOException {
-        TreeSet<PacketPosition> seekPositions = getResetPacketsBeforeTick(wantedTick);
-
-        resetSteps = new LinkedList<>();
-        resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
-        while (seekPositions.size() > 0) {
-            PacketPosition pp = seekPositions.pollFirst();
-            switch (pp.getKind()) {
-                case STRINGTABLE:
-                case FULL_PACKET:
-                    resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
-                    resetSteps.add(new ResetStep(LoopController.Command.RESET_ACCUMULATE, null));
-                    if (seekPositions.size() == 0) {
-                        resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
-                    }
-                    break;
-                case SYNC:
-                    if (seekPositions.size() == 0) {
-                        resetSteps.add(new ResetStep(LoopController.Command.CONTINUE, pp.getOffset()));
-                        resetSteps.add(new ResetStep(LoopController.Command.RESET_APPLY, null));
-                    }
-                    break;
-            }
-        }
-        resetSteps.add(new ResetStep(LoopController.Command.RESET_FORWARD, null));
-        resetSteps.add(new ResetStep(LoopController.Command.RESET_COMPLETE, null));
-    }
-
 
     public class LockingLoopController extends LoopController {
 
