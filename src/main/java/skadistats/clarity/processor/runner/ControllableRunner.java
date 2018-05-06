@@ -85,7 +85,7 @@ public class ControllableRunner extends AbstractFileRunner {
 
             resetSteps = new LinkedList<>();
             resetSteps.add(new ResetStep(LoopController.Command.RESET_START, null));
-            if (diff < 0 || !engineType.isFullPacketSeekAllowed()) {
+            if (diff < 0 || engineType.isFullPacketSeekAllowed()) {
                 TreeSet<PacketPosition> seekPositions = getResetPacketsBeforeTick(wantedTick);
                 resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
                 while (seekPositions.size() > 0) {
