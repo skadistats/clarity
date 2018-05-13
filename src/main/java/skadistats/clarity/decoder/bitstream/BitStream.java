@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.s2.FieldOpType;
 
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Constructor;
-import java.nio.charset.Charset;
 
 public abstract class BitStream {
 
@@ -41,6 +40,8 @@ public abstract class BitStream {
         0xfffffffffffffffL, 0x1fffffffffffffffL, 0x3fffffffffffffffL, 0x7fffffffffffffffL,
         0xffffffffffffffffL
     };
+
+    private static final int[] UBV_COUNT = {0, 4, 8, 28};
 
     protected int len;
     protected int pos;
@@ -168,18 +169,12 @@ public abstract class BitStream {
         // X + Y set -> read 28
 
         int v = readUBitInt(6);
-        switch (v & 48) {
-            case 16:
-                v = (v & 15) | (readUBitInt(4) << 4);
-                break;
-            case 32:
-                v = (v & 15) | (readUBitInt(8) << 4);
-                break;
-            case 48:
-                v = (v & 15) | (readUBitInt(28) << 4);
-                break;
+        int a = v >> 4;
+        if (a == 0) {
+            return v;
+        } else {
+            return (v & 15) | (readUBitInt(UBV_COUNT[a]) << 4);
         }
-        return v;
     }
 
     public int readUBitVarFieldPath() {
