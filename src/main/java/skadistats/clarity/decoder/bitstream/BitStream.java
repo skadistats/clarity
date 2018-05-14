@@ -42,6 +42,7 @@ public abstract class BitStream {
     };
 
     private static final int[] UBV_COUNT = {0, 4, 8, 28};
+    private static final int[] UBVFP_COUNT = {2, 4, 10, 17, 31};
 
     protected int len;
     protected int pos;
@@ -178,11 +179,11 @@ public abstract class BitStream {
     }
 
     public int readUBitVarFieldPath() {
-        if (readBitFlag()) return readUBitInt(2);
-        if (readBitFlag()) return readUBitInt(4);
-        if (readBitFlag()) return readUBitInt(10);
-        if (readBitFlag()) return readUBitInt(17);
-        return readUBitInt(31);
+        int i = -1;
+        while (++i < 4) {
+            if (readBitFlag()) break;
+        }
+        return readUBitInt(UBVFP_COUNT[i]);
     }
 
     public float readBitCoord() {
