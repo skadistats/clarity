@@ -36,6 +36,9 @@ public class MappedFileSource extends Source {
 
     @Override
     public void setPosition(int position) throws IOException {
+        if (position > buf.limit()) {
+            throw new EOFException();
+        }
         buf.position(position);
     }
 
