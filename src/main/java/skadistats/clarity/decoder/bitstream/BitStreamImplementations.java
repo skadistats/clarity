@@ -26,7 +26,7 @@ public class BitStreamImplementations {
 
     public static Constructor<BitStream> determineConstructor() {
         if (implementation == null) {
-            implementation = System.getProperty("os.arch").indexOf("64") != -1 ? 2 : 0;
+            implementation = System.getProperty("os.arch").contains("64") ? 2 : 0;
             implementation += classForName("sun.misc.Unsafe") != null ? 1 : 0;
         }
         try {
