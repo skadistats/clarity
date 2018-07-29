@@ -91,7 +91,7 @@ public class PlayerInfoType {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PlayerInfoType{");
+        final StringBuilder sb = new StringBuilder("PlayerInfoType{");
         sb.append("version=").append(version);
         sb.append(", xuid=").append(xuid);
         sb.append(", name='").append(name).append('\'');
