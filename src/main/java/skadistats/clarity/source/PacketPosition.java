@@ -58,7 +58,7 @@ public class PacketPosition implements Comparable<PacketPosition> {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("PacketPosition{");
+        final StringBuilder sb = new StringBuilder("PacketPosition{");
         sb.append("tick=").append(tick);
         sb.append(", kind=").append(kind);
         sb.append(", offset=").append(offset);
