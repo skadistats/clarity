@@ -85,31 +85,51 @@ public class LiveSource extends Source {
 
     @Override
     public int getPosition() {
-        return file == null ? 0 : file.position();
+        lock.lock();
+        try {
+            return file == null ? 0 : file.position();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void setPosition(int position) throws IOException {
-        if (file == null) {
-            throw new IOException("file is not existing");
+        lock.lock();
+        try {
+            if (file == null) {
+                throw new IOException("file is not existing");
+            }
+            if (demoStopSeen && position < file.position()) {
+                demoStopSeen = false;
+            }
+            blockUntilDataAvailable(position - file.position());
+            file.position(position);
+        } finally {
+            lock.unlock();
         }
-        if (demoStopSeen && position < file.position()) {
-            demoStopSeen = false;
-        }
-        blockUntilDataAvailable(position - file.position());
-        file.position(position);
     }
 
     @Override
     public byte readByte() throws IOException {
-        blockUntilDataAvailable(1);
-        return file.get();
+        lock.lock();
+        try {
+            blockUntilDataAvailable(1);
+            return file.get();
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
     public void readBytes(byte[] dest, int offset, int length) throws IOException {
-        blockUntilDataAvailable(length);
-        file.get(dest, offset, length);
+        lock.lock();
+        try {
+            blockUntilDataAvailable(length);
+            file.get(dest, offset, length);
+        } finally {
+            lock.unlock();
+        }
     }
 
     @Override
@@ -130,13 +150,18 @@ public class LiveSource extends Source {
 
     @Override
     public void close() throws IOException {
-        if (channel != null) {
-            channel.close();
-            channel = null;
-        }
-        if (file != null) {
-            ((DirectBuffer) file).cleaner().clean();
-            file = null;
+        lock.lock();
+        try {
+            if (channel != null) {
+                channel.close();
+                channel = null;
+            }
+            if (file != null) {
+                ((DirectBuffer) file).cleaner().clean();
+                file = null;
+            }
+        } finally {
+            lock.unlock();
         }
     }
 
