@@ -69,6 +69,14 @@ public class BaseStringTableEmitter {
     }
 
     protected void setSingleEntry(StringTable table, int mode, int index, String key, ByteString value) {
+        if (key.isEmpty()) {
+            // With console recorded replays, the replay sometimes has no key,
+            // and supposedly expects us to use the one that is existing
+            // see: https://github.com/skadistats/clarity/issues/147#issuecomment-409619763
+            //      and Slack communication with Lukas
+            // reuse the old key, and see if that works
+            key = table.getNameByIndex(index);
+        }
         table.set(mode, index, key, value);
         raise(table, index, key, value);
     }
