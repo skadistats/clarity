@@ -68,21 +68,21 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void setSingleEntry(StringTable table, int mode, int index, String key, ByteString value) {
-        if (key.isEmpty()) {
-            // With console recorded replays, the replay sometimes has no key,
+    protected void setSingleEntry(StringTable table, int mode, int index, String name, ByteString value) {
+        if (name.isEmpty()) {
+            // With console recorded replays, the replay sometimes has no name entry,
             // and supposedly expects us to use the one that is existing
             // see: https://github.com/skadistats/clarity/issues/147#issuecomment-409619763
             //      and Slack communication with Lukas
             // reuse the old key, and see if that works
-            key = table.getNameByIndex(index);
+            name = table.getNameByIndex(index);
         }
-        table.set(mode, index, key, value);
-        raise(table, index, key, value);
+        table.set(mode, index, name, value);
+        raise(table, index, name, value);
     }
 
-    protected void raise(StringTable table, int index, String key, ByteString value) {
-        updateEvent.raise(table, index, key, value);
+    protected void raise(StringTable table, int index, String name, ByteString value) {
+        updateEvent.raise(table, index, name, value);
     }
 
     @OnReset
