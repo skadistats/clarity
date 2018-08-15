@@ -69,7 +69,7 @@ public class BaseStringTableEmitter {
     }
 
     protected void setSingleEntry(StringTable table, int mode, int index, String name, ByteString value) {
-        if (name.isEmpty()) {
+        if (name.isEmpty() && table.hasIndex(index)) {
             // With console recorded replays, the replay sometimes has no name entry,
             // and supposedly expects us to use the one that is existing
             // see: https://github.com/skadistats/clarity/issues/147#issuecomment-409619763
