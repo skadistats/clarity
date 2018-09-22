@@ -32,6 +32,7 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
 
     public int determineLastTick(Source source) throws IOException {
         int backup = source.getPosition();
+        source.setPosition(8);
         source.setPosition(source.readFixedInt32());
         source.skipVarInt32();
         int lastTick = source.readVarInt32();
