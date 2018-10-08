@@ -8,6 +8,8 @@ import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
+import skadistats.clarity.event.EventListener;
+import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -32,6 +34,7 @@ import skadistats.clarity.wire.common.proto.NetMessages;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
 @UsesDTClasses
@@ -77,6 +80,45 @@ public class Entities {
         fieldReader = engineType.getNewFieldReader();
         entities = new Entity[1 << engineType.getIndexBits()];
         deletions = new int[1 << engineType.getIndexBits()];
+    }
+
+    @Initializer(OnEntityCreated.class)
+    public void initOnEntityCreated(final EventListener<OnEntityCreated> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityDeleted.class)
+    public void initOnEntityDeleted(final EventListener<OnEntityDeleted> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityUpdated.class)
+    public void initOnEntityUpdated(final EventListener<OnEntityUpdated> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityEntered.class)
+    public void initOnEntityEntered(final EventListener<OnEntityEntered> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityLeft.class)
+    public void initOnEntityLeft(final EventListener<OnEntityLeft> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    private Predicate<Object[]> getInvocationPredicate(String classPattern) {
+        if (".*".equals(classPattern)) {
+            return null;
+        }
+        final Pattern p = Pattern.compile(classPattern);
+        return new Predicate<Object[]>() {
+            @Override
+            public boolean apply(Object[] value) {
+                Entity e = (Entity) value[0];
+                return p.matcher(e.getDtClass().getDtName()).matches();
+            }
+        };
     }
 
     @OnReset
