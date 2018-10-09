@@ -32,7 +32,8 @@ public class CsGoEngineType extends AbstractEngineType {
     public CsGoEngineType(EngineId identifier) {
         super(identifier,
                 true,   // CDemoSendTables is container
-                11, 10
+                11,
+                10
         );
     }
 

@@ -17,6 +17,7 @@ public abstract class AbstractEngineType implements EngineType {
     private final int indexBits;
     private final int serialBits;
     private final int indexMask;
+    private final int emptyHandle;
 
     AbstractEngineType(EngineId id, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.id = id;
@@ -24,6 +25,7 @@ public abstract class AbstractEngineType implements EngineType {
         this.indexBits = indexBits;
         this.serialBits = serialBits;
         this.indexMask = (1 << indexBits) - 1;
+        this.emptyHandle = (1 << (indexBits + 10)) - 1;
     }
 
     @Override
@@ -64,6 +66,11 @@ public abstract class AbstractEngineType implements EngineType {
     @Override
     public int handleForIndexAndSerial(int index, int serial) {
         return serial << indexBits | index;
+    }
+
+    @Override
+    public int emptyHandle() {
+        return emptyHandle;
     }
 
     @Override

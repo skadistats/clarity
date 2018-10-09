@@ -19,6 +19,7 @@ public interface EngineType {
     int indexForHandle(int handle);
     int serialForHandle(int handle);
     int handleForIndexAndSerial(int index, int serial);
+    int emptyHandle();
 
     float getMillisPerTick();
 
