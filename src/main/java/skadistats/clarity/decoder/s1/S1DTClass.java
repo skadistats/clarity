@@ -78,7 +78,18 @@ public class S1DTClass implements DTClass {
         }
         return false;
     }
-    
+
+    public boolean instanceOf(int classId) {
+        S1DTClass s = this;
+        while (s != null) {
+            if (s.getClassId() == classId) {
+                return true;
+            }
+            s = s.getSuperClass();
+        }
+        return false;
+    }
+
     public SendTable getSendTable() {
         return sendTable;
     }
