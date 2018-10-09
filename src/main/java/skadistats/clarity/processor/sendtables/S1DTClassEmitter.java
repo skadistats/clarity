@@ -79,7 +79,6 @@ public class S1DTClassEmitter {
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
         dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
-        evClassesComplete.raise();
     }
 
     @OnMessage(Demo.CDemoSyncTick.class)
@@ -99,6 +98,7 @@ public class S1DTClassEmitter {
                 dtc.setSuperClass((S1DTClass) dtClasses.forDtName(superClassName));
             }
         }
+        evClassesComplete.raise();
     }
 
 }
