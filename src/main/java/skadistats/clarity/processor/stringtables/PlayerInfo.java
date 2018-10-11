@@ -46,4 +46,13 @@ public class PlayerInfo {
         return playerInfos.get(i);
     }
 
+    public Integer getEntityIndexForUserId(final int userId) {
+        for (Map.Entry<Integer, PlayerInfoType> e : playerInfos.entrySet()) {
+            if (e.getValue().getUserId() == userId) {
+                return e.getKey();
+            }
+        }
+        return null;
+    }
+
 }
