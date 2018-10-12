@@ -244,12 +244,11 @@ public class InputSourceProcessor {
                 bs.skip(size * 8);
             } else {
                 Event<OnMessage> ev = evOnMessage(messageClass);
-                if (ev.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
+                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
-                    ev.raise(subMessage);
-                    Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
-                    if (evPost.isListenedTo()) {
-                        evPost.raise(subMessage, bs);
+                    if (ev.isListenedTo()) {
+                        ev.raise(subMessage);
                     }
                     if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
                         NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
@@ -259,6 +258,9 @@ public class InputSourceProcessor {
                         } else {
                             evOnMessage(umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
                         }
+                    }
+                    if (evPost.isListenedTo()) {
+                        evPost.raise(subMessage, bs);
                     }
                 } else {
                     bs.skip(size * 8);
