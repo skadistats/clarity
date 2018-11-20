@@ -46,6 +46,10 @@ public abstract class Field {
 
     protected Object[] ensureSubStateCapacity(Object[] state, int i, int wantedSize, boolean shrinkIfNeeded) {
         Object[] subState = (Object[]) state[i];
+        if (wantedSize < 0) {
+            // TODO: sometimes negative - figure out what this means
+            return subState;
+        }
         int growth = 0;
         int curSize = subState == null ? 0 : subState.length;
         if (subState == null && wantedSize > 0) {
