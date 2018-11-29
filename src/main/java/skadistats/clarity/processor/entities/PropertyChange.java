@@ -5,6 +5,7 @@ import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
+import skadistats.clarity.event.Order;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
@@ -88,6 +89,7 @@ public class PropertyChange {
     }
 
     @OnEntityCreated
+    @Order(1000)
     public void onEntityCreated(Entity e) {
         List<FieldPath> fieldPaths = e.getDtClass().collectFieldPaths(e.getState());
         for (FieldPath fp : fieldPaths) {
@@ -96,6 +98,7 @@ public class PropertyChange {
     }
 
     @OnEntityUpdated
+    @Order(1000)
     public void onUpdate(Entity e, FieldPath[] fieldPaths, int num) {
         for (int i = 0; i < num; i++) {
             evPropertyChanged.raise(e, fieldPaths[i]);
@@ -103,6 +106,7 @@ public class PropertyChange {
     }
 
     @OnEntityDeleted
+    @Order(1000)
     public void onDeleted(Entity e) {
         for (ListenerAdapter adapter : adapters) {
             adapter.clear(e);
