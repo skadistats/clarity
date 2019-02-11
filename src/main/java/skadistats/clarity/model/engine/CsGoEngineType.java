@@ -316,23 +316,13 @@ public class CsGoEngineType extends AbstractEngineType {
                         tb.setTableName(bs.readString(4095));
                         int nStrings = bs.readUBitInt(16);
                         for (int s = 0; s < nStrings; s++) {
-                            Demo.CDemoStringTables.items_t.Builder ib = tb.addItemsBuilder();
-                            ib.setStr(bs.readString(255));
-                            if (bs.readBitFlag()) {
-                                byte[] data = new byte[bs.readUBitInt(16)];
-                                bs.readBitsIntoByteArray(data, data.length * 8);
-                                ib.setData(ZeroCopy.wrap(data));
-                            }
+                            readItem(bs, tb.addItemsBuilder());
                         }
                         if (bs.readBitFlag()) {
-                            Demo.CDemoStringTables.items_t.Builder ib = tb.addItemsClientsideBuilder();
-                            ib.setStr(bs.readString(4095));
-                            if (bs.readBitFlag()) {
-                                byte[] data = new byte[bs.readUBitInt(16)];
-                                bs.readBitsIntoByteArray(data, data.length * 8);
-                                ib.setData(ZeroCopy.wrap(data));
+                            nStrings = bs.readUBitInt(16);
+                            for (int s = 0; s < nStrings; s++) {
+                                readItem(bs, tb.addItemsClientsideBuilder());
                             }
-
                         }
                     }
                     return b.build();
@@ -340,6 +330,14 @@ public class CsGoEngineType extends AbstractEngineType {
                 @Override
                 public void skip(Source source) throws IOException {
                     skipPacket(source);
+                }
+                private void readItem(BitStream bs, Demo.CDemoStringTables.items_t.Builder ib) {
+                    ib.setStr(bs.readString(255));
+                    if (bs.readBitFlag()) {
+                        byte[] data = new byte[bs.readUBitInt(16)];
+                        bs.readBitsIntoByteArray(data, data.length * 8);
+                        ib.setData(ZeroCopy.wrap(data));
+                    }
                 }
             }
     };
