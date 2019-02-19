@@ -25,7 +25,7 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Requirements
 
-* Java 7 or newer
+* Java 7 or 8
 * Maven
 
 # Usage
