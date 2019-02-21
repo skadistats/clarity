@@ -42,6 +42,7 @@ public class S2UnpackerFactory {
         // Specials
         FACTORIES.put("Vector2D", new VectorUnpackerFactory(2));
         FACTORIES.put("Vector", new VectorUnpackerFactory(3));
+        FACTORIES.put("Vector4D", new VectorUnpackerFactory(4));
         FACTORIES.put("Quaternion", new VectorUnpackerFactory(4));
     }
 
