@@ -293,7 +293,6 @@ public class LiveSource extends Source {
                 nextTickOffset = file.position();
             }
         } catch (IOException e) {
-            //e.printStackTrace();
         } finally {
             try {
                 log.debug("last tick determined to be %d", getLastTick());
