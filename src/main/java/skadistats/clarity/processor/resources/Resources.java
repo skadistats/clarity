@@ -147,7 +147,6 @@ public class Resources {
 
             addEntryToResourceHandles(entry);
 
-            //System.out.format("%20d %s\n", hash, entryStr);
         }
     }
 
