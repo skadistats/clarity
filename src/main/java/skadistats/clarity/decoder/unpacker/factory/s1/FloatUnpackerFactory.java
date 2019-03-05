@@ -8,12 +8,6 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
 
     public static Unpacker<Float> createUnpackerStatic(SendProp prop) {
         int flags = prop.getFlags();
-//        if ((flags & PropFlag.ROUND_DOWN) != 0) {
-//            System.out.println("unhandled ROUND_DOWN for " + prop.getVarName());
-//        }
-//        if ((flags & PropFlag.ROUND_UP) != 0) {
-//            System.out.println("unhandled ROUND_UP for " + prop.getVarName());
-//        }
         if ((flags & PropFlag.COORD) != 0) {
             return new FloatCoordUnpacker();
         } else if ((flags & (PropFlag.COORD_MP | PropFlag.COORD_MP_LOW_PRECISION | PropFlag.COORD_MP_INTEGRAL)) != 0) {
