@@ -10,6 +10,8 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
@@ -48,7 +50,7 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                Object[] state = new Object[receiveProps.length];
+                EntityState state = EntityStateFactory.withLength(receiveProps.length);
                 fieldReader.readFields(stream, cls, state, false);
                 evTempEntity.raise(new Entity(engineType, 0, 0, cls, true, state));
             }

@@ -7,6 +7,7 @@ import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader extends FieldReader<S2DTClass> {
@@ -38,7 +39,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public int readFields(BitStream bs, S2DTClass dtClass, Object[] state, boolean debug) {
+    public int readFields(BitStream bs, S2DTClass dtClass, EntityState state, boolean debug) {
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());

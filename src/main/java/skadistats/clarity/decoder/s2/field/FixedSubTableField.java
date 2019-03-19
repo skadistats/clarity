@@ -4,6 +4,7 @@ import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.EntityState;
 
 import java.util.List;
 
@@ -61,28 +62,27 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
         assert fp.last >= pos;
         int i = fp.path[pos];
-        Object[] subState = (Object[]) state[i];
         if (fp.last == pos) {
-            return subState != null;
+            return state.has(i);
         } else {
-            return properties.getSerializer().getValueForFieldPath(fp, pos + 1, subState);
+            return properties.getSerializer().getValueForFieldPath(fp, pos + 1, (EntityState) state.get(i));
         }
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
         assert fp.last >= pos;
         int i = fp.path[pos];
-        Object[] subState = (Object[]) state[i];
+        EntityState subState = state.sub(i);
         if (fp.last == pos) {
-            boolean existing = ((Boolean) value).booleanValue();
+            boolean existing = (Boolean) value;
             if (subState == null && existing) {
-                state[i] = properties.getSerializer().getInitialState();
+                state.set(i, properties.getSerializer().getInitialState());
             } else if (subState != null && !existing) {
-                state[i] = null;
+                state.set(i, null);
             }
         } else {
             properties.getSerializer().setValueForFieldPath(fp, pos + 1, subState, value);
@@ -95,22 +95,22 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
-        Object[] subState = (Object[]) state[fp.path[fp.last]];
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
         String name = joinPropertyName(namePrefix, properties.getName());
-        if (subState != null) {
+        int i = fp.path[fp.last];
+        if (state.has(i)) {
             fp.last++;
-            properties.getSerializer().collectDump(fp, name, entries, subState);
+            properties.getSerializer().collectDump(fp, name, entries, state.sub(i));
             fp.last--;
         }
     }
 
     @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
-        Object[] subState = (Object[]) state[fp.path[fp.last]];
-        if (subState != null) {
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
+        int i = fp.path[fp.last];
+        if (state.has(i)) {
             fp.last++;
-            properties.getSerializer().collectFieldPaths(fp, entries, subState);
+            properties.getSerializer().collectFieldPaths(fp, entries, state.sub(i));
             fp.last--;
         }
 

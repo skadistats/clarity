@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.decoder.FieldReader;
-import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
@@ -19,6 +18,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.StringTable;
+import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
@@ -67,7 +67,7 @@ public class Entities {
 
     private class BaselineEntry {
         private ByteString rawBaseline;
-        private Object[] baseline;
+        private EntityState baseline;
 
         public BaselineEntry(ByteString rawBaseline) {
             this.rawBaseline = rawBaseline;
@@ -146,7 +146,7 @@ public class Entities {
         int clsId;
         DTClass cls;
         int serial;
-        Object[] state;
+        EntityState state;
         Entity entity;
 
         boolean debug = false;
@@ -166,7 +166,7 @@ public class Entities {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
-                    state = Util.clone(getBaseline(cls.getClassId()));
+                    state = getBaseline(cls.getClassId()).clone();
                     fieldReader.readFields(stream, cls, state, debug);
                     entity = new Entity(engineType, entityIndex, serial, cls, true, state);
                     entities[entityIndex] = entity;
@@ -226,7 +226,7 @@ public class Entities {
 
     }
 
-    private Object[] getBaseline(int clsId) {
+    private EntityState getBaseline(int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
             throw new ClarityException("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId);

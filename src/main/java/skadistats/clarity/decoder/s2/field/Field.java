@@ -3,6 +3,8 @@ package skadistats.clarity.decoder.s2.field;
 import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.List;
 
@@ -19,11 +21,11 @@ public abstract class Field {
     public abstract Unpacker getUnpackerForFieldPath(FieldPath fp, int pos);
     public abstract Field getFieldForFieldPath(FieldPath fp, int pos);
     public abstract FieldType getTypeForFieldPath(FieldPath fp, int pos);
-    public abstract Object getValueForFieldPath(FieldPath fp, int pos, Object[] state);
-    public abstract void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data);
+    public abstract Object getValueForFieldPath(FieldPath fp, int pos, EntityState state);
+    public abstract void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object data);
     public abstract FieldPath getFieldPathForName(FieldPath fp, String property);
-    public abstract void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state);
-    public abstract void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state);
+    public abstract void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state);
+    public abstract void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state);
 
     protected void addBasePropertyName(List<String> parts) {
         parts.add(properties.getName());
@@ -44,35 +46,39 @@ public abstract class Field {
         return properties;
     }
 
-    protected Object[] ensureSubStateCapacity(Object[] state, int i, int wantedSize, boolean shrinkIfNeeded) {
-        Object[] subState = (Object[]) state[i];
+    protected EntityState ensureSubStateCapacity(EntityState state, int i, int wantedSize, boolean shrinkIfNeeded) {
+        EntityState subState = state.sub(i);
         if (wantedSize < 0) {
             // TODO: sometimes negative - figure out what this means
             return subState;
         }
         int growth = 0;
-        int curSize = subState == null ? 0 : subState.length;
+        int curSize = subState == null ? 0 : subState.length();
         if (subState == null && wantedSize > 0) {
-            state[i] = new Object[wantedSize];
+            state.set(i, EntityStateFactory.withLength(wantedSize));
             growth = wantedSize;
         } else if (shrinkIfNeeded && wantedSize == 0) {
-            state[i] = null;
+            state.set(i, null);
         } else if (wantedSize != curSize) {
             if (shrinkIfNeeded || wantedSize > curSize) {
-                state[i] = new Object[wantedSize];
+                state.set(i, EntityStateFactory.withLength(wantedSize));
                 curSize = wantedSize;
             }
-            System.arraycopy(subState, 0, state[i], 0, Math.min(subState.length, curSize));
-            growth = Math.max(0, curSize - subState.length);
+            int n = Math.min(subState.length(), curSize);
+            EntityState subStateNew = state.sub(i);
+            for (int j = 0; j < n; j++) {
+                subStateNew.set(j, subState.get(j));
+            }
+            growth = Math.max(0, curSize - subState.length());
         }
         if (growth > 0 && properties.getSerializer() != null) {
-            subState = (Object[]) state[i];
-            int j = subState.length;
+            EntityState subStateNew = state.sub(i);
+            int j = subStateNew.length();
             while (growth-- > 0) {
-                subState[--j] = properties.getSerializer().getInitialState();
+                subStateNew.set(--j, properties.getSerializer().getInitialState());
             }
         }
-        return (Object[]) state[i];
+        return state.sub(i);
     }
 
 }

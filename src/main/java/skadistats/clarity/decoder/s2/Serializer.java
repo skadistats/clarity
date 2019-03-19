@@ -4,6 +4,8 @@ import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.Comparator;
 import java.util.List;
@@ -42,10 +44,10 @@ public class Serializer {
         return fields;
     }
 
-    public Object[] getInitialState() {
-        Object[] result = new Object[fields.length];
+    public EntityState getInitialState() {
+        EntityState result = EntityStateFactory.withLength(fields.length);
         for (int i = 0; i < fields.length; i++) {
-            result[i] = fields[i].getInitialState();
+            result.set(i, fields[i].getInitialState());
         }
         return result;
     }
@@ -66,11 +68,11 @@ public class Serializer {
         return fields[fp.path[pos]].getTypeForFieldPath(fp, pos);
     }
 
-    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
         return fields[fp.path[pos]].getValueForFieldPath(fp, pos, state);
     }
 
-    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object data) {
+    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object data) {
         fields[fp.path[pos]].setValueForFieldPath(fp, pos, state, data);
     }
 
@@ -104,18 +106,18 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
         for (int i = 0; i < fields.length; i++) {
-            if (state[i] != null) {
+            if (state.has(i)) {
                 fp.path[fp.last] = i;
                 fields[i].collectDump(fp, namePrefix, entries, state);
             }
         }
     }
 
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
         for (int i = 0; i < fields.length; i++) {
-            if (state[i] != null) {
+            if (state.has(i)) {
                 fp.path[fp.last] = i;
                 fields[i].collectFieldPaths(fp, entries, state);
             }

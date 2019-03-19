@@ -1,5 +1,7 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.model.state.EntityState;
+
 public class Entity {
 
     private final EngineType engineType;
@@ -7,9 +9,9 @@ public class Entity {
     private final int serial;
     private final DTClass dtClass;
     private boolean active;
-    private final Object[] state;
+    private final EntityState state;
 
-    public Entity(EngineType engineType, int index, int serial, DTClass dtClass, boolean active, Object[] state) {
+    public Entity(EngineType engineType, int index, int serial, DTClass dtClass, boolean active, EntityState state) {
         this.engineType = engineType;
         this.index = index;
         this.serial = serial;
@@ -42,7 +44,7 @@ public class Entity {
         this.active = active;
     }
 
-    public Object[] getState() {
+    public EntityState getState() {
         return state;
     }
 
