@@ -5,6 +5,7 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.CloneableEntityState;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.util.TextTable;
@@ -42,8 +43,8 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public EntityState getEmptyStateArray() {
-        EntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
+    public CloneableEntityState getEmptyStateArray() {
+        CloneableEntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
         serializer.initInitialState(state);
         return state;
     }

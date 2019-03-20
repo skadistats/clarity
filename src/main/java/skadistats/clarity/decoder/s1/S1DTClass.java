@@ -2,6 +2,7 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.CloneableEntityState;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.util.TextTable;
@@ -38,7 +39,7 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public EntityState getEmptyStateArray() {
+    public CloneableEntityState getEmptyStateArray() {
         return EntityStateFactory.withLength(receiveProps.length);
     }
 

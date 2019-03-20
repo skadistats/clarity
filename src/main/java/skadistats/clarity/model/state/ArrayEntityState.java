@@ -4,7 +4,7 @@ import skadistats.clarity.decoder.Util;
 
 import java.util.function.Consumer;
 
-public class ArrayEntityState implements EntityState {
+public class ArrayEntityState implements CloneableEntityState {
 
     private static final Object[] EMPTY_STATE = {};
 
@@ -36,7 +36,7 @@ public class ArrayEntityState implements EntityState {
     }
 
     @Override
-    public EntityState clone() {
+    public CloneableEntityState clone() {
         return Util.clone(this);
     }
 

@@ -18,6 +18,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.StringTable;
+import skadistats.clarity.model.state.CloneableEntityState;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
@@ -67,7 +68,7 @@ public class Entities {
 
     private class BaselineEntry {
         private ByteString rawBaseline;
-        private EntityState baseline;
+        private CloneableEntityState baseline;
 
         public BaselineEntry(ByteString rawBaseline) {
             this.rawBaseline = rawBaseline;
@@ -226,7 +227,7 @@ public class Entities {
 
     }
 
-    private EntityState getBaseline(int clsId) {
+    private CloneableEntityState getBaseline(int clsId) {
         BaselineEntry be = baselineEntries.get(clsId);
         if (be == null) {
             throw new ClarityException("Baseline for class %s (%d) not found.", dtClasses.forClassId(clsId).getDtName(), clsId);

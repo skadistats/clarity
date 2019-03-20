@@ -12,8 +12,6 @@ public interface EntityState {
     void set(int idx, Object value);
     void clear(int idx);
 
-    EntityState clone();
-
     EntityState sub(int idx);
 
     EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer);
