@@ -4,7 +4,6 @@ import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.List;
 
@@ -47,38 +46,7 @@ public abstract class Field {
     }
 
     protected EntityState ensureSubStateCapacity(EntityState state, int i, int wantedSize, boolean shrinkIfNeeded) {
-        EntityState subState = state.sub(i);
-        if (wantedSize < 0) {
-            // TODO: sometimes negative - figure out what this means
-            return subState;
-        }
-        int growth = 0;
-        int curSize = subState == null ? 0 : subState.length();
-        if (subState == null && wantedSize > 0) {
-            state.set(i, EntityStateFactory.withLength(wantedSize));
-            growth = wantedSize;
-        } else if (shrinkIfNeeded && wantedSize == 0) {
-            state.set(i, null);
-        } else if (wantedSize != curSize) {
-            if (shrinkIfNeeded || wantedSize > curSize) {
-                state.set(i, EntityStateFactory.withLength(wantedSize));
-                curSize = wantedSize;
-            }
-            int n = Math.min(subState.length(), curSize);
-            EntityState subStateNew = state.sub(i);
-            for (int j = 0; j < n; j++) {
-                subStateNew.set(j, subState.get(j));
-            }
-            growth = Math.max(0, curSize - subState.length());
-        }
-        if (growth > 0 && properties.getSerializer() != null) {
-            EntityState subStateNew = state.sub(i);
-            int j = subStateNew.length();
-            while (growth-- > 0) {
-                subStateNew.set(--j, properties.getSerializer().getInitialState());
-            }
-        }
-        return state.sub(i);
+        return state.capacity(i, wantedSize, shrinkIfNeeded, properties.getSerializer());
     }
 
 }

@@ -7,7 +7,7 @@ public class ArrayEntityState implements EntityState {
     private Object[] state;
 
     public ArrayEntityState(int length) {
-        state = new Object[length];
+        this.state = new Object[length];
     }
 
     @Override
@@ -28,6 +28,13 @@ public class ArrayEntityState implements EntityState {
     @Override
     public void set(int idx, Object value) {
         state[idx] = value;
+    }
+
+    @Override
+    public EntityState createSub(int idx, int length) {
+        ArrayEntityState as = length != -1 ? new ArrayEntityState(length) : null;
+        state[idx] = as;
+        return as;
     }
 
     @Override
