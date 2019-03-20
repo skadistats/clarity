@@ -6,33 +6,46 @@ import java.util.function.Consumer;
 
 public class ArrayEntityState implements CloneableEntityState {
 
-    private static final Object[] EMPTY_STATE = {};
+    private final State rootState;
 
-    private Object[] state = EMPTY_STATE;
+    public ArrayEntityState(int length) {
+        this.rootState = new State();
+        this.rootState.capacity(length);
+    }
 
     @Override
     public int length() {
-        return state.length;
+        return rootState.length();
     }
 
     @Override
     public boolean has(int idx) {
-        return state[idx] != null;
+        return rootState.has(idx);
     }
 
     @Override
     public Object get(int idx) {
-        return state[idx];
+        return rootState.get(idx);
     }
 
     @Override
     public void set(int idx, Object value) {
-        state[idx] = value;
+        rootState.set(idx, value);
     }
 
     @Override
     public void clear(int idx) {
-        state[idx] = null;
+        rootState.clear(idx);
+    }
+
+    @Override
+    public EntityState sub(int idx) {
+        return rootState.sub(idx);
+    }
+
+    @Override
+    public EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer) {
+        return rootState.capacity(wantedSize, shrinkIfNeeded, initializer);
     }
 
     @Override
@@ -40,42 +53,76 @@ public class ArrayEntityState implements CloneableEntityState {
         return Util.clone(this);
     }
 
-    @Override
-    public EntityState sub(int idx) {
-        if (state[idx] == null) {
-            state[idx] = new ArrayEntityState();
-        }
-        return (EntityState) state[idx];
-    }
 
-    @Override
-    public EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer) {
-        int curSize = state.length;
-        if (wantedSize == curSize) {
-            return this;
-        }
-        if (wantedSize < 0) {
-            // TODO: sometimes negative - figure out what this means
-            return this;
+
+    private static final Object[] EMPTY_STATE = {};
+
+    public class State implements EntityState {
+
+        private Object[] state = EMPTY_STATE;
+
+        @Override
+        public int length() {
+            return state.length;
         }
 
-        Object[] newState = null;
-        if (wantedSize > curSize) {
-            newState = new Object[wantedSize];
-        } else if (shrinkIfNeeded) {
-            newState = wantedSize == 0 ? EMPTY_STATE : new Object[wantedSize];
+        @Override
+        public boolean has(int idx) {
+            return state[idx] != null;
         }
 
-        if (newState != null) {
-            System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
-            state = newState;
-            if (initializer != null) {
-                for (int i = curSize; i < wantedSize; i++) {
-                    initializer.accept(sub(i));
+        @Override
+        public Object get(int idx) {
+            return state[idx];
+        }
+
+        @Override
+        public void set(int idx, Object value) {
+            state[idx] = value;
+        }
+
+        @Override
+        public void clear(int idx) {
+            state[idx] = null;
+        }
+
+        @Override
+        public EntityState sub(int idx) {
+            if (state[idx] == null) {
+                state[idx] = new State();
+            }
+            return (EntityState) state[idx];
+        }
+
+        @Override
+        public EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer) {
+            int curSize = state.length;
+            if (wantedSize == curSize) {
+                return this;
+            }
+            if (wantedSize < 0) {
+                // TODO: sometimes negative - figure out what this means
+                return this;
+            }
+
+            Object[] newState = null;
+            if (wantedSize > curSize) {
+                newState = new Object[wantedSize];
+            } else if (shrinkIfNeeded) {
+                newState = wantedSize == 0 ? EMPTY_STATE : new Object[wantedSize];
+            }
+
+            if (newState != null) {
+                System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
+                state = newState;
+                if (initializer != null) {
+                    for (int i = curSize; i < wantedSize; i++) {
+                        initializer.accept(sub(i));
+                    }
                 }
             }
+            return this;
         }
-        return this;
     }
 
 }
