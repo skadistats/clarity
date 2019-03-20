@@ -6,6 +6,7 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;
@@ -42,7 +43,9 @@ public class S2DTClass implements DTClass {
 
     @Override
     public EntityState getEmptyStateArray() {
-        return serializer.getInitialState();
+        EntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
+        serializer.initInitialState(state);
+        return state;
     }
 
     public String getNameForFieldPath(FieldPath fp) {

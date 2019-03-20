@@ -18,8 +18,8 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public Object getInitialState() {
-        return null;
+    public void initInitialState(EntityState state, int idx) {
+        state.set(idx, null);
     }
 
     @Override

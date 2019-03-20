@@ -15,7 +15,7 @@ public abstract class Field {
         this.properties = properties;
     }
 
-    public abstract Object getInitialState();
+    public abstract void initInitialState(EntityState state, int idx);
     public abstract void accumulateName(FieldPath fp, int pos, List<String> parts);
     public abstract Unpacker getUnpackerForFieldPath(FieldPath fp, int pos);
     public abstract Field getFieldForFieldPath(FieldPath fp, int pos);
@@ -43,10 +43,6 @@ public abstract class Field {
 
     public FieldProperties getProperties() {
         return properties;
-    }
-
-    protected EntityState ensureSubStateCapacity(EntityState state, int i, int wantedSize, boolean shrinkIfNeeded) {
-        return state.capacity(i, wantedSize, shrinkIfNeeded, properties.getSerializer());
     }
 
 }

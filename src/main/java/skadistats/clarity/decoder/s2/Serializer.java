@@ -5,7 +5,6 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.Comparator;
 import java.util.List;
@@ -44,12 +43,15 @@ public class Serializer {
         return fields;
     }
 
-    public EntityState getInitialState() {
-        EntityState result = EntityStateFactory.withLength(fields.length);
+    public int getFieldCount() {
+        return fields.length;
+    }
+
+    public void initInitialState(EntityState state) {
+        state.capacity(fields.length);
         for (int i = 0; i < fields.length; i++) {
-            result.set(i, fields[i].getInitialState());
+            fields[i].initInitialState(state, i);
         }
-        return result;
     }
 
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {

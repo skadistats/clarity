@@ -18,8 +18,8 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public Object getInitialState() {
-        return properties.getSerializer().getInitialState();
+    public void initInitialState(EntityState state, int idx) {
+        properties.getSerializer().initInitialState(state.sub(idx));
     }
 
     @Override
@@ -76,16 +76,15 @@ public class FixedSubTableField extends Field {
     public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
         assert fp.last >= pos;
         int i = fp.path[pos];
-        EntityState subState = state.sub(i);
         if (fp.last == pos) {
             boolean existing = (Boolean) value;
-            if (subState == null && existing) {
-                state.set(i, properties.getSerializer().getInitialState());
-            } else if (subState != null && !existing) {
+            if (!state.has(i) && existing) {
+                properties.getSerializer().initInitialState(state.sub(i));
+            } else if (state.has(i) && !existing) {
                 state.set(i, null);
             }
         } else {
-            properties.getSerializer().setValueForFieldPath(fp, pos + 1, subState, value);
+            properties.getSerializer().setValueForFieldPath(fp, pos + 1, state.sub(i), value);
         }
     }
 

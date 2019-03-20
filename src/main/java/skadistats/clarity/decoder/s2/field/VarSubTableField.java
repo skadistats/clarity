@@ -20,8 +20,8 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public Object getInitialState() {
-        return null;
+    public void initInitialState(EntityState state, int idx) {
+        state.set(idx, null);
     }
 
     @Override
@@ -81,11 +81,12 @@ public class VarSubTableField extends Field {
     public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
         assert fp.last == pos || fp.last >= pos + 2;
         int i = fp.path[pos];
+        EntityState subState = state.sub(i);
         if (fp.last == pos) {
-            ensureSubStateCapacity(state, i, (Integer) value, true);
+            subState.capacity((Integer) value, true, properties.getSerializer()::initInitialState);
         } else {
             int j = fp.path[pos + 1];
-            EntityState subState = ensureSubStateCapacity(state, i, j + 1, false);
+            subState.capacity(j + 1, false, properties.getSerializer()::initInitialState);
             properties.getSerializer().setValueForFieldPath(fp, pos + 2, subState.sub(j), value);
         }
     }

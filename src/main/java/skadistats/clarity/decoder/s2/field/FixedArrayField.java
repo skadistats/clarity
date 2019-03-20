@@ -7,7 +7,6 @@ import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.List;
 
@@ -23,8 +22,8 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public Object getInitialState() {
-        return EntityStateFactory.withLength(length);
+    public void initInitialState(EntityState state, int idx) {
+        state.sub(idx).capacity(length);
     }
 
     @Override
