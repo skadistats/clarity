@@ -81,7 +81,7 @@ public class FixedSubTableField extends Field {
             if (!state.has(i) && existing) {
                 properties.getSerializer().initInitialState(state.sub(i));
             } else if (state.has(i) && !existing) {
-                state.set(i, null);
+                state.clear(i);
             }
         } else {
             properties.getSerializer().setValueForFieldPath(fp, pos + 1, state.sub(i), value);
