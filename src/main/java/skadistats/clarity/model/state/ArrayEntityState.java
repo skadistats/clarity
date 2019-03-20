@@ -92,6 +92,11 @@ public class ArrayEntityState implements CloneableEntityState {
         private State getState() {
             return states.get(idx);
         }
+
+        @Override
+        public String toString() {
+            return "StateRef[" + idx + "]";
+        }
     }
 
     private static final Object[] EMPTY_STATE = {};
@@ -182,6 +187,12 @@ public class ArrayEntityState implements CloneableEntityState {
             }
             return this;
         }
+
+        @Override
+        public String toString() {
+            return "State[modifiable=" + modifiable + "]";
+        }
+
     }
 
 }
