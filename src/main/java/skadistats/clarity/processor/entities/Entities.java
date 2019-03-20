@@ -235,7 +235,7 @@ public class Entities {
         if (be.baseline == null) {
             DTClass cls = dtClasses.forClassId(clsId);
             BitStream stream = BitStream.createBitStream(be.rawBaseline);
-            be.baseline = cls.getEmptyStateArray();
+            be.baseline = cls.getEmptyState();
             fieldReader.readFields(stream, cls, be.baseline, false);
         }
         return be.baseline;

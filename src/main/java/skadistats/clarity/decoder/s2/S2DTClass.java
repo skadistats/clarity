@@ -43,7 +43,7 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public CloneableEntityState getEmptyStateArray() {
+    public CloneableEntityState getEmptyState() {
         CloneableEntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
         serializer.initInitialState(state);
         return state;

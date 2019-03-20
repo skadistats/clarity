@@ -12,7 +12,7 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
-    CloneableEntityState getEmptyStateArray();
+    CloneableEntityState getEmptyState();
 
     String getNameForFieldPath(FieldPath fp);
     FieldPath getFieldPathForName(String property);

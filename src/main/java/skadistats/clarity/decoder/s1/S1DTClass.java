@@ -39,7 +39,7 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public CloneableEntityState getEmptyStateArray() {
+    public CloneableEntityState getEmptyState() {
         return EntityStateFactory.withLength(receiveProps.length);
     }
 
