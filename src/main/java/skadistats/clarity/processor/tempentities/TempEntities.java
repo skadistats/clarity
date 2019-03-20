@@ -50,9 +50,10 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                EntityState state = EntityStateFactory.withLength(receiveProps.length);
-                fieldReader.readFields(stream, cls, state, false);
-                evTempEntity.raise(new Entity(engineType, 0, 0, cls, true, state));
+                // TODO: Reenable
+//                EntityState state = EntityStateFactory.withLength(receiveProps.length);
+//                fieldReader.readFields(stream, cls, state, false);
+//                evTempEntity.raise(new Entity(engineType, 0, 0, cls, true, state));
             }
         }
     }
