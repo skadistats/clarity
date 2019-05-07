@@ -72,8 +72,10 @@ public class VarSubTableField extends Field {
         EntityState subState = state.sub(fp.path[pos]);
         if (fp.last == pos) {
             return subState.length();
-        } else {
+        } else if (subState.isSub(fp.path[pos + 1])){
             return properties.getSerializer().getValueForFieldPath(fp, pos + 2, subState.sub(fp.path[pos + 1]));
+        } else {
+            return null;
         }
     }
 

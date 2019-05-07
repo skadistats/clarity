@@ -67,8 +67,10 @@ public class FixedSubTableField extends Field {
         int i = fp.path[pos];
         if (fp.last == pos) {
             return state.has(i);
+        } else if (state.isSub(i)) {
+            return properties.getSerializer().getValueForFieldPath(fp, pos + 1, state.sub(i));
         } else {
-            return properties.getSerializer().getValueForFieldPath(fp, pos + 1, (EntityState) state.get(i));
+            return null;
         }
     }
 

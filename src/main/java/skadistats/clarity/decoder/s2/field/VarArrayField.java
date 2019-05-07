@@ -67,8 +67,10 @@ public class VarArrayField extends Field {
         EntityState subState = state.sub(fp.path[pos]);
         if (fp.last == pos) {
             return subState.length();
-        } else {
+        } else if (subState.has(fp.path[pos + 1])) {
             return subState.get(fp.path[pos + 1]);
+        } else {
+            return null;
         }
     }
 
