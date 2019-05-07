@@ -50,6 +50,11 @@ public class ArrayEntityState implements CloneableEntityState {
     }
 
     @Override
+    public boolean isSub(int idx) {
+        return rootState().isSub(idx);
+    }
+
+    @Override
     public EntityState sub(int idx) {
         return rootState().sub(idx);
     }
@@ -81,16 +86,12 @@ public class ArrayEntityState implements CloneableEntityState {
         states.set(stateRef.idx, null);
     }
 
-    private class StateRef {
+    private static class StateRef {
 
         private final int idx;
 
         private StateRef(int idx) {
             this.idx = idx;
-        }
-
-        private State getState() {
-            return states.get(idx);
         }
 
         @Override
@@ -122,7 +123,7 @@ public class ArrayEntityState implements CloneableEntityState {
 
         @Override
         public boolean has(int idx) {
-            return state[idx] != null;
+            return state.length > idx && state[idx] != null;
         }
 
         @Override
@@ -150,11 +151,17 @@ public class ArrayEntityState implements CloneableEntityState {
         }
 
         @Override
+        public boolean isSub(int idx) {
+            return has(idx) && get(idx) instanceof StateRef;
+        }
+
+        @Override
         public EntityState sub(int idx) {
             if (!has(idx)) {
                 set(idx, createStateRef(new State()));
             }
-            return ((StateRef) get(idx)).getState();
+            StateRef stateRef = (StateRef) get(idx);
+            return states.get(stateRef.idx);
         }
 
         @Override

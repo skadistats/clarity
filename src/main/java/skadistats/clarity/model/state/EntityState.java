@@ -12,6 +12,7 @@ public interface EntityState {
     void set(int idx, Object value);
     void clear(int idx);
 
+    boolean isSub(int idx);
     EntityState sub(int idx);
 
     EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer);
