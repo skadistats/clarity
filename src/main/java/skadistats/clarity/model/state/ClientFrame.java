@@ -11,6 +11,7 @@ public class ClientFrame {
     private final DTClass[] dtClass;
     private final int[] serial;
     private final boolean[] active;
+    private final int[] lastChangedTick;
     private final CloneableEntityState[] state;
 
     public ClientFrame(EngineType engineType, int tick) {
@@ -21,6 +22,7 @@ public class ClientFrame {
         this.dtClass = new DTClass[n];
         this.serial = new int[n];
         this.active = new boolean[n];
+        this.lastChangedTick = new int[n];
         this.state = new CloneableEntityState[n];
     }
 
@@ -29,6 +31,7 @@ public class ClientFrame {
         System.arraycopy(otherFrame.dtClass, idx, dtClass, idx, length);
         System.arraycopy(otherFrame.serial, idx, serial, idx, length);
         System.arraycopy(otherFrame.active, idx, active, idx, length);
+        System.arraycopy(otherFrame.lastChangedTick, idx, lastChangedTick, idx, length);
         System.arraycopy(otherFrame.state, idx, state, idx, length);
     }
 
@@ -37,6 +40,7 @@ public class ClientFrame {
         this.dtClass[eIdx] = dtClass;
         this.serial[eIdx] = serial;
         this.active[eIdx] = true;
+        this.lastChangedTick[eIdx] = tick;
         this.state[eIdx] = state.clone();
     }
 
@@ -45,6 +49,7 @@ public class ClientFrame {
         this.dtClass[eIdx] = oldFrame.dtClass[eIdx];
         this.serial[eIdx] = oldFrame.serial[eIdx];
         this.active[eIdx] = oldFrame.active[eIdx];
+        this.lastChangedTick[eIdx] = tick;
         this.state[eIdx] = oldFrame.state[eIdx].clone();
     }
 
@@ -53,6 +58,7 @@ public class ClientFrame {
         this.dtClass[eIdx] = null;
         this.serial[eIdx] = 0;
         this.active[eIdx] = false;
+        this.lastChangedTick[eIdx] = tick;
         this.state[eIdx] = null;
     }
 
@@ -82,6 +88,10 @@ public class ClientFrame {
 
     public boolean isActive(int idx) {
         return active[idx];
+    }
+
+    public int getLastChangedTick(int idx) {
+        return lastChangedTick[idx];
     }
 
     public CloneableEntityState getState(int idx) {
