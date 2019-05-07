@@ -274,8 +274,8 @@ public class Entities {
                     // UPDATE ENTITY
                     checkOldFrameValid("update", oldFrame, eIdx);
                     newFrame.updateExistingEntity(oldFrame, eIdx);
-                    logModification("UPDATE", newFrame, eIdx);
                     fieldReader.readFields(stream, newFrame.getDtClass(eIdx), newFrame.getState(eIdx), debug);
+                    logModification("UPDATE", newFrame, eIdx);
                     // TODO: raise evUpdated
                     break;
 
@@ -284,6 +284,7 @@ public class Entities {
                     checkOldFrameValid("leave", oldFrame, eIdx);
                     newFrame.copyFromOtherFrame(oldFrame, eIdx, 1);
                     newFrame.setActive(eIdx, false);
+                    logModification("LEAVE", newFrame, eIdx);
                     // TODO: raise evLeft
                     break;
 
@@ -299,7 +300,7 @@ public class Entities {
             eIdx++;
         }
 
-        if (false && engineType.handleDeletions() && message.getIsDelta()) {
+        if (engineType.handleDeletions() && message.getIsDelta()) {
             int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
             for (int i = 0; i < n; i++) {
                 eIdx = deletions[i];
@@ -316,7 +317,6 @@ public class Entities {
                 }
             }
         }
-
 
         log.debug("update finished for tick %d", newFrame.getTick());
 
