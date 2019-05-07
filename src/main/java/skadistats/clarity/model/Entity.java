@@ -8,11 +8,11 @@ import java.util.function.Supplier;
 public class Entity {
 
     private final int index;
-    private Supplier<ClientFrame> clientFrame;
+    private Supplier<ClientFrame> clientFrameSupplier;
 
-    public Entity(int index, Supplier<ClientFrame> clientFrame) {
+    public Entity(int index, Supplier<ClientFrame> clientFrameSupplier) {
         this.index = index;
-        this.clientFrame = clientFrame;
+        this.clientFrameSupplier = clientFrameSupplier;
     }
 
     public int getIndex() {
@@ -20,28 +20,28 @@ public class Entity {
     }
 
     public CloneableEntityState getState() {
-        return isValid() ? clientFrame.get().getState(index) : null;
+        return isValid() ? clientFrameSupplier.get().getState(index) : null;
     }
 
     public DTClass getDtClass() {
-        return isValid() ? clientFrame.get().getDtClass(index) : null;
+        return isValid() ? clientFrameSupplier.get().getDtClass(index) : null;
     }
 
     public int getSerial() {
-        return isValid() ? clientFrame.get().getSerial(index) : 0;
+        return isValid() ? clientFrameSupplier.get().getSerial(index) : 0;
     }
 
     public boolean isActive() {
-        return isValid() && clientFrame.get().isActive(index);
+        return isValid() && clientFrameSupplier.get().isActive(index);
     }
 
     public int getHandle() {
         // TODO: maybe return empty handle?
-        return isValid() ? clientFrame.get().getHandle(index) : 0;
+        return isValid() ? clientFrameSupplier.get().getHandle(index) : 0;
     }
 
     public boolean isValid() {
-        ClientFrame f = this.clientFrame.get();
+        ClientFrame f = this.clientFrameSupplier.get();
         return f != null && f.isValid(index);
     }
 
