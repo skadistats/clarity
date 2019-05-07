@@ -2,6 +2,8 @@ package skadistats.clarity.model;
 
 public class FieldPath implements Comparable<FieldPath> {
 
+    public static final FieldPath[] EMPTY_ARRAY = {};
+
     public final int[] path;
     public int last;
 
@@ -17,6 +19,12 @@ public class FieldPath implements Comparable<FieldPath> {
         System.arraycopy(elements, 0, path, 0, last + 1);
     }
 
+
+    public FieldPath(int[] elements, int last) {
+        path = new int[6];
+        this.last = last;
+        System.arraycopy(elements, 0, path, 0, last + 1);
+    }
 
     public FieldPath(FieldPath other) {
         path = new int[6];
