@@ -17,6 +17,7 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.state.ClientFrame;
 import skadistats.clarity.model.state.CloneableEntityState;
@@ -35,9 +36,12 @@ import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 @Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
@@ -49,30 +53,31 @@ public class Entities {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private int entityCount;
-    private FieldReader fieldReader;
+    private FieldReader<DTClass> fieldReader;
     private int[] deletions;
     private int serverTick;
     private LinkedList<ClientFrame> clientFrames = new LinkedList<>();
 
-    private class ClassBaseline {
-        private ByteString raw;
-        private CloneableEntityState state;
-        private void reset() {
-            raw = null;
-            state = null;
-        }
-    }
-    private ClassBaseline[] classBaselines;
-
+    private Map<Integer, ByteString> rawBaselines = new HashMap<>();
     private class Baseline {
         private int dtClassId = -1;
+        private Set<FieldPath> fieldPaths;
         private CloneableEntityState state;
         private void reset() {
             dtClassId = -1;
+            fieldPaths = null;
             state = null;
         }
+        private void copyFrom(Baseline other) {
+            this.dtClassId = other.dtClassId;
+            this.fieldPaths = other.fieldPaths;
+            this.state = other.state;
+        }
     }
-    private Baseline[][] baselines;
+    private Baseline[] classBaselines;
+    private Baseline[][] entityBaselines;
+
+    protected final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
     @Insert
     private EngineType engineType;
@@ -139,18 +144,18 @@ public class Entities {
 
         deletions = new int[entityCount];
 
-        baselines = new Baseline[entityCount][2];
+        entityBaselines = new Baseline[entityCount][2];
         for (int i = 0; i < entityCount; i++) {
-            baselines[i][0] = new Baseline();
-            baselines[i][1] = new Baseline();
+            entityBaselines[i][0] = new Baseline();
+            entityBaselines[i][1] = new Baseline();
         }
     }
 
     @OnDTClassesComplete
     public void onDTClassesComplete() {
-        classBaselines = new ClassBaseline[dtClasses.getClassCount()];
+        classBaselines = new Baseline[dtClasses.getClassCount()];
         for (int i = 0; i < classBaselines.length; i++) {
-            classBaselines[i] = new ClassBaseline();
+            classBaselines[i] = new Baseline();
         }
     }
 
@@ -160,17 +165,19 @@ public class Entities {
             for (int i = 0; i < classBaselines.length; i++) {
                 classBaselines[i].reset();
             }
-            for (int i = 0; i < baselines.length; i++) {
-                baselines[i][0].reset();
-                baselines[i][1].reset();
+            for (int i = 0; i < entityBaselines.length; i++) {
+                entityBaselines[i][0].reset();
+                entityBaselines[i][1].reset();
             }
         }
     }
 
     @OnStringTableEntry(BASELINE_TABLE)
     public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
+        Integer dtClassId = Integer.valueOf(key);
+        rawBaselines.put(dtClassId, value);
         if (classBaselines != null) {
-            classBaselines[Integer.valueOf(key)].reset();
+            classBaselines[dtClassId].reset();
         }
     }
 
@@ -204,9 +211,10 @@ public class Entities {
         }
 
         if (message.getUpdateBaseline()) {
-            for (Baseline[] baseline : baselines) {
-                // TODO: check if this is correct
-                baseline[1 - message.getBaseline()] = baseline[message.getBaseline()];
+            int iFrom = message.getBaseline();
+            int iTo = 1 - message.getBaseline();
+            for (Baseline[] baseline : entityBaselines) {
+                baseline[iTo].copyFrom(baseline[iFrom]);
             }
         }
 
@@ -216,6 +224,8 @@ public class Entities {
         int updateIndex;
         int updateType;
         int eIdx = 0;
+        Set<FieldPath> changedFieldPaths;
+        CloneableEntityState newState;
 
         while (true) {
             if (updateCount > 0) {
@@ -248,33 +258,50 @@ public class Entities {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
-                    if (oldFrame != null && oldFrame.isValid(eIdx) && oldFrame.getSerial(eIdx) == serial) {
-                        // same entity, only enter
-                        newFrame.updateExistingEntity(oldFrame, eIdx);
-                        fieldReader.readFields(stream, dtClass, newFrame.getState(eIdx), debug);
-                        newFrame.setActive(eIdx, true);
-                        logModification("ENTER", newFrame, eIdx);
-                        // TODO: raise evEntered
+                    changedFieldPaths = new HashSet<>();
+                    boolean isCreate = true;
+                    if (oldFrame != null && oldFrame.isValid(eIdx)) {
+                        if (oldFrame.getSerial(eIdx) == serial) {
+                            // same entity, only enter
+                            isCreate = false;
+                        } else {
+                            // recreate
+                            logModification("DELETE", oldFrame, eIdx);
+                        }
+                    }
+                    if (isCreate) {
+                        Baseline baseline = getBaseline(dtClassId, message.getBaseline(), eIdx, message.getIsDelta());
+                        newState = baseline.state.clone();
+                        changedFieldPaths.addAll(baseline.fieldPaths);
                     } else {
-                        // new entity
-                        CloneableEntityState newState = getBaseline(eIdx, dtClassId, message.getBaseline()).clone();
-                        fieldReader.readFields(stream, dtClass, newState, debug);
-                        newFrame.createNewEntity(eIdx, dtClass, serial, newState);
+                        newState = oldFrame.getState(eIdx).clone();
+                    }
+                    fieldReader.readFields(stream, dtClass, newState, changedFieldPaths::add, debug);
+                    if (isCreate) {
+                        newFrame.createNewEntity(eIdx, dtClass, serial, changedFieldPaths, newState);
                         logModification("CREATE", newFrame, eIdx);
                         // TODO: raise evCreated
                         // TODO: raise evEntered
+                    } else {
+                        newFrame.updateExistingEntity(oldFrame, eIdx, changedFieldPaths, newState);
+                        newFrame.setActive(eIdx, true);
+                        logModification("ENTER", newFrame, eIdx);
                     }
                     if (message.getUpdateBaseline()) {
-                        // TODO: properly update baseline
-                        //throw new UnsupportedOperationException("update baseline");
+                        Baseline baseline = entityBaselines[eIdx][1 - message.getBaseline()];
+                        baseline.dtClassId = dtClassId;
+                        baseline.state = newState.clone();
+                        baseline.fieldPaths = new HashSet<>(dtClass.collectFieldPaths(baseline.state));
                     }
                     break;
 
                 case 0:
                     // UPDATE ENTITY
                     checkOldFrameValid("update", oldFrame, eIdx);
-                    newFrame.updateExistingEntity(oldFrame, eIdx);
-                    fieldReader.readFields(stream, newFrame.getDtClass(eIdx), newFrame.getState(eIdx), debug);
+                    changedFieldPaths = new HashSet<>();
+                    newState = oldFrame.getState(eIdx).clone();
+                    fieldReader.readFields(stream, oldFrame.getDtClass(eIdx), newState, changedFieldPaths::add, debug);
+                    newFrame.updateExistingEntity(oldFrame, eIdx, changedFieldPaths, newState);
                     logModification("UPDATE", newFrame, eIdx);
                     // TODO: raise evUpdated
                     break;
@@ -320,6 +347,8 @@ public class Entities {
 
         log.debug("update finished for tick %d", newFrame.getTick());
 
+        ClientFrame lastFrame = getCurrentFrame();
+
         Iterator<ClientFrame> iter = clientFrames.iterator();
         while(iter.hasNext()) {
             ClientFrame frame = iter.next();
@@ -331,6 +360,70 @@ public class Entities {
         }
 
         clientFrames.add(newFrame);
+
+        if (evCreated.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!newFrame.isValid(i)) continue;
+                if (lastFrame != null && lastFrame.isValid(i)) {
+                    if (lastFrame.getSerial(i) == newFrame.getSerial(i)) {
+                        continue;
+                    }
+                    // TODO: raise deleted event because of recreation
+                }
+                evCreated.raise(getByIndex(i));
+            }
+        }
+        if (evEntered.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (newFrame.isActive(i) && (lastFrame == null || !lastFrame.isActive(i))) {
+                    evEntered.raise(getByIndex(i));
+                }
+            }
+        }
+        if (evUpdated.isListenedTo() && lastFrame != null) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!(lastFrame.isValid(i) && newFrame.isValid(i))) continue;
+                if (!(lastFrame.getLastChangedTick(i) < newFrame.getLastChangedTick(i))) continue;
+                Set<FieldPath> processedFieldPaths = new HashSet<>();
+                Entity e = getByIndex(i);
+                DTClass cls = e.getDtClass();
+                int n = 0;
+                List<ClientFrame> toProcess = this.clientFrames.subList(1, this.clientFrames.size());
+                for (ClientFrame clientFrame : toProcess) {
+                    changedFieldPaths = clientFrame.getChangedFieldPaths(i);
+                    if (changedFieldPaths != null) {
+                        for (FieldPath changedFieldPath : changedFieldPaths) {
+                            if (processedFieldPaths.contains(changedFieldPath)) continue;
+                            processedFieldPaths.add(changedFieldPath);
+                            Object v1 = cls.getValueForFieldPath(changedFieldPath, lastFrame.getState(i));
+                            Object v2 = cls.getValueForFieldPath(changedFieldPath, newFrame.getState(i));
+                            if ((v1 == null) ^ (v2 == null)) {
+                                updatedFieldPaths[n++] = changedFieldPath;
+                            } else if (v1 != null && !v1.equals(v2)) {
+                                updatedFieldPaths[n++] = changedFieldPath;
+                            }
+                        }
+                    }
+                }
+                if (n > 0) {
+                    evUpdated.raise(e, updatedFieldPaths, n);
+                }
+            }
+        }
+        if (evLeft.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!newFrame.isActive(i) && (lastFrame != null && lastFrame.isActive(i))) {
+                    evLeft.raise(getByIndex(i));
+                }
+            }
+        }
+        if (evDeleted.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!newFrame.isValid(i) && (lastFrame != null && lastFrame.isValid(i))) {
+                    evDeleted.raise(getByIndex(i));
+                }
+            }
+        }
 
         evUpdatesCompleted.raise();
     }
@@ -376,37 +469,46 @@ public class Entities {
         return lastFrame;
     }
 
-    private CloneableEntityState getBaseline(int entityIdx, int clsId, int baseline) {
-        Baseline b = baselines[entityIdx][baseline];
-        if (b.dtClassId == clsId && b.state != null) {
-            return b.state;
+    private Baseline getBaseline(int clsId, int baseline, int entityIdx, boolean delta) {
+        Baseline b;
+        if (delta) {
+            b = entityBaselines[entityIdx][baseline];
+            if (b.dtClassId == clsId && b.state != null) {
+                return b;
+            }
         }
-        ClassBaseline be = classBaselines[clsId];
-        if (be != null && be.state != null) {
-            return be.state;
+        b = classBaselines[clsId];
+        if (b.state != null) {
+            return b;
         }
         DTClass cls = dtClasses.forClassId(clsId);
         if (cls == null) {
             throw new ClarityException("DTClass for id %d not found.", clsId);
         }
-        if (be == null) {
+        b.state = cls.getEmptyState();
+        b.fieldPaths = new HashSet<>();
+        ByteString raw = rawBaselines.get(clsId);
+        if (raw == null) {
             throw new ClarityException("Baseline for class %s (%d) not found.", cls.getDtName(), clsId);
         }
-        be.state = cls.getEmptyState();
-        if (be.raw != null) {
-            BitStream stream = BitStream.createBitStream(be.raw);
-            fieldReader.readFields(stream, cls, be.state, false);
+        if (raw.size() > 0) {
+            BitStream stream = BitStream.createBitStream(raw);
+            fieldReader.readFields(stream, cls, b.state, b.fieldPaths::add, false);
         }
-        return be.state;
+        return b;
     }
 
     private Map<Integer, Entity> entityMap = new HashMap<>();
 
+    private ClientFrame getCurrentFrame() {
+        return !clientFrames.isEmpty() ? clientFrames.getLast() : null;
+    }
+
     public Entity getByIndex(int index) {
-        ClientFrame currentFrame = clientFrames.getLast();
+        ClientFrame currentFrame = getCurrentFrame();
         if (currentFrame == null || !currentFrame.isValid(index)) return null;
         int handle = currentFrame.getHandle(index);
-        return entityMap.computeIfAbsent(handle, h -> new Entity(index, clientFrames::getLast));
+        return entityMap.computeIfAbsent(handle, h -> new Entity(index, this::getCurrentFrame));
     }
 
     public Entity getByHandle(int handle) {

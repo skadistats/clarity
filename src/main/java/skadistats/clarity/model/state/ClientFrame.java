@@ -2,6 +2,9 @@ package skadistats.clarity.model.state;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.FieldPath;
+
+import java.util.Set;
 
 public class ClientFrame {
 
@@ -12,6 +15,7 @@ public class ClientFrame {
     private final int[] serial;
     private final boolean[] active;
     private final int[] lastChangedTick;
+    private final Set[] changedFieldPaths;
     private final CloneableEntityState[] state;
 
     public ClientFrame(EngineType engineType, int tick) {
@@ -23,6 +27,7 @@ public class ClientFrame {
         this.serial = new int[n];
         this.active = new boolean[n];
         this.lastChangedTick = new int[n];
+        this.changedFieldPaths = new Set[n];
         this.state = new CloneableEntityState[n];
     }
 
@@ -32,25 +37,28 @@ public class ClientFrame {
         System.arraycopy(otherFrame.serial, idx, serial, idx, length);
         System.arraycopy(otherFrame.active, idx, active, idx, length);
         System.arraycopy(otherFrame.lastChangedTick, idx, lastChangedTick, idx, length);
+        // no changed field paths (leave at null)
         System.arraycopy(otherFrame.state, idx, state, idx, length);
     }
 
-    public void createNewEntity(int eIdx, DTClass dtClass, int serial, CloneableEntityState state) {
+    public void createNewEntity(int eIdx, DTClass dtClass, int serial, Set<FieldPath> changedFieldPaths, CloneableEntityState state) {
         this.valid[eIdx] = true;
         this.dtClass[eIdx] = dtClass;
         this.serial[eIdx] = serial;
         this.active[eIdx] = true;
         this.lastChangedTick[eIdx] = tick;
-        this.state[eIdx] = state.clone();
+        this.changedFieldPaths[eIdx] = changedFieldPaths;
+        this.state[eIdx] = state;
     }
 
-    public void updateExistingEntity(ClientFrame oldFrame, int eIdx) {
+    public void updateExistingEntity(ClientFrame oldFrame, int eIdx, Set<FieldPath> changedFieldPaths, CloneableEntityState state) {
         this.valid[eIdx] = oldFrame.valid[eIdx];
         this.dtClass[eIdx] = oldFrame.dtClass[eIdx];
         this.serial[eIdx] = oldFrame.serial[eIdx];
         this.active[eIdx] = oldFrame.active[eIdx];
         this.lastChangedTick[eIdx] = tick;
-        this.state[eIdx] = oldFrame.state[eIdx].clone();
+        this.changedFieldPaths[eIdx] = changedFieldPaths;
+        this.state[eIdx] = state;
     }
 
     public void deleteEntity(int eIdx) {
@@ -59,6 +67,7 @@ public class ClientFrame {
         this.serial[eIdx] = 0;
         this.active[eIdx] = false;
         this.lastChangedTick[eIdx] = tick;
+        this.changedFieldPaths[eIdx] = null;
         this.state[eIdx] = null;
     }
 
@@ -92,6 +101,10 @@ public class ClientFrame {
 
     public int getLastChangedTick(int idx) {
         return lastChangedTick[idx];
+    }
+
+    public Set<FieldPath> getChangedFieldPaths(int idx) {
+        return changedFieldPaths[idx];
     }
 
     public CloneableEntityState getState(int idx) {

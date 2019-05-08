@@ -2,11 +2,13 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
+import java.util.function.Consumer;
 
 public abstract class S1FieldReader extends FieldReader<S1DTClass> {
 
@@ -28,7 +30,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public int readFields(BitStream bs, S1DTClass dtClass, EntityState state, boolean debug) {
+    public int readFields(BitStream bs, S1DTClass dtClass, EntityState state, Consumer<FieldPath> fieldPathConsumer, boolean debug) {
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());
@@ -58,6 +60,11 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                     debugTable.setData(ci, 9, bs.toString(offsBefore, bs.pos()));
                 }
 
+            }
+            if (fieldPathConsumer != null) {
+                for (int i = 0; i < n; i++) {
+                    fieldPathConsumer.accept(fieldPaths[i]);
+                }
             }
             return n;
         } finally {
