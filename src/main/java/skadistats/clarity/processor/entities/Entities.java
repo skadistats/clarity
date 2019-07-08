@@ -79,6 +79,10 @@ public class Entities {
 
     protected final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
+    private ClientFrame currentFrame;
+    private ClientFrame lastFrame;
+    private ClientFrame activeFrame;
+
     @Insert
     private EngineType engineType;
     @Insert
@@ -194,18 +198,22 @@ public class Entities {
             log.debug("processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s", serverTick, message.getDeltaFrom(), message.getUpdatedEntries(), message.getBaseline(), message.getUpdateBaseline());
         }
 
-        ClientFrame newFrame = new ClientFrame(engineType, serverTick);
-        ClientFrame oldFrame = null;
+        activeFrame = currentFrame;
+
+        lastFrame = currentFrame;
+        currentFrame = new ClientFrame(engineType, serverTick);
+
+        ClientFrame deltaFrame = null;
 
         if (message.getIsDelta()) {
             if (serverTick == message.getDeltaFrom()) {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
             }
-            oldFrame = getClientFrame(message.getDeltaFrom(), false);
-            if (oldFrame == null) {
+            deltaFrame = getClientFrame(message.getDeltaFrom(), false);
+            if (deltaFrame == null) {
                 throw new ClarityException("missing client frame for delta update from tick %d", message.getDeltaFrom());
             }
-            log.debug("performing delta update, using old frame from tick %d", oldFrame.getTick());
+            log.debug("performing delta update, using old frame from tick %d", deltaFrame.getTick());
         } else {
             log.debug("performing full update");
         }
@@ -235,8 +243,8 @@ public class Entities {
                 updateIndex = entityCount;
             }
             if (eIdx < updateIndex) {
-                if (oldFrame != null) {
-                    newFrame.copyFromOtherFrame(oldFrame, eIdx, updateIndex - eIdx);
+                if (deltaFrame != null) {
+                    currentFrame.copyFromOtherFrame(deltaFrame, eIdx, updateIndex - eIdx);
                 }
             }
             eIdx = updateIndex;
@@ -260,13 +268,13 @@ public class Entities {
                     }
                     changedFieldPaths = new HashSet<>();
                     boolean isCreate = true;
-                    if (oldFrame != null && oldFrame.isValid(eIdx)) {
-                        if (oldFrame.getSerial(eIdx) == serial) {
+                    if (deltaFrame != null && deltaFrame.isValid(eIdx)) {
+                        if (deltaFrame.getSerial(eIdx) == serial) {
                             // same entity, only enter
                             isCreate = false;
                         } else {
                             // recreate
-                            logModification("DELETE", oldFrame, eIdx);
+                            logModification("DELETE", deltaFrame, eIdx);
                         }
                     }
                     if (isCreate) {
@@ -274,18 +282,18 @@ public class Entities {
                         newState = baseline.state.clone();
                         changedFieldPaths.addAll(baseline.fieldPaths);
                     } else {
-                        newState = oldFrame.getState(eIdx).clone();
+                        newState = deltaFrame.getState(eIdx).clone();
                     }
                     fieldReader.readFields(stream, dtClass, newState, changedFieldPaths::add, debug);
                     if (isCreate) {
-                        newFrame.createNewEntity(eIdx, dtClass, serial, changedFieldPaths, newState);
-                        logModification("CREATE", newFrame, eIdx);
+                        currentFrame.createNewEntity(eIdx, dtClass, serial, changedFieldPaths, newState);
+                        logModification("CREATE", currentFrame, eIdx);
                         // TODO: raise evCreated
                         // TODO: raise evEntered
                     } else {
-                        newFrame.updateExistingEntity(oldFrame, eIdx, changedFieldPaths, newState);
-                        newFrame.setActive(eIdx, true);
-                        logModification("ENTER", newFrame, eIdx);
+                        currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
+                        currentFrame.setActive(eIdx, true);
+                        logModification("ENTER", currentFrame, eIdx);
                     }
                     if (message.getUpdateBaseline()) {
                         Baseline baseline = entityBaselines[eIdx][1 - message.getBaseline()];
@@ -297,28 +305,28 @@ public class Entities {
 
                 case 0:
                     // UPDATE ENTITY
-                    checkOldFrameValid("update", oldFrame, eIdx);
+                    checkOldFrameValid("update", deltaFrame, eIdx);
                     changedFieldPaths = new HashSet<>();
-                    newState = oldFrame.getState(eIdx).clone();
-                    fieldReader.readFields(stream, oldFrame.getDtClass(eIdx), newState, changedFieldPaths::add, debug);
-                    newFrame.updateExistingEntity(oldFrame, eIdx, changedFieldPaths, newState);
-                    logModification("UPDATE", newFrame, eIdx);
+                    newState = deltaFrame.getState(eIdx).clone();
+                    fieldReader.readFields(stream, deltaFrame.getDtClass(eIdx), newState, changedFieldPaths::add, debug);
+                    currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
+                    logModification("UPDATE", currentFrame, eIdx);
                     // TODO: raise evUpdated
                     break;
 
                 case 1:
                     // LEAVE ENTITY
-                    checkOldFrameValid("leave", oldFrame, eIdx);
-                    newFrame.copyFromOtherFrame(oldFrame, eIdx, 1);
-                    newFrame.setActive(eIdx, false);
-                    logModification("LEAVE", newFrame, eIdx);
+                    checkOldFrameValid("leave", deltaFrame, eIdx);
+                    currentFrame.copyFromOtherFrame(deltaFrame, eIdx, 1);
+                    currentFrame.setActive(eIdx, false);
+                    logModification("LEAVE", currentFrame, eIdx);
                     // TODO: raise evLeft
                     break;
 
                 case 3:
                     // DELETE ENTITY
-                    checkOldFrameValid("delete", oldFrame, eIdx);
-                    logModification("DELETE", oldFrame, eIdx);
+                    checkOldFrameValid("delete", deltaFrame, eIdx);
+                    logModification("DELETE", deltaFrame, eIdx);
                     // TODO: raise evLeft
                     // TODO: raise evDeleted
                     break;
@@ -331,23 +339,21 @@ public class Entities {
             int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
             for (int i = 0; i < n; i++) {
                 eIdx = deletions[i];
-                if (newFrame.isValid(eIdx)) {
+                if (currentFrame.isValid(eIdx)) {
                     log.debug("entity at index %d was ACTUALLY found when ordered to delete, tell the press!", eIdx);
-                    if (newFrame.isActive(eIdx)) {
-                        newFrame.setActive(eIdx, false);
+                    if (currentFrame.isActive(eIdx)) {
+                        currentFrame.setActive(eIdx, false);
                         // TODO: raise evLeft
                     }
                     // TODO: raise evDeleted
-                    newFrame.deleteEntity(eIdx);
+                    currentFrame.deleteEntity(eIdx);
                 } else {
                     log.debug("entity at index %d was not found when ordered to delete.", eIdx);
                 }
             }
         }
 
-        log.debug("update finished for tick %d", newFrame.getTick());
-
-        ClientFrame lastFrame = getCurrentFrame();
+        log.debug("update finished for tick %d", currentFrame.getTick());
 
         Iterator<ClientFrame> iter = clientFrames.iterator();
         while(iter.hasNext()) {
@@ -359,13 +365,30 @@ public class Entities {
             iter.remove();
         }
 
-        clientFrames.add(newFrame);
+        clientFrames.add(currentFrame);
+
+        if (evLeft.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!currentFrame.isActive(i) && (lastFrame != null && lastFrame.isActive(i))) {
+                    evLeft.raise(getByIndex(i));
+                }
+            }
+        }
+        if (evDeleted.isListenedTo()) {
+            for (int i = 0; i < entityCount; i++) {
+                if (!currentFrame.isValid(i) && (lastFrame != null && lastFrame.isValid(i))) {
+                    evDeleted.raise(getByIndex(i));
+                }
+            }
+        }
+
+        activeFrame = currentFrame;
 
         if (evCreated.isListenedTo()) {
             for (int i = 0; i < entityCount; i++) {
-                if (!newFrame.isValid(i)) continue;
+                if (!currentFrame.isValid(i)) continue;
                 if (lastFrame != null && lastFrame.isValid(i)) {
-                    if (lastFrame.getSerial(i) == newFrame.getSerial(i)) {
+                    if (lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
                         continue;
                     }
                     // TODO: raise deleted event because of recreation
@@ -375,15 +398,15 @@ public class Entities {
         }
         if (evEntered.isListenedTo()) {
             for (int i = 0; i < entityCount; i++) {
-                if (newFrame.isActive(i) && (lastFrame == null || !lastFrame.isActive(i))) {
+                if (currentFrame.isActive(i) && (lastFrame == null || !lastFrame.isActive(i))) {
                     evEntered.raise(getByIndex(i));
                 }
             }
         }
         if (evUpdated.isListenedTo() && lastFrame != null) {
             for (int i = 0; i < entityCount; i++) {
-                if (!(lastFrame.isValid(i) && newFrame.isValid(i))) continue;
-                if (!(lastFrame.getLastChangedTick(i) < newFrame.getLastChangedTick(i))) continue;
+                if (!(lastFrame.isValid(i) && currentFrame.isValid(i))) continue;
+                if (!(lastFrame.getLastChangedTick(i) < currentFrame.getLastChangedTick(i))) continue;
                 Set<FieldPath> processedFieldPaths = new HashSet<>();
                 Entity e = getByIndex(i);
                 DTClass cls = e.getDtClass();
@@ -396,7 +419,7 @@ public class Entities {
                             if (processedFieldPaths.contains(changedFieldPath)) continue;
                             processedFieldPaths.add(changedFieldPath);
                             Object v1 = cls.getValueForFieldPath(changedFieldPath, lastFrame.getState(i));
-                            Object v2 = cls.getValueForFieldPath(changedFieldPath, newFrame.getState(i));
+                            Object v2 = cls.getValueForFieldPath(changedFieldPath, currentFrame.getState(i));
                             if ((v1 == null) ^ (v2 == null)) {
                                 updatedFieldPaths[n++] = changedFieldPath;
                             } else if (v1 != null && !v1.equals(v2)) {
@@ -407,20 +430,6 @@ public class Entities {
                 }
                 if (n > 0) {
                     evUpdated.raise(e, updatedFieldPaths, n);
-                }
-            }
-        }
-        if (evLeft.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!newFrame.isActive(i) && (lastFrame != null && lastFrame.isActive(i))) {
-                    evLeft.raise(getByIndex(i));
-                }
-            }
-        }
-        if (evDeleted.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!newFrame.isValid(i) && (lastFrame != null && lastFrame.isValid(i))) {
-                    evDeleted.raise(getByIndex(i));
                 }
             }
         }
@@ -500,15 +509,10 @@ public class Entities {
 
     private Map<Integer, Entity> entityMap = new HashMap<>();
 
-    private ClientFrame getCurrentFrame() {
-        return !clientFrames.isEmpty() ? clientFrames.getLast() : null;
-    }
-
     public Entity getByIndex(int index) {
-        ClientFrame currentFrame = getCurrentFrame();
-        if (currentFrame == null || !currentFrame.isValid(index)) return null;
+        if (activeFrame == null || !activeFrame.isValid(index)) return null;
         int handle = currentFrame.getHandle(index);
-        return entityMap.computeIfAbsent(handle, h -> new Entity(index, this::getCurrentFrame));
+        return entityMap.computeIfAbsent(handle, h -> new Entity(index, () -> activeFrame));
     }
 
     public Entity getByHandle(int handle) {
