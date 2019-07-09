@@ -35,6 +35,8 @@ import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -77,11 +79,15 @@ public class Entities {
     private Baseline[] classBaselines;
     private Baseline[][] entityBaselines;
 
-    protected final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
+    private final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
     private ClientFrame currentFrame;
     private ClientFrame lastFrame;
     private ClientFrame activeFrame;
+    private ClientFrame deltaFrame;
+
+    private List<Runnable> lastFrameEvents = new ArrayList<>();
+    private List<Runnable> currentFrameEvents = new ArrayList<>();
 
     @Insert
     private EngineType engineType;
@@ -198,13 +204,10 @@ public class Entities {
             log.debug("processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s", serverTick, message.getDeltaFrom(), message.getUpdatedEntries(), message.getBaseline(), message.getUpdateBaseline());
         }
 
-        activeFrame = currentFrame;
-
         lastFrame = currentFrame;
         currentFrame = new ClientFrame(engineType, serverTick);
 
-        ClientFrame deltaFrame = null;
-
+        deltaFrame = null;
         if (message.getIsDelta()) {
             if (serverTick == message.getDeltaFrom()) {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
@@ -213,7 +216,7 @@ public class Entities {
             if (deltaFrame == null) {
                 throw new ClarityException("missing client frame for delta update from tick %d", message.getDeltaFrom());
             }
-            log.debug("performing delta update, using old frame from tick %d", deltaFrame.getTick());
+            log.debug("performing delta update, using previous frame from tick %d", deltaFrame.getTick());
         } else {
             log.debug("performing full update");
         }
@@ -275,6 +278,8 @@ public class Entities {
                         } else {
                             // recreate
                             logModification("DELETE", deltaFrame, eIdx);
+                            emitLeftEvent(eIdx);
+                            emitDeletedEvent(eIdx);
                         }
                     }
                     if (isCreate) {
@@ -288,12 +293,13 @@ public class Entities {
                     if (isCreate) {
                         currentFrame.createNewEntity(eIdx, dtClass, serial, changedFieldPaths, newState);
                         logModification("CREATE", currentFrame, eIdx);
-                        // TODO: raise evCreated
-                        // TODO: raise evEntered
+                        emitCreatedEvent(eIdx);
+                        emitEnteredEvent(eIdx);
                     } else {
                         currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
                         currentFrame.setActive(eIdx, true);
                         logModification("ENTER", currentFrame, eIdx);
+                        emitEnteredEvent(eIdx);
                     }
                     if (message.getUpdateBaseline()) {
                         Baseline baseline = entityBaselines[eIdx][1 - message.getBaseline()];
@@ -305,30 +311,30 @@ public class Entities {
 
                 case 0:
                     // UPDATE ENTITY
-                    checkOldFrameValid("update", deltaFrame, eIdx);
+                    checkDeltaFrameValid("update", eIdx);
                     changedFieldPaths = new HashSet<>();
                     newState = deltaFrame.getState(eIdx).clone();
                     fieldReader.readFields(stream, deltaFrame.getDtClass(eIdx), newState, changedFieldPaths::add, debug);
                     currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
                     logModification("UPDATE", currentFrame, eIdx);
-                    // TODO: raise evUpdated
+                    emitUpdatedEvent(eIdx);
                     break;
 
                 case 1:
                     // LEAVE ENTITY
-                    checkOldFrameValid("leave", deltaFrame, eIdx);
+                    checkDeltaFrameValid("leave", eIdx);
                     currentFrame.copyFromOtherFrame(deltaFrame, eIdx, 1);
                     currentFrame.setActive(eIdx, false);
                     logModification("LEAVE", currentFrame, eIdx);
-                    // TODO: raise evLeft
+                    emitLeftEvent(eIdx);
                     break;
 
                 case 3:
                     // DELETE ENTITY
-                    checkOldFrameValid("delete", deltaFrame, eIdx);
+                    checkDeltaFrameValid("delete", eIdx);
                     logModification("DELETE", deltaFrame, eIdx);
-                    // TODO: raise evLeft
-                    // TODO: raise evDeleted
+                    emitLeftEvent(eIdx);
+                    emitDeletedEvent(eIdx);
                     break;
             }
 
@@ -343,9 +349,9 @@ public class Entities {
                     log.debug("entity at index %d was ACTUALLY found when ordered to delete, tell the press!", eIdx);
                     if (currentFrame.isActive(eIdx)) {
                         currentFrame.setActive(eIdx, false);
-                        // TODO: raise evLeft
+                        emitLeftEvent(eIdx);
                     }
-                    // TODO: raise evDeleted
+                    emitDeletedEvent(eIdx);
                     currentFrame.deleteEntity(eIdx);
                 } else {
                     log.debug("entity at index %d was not found when ordered to delete.", eIdx);
@@ -367,91 +373,84 @@ public class Entities {
 
         clientFrames.add(currentFrame);
 
-        if (evLeft.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!currentFrame.isActive(i) && (lastFrame != null && lastFrame.isActive(i))) {
-                    evLeft.raise(getByIndex(i));
-                }
-            }
-        }
-        if (evDeleted.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!currentFrame.isValid(i) && (lastFrame != null && lastFrame.isValid(i))) {
-                    evDeleted.raise(getByIndex(i));
-                }
-            }
-        }
+        activeFrame = lastFrame;
+        lastFrameEvents.forEach(Runnable::run);
+        lastFrameEvents.clear();
 
         activeFrame = currentFrame;
-
-        if (evCreated.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!currentFrame.isValid(i)) continue;
-                if (lastFrame != null && lastFrame.isValid(i)) {
-                    if (lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
-                        continue;
-                    }
-                    // TODO: raise deleted event because of recreation
-                }
-                evCreated.raise(getByIndex(i));
-            }
-        }
-        if (evEntered.isListenedTo()) {
-            for (int i = 0; i < entityCount; i++) {
-                if (currentFrame.isActive(i) && (lastFrame == null || !lastFrame.isActive(i))) {
-                    evEntered.raise(getByIndex(i));
-                }
-            }
-        }
-        if (evUpdated.isListenedTo() && lastFrame != null) {
-            for (int i = 0; i < entityCount; i++) {
-                if (!(lastFrame.isValid(i) && currentFrame.isValid(i))) continue;
-                if (!(lastFrame.getLastChangedTick(i) < currentFrame.getLastChangedTick(i))) continue;
-                Set<FieldPath> processedFieldPaths = new HashSet<>();
-                Entity e = getByIndex(i);
-                DTClass cls = e.getDtClass();
-                int n = 0;
-                List<ClientFrame> toProcess = this.clientFrames.subList(1, this.clientFrames.size());
-                for (ClientFrame clientFrame : toProcess) {
-                    changedFieldPaths = clientFrame.getChangedFieldPaths(i);
-                    if (changedFieldPaths != null) {
-                        for (FieldPath changedFieldPath : changedFieldPaths) {
-                            if (processedFieldPaths.contains(changedFieldPath)) continue;
-                            processedFieldPaths.add(changedFieldPath);
-                            Object v1 = cls.getValueForFieldPath(changedFieldPath, lastFrame.getState(i));
-                            Object v2 = cls.getValueForFieldPath(changedFieldPath, currentFrame.getState(i));
-                            if ((v1 == null) ^ (v2 == null)) {
-                                updatedFieldPaths[n++] = changedFieldPath;
-                            } else if (v1 != null && !v1.equals(v2)) {
-                                updatedFieldPaths[n++] = changedFieldPath;
-                            }
-                        }
-                    }
-                }
-                if (n > 0) {
-                    evUpdated.raise(e, updatedFieldPaths, n);
-                }
-            }
-        }
+        currentFrameEvents.forEach(Runnable::run);
+        currentFrameEvents.clear();
 
         evUpdatesCompleted.raise();
     }
 
-    private void checkOldFrameValid(String which, ClientFrame oldFrame, int eIdx) {
-        if (oldFrame == null) {
-            throw new ClarityException("no old frame on entity %s", which);
+    private void emitCreatedEvent(int i) {
+        if (!evCreated.isListenedTo()) return;
+        currentFrameEvents.add(() -> evCreated.raise(getByIndex(i)));
+    }
+
+    private void emitEnteredEvent(int i) {
+        if (!evEntered.isListenedTo()) return;
+        currentFrameEvents.add(() -> evEntered.raise(getByIndex(i)));
+    }
+
+    private void emitUpdatedEvent(int i) {
+        if (!evUpdated.isListenedTo()) return;
+        currentFrameEvents.add(() -> {
+            Set<FieldPath> processedFieldPaths = new HashSet<>();
+            Entity e = getByIndex(i);
+            DTClass cls = e.getDtClass();
+            int n = 0;
+            List<ClientFrame> toProcess = this.clientFrames.subList(1, this.clientFrames.size());
+            for (ClientFrame clientFrame : toProcess) {
+                Set<FieldPath> changedFieldPaths = clientFrame.getChangedFieldPaths(i);
+                if (changedFieldPaths != null) {
+                    for (FieldPath changedFieldPath : changedFieldPaths) {
+                        if (processedFieldPaths.contains(changedFieldPath)) continue;
+                        processedFieldPaths.add(changedFieldPath);
+                        Object v1 = cls.getValueForFieldPath(changedFieldPath, lastFrame.getState(i));
+                        Object v2 = cls.getValueForFieldPath(changedFieldPath, currentFrame.getState(i));
+                        if ((v1 == null) ^ (v2 == null)) {
+                            updatedFieldPaths[n++] = changedFieldPath;
+                        } else if (v1 != null && !v1.equals(v2)) {
+                            updatedFieldPaths[n++] = changedFieldPath;
+                        }
+                    }
+                }
+            }
+            Arrays.sort(updatedFieldPaths, 0, n);
+            if (n > 0) {
+                evUpdated.raise(e, updatedFieldPaths, n);
+            }
+        });
+    }
+
+    private void emitLeftEvent(int i) {
+        if (!evLeft.isListenedTo()) return;
+        lastFrameEvents.add(() -> evLeft.raise(getByIndex(i)));
+    }
+
+    private void emitDeletedEvent(int i) {
+        if (!evDeleted.isListenedTo()) return;
+        lastFrameEvents.add(() -> evDeleted.raise(getByIndex(i)));
+    }
+
+    private void checkDeltaFrameValid(String which, int eIdx) {
+        if (deltaFrame == null) {
+            throw new ClarityException("no delta frame on entity %s", which);
         }
-        if (!oldFrame.isValid(eIdx)) {
-            throw new ClarityException("entity at index %d was not found for %s", eIdx, which);
+        if (!deltaFrame.isValid(eIdx)) {
+            throw new ClarityException("entity at index %d was not found in delta frame for %s", eIdx, which);
         }
     }
 
     private void logModification(String which, ClientFrame frame, int eIdx) {
         if (!log.isDebugEnabled()) return;
-        log.debug("\t%6s: index: %4d, serial: %03x, class: %s",
+        log.debug("\t%6s: index: %4d, serial: %03x, handle: %d, class: %s",
                 which,
                 eIdx,
                 frame.getSerial(eIdx),
+                frame.getHandle(eIdx),
                 frame.getDtClass(eIdx).getDtName()
         );
     }
