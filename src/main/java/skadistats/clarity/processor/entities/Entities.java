@@ -406,6 +406,18 @@ public class Entities {
         }
     }
 
+    private void raiseChangeEvents() {
+        activeFrame = lastFrame;
+        lastFrameEvents.forEach(Runnable::run);
+        lastFrameEvents.clear();
+
+        activeFrame = currentFrame;
+        currentFrameEvents.forEach(Runnable::run);
+        currentFrameEvents.clear();
+
+        evUpdatesCompleted.raise();
+    }
+
     private void emitCreatedEvent(int i) {
         if (!evCreated.isListenedTo()) return;
         currentFrameEvents.add(() -> evCreated.raise(getByIndex(i)));
@@ -444,18 +456,6 @@ public class Entities {
                 evUpdated.raise(getByIndex(i), updatedFieldPaths, n);
             }
         });
-    }
-
-    private void raiseChangeEvents() {
-        activeFrame = lastFrame;
-        lastFrameEvents.forEach(Runnable::run);
-        lastFrameEvents.clear();
-
-        activeFrame = currentFrame;
-        currentFrameEvents.forEach(Runnable::run);
-        currentFrameEvents.clear();
-
-        evUpdatesCompleted.raise();
     }
 
     private void emitLeftEvent(int i) {
