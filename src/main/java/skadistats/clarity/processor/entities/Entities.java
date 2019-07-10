@@ -65,7 +65,6 @@ public class Entities {
         private int dtClassId = -1;
         private CloneableEntityState state;
         private void reset() {
-            dtClassId = -1;
             state = null;
         }
         private void copyFrom(Baseline other) {
@@ -163,6 +162,7 @@ public class Entities {
         classBaselines = new Baseline[dtClasses.getClassCount()];
         for (int i = 0; i < classBaselines.length; i++) {
             classBaselines[i] = new Baseline();
+            classBaselines[i].dtClassId = i;
         }
     }
 
