@@ -421,7 +421,10 @@ public class Entities {
         currentFrameEvents.add(() -> {
             Set<FieldPath> processedFieldPaths = new TreeSet<>();
             for (ClientFrame cf : clientFrames.subList(1, this.clientFrames.size())) {
-                processedFieldPaths.addAll(cf.getChangedFieldPaths(i));
+                Set<FieldPath> changedFieldPaths = cf.getChangedFieldPaths(i);
+                if (changedFieldPaths != null) {
+                    processedFieldPaths.addAll(changedFieldPaths);
+                }
             }
 
             DTClass cls = currentFrame.getDtClass(i);
