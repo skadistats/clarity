@@ -68,14 +68,31 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void setSingleEntry(StringTable table, int mode, int index, String name, ByteString value) {
-        if (name.isEmpty() && table.hasIndex(index)) {
+    protected void setSingleEntry(StringTable table, int mode, int index, Demo.CDemoStringTables.items_tOrBuilder it) {
+        String name = null;
+        if (it.hasStr()) {
+            name = it.getStr();
+        } else {
             // With console recorded replays, the replay sometimes has no name entry,
             // and supposedly expects us to use the one that is existing
             // see: https://github.com/skadistats/clarity/issues/147#issuecomment-409619763
             //      and Slack communication with Lukas
             // reuse the old key, and see if that works
-            name = table.getNameByIndex(index);
+
+            // 10.07.2019: Only do this if the mode is update (not CreateStringTable)
+            if (mode == 2 && table.hasIndex(index)) {
+                name = table.getNameByIndex(index);
+            }
+        }
+        ByteString value = null;
+        if (it.hasData()) {
+            value = it.getData();
+        } else {
+            // 10.07.2019: CSGO console recorded replay sometimes have no data, and want us to use the old data
+            // as well
+            if (mode == 2 && table.hasIndex(index)) {
+                value = table.getValueByIndex(index);
+            }
         }
         table.set(mode, index, name, value);
         raise(table, index, name, value);
@@ -105,7 +122,7 @@ public class BaseStringTableEmitter {
                 if (tt != null) {
                     for (int i = 0; i < tt.getItemsCount(); i++) {
                         Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                        setSingleEntry(table, 2, i, it.getStr(), it.getData());
+                        setSingleEntry(table, 2, i, it);
                     }
                 } else {
                     for (int i = 0; i < table.getEntryCount(); i++) {
@@ -125,7 +142,7 @@ public class BaseStringTableEmitter {
             }
             for (int i = 0; i < tt.getItemsCount(); i++) {
                 Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                setSingleEntry(table, 2, i, it.getStr(), it.getData());
+                setSingleEntry(table, 2, i, it);
             }
         }
     }

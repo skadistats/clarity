@@ -13,6 +13,7 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.LZSS;
+import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
@@ -80,6 +81,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
 
         int index = -1;
         StringBuilder nameBuf = new StringBuilder();
+        Demo.CDemoStringTables.items_t.Builder it = Demo.CDemoStringTables.items_t.newBuilder();
         while (numEntries-- > 0) {
             // read index
             if (stream.readBitFlag()) {
@@ -88,8 +90,9 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 index = stream.readVarUInt() + 1;
             }
             // read name
-            nameBuf.setLength(0);
+            it.clearStr();
             if (stream.readBitFlag()) {
+                nameBuf.setLength(0);
                 if (stream.readBitFlag()) {
                     int basis = stream.readUBitInt(5);
                     int length = stream.readUBitInt(5);
@@ -110,9 +113,10 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     keyHistory.remove(0);
                 }
                 keyHistory.add(nameBuf.toString());
+                it.setStr(nameBuf.toString());
             }
             // read value
-            ByteString value = null;
+            it.clearData();
             if (stream.readBitFlag()) {
                 boolean isCompressed = false;
                 int bitLength;
@@ -137,10 +141,9 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     valueBuf = new byte[byteLength];
                     stream.readBitsIntoByteArray(valueBuf, bitLength);
                 }
-
-                value = ZeroCopy.wrap(valueBuf);
+                it.setData(ZeroCopy.wrap(valueBuf));
             }
-            setSingleEntry(table, mode, index, nameBuf.toString(), value);
+            setSingleEntry(table, mode, index, it);
         }
     }
 

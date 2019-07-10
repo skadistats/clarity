@@ -9,6 +9,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
@@ -51,6 +52,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         boolean mysteryFlag = stream.readBitFlag();
         int index = -1;
         StringBuilder nameBuf = new StringBuilder();
+        Demo.CDemoStringTables.items_t.Builder it = Demo.CDemoStringTables.items_t.newBuilder();
         while (numEntries-- > 0) {
             // read index
             if (stream.readBitFlag()) {
@@ -59,8 +61,9 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 index = stream.readUBitInt(bitsPerIndex);
             }
             // read name
-            nameBuf.setLength(0);
+            it.clearStr();
             if (stream.readBitFlag()) {
+                nameBuf.setLength(0);
                 if (mysteryFlag && stream.readBitFlag()) {
                     throw new ClarityException("mystery_flag assert failed!");
                 }
@@ -76,9 +79,10 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                     keyHistory.remove(0);
                 }
                 keyHistory.add(nameBuf.toString());
+                it.setStr(nameBuf.toString());
             }
             // read value
-            ByteString value = null;
+            it.clearData();
             if (stream.readBitFlag()) {
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
@@ -88,9 +92,9 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 }
                 byte[] valueBuf = new byte[(bitLength + 7) / 8];
                 stream.readBitsIntoByteArray(valueBuf, bitLength);
-                value = ZeroCopy.wrap(valueBuf);
+                it.setData(ZeroCopy.wrap(valueBuf));
             }
-            setSingleEntry(table, mode, index, nameBuf.toString(), value);
+            setSingleEntry(table, mode, index, it);
         }
     }
 
