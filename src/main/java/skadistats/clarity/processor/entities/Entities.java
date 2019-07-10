@@ -476,7 +476,7 @@ public class Entities {
 
     private void logModification(String which, ClientFrame frame, int eIdx) {
         if (!log.isDebugEnabled()) return;
-        log.debug("\t%6s: index: %4d, serial: %03x, handle: %d, class: %s",
+        log.debug("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
                 which,
                 eIdx,
                 frame.getSerial(eIdx),
