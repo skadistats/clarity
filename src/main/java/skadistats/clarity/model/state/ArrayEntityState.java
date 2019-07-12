@@ -128,7 +128,7 @@ public class ArrayEntityState implements CloneableEntityState {
 
         @Override
         public Object get(int idx) {
-            return state[idx];
+            return state.length > idx ? state[idx] : null;
         }
 
         @Override
