@@ -290,7 +290,15 @@ public class Entities {
         removeObsoleteClientFrames(message.getDeltaFrom());
         clientFrames.add(currentFrame);
 
-        raiseChangeEvents();
+        activeFrame = lastFrame;
+        lastFrameEvents.forEach(Runnable::run);
+        lastFrameEvents.clear();
+
+        activeFrame = currentFrame;
+        currentFrameEvents.forEach(Runnable::run);
+        currentFrameEvents.clear();
+
+        evUpdatesCompleted.raise();
     }
 
     private void processEntityCreate(int eIdx, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
@@ -404,18 +412,6 @@ public class Entities {
             log.debug("deleting client frame for tick %d", frame.getTick());
             iter.remove();
         }
-    }
-
-    private void raiseChangeEvents() {
-        activeFrame = lastFrame;
-        lastFrameEvents.forEach(Runnable::run);
-        lastFrameEvents.clear();
-
-        activeFrame = currentFrame;
-        currentFrameEvents.forEach(Runnable::run);
-        currentFrameEvents.clear();
-
-        evUpdatesCompleted.raise();
     }
 
     private void emitCreatedEvent(int i) {
