@@ -260,22 +260,15 @@ public class Entities {
             updateType = stream.readUBitInt(2);
             switch (updateType) {
                 case 2:
-                    // CREATE ENTITY
                     processEntityCreate(eIdx, message, stream);
                     break;
-
                 case 0:
-                    // UPDATE ENTITY
                     processEntityUpdate(eIdx, stream);
                     break;
-
                 case 1:
-                    // LEAVE ENTITY
                     processEntityLeave(eIdx);
                     break;
-
                 case 3:
-                    // DELETE ENTITY
                     processEntityDelete(eIdx);
                     break;
             }
