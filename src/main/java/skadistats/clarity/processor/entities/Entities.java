@@ -409,11 +409,21 @@ public class Entities {
 
     private void emitCreatedEvent(int i) {
         if (!evCreated.isListenedTo()) return;
-        currentFrameEvents.add(() -> evCreated.raise(getByIndex(i)));
+        if (lastFrame != null && lastFrame.isValid(i)) {
+            // double create event -> emulate an update
+            currentFrame.setChangedFieldPaths(
+                    i,
+                    new TreeSet<>(currentFrame.getDtClass(i).collectFieldPaths(currentFrame.getState(i)))
+            );
+            emitUpdatedEvent(i);
+        } else {
+            currentFrameEvents.add(() -> evCreated.raise(getByIndex(i)));
+        }
     }
 
     private void emitEnteredEvent(int i) {
         if (!evEntered.isListenedTo()) return;
+        if (lastFrame != null && lastFrame.isValid(i) && lastFrame.isActive(i)) return;
         currentFrameEvents.add(() -> evEntered.raise(getByIndex(i)));
     }
 
@@ -449,20 +459,14 @@ public class Entities {
 
     private void emitLeftEvent(int i) {
         if (!evLeft.isListenedTo()) return;
-        lastFrameEvents.add(() -> {
-            if (lastFrame != null && lastFrame.isValid(i) && lastFrame.isActive(i)) {
-                evLeft.raise(getByIndex(i));
-            }
-        });
+        if (lastFrame == null || !lastFrame.isValid(i) || !lastFrame.isActive(i)) return;
+        lastFrameEvents.add(() -> evLeft.raise(getByIndex(i)));
     }
 
     private void emitDeletedEvent(int i) {
         if (!evDeleted.isListenedTo()) return;
-        lastFrameEvents.add(() -> {
-            if (lastFrame != null && lastFrame.isValid(i)) {
-                evDeleted.raise(getByIndex(i));
-            }
-        });
+        if (lastFrame == null || !lastFrame.isValid(i)) return;
+        lastFrameEvents.add(() -> evDeleted.raise(getByIndex(i)));
     }
 
     private void checkDeltaFrameValid(String which, int eIdx) {

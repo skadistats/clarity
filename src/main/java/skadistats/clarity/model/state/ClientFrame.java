@@ -75,6 +75,10 @@ public class ClientFrame {
         this.active[eIdx] = active;
     }
 
+    public void setChangedFieldPaths(int idx, Set<FieldPath> changedFieldPaths) {
+        this.changedFieldPaths[idx] = changedFieldPaths;
+    }
+
     public int getTick() {
         return tick;
     }
