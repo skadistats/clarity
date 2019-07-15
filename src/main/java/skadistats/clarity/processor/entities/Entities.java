@@ -318,8 +318,10 @@ public class Entities {
             } else {
                 // recreate
                 logModification("DELETE", deltaFrame, eIdx);
-                emitLeftEvent(eIdx);
-                emitDeletedEvent(eIdx);
+                if (lastFrame.getSerial(eIdx) != serial) {
+                    emitLeftEvent(eIdx);
+                    emitDeletedEvent(eIdx);
+                }
             }
         }
         if (isCreate) {
@@ -409,7 +411,7 @@ public class Entities {
 
     private void emitCreatedEvent(int i) {
         if (!evCreated.isListenedTo()) return;
-        if (lastFrame != null && lastFrame.isValid(i)) {
+        if (lastFrame != null && lastFrame.isValid(i) && lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
             // double create event -> emulate an update
             currentFrame.setChangedFieldPaths(
                     i,
