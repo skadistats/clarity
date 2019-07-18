@@ -1,49 +1,37 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.model.state.CloneableEntityState;
+
 public class Entity {
 
-    private final EngineType engineType;
-    private final int index;
-    private final int serial;
-    private final DTClass dtClass;
-    private boolean active;
-    private final Object[] state;
+    private final EntityStateSupplier stateSupplier;
 
-    public Entity(EngineType engineType, int index, int serial, DTClass dtClass, boolean active, Object[] state) {
-        this.engineType = engineType;
-        this.index = index;
-        this.serial = serial;
-        this.dtClass = dtClass;
-        this.active = active;
-        this.state = state;
+    public Entity(EntityStateSupplier stateSupplier) {
+        this.stateSupplier = stateSupplier;
     }
 
     public int getIndex() {
-        return index;
+        return stateSupplier.getIndex();
     }
 
-    public int getSerial() {
-        return serial;
-    }
-    
-    public int getHandle() {
-        return engineType.handleForIndexAndSerial(index, serial);
+    public CloneableEntityState getState() {
+        return stateSupplier.getState();
     }
 
     public DTClass getDtClass() {
-        return dtClass;
+        return stateSupplier.getDTClass();
+    }
+
+    public int getSerial() {
+        return stateSupplier.getSerial();
     }
 
     public boolean isActive() {
-        return active;
+        return stateSupplier.isActive();
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Object[] getState() {
-        return state;
+    public int getHandle() {
+        return stateSupplier.getHandle();
     }
 
     /**
@@ -53,7 +41,7 @@ public class Entity {
      * @return True, if and only if the given property is present in this entity
      */
     public boolean hasProperty(String property) {
-        return dtClass.getFieldPathForName(property) != null;
+        return getDtClass().getFieldPathForName(property) != null;
     }
 
     /**
@@ -73,7 +61,7 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        FieldPath fp = dtClass.getFieldPathForName(property);
+        FieldPath fp = getDtClass().getFieldPathForName(property);
         if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
@@ -81,13 +69,13 @@ public class Entity {
     }
 
     public <T> T getPropertyForFieldPath(FieldPath fp) {
-        return (T) dtClass.getValueForFieldPath(fp, state);
+        return (T) getDtClass().getValueForFieldPath(fp, getState());
     }
 
     @Override
     public String toString() {
-        String title = "idx: " + index + ", serial: " + serial + ", class: " + dtClass.getDtName();
-        return dtClass.dumpState(title, state);
+        String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
+        return getDtClass().dumpState(title, getState());
     }
 
 }

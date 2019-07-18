@@ -6,6 +6,7 @@ import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.EntityState;
 
 import java.util.List;
 
@@ -21,8 +22,8 @@ public class VarArrayField extends Field {
     }
 
     @Override
-    public Object getInitialState() {
-        return null;
+    public void initInitialState(EntityState state, int idx) {
+        state.set(idx, null);
     }
 
     @Override
@@ -61,26 +62,29 @@ public class VarArrayField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, Object[] state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
         assert fp.last == pos || fp.last == pos + 1;
-        Object[] subState = (Object[]) state[fp.path[pos]];
+        EntityState subState = state.sub(fp.path[pos]);
         if (fp.last == pos) {
-            return subState.length;
+            return subState.length();
+        } else if (subState.has(fp.path[pos + 1])) {
+            return subState.get(fp.path[pos + 1]);
         } else {
-            return subState[fp.path[pos + 1]];
+            return null;
         }
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, Object[] state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
         assert fp.last == pos || fp.last == pos + 1;
         int i = fp.path[pos];
+        EntityState subState = state.sub(i);
         if (fp.last == pos) {
-            ensureSubStateCapacity(state, i, (Integer) value, true);
+            subState.capacity((Integer) value, true);
         } else {
             int j = fp.path[pos + 1];
-            Object[] subState = ensureSubStateCapacity(state, i, j + 1, false);
-            subState[j] = value;
+            subState.capacity(j + 1, false);
+            subState.set(j, value);
         }
     }
 
@@ -94,29 +98,29 @@ public class VarArrayField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, Object[] state) {
-        Object[] subState = (Object[]) state[fp.path[fp.last]];
+    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
+        EntityState subState = state.sub(fp.path[fp.last]);
         fp.last++;
-        for (int i = 0; i < subState.length; i++) {
-            if (subState[i] != null) {
+        for (int i = 0; i < subState.length(); i++) {
+            if (subState.has(i)) {
                 fp.path[fp.last] = i;
-                entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName(), Util.arrayIdxToString(i)), subState[i]));
+                entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName(), Util.arrayIdxToString(i)), subState.get(i)));
             }
         }
         fp.last--;
     }
 
     @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, Object[] state) {
-        Object[] subState = (Object[]) state[fp.path[fp.last]];
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
+        EntityState subState = state.sub(fp.path[fp.last]);
         fp.last++;
-        for (int i = 0; i < subState.length; i++) {
-            if (subState[i] != null) {
+        for (int i = 0; i < subState.length(); i++) {
+            if (subState.has(i)) {
                 fp.path[fp.last] = i;
                 entries.add(new FieldPath(fp));
             }
         }
         fp.last--;
-
     }
+
 }

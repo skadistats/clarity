@@ -1,5 +1,8 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
+
 import java.util.List;
 
 public interface DTClass {
@@ -9,15 +12,15 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
-    Object[] getEmptyStateArray();
+    CloneableEntityState getEmptyState();
 
     String getNameForFieldPath(FieldPath fp);
     FieldPath getFieldPathForName(String property);
 
-    <T> T getValueForFieldPath(FieldPath fp, Object[] state);
+    <T> T getValueForFieldPath(FieldPath fp, EntityState state);
 
-    List<FieldPath> collectFieldPaths(Object[] state);
-    String dumpState(String title, Object[] state);
+    List<FieldPath> collectFieldPaths(EntityState state);
+    String dumpState(String title, EntityState state);
 
 }
 

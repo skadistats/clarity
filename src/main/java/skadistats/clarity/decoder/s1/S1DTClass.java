@@ -2,6 +2,9 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;
@@ -36,8 +39,8 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public Object[] getEmptyStateArray() {
-        return new Object[receiveProps.length];
+    public CloneableEntityState getEmptyState() {
+        return EntityStateFactory.withLength(receiveProps.length);
     }
 
     @Override
@@ -52,8 +55,8 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp, Object[] state) {
-        return (T) state[fp.path[0]];
+    public <T> T getValueForFieldPath(FieldPath fp, EntityState state) {
+        return (T) state.get(fp.path[0]);
     }
 
     public S1DTClass getSuperClass() {
@@ -123,15 +126,15 @@ public class S1DTClass implements DTClass {
         .build();
 
     @Override
-    public String dumpState(String title, Object[] state) {
+    public String dumpState(String title, EntityState state) {
         DEBUG_LOCK.lock();
         try {
             DEBUG_DUMPER.clear();
             DEBUG_DUMPER.setTitle(title);
-            for (int i = 0; i < state.length; i++) {
+            for (int i = 0; i < state.length(); i++) {
                 DEBUG_DUMPER.setData(i, 0, i);
                 DEBUG_DUMPER.setData(i, 1, receiveProps[i].getVarName());
-                DEBUG_DUMPER.setData(i, 2, state[i]);
+                DEBUG_DUMPER.setData(i, 2, state.get(i));
             }
             return DEBUG_DUMPER.toString();
         } finally {
@@ -140,9 +143,9 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public List<FieldPath> collectFieldPaths(Object[] state) {
-        ArrayList<FieldPath> result = new ArrayList<>(state.length);
-        for (int i = 0; i < state.length; i++) {
+    public List<FieldPath> collectFieldPaths(EntityState state) {
+        ArrayList<FieldPath> result = new ArrayList<>(state.length());
+        for (int i = 0; i < state.length(); i++) {
             result.add(new FieldPath(i));
         }
         return result;

@@ -5,6 +5,9 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;
@@ -40,8 +43,10 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public Object[] getEmptyStateArray() {
-        return serializer.getInitialState();
+    public CloneableEntityState getEmptyState() {
+        CloneableEntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
+        serializer.initInitialState(state);
+        return state;
     }
 
     public String getNameForFieldPath(FieldPath fp) {
@@ -70,11 +75,11 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp, Object[] state) {
+    public <T> T getValueForFieldPath(FieldPath fp, EntityState state) {
         return (T) serializer.getValueForFieldPath(fp, 0, state);
     }
 
-    public void setValueForFieldPath(FieldPath fp, Object[] state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, EntityState state, Object value) {
         serializer.setValueForFieldPath(fp, 0, state, value);
     }
 
@@ -99,7 +104,7 @@ public class S2DTClass implements DTClass {
         .build();
 
     @Override
-    public String dumpState(String title, Object[] state) {
+    public String dumpState(String title, EntityState state) {
         FieldPath fp = new FieldPath();
         List<DumpEntry> entries = new ArrayList<>();
         serializer.collectDump(fp, "", entries, state);
@@ -121,8 +126,8 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public List<FieldPath> collectFieldPaths(Object[] state) {
-        List<FieldPath> result = new ArrayList<>(state.length);
+    public List<FieldPath> collectFieldPaths(EntityState state) {
+        List<FieldPath> result = new ArrayList<>(state.length());
         serializer.collectFieldPaths(new FieldPath(), result, state);
         return result;
     }
