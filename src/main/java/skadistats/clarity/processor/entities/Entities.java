@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
@@ -87,6 +86,10 @@ public class Entities {
 
     private List<Runnable> lastFrameEvents = new ArrayList<>();
     private List<Runnable> currentFrameEvents = new ArrayList<>();
+
+
+    private boolean resetInProgress;
+    private ClientFrame resetFrame;
 
     @Insert
     private EngineType engineType;
@@ -171,14 +174,59 @@ public class Entities {
 
     @OnReset
     public void onReset(Demo.CDemoStringTables packet, ResetPhase phase) {
-        if (phase == ResetPhase.CLEAR) {
-            for (int i = 0; i < classBaselines.length; i++) {
-                classBaselines[i].reset();
-            }
-            for (int i = 0; i < entityBaselines.length; i++) {
-                entityBaselines[i][0].reset();
-                entityBaselines[i][1].reset();
-            }
+        switch (phase) {
+            case START:
+                resetInProgress = true;
+                resetFrame = currentFrame;
+                break;
+
+            case CLEAR:
+                clientFrames.clear();
+                for (int i = 0; i < classBaselines.length; i++) {
+                    classBaselines[i].reset();
+                }
+                for (int i = 0; i < entityBaselines.length; i++) {
+                    entityBaselines[i][0].reset();
+                    entityBaselines[i][1].reset();
+                }
+                break;
+
+            case COMPLETE:
+                lastFrame = resetFrame;
+                resetInProgress = false;
+                resetFrame = null;
+
+                //updateEventDebug = true;
+
+                for (int i = 0; i < entityCount; i++) {
+                    boolean serialDiffers = lastFrame.getSerial(i) != currentFrame.getSerial(i);
+                    if (serialDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
+                        emitLeftEvent(i);
+                    }
+                    if (serialDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
+                        emitDeletedEvent(i);
+                    }
+                }
+                activeFrame = lastFrame;
+                lastFrameEvents.forEach(Runnable::run);
+                lastFrameEvents.clear();
+
+                for (int i = 0; i < entityCount; i++) {
+                    if (currentFrame.isValid(i)) {
+                        emitCreatedEvent(i);
+                    }
+                    if (!lastFrame.isActive(i) && currentFrame.isActive(i)) {
+                        emitEnteredEvent(i);
+                    }
+                }
+                activeFrame = currentFrame;
+                currentFrameEvents.forEach(Runnable::run);
+                currentFrameEvents.clear();
+
+                //updateEventDebug = false;
+
+                evUpdatesCompleted.raise();
+                break;
         }
     }
 
@@ -197,6 +245,18 @@ public class Entities {
     }
 
     boolean debug = false;
+    boolean updateEventDebug = false;
+
+    void debugUpdateEvent(String which, int eIdx) {
+        if (!updateEventDebug) return;
+        log.info("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
+                which,
+                eIdx,
+                activeFrame.getSerial(eIdx),
+                activeFrame.getHandle(eIdx),
+                activeFrame.getDtClass(eIdx).getDtName()
+        );
+    }
 
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
@@ -286,15 +346,17 @@ public class Entities {
         removeObsoleteClientFrames(message.getDeltaFrom());
         clientFrames.add(currentFrame);
 
-        activeFrame = lastFrame;
-        lastFrameEvents.forEach(Runnable::run);
-        lastFrameEvents.clear();
+        if (!resetInProgress) {
+            activeFrame = lastFrame;
+            lastFrameEvents.forEach(Runnable::run);
+            lastFrameEvents.clear();
 
-        activeFrame = currentFrame;
-        currentFrameEvents.forEach(Runnable::run);
-        currentFrameEvents.clear();
+            activeFrame = currentFrame;
+            currentFrameEvents.forEach(Runnable::run);
+            currentFrameEvents.clear();
 
-        evUpdatesCompleted.raise();
+            evUpdatesCompleted.raise();
+        }
     }
 
     private void processEntityCreate(int eIdx, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
@@ -413,8 +475,8 @@ public class Entities {
     }
 
     private void emitCreatedEvent(int i) {
-        if (!evCreated.isListenedTo()) return;
         if (lastFrame != null && lastFrame.isValid(i) && lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
+            if (resetInProgress || !evUpdated.isListenedTo()) return;
             // double create event -> emulate an update
             currentFrame.setChangedFieldPaths(
                     i,
@@ -422,18 +484,25 @@ public class Entities {
             );
             emitUpdatedEvent(i);
         } else {
-            currentFrameEvents.add(() -> evCreated.raise(getByIndex(i)));
+            if (resetInProgress || !evCreated.isListenedTo()) return;
+            currentFrameEvents.add(() -> {
+                debugUpdateEvent("CREATE", i);
+                evCreated.raise(getByIndex(i));
+            });
         }
     }
 
     private void emitEnteredEvent(int i) {
-        if (!evEntered.isListenedTo()) return;
+        if (resetInProgress || !evEntered.isListenedTo()) return;
         if (lastFrame != null && lastFrame.isValid(i) && lastFrame.isActive(i)) return;
-        currentFrameEvents.add(() -> evEntered.raise(getByIndex(i)));
+        currentFrameEvents.add(() -> {
+            debugUpdateEvent("ENTER", i);
+            evEntered.raise(getByIndex(i));
+        });
     }
 
     private void emitUpdatedEvent(int i) {
-        if (!evUpdated.isListenedTo()) return;
+        if (resetInProgress || !evUpdated.isListenedTo()) return;
         currentFrameEvents.add(() -> {
             Set<FieldPath> processedFieldPaths = new TreeSet<>();
             for (ClientFrame cf : clientFrames.subList(1, this.clientFrames.size())) {
@@ -457,21 +526,28 @@ public class Entities {
 
             //Arrays.sort(updatedFieldPaths, 0, n);
             if (n > 0) {
+                debugUpdateEvent("UPDATE", i);
                 evUpdated.raise(getByIndex(i), updatedFieldPaths, n);
             }
         });
     }
 
     private void emitLeftEvent(int i) {
-        if (!evLeft.isListenedTo()) return;
+        if (resetInProgress || !evLeft.isListenedTo()) return;
         if (lastFrame == null || !lastFrame.isValid(i) || !lastFrame.isActive(i)) return;
-        lastFrameEvents.add(() -> evLeft.raise(getByIndex(i)));
+        lastFrameEvents.add(() -> {
+            debugUpdateEvent("LEAVE", i);
+            evLeft.raise(getByIndex(i));
+        });
     }
 
     private void emitDeletedEvent(int i) {
-        if (!evDeleted.isListenedTo()) return;
+        if (resetInProgress || !evDeleted.isListenedTo()) return;
         if (lastFrame == null || !lastFrame.isValid(i)) return;
-        lastFrameEvents.add(() -> evDeleted.raise(getByIndex(i)));
+        lastFrameEvents.add(() -> {
+            debugUpdateEvent("DELETE", i);
+            evDeleted.raise(getByIndex(i));
+        });
     }
 
     private void checkDeltaFrameValid(String which, int eIdx) {
