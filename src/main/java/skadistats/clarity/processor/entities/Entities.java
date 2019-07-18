@@ -17,6 +17,7 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
+import skadistats.clarity.model.EntityStateSupplier;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.state.ClientFrame;
@@ -43,7 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.regex.Pattern;
 
 @Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
@@ -542,11 +545,45 @@ public class Entities {
     }
 
     private Map<Integer, Entity> entityMap = new HashMap<>();
+    private Map<Integer, EntityStateSupplier> supplierMap = new HashMap<>();
+
 
     public Entity getByIndex(int index) {
         if (activeFrame == null || !activeFrame.isValid(index)) return null;
         int handle = currentFrame.getHandle(index);
-        return entityMap.computeIfAbsent(handle, h -> new Entity(index, () -> activeFrame));
+        return entityMap.computeIfAbsent(handle, h -> new Entity(
+            supplierMap.computeIfAbsent(index, i -> new EntityStateSupplier() {
+                private <T> T get(BiFunction<ClientFrame, Integer, T> getter, T defaultValue) {
+                    if (activeFrame == null || !activeFrame.isValid(i)) return defaultValue;
+                    return getter.apply(activeFrame, index);
+                }
+                @Override
+                public int getIndex() {
+                    return index;
+                }
+                @Override
+                public DTClass getDTClass() {
+                    return get(ClientFrame::getDtClass, null);
+                }
+                @Override
+                public int getSerial() {
+                    return get(ClientFrame::getSerial, 0);
+                }
+                @Override
+                public boolean isActive() {
+                    return get(ClientFrame::isActive, false);
+                }
+                @Override
+                public int getHandle() {
+                    // TODO: maybe return empty handle?
+                    return get(ClientFrame::getHandle, 0);
+                }
+                @Override
+                public CloneableEntityState getState() {
+                    return get(ClientFrame::getState, null);
+                }
+            })
+        ));
     }
 
     public Entity getByHandle(int handle) {

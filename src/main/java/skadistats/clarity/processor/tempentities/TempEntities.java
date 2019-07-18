@@ -8,9 +8,11 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.EntityStateSupplier;
+import skadistats.clarity.model.state.CloneableEntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
@@ -50,10 +52,35 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                // TODO: Reenable
-//                EntityState state = EntityStateFactory.withLength(receiveProps.length);
-//                fieldReader.readFields(stream, cls, state, false);
-//                evTempEntity.raise(new Entity(engineType, 0, 0, cls, true, state));
+                CloneableEntityState state = EntityStateFactory.withLength(receiveProps.length);
+                fieldReader.readFields(stream, cls, state, null, false);
+                S1DTClass finalCls = cls;
+                evTempEntity.raise(new Entity(new EntityStateSupplier() {
+                    @Override
+                    public int getIndex() {
+                        return 0;
+                    }
+                    @Override
+                    public DTClass getDTClass() {
+                        return finalCls;
+                    }
+                    @Override
+                    public int getSerial() {
+                        return 0;
+                    }
+                    @Override
+                    public boolean isActive() {
+                        return true;
+                    }
+                    @Override
+                    public int getHandle() {
+                        return 0;
+                    }
+                    @Override
+                    public CloneableEntityState getState() {
+                        return state;
+                    }
+                }));
             }
         }
     }

@@ -1,48 +1,37 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.state.ClientFrame;
 import skadistats.clarity.model.state.CloneableEntityState;
-
-import java.util.function.Supplier;
 
 public class Entity {
 
-    private final int index;
-    private Supplier<ClientFrame> clientFrameSupplier;
+    private final EntityStateSupplier stateSupplier;
 
-    public Entity(int index, Supplier<ClientFrame> clientFrameSupplier) {
-        this.index = index;
-        this.clientFrameSupplier = clientFrameSupplier;
+    public Entity(EntityStateSupplier stateSupplier) {
+        this.stateSupplier = stateSupplier;
     }
 
     public int getIndex() {
-        return index;
+        return stateSupplier.getIndex();
     }
 
     public CloneableEntityState getState() {
-        return isValid() ? clientFrameSupplier.get().getState(index) : null;
+        return stateSupplier.getState();
     }
 
     public DTClass getDtClass() {
-        return isValid() ? clientFrameSupplier.get().getDtClass(index) : null;
+        return stateSupplier.getDTClass();
     }
 
     public int getSerial() {
-        return isValid() ? clientFrameSupplier.get().getSerial(index) : 0;
+        return stateSupplier.getSerial();
     }
 
     public boolean isActive() {
-        return isValid() && clientFrameSupplier.get().isActive(index);
+        return stateSupplier.isActive();
     }
 
     public int getHandle() {
-        // TODO: maybe return empty handle?
-        return isValid() ? clientFrameSupplier.get().getHandle(index) : 0;
-    }
-
-    public boolean isValid() {
-        ClientFrame f = this.clientFrameSupplier.get();
-        return f != null && f.isValid(index);
+        return stateSupplier.getHandle();
     }
 
     /**
@@ -85,7 +74,7 @@ public class Entity {
 
     @Override
     public String toString() {
-        String title = "idx: " + index + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
+        String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
         return getDtClass().dumpState(title, getState());
     }
 
