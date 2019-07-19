@@ -139,12 +139,9 @@ public class Entities {
             return null;
         }
         final Pattern p = Pattern.compile(classPattern);
-        return new Predicate<Object[]>() {
-            @Override
-            public boolean apply(Object[] value) {
-                Entity e = (Entity) value[0];
-                return p.matcher(e.getDtClass().getDtName()).matches();
-            }
+        return value -> {
+            Entity e = (Entity) value[0];
+            return p.matcher(e.getDtClass().getDtName()).matches();
         };
     }
 
@@ -691,12 +688,7 @@ public class Entities {
 
     public Iterator<Entity> getAllByDtName(final String dtClassName) {
         return getAllByPredicate(
-                new Predicate<Entity>() {
-                    @Override
-                    public boolean apply(Entity e) {
-                        return dtClassName.equals(e.getDtClass().getDtName());
-                    }
-                });
+                e -> dtClassName.equals(e.getDtClass().getDtName()));
     }
 
     public Entity getByDtName(final String dtClassName) {

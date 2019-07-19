@@ -22,7 +22,6 @@ import skadistats.clarity.processor.runner.FileRunner;
 import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
@@ -77,12 +76,9 @@ public class InputSourceProcessor {
 
     @Initializer(OnMessageContainer.class)
     public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
-        listener.setInvocationPredicate(new Predicate<Object[]>() {
-            @Override
-            public boolean apply(Object[] args) {
-                Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) args[0];
-                return listener.getAnnotation().value().isAssignableFrom(clazz);
-            }
+        listener.setInvocationPredicate(args -> {
+            Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) args[0];
+            return listener.getAnnotation().value().isAssignableFrom(clazz);
         });
     }
 

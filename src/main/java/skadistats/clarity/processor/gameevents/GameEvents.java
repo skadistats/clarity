@@ -9,7 +9,6 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
@@ -29,25 +28,19 @@ public class GameEvents {
 
     @Initializer(OnGameEventDescriptor.class)
     public void initOnGameEventDescriptor(final EventListener<OnGameEventDescriptor> eventListener) {
-        eventListener.setInvocationPredicate(new Predicate<Object[]>() {
-            @Override
-            public boolean apply(Object[] args) {
-                String v = eventListener.getAnnotation().value();
-                GameEventDescriptor ev = (GameEventDescriptor) args[0];
-                return v.length() == 0 || v.equals(ev.getName());
-            }
+        eventListener.setInvocationPredicate(args -> {
+            String v = eventListener.getAnnotation().value();
+            GameEventDescriptor ev = (GameEventDescriptor) args[0];
+            return v.length() == 0 || v.equals(ev.getName());
         });
     }
 
     @Initializer(OnGameEvent.class)
     public void initOnGameEvent(final EventListener<OnGameEvent> eventListener) {
-        eventListener.setInvocationPredicate(new Predicate<Object[]>() {
-            @Override
-            public boolean apply(Object[] args) {
-                String v = eventListener.getAnnotation().value();
-                GameEvent ev = (GameEvent) args[0];
-                return v.length() == 0 || v.equals(ev.getName());
-            }
+        eventListener.setInvocationPredicate(args -> {
+            String v = eventListener.getAnnotation().value();
+            GameEvent ev = (GameEvent) args[0];
+            return v.length() == 0 || v.equals(ev.getName());
         });
     }
 

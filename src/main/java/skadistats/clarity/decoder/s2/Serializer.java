@@ -6,7 +6,6 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
 
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,12 +20,9 @@ public class Serializer {
         this.id = id;
         this.fields = fields;
 
-        sendNodePrefixes = new TreeSet<>(new Comparator<String>() {
-            @Override
-            public int compare(String o1, String o2) {
-                int result = Integer.compare(o2.length(), o1.length());
-                return result != 0 ? result : o1.compareTo(o2);
-            }
+        sendNodePrefixes = new TreeSet<>((o1, o2) -> {
+            int result = Integer.compare(o2.length(), o1.length());
+            return result != 0 ? result : o1.compareTo(o2);
         });
         for (Field field : fields) {
             if (field.getProperties().getSendNode() != null) {

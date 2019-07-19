@@ -72,12 +72,7 @@ public class LiveSource extends Source {
         resetLastTick();
         handleFileChange();
 
-        final Thread watcherThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                watcherThread();
-            }
-        });
+        final Thread watcherThread = new Thread(this::watcherThread);
         watcherThread.setName("clarity-livesource-watcher");
         watcherThread.setDaemon(true);
         watcherThread.start();

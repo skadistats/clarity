@@ -11,7 +11,6 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.util.Predicate;
 import skadistats.clarity.wire.common.proto.Demo;
 
 import java.util.HashSet;
@@ -55,12 +54,9 @@ public class BaseStringTableEmitter {
         } else {
             updateEventTables.add(tableName);
         }
-        eventListener.setInvocationPredicate(new Predicate<Object[]>() {
-            @Override
-            public boolean apply(Object[] args) {
-                StringTable t = (StringTable) args[0];
-                return "*".equals(tableName) || t.getName().equals(tableName);
-            }
+        eventListener.setInvocationPredicate(args -> {
+            StringTable t = (StringTable) args[0];
+            return "*".equals(tableName) || t.getName().equals(tableName);
         });
     }
 

@@ -42,12 +42,7 @@ public class UsagePoints {
             }
 
             for (List<UsagePointProvider> providersForClass : PROVIDERS.values()) {
-                Collections.sort(providersForClass, new Comparator<UsagePointProvider>() {
-                    @Override
-                    public int compare(UsagePointProvider o1, UsagePointProvider o2) {
-                        return o1.getProvidesAnnotation().precedence() - o2.getProvidesAnnotation().precedence();
-                    }
-                });
+                Collections.sort(providersForClass, Comparator.comparingInt(o -> o.getProvidesAnnotation().precedence()));
             }
         }
     }

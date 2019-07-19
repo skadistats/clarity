@@ -232,24 +232,21 @@ public class ControllableRunner extends AbstractFileRunner {
     }
 
     public ControllableRunner runWith(final Object... processors) {
-        runnerThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                log.debug("runner started");
+        runnerThread = new Thread(() -> {
+            log.debug("runner started");
+            try {
+                initAndRunWith(processors);
+            } catch (Exception e) {
+                lock.lock();
                 try {
-                    initAndRunWith(processors);
-                } catch (Exception e) {
-                    lock.lock();
-                    try {
-                        runnerException = e;
-                        wantedTickReached.signal();
-                    } finally {
-                        lock.unlock();
-                    }
+                    runnerException = e;
+                    wantedTickReached.signal();
+                } finally {
+                    lock.unlock();
                 }
-                log.debug("runner finished");
-                runnerThread = null;
             }
+            log.debug("runner finished");
+            runnerThread = null;
         });
         runnerThread.setName("clarity-runner");
         runnerThread.setDaemon(false);
