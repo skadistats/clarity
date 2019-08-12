@@ -22,9 +22,9 @@ public class EntityStateFactory {
     private static EntityState s1Nested(ReceiveProp[] receiveProps) {
         return new NestedArrayEntityState(
                 receiveProps.length,
-                (s, fp) -> receiveProps[fp.path[0]].getVarName(),
-                (s, fp) -> s.get(fp.path[0]),
-                (s, fp, d) -> s.set(fp.path[0], d),
+                (s, fp) -> receiveProps[fp.cur()].getVarName(),
+                (s, fp) -> s.get(fp.cur()),
+                (s, fp, d) -> s.set(fp.cur(), d),
                 (s) -> {
                     ArrayList<FieldPath> result = new ArrayList<>(s.length());
                     for (int i = 0; i < s.length(); i++) {

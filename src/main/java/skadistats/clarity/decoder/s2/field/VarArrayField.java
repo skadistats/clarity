@@ -27,17 +27,17 @@ public class VarArrayField extends Field {
 
     @Override
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last == pos || fp.last == pos + 1;
+        assert fp.last() == pos || fp.last() == pos + 1;
         addBasePropertyName(parts);
-        if (fp.last > pos) {
-            parts.add(Util.arrayIdxToString(fp.path[pos + 1]));
+        if (fp.last() > pos) {
+            parts.add(Util.arrayIdxToString(fp.get(pos + 1)));
         }
     }
 
     @Override
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
-        if (pos == fp.last) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        if (pos == fp.last()) {
             return baseUnpacker;
         } else {
             return elementUnpacker;
@@ -46,14 +46,14 @@ public class VarArrayField extends Field {
 
     @Override
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
+        assert fp.last() == pos || fp.last() == pos + 1;
         return this;
     }
 
     @Override
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        if (fp.last() == pos) {
             return properties.getType();
         } else {
             return properties.getType().getGenericType();
@@ -62,12 +62,12 @@ public class VarArrayField extends Field {
 
     @Override
     public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
-        assert fp.last == pos || fp.last == pos + 1;
-        ArrayEntityState subState = state.sub(fp.path[pos]);
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        ArrayEntityState subState = state.sub(fp.get(pos));
+        if (fp.last() == pos) {
             return subState.length();
-        } else if (subState.has(fp.path[pos + 1])) {
-            return subState.get(fp.path[pos + 1]);
+        } else if (subState.has(fp.get(pos + 1))) {
+            return subState.get(fp.get(pos + 1));
         } else {
             return null;
         }
@@ -75,13 +75,13 @@ public class VarArrayField extends Field {
 
     @Override
     public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
-        assert fp.last == pos || fp.last == pos + 1;
-        int i = fp.path[pos];
+        assert fp.last() == pos || fp.last() == pos + 1;
+        int i = fp.get(pos);
         ArrayEntityState subState = state.sub(i);
-        if (fp.last == pos) {
+        if (fp.last() == pos) {
             subState.capacity((Integer) value, true);
         } else {
-            int j = fp.path[pos + 1];
+            int j = fp.get(pos + 1);
             subState.capacity(j + 1, false);
             subState.set(j, value);
         }
@@ -92,21 +92,21 @@ public class VarArrayField extends Field {
         if (property.length() != 4) {
             throw new ClarityException("unresolvable fieldpath");
         }
-        fp.path[fp.last] = Integer.parseInt(property);
+        fp.cur(Integer.parseInt(property));
         return fp;
     }
 
     @Override
     public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
-        ArrayEntityState subState = state.sub(fp.path[fp.last]);
-        fp.last++;
+        ArrayEntityState subState = state.sub(fp.cur());
+        fp.down();
         for (int i = 0; i < subState.length(); i++) {
             if (subState.has(i)) {
-                fp.path[fp.last] = i;
+                fp.cur(i);
                 entries.add(new FieldPath(fp));
             }
         }
-        fp.last--;
+        fp.up(1);
     }
 
 }

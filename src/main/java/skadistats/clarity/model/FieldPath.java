@@ -2,10 +2,8 @@ package skadistats.clarity.model;
 
 public class FieldPath implements Comparable<FieldPath> {
 
-    public static final FieldPath[] EMPTY_ARRAY = {};
-
-    public final int[] path;
-    public int last;
+    private final int[] path;
+    private int last;
 
     public FieldPath() {
         path = new int[6];
@@ -51,6 +49,22 @@ public class FieldPath implements Comparable<FieldPath> {
 
     public int last() {
         return last;
+    }
+
+    public int cur() {
+        return path[last];
+    }
+
+    public void cur(int v) {
+        path[last] = v;
+    }
+
+    public void set(int i, int v) {
+        path[i] = v;
+    }
+
+    public int get(int i) {
+        return path[i];
     }
 
     @Override

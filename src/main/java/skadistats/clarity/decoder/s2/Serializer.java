@@ -51,27 +51,27 @@ public class Serializer {
     }
 
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        fields[fp.path[pos]].accumulateName(fp, pos, parts);
+        fields[fp.get(pos)].accumulateName(fp, pos, parts);
     }
 
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getUnpackerForFieldPath(fp, pos);
+        return fields[fp.get(pos)].getUnpackerForFieldPath(fp, pos);
     }
 
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getFieldForFieldPath(fp, pos);
+        return fields[fp.get(pos)].getFieldForFieldPath(fp, pos);
     }
 
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getTypeForFieldPath(fp, pos);
+        return fields[fp.get(pos)].getTypeForFieldPath(fp, pos);
     }
 
     public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
-        return fields[fp.path[pos]].getValueForFieldPath(fp, pos, state);
+        return fields[fp.get(pos)].getValueForFieldPath(fp, pos, state);
     }
 
     public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object data) {
-        fields[fp.path[pos]].setValueForFieldPath(fp, pos, state, data);
+        fields[fp.get(pos)].setValueForFieldPath(fp, pos, state, data);
     }
 
     private FieldPath getFieldPathForNameInternal(FieldPath fp, String property) {
@@ -79,7 +79,7 @@ public class Serializer {
             Field field = fields[i];
             String fieldName = field.getProperties().getName();
             if (property.startsWith(fieldName)) {
-                fp.path[fp.last] = i;
+                fp.cur(i);
                 if (property.length() == fieldName.length()) {
                     return fp;
                 } else {
@@ -87,7 +87,7 @@ public class Serializer {
                         continue;
                     }
                     property = property.substring(fieldName.length() + 1);
-                    fp.last++;
+                    fp.down();
                     return field.getFieldPathForName(fp, property);
                 }
             }
@@ -107,7 +107,7 @@ public class Serializer {
     public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         for (int i = 0; i < fields.length; i++) {
             if (state.has(i)) {
-                fp.path[fp.last] = i;
+                fp.cur(i);
                 fields[i].collectFieldPaths(fp, entries, state);
             }
         }

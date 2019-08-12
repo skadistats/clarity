@@ -25,11 +25,11 @@ public class VarSubTableField extends Field {
 
     @Override
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last == pos || fp.last >= pos + 2;
+        assert fp.last() == pos || fp.last() == pos + 2;
         addBasePropertyName(parts);
-        if (fp.last > pos) {
-            parts.add(Util.arrayIdxToString(fp.path[pos + 1]));
-            if (fp.last > pos + 1) {
+        if (fp.last() > pos) {
+            parts.add(Util.arrayIdxToString(fp.get(pos + 1)));
+            if (fp.last() > pos + 1) {
                 properties.getSerializer().accumulateName(fp, pos + 2, parts);
             }
         }
@@ -37,8 +37,8 @@ public class VarSubTableField extends Field {
 
     @Override
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last >= pos + 2;
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 2;
+        if (fp.last() == pos) {
             return baseUnpacker;
         } else {
             return properties.getSerializer().getUnpackerForFieldPath(fp, pos + 2);
@@ -47,8 +47,8 @@ public class VarSubTableField extends Field {
 
     @Override
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last >= pos + 2;
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 2;
+        if (fp.last() == pos) {
             return this;
         } else {
             return properties.getSerializer().getFieldForFieldPath(fp, pos + 2);
@@ -57,8 +57,8 @@ public class VarSubTableField extends Field {
 
     @Override
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last >= pos + 2;
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 2;
+        if (fp.last() == pos) {
             return properties.getType();
         } else {
             return properties.getSerializer().getTypeForFieldPath(fp, pos + 2);
@@ -67,12 +67,12 @@ public class VarSubTableField extends Field {
 
     @Override
     public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
-        assert fp.last == pos || fp.last >= pos + 2;
-        ArrayEntityState subState = state.sub(fp.path[pos]);
-        if (fp.last == pos) {
+        assert fp.last() == pos || fp.last() == pos + 2;
+        ArrayEntityState subState = state.sub(fp.get(pos));
+        if (fp.last() == pos) {
             return subState.length();
-        } else if (subState.isSub(fp.path[pos + 1])){
-            return properties.getSerializer().getValueForFieldPath(fp, pos + 2, subState.sub(fp.path[pos + 1]));
+        } else if (subState.isSub(fp.get(pos + 1))){
+            return properties.getSerializer().getValueForFieldPath(fp, pos + 2, subState.sub(fp.get(pos + 1)));
         } else {
             return null;
         }
@@ -80,13 +80,13 @@ public class VarSubTableField extends Field {
 
     @Override
     public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
-        assert fp.last == pos || fp.last >= pos + 2;
-        int i = fp.path[pos];
+        assert fp.last() == pos || fp.last() == pos + 2;
+        int i = fp.get(pos);
         ArrayEntityState subState = state.sub(i);
-        if (fp.last == pos) {
+        if (fp.last() == pos) {
             subState.capacity((Integer) value, true, properties.getSerializer()::initInitialState);
         } else {
-            int j = fp.path[pos + 1];
+            int j = fp.get(pos + 1);
             subState.capacity(j + 1, false, properties.getSerializer()::initInitialState);
             properties.getSerializer().setValueForFieldPath(fp, pos + 2, subState.sub(j), value);
         }
@@ -98,22 +98,23 @@ public class VarSubTableField extends Field {
             throw new ClarityException("unresolvable fieldpath");
         }
         String idx = property.substring(0, 4);
-        fp.path[fp.last] = Integer.valueOf(idx);
-        fp.last++;
+        fp.cur(Integer.parseInt(idx));
+        fp.down();
         return properties.getSerializer().getFieldPathForName(fp, property.substring(5));
     }
 
     @Override
     public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
-        ArrayEntityState subState = state.sub(fp.path[fp.last]);
+        ArrayEntityState subState = state.sub(fp.cur());
         int len = subState.length();
         if (len > 0) {
-            fp.last += 2;
+            fp.down();
+            fp.down();
             for (int i = 0; i < len; i++) {
-                fp.path[fp.last - 1] = i;
+                fp.set(fp.last() - 1, i);
                 properties.getSerializer().collectFieldPaths(fp, entries, subState.sub(i));
             }
-            fp.last -= 2;
+            fp.up(2);
         }
     }
 

@@ -40,7 +40,7 @@ public class S1DTClass implements DTClass {
 
     @Override
     public String getNameForFieldPath(FieldPath fp) {
-        return this.receiveProps[fp.path[0]].getVarName();
+        return this.receiveProps[fp.cur()].getVarName();
     }
 
     @Override

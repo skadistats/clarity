@@ -42,7 +42,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
             ReceiveProp[] receiveProps = dtClass.getReceiveProps();
             for (int ci = 0; ci < n; ci++) {
                 int offsBefore = bs.pos();
-                int o = fieldPaths[ci].path[0];
+                int o = fieldPaths[ci].cur();
                 state.setValueForFieldPath(fieldPaths[ci], receiveProps[o].decode(bs));
 
                 if (debug) {

@@ -23,38 +23,38 @@ public class SimpleField extends Field {
 
     @Override
     public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last == pos;
+        assert fp.last() == pos;
         addBasePropertyName(parts);
     }
 
     @Override
     public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos;
+        assert fp.last() == pos;
         return unpacker;
     }
 
     @Override
     public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos;
+        assert fp.last() == pos;
         return this;
     }
 
     @Override
     public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos;
+        assert fp.last() == pos;
         return properties.getType();
     }
 
     @Override
     public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
-        assert fp.last == pos;
-        return state.get(fp.path[pos]);
+        assert fp.last() == pos;
+        return state.get(fp.get(pos));
     }
 
     @Override
     public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
-        assert fp.last == pos;
-        state.set(fp.path[pos], value);
+        assert fp.last() == pos;
+        state.set(fp.get(pos), value);
     }
 
     @Override
