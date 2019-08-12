@@ -91,8 +91,7 @@ public class PropertyChange {
     @OnEntityCreated
     @Order(1000)
     public void onEntityCreated(Entity e) {
-        List<FieldPath> fieldPaths = e.getState().collectFieldPaths();
-        for (FieldPath fp : fieldPaths) {
+        for (FieldPath fp : e.getState().collectFieldPaths()) {
             evPropertyChanged.raise(e, fp);
         }
     }
