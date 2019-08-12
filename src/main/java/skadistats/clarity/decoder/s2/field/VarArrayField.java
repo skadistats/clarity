@@ -92,7 +92,7 @@ public class VarArrayField extends Field {
         if (property.length() != 4) {
             throw new ClarityException("unresolvable fieldpath");
         }
-        fp.path[fp.last] = Integer.valueOf(property);
+        fp.path[fp.last] = Integer.parseInt(property);
         return fp;
     }
 

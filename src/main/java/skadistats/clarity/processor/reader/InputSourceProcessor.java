@@ -272,7 +272,7 @@ public class InputSourceProcessor {
         }
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
         if (matcher.find()) {
-            int num = Integer.valueOf(matcher.group(1));
+            int num = Integer.parseInt(matcher.group(1));
             ctx.setBuildNumber(num);
             if (num < 928) {
                 log.warn("This replay is from an early beta version of Dota 2 Reborn (build number %d).", num);
