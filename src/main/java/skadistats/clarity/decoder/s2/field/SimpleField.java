@@ -1,10 +1,9 @@
 package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
+    public void initInitialState(ArrayEntityState state, int idx) {
         state.set(idx, null);
     }
 
@@ -47,13 +46,13 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
         assert fp.last == pos;
         return state.get(fp.path[pos]);
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
         assert fp.last == pos;
         state.set(fp.path[pos], value);
     }
@@ -64,12 +63,7 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName()), state.get(fp.path[fp.last])));
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         entries.add(new FieldPath(fp));
     }
 }

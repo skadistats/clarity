@@ -5,14 +5,11 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.CloneableEntityState;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
-import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class S2DTClass implements DTClass {
 
@@ -43,9 +40,8 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public CloneableEntityState getEmptyState() {
-        CloneableEntityState state = EntityStateFactory.withLength(serializer.getFieldCount());
-        serializer.initInitialState(state);
+    public EntityState getEmptyState() {
+        EntityState state = EntityStateFactory.forS2(serializer);
         return state;
     }
 
@@ -75,15 +71,6 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp, EntityState state) {
-        return (T) serializer.getValueForFieldPath(fp, 0, state);
-    }
-
-    public void setValueForFieldPath(FieldPath fp, EntityState state, Object value) {
-        serializer.setValueForFieldPath(fp, 0, state, value);
-    }
-
-    @Override
     public FieldPath getFieldPathForName(String property) {
         FieldPath fp = new FieldPath();
         return serializer.getFieldPathForName(fp, property);
@@ -92,44 +79,6 @@ public class S2DTClass implements DTClass {
     @Override
     public String toString() {
         return String.format("%s (%s)", serializer.getId(), classId);
-    }
-
-
-    private static final ReentrantLock DEBUG_LOCK = new ReentrantLock();
-    private static final TextTable DEBUG_DUMPER = new TextTable.Builder()
-        .setFrame(TextTable.FRAME_COMPAT)
-        .addColumn("FP")
-        .addColumn("Property")
-        .addColumn("Value")
-        .build();
-
-    @Override
-    public String dumpState(String title, EntityState state) {
-        FieldPath fp = new FieldPath();
-        List<DumpEntry> entries = new ArrayList<>();
-        serializer.collectDump(fp, "", entries, state);
-        DEBUG_LOCK.lock();
-        try {
-            DEBUG_DUMPER.clear();
-            DEBUG_DUMPER.setTitle(title);
-            int r = 0;
-            for (DumpEntry entry : entries) {
-                DEBUG_DUMPER.setData(r, 0, entry.fieldPath);
-                DEBUG_DUMPER.setData(r, 1, entry.name);
-                DEBUG_DUMPER.setData(r, 2, entry.value);
-                r++;
-            }
-            return DEBUG_DUMPER.toString();
-        } finally {
-            DEBUG_LOCK.unlock();
-        }
-    }
-
-    @Override
-    public List<FieldPath> collectFieldPaths(EntityState state) {
-        List<FieldPath> result = new ArrayList<>(state.length());
-        serializer.collectFieldPaths(new FieldPath(), result, state);
-        return result;
     }
 
 }

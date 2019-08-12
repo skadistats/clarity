@@ -4,7 +4,7 @@ import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 import java.util.Set;
@@ -43,7 +43,7 @@ public class Serializer {
         return fields.length;
     }
 
-    public void initInitialState(EntityState state) {
+    public void initInitialState(ArrayEntityState state) {
         state.capacity(fields.length);
         for (int i = 0; i < fields.length; i++) {
             fields[i].initInitialState(state, i);
@@ -66,11 +66,11 @@ public class Serializer {
         return fields[fp.path[pos]].getTypeForFieldPath(fp, pos);
     }
 
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
         return fields[fp.path[pos]].getValueForFieldPath(fp, pos, state);
     }
 
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object data) {
+    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object data) {
         fields[fp.path[pos]].setValueForFieldPath(fp, pos, state, data);
     }
 
@@ -104,16 +104,7 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        for (int i = 0; i < fields.length; i++) {
-            if (state.has(i)) {
-                fp.path[fp.last] = i;
-                fields[i].collectDump(fp, namePrefix, entries, state);
-            }
-        }
-    }
-
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         for (int i = 0; i < fields.length; i++) {
             if (state.has(i)) {
                 fp.path[fp.last] = i;

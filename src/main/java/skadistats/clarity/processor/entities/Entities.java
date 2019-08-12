@@ -21,7 +21,7 @@ import skadistats.clarity.model.EntityStateSupplier;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.state.ClientFrame;
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
@@ -65,7 +65,7 @@ public class Entities {
     private Map<Integer, ByteString> rawBaselines = new HashMap<>();
     private class Baseline {
         private int dtClassId = -1;
-        private CloneableEntityState state;
+        private EntityState state;
         private void reset() {
             state = null;
         }
@@ -357,7 +357,7 @@ public class Entities {
     }
 
     private void processEntityCreate(int eIdx, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        CloneableEntityState newState;
+        EntityState newState;
         int dtClassId = stream.readUBitInt(dtClasses.getClassBits());
         DTClass dtClass = dtClasses.forClassId(dtClassId);
         if (dtClass == null) {
@@ -413,7 +413,7 @@ public class Entities {
 
     private void processEntityUpdate(int eIdx, BitStream stream) {
         Set<FieldPath> changedFieldPaths;
-        CloneableEntityState newState;
+        EntityState newState;
         checkDeltaFrameValid("update", eIdx);
         changedFieldPaths = new TreeSet<>();
         newState = deltaFrame.getState(eIdx).clone();
@@ -477,7 +477,7 @@ public class Entities {
             // double create event -> emulate an update
             currentFrame.setChangedFieldPaths(
                     i,
-                    new TreeSet<>(currentFrame.getDtClass(i).collectFieldPaths(currentFrame.getState(i)))
+                    new TreeSet<>(currentFrame.getState(i).collectFieldPaths())
             );
             emitUpdatedEvent(i);
         } else {
@@ -512,8 +512,8 @@ public class Entities {
             DTClass cls = currentFrame.getDtClass(i);
             int n = 0;
             for (FieldPath changedFieldPath : processedFieldPaths) {
-                Object v1 = cls.getValueForFieldPath(changedFieldPath, lastFrame.getState(i));
-                Object v2 = cls.getValueForFieldPath(changedFieldPath, currentFrame.getState(i));
+                Object v1 = lastFrame.getState(i).getValueForFieldPath(changedFieldPath);
+                Object v2 = currentFrame.getState(i).getValueForFieldPath(changedFieldPath);
                 if ((v1 == null) ^ (v2 == null)) {
                     updatedFieldPaths[n++] = changedFieldPath;
                 } else if (v1 != null && !v1.equals(v2)) {
@@ -652,7 +652,7 @@ public class Entities {
                     return get(ClientFrame::getHandle, 0);
                 }
                 @Override
-                public CloneableEntityState getState() {
+                public EntityState getState() {
                     return get(ClientFrame::getState, null);
                 }
             })

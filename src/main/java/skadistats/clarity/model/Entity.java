@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
 
 public class Entity {
 
@@ -14,7 +14,7 @@ public class Entity {
         return stateSupplier.getIndex();
     }
 
-    public CloneableEntityState getState() {
+    public EntityState getState() {
         return stateSupplier.getState();
     }
 
@@ -69,13 +69,13 @@ public class Entity {
     }
 
     public <T> T getPropertyForFieldPath(FieldPath fp) {
-        return (T) getDtClass().getValueForFieldPath(fp, getState());
+        return (T) getState().getValueForFieldPath(fp);
     }
 
     @Override
     public String toString() {
         String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getDtClass().dumpState(title, getState());
+        return getState().dump(title);
     }
 
 }

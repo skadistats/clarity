@@ -12,7 +12,7 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.EntityStateSupplier;
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
@@ -52,7 +52,7 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                CloneableEntityState state = EntityStateFactory.withLength(receiveProps.length);
+                EntityState state = EntityStateFactory.forS1(receiveProps);
                 fieldReader.readFields(stream, cls, state, null, false);
                 S1DTClass finalCls = cls;
                 evTempEntity.raise(new Entity(new EntityStateSupplier() {
@@ -77,7 +77,7 @@ public class TempEntities {
                         return 0;
                     }
                     @Override
-                    public CloneableEntityState getState() {
+                    public EntityState getState() {
                         return state;
                     }
                 }));

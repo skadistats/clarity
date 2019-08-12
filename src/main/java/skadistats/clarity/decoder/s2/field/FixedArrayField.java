@@ -2,11 +2,10 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
+    public void initInitialState(ArrayEntityState state, int idx) {
         state.sub(idx).capacity(length);
     }
 
@@ -62,9 +61,9 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
         assert fp.last == pos || fp.last == pos + 1;
-        EntityState subState = state.sub(fp.path[pos]);
+        ArrayEntityState subState = state.sub(fp.path[pos]);
         if (fp.last == pos) {
             return subState.length();
         } else if (subState.has(fp.path[pos + 1])) {
@@ -75,12 +74,12 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
         assert fp.last == pos || fp.last == pos + 1;
         if (fp.last == pos) {
             throw new ClarityException("base of a FixedArrayField cannot be set");
         } else {
-            EntityState subState = state.sub(fp.path[pos]);
+            ArrayEntityState subState = state.sub(fp.path[pos]);
             subState.set(fp.path[pos + 1], value);
         }
     }
@@ -95,21 +94,8 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
-        fp.last++;
-        for (int i = 0; i < subState.length(); i++) {
-            if (subState.has(i)) {
-                fp.path[fp.last] = i;
-                entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName(), Util.arrayIdxToString(i)), subState.get(i)));
-            }
-        }
-        fp.last--;
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+        ArrayEntityState subState = state.sub(fp.path[fp.last]);
         fp.last++;
         for (int i = 0; i < subState.length(); i++) {
             if (subState.has(i)) {

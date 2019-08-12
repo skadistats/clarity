@@ -2,11 +2,10 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
+    public void initInitialState(ArrayEntityState state, int idx) {
         state.set(idx, null);
     }
 
@@ -67,9 +66,9 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
         assert fp.last == pos || fp.last >= pos + 2;
-        EntityState subState = state.sub(fp.path[pos]);
+        ArrayEntityState subState = state.sub(fp.path[pos]);
         if (fp.last == pos) {
             return subState.length();
         } else if (subState.isSub(fp.path[pos + 1])){
@@ -80,10 +79,10 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
         assert fp.last == pos || fp.last >= pos + 2;
         int i = fp.path[pos];
-        EntityState subState = state.sub(i);
+        ArrayEntityState subState = state.sub(i);
         if (fp.last == pos) {
             subState.capacity((Integer) value, true, properties.getSerializer()::initInitialState);
         } else {
@@ -105,24 +104,8 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
-        String name = joinPropertyName(namePrefix, properties.getName());
-        int len = subState.length();
-        if (len > 0) {
-            entries.add(new DumpEntry(fp, name, len));
-            fp.last += 2;
-            for (int i = 0; i < len; i++) {
-                fp.path[fp.last - 1] = i;
-                properties.getSerializer().collectDump(fp, joinPropertyName(name, Util.arrayIdxToString(i)), entries, subState.sub(i));
-            }
-            fp.last -= 2;
-        }
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+        ArrayEntityState subState = state.sub(fp.path[fp.last]);
         int len = subState.length();
         if (len > 0) {
             fp.last += 2;

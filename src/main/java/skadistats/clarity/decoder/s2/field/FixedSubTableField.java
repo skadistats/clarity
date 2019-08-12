@@ -1,10 +1,9 @@
 package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
+    public void initInitialState(ArrayEntityState state, int idx) {
         properties.getSerializer().initInitialState(state.sub(idx));
     }
 
@@ -62,7 +61,7 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
+    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
         assert fp.last >= pos;
         int i = fp.path[pos];
         if (fp.last == pos) {
@@ -75,7 +74,7 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
+    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
         assert fp.last >= pos;
         int i = fp.path[pos];
         if (fp.last == pos) {
@@ -96,18 +95,7 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        String name = joinPropertyName(namePrefix, properties.getName());
-        int i = fp.path[fp.last];
-        if (state.has(i)) {
-            fp.last++;
-            properties.getSerializer().collectDump(fp, name, entries, state.sub(i));
-            fp.last--;
-        }
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
+    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         int i = fp.path[fp.last];
         if (state.has(i)) {
             fp.last++;

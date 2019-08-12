@@ -77,7 +77,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 }
                 int offsBefore = bs.pos();
                 Object data = unpacker.unpack(bs);
-                dtClass.setValueForFieldPath(fp, state, data);
+                state.setValueForFieldPath(fp, data);
 
                 if (debug) {
                     FieldProperties props = dtClass.getFieldForFieldPath(fp).getProperties();

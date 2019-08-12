@@ -16,7 +16,7 @@ public class ClientFrame {
     private final boolean[] active;
     private final int[] lastChangedTick;
     private final Set[] changedFieldPaths;
-    private final CloneableEntityState[] state;
+    private final EntityState[] state;
 
     public ClientFrame(EngineType engineType, int tick) {
         this.engineType = engineType;
@@ -28,7 +28,7 @@ public class ClientFrame {
         this.active = new boolean[n];
         this.lastChangedTick = new int[n];
         this.changedFieldPaths = new Set[n];
-        this.state = new CloneableEntityState[n];
+        this.state = new EntityState[n];
     }
 
     public void copyFromOtherFrame(ClientFrame otherFrame, int idx, int length) {
@@ -41,7 +41,7 @@ public class ClientFrame {
         System.arraycopy(otherFrame.state, idx, state, idx, length);
     }
 
-    public void createNewEntity(int eIdx, DTClass dtClass, int serial, Set<FieldPath> changedFieldPaths, CloneableEntityState state) {
+    public void createNewEntity(int eIdx, DTClass dtClass, int serial, Set<FieldPath> changedFieldPaths, EntityState state) {
         this.valid[eIdx] = true;
         this.dtClass[eIdx] = dtClass;
         this.serial[eIdx] = serial;
@@ -51,7 +51,7 @@ public class ClientFrame {
         this.state[eIdx] = state;
     }
 
-    public void updateExistingEntity(ClientFrame oldFrame, int eIdx, Set<FieldPath> changedFieldPaths, CloneableEntityState state) {
+    public void updateExistingEntity(ClientFrame oldFrame, int eIdx, Set<FieldPath> changedFieldPaths, EntityState state) {
         this.valid[eIdx] = oldFrame.valid[eIdx];
         this.dtClass[eIdx] = oldFrame.dtClass[eIdx];
         this.serial[eIdx] = oldFrame.serial[eIdx];
@@ -111,7 +111,7 @@ public class ClientFrame {
         return changedFieldPaths[idx];
     }
 
-    public CloneableEntityState getState(int idx) {
+    public EntityState getState(int idx) {
         return state[idx];
     }
 

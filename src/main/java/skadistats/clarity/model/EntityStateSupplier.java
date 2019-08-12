@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
 
 public interface EntityStateSupplier {
 
@@ -9,6 +9,6 @@ public interface EntityStateSupplier {
     int getSerial();
     boolean isActive();
     int getHandle();
-    CloneableEntityState getState();
+    EntityState getState();
 
 }

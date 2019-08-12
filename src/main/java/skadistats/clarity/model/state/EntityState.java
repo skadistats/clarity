@@ -1,32 +1,37 @@
 package skadistats.clarity.model.state;
 
-import java.util.function.Consumer;
+import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.util.TextTable;
+
+import java.util.List;
 
 public interface EntityState {
 
-    int length();
+    EntityState clone();
 
-    boolean has(int idx);
+    void setValueForFieldPath(FieldPath fp, Object value);
+    <T> T getValueForFieldPath(FieldPath fp);
+    String getNameForFieldPath(FieldPath fp);
 
-    Object get(int idx);
-    void set(int idx, Object value);
-    void clear(int idx);
+    List<FieldPath> collectFieldPaths();
 
-    boolean isSub(int idx);
-    EntityState sub(int idx);
+    default String dump(String title) {
+        final TextTable table = new TextTable.Builder()
+                .setFrame(TextTable.FRAME_COMPAT)
+                .addColumn("FP")
+                .addColumn("Property")
+                .addColumn("Value")
+                .setTitle(title)
+                .build();
 
-    EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer);
-
-    default EntityState capacity(int wantedSize) {
-        return capacity(wantedSize, false, null);
-    }
-
-    default EntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
-        return capacity(wantedSize, shrinkIfNeeded, null);
-    }
-
-    default EntityState capacity(int wantedSize, Consumer<EntityState> initializer) {
-        return capacity(wantedSize, false, initializer);
+        final List<FieldPath> fieldPaths = collectFieldPaths();
+        for (int i = 0; i < fieldPaths.size(); i++) {
+            final FieldPath fp = fieldPaths.get(i);
+            table.setData(i, 0, fp);
+            table.setData(i, 1, getNameForFieldPath(fp));
+            table.setData(i, 2, getValueForFieldPath(fp));
+        }
+        return table.toString();
     }
 
 }
