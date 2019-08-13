@@ -4,14 +4,14 @@ import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class S2DTClass implements DTClass {
+public class S2DTClass implements DTClass<S2FieldPath> {
 
     private final Serializer serializer;
     private int classId = -1;
@@ -45,7 +45,8 @@ public class S2DTClass implements DTClass {
         return state;
     }
 
-    public String getNameForFieldPath(FieldPath fp) {
+    @Override
+    public String getNameForFieldPath(S2FieldPath fp) {
         List<String> parts = new ArrayList<>();
         serializer.accumulateName(fp, 0, parts);
         StringBuilder b = new StringBuilder();
@@ -58,21 +59,21 @@ public class S2DTClass implements DTClass {
         return b.toString();
     }
 
-    public Unpacker getUnpackerForFieldPath(FieldPath fp) {
+    public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
         return serializer.getUnpackerForFieldPath(fp, 0);
     }
 
-    public Field getFieldForFieldPath(FieldPath fp) {
+    public Field getFieldForFieldPath(S2FieldPath fp) {
         return serializer.getFieldForFieldPath(fp, 0);
     }
 
-    public FieldType getTypeForFieldPath(FieldPath fp) {
+    public FieldType getTypeForFieldPath(S2FieldPath fp) {
         return serializer.getTypeForFieldPath(fp, 0);
     }
 
     @Override
-    public FieldPath getFieldPathForName(String property) {
-        FieldPath fp = new FieldPath();
+    public S2FieldPath getFieldPathForName(String property) {
+        S2FieldPath fp = new S2FieldPath();
         return serializer.getFieldPathForName(fp, property);
     }
 

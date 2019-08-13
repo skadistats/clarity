@@ -2,13 +2,14 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class S1DTClass implements DTClass {
+public class S1DTClass implements DTClass<S1FieldPath> {
 
     private final String dtName;
     private final SendTable sendTable;
@@ -39,14 +40,14 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public String getNameForFieldPath(FieldPath fp) {
+    public String getNameForFieldPath(S1FieldPath fp) {
         return this.receiveProps[fp.cur()].getVarName();
     }
 
     @Override
-    public FieldPath getFieldPathForName(String name){
+    public S1FieldPath getFieldPathForName(String name){
         Integer idx = this.propsByName.get(name);
-        return idx != null ? new FieldPath(idx.intValue()) : null;
+        return idx != null ? new S1FieldPath(idx.intValue()) : null;
     }
 
     public S1DTClass getSuperClass() {

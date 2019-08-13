@@ -7,6 +7,7 @@ import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
@@ -50,7 +51,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             int n = 0;
-            FieldPath fp = new FieldPath();
+            S2FieldPath fp = new S2FieldPath();
             while (true) {
                 int offsBefore = bs.pos();
                 FieldOpType op = bs.readFieldOp();
@@ -65,11 +66,11 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     break;
                 }
                 fieldPaths[n++] = fp;
-                fp = new FieldPath(fp);
+                fp = new S2FieldPath(fp);
             }
 
             for (int r = 0; r < n; r++) {
-                fp = fieldPaths[r];
+                fp = (S2FieldPath) fieldPaths[r];
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
                     FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();

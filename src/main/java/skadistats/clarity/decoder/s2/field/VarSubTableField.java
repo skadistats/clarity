@@ -5,6 +5,7 @@ import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
+    public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         assert fp.last() == pos || fp.last() == pos + 2;
         addBasePropertyName(parts);
         if (fp.last() > pos) {
@@ -36,7 +37,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
+    public Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() == pos + 2;
         if (fp.last() == pos) {
             return baseUnpacker;
@@ -46,7 +47,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public Field getFieldForFieldPath(FieldPath fp, int pos) {
+    public Field getFieldForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() == pos + 2;
         if (fp.last() == pos) {
             return this;
@@ -56,7 +57,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
+    public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() == pos + 2;
         if (fp.last() == pos) {
             return properties.getType();
@@ -66,7 +67,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state) {
+    public Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state) {
         assert fp.last() == pos || fp.last() == pos + 2;
         ArrayEntityState subState = state.sub(fp.get(pos));
         if (fp.last() == pos) {
@@ -79,7 +80,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, ArrayEntityState state, Object value) {
+    public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object value) {
         assert fp.last() == pos || fp.last() == pos + 2;
         int i = fp.get(pos);
         ArrayEntityState subState = state.sub(i);
@@ -93,7 +94,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2FieldPath fp, String property) {
         if (property.length() < 5) {
             throw new ClarityException("unresolvable fieldpath");
         }
@@ -104,7 +105,7 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         ArrayEntityState subState = state.sub(fp.cur());
         int len = subState.length();
         if (len > 0) {
