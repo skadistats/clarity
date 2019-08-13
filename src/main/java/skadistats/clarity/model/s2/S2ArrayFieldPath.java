@@ -5,7 +5,7 @@ public class S2ArrayFieldPath extends S2FieldPath implements Comparable<S2ArrayF
     private final int[] path;
     private int last;
 
-    S2ArrayFieldPath() {
+    public S2ArrayFieldPath() {
         path = new int[6];
         path[0] = -1;
         last = 0;
@@ -17,27 +17,19 @@ public class S2ArrayFieldPath extends S2FieldPath implements Comparable<S2ArrayF
         System.arraycopy(other.path, 0, path, 0, last + 1);
     }
 
-    public static S2ArrayFieldPath createEmpty() {
-        return new S2ArrayFieldPath();
-    }
-
-    public static S2ArrayFieldPath createCopy(S2ArrayFieldPath other) {
-        return new S2ArrayFieldPath(other);
-    }
-
     @Override
     S2ArrayFieldPath copy() {
         return new S2ArrayFieldPath(this);
     }
 
     @Override
-    public void inc(int i, int n) {
-        path[i] += n;
+    public void set(int i, int v) {
+        path[i] = v;
     }
 
     @Override
-    public void inc(int n) {
-        inc(last, n);
+    public int get(int i) {
+        return path[i];
     }
 
     @Override
@@ -55,38 +47,6 @@ public class S2ArrayFieldPath extends S2FieldPath implements Comparable<S2ArrayF
     @Override
     public int last() {
         return last;
-    }
-
-    @Override
-    public int cur() {
-        return path[last];
-    }
-
-    @Override
-    public void cur(int v) {
-        path[last] = v;
-    }
-
-    @Override
-    public void set(int i, int v) {
-        path[i] = v;
-    }
-
-    @Override
-    public int get(int i) {
-        return path[i];
-    }
-
-    @Override
-    public String toString() {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i <= last; i++) {
-            if (i != 0) {
-                sb.append('/');
-            }
-            sb.append(path[i]);
-        }
-        return sb.toString();
     }
 
     @Override

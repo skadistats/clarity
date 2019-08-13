@@ -12,13 +12,13 @@ import java.util.List;
 public class EntityStateFactory {
 
     public static EntityState forS1(ReceiveProp[] receiveProps) {
-        return s1TreeMap(receiveProps);
-        //return s1Nested(receiveProps);
+        //return s1TreeMap(receiveProps);
+        return s1Nested(receiveProps);
     }
 
     public static EntityState forS2(Serializer serializer) {
-        return s2TreeMap(serializer);
-        //return s2Nested(serializer);
+        //return s2TreeMap(serializer);
+        return s2Nested(serializer);
     }
 
     private static EntityState s1Nested(ReceiveProp[] receiveProps) {
