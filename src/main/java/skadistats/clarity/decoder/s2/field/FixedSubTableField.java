@@ -2,7 +2,6 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
@@ -96,7 +95,7 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2FieldPath fp, List<S2FieldPath> entries, ArrayEntityState state) {
         int i = fp.cur();
         if (state.has(i)) {
             fp.down();

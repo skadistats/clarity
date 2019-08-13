@@ -1,7 +1,6 @@
 package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
@@ -23,7 +22,7 @@ public abstract class Field {
     public abstract Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state);
     public abstract void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object data);
     public abstract S2FieldPath getFieldPathForName(S2FieldPath fp, String property);
-    public abstract void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state);
+    public abstract void collectFieldPaths(S2FieldPath fp, List<S2FieldPath> entries, ArrayEntityState state);
 
     protected void addBasePropertyName(List<String> parts) {
         parts.add(properties.getName());

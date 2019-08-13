@@ -1,32 +1,28 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.decoder.s2.Serializer;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NestedArrayEntityState implements EntityState, ArrayEntityState {
+public class NestedArrayEntityState implements EntityState<S2FieldPath>, ArrayEntityState {
 
-    private final ValueGetter valueGetter;
-    private final ValueSetter valueSetter;
-    private final FieldPathCollector fieldPathCollector;
-
+    private final Serializer serializer;
     private final List<Entry> entries = new ArrayList<>();
 
-    public NestedArrayEntityState(int length, ValueGetter valueGetter, ValueSetter valueSetter, FieldPathCollector fieldPathCollector) {
-        this.valueGetter = valueGetter;
-        this.valueSetter = valueSetter;
-        this.fieldPathCollector = fieldPathCollector;
+    public NestedArrayEntityState(Serializer serializer) {
+        this.serializer = serializer;
         Entry rootEntry = new Entry();
-        rootEntry.capacity(length);
+        rootEntry.capacity(serializer.getFieldCount());
         entries.add(rootEntry);
+        serializer.initInitialState(this);
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        valueGetter = other.valueGetter;
-        valueSetter = other.valueSetter;
-        fieldPathCollector = other.fieldPathCollector;
+        serializer = other.serializer;
         for (Entry e : other.entries) {
             entries.add(e != null ? new Entry(e.state, e.state.length == 0) : null);
         }
@@ -82,18 +78,20 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object value) {
-        valueSetter.set(this, fp, value);
+    public void setValueForFieldPath(S2FieldPath fp, Object value) {
+        serializer.setValueForFieldPath(fp, 0, this, value);
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp) {
-        return (T) valueGetter.get(this, fp);
+    public <T> T getValueForFieldPath(S2FieldPath fp) {
+        return (T) serializer.getValueForFieldPath(fp, 0, this);
     }
 
     @Override
-    public List<FieldPath> collectFieldPaths() {
-        return fieldPathCollector.collect(this);
+    public Collection<S2FieldPath> collectFieldPaths() {
+        final ArrayList<S2FieldPath> result = new ArrayList<>();
+        serializer.collectFieldPaths(S2FieldPath.createEmpty(), result, this);
+        return result;
     }
 
     private StateRef createStateRef(Entry state) {
@@ -227,22 +225,6 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             return "State[modifiable=" + modifiable + "]";
         }
 
-    }
-
-    public interface FieldPathCollector {
-        List<FieldPath> collect(ArrayEntityState state);
-    }
-
-    public interface NameGetter {
-        String get(ArrayEntityState state, FieldPath fp);
-    }
-
-    public interface ValueGetter {
-        Object get(ArrayEntityState state, FieldPath fp);
-    }
-
-    public interface ValueSetter {
-        void set(ArrayEntityState state, FieldPath fp, Object data);
     }
 
 }

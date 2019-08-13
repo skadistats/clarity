@@ -14,7 +14,7 @@ public class Entity {
         return stateSupplier.getIndex();
     }
 
-    public EntityState getState() {
+    public <F extends FieldPath> EntityState<F> getState() {
         return stateSupplier.getState();
     }
 
@@ -75,7 +75,7 @@ public class Entity {
     @Override
     public String toString() {
         String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getState().dump(title, getDtClass()::getNameForFieldPath);
+        return getState().dump(title, fp -> getDtClass().getNameForFieldPath(fp));
     }
 
 }
