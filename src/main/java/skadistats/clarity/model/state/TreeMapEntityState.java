@@ -1,19 +1,25 @@
 package skadistats.clarity.model.state;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
 import skadistats.clarity.model.FieldPath;
 
 import java.util.Collection;
-import java.util.TreeMap;
 
 public class TreeMapEntityState implements EntityState {
 
-    private final TreeMap<FieldPath, Object> state = new TreeMap<>();
+    private final Object2ObjectAVLTreeMap<FieldPath, Object> state;
+
+    public TreeMapEntityState() {
+        state = new Object2ObjectAVLTreeMap<>();
+    }
+
+    private TreeMapEntityState(TreeMapEntityState other) {
+        state = other.state.clone();
+    }
 
     @Override
     public EntityState clone() {
-        final TreeMapEntityState clone = new TreeMapEntityState();
-        clone.state.putAll(state);
-        return clone;
+        return new TreeMapEntityState(this);
     }
 
     @Override
