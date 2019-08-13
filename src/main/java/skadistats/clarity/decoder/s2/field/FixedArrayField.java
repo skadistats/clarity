@@ -101,7 +101,7 @@ public class FixedArrayField extends Field {
         for (int i = 0; i < subState.length(); i++) {
             if (subState.has(i)) {
                 fp.cur(i);
-                entries.add(new S2FieldPath(fp));
+                entries.add(S2FieldPath.createCopy(fp));
             }
         }
         fp.up(1);

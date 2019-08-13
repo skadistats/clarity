@@ -51,7 +51,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             int n = 0;
-            S2FieldPath fp = new S2FieldPath();
+            S2FieldPath fp = S2FieldPath.createEmpty();
             while (true) {
                 int offsBefore = bs.pos();
                 FieldOpType op = bs.readFieldOp();
@@ -66,7 +66,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     break;
                 }
                 fieldPaths[n++] = fp;
-                fp = new S2FieldPath(fp);
+                fp = S2FieldPath.createCopy(fp);
             }
 
             for (int r = 0; r < n; r++) {

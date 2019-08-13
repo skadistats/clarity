@@ -65,6 +65,6 @@ public class SimpleField extends Field {
 
     @Override
     public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
-        entries.add(new S2FieldPath(fp));
+        entries.add(S2FieldPath.createCopy(fp));
     }
 }

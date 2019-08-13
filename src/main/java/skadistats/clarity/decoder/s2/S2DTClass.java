@@ -73,7 +73,7 @@ public class S2DTClass implements DTClass<S2FieldPath> {
 
     @Override
     public S2FieldPath getFieldPathForName(String property) {
-        S2FieldPath fp = new S2FieldPath();
+        S2FieldPath fp = S2FieldPath.createEmpty();
         return serializer.getFieldPathForName(fp, property);
     }
 

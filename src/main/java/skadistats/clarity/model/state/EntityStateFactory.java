@@ -48,7 +48,7 @@ public class EntityStateFactory {
                 (s, fp, d) -> serializer.setValueForFieldPath((S2FieldPath)fp, 0, s, d),
                 (s) -> {
                     List<FieldPath> result = new ArrayList<>(s.length());
-                    serializer.collectFieldPaths(new S2FieldPath(), result, s);
+                    serializer.collectFieldPaths(S2FieldPath.createEmpty(), result, s);
                     return result;
                 });
         serializer.initInitialState(state);
