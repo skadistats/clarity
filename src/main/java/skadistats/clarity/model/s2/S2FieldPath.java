@@ -2,7 +2,7 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.model.FieldPath;
 
-public abstract class S2FieldPath implements FieldPath {
+public abstract class S2FieldPath<F extends S2FieldPath> implements FieldPath<F> {
 
     public static S2FieldPath createEmpty() {
         return new S2LongFieldPath();

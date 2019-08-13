@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s2;
 
-public class S2LongFieldPath extends S2FieldPath implements Comparable<S2LongFieldPath> {
+public class S2LongFieldPath extends S2FieldPath<S2LongFieldPath> {
 
     private static final int[] BITS_PER_COMPONENT = { 11, 11, 11, 11, 11 };
 

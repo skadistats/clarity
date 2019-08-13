@@ -2,7 +2,7 @@ package skadistats.clarity.model.s1;
 
 import skadistats.clarity.model.FieldPath;
 
-public class S1FieldPath implements FieldPath, Comparable<S1FieldPath> {
+public class S1FieldPath implements FieldPath<S1FieldPath> {
 
     private final int idx;
 

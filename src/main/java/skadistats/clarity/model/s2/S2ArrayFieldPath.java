@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s2;
 
-public class S2ArrayFieldPath extends S2FieldPath implements Comparable<S2ArrayFieldPath> {
+public class S2ArrayFieldPath extends S2FieldPath<S2ArrayFieldPath> {
 
     private final int[] path;
     private int last;
