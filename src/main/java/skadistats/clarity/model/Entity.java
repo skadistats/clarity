@@ -2,11 +2,11 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.model.state.EntityState;
 
-public class Entity {
+public class Entity<F extends FieldPath> {
 
-    private final EntityStateSupplier stateSupplier;
+    private final EntityStateSupplier<F> stateSupplier;
 
-    public Entity(EntityStateSupplier stateSupplier) {
+    public Entity(EntityStateSupplier<F> stateSupplier) {
         this.stateSupplier = stateSupplier;
     }
 
@@ -14,11 +14,11 @@ public class Entity {
         return stateSupplier.getIndex();
     }
 
-    public <F extends FieldPath> EntityState<F> getState() {
+    public EntityState<F> getState() {
         return stateSupplier.getState();
     }
 
-    public DTClass getDtClass() {
+    public DTClass<F> getDtClass() {
         return stateSupplier.getDTClass();
     }
 
@@ -61,21 +61,21 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        FieldPath fp = getDtClass().getFieldPathForName(property);
+        F fp = getDtClass().getFieldPathForName(property);
         if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
         return getPropertyForFieldPath(fp);
     }
 
-    public <T> T getPropertyForFieldPath(FieldPath fp) {
+    public <T> T getPropertyForFieldPath(F fp) {
         return (T) getState().getValueForFieldPath(fp);
     }
 
     @Override
     public String toString() {
         String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getState().dump(title, fp -> getDtClass().getNameForFieldPath(fp));
+        return getState().dump(title, getDtClass()::getNameForFieldPath);
     }
 
 }

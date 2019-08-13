@@ -7,6 +7,7 @@ import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Order;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.FieldPath;
@@ -51,7 +52,11 @@ public class PropertyChange {
         private Predicate<Object[]> invocationPredicate = new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] value) {
-                Entity e = (Entity) value[0];
+                return applyInternal(value);
+            }
+
+            <F extends FieldPath> boolean applyInternal(Object[] value) {
+                Entity<F> e = (Entity<F>) value[0];
                 int eIdx = e.getIndex();
                 TriState classMatchState = classMatchesForEntity.get(eIdx);
                 if (classMatchState == TriState.UNSET) {
@@ -61,7 +66,7 @@ public class PropertyChange {
                 if (classMatchState != TriState.YES) {
                     return false;
                 }
-                FieldPath fp = (FieldPath) value[1];
+                F fp = (F) value[1];
                 TriState propertyMatchState = propertyMatchesForEntity[eIdx].get(fp);
                 if (propertyMatchState == null) {
                     propertyMatchState = TriState.fromBoolean(propertyPattern.matcher(e.getDtClass().getNameForFieldPath(fp)).matches());
@@ -91,7 +96,7 @@ public class PropertyChange {
     @OnEntityCreated
     @Order(1000)
     public void onEntityCreated(Entity e) {
-        for (FieldPath fp : e.getState().collectFieldPaths()) {
+        for (FieldPath fp : ((Entity<?>)e).getState().collectFieldPaths()) {
             evPropertyChanged.raise(e, fp);
         }
     }

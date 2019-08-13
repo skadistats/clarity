@@ -2,13 +2,13 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.model.state.EntityState;
 
-public interface EntityStateSupplier<E extends EntityState> {
+public interface EntityStateSupplier<F extends FieldPath> {
 
     int getIndex();
-    DTClass getDTClass();
+    DTClass<F> getDTClass();
     int getSerial();
     boolean isActive();
     int getHandle();
-    E getState();
+    EntityState<F> getState();
 
 }

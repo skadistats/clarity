@@ -47,7 +47,7 @@ public class S1DTClass implements DTClass<S1FieldPath> {
     @Override
     public S1FieldPath getFieldPathForName(String name){
         Integer idx = this.propsByName.get(name);
-        return idx != null ? new S1FieldPath(idx.intValue()) : null;
+        return idx != null ? new S1FieldPath(idx) : null;
     }
 
     public S1DTClass getSuperClass() {

@@ -40,9 +40,8 @@ public class S2DTClass implements DTClass<S2FieldPath> {
     }
 
     @Override
-    public EntityState getEmptyState() {
-        EntityState state = EntityStateFactory.forS2(serializer);
-        return state;
+    public EntityState<S2FieldPath> getEmptyState() {
+        return EntityStateFactory.forS2(serializer);
     }
 
     @Override
