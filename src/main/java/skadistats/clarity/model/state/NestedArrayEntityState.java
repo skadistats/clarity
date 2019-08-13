@@ -8,15 +8,13 @@ import java.util.function.Consumer;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
-    private final NameGetter nameGetter;
     private final ValueGetter valueGetter;
     private final ValueSetter valueSetter;
     private final FieldPathCollector fieldPathCollector;
 
     private final List<Entry> entries = new ArrayList<>();
 
-    public NestedArrayEntityState(int length, NameGetter nameGetter, ValueGetter valueGetter, ValueSetter valueSetter, FieldPathCollector fieldPathCollector) {
-        this.nameGetter = nameGetter;
+    public NestedArrayEntityState(int length, ValueGetter valueGetter, ValueSetter valueSetter, FieldPathCollector fieldPathCollector) {
         this.valueGetter = valueGetter;
         this.valueSetter = valueSetter;
         this.fieldPathCollector = fieldPathCollector;
@@ -26,7 +24,6 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        nameGetter = other.nameGetter;
         valueGetter = other.valueGetter;
         valueSetter = other.valueSetter;
         fieldPathCollector = other.fieldPathCollector;
@@ -82,11 +79,6 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     @Override
     public EntityState clone() {
         return new NestedArrayEntityState(this);
-    }
-
-    @Override
-    public String getNameForFieldPath(FieldPath fp) {
-        return nameGetter.get(this, fp);
     }
 
     @Override

@@ -75,7 +75,7 @@ public class Entity {
     @Override
     public String toString() {
         String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getState().dump(title);
+        return getState().dump(title, getDtClass()::getNameForFieldPath);
     }
 
 }

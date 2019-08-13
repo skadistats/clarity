@@ -24,7 +24,6 @@ public class EntityStateFactory {
     private static EntityState s1Nested(ReceiveProp[] receiveProps) {
         return new NestedArrayEntityState(
                 receiveProps.length,
-                (s, fp) -> receiveProps[fp.cur()].getVarName(),
                 (s, fp) -> s.get(fp.cur()),
                 (s, fp, d) -> s.set(fp.cur(), d),
                 (s) -> {
@@ -39,11 +38,6 @@ public class EntityStateFactory {
     private static EntityState s2Nested(Serializer serializer) {
         NestedArrayEntityState state = new NestedArrayEntityState(
                 serializer.getFieldCount(),
-                (s, fp) -> {
-                    List<String> parts = new ArrayList<>();
-                    serializer.accumulateName((S2FieldPath) fp, 0, parts);
-                    return String.join(".", parts);
-                },
                 (s, fp) -> serializer.getValueForFieldPath((S2FieldPath)fp, 0, s),
                 (s, fp, d) -> serializer.setValueForFieldPath((S2FieldPath)fp, 0, s, d),
                 (s) -> {

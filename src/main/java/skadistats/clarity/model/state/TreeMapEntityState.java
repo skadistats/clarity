@@ -33,11 +33,6 @@ public class TreeMapEntityState implements EntityState {
     }
 
     @Override
-    public String getNameForFieldPath(FieldPath fp) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
     public Collection<FieldPath> collectFieldPaths() {
         return state.keySet();
     }
