@@ -4,7 +4,9 @@ import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,18 +14,28 @@ import java.util.function.Consumer;
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private final Serializer serializer;
-    private final List<Entry> entries = new ArrayList<>();
+    private final List<Entry> entries;
+    private final Deque<Integer> freeEntries = new ArrayDeque<>();
 
     public NestedArrayEntityState(Serializer serializer) {
         this.serializer = serializer;
+        entries = new ArrayList<>(20);
         entries.add(new Entry());
         serializer.initInitialState(this);
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
         serializer = other.serializer;
-        for (Entry e : other.entries) {
-            entries.add(e != null ? new Entry(e.state, e.state.length == 0) : null);
+        int otherSize = other.entries.size();
+        entries = new ArrayList<>(otherSize + 4);
+        for (int i = 0; i < otherSize; i++) {
+            Entry e = other.entries.get(i);
+            if (e == null) {
+                entries.add(null);
+                freeEntries.add(i);
+            } else {
+                entries.add(new Entry(e.state, e.state.length == 0));
+            }
         }
     }
 
@@ -94,20 +106,20 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     private EntryRef createEntryRef(Entry entry) {
-        // TODO: this is slower than not doing it
-//        for (int i = 0; i < entries.size(); i++) {
-//            if (entries.get(i) == null) {
-//                entries.set(i, entry);
-//                return new EntryRef(i);
-//            }
-//        }
-        int i = entries.size();
-        entries.add(entry);
+        int i;
+        if (freeEntries.isEmpty()) {
+            i = entries.size();
+            entries.add(entry);
+        } else {
+            i = freeEntries.removeFirst();
+            entries.set(i, entry);
+        }
         return new EntryRef(i);
     }
 
     private void clearEntryRef(EntryRef entryRef) {
         entries.set(entryRef.idx, null);
+        freeEntries.add(entryRef.idx);
     }
 
     private static class EntryRef {
