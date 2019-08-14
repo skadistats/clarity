@@ -4,6 +4,7 @@ import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
@@ -59,12 +60,12 @@ public class SimpleField extends Field {
     }
 
     @Override
-    public S2FieldPath getFieldPathForName(S2FieldPath fp, String name) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String name) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
-        entries.add(S2FieldPath.createCopy(fp));
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+        entries.add(fp.unmodifiable());
     }
 }

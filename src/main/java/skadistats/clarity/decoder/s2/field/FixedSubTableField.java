@@ -4,6 +4,7 @@ import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
@@ -91,12 +92,12 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public S2FieldPath getFieldPathForName(S2FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
         return properties.getSerializer().getFieldPathForName(fp, property);
     }
 
     @Override
-    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         int i = fp.cur();
         if (state.has(i)) {
             fp.down();

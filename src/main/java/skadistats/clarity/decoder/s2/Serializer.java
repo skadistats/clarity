@@ -5,6 +5,7 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
@@ -75,14 +76,14 @@ public class Serializer {
         fields[fp.get(pos)].setValueForFieldPath(fp, pos, state, data);
     }
 
-    private S2FieldPath getFieldPathForNameInternal(S2FieldPath fp, String property) {
+    private S2FieldPath getFieldPathForNameInternal(S2ModifiableFieldPath fp, String property) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             String fieldName = field.getProperties().getName();
             if (property.startsWith(fieldName)) {
                 fp.cur(i);
                 if (property.length() == fieldName.length()) {
-                    return fp;
+                    return fp.unmodifiable();
                 } else {
                     if (property.charAt(fieldName.length()) != '.') {
                         continue;
@@ -96,7 +97,7 @@ public class Serializer {
         return null;
     }
 
-    public S2FieldPath getFieldPathForName(S2FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
 //        for (String sendNodePrefix : sendNodePrefixes) {
 //            if (property.length() > sendNodePrefix.length() && property.startsWith(sendNodePrefix)) {
 //                return getFieldPathForNameInternal(fp, property.substring(sendNodePrefix.length() + 1));
@@ -105,7 +106,7 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
-    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         for (int i = 0; i < fields.length; i++) {
             if (state.has(i)) {
                 fp.cur(i);

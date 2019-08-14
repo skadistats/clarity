@@ -2,7 +2,7 @@ package skadistats.clarity.model.state;
 
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -91,7 +91,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     @Override
     public Collection<FieldPath> collectFieldPaths() {
         List<FieldPath> result = new ArrayList<>();
-        serializer.collectFieldPaths(S2FieldPath.createEmpty(), result, this);
+        serializer.collectFieldPaths(S2ModifiableFieldPath.newInstance(), result, this);
         return result;
     }
 
