@@ -16,6 +16,7 @@ import skadistats.clarity.util.TriStateTable;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -95,8 +96,9 @@ public class PropertyChange {
     @OnEntityCreated
     @Order(1000)
     public void onEntityCreated(Entity e) {
-        for (FieldPath fp : e.getState().collectFieldPaths()) {
-            evPropertyChanged.raise(e, fp);
+        final Iterator<FieldPath> iter = e.getState().fieldPathIterator();
+        while(iter.hasNext()) {
+            evPropertyChanged.raise(e, iter.next());
         }
     }
 

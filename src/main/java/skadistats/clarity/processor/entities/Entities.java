@@ -475,10 +475,10 @@ public class Entities {
         if (lastFrame != null && lastFrame.isValid(i) && lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
             if (resetInProgress || !evUpdated.isListenedTo()) return;
             // double create event -> emulate an update
-            currentFrame.setChangedFieldPaths(
-                    i,
-                    new TreeSet<>(currentFrame.getState(i).collectFieldPaths())
-            );
+            Set<FieldPath> changes = new TreeSet<>();
+            Iterator<FieldPath> iter = currentFrame.getState(i).fieldPathIterator();
+            while (iter.hasNext()) changes.add(iter.next());
+            currentFrame.setChangedFieldPaths(i, changes);
             emitUpdatedEvent(i);
         } else {
             if (resetInProgress || !evCreated.isListenedTo()) return;

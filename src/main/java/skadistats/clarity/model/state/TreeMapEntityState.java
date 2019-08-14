@@ -3,7 +3,7 @@ package skadistats.clarity.model.state;
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
 import skadistats.clarity.model.FieldPath;
 
-import java.util.Collection;
+import java.util.Iterator;
 
 public class TreeMapEntityState implements EntityState {
 
@@ -33,8 +33,8 @@ public class TreeMapEntityState implements EntityState {
     }
 
     @Override
-    public Collection<FieldPath> collectFieldPaths() {
-        return state.keySet();
+    public Iterator<FieldPath> fieldPathIterator() {
+        return state.keySet().iterator();
     }
 
 }

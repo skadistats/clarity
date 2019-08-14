@@ -2,10 +2,9 @@ package skadistats.clarity.model.state;
 
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1FieldPath;
+import skadistats.clarity.util.SimpleIterator;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.Iterator;
 
 public class ObjectArrayEntityState implements EntityState {
 
@@ -36,12 +35,14 @@ public class ObjectArrayEntityState implements EntityState {
     }
 
     @Override
-    public Collection<FieldPath> collectFieldPaths() {
-        List<FieldPath> result = new ArrayList<>(state.length);
-        for (int i = 0; i < state.length; i++) {
-            result.add(new S1FieldPath(i));
-        }
-        return result;
+    public Iterator<FieldPath> fieldPathIterator() {
+        return new SimpleIterator<FieldPath>() {
+            int i = 0;
+            @Override
+            public FieldPath readNext() {
+                return i < state.length ? new S1FieldPath(i++) : null;
+            }
+        };
     }
 
 }

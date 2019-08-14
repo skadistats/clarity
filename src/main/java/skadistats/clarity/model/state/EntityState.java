@@ -3,7 +3,7 @@ package skadistats.clarity.model.state;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.util.TextTable;
 
-import java.util.Collection;
+import java.util.Iterator;
 import java.util.function.Function;
 
 public interface EntityState {
@@ -13,7 +13,7 @@ public interface EntityState {
     void setValueForFieldPath(FieldPath fp, Object value);
     <T> T getValueForFieldPath(FieldPath fp);
 
-    Collection<FieldPath> collectFieldPaths();
+    Iterator<FieldPath> fieldPathIterator();
 
     default String dump(String title, Function<FieldPath, String> nameResolver) {
         final TextTable table = new TextTable.Builder()
@@ -25,7 +25,9 @@ public interface EntityState {
                 .build();
 
         int i = 0;
-        for (FieldPath fp : collectFieldPaths()) {
+        final Iterator<FieldPath> iter = fieldPathIterator();
+        while (iter.hasNext()) {
+            FieldPath fp = iter.next();
             table.setData(i, 0, fp);
             table.setData(i, 1, nameResolver.apply(fp));
             table.setData(i, 2, getValueForFieldPath(fp));

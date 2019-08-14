@@ -104,6 +104,6 @@ public class FixedSubTableField extends Field {
             properties.getSerializer().collectFieldPaths(fp, entries, state.sub(i));
             fp.up(1);
         }
-
     }
+
 }
