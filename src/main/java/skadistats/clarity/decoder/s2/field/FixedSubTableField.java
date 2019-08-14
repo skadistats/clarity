@@ -19,11 +19,6 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void initInitialState(ArrayEntityState state, int idx) {
-        properties.getSerializer().initInitialState(state.sub(idx));
-    }
-
-    @Override
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         assert fp.last() >= pos;
         addBasePropertyName(parts);
@@ -81,9 +76,7 @@ public class FixedSubTableField extends Field {
         int i = fp.get(pos);
         if (fp.last() == pos) {
             boolean existing = (Boolean) value;
-            if (!state.has(i) && existing) {
-                properties.getSerializer().initInitialState(state.sub(i));
-            } else if (state.has(i) && !existing) {
+            if (state.has(i) && !existing) {
                 state.clear(i);
             }
         } else {

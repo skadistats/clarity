@@ -45,13 +45,6 @@ public class Serializer {
         return fields.length;
     }
 
-    public void initInitialState(ArrayEntityState state) {
-        state.capacity(fields.length);
-        for (int i = 0; i < fields.length; i++) {
-            fields[i].initInitialState(state, i);
-        }
-    }
-
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         fields[fp.get(pos)].accumulateName(fp, pos, parts);
     }
@@ -73,7 +66,11 @@ public class Serializer {
     }
 
     public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object data) {
-        fields[fp.get(pos)].setValueForFieldPath(fp, pos, state, data);
+        int idx = fp.get(pos);
+        if (!state.has(idx)) {
+            state.capacity(fields.length);
+        }
+        fields[idx].setValueForFieldPath(fp, pos, state, data);
     }
 
     private S2FieldPath getFieldPathForNameInternal(S2ModifiableFieldPath fp, String property) {

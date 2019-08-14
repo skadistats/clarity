@@ -23,11 +23,6 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void initInitialState(ArrayEntityState state, int idx) {
-        state.sub(idx).capacity(length);
-    }
-
-    @Override
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         assert fp.last() == pos || fp.last() == pos + 1;
         addBasePropertyName(parts);
@@ -81,7 +76,11 @@ public class FixedArrayField extends Field {
         if (fp.last() == pos) {
             throw new ClarityException("base of a FixedArrayField cannot be set");
         } else {
-            ArrayEntityState subState = state.sub(fp.get(pos));
+            int idx = fp.get(pos);
+            if (!state.has(idx)) {
+                state.sub(idx).capacity(length);
+            }
+            ArrayEntityState subState = state.sub(idx);
             subState.set(fp.get(pos + 1), value);
         }
     }

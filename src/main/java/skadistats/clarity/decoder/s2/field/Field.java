@@ -16,7 +16,6 @@ public abstract class Field {
         this.properties = properties;
     }
 
-    public abstract void initInitialState(ArrayEntityState state, int idx);
     public abstract void accumulateName(S2FieldPath fp, int pos, List<String> parts);
     public abstract Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos);
     public abstract Field getFieldForFieldPath(S2FieldPath fp, int pos);

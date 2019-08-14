@@ -1,7 +1,5 @@
 package skadistats.clarity.model.state;
 
-import java.util.function.Consumer;
-
 public interface ArrayEntityState {
 
     int length();
@@ -15,18 +13,10 @@ public interface ArrayEntityState {
     boolean isSub(int idx);
     ArrayEntityState sub(int idx);
 
-    ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<ArrayEntityState> initializer);
+    ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded);
 
     default ArrayEntityState capacity(int wantedSize) {
-        return capacity(wantedSize, false, null);
-    }
-
-    default ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
-        return capacity(wantedSize, shrinkIfNeeded, null);
-    }
-
-    default ArrayEntityState capacity(int wantedSize, Consumer<ArrayEntityState> initializer) {
-        return capacity(wantedSize, false, initializer);
+        return capacity(wantedSize, false);
     }
 
 }

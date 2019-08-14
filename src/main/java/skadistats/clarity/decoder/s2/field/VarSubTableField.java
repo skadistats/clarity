@@ -21,11 +21,6 @@ public class VarSubTableField extends Field {
     }
 
     @Override
-    public void initInitialState(ArrayEntityState state, int idx) {
-        state.set(idx, null);
-    }
-
-    @Override
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         assert fp.last() == pos || fp.last() == pos + 2;
         addBasePropertyName(parts);
@@ -86,10 +81,10 @@ public class VarSubTableField extends Field {
         int i = fp.get(pos);
         ArrayEntityState subState = state.sub(i);
         if (fp.last() == pos) {
-            subState.capacity((Integer) value, true, properties.getSerializer()::initInitialState);
+            subState.capacity((Integer) value, true);
         } else {
             int j = fp.get(pos + 1);
-            subState.capacity(j + 1, false, properties.getSerializer()::initInitialState);
+            subState.capacity(j + 1, false);
             properties.getSerializer().setValueForFieldPath(fp, pos + 2, subState.sub(j), value);
         }
     }

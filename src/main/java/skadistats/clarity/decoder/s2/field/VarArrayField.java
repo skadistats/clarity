@@ -23,11 +23,6 @@ public class VarArrayField extends Field {
     }
 
     @Override
-    public void initInitialState(ArrayEntityState state, int idx) {
-        state.set(idx, null);
-    }
-
-    @Override
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
         assert fp.last() == pos || fp.last() == pos + 1;
         addBasePropertyName(parts);

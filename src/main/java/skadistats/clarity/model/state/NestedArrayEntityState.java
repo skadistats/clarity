@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
@@ -21,7 +20,6 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         this.serializer = serializer;
         entries = new ArrayList<>(20);
         entries.add(new Entry());
-        serializer.initInitialState(this);
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
@@ -79,8 +77,8 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<ArrayEntityState> initializer) {
-        return rootEntry().capacity(wantedSize, shrinkIfNeeded, initializer);
+    public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
+        return rootEntry().capacity(wantedSize, shrinkIfNeeded);
     }
 
     @Override
@@ -201,7 +199,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         }
 
         @Override
-        public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<ArrayEntityState> initializer) {
+        public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
             int curSize = state.length;
             if (wantedSize == curSize) {
                 return this;
@@ -222,11 +220,6 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
                 state = newState;
                 modifiable = true;
-                if (initializer != null) {
-                    for (int i = curSize; i < wantedSize; i++) {
-                        initializer.accept(sub(i));
-                    }
-                }
             }
             return this;
         }
