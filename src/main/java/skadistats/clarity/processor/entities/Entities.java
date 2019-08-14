@@ -195,24 +195,26 @@ public class Entities {
 
                 //updateEventDebug = true;
 
-                for (int i = 0; i < entityCount; i++) {
-                    boolean serialDiffers = lastFrame.getSerial(i) != currentFrame.getSerial(i);
-                    if (serialDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
-                        emitLeftEvent(i);
+                if (lastFrame != null) {
+                    for (int i = 0; i < entityCount; i++) {
+                        boolean serialDiffers = lastFrame.getSerial(i) != currentFrame.getSerial(i);
+                        if (serialDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
+                            emitLeftEvent(i);
+                        }
+                        if (serialDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
+                            emitDeletedEvent(i);
+                        }
                     }
-                    if (serialDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
-                        emitDeletedEvent(i);
-                    }
+                    activeFrame = lastFrame;
+                    lastFrameEvents.forEach(Runnable::run);
+                    lastFrameEvents.clear();
                 }
-                activeFrame = lastFrame;
-                lastFrameEvents.forEach(Runnable::run);
-                lastFrameEvents.clear();
 
                 for (int i = 0; i < entityCount; i++) {
                     if (currentFrame.isValid(i)) {
                         emitCreatedEvent(i);
                     }
-                    if (!lastFrame.isActive(i) && currentFrame.isActive(i)) {
+                    if ((lastFrame == null || !lastFrame.isActive(i)) && currentFrame.isActive(i)) {
                         emitEnteredEvent(i);
                     }
                 }
