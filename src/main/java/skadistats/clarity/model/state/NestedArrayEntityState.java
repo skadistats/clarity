@@ -14,7 +14,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private final Serializer serializer;
     private final List<Entry> entries;
-    private final Deque<Integer> freeEntries = new ArrayDeque<>();
+    private Deque<Integer> freeEntries;
 
     public NestedArrayEntityState(Serializer serializer) {
         this.serializer = serializer;
@@ -30,7 +30,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             Entry e = other.entries.get(i);
             if (e == null) {
                 entries.add(null);
-                freeEntries.add(i);
+                markFree(i);
             } else {
                 entries.add(new Entry(e.state, e.state.length == 0));
             }
@@ -105,7 +105,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private EntryRef createEntryRef(Entry entry) {
         int i;
-        if (freeEntries.isEmpty()) {
+        if (freeEntries == null || freeEntries.isEmpty()) {
             i = entries.size();
             entries.add(entry);
         } else {
@@ -117,8 +117,16 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private void clearEntryRef(EntryRef entryRef) {
         entries.set(entryRef.idx, null);
-        freeEntries.add(entryRef.idx);
+        markFree(entryRef.idx);
     }
+
+    private void markFree(int i) {
+        if (freeEntries == null) {
+            freeEntries = new ArrayDeque<>();
+        }
+        freeEntries.add(i);
+    }
+
 
     private static class EntryRef {
 
