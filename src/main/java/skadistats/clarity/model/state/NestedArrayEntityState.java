@@ -16,9 +16,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     public NestedArrayEntityState(Serializer serializer) {
         this.serializer = serializer;
-        Entry rootEntry = new Entry();
-        rootEntry.capacity(serializer.getFieldCount());
-        entries.add(rootEntry);
+        entries.add(new Entry());
         serializer.initInitialState(this);
     }
 
@@ -95,34 +93,34 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         return result.iterator();
     }
 
-    private StateRef createStateRef(Entry state) {
+    private EntryRef createEntryRef(Entry entry) {
         // TODO: this is slower than not doing it
-//        for (int i = 0; i < states.size(); i++) {
-//            if (states.get(i) == null) {
-//                states.set(i, state);
-//                return new StateRef(i);
+//        for (int i = 0; i < entries.size(); i++) {
+//            if (entries.get(i) == null) {
+//                entries.set(i, entry);
+//                return new EntryRef(i);
 //            }
 //        }
         int i = entries.size();
-        entries.add(state);
-        return new StateRef(i);
+        entries.add(entry);
+        return new EntryRef(i);
     }
 
-    private void clearStateRef(StateRef stateRef) {
-        entries.set(stateRef.idx, null);
+    private void clearEntryRef(EntryRef entryRef) {
+        entries.set(entryRef.idx, null);
     }
 
-    private static class StateRef {
+    private static class EntryRef {
 
         private final int idx;
 
-        private StateRef(int idx) {
+        private EntryRef(int idx) {
             this.idx = idx;
         }
 
         @Override
         public String toString() {
-            return "StateRef[" + idx + "]";
+            return "EntryRef[" + idx + "]";
         }
     }
 
@@ -165,8 +163,8 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 state = newState;
                 modifiable = true;
             }
-            if (state[idx] instanceof StateRef) {
-                clearStateRef((StateRef) state[idx]);
+            if (state[idx] instanceof EntryRef) {
+                clearEntryRef((EntryRef) state[idx]);
             }
             state[idx] = value;
         }
@@ -178,16 +176,16 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
         @Override
         public boolean isSub(int idx) {
-            return has(idx) && get(idx) instanceof StateRef;
+            return has(idx) && get(idx) instanceof EntryRef;
         }
 
         @Override
         public ArrayEntityState sub(int idx) {
             if (!has(idx)) {
-                set(idx, createStateRef(new Entry()));
+                set(idx, createEntryRef(new Entry()));
             }
-            StateRef stateRef = (StateRef) get(idx);
-            return entries.get(stateRef.idx);
+            EntryRef entryRef = (EntryRef) get(idx);
+            return entries.get(entryRef.idx);
         }
 
         @Override
@@ -223,7 +221,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
         @Override
         public String toString() {
-            return "State[modifiable=" + modifiable + "]";
+            return "Entry[modifiable=" + modifiable + "]";
         }
 
     }
