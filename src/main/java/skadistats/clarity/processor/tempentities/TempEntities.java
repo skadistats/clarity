@@ -8,7 +8,6 @@ import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.EntityStateSupplier;
@@ -54,27 +53,10 @@ public class TempEntities {
                 }
                 EntityState state = EntityStateFactory.forS1(receiveProps);
                 fieldReader.readFields(stream, cls, state, null, false);
-                S1DTClass finalCls = cls;
-                evTempEntity.raise(new Entity(new EntityStateSupplier() {
-                    @Override
-                    public int getIndex() {
-                        return 0;
-                    }
-                    @Override
-                    public DTClass getDTClass() {
-                        return finalCls;
-                    }
-                    @Override
-                    public int getSerial() {
-                        return 0;
-                    }
+                evTempEntity.raise(new Entity(engineType, engineType.emptyHandle(), cls, new EntityStateSupplier() {
                     @Override
                     public boolean isActive() {
                         return true;
-                    }
-                    @Override
-                    public int getHandle() {
-                        return 0;
                     }
                     @Override
                     public EntityState getState() {

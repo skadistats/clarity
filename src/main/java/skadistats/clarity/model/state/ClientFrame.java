@@ -1,72 +1,51 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.FieldPath;
 
 import java.util.Set;
 
 public class ClientFrame {
 
-    private final EngineType engineType;
     private final int tick;
-    private final boolean[] valid;
-    private final DTClass[] dtClass;
-    private final int[] serial;
     private final boolean[] active;
-    private final int[] lastChangedTick;
+    private final Entity[] entity;
     private final Set[] changedFieldPaths;
     private final EntityState[] state;
 
-    public ClientFrame(EngineType engineType, int tick) {
-        this.engineType = engineType;
+    public ClientFrame(int tick, int size) {
         this.tick = tick;
-        int n = 1 << engineType.getIndexBits();
-        this.valid = new boolean[n];
-        this.dtClass = new DTClass[n];
-        this.serial = new int[n];
-        this.active = new boolean[n];
-        this.lastChangedTick = new int[n];
-        this.changedFieldPaths = new Set[n];
-        this.state = new EntityState[n];
+        this.active = new boolean[size];
+        this.entity = new Entity[size];
+        this.changedFieldPaths = new Set[size];
+        this.state = new EntityState[size];
     }
 
     public void copyFromOtherFrame(ClientFrame otherFrame, int idx, int length) {
-        System.arraycopy(otherFrame.valid, idx, valid, idx, length);
-        System.arraycopy(otherFrame.dtClass, idx, dtClass, idx, length);
-        System.arraycopy(otherFrame.serial, idx, serial, idx, length);
         System.arraycopy(otherFrame.active, idx, active, idx, length);
-        System.arraycopy(otherFrame.lastChangedTick, idx, lastChangedTick, idx, length);
+        System.arraycopy(otherFrame.entity, idx, entity, idx, length);
         // no changed field paths (leave at null)
         System.arraycopy(otherFrame.state, idx, state, idx, length);
     }
 
-    public void createNewEntity(int eIdx, DTClass dtClass, int serial, Set<FieldPath> changedFieldPaths, EntityState state) {
-        this.valid[eIdx] = true;
-        this.dtClass[eIdx] = dtClass;
-        this.serial[eIdx] = serial;
+    public void createNewEntity(Entity entity, Set<FieldPath> changedFieldPaths, EntityState state) {
+        int eIdx = entity.getIndex();
         this.active[eIdx] = true;
-        this.lastChangedTick[eIdx] = tick;
+        this.entity[eIdx] = entity;
         this.changedFieldPaths[eIdx] = changedFieldPaths;
         this.state[eIdx] = state;
     }
 
     public void updateExistingEntity(ClientFrame oldFrame, int eIdx, Set<FieldPath> changedFieldPaths, EntityState state) {
-        this.valid[eIdx] = oldFrame.valid[eIdx];
-        this.dtClass[eIdx] = oldFrame.dtClass[eIdx];
-        this.serial[eIdx] = oldFrame.serial[eIdx];
         this.active[eIdx] = oldFrame.active[eIdx];
-        this.lastChangedTick[eIdx] = tick;
+        this.entity[eIdx] = oldFrame.entity[eIdx];
         this.changedFieldPaths[eIdx] = changedFieldPaths;
         this.state[eIdx] = state;
     }
 
     public void deleteEntity(int eIdx) {
-        this.valid[eIdx] = false;
-        this.dtClass[eIdx] = null;
-        this.serial[eIdx] = 0;
         this.active[eIdx] = false;
-        this.lastChangedTick[eIdx] = tick;
+        this.entity[eIdx] = null;
         this.changedFieldPaths[eIdx] = null;
         this.state[eIdx] = null;
     }
@@ -88,23 +67,15 @@ public class ClientFrame {
     }
 
     public boolean isValid(int idx) {
-        return valid[idx];
-    }
-
-    public DTClass getDtClass(int idx) {
-        return dtClass[idx];
-    }
-
-    public int getSerial(int idx) {
-        return serial[idx];
+        return entity[idx] != null;
     }
 
     public boolean isActive(int idx) {
         return active[idx];
     }
 
-    public int getLastChangedTick(int idx) {
-        return lastChangedTick[idx];
+    public Entity getEntity(int eIdx) {
+        return entity[eIdx];
     }
 
     public Set<FieldPath> getChangedFieldPaths(int idx) {
@@ -113,10 +84,6 @@ public class ClientFrame {
 
     public EntityState getState(int idx) {
         return state[idx];
-    }
-
-    public int getHandle(int idx) {
-        return engineType.handleForIndexAndSerial(idx, getSerial(idx));
     }
 
     @Override

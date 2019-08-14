@@ -4,35 +4,43 @@ import skadistats.clarity.model.state.EntityState;
 
 public class Entity {
 
+    private final EngineType engineType;
+    private final int handle;
+    private final DTClass dtClass;
+
     private final EntityStateSupplier stateSupplier;
 
-    public Entity(EntityStateSupplier stateSupplier) {
+    public Entity(EngineType engineType, int handle, DTClass dtClass, EntityStateSupplier stateSupplier) {
+        this.engineType = engineType;
+        this.handle = handle;
+        this.dtClass = dtClass;
         this.stateSupplier = stateSupplier;
     }
 
     public int getIndex() {
-        return stateSupplier.getIndex();
+        return engineType.indexForHandle(handle);
+    }
+
+    public int getSerial() {
+        return engineType.serialForHandle(handle);
+    }
+
+    public int getHandle() {
+        return handle;
+    }
+
+    public DTClass getDtClass() {
+        return dtClass;
     }
 
     public EntityState getState() {
         return stateSupplier.getState();
     }
 
-    public DTClass getDtClass() {
-        return stateSupplier.getDTClass();
-    }
-
-    public int getSerial() {
-        return stateSupplier.getSerial();
-    }
-
     public boolean isActive() {
         return stateSupplier.isActive();
     }
 
-    public int getHandle() {
-        return stateSupplier.getHandle();
-    }
 
     /**
      * Check if this entity contains the given property.

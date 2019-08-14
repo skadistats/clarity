@@ -21,6 +21,7 @@ import skadistats.clarity.model.EntityStateSupplier;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.state.ClientFrame;
+import skadistats.clarity.model.state.EntityRegistry;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
@@ -61,6 +62,7 @@ public class Entities {
     private int[] deletions;
     private int serverTick;
     private LinkedList<ClientFrame> clientFrames = new LinkedList<>();
+    private EntityRegistry entityRegistry = new EntityRegistry();
 
     private Map<Integer, ByteString> rawBaselines = new HashMap<>();
     private class Baseline {
@@ -197,11 +199,11 @@ public class Entities {
 
                 if (lastFrame != null) {
                     for (int i = 0; i < entityCount; i++) {
-                        boolean serialDiffers = lastFrame.getSerial(i) != currentFrame.getSerial(i);
-                        if (serialDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
+                        boolean entityDiffers = lastFrame.getEntity(i) != currentFrame.getEntity(i);
+                        if (entityDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
                             emitLeftEvent(i);
                         }
-                        if (serialDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
+                        if (entityDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
                             emitDeletedEvent(i);
                         }
                     }
@@ -248,12 +250,13 @@ public class Entities {
 
     void debugUpdateEvent(String which, int eIdx) {
         if (!updateEventDebug) return;
+        Entity entity = activeFrame.getEntity(eIdx);
         log.info("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
                 which,
                 eIdx,
-                activeFrame.getSerial(eIdx),
-                activeFrame.getHandle(eIdx),
-                activeFrame.getDtClass(eIdx).getDtName()
+                entity.getSerial(),
+                entity.getHandle(),
+                entity.getDtClass().getDtName()
         );
     }
 
@@ -271,7 +274,7 @@ public class Entities {
         }
 
         lastFrame = currentFrame;
-        currentFrame = new ClientFrame(engineType, serverTick);
+        currentFrame = new ClientFrame(serverTick, entityCount);
 
         deltaFrame = null;
         if (message.getIsDelta()) {
@@ -374,7 +377,7 @@ public class Entities {
         Set<FieldPath> changedFieldPaths = null;
         Consumer<FieldPath> changedFieldPathConsumer = null;
         if (deltaFrame != null && deltaFrame.isValid(eIdx)) {
-            if (deltaFrame.getSerial(eIdx) == serial) {
+            if (deltaFrame.getEntity(eIdx).getSerial() == serial) {
                 // same entity, only enter
                 isCreate = false;
                 changedFieldPaths = new TreeSet<>();
@@ -382,9 +385,12 @@ public class Entities {
             } else {
                 // recreate
                 logModification("DELETE", deltaFrame, eIdx);
-                if (lastFrame.getSerial(eIdx) != serial) {
-                    emitLeftEvent(eIdx);
-                    emitDeletedEvent(eIdx);
+                if (lastFrame != null) {
+                    Entity entity = lastFrame.getEntity(eIdx);
+                    if (entity != null && entity.getSerial() != serial) {
+                        emitLeftEvent(eIdx);
+                        emitDeletedEvent(eIdx);
+                    }
                 }
             }
         }
@@ -396,7 +402,12 @@ public class Entities {
         }
         fieldReader.readFields(stream, dtClass, newState, changedFieldPathConsumer, debug);
         if (isCreate) {
-            currentFrame.createNewEntity(eIdx, dtClass, serial, null, newState);
+            int handle = engineType.handleForIndexAndSerial(eIdx, serial);
+            currentFrame.createNewEntity(
+                    entityRegistry.get(handle, () -> new Entity(engineType, handle, dtClass, stateSupplierForIndex(eIdx))),
+                    null,
+                    newState
+            );
             logModification("CREATE", currentFrame, eIdx);
             emitCreatedEvent(eIdx);
             emitEnteredEvent(eIdx);
@@ -419,7 +430,7 @@ public class Entities {
         checkDeltaFrameValid("update", eIdx);
         changedFieldPaths = new TreeSet<>();
         newState = deltaFrame.getState(eIdx).clone();
-        fieldReader.readFields(stream, deltaFrame.getDtClass(eIdx), newState, changedFieldPaths::add, debug);
+        fieldReader.readFields(stream, deltaFrame.getEntity(eIdx).getDtClass(), newState, changedFieldPaths::add, debug);
         currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
         logModification("UPDATE", currentFrame, eIdx);
         emitUpdatedEvent(eIdx);
@@ -474,7 +485,7 @@ public class Entities {
     }
 
     private void emitCreatedEvent(int i) {
-        if (lastFrame != null && lastFrame.isValid(i) && lastFrame.getSerial(i) == currentFrame.getSerial(i)) {
+        if (lastFrame != null && lastFrame.getEntity(i) == currentFrame.getEntity(i)) {
             if (resetInProgress || !evUpdated.isListenedTo()) return;
             // double create event -> emulate an update
             Set<FieldPath> changes = new TreeSet<>();
@@ -511,7 +522,6 @@ public class Entities {
                 }
             }
 
-            DTClass cls = currentFrame.getDtClass(i);
             int n = 0;
             for (FieldPath changedFieldPath : processedFieldPaths) {
                 Object v1 = lastFrame.getState(i).getValueForFieldPath(changedFieldPath);
@@ -560,12 +570,13 @@ public class Entities {
 
     private void logModification(String which, ClientFrame frame, int eIdx) {
         if (!log.isDebugEnabled()) return;
+        Entity entity = frame.getEntity(eIdx);
         log.debug("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
                 which,
                 eIdx,
-                frame.getSerial(eIdx),
-                frame.getHandle(eIdx),
-                frame.getDtClass(eIdx).getDtName()
+                entity.getSerial(),
+                entity.getHandle(),
+                entity.getDtClass().getDtName()
         );
     }
 
@@ -619,51 +630,32 @@ public class Entities {
         return b;
     }
 
-    private Map<Integer, Entity> entityMap = new HashMap<>();
     private Map<Integer, EntityStateSupplier> supplierMap = new HashMap<>();
 
+    private EntityStateSupplier stateSupplierForIndex(int eIdx) {
+        return supplierMap.computeIfAbsent(eIdx, x -> new EntityStateSupplier() {
+            private <T> T get(BiFunction<ClientFrame, Integer, T> getter, T defaultValue) {
+                if (activeFrame == null || !activeFrame.isValid(eIdx)) return defaultValue;
+                return getter.apply(activeFrame, eIdx);
+            }
+            @Override
+            public boolean isActive() {
+                return get(ClientFrame::isActive, false);
+            }
+            @Override
+            public EntityState getState() {
+                return get(ClientFrame::getState, null);
+            }
+        });
+    }
 
     public Entity getByIndex(int index) {
-        if (activeFrame == null || !activeFrame.isValid(index)) return null;
-        int handle = currentFrame.getHandle(index);
-        return entityMap.computeIfAbsent(handle, h -> new Entity(
-            supplierMap.computeIfAbsent(index, i -> new EntityStateSupplier() {
-                private <T> T get(BiFunction<ClientFrame, Integer, T> getter, T defaultValue) {
-                    if (activeFrame == null || !activeFrame.isValid(i)) return defaultValue;
-                    return getter.apply(activeFrame, index);
-                }
-                @Override
-                public int getIndex() {
-                    return index;
-                }
-                @Override
-                public DTClass getDTClass() {
-                    return get(ClientFrame::getDtClass, null);
-                }
-                @Override
-                public int getSerial() {
-                    return get(ClientFrame::getSerial, 0);
-                }
-                @Override
-                public boolean isActive() {
-                    return get(ClientFrame::isActive, false);
-                }
-                @Override
-                public int getHandle() {
-                    // TODO: maybe return empty handle?
-                    return get(ClientFrame::getHandle, 0);
-                }
-                @Override
-                public EntityState getState() {
-                    return get(ClientFrame::getState, null);
-                }
-            })
-        ));
+        return activeFrame != null ? activeFrame.getEntity(index) : null;
     }
 
     public Entity getByHandle(int handle) {
         Entity e = getByIndex(engineType.indexForHandle(handle));
-        return e == null || e.getSerial() != engineType.serialForHandle(handle) ? null : e;
+        return e == null || e.getHandle() != handle ? null : e;
     }
 
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
