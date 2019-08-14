@@ -2,7 +2,7 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.model.state.EntityState;
 
-public interface DTClass<F extends FieldPath> {
+public interface DTClass {
 
     String getDtName();
 
@@ -11,8 +11,8 @@ public interface DTClass<F extends FieldPath> {
 
     EntityState getEmptyState();
 
-    String getNameForFieldPath(F fp);
-    F getFieldPathForName(String property);
+    String getNameForFieldPath(FieldPath fp);
+    FieldPath getFieldPathForName(String property);
 
 }
 

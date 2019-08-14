@@ -10,8 +10,7 @@ public class S1FieldPath implements FieldPath<S1FieldPath> {
         this.idx = idx;
     }
 
-    @Override
-    public int cur() {
+    public int idx() {
         return idx;
     }
 
@@ -22,20 +21,20 @@ public class S1FieldPath implements FieldPath<S1FieldPath> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        S1FieldPath that = (S1FieldPath) o;
-        return idx == that.idx;
+        if (o instanceof S1FieldPath) {
+            return idx == ((S1FieldPath) o).idx;
+        }
+        return false;
     }
 
     @Override
     public int hashCode() {
-        return idx;
+        return Integer.hashCode(idx);
     }
 
     @Override
     public int compareTo(S1FieldPath o) {
-        return idx - o.idx;
+        return Integer.compare(idx, o.idx);
     }
 
 }

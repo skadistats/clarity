@@ -1,12 +1,13 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1FieldPath;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-public class ObjectArrayEntityState implements EntityState<S1FieldPath> {
+public class ObjectArrayEntityState implements EntityState {
 
     private final Object[] state;
 
@@ -25,18 +26,18 @@ public class ObjectArrayEntityState implements EntityState<S1FieldPath> {
     }
 
     @Override
-    public void setValueForFieldPath(S1FieldPath fp, Object value) {
-        state[fp.cur()] = value;
+    public void setValueForFieldPath(FieldPath fp, Object value) {
+        state[fp.s1().idx()] = value;
     }
 
     @Override
-    public <T> T getValueForFieldPath(S1FieldPath fp) {
-        return (T) state[fp.cur()];
+    public <T> T getValueForFieldPath(FieldPath fp) {
+        return (T) state[fp.s1().idx()];
     }
 
     @Override
-    public Collection<S1FieldPath> collectFieldPaths() {
-        List<S1FieldPath> result = new ArrayList<>(state.length);
+    public Collection<FieldPath> collectFieldPaths() {
+        List<FieldPath> result = new ArrayList<>(state.length);
         for (int i = 0; i < state.length; i++) {
             result.add(new S1FieldPath(i));
         }

@@ -3,6 +3,7 @@ package skadistats.clarity.decoder.s2;
 import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
@@ -104,7 +105,7 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
-    public void collectFieldPaths(S2FieldPath fp, List<S2FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         for (int i = 0; i < fields.length; i++) {
             if (state.has(i)) {
                 fp.cur(i);

@@ -6,16 +6,16 @@ import skadistats.clarity.util.TextTable;
 import java.util.Collection;
 import java.util.function.Function;
 
-public interface EntityState<F extends FieldPath> {
+public interface EntityState {
 
     EntityState clone();
 
-    void setValueForFieldPath(F fp, Object value);
-    <T> T getValueForFieldPath(F fp);
+    void setValueForFieldPath(FieldPath fp, Object value);
+    <T> T getValueForFieldPath(FieldPath fp);
 
-    Collection<F> collectFieldPaths();
+    Collection<FieldPath> collectFieldPaths();
 
-    default String dump(String title, Function<F, String> nameResolver) {
+    default String dump(String title, Function<FieldPath, String> nameResolver) {
         final TextTable table = new TextTable.Builder()
                 .setFrame(TextTable.FRAME_COMPAT)
                 .addColumn("FP")
@@ -25,7 +25,7 @@ public interface EntityState<F extends FieldPath> {
                 .build();
 
         int i = 0;
-        for (F fp : collectFieldPaths()) {
+        for (FieldPath fp : collectFieldPaths()) {
             table.setData(i, 0, fp);
             table.setData(i, 1, nameResolver.apply(fp));
             table.setData(i, 2, getValueForFieldPath(fp));

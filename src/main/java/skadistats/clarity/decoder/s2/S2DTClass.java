@@ -4,6 +4,7 @@ import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
@@ -11,7 +12,7 @@ import skadistats.clarity.model.state.EntityStateFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class S2DTClass implements DTClass<S2FieldPath> {
+public class S2DTClass implements DTClass {
 
     private final Serializer serializer;
     private int classId = -1;
@@ -40,14 +41,14 @@ public class S2DTClass implements DTClass<S2FieldPath> {
     }
 
     @Override
-    public EntityState<S2FieldPath> getEmptyState() {
+    public EntityState getEmptyState() {
         return EntityStateFactory.forS2(serializer);
     }
 
     @Override
-    public String getNameForFieldPath(S2FieldPath fp) {
+    public String getNameForFieldPath(FieldPath fp) {
         List<String> parts = new ArrayList<>();
-        serializer.accumulateName(fp, 0, parts);
+        serializer.accumulateName(fp.s2(), 0, parts);
         StringBuilder b = new StringBuilder();
         for (String part : parts) {
             if (b.length() != 0) {

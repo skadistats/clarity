@@ -1,13 +1,13 @@
 package skadistats.clarity.model.state;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
-import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.FieldPath;
 
 import java.util.Collection;
 
-public class TreeMapEntityState implements EntityState<S2FieldPath> {
+public class TreeMapEntityState implements EntityState {
 
-    private final Object2ObjectAVLTreeMap<S2FieldPath, Object> state;
+    private final Object2ObjectAVLTreeMap<FieldPath, Object> state;
 
     public TreeMapEntityState() {
         state = new Object2ObjectAVLTreeMap<>();
@@ -23,17 +23,17 @@ public class TreeMapEntityState implements EntityState<S2FieldPath> {
     }
 
     @Override
-    public void setValueForFieldPath(S2FieldPath fp, Object value) {
+    public void setValueForFieldPath(FieldPath fp, Object value) {
         state.put(fp, value);
     }
 
     @Override
-    public <T> T getValueForFieldPath(S2FieldPath fp) {
+    public <T> T getValueForFieldPath(FieldPath fp) {
         return (T) state.get(fp);
     }
 
     @Override
-    public Collection<S2FieldPath> collectFieldPaths() {
+    public Collection<FieldPath> collectFieldPaths() {
         return state.keySet();
     }
 

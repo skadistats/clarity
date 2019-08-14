@@ -4,6 +4,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
@@ -94,7 +95,7 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void collectFieldPaths(S2FieldPath fp, List<S2FieldPath> entries, ArrayEntityState state) {
+    public void collectFieldPaths(S2FieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         ArrayEntityState subState = state.sub(fp.cur());
         fp.down();
         for (int i = 0; i < subState.length(); i++) {

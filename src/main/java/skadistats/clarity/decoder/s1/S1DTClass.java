@@ -9,7 +9,7 @@ import skadistats.clarity.model.state.EntityStateFactory;
 import java.util.HashMap;
 import java.util.Map;
 
-public class S1DTClass implements DTClass<S1FieldPath> {
+public class S1DTClass implements DTClass {
 
     private final String dtName;
     private final SendTable sendTable;
@@ -40,8 +40,8 @@ public class S1DTClass implements DTClass<S1FieldPath> {
     }
 
     @Override
-    public String getNameForFieldPath(S1FieldPath fp) {
-        return this.receiveProps[fp.cur()].getVarName();
+    public String getNameForFieldPath(FieldPath fp) {
+        return this.receiveProps[fp.s1().idx()].getVarName();
     }
 
     @Override

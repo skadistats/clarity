@@ -70,7 +70,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             for (int r = 0; r < n; r++) {
-                fp = (S2FieldPath) fieldPaths[r];
+                fp = fieldPaths[r].s2();
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
                     FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();

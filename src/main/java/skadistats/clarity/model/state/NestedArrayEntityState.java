@@ -1,6 +1,7 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.decoder.s2.Serializer;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayList;
@@ -8,7 +9,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class NestedArrayEntityState implements EntityState<S2FieldPath>, ArrayEntityState {
+public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private final Serializer serializer;
     private final List<Entry> entries = new ArrayList<>();
@@ -78,18 +79,18 @@ public class NestedArrayEntityState implements EntityState<S2FieldPath>, ArrayEn
     }
 
     @Override
-    public void setValueForFieldPath(S2FieldPath fp, Object value) {
-        serializer.setValueForFieldPath(fp, 0, this, value);
+    public void setValueForFieldPath(FieldPath fp, Object value) {
+        serializer.setValueForFieldPath(fp.s2(), 0, this, value);
     }
 
     @Override
-    public <T> T getValueForFieldPath(S2FieldPath fp) {
-        return (T) serializer.getValueForFieldPath(fp, 0, this);
+    public <T> T getValueForFieldPath(FieldPath fp) {
+        return (T) serializer.getValueForFieldPath(fp.s2(), 0, this);
     }
 
     @Override
-    public Collection<S2FieldPath> collectFieldPaths() {
-        final ArrayList<S2FieldPath> result = new ArrayList<>();
+    public Collection<FieldPath> collectFieldPaths() {
+        List<FieldPath> result = new ArrayList<>();
         serializer.collectFieldPaths(S2FieldPath.createEmpty(), result, this);
         return result;
     }

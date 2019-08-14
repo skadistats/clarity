@@ -2,11 +2,11 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.model.state.EntityState;
 
-public class Entity<F extends FieldPath> {
+public class Entity {
 
-    private final EntityStateSupplier<F> stateSupplier;
+    private final EntityStateSupplier stateSupplier;
 
-    public Entity(EntityStateSupplier<F> stateSupplier) {
+    public Entity(EntityStateSupplier stateSupplier) {
         this.stateSupplier = stateSupplier;
     }
 
@@ -14,11 +14,11 @@ public class Entity<F extends FieldPath> {
         return stateSupplier.getIndex();
     }
 
-    public EntityState<F> getState() {
+    public EntityState getState() {
         return stateSupplier.getState();
     }
 
-    public DTClass<F> getDtClass() {
+    public DTClass getDtClass() {
         return stateSupplier.getDTClass();
     }
 
@@ -61,14 +61,14 @@ public class Entity<F extends FieldPath> {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        F fp = getDtClass().getFieldPathForName(property);
+        FieldPath fp = getDtClass().getFieldPathForName(property);
         if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
         return getPropertyForFieldPath(fp);
     }
 
-    public <T> T getPropertyForFieldPath(F fp) {
+    public <T> T getPropertyForFieldPath(FieldPath fp) {
         return (T) getState().getValueForFieldPath(fp);
     }
 
