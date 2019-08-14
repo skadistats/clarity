@@ -237,6 +237,7 @@ public class ControllableRunner extends AbstractFileRunner {
             try {
                 initAndRunWith(processors);
             } catch (Exception e) {
+                log.error("Runner thread crashed", e);
                 lock.lock();
                 try {
                     runnerException = e;
