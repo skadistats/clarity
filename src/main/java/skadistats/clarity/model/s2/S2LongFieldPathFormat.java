@@ -41,22 +41,22 @@ public class S2LongFieldPathFormat {
 
     static {
         int bitCount = -1;
-        for (int i = 0; i < S2LongFieldPathFormat.BITS_PER_COMPONENT.length; i++) {
-            bitCount += S2LongFieldPathFormat.BITS_PER_COMPONENT[i] + 1;
+        for (int i = 0; i < BITS_PER_COMPONENT.length; i++) {
+            bitCount += BITS_PER_COMPONENT[i] + 1;
         }
         int cur = bitCount;
         long presentMaskAkku = 0L;
-        for (int i = 0; i < S2LongFieldPathFormat.BITS_PER_COMPONENT.length; i++) {
-            S2LongFieldPathFormat.OFFSET[i] = i == 0 ? 1L : 0L;
+        for (int i = 0; i < BITS_PER_COMPONENT.length; i++) {
+            OFFSET[i] = i == 0 ? 1L : 0L;
             if (i != 0) {
-                S2LongFieldPathFormat.CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);
+                CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);
                 cur--;
-                S2LongFieldPathFormat.PRESENT_BIT[i - 1] = 1L << cur;
+                PRESENT_BIT[i - 1] = 1L << cur;
                 presentMaskAkku |= 1L << cur;
             }
-            cur -= S2LongFieldPathFormat.BITS_PER_COMPONENT[i];
-            S2LongFieldPathFormat.VALUE_SHIFT[i] = cur;
-            S2LongFieldPathFormat.VALUE_MASK[i] = ((1L << S2LongFieldPathFormat.BITS_PER_COMPONENT[i]) - 1L) << cur;
+            cur -= BITS_PER_COMPONENT[i];
+            VALUE_SHIFT[i] = cur;
+            VALUE_MASK[i] = ((1L << BITS_PER_COMPONENT[i]) - 1L) << cur;
         }
         PRESENT_MASK = presentMaskAkku;
     }
