@@ -1,38 +1,46 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.state.EntityState;
 
 public class Entity {
 
+    private final EngineType engineType;
+    private final int handle;
+    private final DTClass dtClass;
+
     private final EntityStateSupplier stateSupplier;
 
-    public Entity(EntityStateSupplier stateSupplier) {
+    public Entity(EngineType engineType, int handle, DTClass dtClass, EntityStateSupplier stateSupplier) {
+        this.engineType = engineType;
+        this.handle = handle;
+        this.dtClass = dtClass;
         this.stateSupplier = stateSupplier;
     }
 
     public int getIndex() {
-        return stateSupplier.getIndex();
-    }
-
-    public CloneableEntityState getState() {
-        return stateSupplier.getState();
-    }
-
-    public DTClass getDtClass() {
-        return stateSupplier.getDTClass();
+        return engineType.indexForHandle(handle);
     }
 
     public int getSerial() {
-        return stateSupplier.getSerial();
+        return engineType.serialForHandle(handle);
+    }
+
+    public int getHandle() {
+        return handle;
+    }
+
+    public DTClass getDtClass() {
+        return dtClass;
+    }
+
+    public EntityState getState() {
+        return stateSupplier.getState();
     }
 
     public boolean isActive() {
         return stateSupplier.isActive();
     }
 
-    public int getHandle() {
-        return stateSupplier.getHandle();
-    }
 
     /**
      * Check if this entity contains the given property.
@@ -69,13 +77,13 @@ public class Entity {
     }
 
     public <T> T getPropertyForFieldPath(FieldPath fp) {
-        return (T) getDtClass().getValueForFieldPath(fp, getState());
+        return (T) getState().getValueForFieldPath(fp);
     }
 
     @Override
     public String toString() {
         String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getDtClass().dumpState(title, getState());
+        return getState().dump(title, getDtClass()::getNameForFieldPath);
     }
 
 }

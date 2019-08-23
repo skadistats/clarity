@@ -7,6 +7,8 @@ import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
@@ -50,26 +52,25 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             int n = 0;
-            FieldPath fp = new FieldPath();
+            S2ModifiableFieldPath mfp = S2ModifiableFieldPath.newInstance();
             while (true) {
                 int offsBefore = bs.pos();
                 FieldOpType op = bs.readFieldOp();
-                op.execute(fp, bs);
+                op.execute(mfp, bs);
                 if (debug) {
                     opDebugTable.setData(n, 0, op);
-                    opDebugTable.setData(n, 1, fp);
+                    opDebugTable.setData(n, 1, mfp.unmodifiable());
                     opDebugTable.setData(n, 2, bs.pos() - offsBefore);
                     opDebugTable.setData(n, 3, bs.toString(offsBefore, bs.pos()));
                 }
                 if (op == FieldOpType.FieldPathEncodeFinish) {
                     break;
                 }
-                fieldPaths[n++] = fp;
-                fp = new FieldPath(fp);
+                fieldPaths[n++] = mfp.unmodifiable();
             }
 
             for (int r = 0; r < n; r++) {
-                fp = fieldPaths[r];
+                S2FieldPath fp = fieldPaths[r].s2();
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
                     FieldProperties f = dtClass.getFieldForFieldPath(fp).getProperties();
@@ -77,7 +78,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 }
                 int offsBefore = bs.pos();
                 Object data = unpacker.unpack(bs);
-                dtClass.setValueForFieldPath(fp, state, data);
+                state.setValueForFieldPath(fp, data);
 
                 if (debug) {
                     FieldProperties props = dtClass.getFieldForFieldPath(fp).getProperties();

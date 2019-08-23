@@ -1,32 +1,40 @@
 package skadistats.clarity.model.state;
 
-import java.util.function.Consumer;
+import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.util.TextTable;
+
+import java.util.Iterator;
+import java.util.function.Function;
 
 public interface EntityState {
 
-    int length();
+    EntityState clone();
 
-    boolean has(int idx);
+    void setValueForFieldPath(FieldPath fp, Object value);
+    <T> T getValueForFieldPath(FieldPath fp);
 
-    Object get(int idx);
-    void set(int idx, Object value);
-    void clear(int idx);
+    Iterator<FieldPath> fieldPathIterator();
 
-    boolean isSub(int idx);
-    EntityState sub(int idx);
+    default String dump(String title, Function<FieldPath, String> nameResolver) {
+        final TextTable table = new TextTable.Builder()
+                .setFrame(TextTable.FRAME_COMPAT)
+                .addColumn("FP")
+                .addColumn("Property")
+                .addColumn("Value")
+                .setTitle(title)
+                .build();
 
-    EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer);
+        int i = 0;
+        final Iterator<FieldPath> iter = fieldPathIterator();
+        while (iter.hasNext()) {
+            FieldPath fp = iter.next();
+            table.setData(i, 0, fp);
+            table.setData(i, 1, nameResolver.apply(fp));
+            table.setData(i, 2, getValueForFieldPath(fp));
+            i++;
+        }
 
-    default EntityState capacity(int wantedSize) {
-        return capacity(wantedSize, false, null);
-    }
-
-    default EntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
-        return capacity(wantedSize, shrinkIfNeeded, null);
-    }
-
-    default EntityState capacity(int wantedSize, Consumer<EntityState> initializer) {
-        return capacity(wantedSize, false, initializer);
+        return table.toString();
     }
 
 }

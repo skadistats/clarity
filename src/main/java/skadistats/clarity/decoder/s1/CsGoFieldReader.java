@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s1.S1FieldPath;
 
 public class CsGoFieldReader extends S1FieldReader{
 
@@ -35,7 +35,7 @@ public class CsGoFieldReader extends S1FieldReader{
                 }
                 cursor += 1 + v;
             }
-            fieldPaths[n++] = new FieldPath(dtClass.getIndexMapping()[cursor]);
+            fieldPaths[n++] = new S1FieldPath(dtClass.getIndexMapping()[cursor]);
         }
     }
 

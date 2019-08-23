@@ -2,16 +2,12 @@ package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.CloneableEntityState;
+import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
-import skadistats.clarity.util.TextTable;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class S1DTClass implements DTClass {
 
@@ -39,24 +35,19 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
-    public CloneableEntityState getEmptyState() {
-        return EntityStateFactory.withLength(receiveProps.length);
+    public EntityState getEmptyState() {
+        return EntityStateFactory.forS1(receiveProps);
     }
 
     @Override
     public String getNameForFieldPath(FieldPath fp) {
-        return this.receiveProps[fp.path[0]].getVarName();
+        return this.receiveProps[fp.s1().idx()].getVarName();
     }
 
     @Override
-    public FieldPath getFieldPathForName(String name){
+    public S1FieldPath getFieldPathForName(String name){
         Integer idx = this.propsByName.get(name);
-        return idx != null ? new FieldPath(idx.intValue()) : null;
-    }
-
-    @Override
-    public <T> T getValueForFieldPath(FieldPath fp, EntityState state) {
-        return (T) state.get(fp.path[0]);
+        return idx != null ? new S1FieldPath(idx) : null;
     }
 
     public S1DTClass getSuperClass() {
@@ -115,40 +106,6 @@ public class S1DTClass implements DTClass {
 
     public void setIndexMapping(int[] indexMapping) {
         this.indexMapping = indexMapping;
-    }
-
-    private static final ReentrantLock DEBUG_LOCK = new ReentrantLock();
-    private static final TextTable DEBUG_DUMPER = new TextTable.Builder()
-        .setFrame(TextTable.FRAME_COMPAT)
-        .addColumn("Idx", TextTable.Alignment.RIGHT)
-        .addColumn("Property")
-        .addColumn("Value")
-        .build();
-
-    @Override
-    public String dumpState(String title, EntityState state) {
-        DEBUG_LOCK.lock();
-        try {
-            DEBUG_DUMPER.clear();
-            DEBUG_DUMPER.setTitle(title);
-            for (int i = 0; i < state.length(); i++) {
-                DEBUG_DUMPER.setData(i, 0, i);
-                DEBUG_DUMPER.setData(i, 1, receiveProps[i].getVarName());
-                DEBUG_DUMPER.setData(i, 2, state.get(i));
-            }
-            return DEBUG_DUMPER.toString();
-        } finally {
-            DEBUG_LOCK.unlock();
-        }
-    }
-
-    @Override
-    public List<FieldPath> collectFieldPaths(EntityState state) {
-        ArrayList<FieldPath> result = new ArrayList<>(state.length());
-        for (int i = 0; i < state.length(); i++) {
-            result.add(new FieldPath(i));
-        }
-        return result;
     }
 
 }

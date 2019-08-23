@@ -2,11 +2,12 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.Util;
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -22,23 +23,18 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
-        state.sub(idx).capacity(length);
-    }
-
-    @Override
-    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last == pos || fp.last == pos + 1;
+    public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
+        assert fp.last() == pos || fp.last() == pos + 1;
         addBasePropertyName(parts);
-        if (fp.last > pos) {
-            parts.add(Util.arrayIdxToString(fp.path[pos + 1]));
+        if (fp.last() > pos) {
+            parts.add(Util.arrayIdxToString(fp.get(pos + 1)));
         }
     }
 
     @Override
-    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
-        if (fp.last == pos) {
+    public Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        if (fp.last() == pos) {
             return null;
         } else {
             return elementUnpacker;
@@ -46,15 +42,15 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
+    public Field getFieldForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() == pos || fp.last() == pos + 1;
         return this;
     }
 
     @Override
-    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last == pos || fp.last == pos + 1;
-        if (fp.last == pos) {
+    public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        if (fp.last() == pos) {
             return properties.getType();
         } else {
             return properties.getType().getElementType();
@@ -62,62 +58,53 @@ public class FixedArrayField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
-        assert fp.last == pos || fp.last == pos + 1;
-        EntityState subState = state.sub(fp.path[pos]);
-        if (fp.last == pos) {
+    public Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        ArrayEntityState subState = state.sub(fp.get(pos));
+        if (fp.last() == pos) {
             return subState.length();
-        } else if (subState.has(fp.path[pos + 1])) {
-            return subState.get(fp.path[pos + 1]);
+        } else if (subState.has(fp.get(pos + 1))) {
+            return subState.get(fp.get(pos + 1));
         } else {
             return null;
         }
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
-        assert fp.last == pos || fp.last == pos + 1;
-        if (fp.last == pos) {
+    public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object value) {
+        assert fp.last() == pos || fp.last() == pos + 1;
+        if (fp.last() == pos) {
             throw new ClarityException("base of a FixedArrayField cannot be set");
         } else {
-            EntityState subState = state.sub(fp.path[pos]);
-            subState.set(fp.path[pos + 1], value);
+            int idx = fp.get(pos);
+            if (!state.has(idx)) {
+                state.sub(idx).capacity(length);
+            }
+            ArrayEntityState subState = state.sub(idx);
+            subState.set(fp.get(pos + 1), value);
         }
     }
 
     @Override
-    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
         if (property.length() != 4) {
             throw new ClarityException("unresolvable fieldpath");
         }
-        fp.path[fp.last] = Integer.valueOf(property);
-        return fp;
+        fp.cur(Integer.parseInt(property));
+        return fp.unmodifiable();
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
-        fp.last++;
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+        ArrayEntityState subState = state.sub(fp.cur());
+        fp.down();
         for (int i = 0; i < subState.length(); i++) {
             if (subState.has(i)) {
-                fp.path[fp.last] = i;
-                entries.add(new DumpEntry(fp, joinPropertyName(namePrefix, properties.getName(), Util.arrayIdxToString(i)), subState.get(i)));
+                fp.cur(i);
+                entries.add(fp.unmodifiable());
             }
         }
-        fp.last--;
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
-        EntityState subState = state.sub(fp.path[fp.last]);
-        fp.last++;
-        for (int i = 0; i < subState.length(); i++) {
-            if (subState.has(i)) {
-                fp.path[fp.last] = i;
-                entries.add(new FieldPath(fp));
-            }
-        }
-        fp.last--;
+        fp.up(1);
     }
 
 }

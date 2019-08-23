@@ -1,9 +1,9 @@
 package skadistats.clarity.decoder.s1;
 
 import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s1.S1FieldPath;
 
-public class DotaS1FieldReader extends S1FieldReader{
+public class DotaS1FieldReader extends S1FieldReader {
 
     @Override
     protected int readIndices(BitStream bs, S1DTClass dtClass) {
@@ -20,7 +20,7 @@ public class DotaS1FieldReader extends S1FieldReader{
                     cursor += offset + 1;
                 }
             }
-            fieldPaths[n++] = new FieldPath(dtClass.getIndexMapping()[cursor]);
+            fieldPaths[n++] = new S1FieldPath(dtClass.getIndexMapping()[cursor]);
         }
         return n;
     }

@@ -1,10 +1,11 @@
 package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.decoder.s2.DumpEntry;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 
@@ -18,23 +19,18 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void initInitialState(EntityState state, int idx) {
-        properties.getSerializer().initInitialState(state.sub(idx));
-    }
-
-    @Override
-    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        assert fp.last >= pos;
+    public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
+        assert fp.last() >= pos;
         addBasePropertyName(parts);
-        if (fp.last > pos) {
+        if (fp.last() > pos) {
             properties.getSerializer().accumulateName(fp, pos + 1, parts);
         }
     }
 
     @Override
-    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        assert fp.last >= pos;
-        if (fp.last == pos) {
+    public Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() >= pos;
+        if (fp.last() == pos) {
             return baseUnpacker;
         } else {
             return properties.getSerializer().getUnpackerForFieldPath(fp, pos + 1);
@@ -42,9 +38,9 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        assert fp.last >= pos;
-        if (fp.last == pos) {
+    public Field getFieldForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() >= pos;
+        if (fp.last() == pos) {
             return this;
         } else {
             return properties.getSerializer().getFieldForFieldPath(fp, pos + 1);
@@ -52,9 +48,9 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        assert fp.last >= pos;
-        if (fp.last == pos) {
+    public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
+        assert fp.last() >= pos;
+        if (fp.last() == pos) {
             return properties.getType();
         } else {
             return properties.getSerializer().getTypeForFieldPath(fp, pos + 1);
@@ -62,10 +58,10 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
-        assert fp.last >= pos;
-        int i = fp.path[pos];
-        if (fp.last == pos) {
+    public Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state) {
+        assert fp.last() >= pos;
+        int i = fp.get(pos);
+        if (fp.last() == pos) {
             return state.has(i);
         } else if (state.isSub(i)) {
             return properties.getSerializer().getValueForFieldPath(fp, pos + 1, state.sub(i));
@@ -75,14 +71,12 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object value) {
-        assert fp.last >= pos;
-        int i = fp.path[pos];
-        if (fp.last == pos) {
+    public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object value) {
+        assert fp.last() >= pos;
+        int i = fp.get(pos);
+        if (fp.last() == pos) {
             boolean existing = (Boolean) value;
-            if (!state.has(i) && existing) {
-                properties.getSerializer().initInitialState(state.sub(i));
-            } else if (state.has(i) && !existing) {
+            if (state.has(i) && !existing) {
                 state.clear(i);
             }
         } else {
@@ -91,29 +85,18 @@ public class FixedSubTableField extends Field {
     }
 
     @Override
-    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
         return properties.getSerializer().getFieldPathForName(fp, property);
     }
 
     @Override
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
-        String name = joinPropertyName(namePrefix, properties.getName());
-        int i = fp.path[fp.last];
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
+        int i = fp.cur();
         if (state.has(i)) {
-            fp.last++;
-            properties.getSerializer().collectDump(fp, name, entries, state.sub(i));
-            fp.last--;
-        }
-    }
-
-    @Override
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
-        int i = fp.path[fp.last];
-        if (state.has(i)) {
-            fp.last++;
+            fp.down();
             properties.getSerializer().collectFieldPaths(fp, entries, state.sub(i));
-            fp.last--;
+            fp.up(1);
         }
-
     }
+
 }

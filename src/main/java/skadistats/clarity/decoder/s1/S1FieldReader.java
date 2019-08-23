@@ -42,12 +42,12 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
             ReceiveProp[] receiveProps = dtClass.getReceiveProps();
             for (int ci = 0; ci < n; ci++) {
                 int offsBefore = bs.pos();
-                int o = fieldPaths[ci].path[0];
-                state.set(o, receiveProps[o].decode(bs));
+                int o = fieldPaths[ci].s1().idx();
+                state.setValueForFieldPath(fieldPaths[ci], receiveProps[o].decode(bs));
 
                 if (debug) {
                     SendProp sp = receiveProps[o].getSendProp();
-                    Object subState = state.get(o);
+                    Object subState = state.getValueForFieldPath(fieldPaths[ci]);
                     debugTable.setData(ci, 0, o);
                     debugTable.setData(ci, 1, receiveProps[o].getVarName());
                     debugTable.setData(ci, 2, sp.getLowValue());

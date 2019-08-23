@@ -1,7 +1,6 @@
 package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
-import com.rits.cloning.Cloner;
 import org.xerial.snappy.Snappy;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.source.Source;
@@ -59,12 +58,6 @@ public class Util {
         int i = 0;
         while (buf[i] != 0) i++;
         return new String(buf, 0, i, "UTF-8");
-    }
-
-    private static final Cloner CLONER = new Cloner();
-
-    public static <T> T clone(T src) {
-        return CLONER.deepClone(src);
     }
 
     public static String arrayIdxToString(int idx) {

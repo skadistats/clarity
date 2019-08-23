@@ -4,7 +4,9 @@ import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
 import java.util.Set;
@@ -43,51 +45,48 @@ public class Serializer {
         return fields.length;
     }
 
-    public void initInitialState(EntityState state) {
-        state.capacity(fields.length);
-        for (int i = 0; i < fields.length; i++) {
-            fields[i].initInitialState(state, i);
+    public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
+        fields[fp.get(pos)].accumulateName(fp, pos, parts);
+    }
+
+    public Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos) {
+        return fields[fp.get(pos)].getUnpackerForFieldPath(fp, pos);
+    }
+
+    public Field getFieldForFieldPath(S2FieldPath fp, int pos) {
+        return fields[fp.get(pos)].getFieldForFieldPath(fp, pos);
+    }
+
+    public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
+        return fields[fp.get(pos)].getTypeForFieldPath(fp, pos);
+    }
+
+    public Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state) {
+        return fields[fp.get(pos)].getValueForFieldPath(fp, pos, state);
+    }
+
+    public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object data) {
+        int idx = fp.get(pos);
+        if (!state.has(idx)) {
+            state.capacity(fields.length);
         }
+        fields[idx].setValueForFieldPath(fp, pos, state, data);
     }
 
-    public void accumulateName(FieldPath fp, int pos, List<String> parts) {
-        fields[fp.path[pos]].accumulateName(fp, pos, parts);
-    }
-
-    public Unpacker getUnpackerForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getUnpackerForFieldPath(fp, pos);
-    }
-
-    public Field getFieldForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getFieldForFieldPath(fp, pos);
-    }
-
-    public FieldType getTypeForFieldPath(FieldPath fp, int pos) {
-        return fields[fp.path[pos]].getTypeForFieldPath(fp, pos);
-    }
-
-    public Object getValueForFieldPath(FieldPath fp, int pos, EntityState state) {
-        return fields[fp.path[pos]].getValueForFieldPath(fp, pos, state);
-    }
-
-    public void setValueForFieldPath(FieldPath fp, int pos, EntityState state, Object data) {
-        fields[fp.path[pos]].setValueForFieldPath(fp, pos, state, data);
-    }
-
-    private FieldPath getFieldPathForNameInternal(FieldPath fp, String property) {
+    private S2FieldPath getFieldPathForNameInternal(S2ModifiableFieldPath fp, String property) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
             String fieldName = field.getProperties().getName();
             if (property.startsWith(fieldName)) {
-                fp.path[fp.last] = i;
+                fp.cur(i);
                 if (property.length() == fieldName.length()) {
-                    return fp;
+                    return fp.unmodifiable();
                 } else {
                     if (property.charAt(fieldName.length()) != '.') {
                         continue;
                     }
                     property = property.substring(fieldName.length() + 1);
-                    fp.last++;
+                    fp.down();
                     return field.getFieldPathForName(fp, property);
                 }
             }
@@ -95,7 +94,7 @@ public class Serializer {
         return null;
     }
 
-    public FieldPath getFieldPathForName(FieldPath fp, String property) {
+    public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
 //        for (String sendNodePrefix : sendNodePrefixes) {
 //            if (property.length() > sendNodePrefix.length() && property.startsWith(sendNodePrefix)) {
 //                return getFieldPathForNameInternal(fp, property.substring(sendNodePrefix.length() + 1));
@@ -104,19 +103,10 @@ public class Serializer {
         return getFieldPathForNameInternal(fp, property);
     }
 
-    public void collectDump(FieldPath fp, String namePrefix, List<DumpEntry> entries, EntityState state) {
+    public void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state) {
         for (int i = 0; i < fields.length; i++) {
             if (state.has(i)) {
-                fp.path[fp.last] = i;
-                fields[i].collectDump(fp, namePrefix, entries, state);
-            }
-        }
-    }
-
-    public void collectFieldPaths(FieldPath fp, List<FieldPath> entries, EntityState state) {
-        for (int i = 0; i < fields.length; i++) {
-            if (state.has(i)) {
-                fp.path[fp.last] = i;
+                fp.cur(i);
                 fields[i].collectFieldPaths(fp, entries, state);
             }
         }

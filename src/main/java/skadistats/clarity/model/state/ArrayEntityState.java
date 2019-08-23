@@ -1,205 +1,22 @@
 package skadistats.clarity.model.state;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Consumer;
+public interface ArrayEntityState {
 
-public class ArrayEntityState implements CloneableEntityState {
+    int length();
 
-    private final List<State> states = new ArrayList<>();
+    boolean has(int idx);
 
-    public ArrayEntityState(int length) {
-        State rootState = new State();
-        rootState.capacity(length);
-        states.add(rootState);
-    }
+    Object get(int idx);
+    void set(int idx, Object value);
+    void clear(int idx);
 
-    private ArrayEntityState(ArrayEntityState other) {
-        for (State state : other.states) {
-            states.add(state != null ? new State(state.state, state.state.length == 0) : null);
-        }
-    }
+    boolean isSub(int idx);
+    ArrayEntityState sub(int idx);
 
-    private State rootState() {
-        return states.get(0);
-    }
+    ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded);
 
-    @Override
-    public int length() {
-        return rootState().length();
-    }
-
-    @Override
-    public boolean has(int idx) {
-        return rootState().has(idx);
-    }
-
-    @Override
-    public Object get(int idx) {
-        return rootState().get(idx);
-    }
-
-    @Override
-    public void set(int idx, Object value) {
-        rootState().set(idx, value);
-    }
-
-    @Override
-    public void clear(int idx) {
-        rootState().clear(idx);
-    }
-
-    @Override
-    public boolean isSub(int idx) {
-        return rootState().isSub(idx);
-    }
-
-    @Override
-    public EntityState sub(int idx) {
-        return rootState().sub(idx);
-    }
-
-    @Override
-    public EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer) {
-        return rootState().capacity(wantedSize, shrinkIfNeeded, initializer);
-    }
-
-    @Override
-    public CloneableEntityState clone() {
-        return new ArrayEntityState(this);
-    }
-
-    private StateRef createStateRef(State state) {
-        // TODO: this is slower than not doing it
-//        for (int i = 0; i < states.size(); i++) {
-//            if (states.get(i) == null) {
-//                states.set(i, state);
-//                return new StateRef(i);
-//            }
-//        }
-        int i = states.size();
-        states.add(state);
-        return new StateRef(i);
-    }
-
-    private void clearStateRef(StateRef stateRef) {
-        states.set(stateRef.idx, null);
-    }
-
-    private static class StateRef {
-
-        private final int idx;
-
-        private StateRef(int idx) {
-            this.idx = idx;
-        }
-
-        @Override
-        public String toString() {
-            return "StateRef[" + idx + "]";
-        }
-    }
-
-    private static final Object[] EMPTY_STATE = {};
-
-    public class State implements EntityState {
-
-        private Object[] state;
-        private boolean modifiable;
-
-        private State() {
-            this(EMPTY_STATE, true);
-        }
-
-        private State(Object[] state, boolean modifiable) {
-            this.state = state;
-            this.modifiable = modifiable;
-        }
-
-        @Override
-        public int length() {
-            return state.length;
-        }
-
-        @Override
-        public boolean has(int idx) {
-            return state.length > idx && state[idx] != null;
-        }
-
-        @Override
-        public Object get(int idx) {
-            return state.length > idx ? state[idx] : null;
-        }
-
-        @Override
-        public void set(int idx, Object value) {
-            if (!modifiable) {
-                Object[] newState = new Object[state.length];
-                System.arraycopy(state, 0, newState, 0, state.length);
-                state = newState;
-                modifiable = true;
-            }
-            if (state[idx] instanceof StateRef) {
-                clearStateRef((StateRef) state[idx]);
-            }
-            state[idx] = value;
-        }
-
-        @Override
-        public void clear(int idx) {
-            set(idx, null);
-        }
-
-        @Override
-        public boolean isSub(int idx) {
-            return has(idx) && get(idx) instanceof StateRef;
-        }
-
-        @Override
-        public EntityState sub(int idx) {
-            if (!has(idx)) {
-                set(idx, createStateRef(new State()));
-            }
-            StateRef stateRef = (StateRef) get(idx);
-            return states.get(stateRef.idx);
-        }
-
-        @Override
-        public EntityState capacity(int wantedSize, boolean shrinkIfNeeded, Consumer<EntityState> initializer) {
-            int curSize = state.length;
-            if (wantedSize == curSize) {
-                return this;
-            }
-            if (wantedSize < 0) {
-                // TODO: sometimes negative - figure out what this means
-                return this;
-            }
-
-            Object[] newState = null;
-            if (wantedSize > curSize) {
-                newState = new Object[wantedSize];
-            } else if (shrinkIfNeeded) {
-                newState = wantedSize == 0 ? EMPTY_STATE : new Object[wantedSize];
-            }
-
-            if (newState != null) {
-                System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
-                state = newState;
-                modifiable = true;
-                if (initializer != null) {
-                    for (int i = curSize; i < wantedSize; i++) {
-                        initializer.accept(sub(i));
-                    }
-                }
-            }
-            return this;
-        }
-
-        @Override
-        public String toString() {
-            return "State[modifiable=" + modifiable + "]";
-        }
-
+    default ArrayEntityState capacity(int wantedSize) {
+        return capacity(wantedSize, false);
     }
 
 }
