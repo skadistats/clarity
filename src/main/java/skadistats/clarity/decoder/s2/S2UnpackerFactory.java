@@ -86,10 +86,10 @@ public class S2UnpackerFactory {
     }
 
 
-    public static Unpacker createUnpacker(UnpackerProperties fieldProperties, String type) {
+    public static Unpacker createUnpacker(UnpackerProperties unpackerProperties, String type) {
         UnpackerFactory unpackerFactory = FACTORIES.get(type);
         if (unpackerFactory != null) {
-            return unpackerFactory.createUnpacker(fieldProperties);
+            return unpackerFactory.createUnpacker(unpackerProperties);
         }
         Unpacker unpacker = UNPACKERS.get(type);
         if (unpacker == null) {
