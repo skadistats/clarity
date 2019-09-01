@@ -75,7 +75,7 @@ public class S2DTClassEmitter {
     }
 
     private Field createField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
-        if (unpackerProperties.getSerializer() != null) {
+        if (fieldProperties.getSerializer() != null) {
             if (POINTERS.contains(fieldProperties.getType().getBaseType())) {
                 return new FixedSubTableField(fieldProperties, unpackerProperties);
             } else {
@@ -137,15 +137,15 @@ public class S2DTClassEmitter {
                     }
                     FieldProperties fieldProperties = new FieldProperties(
                             fieldType,
-                            () -> protoField.varName
+                            () -> protoField.varName,
+                            fieldSerializer
                     );
                     UnpackerProperties unpackerProperties = new UnpackerProperties(
                             protoField.encodeFlags,
-                        protoField.bitCount,
-                        protoField.lowValue,
-                        protoField.highValue,
-                        fieldSerializer,
-                        protoField.encoderType
+                            protoField.bitCount,
+                            protoField.lowValue,
+                            protoField.highValue,
+                            protoField.encoderType
                     );
                     field = createField(fieldProperties, unpackerProperties);
                     fields[fi] = field;

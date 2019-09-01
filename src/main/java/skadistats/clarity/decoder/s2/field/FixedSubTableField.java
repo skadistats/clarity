@@ -23,7 +23,7 @@ public class FixedSubTableField extends Field {
         assert fp.last() >= pos;
         addBasePropertyName(parts);
         if (fp.last() > pos) {
-            unpackerProperties.getSerializer().accumulateName(fp, pos + 1, parts);
+            fieldProperties.getSerializer().accumulateName(fp, pos + 1, parts);
         }
     }
 
@@ -33,7 +33,7 @@ public class FixedSubTableField extends Field {
         if (fp.last() == pos) {
             return baseUnpacker;
         } else {
-            return unpackerProperties.getSerializer().getUnpackerForFieldPath(fp, pos + 1);
+            return fieldProperties.getSerializer().getUnpackerForFieldPath(fp, pos + 1);
         }
     }
 
@@ -43,7 +43,7 @@ public class FixedSubTableField extends Field {
         if (fp.last() == pos) {
             return this;
         } else {
-            return unpackerProperties.getSerializer().getFieldForFieldPath(fp, pos + 1);
+            return fieldProperties.getSerializer().getFieldForFieldPath(fp, pos + 1);
         }
     }
 
@@ -53,7 +53,7 @@ public class FixedSubTableField extends Field {
         if (fp.last() == pos) {
             return fieldProperties.getType();
         } else {
-            return unpackerProperties.getSerializer().getTypeForFieldPath(fp, pos + 1);
+            return fieldProperties.getSerializer().getTypeForFieldPath(fp, pos + 1);
         }
     }
 
@@ -64,7 +64,7 @@ public class FixedSubTableField extends Field {
         if (fp.last() == pos) {
             return state.has(i);
         } else if (state.isSub(i)) {
-            return unpackerProperties.getSerializer().getValueForFieldPath(fp, pos + 1, state.sub(i));
+            return fieldProperties.getSerializer().getValueForFieldPath(fp, pos + 1, state.sub(i));
         } else {
             return null;
         }
@@ -80,13 +80,13 @@ public class FixedSubTableField extends Field {
                 state.clear(i);
             }
         } else {
-            unpackerProperties.getSerializer().setValueForFieldPath(fp, pos + 1, state.sub(i), value);
+            fieldProperties.getSerializer().setValueForFieldPath(fp, pos + 1, state.sub(i), value);
         }
     }
 
     @Override
     public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
-        return unpackerProperties.getSerializer().getFieldPathForName(fp, property);
+        return fieldProperties.getSerializer().getFieldPathForName(fp, property);
     }
 
     @Override
@@ -94,7 +94,7 @@ public class FixedSubTableField extends Field {
         int i = fp.cur();
         if (state.has(i)) {
             fp.down();
-            unpackerProperties.getSerializer().collectFieldPaths(fp, entries, state.sub(i));
+            fieldProperties.getSerializer().collectFieldPaths(fp, entries, state.sub(i));
             fp.up(1);
         }
     }

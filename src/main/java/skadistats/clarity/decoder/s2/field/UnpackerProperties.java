@@ -1,22 +1,18 @@
 package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.decoder.s2.Serializer;
-
 public class UnpackerProperties {
 
     private final Integer encodeFlags;
     private final Integer bitCount;
     private final Float lowValue;
     private final Float highValue;
-    private final Serializer serializer;
     private final String encoderType;
 
-    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType) {
+    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
         this.encodeFlags = encodeFlags;
         this.bitCount = bitCount;
         this.lowValue = lowValue;
         this.highValue = highValue;
-        this.serializer = serializer;
         this.encoderType = encoderType;
     }
 
@@ -50,10 +46,6 @@ public class UnpackerProperties {
 
     public float getHighValueOrDefault(float defaultValue) {
         return highValue != null ? highValue.floatValue() : defaultValue;
-    }
-
-    public Serializer getSerializer() {
-        return serializer;
     }
 
     public String getEncoderType() {
