@@ -9,28 +9,15 @@ import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 
 public class Serializer {
 
     private final SerializerId id;
     private final Field[] fields;
-    private final Set<String> sendNodePrefixes;
 
     public Serializer(SerializerId id, Field[] fields) {
         this.id = id;
         this.fields = fields;
-
-        sendNodePrefixes = new TreeSet<>((o1, o2) -> {
-            int result = Integer.compare(o2.length(), o1.length());
-            return result != 0 ? result : o1.compareTo(o2);
-        });
-        for (Field field : fields) {
-            if (field.getUnpackerProperties().getSendNode() != null) {
-                sendNodePrefixes.add(field.getUnpackerProperties().getSendNode());
-            }
-        }
     }
 
     public SerializerId getId() {
@@ -95,11 +82,6 @@ public class Serializer {
     }
 
     public S2FieldPath getFieldPathForName(S2ModifiableFieldPath fp, String property) {
-//        for (String sendNodePrefix : sendNodePrefixes) {
-//            if (property.length() > sendNodePrefix.length() && property.startsWith(sendNodePrefix)) {
-//                return getFieldPathForNameInternal(fp, property.substring(sendNodePrefix.length() + 1));
-//            }
-//        }
         return getFieldPathForNameInternal(fp, property);
     }
 

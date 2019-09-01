@@ -140,8 +140,7 @@ public class S2DTClassEmitter {
                             () -> protoField.varName
                     );
                     UnpackerProperties unpackerProperties = new UnpackerProperties(
-                            protoField.sendNode,
-                        protoField.encodeFlags,
+                            protoField.encodeFlags,
                         protoField.bitCount,
                         protoField.lowValue,
                         protoField.highValue,
@@ -197,7 +196,6 @@ public class S2DTClassEmitter {
         private String parent;
         private String varName;
         private String varType;
-        private String sendNode;
         private String serializerName;
         private Integer serializerVersion;
         private String encoderType;
@@ -211,8 +209,6 @@ public class S2DTClassEmitter {
             this.parent = parent;
             this.varName = serializer.getSymbols(field.getVarNameSym());
             this.varType = serializer.getSymbols(field.getVarTypeSym());
-            String sn = serializer.getSymbols(field.getSendNodeSym());
-            this.sendNode = !"(root)".equals(sn) ? sn : null;
             this.serializerName = field.hasFieldSerializerNameSym() ? serializer.getSymbols(field.getFieldSerializerNameSym()) : null;
             this.serializerVersion = field.hasFieldSerializerVersion() ? field.getFieldSerializerVersion() : null;
             this.encoderType = field.hasVarEncoderSym() ? serializer.getSymbols(field.getVarEncoderSym()) : null;

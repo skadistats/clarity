@@ -4,7 +4,6 @@ import skadistats.clarity.decoder.s2.Serializer;
 
 public class UnpackerProperties {
 
-    private final String sendNode;
     private final Integer encodeFlags;
     private final Integer bitCount;
     private final Float lowValue;
@@ -13,8 +12,7 @@ public class UnpackerProperties {
     private final String encoderType;
     private final String serializerType;
 
-    public UnpackerProperties(String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
-        this.sendNode = sendNode;
+    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
         this.encodeFlags = encodeFlags;
         this.bitCount = bitCount;
         this.lowValue = lowValue;
@@ -22,10 +20,6 @@ public class UnpackerProperties {
         this.serializer = serializer;
         this.encoderType = encoderType;
         this.serializerType = serializerType;
-    }
-
-    public String getSendNode() {
-        return sendNode;
     }
 
     public Integer getEncodeFlags() {
