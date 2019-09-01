@@ -1,6 +1,6 @@
 package skadistats.clarity.decoder.unpacker.factory.s2;
 
-import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.decoder.unpacker.VectorDefaultUnpacker;
 import skadistats.clarity.decoder.unpacker.VectorNormalUnpacker;
@@ -14,7 +14,7 @@ public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
         this.dim = dim;
     }
 
-    public static Unpacker<Vector> createUnpackerStatic(int dim, FieldProperties f) {
+    public static Unpacker<Vector> createUnpackerStatic(int dim, UnpackerProperties f) {
         if (dim == 3 && "normal".equals(f.getEncoderType())) {
             return new VectorNormalUnpacker();
         }
@@ -22,7 +22,7 @@ public class VectorUnpackerFactory implements UnpackerFactory<Vector> {
     }
 
     @Override
-    public Unpacker<Vector> createUnpacker(FieldProperties f) {
+    public Unpacker<Vector> createUnpacker(UnpackerProperties f) {
         return createUnpackerStatic(dim, f);
     }
 

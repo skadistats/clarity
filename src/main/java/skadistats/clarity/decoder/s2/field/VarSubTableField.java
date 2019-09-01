@@ -15,7 +15,7 @@ public class VarSubTableField extends Field {
 
     private final Unpacker baseUnpacker;
 
-    public VarSubTableField(FieldProperties properties) {
+    public VarSubTableField(UnpackerProperties properties) {
         super(properties);
         baseUnpacker = S2UnpackerFactory.createUnpacker(properties, "uint32");
     }

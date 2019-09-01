@@ -1,16 +1,20 @@
 package skadistats.clarity.decoder.unpacker.factory.s2;
 
-import skadistats.clarity.decoder.s2.field.FieldProperties;
-import skadistats.clarity.decoder.unpacker.*;
+import skadistats.clarity.decoder.s2.field.UnpackerProperties;
+import skadistats.clarity.decoder.unpacker.FloatCoordUnpacker;
+import skadistats.clarity.decoder.unpacker.FloatNoScaleUnpacker;
+import skadistats.clarity.decoder.unpacker.FloatQuantizedUnpacker;
+import skadistats.clarity.decoder.unpacker.FloatSimulationTimeUnpacker;
+import skadistats.clarity.decoder.unpacker.Unpacker;
 
 public class FloatUnpackerFactory implements UnpackerFactory<Float> {
 
     @Override
-    public Unpacker<Float> createUnpacker(FieldProperties f) {
+    public Unpacker<Float> createUnpacker(UnpackerProperties f) {
         return createUnpackerStatic(f);
     }
 
-    public static Unpacker<Float> createUnpackerStatic(FieldProperties f) {
+    public static Unpacker<Float> createUnpackerStatic(UnpackerProperties f) {
         if ("coord".equals(f.getEncoderType())) {
             return new FloatCoordUnpacker();
         }

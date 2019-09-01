@@ -13,7 +13,7 @@ public class SimpleField extends Field {
 
     private final Unpacker unpacker;
 
-    public SimpleField(FieldProperties properties) {
+    public SimpleField(UnpackerProperties properties) {
         super(properties);
         unpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getBaseType());
     }

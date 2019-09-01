@@ -16,7 +16,7 @@ public class VarArrayField extends Field {
     private final Unpacker baseUnpacker;
     private final Unpacker elementUnpacker;
 
-    public VarArrayField(FieldProperties properties) {
+    public VarArrayField(UnpackerProperties properties) {
         super(properties);
         baseUnpacker = S2UnpackerFactory.createUnpacker(properties, "uint32");
         elementUnpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getGenericType().getBaseType());

@@ -16,7 +16,7 @@ public class FixedArrayField extends Field {
     private final int length;
     private final Unpacker elementUnpacker;
 
-    public FixedArrayField(FieldProperties properties, int length) {
+    public FixedArrayField(UnpackerProperties properties, int length) {
         super(properties);
         this.length = length;
         elementUnpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getBaseType());

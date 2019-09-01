@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s2;
 
 import org.slf4j.Logger;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.BoolUnpacker;
 import skadistats.clarity.decoder.unpacker.IntMinusOneUnpacker;
 import skadistats.clarity.decoder.unpacker.IntVarSignedUnpacker;
@@ -86,7 +86,7 @@ public class S2UnpackerFactory {
     }
 
 
-    public static Unpacker createUnpacker(FieldProperties fieldProperties, String type) {
+    public static Unpacker createUnpacker(UnpackerProperties fieldProperties, String type) {
         UnpackerFactory unpackerFactory = FACTORIES.get(type);
         if (unpackerFactory != null) {
             return unpackerFactory.createUnpacker(fieldProperties);

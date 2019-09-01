@@ -2,7 +2,7 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.decoder.s2.Serializer;
 
-public class FieldProperties {
+public class UnpackerProperties {
 
     private final FieldType type;
     private final String name;
@@ -15,7 +15,7 @@ public class FieldProperties {
     private final String encoderType;
     private final String serializerType;
 
-    public FieldProperties(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
+    public UnpackerProperties(FieldType type, String name, String sendNode, Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
         this.type = type;
         this.name = name;
         this.sendNode = sendNode;

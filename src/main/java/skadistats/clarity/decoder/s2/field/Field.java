@@ -10,9 +10,9 @@ import java.util.List;
 
 public abstract class Field {
 
-    protected final FieldProperties properties;
+    protected final UnpackerProperties properties;
 
-    public Field(FieldProperties properties) {
+    public Field(UnpackerProperties properties) {
         this.properties = properties;
     }
 
@@ -29,7 +29,7 @@ public abstract class Field {
         parts.add(properties.getName());
     }
 
-    public FieldProperties getProperties() {
+    public UnpackerProperties getProperties() {
         return properties;
     }
 

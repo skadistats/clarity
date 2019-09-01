@@ -13,7 +13,7 @@ public class FixedSubTableField extends Field {
 
     private final Unpacker baseUnpacker;
 
-    public FixedSubTableField(FieldProperties properties) {
+    public FixedSubTableField(UnpackerProperties properties) {
         super(properties);
         baseUnpacker = S2UnpackerFactory.createUnpacker(properties, "bool");
     }

@@ -7,11 +7,11 @@ import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
 import skadistats.clarity.decoder.s2.field.Field;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.FixedArrayField;
 import skadistats.clarity.decoder.s2.field.FixedSubTableField;
 import skadistats.clarity.decoder.s2.field.SimpleField;
+import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.s2.field.VarArrayField;
 import skadistats.clarity.decoder.s2.field.VarSubTableField;
 import skadistats.clarity.event.Event;
@@ -73,7 +73,7 @@ public class S2DTClassEmitter {
         return new FieldType(type);
     }
 
-    private Field createField(FieldProperties properties) {
+    private Field createField(UnpackerProperties properties) {
         if (properties.getSerializer() != null) {
             if (POINTERS.contains(properties.getType().getBaseType())) {
                 return new FixedSubTableField(properties);
@@ -134,7 +134,7 @@ public class S2DTClassEmitter {
                             new SerializerId(protoField.serializerName, protoField.serializerVersion)
                         );
                     }
-                    FieldProperties fieldProperties = new FieldProperties(
+                    UnpackerProperties fieldProperties = new UnpackerProperties(
                         fieldType,
                         protoField.varName,
                         protoField.sendNode,
