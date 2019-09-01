@@ -7,6 +7,7 @@ import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
 import skadistats.clarity.decoder.s2.field.Field;
+import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.FixedArrayField;
 import skadistats.clarity.decoder.s2.field.FixedSubTableField;
@@ -73,26 +74,26 @@ public class S2DTClassEmitter {
         return new FieldType(type);
     }
 
-    private Field createField(UnpackerProperties properties) {
-        if (properties.getSerializer() != null) {
-            if (POINTERS.contains(properties.getType().getBaseType())) {
-                return new FixedSubTableField(properties);
+    private Field createField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
+        if (unpackerProperties.getSerializer() != null) {
+            if (POINTERS.contains(fieldProperties.getType().getBaseType())) {
+                return new FixedSubTableField(fieldProperties, unpackerProperties);
             } else {
-                return new VarSubTableField(properties);
+                return new VarSubTableField(fieldProperties, unpackerProperties);
             }
         }
-        String elementCount = properties.getType().getElementCount();
-        if (elementCount != null && !"char".equals(properties.getType().getBaseType())) {
+        String elementCount = fieldProperties.getType().getElementCount();
+        if (elementCount != null && !"char".equals(fieldProperties.getType().getBaseType())) {
             Integer countAsInt = ITEM_COUNTS.get(elementCount);
             if (countAsInt == null) {
                 countAsInt = Integer.valueOf(elementCount);
             }
-            return new FixedArrayField(properties, countAsInt);
+            return new FixedArrayField(fieldProperties, unpackerProperties, countAsInt);
         }
-        if ("CUtlVector".equals(properties.getType().getBaseType())) {
-            return new VarArrayField(properties);
+        if ("CUtlVector".equals(fieldProperties.getType().getBaseType())) {
+            return new VarArrayField(fieldProperties, unpackerProperties);
         }
-        return new SimpleField(properties);
+        return new SimpleField(fieldProperties, unpackerProperties);
     }
 
     @OnMessage(Demo.CDemoSendTables.class)
@@ -134,10 +135,12 @@ public class S2DTClassEmitter {
                             new SerializerId(protoField.serializerName, protoField.serializerVersion)
                         );
                     }
-                    UnpackerProperties fieldProperties = new UnpackerProperties(
-                        fieldType,
-                        protoField.varName,
-                        protoField.sendNode,
+                    FieldProperties fieldProperties = new FieldProperties(
+                            fieldType,
+                            () -> protoField.varName
+                    );
+                    UnpackerProperties unpackerProperties = new UnpackerProperties(
+                            protoField.sendNode,
                         protoField.encodeFlags,
                         protoField.bitCount,
                         protoField.lowValue,
@@ -146,7 +149,7 @@ public class S2DTClassEmitter {
                         protoField.encoderType,
                         protoField.serializerType
                     );
-                    field = createField(fieldProperties);
+                    field = createField(fieldProperties, unpackerProperties);
                     fields[fi] = field;
                 }
                 currentFields.add(field);

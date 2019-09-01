@@ -10,10 +10,12 @@ import java.util.List;
 
 public abstract class Field {
 
-    protected final UnpackerProperties properties;
+    protected final FieldProperties fieldProperties;
+    protected final UnpackerProperties unpackerProperties;
 
-    public Field(UnpackerProperties properties) {
-        this.properties = properties;
+    public Field(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
+        this.fieldProperties = fieldProperties;
+        this.unpackerProperties = unpackerProperties;
     }
 
     public abstract void accumulateName(S2FieldPath fp, int pos, List<String> parts);
@@ -26,11 +28,15 @@ public abstract class Field {
     public abstract void collectFieldPaths(S2ModifiableFieldPath fp, List<FieldPath> entries, ArrayEntityState state);
 
     protected void addBasePropertyName(List<String> parts) {
-        parts.add(properties.getName());
+        parts.add(fieldProperties.getName());
     }
 
-    public UnpackerProperties getProperties() {
-        return properties;
+    public UnpackerProperties getUnpackerProperties() {
+        return unpackerProperties;
+    }
+
+    public FieldProperties getFieldProperties() {
+        return fieldProperties;
     }
 
 }

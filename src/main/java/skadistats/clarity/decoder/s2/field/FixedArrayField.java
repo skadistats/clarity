@@ -16,10 +16,10 @@ public class FixedArrayField extends Field {
     private final int length;
     private final Unpacker elementUnpacker;
 
-    public FixedArrayField(UnpackerProperties properties, int length) {
-        super(properties);
+    public FixedArrayField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, int length) {
+        super(fieldProperties, unpackerProperties);
         this.length = length;
-        elementUnpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getBaseType());
+        elementUnpacker = S2UnpackerFactory.createUnpacker(unpackerProperties, fieldProperties.getType().getBaseType());
     }
 
     @Override
@@ -51,9 +51,9 @@ public class FixedArrayField extends Field {
     public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() == pos + 1;
         if (fp.last() == pos) {
-            return properties.getType();
+            return fieldProperties.getType();
         } else {
-            return properties.getType().getElementType();
+            return fieldProperties.getType().getElementType();
         }
     }
 

@@ -25,7 +25,8 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
         if (bc <= 0 || bc >= 32) {
             return new FloatNoScaleUnpacker();
         }
-        return new FloatQuantizedUnpacker(f.getName(), bc, f.getEncodeFlagsOrDefault(0) & 0xF, f.getLowValueOrDefault(0.0f), f.getHighValueOrDefault(1.0f));
+        // TODO: get real name
+        return new FloatQuantizedUnpacker("N/A", bc, f.getEncodeFlagsOrDefault(0) & 0xF, f.getLowValueOrDefault(0.0f), f.getHighValueOrDefault(1.0f));
     }
 
 }

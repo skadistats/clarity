@@ -15,8 +15,8 @@ public class VarSubTableField extends Field {
 
     private final Unpacker baseUnpacker;
 
-    public VarSubTableField(UnpackerProperties properties) {
-        super(properties);
+    public VarSubTableField(FieldProperties fieldProperties, UnpackerProperties properties) {
+        super(fieldProperties, properties);
         baseUnpacker = S2UnpackerFactory.createUnpacker(properties, "uint32");
     }
 
@@ -27,7 +27,7 @@ public class VarSubTableField extends Field {
         if (fp.last() > pos) {
             parts.add(Util.arrayIdxToString(fp.get(pos + 1)));
             if (fp.last() > pos + 1) {
-                properties.getSerializer().accumulateName(fp, pos + 2, parts);
+                unpackerProperties.getSerializer().accumulateName(fp, pos + 2, parts);
             }
         }
     }
@@ -38,7 +38,7 @@ public class VarSubTableField extends Field {
         if (fp.last() == pos) {
             return baseUnpacker;
         } else {
-            return properties.getSerializer().getUnpackerForFieldPath(fp, pos + 2);
+            return unpackerProperties.getSerializer().getUnpackerForFieldPath(fp, pos + 2);
         }
     }
 
@@ -48,7 +48,7 @@ public class VarSubTableField extends Field {
         if (fp.last() == pos) {
             return this;
         } else {
-            return properties.getSerializer().getFieldForFieldPath(fp, pos + 2);
+            return unpackerProperties.getSerializer().getFieldForFieldPath(fp, pos + 2);
         }
     }
 
@@ -56,9 +56,9 @@ public class VarSubTableField extends Field {
     public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() >= pos + 2;
         if (fp.last() == pos) {
-            return properties.getType();
+            return fieldProperties.getType();
         } else {
-            return properties.getSerializer().getTypeForFieldPath(fp, pos + 2);
+            return unpackerProperties.getSerializer().getTypeForFieldPath(fp, pos + 2);
         }
     }
 
@@ -69,7 +69,7 @@ public class VarSubTableField extends Field {
         if (fp.last() == pos) {
             return subState.length();
         } else if (subState.isSub(fp.get(pos + 1))){
-            return properties.getSerializer().getValueForFieldPath(fp, pos + 2, subState.sub(fp.get(pos + 1)));
+            return unpackerProperties.getSerializer().getValueForFieldPath(fp, pos + 2, subState.sub(fp.get(pos + 1)));
         } else {
             return null;
         }
@@ -85,7 +85,7 @@ public class VarSubTableField extends Field {
         } else {
             int j = fp.get(pos + 1);
             subState.capacity(j + 1, false);
-            properties.getSerializer().setValueForFieldPath(fp, pos + 2, subState.sub(j), value);
+            unpackerProperties.getSerializer().setValueForFieldPath(fp, pos + 2, subState.sub(j), value);
         }
     }
 
@@ -97,7 +97,7 @@ public class VarSubTableField extends Field {
         String idx = property.substring(0, 4);
         fp.cur(Integer.parseInt(idx));
         fp.down();
-        return properties.getSerializer().getFieldPathForName(fp, property.substring(5));
+        return unpackerProperties.getSerializer().getFieldPathForName(fp, property.substring(5));
     }
 
     @Override
@@ -109,7 +109,7 @@ public class VarSubTableField extends Field {
             fp.down();
             for (int i = 0; i < len; i++) {
                 fp.set(fp.last() - 1, i);
-                properties.getSerializer().collectFieldPaths(fp, entries, subState.sub(i));
+                unpackerProperties.getSerializer().collectFieldPaths(fp, entries, subState.sub(i));
             }
             fp.up(2);
         }

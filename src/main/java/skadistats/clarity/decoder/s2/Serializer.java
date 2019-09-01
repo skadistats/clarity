@@ -27,8 +27,8 @@ public class Serializer {
             return result != 0 ? result : o1.compareTo(o2);
         });
         for (Field field : fields) {
-            if (field.getProperties().getSendNode() != null) {
-                sendNodePrefixes.add(field.getProperties().getSendNode());
+            if (field.getUnpackerProperties().getSendNode() != null) {
+                sendNodePrefixes.add(field.getUnpackerProperties().getSendNode());
             }
         }
     }
@@ -76,7 +76,7 @@ public class Serializer {
     private S2FieldPath getFieldPathForNameInternal(S2ModifiableFieldPath fp, String property) {
         for (int i = 0; i < fields.length; i++) {
             Field field = fields[i];
-            String fieldName = field.getProperties().getName();
+            String fieldName = field.getFieldProperties().getName();
             if (property.startsWith(fieldName)) {
                 fp.cur(i);
                 if (property.length() == fieldName.length()) {

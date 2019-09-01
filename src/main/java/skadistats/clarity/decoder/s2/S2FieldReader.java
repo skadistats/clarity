@@ -3,6 +3,7 @@ package skadistats.clarity.decoder.s2;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
@@ -70,7 +71,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 S2FieldPath fp = fieldPaths[r].s2();
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
-                    UnpackerProperties f = dtClass.getFieldForFieldPath(fp).getProperties();
+                    FieldProperties f = dtClass.getFieldForFieldPath(fp).getFieldProperties();
                     throw new ClarityException("no unpacker for field %s with type %s!", f.getName(), f.getType());
                 }
                 int offsBefore = bs.pos();
@@ -78,7 +79,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 state.setValueForFieldPath(fp, data);
 
                 if (debug) {
-                    UnpackerProperties props = dtClass.getFieldForFieldPath(fp).getProperties();
+                    UnpackerProperties props = dtClass.getFieldForFieldPath(fp).getUnpackerProperties();
                     FieldType type = dtClass.getTypeForFieldPath(fp);
                     dataDebugTable.setData(r, 0, fp);
                     dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));

@@ -16,10 +16,10 @@ public class VarArrayField extends Field {
     private final Unpacker baseUnpacker;
     private final Unpacker elementUnpacker;
 
-    public VarArrayField(UnpackerProperties properties) {
-        super(properties);
-        baseUnpacker = S2UnpackerFactory.createUnpacker(properties, "uint32");
-        elementUnpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getGenericType().getBaseType());
+    public VarArrayField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
+        super(fieldProperties, unpackerProperties);
+        baseUnpacker = S2UnpackerFactory.createUnpacker(unpackerProperties, "uint32");
+        elementUnpacker = S2UnpackerFactory.createUnpacker(unpackerProperties, fieldProperties.getType().getGenericType().getBaseType());
     }
 
     @Override
@@ -51,9 +51,9 @@ public class VarArrayField extends Field {
     public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos || fp.last() == pos + 1;
         if (fp.last() == pos) {
-            return properties.getType();
+            return fieldProperties.getType();
         } else {
-            return properties.getType().getGenericType();
+            return fieldProperties.getType().getGenericType();
         }
     }
 

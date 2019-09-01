@@ -13,9 +13,9 @@ public class SimpleField extends Field {
 
     private final Unpacker unpacker;
 
-    public SimpleField(UnpackerProperties properties) {
-        super(properties);
-        unpacker = S2UnpackerFactory.createUnpacker(properties, properties.getType().getBaseType());
+    public SimpleField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
+        super(fieldProperties, unpackerProperties);
+        unpacker = S2UnpackerFactory.createUnpacker(unpackerProperties, fieldProperties.getType().getBaseType());
     }
 
     @Override
@@ -39,7 +39,7 @@ public class SimpleField extends Field {
     @Override
     public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
         assert fp.last() == pos;
-        return properties.getType();
+        return fieldProperties.getType();
     }
 
     @Override
