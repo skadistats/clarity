@@ -10,16 +10,14 @@ public class UnpackerProperties {
     private final Float highValue;
     private final Serializer serializer;
     private final String encoderType;
-    private final String serializerType;
 
-    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType, String serializerType) {
+    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, Serializer serializer, String encoderType) {
         this.encodeFlags = encodeFlags;
         this.bitCount = bitCount;
         this.lowValue = lowValue;
         this.highValue = highValue;
         this.serializer = serializer;
         this.encoderType = encoderType;
-        this.serializerType = serializerType;
     }
 
     public Integer getEncodeFlags() {
@@ -60,10 +58,6 @@ public class UnpackerProperties {
 
     public String getEncoderType() {
         return encoderType;
-    }
-
-    public String getSerializerType() {
-        return serializerType;
     }
 
 }

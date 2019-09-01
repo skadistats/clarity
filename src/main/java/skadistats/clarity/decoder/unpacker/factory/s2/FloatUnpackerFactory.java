@@ -18,7 +18,7 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
         if ("coord".equals(f.getEncoderType())) {
             return new FloatCoordUnpacker();
         }
-        if ("simulationtime".equals(f.getSerializerType())) {
+        if ("simulationtime".equals(f.getEncoderType())) {
             return new FloatSimulationTimeUnpacker();
         }
         int bc = f.getBitCountOrDefault(0);
