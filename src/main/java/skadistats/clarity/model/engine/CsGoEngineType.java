@@ -164,19 +164,15 @@ public class CsGoEngineType extends AbstractEngineType {
         }
     }
 
-
-
-    private static final int dem_signon       = 1; // it's a startup message, process as fast as possible
-    private static final int dem_packet       = 2; // it's a normal network packet that we stored off
-    private static final int dem_synctick     = 3; // sync client clock to demo tick
-    private static final int dem_consolecmd   = 4; // console command
-    private static final int dem_usercmd      = 5; // user input command
-    private static final int dem_datatables   = 6; // network data tables
-    private static final int dem_stop         = 7; // end of time
-    private static final int dem_customdata   = 8; // a blob of binary data understood by a callback function
-    private static final int dem_stringtables = 9; // alternative to 6? Similar to dota?
-
-
+    public static final byte dem_signon       = 1; // it's a startup message, process as fast as possible
+    public static final byte dem_packet       = 2; // it's a normal network packet that we stored off
+    public static final byte dem_synctick     = 3; // sync client clock to demo tick
+    public static final byte dem_consolecmd   = 4; // console command
+    public static final byte dem_usercmd      = 5; // user input command
+    public static final byte dem_datatables   = 6; // network data tables
+    public static final byte dem_stop         = 7; // end of time
+    public static final byte dem_customdata   = 8; // a blob of binary data understood by a callback function
+    public static final byte dem_stringtables = 9; // alternative to 6? Similar to dota?
 
     private byte[] readPacket(Source source) throws IOException {
         int size = source.readFixedInt32();
