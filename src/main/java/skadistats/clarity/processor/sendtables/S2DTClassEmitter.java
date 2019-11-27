@@ -303,7 +303,7 @@ public class S2DTClassEmitter {
             @Override
             public void execute(SerializerField field) {
                 if (manaProps.contains(field.varName)) {
-                    if (field.highValue == 3.4028235E38f) {
+                    if (field.highValue == Float.MAX_VALUE) {
                         field.lowValue = null;
                         field.highValue = 8192.0f;
                     }
@@ -312,6 +312,20 @@ public class S2DTClassEmitter {
         });
 
 
+        PATCHES.put(new BuildNumberRange(null, null), new PatchFunc() {
+            private final Set<String> manaProps = new HashSet<>(Arrays.asList(
+                    "m_flRuneTime"
+            ));
+            @Override
+            public void execute(SerializerField field) {
+                if (manaProps.contains(field.varName)) {
+                    if (field.highValue == Float.MAX_VALUE && field.lowValue == -Float.MAX_VALUE) {
+                        field.lowValue = null;
+                        field.highValue = null;
+                    }
+                }
+            }
+        });
     }
 
 }
