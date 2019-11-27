@@ -17,6 +17,9 @@ public class FloatUnpackerFactory implements UnpackerFactory<Float> {
         if ("simulationtime".equals(f.getSerializerType())) {
             return new FloatSimulationTimeUnpacker();
         }
+	if ("runetime".equals(f.getSerializerType())) {
+	    return new FloatRuneTimeUnpacker();
+	}
         int bc = f.getBitCountOrDefault(0);
         if (bc <= 0 || bc >= 32) {
             return new FloatNoScaleUnpacker();

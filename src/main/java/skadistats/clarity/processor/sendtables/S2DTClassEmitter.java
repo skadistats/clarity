@@ -295,6 +295,19 @@ public class S2DTClassEmitter {
             }
         });
 
+        PATCHES.put(new BuildNumberRange(null, null), new PatchFunc() {
+            private final Set<String> runeTime = new HashSet<>(Arrays.asList(
+                "m_flRuneTime"
+            ));
+            @Override
+            public void execute(SerializerField field) {
+                if (runeTime.contains(field.varName)) {
+                    field.serializerType = "runetime";
+                }
+            }
+        });
+
+
         PATCHES.put(new BuildNumberRange(null, 954), new PatchFunc() {
             private final Set<String> manaProps = new HashSet<>(Arrays.asList(
                 "m_flMana",
