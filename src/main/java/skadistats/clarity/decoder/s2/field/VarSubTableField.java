@@ -22,7 +22,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public void accumulateName(S2FieldPath fp, int pos, List<String> parts) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         addBasePropertyName(parts);
         if (fp.last() > pos) {
             parts.add(Util.arrayIdxToString(fp.get(pos + 1)));
@@ -34,7 +34,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public Unpacker getUnpackerForFieldPath(S2FieldPath fp, int pos) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         if (fp.last() == pos) {
             return baseUnpacker;
         } else {
@@ -44,7 +44,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public Field getFieldForFieldPath(S2FieldPath fp, int pos) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         if (fp.last() == pos) {
             return this;
         } else {
@@ -54,7 +54,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public FieldType getTypeForFieldPath(S2FieldPath fp, int pos) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         if (fp.last() == pos) {
             return properties.getType();
         } else {
@@ -64,7 +64,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public Object getValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         ArrayEntityState subState = state.sub(fp.get(pos));
         if (fp.last() == pos) {
             return subState.length();
@@ -77,7 +77,7 @@ public class VarSubTableField extends Field {
 
     @Override
     public void setValueForFieldPath(S2FieldPath fp, int pos, ArrayEntityState state, Object value) {
-        assert fp.last() == pos || fp.last() == pos + 2;
+        assert fp.last() == pos || fp.last() >= pos + 2;
         int i = fp.get(pos);
         ArrayEntityState subState = state.sub(i);
         if (fp.last() == pos) {
