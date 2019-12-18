@@ -3,88 +3,70 @@ package skadistats.clarity.model;
 import com.google.protobuf.ByteString;
 import skadistats.clarity.util.TextTable;
 
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static skadistats.clarity.util.TextTable.Alignment;
 
 public class StringTable {
 
     private final String name;
-    private final int maxEntries;
+    private final Integer maxEntries;
     private final boolean userDataFixedSize;
     private final int userDataSize;
     private final int userDataSizeBits;
     private final int flags;
 
-    private String[][] names;
-    private ByteString[][] values;
+    private List<Entry> entries;
+    private List<Entry> initialEntries;
 
-    private int initialEntryCount;
-    private int entryCount;
-
-    public StringTable(String name, int maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags) {
+    public StringTable(String name, Integer maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags) {
         this.name = name;
         this.maxEntries = maxEntries;
         this.userDataFixedSize = userDataFixedSize;
         this.userDataSize = userDataSize;
         this.userDataSizeBits = userDataSizeBits;
         this.flags = flags;
-        this.names = new String[maxEntries][2];
-        this.values = new ByteString[maxEntries][2];
-        this.initialEntryCount = 0;
-        this.entryCount = 0;
+        this.entries = new ArrayList<>();
+        this.initialEntries = Collections.emptyList();
     }
 
-    private void ensureSize(int minCapacity) {
-        if (names.length < minCapacity) {
-            int oldCapacity = names.length;
-            int newCapacity = oldCapacity + (oldCapacity >> 1);
-            if (newCapacity - minCapacity < 0)
-                newCapacity = minCapacity;
-            names = Arrays.copyOf(names, newCapacity);
-            values = Arrays.copyOf(values, newCapacity);
-            for (int i = oldCapacity; i < newCapacity; i++) {
-                names[i] = new String[2];
-                values[i] = new ByteString[2];
-            }
-        }
+    public void setValueForIndex(int index, ByteString value) {
+        entries.get(index).value = value;
     }
 
-    public void set(int tbl, int index, String name, ByteString value) {
-        ensureSize(index + 1);
-        if ((tbl & 1) != 0) {
-            initialEntryCount = Math.max(initialEntryCount, index + 1);
-            this.names[index][0] = name;
-            this.values[index][0] = value;
-        }
-        if ((tbl & 2) != 0) {
-            entryCount = Math.max(entryCount, index + 1);
-            this.names[index][1] = name;
-            this.values[index][1] = value;
-        }
+    public void addEntry(String name, ByteString value) {
+        entries.add(new Entry(name, value));
     }
 
     public boolean hasIndex(int index) {
-        return index >= 0 && names.length > index;
+        return index >= 0 && index < entries.size();
     }
 
     public ByteString getValueByIndex(int index) {
-        return values[index][1];
+        return entries.get(index).value;
     }
 
     public String getNameByIndex(int index) {
-        return names[index][1];
+        return entries.get(index).name;
+    }
+
+    public void markInitialState() {
+        initialEntries = entries.stream()
+                .map(e -> new Entry(e.name, e.value))
+                .collect(Collectors.toList());
     }
 
     public void reset() {
-        for (int i = 0; i < names.length; i++) {
-            names[i][1] = names[i][0];
-            values[i][1] = values[i][0];
-        }
-        entryCount = initialEntryCount;
+        entries.clear();
+        initialEntries.stream()
+                .map(e -> new Entry(e.name, e.value))
+                .forEach(entries::add);
     }
 
-    public int getMaxEntries() {
+    public Integer getMaxEntries() {
         return maxEntries;
     }
 
@@ -109,7 +91,7 @@ public class StringTable {
     }
 
     public int getEntryCount() {
-        return entryCount;
+        return entries.size();
     }
 
     public String toString() {
@@ -120,12 +102,27 @@ public class StringTable {
             .addColumn("Key", Alignment.RIGHT)
             .addColumn("Value", Alignment.RIGHT)
             .build();
-        for (int i = 0; i < entryCount; i++) {
+        int n = entries.size();
+        for (int i = 0; i < n; i++) {
+            ByteString v = getValueByIndex(i);
+
             t.setData(i, 0, i);
-            t.setData(i, 1, names[i][1]);
-            t.setData(i, 2, values[i][1] != null ? (values[i][1].size() + " bytes") : null);
+            t.setData(i, 1, getNameByIndex(i));
+            t.setData(i, 2, v != null ? (v.size() + " bytes") : null);
         }
         return t.toString();
+    }
+
+    private static class Entry {
+
+        private String name;
+        private ByteString value;
+
+        private Entry(String name, ByteString value) {
+            this.name = name;
+            this.value = value;
+        }
+
     }
 
 }

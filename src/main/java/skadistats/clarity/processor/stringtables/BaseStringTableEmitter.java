@@ -15,13 +15,17 @@ import skadistats.clarity.wire.common.proto.Demo;
 
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
 public class BaseStringTableEmitter {
 
     protected static final int MAX_NAME_LENGTH = 0x400;
-    protected static final int KEY_HISTORY_SIZE = 32;
+
+    protected static final int KEY_HISTORY_BITS = 5;
+    protected static final int KEY_HISTORY_SIZE = (1 << KEY_HISTORY_BITS);
+    protected static final int KEY_HISTORY_MASK = (KEY_HISTORY_SIZE - 1);
 
     protected int numTables = 0;
 
@@ -64,36 +68,6 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void setSingleEntry(StringTable table, int mode, int index, Demo.CDemoStringTables.items_tOrBuilder it) {
-        String name = null;
-        if (it.hasStr()) {
-            name = it.getStr();
-        } else {
-            // With console recorded replays, the replay sometimes has no name entry,
-            // and supposedly expects us to use the one that is existing
-            // see: https://github.com/skadistats/clarity/issues/147#issuecomment-409619763
-            //      and Slack communication with Lukas
-            // reuse the old key, and see if that works
-
-            // 10.07.2019: Only do this if the mode is update (not CreateStringTable)
-            if (mode == 2 && table.hasIndex(index)) {
-                name = table.getNameByIndex(index);
-            }
-        }
-        ByteString value = null;
-        if (it.hasData()) {
-            value = it.getData();
-        } else {
-            // 10.07.2019: CSGO console recorded replay sometimes have no data, and want us to use the old data
-            // as well
-            if (mode == 2 && table.hasIndex(index)) {
-                value = table.getValueByIndex(index);
-            }
-        }
-        table.set(mode, index, name, value);
-        raise(table, index, name, value);
-    }
-
     protected void raise(StringTable table, int index, String name, ByteString value) {
         updateEvent.raise(table, index, name, value);
     }
@@ -116,11 +90,7 @@ public class BaseStringTableEmitter {
             for (StringTable table : stringTables.byName.values()) {
                 Demo.CDemoStringTables.table_t tt = resetStringTables.get(table.getName());
                 if (tt != null) {
-                    for (int i = 0; i < tt.getItemsCount(); i++) {
-                        Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                        setSingleEntry(table, 2, i, it);
-                    }
-                } else {
+                    applyFullStringTables(table, tt);
                     for (int i = 0; i < table.getEntryCount(); i++) {
                         raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
                     }
@@ -136,10 +106,30 @@ public class BaseStringTableEmitter {
             if (table == null) {
                 continue;
             }
-            for (int i = 0; i < tt.getItemsCount(); i++) {
-                Demo.CDemoStringTables.items_t it = tt.getItems(i);
-                setSingleEntry(table, 2, i, it);
+            applyFullStringTables(table, tt);
+            for (int i = 0; i < table.getEntryCount(); i++) {
+                raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
             }
+        }
+    }
+
+    private void applyFullStringTables(StringTable table, Demo.CDemoStringTables.table_t tt) {
+        int ic = tt.getItemsCount();
+        int ec = table.getEntryCount();
+
+        if (ic < ec) {
+            throw new UnsupportedOperationException("removing entries is not supported");
+        }
+
+        for (int i = 0; i < ec; i++) {
+            Demo.CDemoStringTables.items_t it = tt.getItems(i);
+            assert(Objects.equals(it.getStr(), table.getNameByIndex(i)));
+            table.setValueForIndex(i, it.getData());
+        }
+
+        for (int i = ec; i < ic; i++) {
+            Demo.CDemoStringTables.items_t it = tt.getItems(i);
+            table.addEntry(it.getStr(), it.getData());
         }
     }
 
