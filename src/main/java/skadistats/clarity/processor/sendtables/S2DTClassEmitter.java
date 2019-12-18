@@ -313,12 +313,12 @@ public class S2DTClassEmitter {
 
 
         PATCHES.put(new BuildNumberRange(null, null), new PatchFunc() {
-            private final Set<String> manaProps = new HashSet<>(Arrays.asList(
+            private final Set<String> fixupProps = new HashSet<>(Arrays.asList(
                     "m_flRuneTime"
             ));
             @Override
             public void execute(SerializerField field) {
-                if (manaProps.contains(field.varName)) {
+                if (fixupProps.contains(field.varName)) {
                     if (field.highValue == Float.MAX_VALUE && field.lowValue == -Float.MAX_VALUE) {
                         field.lowValue = null;
                         field.highValue = null;
