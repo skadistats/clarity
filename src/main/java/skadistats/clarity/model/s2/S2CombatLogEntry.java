@@ -700,6 +700,66 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getModifierHidden();
     }
 
+    @Override
+    public boolean hasInflictorIsStolenAbility() {
+        return e.hasInflictorIsStolenAbility();
+    }
+
+    @Override
+    public boolean isInflictorIsStolenAbility() {
+        return e.getInflictorIsStolenAbility();
+    }
+
+    @Override
+    public boolean hasKillEaterEvent() {
+        return e.hasKillEaterEvent();
+    }
+
+    @Override
+    public int getKillEaterEvent() {
+        return e.getKillEaterEvent();
+    }
+
+    @Override
+    public boolean hasUnitStatusLabel() {
+        return e.hasUnitStatusLabel();
+    }
+
+    @Override
+    public int getUnitStatusLabel() {
+        return e.getUnitStatusLabel();
+    }
+
+    @Override
+    public boolean hasSpellGeneratedAttack() {
+        return e.hasSpellGeneratedAttack();
+    }
+
+    @Override
+    public boolean isSpellGeneratedAttack() {
+        return e.getSpellGeneratedAttack();
+    }
+
+    @Override
+    public boolean hasAtNightTime() {
+        return e.hasAtNightTime();
+    }
+
+    @Override
+    public boolean isAtNightTime() {
+        return e.getAtNightTime();
+    }
+
+    @Override
+    public boolean hasAttackerHasScepter() {
+        return e.hasAttackerHasScepter();
+    }
+
+    @Override
+    public boolean isAttackerHasScepter() {
+        return e.getAttackerHasScepter();
+    }
+
     public String toString() {
         return e.toString();
     }

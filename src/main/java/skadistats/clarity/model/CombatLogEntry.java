@@ -140,4 +140,17 @@ public interface CombatLogEntry {
     int getModifierAbility();
     boolean hasModifierHidden();
     boolean isModifierHidden();
+    boolean hasInflictorIsStolenAbility();
+    boolean isInflictorIsStolenAbility();
+    boolean hasKillEaterEvent();
+    int getKillEaterEvent();
+    boolean hasUnitStatusLabel();
+    int getUnitStatusLabel();
+    boolean hasSpellGeneratedAttack();
+    boolean isSpellGeneratedAttack();
+    boolean hasAtNightTime();
+    boolean isAtNightTime();
+    boolean hasAttackerHasScepter();
+    boolean isAttackerHasScepter();
+
 }

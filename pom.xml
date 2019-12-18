@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.skadistats</groupId>
             <artifactId>clarity-protobuf</artifactId>
-            <version>[4.11,5.0)</version>
+            <version>[4.17,5.0)</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>

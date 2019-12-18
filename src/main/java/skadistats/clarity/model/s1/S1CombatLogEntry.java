@@ -704,6 +704,66 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return false;
     }
 
+    @Override
+    public boolean hasInflictorIsStolenAbility() {
+        return false;
+    }
+
+    @Override
+    public boolean isInflictorIsStolenAbility() {
+        return false;
+    }
+
+    @Override
+    public boolean hasKillEaterEvent() {
+        return false;
+    }
+
+    @Override
+    public int getKillEaterEvent() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasUnitStatusLabel() {
+        return false;
+    }
+
+    @Override
+    public int getUnitStatusLabel() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasSpellGeneratedAttack() {
+        return false;
+    }
+
+    @Override
+    public boolean isSpellGeneratedAttack() {
+        return false;
+    }
+
+    @Override
+    public boolean hasAtNightTime() {
+        return false;
+    }
+
+    @Override
+    public boolean isAtNightTime() {
+        return false;
+    }
+
+    @Override
+    public boolean hasAttackerHasScepter() {
+        return false;
+    }
+
+    @Override
+    public boolean isAttackerHasScepter() {
+        return false;
+    }
+
     public String toString() {
         return e.toString();
     }
