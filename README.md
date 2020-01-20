@@ -14,10 +14,10 @@ multiple times, preventing client code to reliably hold a reference to an entity
 It has already been battle tested with some closed source parsers, but you might still
 find problems - so use 2.5-SNAPSHOT with caution, and report bugs!
 
-# Version 2.4 released
+# Version 2.4.1 released
 
-Today (Febuary 21, 2019) version 2.4 has been released. It contains fixes and improvements, while being 
-backwards compatible with code running on 2.3.
+The fall update of Dota 2 contains a bugfix that are needed for replays from that new patch. If you get 
+an exception saying that `highLowMultiplier is zero`, be sure to use the fixed version!
 
 # Replay Data
 
