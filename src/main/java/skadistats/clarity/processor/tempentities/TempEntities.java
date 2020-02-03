@@ -10,7 +10,6 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.EntityStateSupplier;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -53,16 +52,10 @@ public class TempEntities {
                 }
                 EntityState state = EntityStateFactory.forS1(receiveProps);
                 fieldReader.readFields(stream, cls, state, null, false);
-                evTempEntity.raise(new Entity(engineType, engineType.emptyHandle(), cls, new EntityStateSupplier() {
-                    @Override
-                    public boolean isActive() {
-                        return true;
-                    }
-                    @Override
-                    public EntityState getState() {
-                        return state;
-                    }
-                }));
+
+                Entity te = new Entity(engineType, engineType.emptyHandle(), cls);
+                te.bindState(true, state);
+                evTempEntity.raise(te);
             }
         }
     }

@@ -17,7 +17,6 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.EntityStateSupplier;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.state.ClientFrame;
@@ -45,7 +44,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
@@ -221,6 +219,7 @@ public class Entities {
                     }
                 }
                 activeFrame = currentFrame;
+                activeFrame.bindEntityStates();
                 currentFrameEvents.forEach(Runnable::run);
                 currentFrameEvents.clear();
 
@@ -354,6 +353,7 @@ public class Entities {
             lastFrameEvents.clear();
 
             activeFrame = currentFrame;
+            activeFrame.bindEntityStates();
             currentFrameEvents.forEach(Runnable::run);
             currentFrameEvents.clear();
 
@@ -404,7 +404,7 @@ public class Entities {
         if (isCreate) {
             int handle = engineType.handleForIndexAndSerial(eIdx, serial);
             currentFrame.createNewEntity(
-                    entityRegistry.get(handle, () -> new Entity(engineType, handle, dtClass, stateSupplierForIndex(eIdx))),
+                    entityRegistry.get(handle, () -> new Entity(engineType, handle, dtClass)),
                     null,
                     newState
             );
@@ -628,25 +628,6 @@ public class Entities {
             fieldReader.readFields(stream, cls, b.state, null, false);
         }
         return b;
-    }
-
-    private Map<Integer, EntityStateSupplier> supplierMap = new HashMap<>();
-
-    private EntityStateSupplier stateSupplierForIndex(int eIdx) {
-        return supplierMap.computeIfAbsent(eIdx, x -> new EntityStateSupplier() {
-            private <T> T get(BiFunction<ClientFrame, Integer, T> getter, T defaultValue) {
-                if (activeFrame == null || !activeFrame.isValid(eIdx)) return defaultValue;
-                return getter.apply(activeFrame, eIdx);
-            }
-            @Override
-            public boolean isActive() {
-                return get(ClientFrame::isActive, false);
-            }
-            @Override
-            public EntityState getState() {
-                return get(ClientFrame::getState, null);
-            }
-        });
     }
 
     public Entity getByIndex(int index) {

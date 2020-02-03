@@ -86,6 +86,14 @@ public class ClientFrame {
         return state[idx];
     }
 
+    public void bindEntityStates() {
+        for (int idx = 0; idx < entity.length; idx++) {
+            if (entity[idx] != null) {
+                entity[idx].bindState(active[idx], state[idx]);
+            }
+        }
+    }
+
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer("ClientFrame{");

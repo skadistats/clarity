@@ -8,13 +8,19 @@ public class Entity {
     private final int handle;
     private final DTClass dtClass;
 
-    private final EntityStateSupplier stateSupplier;
+    private boolean active;
+    private EntityState state;
 
-    public Entity(EngineType engineType, int handle, DTClass dtClass, EntityStateSupplier stateSupplier) {
+    public Entity(EngineType engineType, int handle, DTClass dtClass) {
         this.engineType = engineType;
         this.handle = handle;
         this.dtClass = dtClass;
-        this.stateSupplier = stateSupplier;
+    }
+
+    public void bindState(boolean active, EntityState state) {
+        this.active = active;
+        this.state = state;
+
     }
 
     public int getIndex() {
@@ -34,13 +40,12 @@ public class Entity {
     }
 
     public EntityState getState() {
-        return stateSupplier.getState();
+        return state;
     }
 
     public boolean isActive() {
-        return stateSupplier.isActive();
+        return active;
     }
-
 
     /**
      * Check if this entity contains the given property.
