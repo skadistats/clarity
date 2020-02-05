@@ -514,8 +514,11 @@ public class Entities {
     private void emitUpdatedEvent(int i) {
         if (resetInProgress || !evUpdated.isListenedTo()) return;
         currentFrameEvents.add(() -> {
+            int serial = currentFrame.getEntity(i).getSerial();
             Set<FieldPath> processedFieldPaths = new TreeSet<>();
             for (ClientFrame cf : clientFrames.subList(1, this.clientFrames.size())) {
+                Entity e = cf.getEntity(i);
+                if (e == null || e.getSerial() != serial) continue;
                 Set<FieldPath> changedFieldPaths = cf.getChangedFieldPaths(i);
                 if (changedFieldPaths != null) {
                     processedFieldPaths.addAll(changedFieldPaths);
