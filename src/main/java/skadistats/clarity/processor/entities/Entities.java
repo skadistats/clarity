@@ -415,6 +415,7 @@ public class Entities {
             currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
             currentFrame.setActive(eIdx, true);
             logModification("ENTER", currentFrame, eIdx);
+            emitCreatedEvent(eIdx); // do not remove, it will take care of proper update events!
             emitEnteredEvent(eIdx);
         }
         if (message.getUpdateBaseline()) {
