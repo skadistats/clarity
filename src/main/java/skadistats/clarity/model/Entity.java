@@ -4,31 +4,28 @@ import skadistats.clarity.model.state.EntityState;
 
 public class Entity {
 
-    private final EngineType engineType;
+    private final int index;
+    private final int serial;
     private final int handle;
     private final DTClass dtClass;
 
+    private boolean existent;
     private boolean active;
     private EntityState state;
 
-    public Entity(EngineType engineType, int handle, DTClass dtClass) {
-        this.engineType = engineType;
+    public Entity(int index, int serial, int handle, DTClass dtClass) {
+        this.index = index;
+        this.serial = serial;
         this.handle = handle;
         this.dtClass = dtClass;
     }
 
-    public void bindState(boolean active, EntityState state) {
-        this.active = active;
-        this.state = state;
-
-    }
-
     public int getIndex() {
-        return engineType.indexForHandle(handle);
+        return index;
     }
 
     public int getSerial() {
-        return engineType.serialForHandle(handle);
+        return serial;
     }
 
     public int getHandle() {
@@ -39,12 +36,28 @@ public class Entity {
         return dtClass;
     }
 
-    public EntityState getState() {
-        return state;
+    public boolean isExistent() {
+        return existent;
+    }
+
+    public void setExistent(boolean existent) {
+        this.existent = existent;
     }
 
     public boolean isActive() {
         return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public EntityState getState() {
+        return state;
+    }
+
+    public void setState(EntityState state) {
+        this.state = state;
     }
 
     /**

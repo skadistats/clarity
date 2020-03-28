@@ -32,7 +32,9 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 entries.add(null);
                 markFree(i);
             } else {
-                entries.add(new Entry(e.state, e.state.length == 0));
+                boolean modifiable = e.state.length == 0;
+                e.modifiable = modifiable;
+                entries.add(new Entry(e.state, modifiable));
             }
         }
     }
@@ -82,7 +84,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public EntityState clone() {
+    public EntityState copy() {
         return new NestedArrayEntityState(this);
     }
 

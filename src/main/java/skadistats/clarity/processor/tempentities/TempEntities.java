@@ -53,8 +53,15 @@ public class TempEntities {
                 EntityState state = EntityStateFactory.forS1(receiveProps);
                 fieldReader.readFields(stream, cls, state, null, false);
 
-                Entity te = new Entity(engineType, engineType.emptyHandle(), cls);
-                te.bindState(true, state);
+                int handle = engineType.emptyHandle();
+                Entity te = new Entity(
+                        engineType.indexForHandle(handle),
+                        engineType.serialForHandle(handle),
+                        handle,
+                        cls);
+                te.setExistent(true);
+                te.setActive(true);
+                te.setState(state);
                 evTempEntity.raise(te);
             }
         }

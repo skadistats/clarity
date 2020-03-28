@@ -20,7 +20,7 @@ public class ObjectArrayEntityState implements EntityState {
     }
 
     @Override
-    public EntityState clone() {
+    public EntityState copy() {
         return new ObjectArrayEntityState(this);
     }
 

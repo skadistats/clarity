@@ -36,15 +36,9 @@ import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.function.Consumer;
 import java.util.regex.Pattern;
 
 @Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
@@ -59,7 +53,6 @@ public class Entities {
     private FieldReader<DTClass> fieldReader;
     private int[] deletions;
     private int serverTick;
-    private LinkedList<ClientFrame> clientFrames = new LinkedList<>();
     private EntityRegistry entityRegistry = new EntityRegistry();
 
     private Map<Integer, ByteString> rawBaselines = new HashMap<>();
@@ -79,17 +72,10 @@ public class Entities {
 
     private final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
-    private ClientFrame currentFrame;
-    private ClientFrame lastFrame;
-    private ClientFrame activeFrame;
-    private ClientFrame deltaFrame;
-
-    private List<Runnable> lastFrameEvents = new ArrayList<>();
-    private List<Runnable> currentFrameEvents = new ArrayList<>();
-
+    private ClientFrame entities;
 
     private boolean resetInProgress;
-    private ClientFrame resetFrame;
+    private ClientFrame.Capsule resetCapsule;
 
     @Insert
     private EngineType engineType;
@@ -148,6 +134,7 @@ public class Entities {
     @OnInit
     public void onInit() {
         entityCount = 1 << engineType.getIndexBits();
+        entities = new ClientFrame(entityCount);
 
         fieldReader = engineType.getNewFieldReader();
 
@@ -174,11 +161,11 @@ public class Entities {
         switch (phase) {
             case START:
                 resetInProgress = true;
-                resetFrame = currentFrame;
+                resetCapsule = entities.createCapsule();
                 break;
 
             case CLEAR:
-                clientFrames.clear();
+                entities = new ClientFrame(entityCount);
                 for (int i = 0; i < classBaselines.length; i++) {
                     classBaselines[i].reset();
                 }
@@ -189,39 +176,40 @@ public class Entities {
                 break;
 
             case COMPLETE:
-                lastFrame = resetFrame;
                 resetInProgress = false;
-                resetFrame = null;
 
                 //updateEventDebug = true;
 
-                if (lastFrame != null) {
-                    for (int i = 0; i < entityCount; i++) {
-                        boolean entityDiffers = lastFrame.getEntity(i) != currentFrame.getEntity(i);
-                        if (entityDiffers || (lastFrame.isActive(i) && !currentFrame.isActive(i))) {
-                            emitLeftEvent(i);
-                        }
-                        if (entityDiffers || (lastFrame.isValid(i) && !currentFrame.isValid(i))) {
-                            emitDeletedEvent(i);
+                Entity entity;
+                for (int eIdx = 0; eIdx < entityCount; eIdx++) {
+                    entity = entities.getEntity(eIdx);
+                    if (resetCapsule.isExistent(eIdx)) {
+                        if (entity == null || entity.getHandle() != resetCapsule.getHandle(eIdx)) {
+                            Entity deletedEntity = entityRegistry.get(resetCapsule.getHandle(eIdx));
+                            if (resetCapsule.isActive(eIdx)) {
+                                emitLeftEvent(deletedEntity);
+                            }
+                            emitDeletedEvent(deletedEntity);
                         }
                     }
-                    activeFrame = lastFrame;
-                    lastFrameEvents.forEach(Runnable::run);
-                    lastFrameEvents.clear();
+                    if (entity != null) {
+                        if (!resetCapsule.isExistent(eIdx) || entity.getHandle() != resetCapsule.getHandle(eIdx)) {
+                            emitCreatedEvent(entity);
+                            if (entity.isActive()) {
+                                emitEnteredEvent(entity);
+                            }
+                        } else {
+                            Iterator<FieldPath> iter = entity.getState().fieldPathIterator();
+                            int n = 0;
+                            while (iter.hasNext()) {
+                                updatedFieldPaths[n++] = iter.next();
+                            }
+                            emitUpdatedEvent(entity, n);
+                        }
+                    }
                 }
 
-                for (int i = 0; i < entityCount; i++) {
-                    if (currentFrame.isValid(i)) {
-                        emitCreatedEvent(i);
-                    }
-                    if ((lastFrame == null || !lastFrame.isActive(i)) && currentFrame.isActive(i)) {
-                        emitEnteredEvent(i);
-                    }
-                }
-                activeFrame = currentFrame;
-                activeFrame.bindEntityStates();
-                currentFrameEvents.forEach(Runnable::run);
-                currentFrameEvents.clear();
+                resetCapsule = null;
 
                 //updateEventDebug = false;
 
@@ -247,12 +235,11 @@ public class Entities {
     boolean debug = false;
     boolean updateEventDebug = false;
 
-    void debugUpdateEvent(String which, int eIdx) {
+    void debugUpdateEvent(String which, Entity entity) {
         if (!updateEventDebug) return;
-        Entity entity = activeFrame.getEntity(eIdx);
         log.info("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
                 which,
-                eIdx,
+                entity.getIndex(),
                 entity.getSerial(),
                 entity.getHandle(),
                 entity.getDtClass().getDtName()
@@ -272,19 +259,11 @@ public class Entities {
             );
         }
 
-        lastFrame = currentFrame;
-        currentFrame = new ClientFrame(serverTick, entityCount);
-
-        deltaFrame = null;
         if (message.getIsDelta()) {
             if (serverTick == message.getDeltaFrom()) {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
             }
-            deltaFrame = getClientFrame(message.getDeltaFrom(), false);
-            if (deltaFrame == null) {
-                throw new ClarityException("missing client frame for delta update from tick %d", message.getDeltaFrom());
-            }
-            log.debug("performing delta update, using previous frame from tick %d", deltaFrame.getTick());
+            log.debug("performing delta update, using previous frame from tick %d", message.getDeltaFrom());
         } else {
             log.debug("performing full update");
         }
@@ -300,310 +279,183 @@ public class Entities {
         BitStream stream = BitStream.createBitStream(message.getEntityData());
 
         int updateCount = message.getUpdatedEntries();
-        int updateIndex;
         int updateType;
-        int eIdx = 0;
+        int eIdx = -1;
+        Entity eEnt;
 
-        while (true) {
-            if (updateCount > 0) {
-                updateIndex = eIdx + stream.readUBitVar();
-                updateCount--;
-            } else {
-                updateIndex = entityCount;
-            }
-            if (eIdx < updateIndex) {
-                if (deltaFrame != null) {
-                    currentFrame.copyFromOtherFrame(deltaFrame, eIdx, updateIndex - eIdx);
-                }
-            }
-            eIdx = updateIndex;
-            if (eIdx == entityCount) {
-                break;
-            }
+        while (updateCount-- != 0) {
+            eIdx += stream.readUBitVar() + 1;
+            eEnt = entities.getEntity(eIdx);
 
             updateType = stream.readUBitInt(2);
             switch (updateType) {
-                case 2:
-                    processEntityCreate(eIdx, message, stream);
-                    break;
-                case 0:
-                    processEntityUpdate(eIdx, stream);
-                    break;
-                case 1:
-                    processEntityLeave(eIdx);
-                    break;
-                case 3:
-                    processEntityDelete(eIdx);
-                    break;
-            }
 
-            eIdx++;
-        }
-
-        processDeletions(message, stream);
-
-        log.debug("update finished for tick %d", currentFrame.getTick());
-
-        removeObsoleteClientFrames(message.getDeltaFrom());
-        clientFrames.add(currentFrame);
-
-        if (!resetInProgress) {
-            activeFrame = lastFrame;
-            lastFrameEvents.forEach(Runnable::run);
-            lastFrameEvents.clear();
-
-            activeFrame = currentFrame;
-            activeFrame.bindEntityStates();
-            currentFrameEvents.forEach(Runnable::run);
-            currentFrameEvents.clear();
-
-            evUpdatesCompleted.raise();
-        }
-    }
-
-    private void processEntityCreate(int eIdx, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        EntityState newState;
-        int dtClassId = stream.readUBitInt(dtClasses.getClassBits());
-        DTClass dtClass = dtClasses.forClassId(dtClassId);
-        if (dtClass == null) {
-            throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
-        }
-        int serial = stream.readUBitInt(engineType.getSerialBits());
-        if (engineType.getId() == EngineId.SOURCE2) {
-            // TODO: there is an extra VarInt encoded here for S2, figure out what it is
-            stream.readVarUInt();
-        }
-        boolean isCreate = true;
-        Set<FieldPath> changedFieldPaths = null;
-        Consumer<FieldPath> changedFieldPathConsumer = null;
-        if (deltaFrame != null && deltaFrame.isValid(eIdx)) {
-            if (deltaFrame.getEntity(eIdx).getSerial() == serial) {
-                // same entity, only enter
-                isCreate = false;
-                changedFieldPaths = new TreeSet<>();
-                changedFieldPathConsumer = changedFieldPaths::add;
-            } else {
-                // recreate
-                logModification("DELETE", deltaFrame, eIdx);
-                if (lastFrame != null) {
-                    Entity entity = lastFrame.getEntity(eIdx);
-                    if (entity != null && entity.getSerial() != serial) {
-                        emitLeftEvent(eIdx);
-                        emitDeletedEvent(eIdx);
+                case 2: // CREATE
+                    int dtClassId = stream.readUBitInt(dtClasses.getClassBits());
+                    DTClass dtClass = dtClasses.forClassId(dtClassId);
+                    if (dtClass == null) {
+                        throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
-                }
+                    int serial = stream.readUBitInt(engineType.getSerialBits());
+                    if (engineType.getId() == EngineId.SOURCE2) {
+                        // TODO: there is an extra VarInt encoded here for S2, figure out what it is
+                        stream.readVarUInt();
+                    }
+                    if (eEnt != null) {
+                        if (eEnt.getHandle() == engineType.handleForIndexAndSerial(eIdx, serial)) {
+                            if (!eEnt.isActive()) {
+                                processEntityEnter(eEnt);
+                            }
+                            processEntityUpdate(eEnt, stream, false);
+                            break;
+                        }
+                        if (eEnt.isActive()) {
+                            processEntityLeave(eEnt);
+                        }
+                        processEntityDelete(eEnt);
+                    }
+                    processEntityCreate(eIdx, serial, dtClass, message, stream);
+                    break;
+
+                case 0: // UPDATE
+                    if (eEnt == null) {
+                        int lastHandle = entities.getLastHandle(eIdx);
+                        eEnt = entityRegistry.get(lastHandle);
+                        processEntityUpdate(eEnt, stream, true);
+                        break;
+                    }
+                    processEntityUpdate(eEnt, stream, false);
+                    break;
+
+                case 1: // LEAVE
+                    if (eEnt != null && eEnt.isActive()) {
+                        processEntityLeave(eEnt);
+                    }
+                    break;
+
+                case 3: // DELETE
+                    if (eEnt != null) {
+                        if (eEnt.isActive()) {
+                            processEntityLeave(eEnt);
+                        }
+                        processEntityDelete(eEnt);
+                    }
+                    break;
             }
         }
-        if (isCreate) {
-            Baseline baseline = getBaseline(dtClassId, message.getBaseline(), eIdx, message.getIsDelta());
-            newState = baseline.state.clone();
-        } else {
-            newState = deltaFrame.getState(eIdx).clone();
-        }
-        fieldReader.readFields(stream, dtClass, newState, changedFieldPathConsumer, debug);
-        if (isCreate) {
-            int handle = engineType.handleForIndexAndSerial(eIdx, serial);
-            currentFrame.createNewEntity(
-                    entityRegistry.get(handle, () -> new Entity(engineType, handle, dtClass)),
-                    null,
-                    newState
-            );
-            logModification("CREATE", currentFrame, eIdx);
-            emitCreatedEvent(eIdx);
-            emitEnteredEvent(eIdx);
-        } else {
-            currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
-            currentFrame.setActive(eIdx, true);
-            logModification("ENTER", currentFrame, eIdx);
-            emitCreatedEvent(eIdx); // do not remove, it will take care of proper update events!
-            emitEnteredEvent(eIdx);
-        }
-        if (message.getUpdateBaseline()) {
-            Baseline baseline = entityBaselines[eIdx][1 - message.getBaseline()];
-            baseline.dtClassId = dtClassId;
-            baseline.state = newState.clone();
-        }
-    }
 
-    private void processEntityUpdate(int eIdx, BitStream stream) {
-        Set<FieldPath> changedFieldPaths;
-        EntityState newState;
-        checkDeltaFrameValid("update", eIdx);
-        changedFieldPaths = new TreeSet<>();
-        newState = deltaFrame.getState(eIdx).clone();
-        fieldReader.readFields(stream, deltaFrame.getEntity(eIdx).getDtClass(), newState, changedFieldPaths::add, debug);
-        currentFrame.updateExistingEntity(deltaFrame, eIdx, changedFieldPaths, newState);
-        logModification("UPDATE", currentFrame, eIdx);
-        emitUpdatedEvent(eIdx);
-    }
-
-    private void processEntityLeave(int eIdx) {
-        checkDeltaFrameValid("leave", eIdx);
-        currentFrame.copyFromOtherFrame(deltaFrame, eIdx, 1);
-        currentFrame.setActive(eIdx, false);
-        logModification("LEAVE", currentFrame, eIdx);
-        emitLeftEvent(eIdx);
-    }
-
-    private void processEntityDelete(int eIdx) {
-        checkDeltaFrameValid("delete", eIdx);
-        logModification("DELETE", deltaFrame, eIdx);
-        emitLeftEvent(eIdx);
-        emitDeletedEvent(eIdx);
-    }
-
-    private void processDeletions(NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        int eIdx;
         if (engineType.handleDeletions() && message.getIsDelta()) {
             int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
             for (int i = 0; i < n; i++) {
                 eIdx = deletions[i];
-                if (currentFrame.isValid(eIdx)) {
-                    log.debug("entity at index %d was ACTUALLY found when ordered to delete, tell the press!", eIdx);
-                    if (currentFrame.isActive(eIdx)) {
-                        currentFrame.setActive(eIdx, false);
-                        emitLeftEvent(eIdx);
+                eEnt = entities.getEntity(eIdx);
+                if (eEnt != null) {
+                    if (eEnt.isActive()) {
+                        processEntityLeave(eEnt);
                     }
-                    emitDeletedEvent(eIdx);
-                    currentFrame.deleteEntity(eIdx);
-                } else {
-                    log.debug("entity at index %d was not found when ordered to delete.", eIdx);
+                    processEntityDelete(eEnt);
                 }
             }
         }
-    }
 
-    private void removeObsoleteClientFrames(int deltaFrom) {
-        Iterator<ClientFrame> iter = clientFrames.iterator();
-        while(iter.hasNext()) {
-            ClientFrame frame = iter.next();
-            if (frame.getTick() >= deltaFrom) {
-                break;
-            }
-            log.debug("deleting client frame for tick %d", frame.getTick());
-            iter.remove();
+        log.debug("update finished for tick %d", serverTick);
+
+        if (!resetInProgress) {
+            evUpdatesCompleted.raise();
         }
     }
 
-    private void emitCreatedEvent(int i) {
-        if (lastFrame != null && lastFrame.getEntity(i) == currentFrame.getEntity(i)) {
-            if (resetInProgress || !evUpdated.isListenedTo()) return;
-            // double create event -> emulate an update
-            Set<FieldPath> changes = new TreeSet<>();
-            Iterator<FieldPath> iter = currentFrame.getState(i).fieldPathIterator();
-            while (iter.hasNext()) changes.add(iter.next());
-            currentFrame.setChangedFieldPaths(i, changes);
-            emitUpdatedEvent(i);
-        } else {
-            if (resetInProgress || !evCreated.isListenedTo()) return;
-            currentFrameEvents.add(() -> {
-                debugUpdateEvent("CREATE", i);
-                evCreated.raise(getByIndex(i));
-            });
+    private void processEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+        Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
+        EntityState newState = baseline.state.copy();
+        fieldReader.readFields(stream, dtClass, newState, null, debug);
+        Entity entity = entityRegistry.create(
+                eIdx, serial,
+                engineType.handleForIndexAndSerial(eIdx, serial),
+                dtClass);
+        entity.setExistent(true);
+        entity.setState(newState);
+        entities.setEntity(entity);
+        logModification("CREATE", entity);
+        emitCreatedEvent(entity);
+        processEntityEnter(entity);
+        if (message.getUpdateBaseline()) {
+            Baseline updatedBaseline = entityBaselines[eIdx][1 - message.getBaseline()];
+            updatedBaseline.dtClassId = dtClass.getClassId();
+            updatedBaseline.state = newState.copy();
         }
     }
 
-    private void emitEnteredEvent(int i) {
-        if (resetInProgress || !evEntered.isListenedTo()) return;
-        if (lastFrame != null && lastFrame.isValid(i) && lastFrame.isActive(i)) return;
-        currentFrameEvents.add(() -> {
-            debugUpdateEvent("ENTER", i);
-            evEntered.raise(getByIndex(i));
-        });
+    private void processEntityUpdate(Entity entity, BitStream stream, boolean silent) {
+        assert silent || (entity.isExistent() && entity.isActive());
+        int nUpdated = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), (i, f) -> updatedFieldPaths[i] = f, debug);
+        logModification("UPDATE", entity);
+        if (!silent) {
+            emitUpdatedEvent(entity, nUpdated);
+        }
     }
 
-    private void emitUpdatedEvent(int i) {
+    private void processEntityEnter(Entity entity) {
+        assert !entity.isActive();
+        entity.setActive(true);
+        logModification("ENTER", entity);
+        emitEnteredEvent(entity);
+    }
+
+    private void processEntityLeave(Entity entity) {
+        assert entity.isActive();
+        entity.setActive(false);
+        logModification("LEAVE", entity);
+        emitLeftEvent(entity);
+    }
+
+    private void processEntityDelete(Entity entity) {
+        assert entity.isExistent();
+        entity.setExistent(false);
+        entities.removeEntity(entity);
+        logModification("DELETE", entity);
+        emitDeletedEvent(entity);
+    }
+
+    private void emitCreatedEvent(Entity entity) {
         if (resetInProgress || !evUpdated.isListenedTo()) return;
-        currentFrameEvents.add(() -> {
-            int serial = currentFrame.getEntity(i).getSerial();
-            Set<FieldPath> processedFieldPaths = new TreeSet<>();
-            for (ClientFrame cf : clientFrames.subList(1, this.clientFrames.size())) {
-                Entity e = cf.getEntity(i);
-                if (e == null || e.getSerial() != serial) continue;
-                Set<FieldPath> changedFieldPaths = cf.getChangedFieldPaths(i);
-                if (changedFieldPaths != null) {
-                    processedFieldPaths.addAll(changedFieldPaths);
-                }
-            }
-
-            int n = 0;
-            for (FieldPath changedFieldPath : processedFieldPaths) {
-                Object v1 = lastFrame.getState(i).getValueForFieldPath(changedFieldPath);
-                Object v2 = currentFrame.getState(i).getValueForFieldPath(changedFieldPath);
-                if ((v1 == null) ^ (v2 == null)) {
-                    updatedFieldPaths[n++] = changedFieldPath;
-                } else if (v1 != null && !v1.equals(v2)) {
-                    updatedFieldPaths[n++] = changedFieldPath;
-                }
-            }
-
-            //Arrays.sort(updatedFieldPaths, 0, n);
-            if (n > 0) {
-                debugUpdateEvent("UPDATE", i);
-                evUpdated.raise(getByIndex(i), updatedFieldPaths, n);
-            }
-        });
+        debugUpdateEvent("CREATE", entity);
+        evCreated.raise(entity);
     }
 
-    private void emitLeftEvent(int i) {
+    private void emitEnteredEvent(Entity entity) {
+        if (resetInProgress || !evEntered.isListenedTo()) return;
+        debugUpdateEvent("ENTER", entity);
+        evEntered.raise(entity);
+    }
+
+    private void emitUpdatedEvent(Entity entity, int nUpdated) {
+        if (resetInProgress || !evUpdated.isListenedTo()) return;
+        debugUpdateEvent("UPDATE", entity);
+        evUpdated.raise(entity, updatedFieldPaths, nUpdated);
+    }
+
+    private void emitLeftEvent(Entity entity) {
         if (resetInProgress || !evLeft.isListenedTo()) return;
-        if (lastFrame == null || !lastFrame.isValid(i) || !lastFrame.isActive(i)) return;
-        lastFrameEvents.add(() -> {
-            debugUpdateEvent("LEAVE", i);
-            evLeft.raise(getByIndex(i));
-        });
+        debugUpdateEvent("LEAVE", entity);
+        evLeft.raise(entity);
     }
 
-    private void emitDeletedEvent(int i) {
+    private void emitDeletedEvent(Entity entity) {
         if (resetInProgress || !evDeleted.isListenedTo()) return;
-        if (lastFrame == null || !lastFrame.isValid(i)) return;
-        lastFrameEvents.add(() -> {
-            debugUpdateEvent("DELETE", i);
-            evDeleted.raise(getByIndex(i));
-        });
+        debugUpdateEvent("DELETE", entity);
+        evDeleted.raise(entity);
     }
 
-    private void checkDeltaFrameValid(String which, int eIdx) {
-        if (deltaFrame == null) {
-            throw new ClarityException("no delta frame on entity %s", which);
-        }
-        if (!deltaFrame.isValid(eIdx)) {
-            throw new ClarityException("entity at index %d was not found in delta frame for %s", eIdx, which);
-        }
-    }
-
-    private void logModification(String which, ClientFrame frame, int eIdx) {
+    private void logModification(String which, Entity entity) {
         if (!log.isDebugEnabled()) return;
-        Entity entity = frame.getEntity(eIdx);
         log.debug("\t%6s: index: %4d, serial: %03x, handle: %7d, class: %s",
                 which,
-                eIdx,
+                entity.getIndex(),
                 entity.getSerial(),
                 entity.getHandle(),
                 entity.getDtClass().getDtName()
         );
-    }
-
-    private ClientFrame getClientFrame(int tick, boolean exact) {
-        Iterator<ClientFrame> iter = clientFrames.iterator();
-        ClientFrame lastFrame = clientFrames.peekFirst();
-        while (iter.hasNext()) {
-            ClientFrame frame = iter.next();
-            if (frame.getTick() >= tick) {
-                if (frame.getTick() == tick) {
-                    return frame;
-                }
-                if (exact) {
-                    return null;
-                }
-                return lastFrame;
-            }
-            lastFrame = frame;
-        }
-        if (exact) {
-            return null;
-        }
-        return lastFrame;
     }
 
     private Baseline getBaseline(int clsId, int baseline, int entityIdx, boolean delta) {
@@ -635,7 +487,7 @@ public class Entities {
     }
 
     public Entity getByIndex(int index) {
-        return activeFrame != null ? activeFrame.getEntity(index) : null;
+        return entities.getEntity(index);
     }
 
     public Entity getByHandle(int handle) {

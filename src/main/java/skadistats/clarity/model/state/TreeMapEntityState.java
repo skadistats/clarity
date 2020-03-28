@@ -18,7 +18,7 @@ public class TreeMapEntityState implements EntityState {
     }
 
     @Override
-    public EntityState clone() {
+    public EntityState copy() {
         return new TreeMapEntityState(this);
     }
 

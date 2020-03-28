@@ -6,13 +6,10 @@ import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.unpacker.Unpacker;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
-
-import java.util.function.Consumer;
 
 public class S2FieldReader extends FieldReader<S2DTClass> {
 
@@ -43,7 +40,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public int readFields(BitStream bs, S2DTClass dtClass, EntityState state, Consumer<FieldPath> fieldPathConsumer, boolean debug) {
+    public int readFields(BitStream bs, S2DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());
@@ -96,9 +93,9 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
                 }
             }
-            if (fieldPathConsumer != null) {
+            if (fieldPathUpdateListener != null) {
                 for (int i = 0; i < n; i++) {
-                    fieldPathConsumer.accept(fieldPaths[i]);
+                    fieldPathUpdateListener.fieldPathUpdated(i, fieldPaths[i]);
                 }
             }
             return n;

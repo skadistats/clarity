@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 public interface EntityState {
 
-    EntityState clone();
+    EntityState copy();
 
     void setValueForFieldPath(FieldPath fp, Object value);
     <T> T getValueForFieldPath(FieldPath fp);
