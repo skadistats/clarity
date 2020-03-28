@@ -2,16 +2,14 @@
 
 Clarity is a parser for Dota 2 and CSGO replay files written in Java.
 
-# Caution - new feature
+# Version 2.5 (last updated March 28, 2020)
 
-Today (July 18, 2019) I merged work on a big new feature, which aims at reproducing entity data
-more accurately. While making parsing entities quite a bit slower, the data it produces is much
-more accurate, and the related events (@OnEntity{Created,Updated,Deleted}) contain less duplicates. 
+Version 2.5 has been quite a lot slower and buggy, because of overly accurate reproduction of client frame handling
+in the Source engine. Today I refactored a lot of the handling, to get back to how clarity 2.4 does things.
 
-This also fixes longstanding issues, like entities with the same handle getting instantiated by the parser
-multiple times, preventing client code to reliably hold a reference to an entity.
-
-It has already been battle tested with some closed source parsers, but you might still
+The result is worth it: Speeds are back to 2.4 level, while console replays and live data will work fine.
+  
+2.5 has already been battle tested with some closed source parsers, but you might still
 find problems - so use 2.5-SNAPSHOT with caution, and report bugs!
 
 # Version 2.4.1 released
@@ -37,17 +35,17 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Requirements
 
-* Java 7 or 8
+* Java 7 (for 2.4) or 8 (2.5)
 * Maven
 
 # Usage
 
-Fetch the current stable version (2.4) from Maven Central with
+Fetch the current stable version (2.4.1) from Maven Central with
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.4</version>
+	<version>2.4.1</version>
 </dependency>
 ```
 
