@@ -124,7 +124,9 @@ public class BaseStringTableEmitter {
         for (int i = 0; i < ec; i++) {
             Demo.CDemoStringTables.items_t it = tt.getItems(i);
             assert(Objects.equals(it.getStr(), table.getNameByIndex(i)));
-            table.setValueForIndex(i, it.getData());
+            if (it.hasData()) {
+                table.setValueForIndex(i, it.getData());
+            }
         }
 
         for (int i = ec; i < ic; i++) {
