@@ -418,7 +418,7 @@ public class Entities {
     }
 
     private void emitCreatedEvent(Entity entity) {
-        if (resetInProgress || !evUpdated.isListenedTo()) return;
+        if (resetInProgress || !evCreated.isListenedTo()) return;
         debugUpdateEvent("CREATE", entity);
         evCreated.raise(entity);
     }
