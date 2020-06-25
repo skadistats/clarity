@@ -12,6 +12,8 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -20,6 +22,7 @@ public class GameEvents {
 
     private final Map<Integer, GameEventDescriptor> byId = new TreeMap<>();
     private final Map<String, GameEventDescriptor> byName = new TreeMap<>();
+    private List<NetworkBaseTypes.CSVCMsg_GameEvent> preListBuffer;
 
     @InsertEvent
     private Event<OnGameEventDescriptor> evGameEventDescriptor;
@@ -61,10 +64,21 @@ public class GameEvents {
             byId.put(gev.getEventId(), gev);
             evGameEventDescriptor.raise(gev);
         }
+        if (preListBuffer != null) {
+            preListBuffer.forEach(this::onGameEvent);
+            preListBuffer = null;
+        }
     }
 
     @OnMessage(NetworkBaseTypes.CSVCMsg_GameEvent.class)
     public void onGameEvent(NetworkBaseTypes.CSVCMsg_GameEvent message) {
+        if (byId.isEmpty()) {
+            if (preListBuffer == null) {
+                preListBuffer = new ArrayList<>();
+            }
+            preListBuffer.add(message);
+            return;
+        }
         GameEventDescriptor desc = byId.get(message.getEventid());
         GameEvent e = new GameEvent(desc);
         for (int i = 0; i < message.getKeysCount(); i++) {
