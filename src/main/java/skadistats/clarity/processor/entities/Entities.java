@@ -476,10 +476,9 @@ public class Entities {
         }
         b.state = cls.getEmptyState();
         ByteString raw = rawBaselines.get(clsId);
-        if (raw == null) {
-            throw new ClarityException("Baseline for class %s (%d) not found.", cls.getDtName(), clsId);
-        }
-        if (raw.size() > 0) {
+        if (raw == null || raw.size() == 0) {
+            log.error("Baseline for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
+        } else {
             BitStream stream = BitStream.createBitStream(raw);
             fieldReader.readFields(stream, cls, b.state, null, false);
         }
