@@ -321,6 +321,9 @@ public class Entities {
                     if (eEnt == null) {
                         int lastHandle = entities.getLastHandle(eIdx);
                         eEnt = entityRegistry.get(lastHandle);
+                        if (eEnt == null) {
+                            throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
+                        }
                         processEntityUpdate(eEnt, stream, true);
                         break;
                     }
