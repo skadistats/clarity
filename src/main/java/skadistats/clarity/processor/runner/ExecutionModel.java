@@ -18,7 +18,6 @@ import skadistats.clarity.event.UsagePointType;
 import skadistats.clarity.event.UsagePoints;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.model.EngineType;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -293,7 +292,7 @@ public class ExecutionModel {
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
         Set<EventListener<A>> listeners = computeListenersForEvent(eventType, parameterTypes);
-        return new Event<>(listeners);
+        return new Event<>(runner.getContext(), eventType, listeners);
     }
 
     private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {

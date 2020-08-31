@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
+import skadistats.clarity.Clarity;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
@@ -41,7 +42,7 @@ public abstract class AbstractRunner implements Runner {
 
     protected void initWithProcessors(Object... processors) {
         ExecutionModel em = createExecutionModel(processors);
-        context = new Context(em);
+        context = new Context(em, Clarity.getExceptionHandler());
         em.initialize(context);
         if (evInitRun != null) {
             evInitRun.raise();

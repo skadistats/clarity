@@ -2,6 +2,7 @@ package skadistats.clarity;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.InputStreamSource;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class Clarity {
+
+    private static ClarityExceptionHandler EXCEPTION_HANDLER = (eventType, parameters, throwable) -> Util.uncheckedThrow(throwable);
 
     /**
      * Retrieves summary-data from the given demo-file
@@ -74,6 +77,24 @@ public class Clarity {
      */
     private static S2DotaMatchMetadata.CDOTAMatchMetadataFile metadataForStream(InputStream stream) throws IOException {
         return Packet.parse(S2DotaMatchMetadata.CDOTAMatchMetadataFile.class, ByteString.readFrom(stream));
+    }
+
+    /**
+     * sets the exception handler to use
+     *
+     * @param exceptionHandler the handler to use
+     */
+    public static void exceptionHandler(ClarityExceptionHandler exceptionHandler) {
+        EXCEPTION_HANDLER = exceptionHandler;
+    }
+
+    /**
+     * gets the exception handler to use
+     *
+     * @return the {@code ClarityExceptionHandler}
+     */
+    public static ClarityExceptionHandler getExceptionHandler() {
+        return EXCEPTION_HANDLER;
     }
 
 }
