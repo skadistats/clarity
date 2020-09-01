@@ -1,7 +1,7 @@
 package skadistats.clarity.event;
 
 
-import skadistats.clarity.processor.runner.Context;
+import skadistats.clarity.processor.runner.Runner;
 
 import java.lang.annotation.Annotation;
 import java.util.HashSet;
@@ -11,12 +11,12 @@ import java.util.TreeMap;
 
 public class Event<A extends Annotation> {
 
-    private final Context context;
+    private final Runner runner;
     private final Class<A> eventType;
     private final Map<Integer, Set<EventListener<A>>> orderedListeners;
 
-    public Event(Context context, Class<A> eventType, Set<EventListener<A>> listeners) {
-        this.context = context;
+    public Event(Runner runner, Class<A> eventType, Set<EventListener<A>> listeners) {
+        this.runner = runner;
         this.eventType = eventType;
         orderedListeners = new TreeMap<>();
         for (EventListener<A> listener : listeners) {
@@ -40,7 +40,7 @@ public class Event<A extends Annotation> {
                     try {
                         listener.invoke(args);
                     } catch (Throwable throwable) {
-                        context.getExceptionHandler().handleException(eventType, args, throwable);
+                        runner.getExceptionHandler().handleException(eventType, args, throwable);
                     }
                 }
             }

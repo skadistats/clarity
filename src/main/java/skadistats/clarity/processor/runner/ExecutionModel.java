@@ -292,7 +292,7 @@ public class ExecutionModel {
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
         Set<EventListener<A>> listeners = computeListenersForEvent(eventType, parameterTypes);
-        return new Event<>(runner.getContext(), eventType, listeners);
+        return new Event<>(runner, eventType, listeners);
     }
 
     private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {

@@ -1,8 +1,9 @@
 package skadistats.clarity.processor.runner;
 
 import org.slf4j.Logger;
-import skadistats.clarity.Clarity;
+import skadistats.clarity.ClarityExceptionHandler;
 import skadistats.clarity.LogChannel;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -19,6 +20,7 @@ public abstract class AbstractRunner implements Runner {
 
     protected final EngineType engineType;
     protected Context context;
+    protected ClarityExceptionHandler exceptionHandler = (eventType, parameters, throwable) -> Util.uncheckedThrow(throwable);
 
     public AbstractRunner(EngineType engineType) {
         this.engineType = engineType;
@@ -42,7 +44,7 @@ public abstract class AbstractRunner implements Runner {
 
     protected void initWithProcessors(Object... processors) {
         ExecutionModel em = createExecutionModel(processors);
-        context = new Context(em, Clarity.getExceptionHandler());
+        context = new Context(em);
         em.initialize(context);
         if (evInitRun != null) {
             evInitRun.raise();
@@ -57,6 +59,15 @@ public abstract class AbstractRunner implements Runner {
     @Override
     public Context getContext() {
         return context;
+    }
+
+    @Override
+    public ClarityExceptionHandler getExceptionHandler() {
+        return exceptionHandler;
+    }
+
+    public void setExceptionHandler(ClarityExceptionHandler exceptionHandler) {
+        this.exceptionHandler = exceptionHandler;
     }
 
 }
