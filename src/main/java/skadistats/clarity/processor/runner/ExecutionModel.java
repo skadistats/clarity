@@ -109,17 +109,27 @@ public class ExecutionModel {
         if (providers != null) {
             for (UsagePointProvider usagePointProvider : providers) {
                 Provides a = usagePointProvider.getProvidesAnnotation();
-                if (a.runnerClass().length > 0 && !supportsRunner(a)) {
-                    continue;
-                }
-                if (a.engine().length > 0 && !supportsEngineType(a)) {
-                    continue;
-                }
+                if (isInvalidProvider(a)) continue;
+                if (hasProcessorForClass(usagePointProvider.getProviderClass())) return;
+            }
+            for (UsagePointProvider usagePointProvider : providers) {
+                Provides a = usagePointProvider.getProvidesAnnotation();
+                if (isInvalidProvider(a)) continue;
                 requireProcessorClass(usagePointProvider.getProviderClass());
                 return;
             }
         }
         throw new ClarityException("oops. no provider found for required usage point %s", usagePointClass);
+    }
+
+    private boolean isInvalidProvider(Provides a) {
+        if (a.runnerClass().length > 0 && !supportsRunner(a)) {
+            return true;
+        }
+        if (a.engine().length > 0 && !supportsEngineType(a)) {
+            return true;
+        }
+        return false;
     }
 
 
