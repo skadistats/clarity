@@ -218,6 +218,10 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 // TODO: sometimes negative - figure out what this means
                 return this;
             }
+            if (wantedSize == 0xFFFFFE0) {
+                // TODO: 7.28 hotfix - figure out what's going on
+                return this;
+            }
 
             Object[] newState = null;
             if (wantedSize > curSize) {
