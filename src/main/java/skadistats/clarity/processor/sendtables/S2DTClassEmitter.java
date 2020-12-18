@@ -50,6 +50,7 @@ public class S2DTClassEmitter {
         POINTERS.add("CDOTAGameManager");
         POINTERS.add("CDOTASpectatorGraphManager");
         POINTERS.add("CPlayerLocalData");
+        POINTERS.add("PhysicsRagdollPose_t");
     }
 
     private static final Map<String, Integer> ITEM_COUNTS = new HashMap<>();
