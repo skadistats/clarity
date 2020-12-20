@@ -2,6 +2,8 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.ClarityException;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -27,7 +29,7 @@ public class FieldType {
         if (elementCount == null) {
             elementType = null;
         } else {
-            elementType = new FieldType(toString(true));
+            elementType = forString(toString(true));
         }
     }
 
@@ -69,10 +71,16 @@ public class FieldType {
         }
         if (!omitElementCount && elementCount != null) {
             sb.append('[');
-            sb.append(elementCount.toString());
+            sb.append(elementCount);
             sb.append(']');
         }
         return sb.toString();
+    }
+
+    private static final Map<String, FieldType> FIELD_TYPE_MAP = new ConcurrentHashMap<>();
+
+    public static FieldType forString(String fieldTypeString) {
+        return FIELD_TYPE_MAP.computeIfAbsent(fieldTypeString, FieldType::new);
     }
 
 }
