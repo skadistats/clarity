@@ -6,5 +6,6 @@ public class LogChannel {
     public static final String unpacker = "clarity.unpacker";
     public static final String entities = "clarity.entities";
     public static final String stringtables = "clarity.stringtables";
+    public static final String sendtables = "clarity.sendtables";
     public static final String modifiers = "clarity.modifiers";
 }

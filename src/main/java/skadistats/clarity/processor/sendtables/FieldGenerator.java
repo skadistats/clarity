@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
+import org.slf4j.Logger;
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.S2DTClass;
@@ -13,6 +14,7 @@ import skadistats.clarity.decoder.s2.field.impl.ArrayField;
 import skadistats.clarity.decoder.s2.field.impl.ListField;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.decoder.s2.field.impl.ValueField;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.BuildNumberRange;
 import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
@@ -25,10 +27,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.IntFunction;
 
+import static skadistats.clarity.LogChannel.sendtables;
+
 public class FieldGenerator {
+
+    private final Logger log = PrintfLoggerFactory.getLogger(sendtables);
 
     private final S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage;
     private final FieldData[] fieldData;
+    private final IntFunction[] nameLookupFunctions;
     private final List<PatchFunc> patchFuncs;
 
     private final Map<SerializerId, Serializer> serializers = new HashMap<>();
@@ -36,6 +43,7 @@ public class FieldGenerator {
     public FieldGenerator(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage, int buildNumber) {
         this.protoMessage = protoMessage;
         this.fieldData = new FieldData[protoMessage.getFieldsCount()];
+        this.nameLookupFunctions = new IntFunction[protoMessage.getSymbolsCount()];
         this.patchFuncs = new ArrayList<>();
         for (Map.Entry<BuildNumberRange, PatchFunc> patchEntry : PATCHES.entrySet()) {
             if (patchEntry.getKey().appliesTo(buildNumber)) {
@@ -163,8 +171,15 @@ public class FieldGenerator {
     }
 
     private IntFunction<String> fieldNameFunction(S2NetMessages.ProtoFlattenedSerializerField_t field) {
-        String name = sym(field.getVarNameSym());
-        return i -> name;
+        int nameSym = field.getVarNameSym();
+        if (nameLookupFunctions[nameSym] == null) {
+            String name = sym(nameSym);
+            if (name.indexOf('.') != -1) {
+                log.warn("replay contains field with invalid name '%s'. Please open a github issue!", name);
+            }
+            nameLookupFunctions[nameSym] = i -> name;
+        }
+        return nameLookupFunctions[nameSym];
     }
 
     private static class FieldData {
