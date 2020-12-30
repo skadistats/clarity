@@ -16,7 +16,11 @@ public class FieldProperties {
         return fieldType;
     }
 
-    public String getName(int i) {
+    public String getName() {
+        return getNameForIndex(0);
+    }
+
+    public String getNameForIndex(int i) {
         return nameFunction.apply(i);
     }
 

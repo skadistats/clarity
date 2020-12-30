@@ -72,7 +72,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
                 if (unpacker == null) {
                     FieldProperties f = dtClass.getFieldForFieldPath(fp).getFieldProperties();
-                    throw new ClarityException("no unpacker for field %s with type %s!", f.getName(0), f.getType());
+                    throw new ClarityException("no unpacker for field %s with type %s!", f.getName(), f.getType());
                 }
                 int offsBefore = bs.pos();
                 Object data = unpacker.unpack(bs);

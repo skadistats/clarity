@@ -25,7 +25,7 @@ public abstract class Field {
     }
 
     public String toString() {
-        return fieldProperties.getName(0) + "(" + fieldProperties.getType() + ")";
+        return fieldProperties.getName() + "(" + fieldProperties.getType() + ")";
     }
 
     public abstract AccessorFunction<Field> getFieldAccessor();
