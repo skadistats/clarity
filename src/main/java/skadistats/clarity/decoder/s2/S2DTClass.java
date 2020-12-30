@@ -1,25 +1,23 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.s2.field.Field;
 import skadistats.clarity.decoder.s2.field.FieldType;
+import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 
-import java.util.ArrayList;
-import java.util.List;
+import static skadistats.clarity.decoder.s2.field.AccessorFunction.performAccess;
 
 public class S2DTClass implements DTClass {
 
-    private final Serializer serializer;
+    private final RecordField field;
     private int classId = -1;
 
-    public S2DTClass(Serializer serializer) {
-        this.serializer = serializer;
+    public S2DTClass(RecordField field) {
+        this.field = field;
     }
 
     @Override
@@ -34,52 +32,45 @@ public class S2DTClass implements DTClass {
 
     @Override
     public String getDtName() {
-        return serializer.getId().getName();
+        return field.getSerializer().getId().getName();
     }
 
     public Serializer getSerializer() {
-        return serializer;
+        return field.getSerializer();
     }
 
     @Override
     public EntityState getEmptyState() {
-        return EntityStateFactory.forS2(serializer);
+        return EntityStateFactory.forS2(field);
     }
 
     @Override
-    public String getNameForFieldPath(FieldPath fp) {
-        List<String> parts = new ArrayList<>();
-        serializer.accumulateName(fp.s2(), 0, parts);
-        StringBuilder b = new StringBuilder();
-        for (String part : parts) {
-            if (b.length() != 0) {
-                b.append('.');
-            }
-            b.append(part);
-        }
-        return b.toString();
+    public String getNameForFieldPath(FieldPath fpX) {
+        // TODO reworkfields
+        throw new UnsupportedOperationException();
     }
 
     public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
-        return serializer.getUnpackerForFieldPath(fp, 0);
+        return performAccess(field.getUnpackerAccessor(), fp);
     }
 
     public Field getFieldForFieldPath(S2FieldPath fp) {
-        return serializer.getFieldForFieldPath(fp, 0);
+        return performAccess(field.getFieldAccessor(), fp);
     }
 
     public FieldType getTypeForFieldPath(S2FieldPath fp) {
-        return serializer.getTypeForFieldPath(fp, 0);
+        return performAccess(field.getTypeAccessor(), fp);
     }
 
     @Override
     public S2FieldPath getFieldPathForName(String property) {
-        return serializer.getFieldPathForName(S2ModifiableFieldPath.newInstance(), property);
+        // TODO reworkfields
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public String toString() {
-        return String.format("%s (%s)", serializer.getId(), classId);
+        return String.format("%s (%s)", field.getSerializer().getId(), classId);
     }
 
 }

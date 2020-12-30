@@ -1,8 +1,7 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.decoder.s2.Serializer;
+import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -12,18 +11,18 @@ import java.util.List;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
-    private final Serializer serializer;
+    private final RecordField field;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
-    public NestedArrayEntityState(Serializer serializer) {
-        this.serializer = serializer;
+    public NestedArrayEntityState(RecordField field) {
+        this.field = field;
         entries = new ArrayList<>(20);
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        serializer = other.serializer;
+        field = other.field;
         int otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
         for (int i = 0; i < otherSize; i++) {
@@ -90,19 +89,20 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     @Override
     public void setValueForFieldPath(FieldPath fp, Object value) {
-        serializer.setValueForFieldPath(fp.s2(), 0, this, value);
+        // TODO reworkfields
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T> T getValueForFieldPath(FieldPath fp) {
-        return (T) serializer.getValueForFieldPath(fp.s2(), 0, this);
+        // TODO reworkfields
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        List<FieldPath> result = new ArrayList<>();
-        serializer.collectFieldPaths(S2ModifiableFieldPath.newInstance(), result, this);
-        return result.iterator();
+        // TODO reworkfields
+        throw new UnsupportedOperationException();
     }
 
     private EntryRef createEntryRef(Entry entry) {

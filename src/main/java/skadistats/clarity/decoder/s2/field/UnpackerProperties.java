@@ -1,55 +1,63 @@
 package skadistats.clarity.decoder.s2.field;
 
-public class UnpackerProperties {
+public interface UnpackerProperties {
 
-    private final Integer encodeFlags;
-    private final Integer bitCount;
-    private final Float lowValue;
-    private final Float highValue;
-    private final String encoderType;
+    Integer getEncodeFlags();
+    Integer getBitCount();
+    Float getLowValue();
+    Float getHighValue();
+    String getEncoderType();
 
-    public UnpackerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
-        this.encodeFlags = encodeFlags;
-        this.bitCount = bitCount;
-        this.lowValue = lowValue;
-        this.highValue = highValue;
-        this.encoderType = encoderType;
-    }
+    int getEncodeFlagsOrDefault(int defaultValue);
+    int getBitCountOrDefault(int defaultValue);
+    float getLowValueOrDefault(float defaultValue);
+    float getHighValueOrDefault(float defaultValue);
 
-    public Integer getEncodeFlags() {
-        return encodeFlags;
-    }
+    UnpackerProperties DEFAULT = new UnpackerProperties() {
+        @Override
+        public Integer getEncodeFlags() {
+            return null;
+        }
 
-    public int getEncodeFlagsOrDefault(int defaultValue) {
-        return encodeFlags != null ? encodeFlags.intValue() : defaultValue;
-    }
+        @Override
+        public Integer getBitCount() {
+            return null;
+        }
 
-    public Integer getBitCount() {
-        return bitCount;
-    }
+        @Override
+        public Float getLowValue() {
+            return null;
+        }
 
-    public int getBitCountOrDefault(int defaultValue) {
-        return bitCount != null ? bitCount.intValue() : defaultValue;
-    }
+        @Override
+        public Float getHighValue() {
+            return null;
+        }
 
-    public Float getLowValue() {
-        return lowValue;
-    }
+        @Override
+        public String getEncoderType() {
+            return null;
+        }
 
-    public float getLowValueOrDefault(float defaultValue) {
-        return lowValue != null ? lowValue.floatValue() : defaultValue;
-    }
+        @Override
+        public int getEncodeFlagsOrDefault(int defaultValue) {
+            return defaultValue;
+        }
 
-    public Float getHighValue() {
-        return highValue;
-    }
+        @Override
+        public int getBitCountOrDefault(int defaultValue) {
+            return defaultValue;
+        }
 
-    public float getHighValueOrDefault(float defaultValue) {
-        return highValue != null ? highValue.floatValue() : defaultValue;
-    }
+        @Override
+        public float getLowValueOrDefault(float defaultValue) {
+            return defaultValue;
+        }
 
-    public String getEncoderType() {
-        return encoderType;
-    }
+        @Override
+        public float getHighValueOrDefault(float defaultValue) {
+            return defaultValue;
+        }
+    };
 
 }
