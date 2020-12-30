@@ -64,6 +64,10 @@ public class Util {
         return String.format("%04d", idx);
     }
 
+    public static int stringToArrayIdx(String value) {
+        return Integer.parseInt(value);
+    }
+
     public static <T> Class<T> valueClassForUnpacker(Unpacker<T> unpacker) {
         ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
         return (Class<T>)interfaceType.getActualTypeArguments()[0];

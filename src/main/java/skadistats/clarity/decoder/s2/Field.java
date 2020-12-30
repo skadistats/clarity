@@ -32,4 +32,6 @@ public abstract class Field {
     public abstract AccessorFunction<Unpacker<?>> getUnpackerAccessor();
     public abstract AccessorFunction<FieldType> getTypeAccessor();
 
+    public abstract Integer getFieldIndex(String name);
+
 }

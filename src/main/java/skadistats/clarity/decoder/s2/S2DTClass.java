@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.decoder.s2.field.AccessorFunction;
 import skadistats.clarity.decoder.s2.field.FieldNameAccumulator;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
@@ -7,6 +8,7 @@ import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 
@@ -66,9 +68,26 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
-    public S2FieldPath getFieldPathForName(String property) {
-        // TODO reworkfields
-        throw new UnsupportedOperationException();
+    public S2FieldPath getFieldPathForName(String fieldName) {
+        String search = fieldName;
+        S2ModifiableFieldPath fp = S2ModifiableFieldPath.newInstance();
+        AccessorFunction<Field> fieldAccessor = field.getFieldAccessor();
+        while(true) {
+            Field currentField = fieldAccessor.get();
+            int dotIdx = search.indexOf('.');
+            boolean last = (dotIdx == -1);
+            String segment = last ? search : search.substring(0, dotIdx);
+            Integer fieldIdx = currentField.getFieldIndex(segment);
+            if (fieldIdx == null) {
+                throw new IllegalArgumentException(fieldName);
+            }
+            fp.cur(fieldIdx);
+            if (last) break;
+            fp.down();
+            fieldAccessor = fieldAccessor.down(fieldIdx);
+            search = search.substring(segment.length() + 1);
+        }
+        return fp.unmodifiable();
     }
 
     @Override

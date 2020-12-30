@@ -22,4 +22,14 @@ public class Serializer {
         return fields[i];
     }
 
+    public Integer getFieldIndex(String name) {
+        int searchHash = name.hashCode();
+        for (int i = 0; i < fields.length; i++) {
+            String fieldName = fields[i].getFieldProperties().getName();
+            if (searchHash != fieldName.hashCode()) continue;
+            if (name.equals(fieldName)) return i;
+        }
+        return null;
+    }
+
 }

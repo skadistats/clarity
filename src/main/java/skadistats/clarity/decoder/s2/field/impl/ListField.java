@@ -1,7 +1,8 @@
 package skadistats.clarity.decoder.s2.field.impl;
 
-import skadistats.clarity.decoder.s2.field.AccessorFunction;
+import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.Field;
+import skadistats.clarity.decoder.s2.field.AccessorFunction;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
@@ -64,6 +65,11 @@ public class ListField extends Field {
     @Override
     public AccessorFunction<FieldType> getTypeAccessor() {
         return typeAccessor;
+    }
+
+    @Override
+    public Integer getFieldIndex(String name) {
+        return Util.stringToArrayIdx(name);
     }
 
 }
