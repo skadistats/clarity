@@ -1,10 +1,23 @@
 package skadistats.clarity.decoder.s2.field;
 
-import skadistats.clarity.decoder.s2.field.FieldType;
+import java.util.function.IntFunction;
 
-public interface FieldProperties {
+public class FieldProperties {
 
-    FieldType getType();
-    String getName(int i);
+    private FieldType fieldType;
+    private IntFunction<String> nameFunction;
+
+    public FieldProperties(FieldType fieldType, IntFunction<String> nameFunction) {
+        this.fieldType = fieldType;
+        this.nameFunction = nameFunction;
+    }
+
+    public FieldType getType() {
+        return fieldType;
+    }
+
+    public String getName(int i) {
+        return nameFunction.apply(i);
+    }
 
 }

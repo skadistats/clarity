@@ -56,7 +56,7 @@ public class FieldGenerator {
 
     public S2DTClass createDTClass(String name) {
         RecordField field = new RecordField(
-                new FieldPropertiesImpl(FieldType.forString(name), i -> name),
+                new FieldProperties(FieldType.forString(name), i -> name),
                 serializers.get(new SerializerId(name, 0))
         );
         return new S2DTClass(field);
@@ -106,18 +106,18 @@ public class FieldGenerator {
             Serializer subSerializer = serializers.get(fd.serializerId);
             if (POINTERS.contains(fd.fieldType.getBaseType())) {
                 return new RecordField(
-                        new FieldPropertiesImpl(fd.fieldType, fd.nameFunction),
+                        new FieldProperties(fd.fieldType, fd.nameFunction),
                         UnpackerProperties.DEFAULT,
                         S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "bool"),
                         subSerializer
                 );
             } else {
                 return new ListField(
-                        new FieldPropertiesImpl(fd.fieldType, fd.nameFunction),
+                        new FieldProperties(fd.fieldType, fd.nameFunction),
                         UnpackerProperties.DEFAULT,
                         S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
                         new RecordField(
-                                new FieldPropertiesImpl(fd.fieldType, Util::arrayIdxToString),
+                                new FieldProperties(fd.fieldType, Util::arrayIdxToString),
                                 subSerializer
                         )
                 );
@@ -130,9 +130,9 @@ public class FieldGenerator {
                 countAsInt = Integer.valueOf(elementCount);
             }
             return new ArrayField(
-                    new FieldPropertiesImpl(fd.fieldType, fd.nameFunction),
+                    new FieldProperties(fd.fieldType, fd.nameFunction),
                     new ValueField(
-                            new FieldPropertiesImpl(fd.fieldType.getElementType(), Util::arrayIdxToString),
+                            new FieldProperties(fd.fieldType.getElementType(), Util::arrayIdxToString),
                             fd.unpackerProperties,
                             S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getBaseType())
                     ),
@@ -141,18 +141,18 @@ public class FieldGenerator {
         }
         if ("CUtlVector".equals(fd.fieldType.getBaseType())) {
             return new ListField(
-                    new FieldPropertiesImpl(fd.fieldType, fd.nameFunction),
+                    new FieldProperties(fd.fieldType, fd.nameFunction),
                     UnpackerProperties.DEFAULT,
                     S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
                     new ValueField(
-                            new FieldPropertiesImpl(fd.fieldType.getGenericType(), Util::arrayIdxToString),
+                            new FieldProperties(fd.fieldType.getGenericType(), Util::arrayIdxToString),
                             fd.unpackerProperties,
                             S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getGenericType().getBaseType())
                     )
             );
         }
         return new ValueField(
-                new FieldPropertiesImpl(fd.fieldType, fd.nameFunction),
+                new FieldProperties(fd.fieldType, fd.nameFunction),
                 fd.unpackerProperties,
                 S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getBaseType())
         );
@@ -173,28 +173,6 @@ public class FieldGenerator {
         private UnpackerPropertiesImpl unpackerProperties;
         private SerializerId serializerId;
         private Field field;
-    }
-
-    public static class FieldPropertiesImpl implements FieldProperties {
-
-        private FieldType fieldType;
-        private IntFunction<String> nameFunction;
-
-        public FieldPropertiesImpl(FieldType fieldType, IntFunction<String> nameFunction) {
-            this.fieldType = fieldType;
-            this.nameFunction = nameFunction;
-        }
-
-        @Override
-        public FieldType getType() {
-            return fieldType;
-        }
-
-        @Override
-        public String getName(int i) {
-            return nameFunction.apply(i);
-        }
-
     }
 
     public static class UnpackerPropertiesImpl implements UnpackerProperties {
