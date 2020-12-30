@@ -1,5 +1,6 @@
 package skadistats.clarity.decoder.s2;
 
+import skadistats.clarity.decoder.s2.field.FieldNameAccumulator;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.decoder.unpacker.Unpacker;
@@ -46,8 +47,10 @@ public class S2DTClass implements DTClass {
 
     @Override
     public String getNameForFieldPath(FieldPath fpX) {
-        // TODO reworkfields
-        throw new UnsupportedOperationException();
+        return performAccess(
+                new FieldNameAccumulator(field.getFieldAccessor()),
+                fpX.s2()
+        );
     }
 
     public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
