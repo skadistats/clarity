@@ -265,6 +265,19 @@ public class FieldGenerator {
 
     private static final Map<BuildNumberRange, PatchFunc> PATCHES = new LinkedHashMap<>();
     static {
+
+        PATCHES.put(new BuildNumberRange(null, 954), (serializerId, field) -> {
+            switch (field.nameFunction.apply(0)) {
+                case "m_flMana":
+                case "m_flMaxMana":
+                    UnpackerPropertiesImpl up = field.unpackerProperties;
+                    if (up.highValue == 3.4028235E38f) {
+                        up.lowValue = null;
+                        up.highValue = 8192.0f;
+                    }
+            }
+        });
+
         PATCHES.put(new BuildNumberRange(null, 990), (serializerId, field) -> {
             switch (field.nameFunction.apply(0)) {
                 case "dirPrimary":
@@ -326,18 +339,6 @@ public class FieldGenerator {
                 case "m_flSimulationTime":
                 case "m_flAnimTime":
                     field.unpackerProperties.encoderType = "simulationtime";
-            }
-        });
-
-        PATCHES.put(new BuildNumberRange(null, 954), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
-                case "m_flMana":
-                case "m_flMaxMana":
-                    UnpackerPropertiesImpl up = field.unpackerProperties;
-                    if (up.highValue == 3.4028235E38f) {
-                        up.lowValue = null;
-                        up.highValue = 8192.0f;
-                    }
             }
         });
 
