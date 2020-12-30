@@ -2,8 +2,8 @@ package skadistats.clarity.decoder.s2.field;
 
 import skadistats.clarity.ClarityException;
 
+import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +23,7 @@ public class FieldType {
             throw new ClarityException("cannot parse field type");
         }
         baseType = m.group(1);
-        genericType = m.group(3) != null ? new FieldType(m.group(3)) : null;
+        genericType = m.group(3) != null ? forString(m.group(3)) : null;
         pointer = m.group(4) != null;
         elementCount = m.group(6);
         if (elementCount == null) {
@@ -77,10 +77,20 @@ public class FieldType {
         return sb.toString();
     }
 
-    private static final Map<String, FieldType> FIELD_TYPE_MAP = new ConcurrentHashMap<>();
+    private static final Map<String, FieldType> FIELD_TYPE_MAP = new HashMap<>();
 
     public static FieldType forString(String fieldTypeString) {
-        return FIELD_TYPE_MAP.computeIfAbsent(fieldTypeString, FieldType::new);
+        FieldType result = FIELD_TYPE_MAP.get(fieldTypeString);
+        if (result == null) {
+            synchronized (FIELD_TYPE_MAP) {
+                result = FIELD_TYPE_MAP.get(fieldTypeString);
+                if (result == null) {
+                    result = new FieldType(fieldTypeString);
+                    FIELD_TYPE_MAP.put(fieldTypeString, result);
+                }
+            }
+        }
+        return result;
     }
 
 }
