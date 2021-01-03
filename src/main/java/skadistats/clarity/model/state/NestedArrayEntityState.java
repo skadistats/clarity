@@ -135,8 +135,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        // TODO reworkfields
-        throw new UnsupportedOperationException();
+        return new NestedArrayEntityStateIterator(rootEntry());
     }
 
     private EntryRef createEntryRef(Entry entry) {

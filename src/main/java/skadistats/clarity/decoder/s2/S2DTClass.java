@@ -93,7 +93,7 @@ public class S2DTClass implements DTClass {
             String segment = last ? search : search.substring(0, dotIdx);
             Integer fieldIdx = currentField.getChildIndex(segment);
             if (fieldIdx == null) {
-                throw new IllegalArgumentException(fieldName);
+                return null;
             }
             fp.cur(fieldIdx);
             if (last) break;
