@@ -1,7 +1,5 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.s2.field.AccessorFunction;
-import skadistats.clarity.decoder.s2.field.FieldNameAccumulator;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.decoder.unpacker.Unpacker;
@@ -11,8 +9,6 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
-
-import static skadistats.clarity.decoder.s2.field.AccessorFunction.performAccess;
 
 public class S2DTClass implements DTClass {
 
@@ -47,46 +43,65 @@ public class S2DTClass implements DTClass {
         return EntityStateFactory.forS2(field);
     }
 
-    @Override
-    public String getNameForFieldPath(FieldPath fpX) {
-        return performAccess(
-                new FieldNameAccumulator(field.getFieldAccessor()),
-                fpX.s2()
-        );
+    public Field getFieldForFieldPath(S2FieldPath fp) {
+            switch (fp.last()) {
+            case 0: return field.getChild(fp.get(0));
+            case 1: return field.getChild(fp.get(0)).getChild(fp.get(1));
+            case 2: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2));
+            case 3: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3));
+            case 4: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3)).getChild(fp.get(4));
+            case 5: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3)).getChild(fp.get(4)).getChild(fp.get(5));
+            default: throw new UnsupportedOperationException();
+        }
     }
 
     public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
-        return performAccess(field.getUnpackerAccessor(), fp);
-    }
-
-    public Field getFieldForFieldPath(S2FieldPath fp) {
-        return performAccess(field.getFieldAccessor(), fp);
+        return getFieldForFieldPath(fp).getUnpacker();
     }
 
     public FieldType getTypeForFieldPath(S2FieldPath fp) {
-        return performAccess(field.getTypeAccessor(), fp);
+        return getFieldForFieldPath(fp).getType();
+    }
+
+    @Override
+    public String getNameForFieldPath(FieldPath fpX) {
+        S2FieldPath fp = fpX.s2();
+        StringBuilder sb = new StringBuilder();
+
+        Field currentField = field;
+        int last = fp.last();
+        for (int i = 0; i <= last; i++) {
+            currentField = currentField.getChild(fp.get(i));
+            if (sb.length() != 0) {
+                sb.append('.');
+            }
+            sb.append(currentField.getFieldProperties().getNameForIndex(i));
+        }
+
+        return sb.toString();
     }
 
     @Override
     public S2FieldPath getFieldPathForName(String fieldName) {
-        String search = fieldName;
         S2ModifiableFieldPath fp = S2ModifiableFieldPath.newInstance();
-        AccessorFunction<Field> fieldAccessor = field.getFieldAccessor();
+
+        Field currentField = field;
+        String search = fieldName;
         while(true) {
-            Field currentField = fieldAccessor.get();
             int dotIdx = search.indexOf('.');
             boolean last = (dotIdx == -1);
             String segment = last ? search : search.substring(0, dotIdx);
-            Integer fieldIdx = currentField.getFieldIndex(segment);
+            Integer fieldIdx = currentField.getChildIndex(segment);
             if (fieldIdx == null) {
                 throw new IllegalArgumentException(fieldName);
             }
             fp.cur(fieldIdx);
             if (last) break;
             fp.down();
-            fieldAccessor = fieldAccessor.down(fieldIdx);
+            currentField = currentField.getChild(fieldIdx);
             search = search.substring(segment.length() + 1);
         }
+
         return fp.unmodifiable();
     }
 

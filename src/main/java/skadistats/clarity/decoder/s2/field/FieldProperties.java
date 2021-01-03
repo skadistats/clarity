@@ -20,8 +20,8 @@ public class FieldProperties {
         return getNameForIndex(0);
     }
 
-    public String getNameForIndex(int i) {
-        return nameFunction.apply(i);
+    public String getNameForIndex(int idx) {
+        return nameFunction.apply(idx);
     }
 
 }

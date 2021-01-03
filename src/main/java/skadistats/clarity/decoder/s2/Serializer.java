@@ -18,8 +18,8 @@ public class Serializer {
         return fields.length;
     }
 
-    public Field getField(int i) {
-        return fields[i];
+    public Field getField(int idx) {
+        return fields[idx];
     }
 
     public Integer getFieldIndex(String name) {

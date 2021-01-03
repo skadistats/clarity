@@ -1,6 +1,5 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.s2.field.AccessorFunction;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
@@ -24,14 +23,24 @@ public abstract class Field {
         return unpackerProperties;
     }
 
+    public FieldType getType() {
+        return fieldProperties.getType();
+    }
+
+    public Unpacker<?> getUnpacker() {
+        return null;
+    }
+
+    public Field getChild(int idx) {
+        return null;
+    }
+
+    public Integer getChildIndex(String name) {
+        return null;
+    }
+
     public String toString() {
         return fieldProperties.getName() + "(" + fieldProperties.getType() + ")";
     }
-
-    public abstract AccessorFunction<Field> getFieldAccessor();
-    public abstract AccessorFunction<Unpacker<?>> getUnpackerAccessor();
-    public abstract AccessorFunction<FieldType> getTypeAccessor();
-
-    public abstract Integer getFieldIndex(String name);
 
 }
