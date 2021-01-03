@@ -4,26 +4,15 @@ import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 public class RecordField extends Field {
 
-    private final Unpacker<?> baseUnpacker;
-    private final Serializer serializer;
+    protected final Serializer serializer;
 
-    public RecordField(FieldProperties fieldProperties, Serializer serializer) {
-        this(fieldProperties, null, null, serializer);
-    }
-
-    public RecordField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, Unpacker<?> baseUnpacker, Serializer serializer) {
+    public RecordField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, Serializer serializer) {
         super(fieldProperties, unpackerProperties);
-        this.baseUnpacker = baseUnpacker;
         this.serializer = serializer;
-    }
-
-    @Override
-    public Unpacker<?> getUnpacker() {
-        return baseUnpacker;
     }
 
     public Serializer getSerializer() {
@@ -40,5 +29,9 @@ public class RecordField extends Field {
         return serializer.getFieldIndex(name);
     }
 
+    @Override
+    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
+        state.capacity(serializer.getFieldCount());
+    }
 
 }

@@ -2,10 +2,10 @@ package skadistats.clarity.decoder.s2.field.impl;
 
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.Field;
-import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 public class ListField extends Field {
 
@@ -31,6 +31,21 @@ public class ListField extends Field {
     @Override
     public Integer getChildIndex(String name) {
         return Util.stringToArrayIdx(name);
+    }
+
+    @Override
+    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
+        state.capacity(capacity, false);
+    }
+
+    @Override
+    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
+        state.sub(idx).capacity((Integer) value, true);
+    }
+
+    @Override
+    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+        return state.sub(idx).length();
     }
 
 }

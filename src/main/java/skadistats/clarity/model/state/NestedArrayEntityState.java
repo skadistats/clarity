@@ -1,7 +1,9 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -11,18 +13,18 @@ import java.util.List;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
-    private final RecordField field;
+    private final RecordField rootField;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
     public NestedArrayEntityState(RecordField field) {
-        this.field = field;
+        rootField = field;
         entries = new ArrayList<>(20);
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        field = other.field;
+        rootField = other.rootField;
         int otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
         for (int i = 0; i < otherSize; i++) {
@@ -88,15 +90,47 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object value) {
-        // TODO reworkfields
-        throw new UnsupportedOperationException();
+    public void setValueForFieldPath(FieldPath fpX, Object value) {
+        S2FieldPath fp = fpX.s2();
+
+        Field field = rootField;
+        Entry entry = rootEntry();
+        int last = fp.last();
+
+        for (int i = 0; i <= last; i++) {
+            int idx = fp.get(i);
+            if (!entry.has(idx)) {
+                field.ensureArrayEntityStateCapacity(entry, idx + 1);
+            }
+            field = field.getChild(idx);
+            if (i == last) {
+                field.setArrayEntityState(entry, idx, value);
+                return;
+            }
+            entry = entry.subEntry(idx);
+        }
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp) {
-        // TODO reworkfields
-        throw new UnsupportedOperationException();
+    public <T> T getValueForFieldPath(FieldPath fpX) {
+        S2FieldPath fp = fpX.s2();
+
+        Field field = rootField;
+        Entry entry = rootEntry();
+        int last = fp.last();
+
+        for (int i = 0; i <= last; i++) {
+            int idx = fp.get(i);
+            field = field.getChild(idx);
+            if (i == last) {
+                return (T) field.getArrayEntityState(entry, idx);
+            }
+            if (!entry.isSub(idx)) {
+                return null;
+            }
+            entry = entry.subEntry(idx);
+        }
+        return null;
     }
 
     @Override
@@ -201,7 +235,11 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
         @Override
         public ArrayEntityState sub(int idx) {
-            if (!has(idx)) {
+            return subEntry(idx);
+        }
+
+        private Entry subEntry(int idx) {
+            if (!isSub(idx)) {
                 set(idx, createEntryRef(new Entry()));
             }
             EntryRef entryRef = (EntryRef) get(idx);
@@ -240,7 +278,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
         @Override
         public String toString() {
-            return "Entry[modifiable=" + modifiable + "]";
+            return "Entry[modifiable=" + modifiable + ", size=" + state.length + "]";
         }
 
     }

@@ -4,6 +4,7 @@ import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.model.state.ArrayEntityState;
 
 public abstract class Field {
 
@@ -37,6 +38,18 @@ public abstract class Field {
 
     public Integer getChildIndex(String name) {
         return null;
+    }
+
+    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+        return null;
+    }
+
+    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
+    }
+
+    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
+        throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
     public String toString() {

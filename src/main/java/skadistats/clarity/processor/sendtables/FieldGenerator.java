@@ -12,6 +12,7 @@ import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.s2.field.impl.ArrayField;
 import skadistats.clarity.decoder.s2.field.impl.ListField;
+import skadistats.clarity.decoder.s2.field.impl.PointerField;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
 import skadistats.clarity.decoder.s2.field.impl.ValueField;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -65,6 +66,7 @@ public class FieldGenerator {
     public S2DTClass createDTClass(String name) {
         RecordField field = new RecordField(
                 new FieldProperties(FieldType.forString(name), i -> name),
+                UnpackerProperties.DEFAULT,
                 serializers.get(new SerializerId(name, 0))
         );
         return new S2DTClass(field);
@@ -113,7 +115,7 @@ public class FieldGenerator {
         if (fd.serializerId != null) {
             Serializer subSerializer = serializers.get(fd.serializerId);
             if (POINTERS.contains(fd.fieldType.getBaseType())) {
-                return new RecordField(
+                return new PointerField(
                         new FieldProperties(fd.fieldType, fd.nameFunction),
                         UnpackerProperties.DEFAULT,
                         S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "bool"),
@@ -126,6 +128,7 @@ public class FieldGenerator {
                         S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
                         new RecordField(
                                 new FieldProperties(fd.fieldType, Util::arrayIdxToString),
+                                UnpackerProperties.DEFAULT,
                                 subSerializer
                         )
                 );
