@@ -4,8 +4,8 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.decoder.FieldReader;
 import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.decoder.s2.field.FieldType;
-import skadistats.clarity.decoder.s2.field.UnpackerProperties;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.s2.field.DecoderProperties;
+import skadistats.clarity.decoder.unpacker.Decoder;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;
@@ -68,16 +68,16 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
 
             for (int r = 0; r < n; r++) {
                 S2FieldPath fp = fieldPaths[r].s2();
-                Unpacker unpacker = dtClass.getUnpackerForFieldPath(fp);
-                if (unpacker == null) {
-                    throw new ClarityException("no unpacker for class %s at %s!", dtClass.getDtName(), fp);
+                Decoder decoder = dtClass.getDecoderForFieldPath(fp);
+                if (decoder == null) {
+                    throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
                 }
                 int offsBefore = bs.pos();
-                Object data = unpacker.unpack(bs);
+                Object data = decoder.decode(bs);
                 state.setValueForFieldPath(fp, data);
 
                 if (debug) {
-                    UnpackerProperties props = dtClass.getFieldForFieldPath(fp).getUnpackerProperties();
+                    DecoderProperties props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
                     FieldType type = dtClass.getTypeForFieldPath(fp);
                     dataDebugTable.setData(r, 0, fp);
                     dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
@@ -85,7 +85,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     dataDebugTable.setData(r, 3, props.getHighValue());
                     dataDebugTable.setData(r, 4, props.getBitCount());
                     dataDebugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
-                    dataDebugTable.setData(r, 6, unpacker.getClass().getSimpleName());
+                    dataDebugTable.setData(r, 6, decoder.getClass().getSimpleName());
                     dataDebugTable.setData(r, 7, String.format("%s%s", type, props.getEncoderType() != null ? String.format(" {%s}", props.getEncoderType()) : ""));
                     dataDebugTable.setData(r, 8, data);
                     dataDebugTable.setData(r, 9, bs.pos() - offsBefore);

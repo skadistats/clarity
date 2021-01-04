@@ -22,7 +22,7 @@ public class ReceiveProp {
     }
 
     public Object decode(BitStream stream) {
-        return sendProp.getUnpacker().unpack(stream);
+        return sendProp.getDecoder().decode(stream);
     }
 
     @Override

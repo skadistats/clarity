@@ -2,7 +2,7 @@ package skadistats.clarity.decoder;
 
 import com.google.protobuf.ByteString;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.unpacker.Decoder;
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;
@@ -68,8 +68,8 @@ public class Util {
         return Integer.parseInt(value);
     }
 
-    public static <T> Class<T> valueClassForUnpacker(Unpacker<T> unpacker) {
-        ParameterizedType interfaceType = (ParameterizedType) unpacker.getClass().getGenericInterfaces()[0];
+    public static <T> Class<T> valueClassForDecoder(Decoder<T> decoder) {
+        ParameterizedType interfaceType = (ParameterizedType) decoder.getClass().getGenericInterfaces()[0];
         return (Class<T>)interfaceType.getActualTypeArguments()[0];
     }
 

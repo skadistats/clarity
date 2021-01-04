@@ -1,14 +1,14 @@
 package skadistats.clarity.decoder.s1;
 
 
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.unpacker.Decoder;
 import skadistats.clarity.model.s1.PropType;
 
 public class SendProp {
 
     private final SendTable table;
     private final SendProp template;
-    
+
     private final PropType type;
     private final String varName;
     private final int flags;
@@ -20,7 +20,7 @@ public class SendProp {
     private final int numBits;
 
     private final SendTableExclusion excludeIdentifier;
-    private final Unpacker unpacker;
+    private final Decoder decoder;
 
 
     public SendProp(SendTable table, SendProp template, int type, String varName, int flags, int priority, String dtName, int numElements, float lowValue, float highValue, int numBits) {
@@ -36,7 +36,7 @@ public class SendProp {
         this.highValue = highValue;
         this.numBits = numBits;
         this.excludeIdentifier = new SendTableExclusion(dtName, varName);
-        this.unpacker = S1UnpackerFactory.createUnpacker(this);
+        this.decoder = S1DecoderFactory.createDecoder(this);
     }
 
     public SendTableExclusion getExcludeIdentifier() {
@@ -87,8 +87,8 @@ public class SendProp {
         return flags;
     }
 
-    public Unpacker getUnpacker() {
-        return unpacker;
+    public Decoder getDecoder() {
+        return decoder;
     }
 
     @Override

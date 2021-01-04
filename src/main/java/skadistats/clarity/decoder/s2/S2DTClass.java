@@ -2,7 +2,7 @@ package skadistats.clarity.decoder.s2;
 
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.impl.RecordField;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.unpacker.Decoder;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
@@ -55,9 +55,9 @@ public class S2DTClass implements DTClass {
         }
     }
 
-    public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
+    public Decoder getDecoderForFieldPath(S2FieldPath fp) {
         Field f = getFieldForFieldPath(fp);
-        return f != null ? f.getUnpacker() : null;
+        return f != null ? f.getDecoder() : null;
     }
 
     public FieldType getTypeForFieldPath(S2FieldPath fp) {

@@ -5,11 +5,11 @@ import it.unimi.dsi.fastutil.ints.IntSet;
 import org.slf4j.Logger;
 import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.S2DTClass;
-import skadistats.clarity.decoder.s2.S2UnpackerFactory;
+import skadistats.clarity.decoder.s2.S2DecoderFactory;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
 import skadistats.clarity.decoder.s2.field.FieldType;
-import skadistats.clarity.decoder.s2.field.UnpackerProperties;
+import skadistats.clarity.decoder.s2.field.DecoderProperties;
 import skadistats.clarity.decoder.s2.field.impl.ArrayField;
 import skadistats.clarity.decoder.s2.field.impl.ListField;
 import skadistats.clarity.decoder.s2.field.impl.PointerField;
@@ -63,7 +63,7 @@ public class FieldGenerator {
     public S2DTClass createDTClass(String name) {
         RecordField field = new RecordField(
                 FieldType.forString(name),
-                UnpackerProperties.DEFAULT,
+                DecoderProperties.DEFAULT,
                 serializers.get(new SerializerId(name, 0))
         );
         return new S2DTClass(field);
@@ -73,7 +73,7 @@ public class FieldGenerator {
         return new FieldData(
                 FieldType.forString(sym(proto.getVarTypeSym())),
                 fieldNameFunction(proto),
-                new UnpackerPropertiesImpl(
+                new DecoderPropertiesImpl(
                         proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
                         proto.hasBitCount() ? proto.getBitCount() : null,
                         proto.hasLowValue() ? proto.getLowValue() : null,
@@ -125,22 +125,22 @@ public class FieldGenerator {
             if (fd.category == FieldCategory.POINTER) {
                 elementField = new PointerField(
                         elementType,
-                        UnpackerProperties.DEFAULT,
-                        S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "bool"),
+                        DecoderProperties.DEFAULT,
+                        S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "bool"),
                         serializers.get(fd.serializerId)
                 );
             } else {
                 elementField = new RecordField(
                         elementType,
-                        UnpackerProperties.DEFAULT,
+                        DecoderProperties.DEFAULT,
                         serializers.get(fd.serializerId)
                 );
             }
         } else {
             elementField = new ValueField(
                     elementType,
-                    fd.unpackerProperties,
-                    S2UnpackerFactory.createUnpacker(fd.unpackerProperties, elementType.getBaseType())
+                    fd.decoderProperties,
+                    S2DecoderFactory.createDecoder(fd.decoderProperties, elementType.getBaseType())
             );
         }
 
@@ -153,8 +153,8 @@ public class FieldGenerator {
         } else if (fd.category == FieldCategory.VECTOR) {
             return new ListField(
                     fd.fieldType,
-                    UnpackerProperties.DEFAULT,
-                    S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
+                    DecoderProperties.DEFAULT,
+                    S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "uint32"),
                     elementField
             );
         } else {
@@ -188,16 +188,16 @@ public class FieldGenerator {
     private static class FieldData {
         private final FieldType fieldType;
         private final String name;
-        private final UnpackerPropertiesImpl unpackerProperties;
+        private final DecoderPropertiesImpl decoderProperties;
         private final SerializerId serializerId;
 
         private final FieldCategory category;
         private Field field;
 
-        public FieldData(FieldType fieldType, String name, UnpackerPropertiesImpl unpackerProperties, SerializerId serializerId) {
+        public FieldData(FieldType fieldType, String name, DecoderPropertiesImpl decoderProperties, SerializerId serializerId) {
             this.fieldType = fieldType;
             this.name = name;
-            this.unpackerProperties = unpackerProperties;
+            this.decoderProperties = decoderProperties;
             this.serializerId = serializerId;
 
             if (determineIsPointer()) {
@@ -244,7 +244,7 @@ public class FieldGenerator {
 
     }
 
-    public static class UnpackerPropertiesImpl implements UnpackerProperties {
+    public static class DecoderPropertiesImpl implements DecoderProperties {
 
         private Integer encodeFlags;
         private Integer bitCount;
@@ -252,7 +252,7 @@ public class FieldGenerator {
         private Float highValue;
         private String encoderType;
 
-        public UnpackerPropertiesImpl(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
+        public DecoderPropertiesImpl(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
             this.encodeFlags = encodeFlags;
             this.bitCount = bitCount;
             this.lowValue = lowValue;
@@ -326,7 +326,7 @@ public class FieldGenerator {
             switch (field.name) {
                 case "m_flMana":
                 case "m_flMaxMana":
-                    UnpackerPropertiesImpl up = field.unpackerProperties;
+                    DecoderPropertiesImpl up = field.decoderProperties;
                     if (up.highValue == 3.4028235E38f) {
                         up.lowValue = null;
                         up.highValue = 8192.0f;
@@ -356,7 +356,7 @@ public class FieldGenerator {
                 case "origin":
                 case "vecExtraLocalOrigin":
                 case "vecLocalOrigin":
-                    field.unpackerProperties.encoderType = "coord";
+                    field.decoderProperties.encoderType = "coord";
                     break;
 
                 case "angExtraLocalAngles":
@@ -364,15 +364,15 @@ public class FieldGenerator {
                 case "m_angInitialAngles":
                 case "m_ragAngles":
                 case "m_vLightDirection":
-                    field.unpackerProperties.encoderType = "QAngle";
+                    field.decoderProperties.encoderType = "QAngle";
                     break;
 
                 case "m_vecLadderNormal":
-                    field.unpackerProperties.encoderType = "normal";
+                    field.decoderProperties.encoderType = "normal";
                     break;
 
                 case "m_angRotation":
-                    field.unpackerProperties.encoderType = SID_PITCH_YAW.equals(serializerId) ? "qangle_pitch_yaw" : "QAngle";
+                    field.decoderProperties.encoderType = SID_PITCH_YAW.equals(serializerId) ? "qangle_pitch_yaw" : "QAngle";
                     break;
             }
         });
@@ -386,7 +386,7 @@ public class FieldGenerator {
                 case "m_iPlayerIDsInControl":
                 case "m_bItemWhiteList":
                 case "m_iPlayerSteamID":
-                    field.unpackerProperties.encoderType = "fixed64";
+                    field.decoderProperties.encoderType = "fixed64";
             }
         });
 
@@ -394,14 +394,14 @@ public class FieldGenerator {
             switch (field.name) {
                 case "m_flSimulationTime":
                 case "m_flAnimTime":
-                    field.unpackerProperties.encoderType = "simulationtime";
+                    field.decoderProperties.encoderType = "simulationtime";
             }
         });
 
         PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
             switch (field.name) {
                 case "m_flRuneTime":
-                    UnpackerPropertiesImpl up = field.unpackerProperties;
+                    DecoderPropertiesImpl up = field.decoderProperties;
                     if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
                         up.lowValue = null;
                         up.highValue = null;

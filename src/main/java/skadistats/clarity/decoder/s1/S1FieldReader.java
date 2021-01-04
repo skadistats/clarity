@@ -52,7 +52,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                     debugTable.setData(ci, 3, sp.getHighValue());
                     debugTable.setData(ci, 4, sp.getNumBits());
                     debugTable.setData(ci, 5, PropFlag.descriptionForFlags(sp.getFlags()));
-                    debugTable.setData(ci, 6, sp.getUnpacker().getClass().getSimpleName());
+                    debugTable.setData(ci, 6, sp.getDecoder().getClass().getSimpleName());
                     debugTable.setData(ci, 7, subState.getClass().isArray() ? Arrays.toString((Object[]) subState) : subState);
                     debugTable.setData(ci, 8, bs.pos() - offsBefore);
                     debugTable.setData(ci, 9, bs.toString(offsBefore, bs.pos()));

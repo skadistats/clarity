@@ -2,22 +2,22 @@ package skadistats.clarity.decoder.s2.field.impl;
 
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.field.FieldType;
-import skadistats.clarity.decoder.s2.field.UnpackerProperties;
-import skadistats.clarity.decoder.unpacker.Unpacker;
+import skadistats.clarity.decoder.s2.field.DecoderProperties;
+import skadistats.clarity.decoder.unpacker.Decoder;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class PointerField extends RecordField {
 
-    private final Unpacker<?> baseUnpacker;
+    private final Decoder<?> baseDecoder;
 
-    public PointerField(FieldType fieldType, UnpackerProperties unpackerProperties, Unpacker<?> baseUnpacker, Serializer serializer) {
-        super(fieldType, unpackerProperties, serializer);
-        this.baseUnpacker = baseUnpacker;
+    public PointerField(FieldType fieldType, DecoderProperties decoderProperties, Decoder<?> baseDecoder, Serializer serializer) {
+        super(fieldType, decoderProperties, serializer);
+        this.baseDecoder = baseDecoder;
     }
 
     @Override
-    public Unpacker<?> getUnpacker() {
-        return baseUnpacker;
+    public Decoder<?> getDecoder() {
+        return baseDecoder;
     }
 
     @Override

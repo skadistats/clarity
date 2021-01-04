@@ -3,15 +3,15 @@ package skadistats.clarity.decoder.s2.field.impl;
 import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.field.FieldType;
-import skadistats.clarity.decoder.s2.field.UnpackerProperties;
+import skadistats.clarity.decoder.s2.field.DecoderProperties;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class RecordField extends Field {
 
     protected final Serializer serializer;
 
-    public RecordField(FieldType fieldType, UnpackerProperties unpackerProperties, Serializer serializer) {
-        super(fieldType, unpackerProperties);
+    public RecordField(FieldType fieldType, DecoderProperties decoderProperties, Serializer serializer) {
+        super(fieldType, decoderProperties);
         this.serializer = serializer;
     }
 
