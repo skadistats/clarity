@@ -60,7 +60,7 @@ public class SendTableFlattener {
                     int l = nameBuf.length();
                     nameBuf.append(sp.getVarName());
                     nameBuf.append('.');
-                    gather(sendTableForDtName(sp.getDtName()), new LinkedList<SendProp>(), nameBuf);
+                    gather(sendTableForDtName(sp.getDtName()), new LinkedList<>(), nameBuf);
                     nameBuf.setLength(l);
                 }
             } else {
@@ -102,7 +102,7 @@ public class SendTableFlattener {
 
     public Result flatten() {
         aggregateExclusions(table);
-        gather(table, new LinkedList<SendProp>(), new StringBuilder());
+        gather(table, new LinkedList<>(), new StringBuilder());
         Result r = new Result();
         r.receiveProps = receiveProps.toArray(new ReceiveProp[] {});
         r.indexMapping = computeIndexMapping();

@@ -9,9 +9,9 @@ public class GameEventDescriptor {
     private final int eventId;
     private final String name;
     private final String[] keys;
-    private Map<String, Integer> indexByKey = new HashMap<String, Integer>();
-    
-    
+    private Map<String, Integer> indexByKey = new HashMap<>();
+
+
     public GameEventDescriptor(int eventId, String name, String[] keys) {
         this.eventId = eventId;
         this.name = name;
@@ -32,7 +32,7 @@ public class GameEventDescriptor {
     public String[] getKeys() {
         return keys;
     }
-    
+
     public Integer getIndexForKey(String key) {
         return indexByKey.get(key);
     }

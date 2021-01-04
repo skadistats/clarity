@@ -41,7 +41,7 @@ public class S1DTClassEmitter {
             return;
         }
 
-        LinkedList<SendProp> props = new LinkedList<SendProp>();
+        LinkedList<SendProp> props = new LinkedList<>();
         SendTable st = new SendTable(
             message.getNetTableName(),
             props
