@@ -27,7 +27,7 @@ public abstract class Field {
         return null;
     }
 
-    public Integer getChildIndex(String name) {
+    public Integer getChildIndex(String nameSegment) {
         return null;
     }
 

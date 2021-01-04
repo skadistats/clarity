@@ -24,8 +24,8 @@ public class RecordField extends Field {
     }
 
     @Override
-    public Integer getChildIndex(String name) {
-        return serializer.getFieldIndex(name);
+    public Integer getChildIndex(String nameSegment) {
+        return serializer.getFieldIndex(nameSegment);
     }
 
     @Override

@@ -22,8 +22,8 @@ public class ArrayField extends Field {
     }
 
     @Override
-    public Integer getChildIndex(String name) {
-        return Util.stringToArrayIdx(name);
+    public Integer getChildIndex(String nameSegment) {
+        return Util.stringToArrayIdx(nameSegment);
     }
 
     @Override
