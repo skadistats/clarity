@@ -112,12 +112,15 @@ public class FieldGenerator {
         }
 
         FieldType elementType;
-        if (fd.category == FieldCategory.ARRAY) {
-            elementType = fd.fieldType.getElementType();
-        } else if (fd.category == FieldCategory.VECTOR) {
-            elementType = fd.fieldType.getGenericType();
-        } else {
-            elementType = fd.fieldType;
+        switch (fd.category) {
+            case ARRAY:
+                elementType = fd.fieldType.getElementType();
+                break;
+            case VECTOR:
+                elementType = fd.fieldType.getGenericType();
+                break;
+            default:
+                elementType = fd.fieldType;
         }
 
         Field elementField;
@@ -144,21 +147,22 @@ public class FieldGenerator {
             );
         }
 
-        if (fd.category == FieldCategory.ARRAY) {
-            return new ArrayField(
-                    fd.fieldType,
-                    elementField,
-                    fd.getArrayElementCount()
-            );
-        } else if (fd.category == FieldCategory.VECTOR) {
-            return new ListField(
-                    fd.fieldType,
-                    DecoderProperties.DEFAULT,
-                    S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "uint32"),
-                    elementField
-            );
-        } else {
-            return elementField;
+        switch (fd.category) {
+            case ARRAY:
+                return new ArrayField(
+                        fd.fieldType,
+                        elementField,
+                        fd.getArrayElementCount()
+                );
+            case VECTOR:
+                return new ListField(
+                        fd.fieldType,
+                        DecoderProperties.DEFAULT,
+                        S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "uint32"),
+                        elementField
+                );
+            default:
+                return elementField;
         }
     }
 
