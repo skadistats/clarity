@@ -178,6 +178,8 @@ public class FieldGenerator {
         return name;
     }
 
+
+
     private enum FieldCategory {
         POINTER,
         VECTOR,
@@ -235,23 +237,21 @@ public class FieldGenerator {
 
         private int getArrayElementCount() {
             String elementCount = fieldType.getElementCount();
-            Integer countAsInt = ITEM_COUNTS.get(elementCount);
-            if (countAsInt == null) {
-                countAsInt = Integer.valueOf(elementCount);
+            switch (elementCount) {
+                case "MAX_ITEM_STOCKS":
+                    return 8;
+                case "MAX_ABILITY_DRAFT_ABILITIES":
+                    return 48;
+                default:
+                    return Integer.parseInt(elementCount);
             }
-            return countAsInt;
         }
 
     }
 
-    private static final Map<String, Integer> ITEM_COUNTS = new HashMap<>();
-    static {
-        ITEM_COUNTS.put("MAX_ITEM_STOCKS", 8);
-        ITEM_COUNTS.put("MAX_ABILITY_DRAFT_ABILITIES", 48);
-    }
+
 
     private static final SerializerId SID_PITCH_YAW = new SerializerId("CBodyComponentBaseAnimatingOverlay", 3);
-
 
     private interface PatchFunc {
         void execute(SerializerId serializerId, FieldData field);
