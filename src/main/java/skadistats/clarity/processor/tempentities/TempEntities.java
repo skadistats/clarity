@@ -1,9 +1,9 @@
 package skadistats.clarity.processor.tempentities;
 
-import skadistats.clarity.decoder.FieldReader;
-import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.decoder.s1.ReceiveProp;
-import skadistats.clarity.decoder.s1.S1DTClass;
+import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.s1.ReceiveProp;
+import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;

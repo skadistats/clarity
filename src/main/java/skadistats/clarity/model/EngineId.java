@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.decoder.Util;
+import skadistats.clarity.io.Util;
 import skadistats.clarity.model.engine.CsGoEngineType;
 import skadistats.clarity.model.engine.DotaS1EngineType;
 import skadistats.clarity.model.engine.DotaS2EngineType;

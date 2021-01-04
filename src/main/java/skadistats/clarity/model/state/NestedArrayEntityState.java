@@ -1,7 +1,7 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.decoder.s2.Field;
-import skadistats.clarity.decoder.s2.field.impl.RecordField;
+import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.io.s2.field.impl.RecordField;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 

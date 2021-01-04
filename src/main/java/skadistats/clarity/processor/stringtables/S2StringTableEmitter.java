@@ -4,7 +4,7 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;

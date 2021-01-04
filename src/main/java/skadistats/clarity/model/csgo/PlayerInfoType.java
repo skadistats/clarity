@@ -2,7 +2,7 @@ package skadistats.clarity.model.csgo;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.decoder.Util;
+import skadistats.clarity.io.Util;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
