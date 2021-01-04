@@ -1,7 +1,6 @@
 package skadistats.clarity.io.s2;
 
 import org.slf4j.Logger;
-import skadistats.clarity.io.s2.field.DecoderProperties;
 import skadistats.clarity.io.decoder.BoolDecoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;

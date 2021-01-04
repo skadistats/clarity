@@ -9,7 +9,7 @@ import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerId;
 import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.field.DecoderProperties;
+import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.field.impl.ArrayField;
 import skadistats.clarity.io.s2.field.impl.ListField;
 import skadistats.clarity.io.s2.field.impl.PointerField;
