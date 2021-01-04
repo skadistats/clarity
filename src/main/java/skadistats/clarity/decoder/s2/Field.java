@@ -1,6 +1,5 @@
 package skadistats.clarity.decoder.s2;
 
-import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
@@ -8,24 +7,24 @@ import skadistats.clarity.model.state.ArrayEntityState;
 
 public abstract class Field {
 
-    protected final FieldProperties fieldProperties;
+    private final FieldType fieldType;
     protected final UnpackerProperties unpackerProperties;
 
-    public Field(FieldProperties fieldProperties, UnpackerProperties unpackerProperties) {
-        this.fieldProperties = fieldProperties;
+    public Field(FieldType fieldType, UnpackerProperties unpackerProperties) {
+        this.fieldType = fieldType;
         this.unpackerProperties = unpackerProperties;
-    }
-
-    public FieldProperties getFieldProperties() {
-        return fieldProperties;
     }
 
     public UnpackerProperties getUnpackerProperties() {
         return unpackerProperties;
     }
 
+    public String getChildNameSegment(int idx) {
+        return null;
+    }
+
     public FieldType getType() {
-        return fieldProperties.getType();
+        return fieldType;
     }
 
     public Unpacker<?> getUnpacker() {
@@ -53,7 +52,7 @@ public abstract class Field {
     }
 
     public String toString() {
-        return fieldProperties.getName() + "(" + fieldProperties.getType() + ")";
+        return "Field (" + getType() + ")";
     }
 
 }

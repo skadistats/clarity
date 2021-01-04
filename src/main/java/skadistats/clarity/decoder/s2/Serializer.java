@@ -4,10 +4,12 @@ public class Serializer {
 
     private final SerializerId id;
     private final Field[] fields;
+    private final String[] fieldNames;
 
-    public Serializer(SerializerId id, Field[] fields) {
+    public Serializer(SerializerId id, Field[] fields, String[] fieldNames) {
         this.id = id;
         this.fields = fields;
+        this.fieldNames = fieldNames;
     }
 
     public SerializerId getId() {
@@ -22,10 +24,14 @@ public class Serializer {
         return fields[idx];
     }
 
+    public String getFieldName(int idx) {
+        return fieldNames[idx];
+    }
+
     public Integer getFieldIndex(String name) {
         int searchHash = name.hashCode();
         for (int i = 0; i < fields.length; i++) {
-            String fieldName = fields[i].getFieldProperties().getName();
+            String fieldName = fieldNames[i];
             if (searchHash != fieldName.hashCode()) continue;
             if (name.equals(fieldName)) return i;
         }

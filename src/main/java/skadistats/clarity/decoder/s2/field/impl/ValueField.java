@@ -1,7 +1,7 @@
 package skadistats.clarity.decoder.s2.field.impl;
 
 import skadistats.clarity.decoder.s2.Field;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.state.ArrayEntityState;
@@ -10,8 +10,8 @@ public class ValueField extends Field {
 
     private final Unpacker<?> unpacker;
 
-    public ValueField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, Unpacker<?> unpacker) {
-        super(fieldProperties, unpackerProperties);
+    public ValueField(FieldType fieldType, UnpackerProperties unpackerProperties, Unpacker<?> unpacker) {
+        super(fieldType, unpackerProperties);
         this.unpacker = unpacker;
     }
 

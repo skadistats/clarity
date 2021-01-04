@@ -2,7 +2,7 @@ package skadistats.clarity.decoder.s2.field.impl;
 
 import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.Field;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.unpacker.Unpacker;
 import skadistats.clarity.model.state.ArrayEntityState;
@@ -12,8 +12,8 @@ public class ListField extends Field {
     private final Unpacker<?> lengthUnpacker;
     private final Field elementField;
 
-    public ListField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, Unpacker<?> lengthUnpacker, Field elementField) {
-        super(fieldProperties, unpackerProperties);
+    public ListField(FieldType fieldType, UnpackerProperties unpackerProperties, Unpacker<?> lengthUnpacker, Field elementField) {
+        super(fieldType, unpackerProperties);
         this.lengthUnpacker = lengthUnpacker;
         this.elementField = elementField;
     }
@@ -21,6 +21,11 @@ public class ListField extends Field {
     @Override
     public Unpacker<?> getUnpacker() {
         return lengthUnpacker;
+    }
+
+    @Override
+    public String getChildNameSegment(int idx) {
+        return Util.arrayIdxToString(idx);
     }
 
     @Override

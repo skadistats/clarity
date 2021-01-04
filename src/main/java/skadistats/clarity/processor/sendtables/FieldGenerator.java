@@ -1,13 +1,13 @@
 package skadistats.clarity.processor.sendtables;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.ints.IntSet;
 import org.slf4j.Logger;
-import skadistats.clarity.decoder.Util;
 import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.S2DTClass;
 import skadistats.clarity.decoder.s2.S2UnpackerFactory;
 import skadistats.clarity.decoder.s2.Serializer;
 import skadistats.clarity.decoder.s2.SerializerId;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
 import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.decoder.s2.field.impl.ArrayField;
@@ -21,12 +21,9 @@ import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.IntFunction;
 
 import static skadistats.clarity.LogChannel.sendtables;
 
@@ -36,7 +33,7 @@ public class FieldGenerator {
 
     private final S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage;
     private final FieldData[] fieldData;
-    private final IntFunction[] nameLookupFunctions;
+    private final IntSet checkedNames;
     private final List<PatchFunc> patchFuncs;
 
     private final Map<SerializerId, Serializer> serializers = new HashMap<>();
@@ -44,7 +41,7 @@ public class FieldGenerator {
     public FieldGenerator(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage, int buildNumber) {
         this.protoMessage = protoMessage;
         this.fieldData = new FieldData[protoMessage.getFieldsCount()];
-        this.nameLookupFunctions = new IntFunction[protoMessage.getSymbolsCount()];
+        this.checkedNames = new IntOpenHashSet();
         this.patchFuncs = new ArrayList<>();
         for (Map.Entry<BuildNumberRange, PatchFunc> patchEntry : PATCHES.entrySet()) {
             if (patchEntry.getKey().appliesTo(buildNumber)) {
@@ -65,7 +62,7 @@ public class FieldGenerator {
 
     public S2DTClass createDTClass(String name) {
         RecordField field = new RecordField(
-                new FieldProperties(FieldType.forString(name), i -> name),
+                FieldType.forString(name),
                 UnpackerProperties.DEFAULT,
                 serializers.get(new SerializerId(name, 0))
         );
@@ -73,23 +70,22 @@ public class FieldGenerator {
     }
 
     private FieldData generateFieldData(S2NetMessages.ProtoFlattenedSerializerField_t proto) {
-        FieldData fd = new FieldData();
-        fd.fieldType = FieldType.forString(sym(proto.getVarTypeSym()));
-        fd.nameFunction = fieldNameFunction(proto);
-        fd.unpackerProperties = new UnpackerPropertiesImpl(
-                proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
-                proto.hasBitCount() ? proto.getBitCount() : null,
-                proto.hasLowValue() ? proto.getLowValue() : null,
-                proto.hasHighValue() ? proto.getHighValue() : null,
-                proto.hasVarEncoderSym() ? sym(proto.getVarEncoderSym()) : null
+        return new FieldData(
+                FieldType.forString(sym(proto.getVarTypeSym())),
+                fieldNameFunction(proto),
+                new UnpackerPropertiesImpl(
+                        proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
+                        proto.hasBitCount() ? proto.getBitCount() : null,
+                        proto.hasLowValue() ? proto.getLowValue() : null,
+                        proto.hasHighValue() ? proto.getHighValue() : null,
+                        proto.hasVarEncoderSym() ? sym(proto.getVarEncoderSym()) : null
+                ),
+                proto.hasFieldSerializerNameSym() ?
+                        new SerializerId(
+                                sym(proto.getFieldSerializerNameSym()),
+                                proto.getFieldSerializerVersion()
+                        ) : null
         );
-        if (proto.hasFieldSerializerNameSym()) {
-            fd.serializerId = new SerializerId(
-                    sym(proto.getFieldSerializerNameSym()),
-                    proto.getFieldSerializerVersion()
-            );
-        }
-        return fd;
     }
 
     private Serializer generateSerializer(S2NetMessages.ProtoFlattenedSerializer_t proto) {
@@ -98,99 +94,154 @@ public class FieldGenerator {
                 proto.getSerializerVersion()
         );
         Field[] fields = new Field[proto.getFieldsIndexCount()];
+        String[] fieldNames = new String[proto.getFieldsIndexCount()];
         for (int i = 0; i < fields.length; i++) {
             int fi = proto.getFieldsIndex(i);
             if (fieldData[fi].field == null) {
                 fieldData[fi].field = createField(sid, fieldData[fi]);
             }
             fields[i] = fieldData[fi].field;
+            fieldNames[i] = fieldData[fi].name;
         }
-        return new Serializer(sid, fields);
+        return new Serializer(sid, fields, fieldNames);
     }
 
     private Field createField(SerializerId sId, FieldData fd) {
         for (PatchFunc patchFunc : patchFuncs) {
             patchFunc.execute(sId, fd);
         }
+
+        FieldType elementType;
+        if (fd.category == FieldCategory.ARRAY) {
+            elementType = fd.fieldType.getElementType();
+        } else if (fd.category == FieldCategory.VECTOR) {
+            elementType = fd.fieldType.getGenericType();
+        } else {
+            elementType = fd.fieldType;
+        }
+
+        Field elementField;
         if (fd.serializerId != null) {
-            Serializer subSerializer = serializers.get(fd.serializerId);
-            if (POINTERS.contains(fd.fieldType.getBaseType())) {
-                return new PointerField(
-                        new FieldProperties(fd.fieldType, fd.nameFunction),
+            if (fd.category == FieldCategory.POINTER) {
+                elementField = new PointerField(
+                        elementType,
                         UnpackerProperties.DEFAULT,
                         S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "bool"),
-                        subSerializer
+                        serializers.get(fd.serializerId)
                 );
             } else {
-                return new ListField(
-                        new FieldProperties(fd.fieldType, fd.nameFunction),
+                elementField = new RecordField(
+                        elementType,
                         UnpackerProperties.DEFAULT,
-                        S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
-                        new RecordField(
-                                new FieldProperties(fd.fieldType, Util::arrayIdxToString),
-                                UnpackerProperties.DEFAULT,
-                                subSerializer
-                        )
+                        serializers.get(fd.serializerId)
                 );
             }
-        }
-        String elementCount = fd.fieldType.getElementCount();
-        if (elementCount != null && !"char".equals(fd.fieldType.getBaseType())) {
-            Integer countAsInt = ITEM_COUNTS.get(elementCount);
-            if (countAsInt == null) {
-                countAsInt = Integer.valueOf(elementCount);
-            }
-            return new ArrayField(
-                    new FieldProperties(fd.fieldType, fd.nameFunction),
-                    new ValueField(
-                            new FieldProperties(fd.fieldType.getElementType(), Util::arrayIdxToString),
-                            fd.unpackerProperties,
-                            S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getBaseType())
-                    ),
-                    countAsInt
+        } else {
+            elementField = new ValueField(
+                    elementType,
+                    fd.unpackerProperties,
+                    S2UnpackerFactory.createUnpacker(fd.unpackerProperties, elementType.getBaseType())
             );
         }
-        if ("CUtlVector".equals(fd.fieldType.getBaseType())) {
+
+        if (fd.category == FieldCategory.ARRAY) {
+            return new ArrayField(
+                    fd.fieldType,
+                    elementField,
+                    fd.getArrayElementCount()
+            );
+        } else if (fd.category == FieldCategory.VECTOR) {
             return new ListField(
-                    new FieldProperties(fd.fieldType, fd.nameFunction),
+                    fd.fieldType,
                     UnpackerProperties.DEFAULT,
                     S2UnpackerFactory.createUnpacker(UnpackerProperties.DEFAULT, "uint32"),
-                    new ValueField(
-                            new FieldProperties(fd.fieldType.getGenericType(), Util::arrayIdxToString),
-                            fd.unpackerProperties,
-                            S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getGenericType().getBaseType())
-                    )
+                    elementField
             );
+        } else {
+            return elementField;
         }
-        return new ValueField(
-                new FieldProperties(fd.fieldType, fd.nameFunction),
-                fd.unpackerProperties,
-                S2UnpackerFactory.createUnpacker(fd.unpackerProperties, fd.fieldType.getBaseType())
-        );
     }
 
     private String sym(int i) {
         return protoMessage.getSymbols(i);
     }
 
-    private IntFunction<String> fieldNameFunction(S2NetMessages.ProtoFlattenedSerializerField_t field) {
+    private String fieldNameFunction(S2NetMessages.ProtoFlattenedSerializerField_t field) {
         int nameSym = field.getVarNameSym();
-        if (nameLookupFunctions[nameSym] == null) {
-            String name = sym(nameSym);
+        String name = sym(nameSym);
+        if (!checkedNames.contains(nameSym)) {
             if (name.indexOf('.') != -1) {
                 log.warn("replay contains field with invalid name '%s'. Please open a github issue!", name);
             }
-            nameLookupFunctions[nameSym] = i -> name;
+            checkedNames.add(nameSym);
         }
-        return nameLookupFunctions[nameSym];
+        return name;
+    }
+
+    private enum FieldCategory {
+        POINTER,
+        VECTOR,
+        ARRAY,
+        VALUE
     }
 
     private static class FieldData {
-        private FieldType fieldType;
-        private IntFunction<String> nameFunction;
-        private UnpackerPropertiesImpl unpackerProperties;
-        private SerializerId serializerId;
+        private final FieldType fieldType;
+        private final String name;
+        private final UnpackerPropertiesImpl unpackerProperties;
+        private final SerializerId serializerId;
+
+        private final FieldCategory category;
         private Field field;
+
+        public FieldData(FieldType fieldType, String name, UnpackerPropertiesImpl unpackerProperties, SerializerId serializerId) {
+            this.fieldType = fieldType;
+            this.name = name;
+            this.unpackerProperties = unpackerProperties;
+            this.serializerId = serializerId;
+
+            if (determineIsPointer()) {
+                category = FieldCategory.POINTER;
+            } else if (determineIsVector()) {
+                category = FieldCategory.VECTOR;
+            } else if (determineIsArray()) {
+                category = FieldCategory.ARRAY;
+            } else {
+                category = FieldCategory.VALUE;
+            }
+        }
+
+        private boolean determineIsPointer() {
+            if (fieldType.isPointer()) return true;
+            switch (fieldType.getBaseType()) {
+                case "CBodyComponent":
+                case "CLightComponent":
+                case "CPhysicsComponent":
+                case "CRenderComponent":
+                case "CPlayerLocalData":
+                    return true;
+            }
+            return false;
+        }
+
+        private boolean determineIsVector() {
+            if ("CUtlVector".equals(fieldType.getBaseType())) return true;
+            return serializerId != null;
+        }
+
+        private boolean determineIsArray() {
+            return fieldType.getElementCount() != null && !"char".equals(fieldType.getBaseType());
+        }
+
+        private int getArrayElementCount() {
+            String elementCount = fieldType.getElementCount();
+            Integer countAsInt = ITEM_COUNTS.get(elementCount);
+            if (countAsInt == null) {
+                countAsInt = Integer.valueOf(elementCount);
+            }
+            return countAsInt;
+        }
+
     }
 
     public static class UnpackerPropertiesImpl implements UnpackerProperties {
@@ -255,19 +306,6 @@ public class FieldGenerator {
         }
     }
 
-    private static final Set<String> POINTERS = new HashSet<>();
-    static {
-        POINTERS.add("CBodyComponent");
-        POINTERS.add("CEntityIdentity");
-        POINTERS.add("CPhysicsComponent");
-        POINTERS.add("CRenderComponent");
-        POINTERS.add("CDOTAGamerules");
-        POINTERS.add("CDOTAGameManager");
-        POINTERS.add("CDOTASpectatorGraphManager");
-        POINTERS.add("CPlayerLocalData");
-        POINTERS.add("PhysicsRagdollPose_t");
-    }
-
     private static final Map<String, Integer> ITEM_COUNTS = new HashMap<>();
     static {
         ITEM_COUNTS.put("MAX_ITEM_STOCKS", 8);
@@ -285,7 +323,7 @@ public class FieldGenerator {
     static {
 
         PATCHES.put(new BuildNumberRange(null, 954), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
+            switch (field.name) {
                 case "m_flMana":
                 case "m_flMaxMana":
                     UnpackerPropertiesImpl up = field.unpackerProperties;
@@ -297,7 +335,7 @@ public class FieldGenerator {
         });
 
         PATCHES.put(new BuildNumberRange(null, 990), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
+            switch (field.name) {
                 case "dirPrimary":
                 case "localSound":
                 case "m_attachmentPointBoneSpace":
@@ -340,7 +378,7 @@ public class FieldGenerator {
         });
 
         PATCHES.put(new BuildNumberRange(1016, 1026), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
+            switch (field.name) {
                 case "m_bWorldTreeState":
                 case "m_ulTeamLogo":
                 case "m_ulTeamBaseLogo":
@@ -353,7 +391,7 @@ public class FieldGenerator {
         });
 
         PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
+            switch (field.name) {
                 case "m_flSimulationTime":
                 case "m_flAnimTime":
                     field.unpackerProperties.encoderType = "simulationtime";
@@ -361,7 +399,7 @@ public class FieldGenerator {
         });
 
         PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
-            switch (field.nameFunction.apply(0)) {
+            switch (field.name) {
                 case "m_flRuneTime":
                     UnpackerPropertiesImpl up = field.unpackerProperties;
                     if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {

@@ -56,11 +56,13 @@ public class S2DTClass implements DTClass {
     }
 
     public Unpacker getUnpackerForFieldPath(S2FieldPath fp) {
-        return getFieldForFieldPath(fp).getUnpacker();
+        Field f = getFieldForFieldPath(fp);
+        return f != null ? f.getUnpacker() : null;
     }
 
     public FieldType getTypeForFieldPath(S2FieldPath fp) {
-        return getFieldForFieldPath(fp).getType();
+        Field f = getFieldForFieldPath(fp);
+        return f != null ? f.getType() : null;
     }
 
     @Override
@@ -69,16 +71,18 @@ public class S2DTClass implements DTClass {
         StringBuilder sb = new StringBuilder();
 
         Field currentField = field;
+        int i = 0;
         int last = fp.last();
-        for (int i = 0; i <= last; i++) {
-            currentField = currentField.getChild(fp.get(i));
-            if (sb.length() != 0) {
-                sb.append('.');
-            }
-            sb.append(currentField.getFieldProperties().getNameForIndex(i));
+        while(true) {
+            int idx = fp.get(i);
+            String segment = currentField.getChildNameSegment(idx);
+            if (segment == null) return null;
+            if (i != 0) sb.append('.');
+            sb.append(segment);
+            if (i == last) return sb.toString();
+            currentField = currentField.getChild(idx);
+            i++;
         }
-
-        return sb.toString();
     }
 
     @Override
@@ -92,17 +96,13 @@ public class S2DTClass implements DTClass {
             boolean last = (dotIdx == -1);
             String segment = last ? search : search.substring(0, dotIdx);
             Integer fieldIdx = currentField.getChildIndex(segment);
-            if (fieldIdx == null) {
-                return null;
-            }
+            if (fieldIdx == null) return null;
             fp.cur(fieldIdx);
-            if (last) break;
+            if (last) return fp.unmodifiable();
             fp.down();
             currentField = currentField.getChild(fieldIdx);
             search = search.substring(segment.length() + 1);
         }
-
-        return fp.unmodifiable();
     }
 
     @Override

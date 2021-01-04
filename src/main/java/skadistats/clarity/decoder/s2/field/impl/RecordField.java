@@ -2,7 +2,7 @@ package skadistats.clarity.decoder.s2.field.impl;
 
 import skadistats.clarity.decoder.s2.Field;
 import skadistats.clarity.decoder.s2.Serializer;
-import skadistats.clarity.decoder.s2.field.FieldProperties;
+import skadistats.clarity.decoder.s2.field.FieldType;
 import skadistats.clarity.decoder.s2.field.UnpackerProperties;
 import skadistats.clarity.model.state.ArrayEntityState;
 
@@ -10,13 +10,18 @@ public class RecordField extends Field {
 
     protected final Serializer serializer;
 
-    public RecordField(FieldProperties fieldProperties, UnpackerProperties unpackerProperties, Serializer serializer) {
-        super(fieldProperties, unpackerProperties);
+    public RecordField(FieldType fieldType, UnpackerProperties unpackerProperties, Serializer serializer) {
+        super(fieldType, unpackerProperties);
         this.serializer = serializer;
     }
 
     public Serializer getSerializer() {
         return serializer;
+    }
+
+    @Override
+    public String getChildNameSegment(int idx) {
+        return serializer.getFieldName(idx);
     }
 
     @Override
