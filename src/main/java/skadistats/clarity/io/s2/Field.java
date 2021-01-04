@@ -48,7 +48,7 @@ public abstract class Field {
     }
 
     public String toString() {
-        return "Field (" + getType() + ")";
+        return getType().toString();
     }
 
 }
