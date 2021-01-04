@@ -41,7 +41,16 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
+@Provides({
+        UsesEntities.class,
+        OnEntityCreated.class,
+        OnEntityUpdated.class,
+        OnEntityPropertyCountChanged.class,
+        OnEntityDeleted.class,
+        OnEntityEntered.class,
+        OnEntityLeft.class,
+        OnEntityUpdatesCompleted.class
+})
 @UsesDTClasses
 public class Entities {
 
@@ -87,6 +96,8 @@ public class Entities {
     @InsertEvent
     private Event<OnEntityUpdated> evUpdated;
     @InsertEvent
+    private Event<OnEntityPropertyCountChanged> evPropertyCountChanged;
+    @InsertEvent
     private Event<OnEntityDeleted> evDeleted;
     @InsertEvent
     private Event<OnEntityEntered> evEntered;
@@ -107,6 +118,11 @@ public class Entities {
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final EventListener<OnEntityUpdated> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityPropertyCountChanged.class)
+    public void initPropertyCountChanged(final EventListener<OnEntityPropertyCountChanged> listener) {
         listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
     }
 
@@ -204,6 +220,7 @@ public class Entities {
                             while (iter.hasNext()) {
                                 updatedFieldPaths[n++] = iter.next();
                             }
+                            emitPropertyCountChangedEvent(entity);
                             emitUpdatedEvent(entity, n);
                         }
                     }
@@ -391,10 +408,13 @@ public class Entities {
 
     private void processEntityUpdate(Entity entity, BitStream stream, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        int nUpdated = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), (i, f) -> updatedFieldPaths[i] = f, debug);
+        FieldReader.Result r = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), (i, f) -> updatedFieldPaths[i] = f, debug);
         logModification("UPDATE", entity);
         if (!silent) {
-            emitUpdatedEvent(entity, nUpdated);
+            if (r.isCapacityChanged()) {
+                emitPropertyCountChangedEvent(entity);
+            }
+            emitUpdatedEvent(entity, r.getUpdateCount());
         }
     }
 
@@ -436,6 +456,12 @@ public class Entities {
         if (resetInProgress || !evUpdated.isListenedTo()) return;
         debugUpdateEvent("UPDATE", entity);
         evUpdated.raise(entity, updatedFieldPaths, nUpdated);
+    }
+
+    private void emitPropertyCountChangedEvent(Entity entity) {
+        if (resetInProgress || !evPropertyCountChanged.isListenedTo()) return;
+        debugUpdateEvent("PROPERTYCOUNTCHANGE", entity);
+        evPropertyCountChanged.raise(entity);
     }
 
     private void emitLeftEvent(Entity entity) {

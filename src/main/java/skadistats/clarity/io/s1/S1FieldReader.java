@@ -28,7 +28,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public int readFields(BitStream bs, S1DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
+    public Result readFields(BitStream bs, S1DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());
@@ -64,7 +64,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                     fieldPathUpdateListener.fieldPathUpdated(i, fieldPaths[i]);
                 }
             }
-            return n;
+            return new Result(n, false);
         } finally {
             if (debug) {
                 debugTable.print(DEBUG_STREAM);

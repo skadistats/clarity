@@ -17,6 +17,8 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
+    boolean capacityChanged;
+
     public NestedArrayEntityState(SerializerField field) {
         rootField = field;
         entries = new ArrayList<>(20);
@@ -90,14 +92,16 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fpX, Object value) {
+    public boolean setValueForFieldPath(FieldPath fpX, Object value) {
         S2FieldPath fp = fpX.s2();
 
         Field field = rootField;
         Entry entry = rootEntry();
         int last = fp.last();
 
-        for (int i = 0; i <= last; i++) {
+        capacityChanged = false;
+        int i = 0;
+        while (true) {
             int idx = fp.get(i);
             if (!entry.has(idx)) {
                 field.ensureArrayEntityStateCapacity(entry, idx + 1);
@@ -105,9 +109,10 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             field = field.getChild(idx);
             if (i == last) {
                 field.setArrayEntityState(entry, idx, value);
-                return;
+                return capacityChanged;
             }
             entry = entry.subEntry(idx);
+            i++;
         }
     }
 
@@ -119,7 +124,8 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         Entry entry = rootEntry();
         int last = fp.last();
 
-        for (int i = 0; i <= last; i++) {
+        int i = 0;
+        while (true) {
             int idx = fp.get(i);
             field = field.getChild(idx);
             if (i == last) {
@@ -129,8 +135,8 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 return null;
             }
             entry = entry.subEntry(idx);
+            i++;
         }
-        return null;
     }
 
     @Override
@@ -271,6 +277,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
                 state = newState;
                 modifiable = true;
+                capacityChanged = true;
             }
             return this;
         }

@@ -10,7 +10,8 @@ public interface EntityState {
 
     EntityState copy();
 
-    void setValueForFieldPath(FieldPath fp, Object value);
+    // returns true if capacity has changed
+    boolean setValueForFieldPath(FieldPath fp, Object value);
     <T> T getValueForFieldPath(FieldPath fp);
 
     Iterator<FieldPath> fieldPathIterator();

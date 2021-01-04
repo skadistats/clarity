@@ -38,7 +38,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public int readFields(BitStream bs, S2DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
+    public Result readFields(BitStream bs, S2DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());
@@ -47,6 +47,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             int n = 0;
+            boolean capacityChanged = false;
             S2ModifiableFieldPath mfp = S2ModifiableFieldPath.newInstance();
             while (true) {
                 int offsBefore = bs.pos();
@@ -72,7 +73,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 }
                 int offsBefore = bs.pos();
                 Object data = decoder.decode(bs);
-                state.setValueForFieldPath(fp, data);
+                capacityChanged |= state.setValueForFieldPath(fp, data);
 
                 if (debug) {
                     DecoderProperties props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
@@ -95,7 +96,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     fieldPathUpdateListener.fieldPathUpdated(i, fieldPaths[i]);
                 }
             }
-            return n;
+            return new Result(n, capacityChanged);
         } finally {
             if (debug) {
                 dataDebugTable.print(DEBUG_STREAM);
