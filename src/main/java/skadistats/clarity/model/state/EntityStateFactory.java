@@ -1,7 +1,7 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.io.s1.ReceiveProp;
-import skadistats.clarity.io.s2.field.impl.RecordField;
+import skadistats.clarity.io.s2.field.RecordField;
 
 public class EntityStateFactory {
 

@@ -1,4 +1,4 @@
-package skadistats.clarity.io.s2.field.impl;
+package skadistats.clarity.io.s2.field;
 
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;

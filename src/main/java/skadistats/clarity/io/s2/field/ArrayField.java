@@ -1,26 +1,20 @@
-package skadistats.clarity.io.s2.field.impl;
+package skadistats.clarity.io.s2.field;
 
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.DecoderProperties;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.state.ArrayEntityState;
 
-public class ListField extends Field {
+public class ArrayField extends Field {
 
-    private final Decoder<?> lengthDecoder;
     private final Field elementField;
+    private final int length;
 
-    public ListField(FieldType fieldType, DecoderProperties decoderProperties, Decoder<?> lengthDecoder, Field elementField) {
-        super(fieldType, decoderProperties);
-        this.lengthDecoder = lengthDecoder;
+    public ArrayField(FieldType fieldType, Field elementField, int length) {
+        super(fieldType, DecoderProperties.DEFAULT);
         this.elementField = elementField;
-    }
-
-    @Override
-    public Decoder<?> getDecoder() {
-        return lengthDecoder;
+        this.length = length;
     }
 
     @Override
@@ -40,12 +34,7 @@ public class ListField extends Field {
 
     @Override
     public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
-        state.capacity(capacity, false);
-    }
-
-    @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
-        state.sub(idx).capacity((Integer) value, true);
+        state.capacity(length);
     }
 
     @Override

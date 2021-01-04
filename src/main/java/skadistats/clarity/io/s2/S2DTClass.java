@@ -1,6 +1,6 @@
 package skadistats.clarity.io.s2;
 
-import skadistats.clarity.io.s2.field.impl.RecordField;
+import skadistats.clarity.io.s2.field.RecordField;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
