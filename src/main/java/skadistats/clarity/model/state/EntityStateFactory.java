@@ -1,7 +1,7 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.io.s1.ReceiveProp;
-import skadistats.clarity.io.s2.field.RecordField;
+import skadistats.clarity.io.s2.field.SerializerField;
 
 public class EntityStateFactory {
 
@@ -9,8 +9,8 @@ public class EntityStateFactory {
         return new ObjectArrayEntityState(receiveProps.length);
     }
 
-    public static EntityState forS2(RecordField serializer) {
-        return new NestedArrayEntityState(serializer);
+    public static EntityState forS2(SerializerField field) {
+        return new NestedArrayEntityState(field);
         //return new TreeMapEntityState();
     }
 

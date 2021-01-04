@@ -9,13 +9,13 @@ import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.model.state.ArrayEntityState;
 
-public class ListField extends Field {
+public class VectorField extends Field {
 
     private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("uint32");
 
     private final Field elementField;
 
-    public ListField(FieldType fieldType, Field elementField) {
+    public VectorField(FieldType fieldType, Field elementField) {
         super(fieldType);
         this.elementField = elementField;
     }

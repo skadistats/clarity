@@ -10,9 +10,9 @@ import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerId;
 import skadistats.clarity.io.s2.field.ArrayField;
-import skadistats.clarity.io.s2.field.ListField;
+import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.io.s2.field.PointerField;
-import skadistats.clarity.io.s2.field.RecordField;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.ValueField;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.BuildNumberRange;
@@ -60,7 +60,7 @@ public class FieldGenerator {
     }
 
     public S2DTClass createDTClass(String name) {
-        RecordField field = new RecordField(
+        SerializerField field = new SerializerField(
                 FieldType.forString(name),
                 serializers.get(new SerializerId(name, 0))
         );
@@ -129,7 +129,7 @@ public class FieldGenerator {
                         serializers.get(fd.serializerId)
                 );
             } else {
-                elementField = new RecordField(
+                elementField = new SerializerField(
                         elementType,
                         serializers.get(fd.serializerId)
                 );
@@ -149,7 +149,7 @@ public class FieldGenerator {
                         fd.getArrayElementCount()
                 );
             case VECTOR:
-                return new ListField(
+                return new VectorField(
                         fd.fieldType,
                         elementField
                 );

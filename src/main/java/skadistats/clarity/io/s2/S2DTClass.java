@@ -1,6 +1,6 @@
 package skadistats.clarity.io.s2;
 
-import skadistats.clarity.io.s2.field.RecordField;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
@@ -11,10 +11,10 @@ import skadistats.clarity.model.state.EntityStateFactory;
 
 public class S2DTClass implements DTClass {
 
-    private final RecordField field;
+    private final SerializerField field;
     private int classId = -1;
 
-    public S2DTClass(RecordField field) {
+    public S2DTClass(SerializerField field) {
         this.field = field;
     }
 

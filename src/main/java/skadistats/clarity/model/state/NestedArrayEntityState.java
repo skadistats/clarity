@@ -1,7 +1,7 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.io.s2.Field;
-import skadistats.clarity.io.s2.field.RecordField;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 
@@ -13,11 +13,11 @@ import java.util.List;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
-    private final RecordField rootField;
+    private final SerializerField rootField;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
-    public NestedArrayEntityState(RecordField field) {
+    public NestedArrayEntityState(SerializerField field) {
         rootField = field;
         entries = new ArrayList<>(20);
         entries.add(new Entry());

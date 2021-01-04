@@ -5,11 +5,11 @@ import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.state.ArrayEntityState;
 
-public class RecordField extends Field {
+public class SerializerField extends Field {
 
     protected final Serializer serializer;
 
-    public RecordField(FieldType fieldType, Serializer serializer) {
+    public SerializerField(FieldType fieldType, Serializer serializer) {
         super(fieldType);
         this.serializer = serializer;
     }

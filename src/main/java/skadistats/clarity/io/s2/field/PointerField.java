@@ -8,7 +8,7 @@ import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.state.ArrayEntityState;
 
-public class PointerField extends RecordField {
+public class PointerField extends SerializerField {
 
     private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("bool");
 
