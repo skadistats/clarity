@@ -223,8 +223,8 @@ public class FieldGenerator {
         }
 
         private boolean determineIsVector() {
-            if ("CUtlVector".equals(fieldType.getBaseType())) return true;
-            return serializerId != null;
+            if (serializerId != null) return true;
+            return "CUtlVector".equals(fieldType.getBaseType());
         }
 
         private boolean determineIsArray() {
