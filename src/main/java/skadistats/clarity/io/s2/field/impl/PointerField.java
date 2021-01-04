@@ -1,7 +1,7 @@
 package skadistats.clarity.io.s2.field.impl;
 
 import skadistats.clarity.io.s2.Serializer;
-import skadistats.clarity.io.s2.field.FieldType;
+import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.field.DecoderProperties;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.state.ArrayEntityState;

@@ -1,4 +1,4 @@
-package skadistats.clarity.io.s2.field;
+package skadistats.clarity.io.s2;
 
 import skadistats.clarity.ClarityException;
 
