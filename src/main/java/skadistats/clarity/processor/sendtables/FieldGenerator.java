@@ -73,7 +73,7 @@ public class FieldGenerator {
         return new FieldData(
                 FieldType.forString(sym(proto.getVarTypeSym())),
                 fieldNameFunction(proto),
-                new DecoderPropertiesImpl(
+                new ProtoDecoderProperties(
                         proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
                         proto.hasBitCount() ? proto.getBitCount() : null,
                         proto.hasLowValue() ? proto.getLowValue() : null,
@@ -188,13 +188,13 @@ public class FieldGenerator {
     private static class FieldData {
         private final FieldType fieldType;
         private final String name;
-        private final DecoderPropertiesImpl decoderProperties;
+        private final ProtoDecoderProperties decoderProperties;
         private final SerializerId serializerId;
 
         private final FieldCategory category;
         private Field field;
 
-        public FieldData(FieldType fieldType, String name, DecoderPropertiesImpl decoderProperties, SerializerId serializerId) {
+        public FieldData(FieldType fieldType, String name, ProtoDecoderProperties decoderProperties, SerializerId serializerId) {
             this.fieldType = fieldType;
             this.name = name;
             this.decoderProperties = decoderProperties;
@@ -244,68 +244,6 @@ public class FieldGenerator {
 
     }
 
-    public static class DecoderPropertiesImpl implements DecoderProperties {
-
-        private Integer encodeFlags;
-        private Integer bitCount;
-        private Float lowValue;
-        private Float highValue;
-        private String encoderType;
-
-        public DecoderPropertiesImpl(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
-            this.encodeFlags = encodeFlags;
-            this.bitCount = bitCount;
-            this.lowValue = lowValue;
-            this.highValue = highValue;
-            this.encoderType = encoderType;
-        }
-
-        @Override
-        public Integer getEncodeFlags() {
-            return encodeFlags;
-        }
-
-        @Override
-        public Integer getBitCount() {
-            return bitCount;
-        }
-
-        @Override
-        public Float getLowValue() {
-            return lowValue;
-        }
-
-        @Override
-        public Float getHighValue() {
-            return highValue;
-        }
-
-        @Override
-        public String getEncoderType() {
-            return encoderType;
-        }
-
-        @Override
-        public int getEncodeFlagsOrDefault(int defaultValue) {
-            return encodeFlags != null ? encodeFlags : defaultValue;
-        }
-
-        @Override
-        public int getBitCountOrDefault(int defaultValue) {
-            return bitCount != null ? bitCount : defaultValue;
-        }
-
-        @Override
-        public float getLowValueOrDefault(float defaultValue) {
-            return lowValue != null ? lowValue : defaultValue;
-        }
-
-        @Override
-        public float getHighValueOrDefault(float defaultValue) {
-            return highValue != null ? highValue : defaultValue;
-        }
-    }
-
     private static final Map<String, Integer> ITEM_COUNTS = new HashMap<>();
     static {
         ITEM_COUNTS.put("MAX_ITEM_STOCKS", 8);
@@ -326,7 +264,7 @@ public class FieldGenerator {
             switch (field.name) {
                 case "m_flMana":
                 case "m_flMaxMana":
-                    DecoderPropertiesImpl up = field.decoderProperties;
+                    ProtoDecoderProperties up = field.decoderProperties;
                     if (up.highValue == 3.4028235E38f) {
                         up.lowValue = null;
                         up.highValue = 8192.0f;
@@ -401,7 +339,7 @@ public class FieldGenerator {
         PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
             switch (field.name) {
                 case "m_flRuneTime":
-                    DecoderPropertiesImpl up = field.decoderProperties;
+                    ProtoDecoderProperties up = field.decoderProperties;
                     if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
                         up.lowValue = null;
                         up.highValue = null;
