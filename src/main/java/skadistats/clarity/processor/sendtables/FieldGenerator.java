@@ -4,12 +4,11 @@ import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import it.unimi.dsi.fastutil.ints.IntSet;
 import org.slf4j.Logger;
 import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.S2DTClass;
 import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerId;
-import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.field.ArrayField;
 import skadistats.clarity.io.s2.field.ListField;
 import skadistats.clarity.io.s2.field.PointerField;
@@ -63,7 +62,6 @@ public class FieldGenerator {
     public S2DTClass createDTClass(String name) {
         RecordField field = new RecordField(
                 FieldType.forString(name),
-                DecoderProperties.DEFAULT,
                 serializers.get(new SerializerId(name, 0))
         );
         return new S2DTClass(field);
@@ -128,21 +126,17 @@ public class FieldGenerator {
             if (fd.category == FieldCategory.POINTER) {
                 elementField = new PointerField(
                         elementType,
-                        DecoderProperties.DEFAULT,
-                        S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "bool"),
                         serializers.get(fd.serializerId)
                 );
             } else {
                 elementField = new RecordField(
                         elementType,
-                        DecoderProperties.DEFAULT,
                         serializers.get(fd.serializerId)
                 );
             }
         } else {
             elementField = new ValueField(
                     elementType,
-                    fd.decoderProperties,
                     S2DecoderFactory.createDecoder(fd.decoderProperties, elementType.getBaseType())
             );
         }
@@ -157,8 +151,6 @@ public class FieldGenerator {
             case VECTOR:
                 return new ListField(
                         fd.fieldType,
-                        DecoderProperties.DEFAULT,
-                        S2DecoderFactory.createDecoder(DecoderProperties.DEFAULT, "uint32"),
                         elementField
                 );
             default:

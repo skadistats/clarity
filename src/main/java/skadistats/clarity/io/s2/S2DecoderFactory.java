@@ -2,17 +2,17 @@ package skadistats.clarity.io.s2;
 
 import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.BoolDecoder;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;
 import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
 import skadistats.clarity.io.decoder.LongVarSignedDecoder;
 import skadistats.clarity.io.decoder.LongVarUnsignedDecoder;
 import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
-import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.QAngleDecoderFactory;
-import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.VectorDecoderFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 
@@ -85,16 +85,23 @@ public class S2DecoderFactory {
     }
 
 
-    public static Decoder createDecoder(DecoderProperties decoderProperties, String type) {
+    public static DecoderHolder createDecoder(String type) {
+        return createDecoder(DecoderProperties.DEFAULT, type);
+    }
+
+    public static DecoderHolder createDecoder(DecoderProperties decoderProperties, String type) {
+        Decoder decoder;
         DecoderFactory decoderFactory = FACTORIES.get(type);
         if (decoderFactory != null) {
-            return decoderFactory.createDecoder(decoderProperties);
+            decoder = decoderFactory.createDecoder(decoderProperties);
+        } else {
+            decoder = DECODERS.get(type);
+            if (decoder == null) {
+                log.debug("don't know how to create decoder for %s, assuming int.", type);
+                decoder = DEFAULT_DECODER;
+            }
         }
-        Decoder decoder = DECODERS.get(type);
-        if (decoder == null) {
-            log.debug("don't know how to create decoder for %s, assuming int.", type);
-            decoder = DEFAULT_DECODER;
-        }
-        return decoder;
+        return new DecoderHolder(decoderProperties, decoder);
     }
+
 }

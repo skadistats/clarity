@@ -1,23 +1,29 @@
 package skadistats.clarity.io.s2.field;
 
-import skadistats.clarity.io.s2.Serializer;
-import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.s2.DecoderHolder;
+import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.s2.FieldType;
+import skadistats.clarity.io.s2.S2DecoderFactory;
+import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class PointerField extends RecordField {
 
-    private final Decoder<?> baseDecoder;
+    private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("bool");
 
-    public PointerField(FieldType fieldType, DecoderProperties decoderProperties, Decoder<?> baseDecoder, Serializer serializer) {
-        super(fieldType, decoderProperties, serializer);
-        this.baseDecoder = baseDecoder;
+    public PointerField(FieldType fieldType, Serializer serializer) {
+        super(fieldType, serializer);
+    }
+
+    @Override
+    public DecoderProperties getDecoderProperties() {
+        return decoderHolder.getDecoderProperties();
     }
 
     @Override
     public Decoder<?> getDecoder() {
-        return baseDecoder;
+        return decoderHolder.getDecoder();
     }
 
     @Override

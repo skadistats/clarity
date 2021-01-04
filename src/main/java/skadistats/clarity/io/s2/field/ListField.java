@@ -1,31 +1,33 @@
 package skadistats.clarity.io.s2.field;
 
 import skadistats.clarity.io.Util;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.s2.DecoderHolder;
+import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.DecoderProperties;
-import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class ListField extends Field {
 
-    private final Decoder<?> lengthDecoder;
+    private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("uint32");
+
     private final Field elementField;
 
-    public ListField(FieldType fieldType, DecoderProperties decoderProperties, Decoder<?> lengthDecoder, Field elementField) {
-        super(fieldType, decoderProperties);
-        this.lengthDecoder = lengthDecoder;
+    public ListField(FieldType fieldType, Field elementField) {
+        super(fieldType);
         this.elementField = elementField;
     }
 
     @Override
-    public Decoder<?> getDecoder() {
-        return lengthDecoder;
+    public DecoderProperties getDecoderProperties() {
+        return decoderHolder.getDecoderProperties();
     }
 
     @Override
-    public String getChildNameSegment(int idx) {
-        return Util.arrayIdxToString(idx);
+    public Decoder<?> getDecoder() {
+        return decoderHolder.getDecoder();
     }
 
     @Override
@@ -36,6 +38,11 @@ public class ListField extends Field {
     @Override
     public Integer getChildIndex(String name) {
         return Util.stringToArrayIdx(name);
+    }
+
+    @Override
+    public String getChildNameSegment(int idx) {
+        return Util.arrayIdxToString(idx);
     }
 
     @Override
