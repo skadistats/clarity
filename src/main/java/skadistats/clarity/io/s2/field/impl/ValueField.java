@@ -3,7 +3,7 @@ package skadistats.clarity.io.s2.field.impl;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.field.FieldType;
 import skadistats.clarity.io.s2.field.DecoderProperties;
-import skadistats.clarity.io.unpacker.Decoder;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class ValueField extends Field {

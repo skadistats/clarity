@@ -5,7 +5,7 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.field.FieldType;
 import skadistats.clarity.io.s2.field.DecoderProperties;
-import skadistats.clarity.io.unpacker.Decoder;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.EntityState;

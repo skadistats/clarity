@@ -2,7 +2,7 @@ package skadistats.clarity.io;
 
 import com.google.protobuf.ByteString;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.io.unpacker.Decoder;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;

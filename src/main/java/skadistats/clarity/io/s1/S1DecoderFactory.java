@@ -1,8 +1,8 @@
 package skadistats.clarity.io.s1;
 
-import skadistats.clarity.io.unpacker.StringLenDecoder;
-import skadistats.clarity.io.unpacker.Decoder;
-import skadistats.clarity.io.unpacker.factory.s1.*;
+import skadistats.clarity.io.decoder.StringLenDecoder;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.factory.s1.*;
 import skadistats.clarity.model.s1.PropType;
 
 import java.util.HashMap;
