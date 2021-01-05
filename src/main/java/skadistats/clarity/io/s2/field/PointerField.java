@@ -27,6 +27,11 @@ public class PointerField extends SerializerField {
     }
 
     @Override
+    public boolean isHiddenFieldPath() {
+        return true;
+    }
+
+    @Override
     public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
         boolean existing = (Boolean) value;
         if (state.has(idx) ^ existing) {

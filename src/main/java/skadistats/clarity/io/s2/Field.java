@@ -47,6 +47,11 @@ public abstract class Field {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
+    public boolean isHiddenFieldPath() {
+        // true, if this field's state value is hidden
+        return false;
+    }
+
     public String toString() {
         return getType().toString();
     }

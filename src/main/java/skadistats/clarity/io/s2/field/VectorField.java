@@ -51,6 +51,11 @@ public class VectorField extends Field {
     }
 
     @Override
+    public boolean isHiddenFieldPath() {
+        return true;
+    }
+
+    @Override
     public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
         state.sub(idx).capacity((Integer) value, true);
     }
