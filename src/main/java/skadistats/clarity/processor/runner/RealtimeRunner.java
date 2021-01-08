@@ -28,9 +28,13 @@ public class RealtimeRunner extends SimpleRunner {
     }
 
     public RealtimeRunner(Source s, Duration delay) throws IOException {
+        this(s, delay, now());
+    }
+
+    public RealtimeRunner(Source s, Duration delay, Instant startTime) throws IOException {
         super(s);
         setDelay(delay);
-        startTime = now();
+        this.startTime = startTime;
     }
 
     private boolean canDelay() {
