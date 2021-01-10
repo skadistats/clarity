@@ -4,14 +4,14 @@ import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.io.FieldReader;
-import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
@@ -32,12 +32,14 @@ import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
+import skadistats.clarity.util.StateDifferenceEvaluator;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -215,13 +217,31 @@ public class Entities {
                                 emitEnteredEvent(entity);
                             }
                         } else {
-                            Iterator<FieldPath> iter = entity.getState().fieldPathIterator();
-                            int n = 0;
-                            while (iter.hasNext()) {
-                                updatedFieldPaths[n++] = iter.next();
+                            int[] n = { 0 };
+                            boolean[] countChanged = { false };
+                            new StateDifferenceEvaluator(resetCapsule.getState(eIdx), entity.getState()) {
+                                @Override
+                                protected void onPropertiesDeleted(List<FieldPath> fieldPaths) {
+                                    countChanged[0] = true;
+                                }
+                                @Override
+                                protected void onPropertiesAdded(List<FieldPath> fieldPaths) {
+                                    countChanged[0] = true;
+                                    for (FieldPath fieldPath : fieldPaths) {
+                                        updatedFieldPaths[n[0]++] = fieldPath;
+                                    }
+                                }
+                                @Override
+                                protected void onPropertyChanged(FieldPath fieldPath) {
+                                    updatedFieldPaths[n[0]++] = fieldPath;
+                                }
+                            }.work();
+                            if (countChanged[0]) {
+                                emitPropertyCountChangedEvent(entity);
                             }
-                            emitPropertyCountChangedEvent(entity);
-                            emitUpdatedEvent(entity, n);
+                            if (n[0] != 0) {
+                                emitUpdatedEvent(entity, n[0]);
+                            }
                         }
                     }
                 }

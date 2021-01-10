@@ -43,22 +43,24 @@ public class ClientFrame {
 
         private final int[] handle;
         private final boolean[] active;
+        private EntityState[] state;
 
         private Capsule(ClientFrame frame) {
             int size = frame.getSize();
             handle = new int[size];
             active = new boolean[size];
+            state = new EntityState[size];
             for (int i = 0; i < size; i++) {
                 Entity e = frame.entity[i];
                 handle[i] = e != null ? e.getHandle() : -1;
                 active[i] = e != null && e.isActive();
+                state[i] = e != null ? e.getState().copy() : null;
             }
         }
 
         public boolean isExistent(int eIdx) {
             return handle[eIdx] != -1;
         }
-
 
         public boolean isActive(int eIdx) {
             return active[eIdx];
@@ -67,6 +69,11 @@ public class ClientFrame {
         public int getHandle(int eIdx) {
             return handle[eIdx];
         }
+
+        public EntityState getState(int eIdx) {
+            return state[eIdx];
+        }
+
     }
 
 }
