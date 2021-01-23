@@ -1,12 +1,12 @@
 package skadistats.clarity.io.s2;
 
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
-import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
 public class S2FieldReader extends FieldReader<S2DTClass> {
@@ -38,7 +38,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public Result readFields(BitStream bs, S2DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
+    public FieldChanges readFields(BitStream bs, S2DTClass dtClass, boolean debug) {
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());
@@ -47,7 +47,6 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
             }
 
             int n = 0;
-            boolean capacityChanged = false;
             S2ModifiableFieldPath mfp = S2ModifiableFieldPath.newInstance();
             while (true) {
                 int offsBefore = bs.pos();
@@ -65,6 +64,8 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 fieldPaths[n++] = mfp.unmodifiable();
             }
 
+            FieldChanges result = new FieldChanges(fieldPaths, n);
+
             for (int r = 0; r < n; r++) {
                 S2FieldPath fp = fieldPaths[r].s2();
                 Decoder decoder = dtClass.getDecoderForFieldPath(fp);
@@ -72,8 +73,7 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
                 }
                 int offsBefore = bs.pos();
-                Object data = decoder.decode(bs);
-                capacityChanged |= state.setValueForFieldPath(fp, data);
+                result.setValue(r, decoder.decode(bs));
 
                 if (debug) {
                     DecoderProperties props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
@@ -86,17 +86,12 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                     dataDebugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
                     dataDebugTable.setData(r, 6, decoder.getClass().getSimpleName());
                     dataDebugTable.setData(r, 7, String.format("%s%s", type, props.getEncoderType() != null ? String.format(" {%s}", props.getEncoderType()) : ""));
-                    dataDebugTable.setData(r, 8, data);
+                    dataDebugTable.setData(r, 8, result.getValue(r));
                     dataDebugTable.setData(r, 9, bs.pos() - offsBefore);
                     dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
                 }
             }
-            if (fieldPathUpdateListener != null) {
-                for (int i = 0; i < n; i++) {
-                    fieldPathUpdateListener.fieldPathUpdated(i, fieldPaths[i]);
-                }
-            }
-            return new Result(n, capacityChanged);
+            return result;
         } finally {
             if (debug) {
                 dataDebugTable.print(DEBUG_STREAM);

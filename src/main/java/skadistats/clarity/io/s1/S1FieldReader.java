@@ -1,9 +1,9 @@
 package skadistats.clarity.io.s1;
 
+import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.s1.PropFlag;
-import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
@@ -28,7 +28,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public Result readFields(BitStream bs, S1DTClass dtClass, EntityState state, FieldPathUpdateListener fieldPathUpdateListener, boolean debug) {
+    public FieldChanges readFields(BitStream bs, S1DTClass dtClass, boolean debug) {
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());
@@ -36,16 +36,17 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
             }
 
             int n = readIndices(bs, dtClass);
+            FieldChanges result = new FieldChanges(fieldPaths, n);
 
             ReceiveProp[] receiveProps = dtClass.getReceiveProps();
             for (int ci = 0; ci < n; ci++) {
                 int offsBefore = bs.pos();
                 int o = fieldPaths[ci].s1().idx();
-                state.setValueForFieldPath(fieldPaths[ci], receiveProps[o].decode(bs));
+                result.setValue(ci, receiveProps[o].decode(bs));
 
                 if (debug) {
                     SendProp sp = receiveProps[o].getSendProp();
-                    Object subState = state.getValueForFieldPath(fieldPaths[ci]);
+                    Object subState = result.getValue(ci);
                     debugTable.setData(ci, 0, o);
                     debugTable.setData(ci, 1, receiveProps[o].getVarName());
                     debugTable.setData(ci, 2, sp.getLowValue());
@@ -59,12 +60,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                 }
 
             }
-            if (fieldPathUpdateListener != null) {
-                for (int i = 0; i < n; i++) {
-                    fieldPathUpdateListener.fieldPathUpdated(i, fieldPaths[i]);
-                }
-            }
-            return new Result(n, false);
+            return result;
         } finally {
             if (debug) {
                 debugTable.print(DEBUG_STREAM);

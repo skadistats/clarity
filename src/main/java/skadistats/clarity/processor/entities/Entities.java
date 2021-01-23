@@ -10,6 +10,7 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -37,6 +38,7 @@ import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -80,8 +82,6 @@ public class Entities {
     }
     private Baseline[] classBaselines;
     private Baseline[][] entityBaselines;
-
-    private final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
 
     private ClientFrame entities;
 
@@ -216,8 +216,8 @@ public class Entities {
                             if (entity.isActive()) {
                                 emitEnteredEvent(entity);
                             }
-                        } else {
-                            int[] n = { 0 };
+                        } else if (evUpdated.isListenedTo() || evPropertyCountChanged.isListenedTo()) {
+                            List<FieldPath> changedFieldPaths = new ArrayList<>();
                             boolean[] countChanged = { false };
                             new StateDifferenceEvaluator(resetCapsule.getState(eIdx), entity.getState()) {
                                 @Override
@@ -227,20 +227,18 @@ public class Entities {
                                 @Override
                                 protected void onPropertiesAdded(List<FieldPath> fieldPaths) {
                                     countChanged[0] = true;
-                                    for (FieldPath fieldPath : fieldPaths) {
-                                        updatedFieldPaths[n[0]++] = fieldPath;
-                                    }
+                                    changedFieldPaths.addAll(fieldPaths);
                                 }
                                 @Override
                                 protected void onPropertyChanged(FieldPath fieldPath) {
-                                    updatedFieldPaths[n[0]++] = fieldPath;
+                                    changedFieldPaths.add(fieldPath);
                                 }
                             }.work();
                             if (countChanged[0]) {
                                 emitPropertyCountChangedEvent(entity);
                             }
-                            if (n[0] != 0) {
-                                emitUpdatedEvent(entity, n[0]);
+                            if (evUpdated.isListenedTo() && !changedFieldPaths.isEmpty()) {
+                                emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[changedFieldPaths.size()]));
                             }
                         }
                     }
@@ -408,7 +406,8 @@ public class Entities {
     private void processEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         EntityState newState = baseline.state.copy();
-        fieldReader.readFields(stream, dtClass, newState, null, debug);
+        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
+        changes.applyTo(newState);
         Entity entity = entityRegistry.create(
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
@@ -428,13 +427,14 @@ public class Entities {
 
     private void processEntityUpdate(Entity entity, BitStream stream, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        FieldReader.Result r = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), (i, f) -> updatedFieldPaths[i] = f, debug);
+        FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        boolean capacityChanged = changes.applyTo(entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
-            if (r.isCapacityChanged()) {
+            if (capacityChanged) {
                 emitPropertyCountChangedEvent(entity);
             }
-            emitUpdatedEvent(entity, r.getUpdateCount());
+            emitUpdatedEvent(entity, changes.getFieldPaths());
         }
     }
 
@@ -472,10 +472,10 @@ public class Entities {
         evEntered.raise(entity);
     }
 
-    private void emitUpdatedEvent(Entity entity, int nUpdated) {
+    private void emitUpdatedEvent(Entity entity, FieldPath[] updatedFieldPaths) {
         if (resetInProgress || !evUpdated.isListenedTo()) return;
         debugUpdateEvent("UPDATE", entity);
-        evUpdated.raise(entity, updatedFieldPaths, nUpdated);
+        evUpdated.raise(entity, updatedFieldPaths, updatedFieldPaths.length);
     }
 
     private void emitPropertyCountChangedEvent(Entity entity) {
@@ -529,7 +529,8 @@ public class Entities {
             log.error("Baseline for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
         } else {
             BitStream stream = BitStream.createBitStream(raw);
-            fieldReader.readFields(stream, cls, b.state, null, false);
+            FieldChanges changes = fieldReader.readFields(stream, cls, false);
+            changes.applyTo(b.state);
         }
         return b;
     }
