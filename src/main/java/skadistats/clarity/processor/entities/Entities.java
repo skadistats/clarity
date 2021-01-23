@@ -88,6 +88,8 @@ public class Entities {
     private boolean resetInProgress;
     private ClientFrame.Capsule resetCapsule;
 
+    private List<Runnable> queuedUpdates = new ArrayList<>();
+
     @Insert
     private EngineType engineType;
     @Insert
@@ -281,8 +283,26 @@ public class Entities {
         );
     }
 
+    private void queueUpdate(Runnable update) {
+        queuedUpdates.add(update);
+    }
+
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+        try {
+            processPacketEntities(message);
+            queuedUpdates.forEach(Runnable::run);
+            if (!resetInProgress) {
+                evUpdatesCompleted.raise();
+            }
+        } catch (ClarityException e) {
+            throw e;
+        } finally {
+            queuedUpdates.clear();
+        }
+    }
+
+    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s",
@@ -304,11 +324,7 @@ public class Entities {
         }
 
         if (message.getUpdateBaseline()) {
-            int iFrom = message.getBaseline();
-            int iTo = 1 - message.getBaseline();
-            for (Baseline[] baseline : entityBaselines) {
-                baseline[iTo].copyFrom(baseline[iFrom]);
-            }
+            queueUpdate(() -> switchBaselines(message.getBaseline()));
         }
 
         BitStream stream = BitStream.createBitStream(message.getEntityData());
@@ -339,44 +355,38 @@ public class Entities {
                     if (eEnt != null) {
                         if (eEnt.getHandle() == engineType.handleForIndexAndSerial(eIdx, serial)) {
                             if (!eEnt.isActive()) {
-                                processEntityEnter(eEnt);
+                                queueEntityEnter(eEnt);
                             }
-                            processEntityUpdate(eEnt, stream, false);
+                            queueEntityUpdate(eEnt, stream, false);
                             break;
                         }
                         if (eEnt.isActive()) {
-                            processEntityLeave(eEnt);
+                            queueEntityLeave(eEnt);
                         }
-                        processEntityDelete(eEnt);
+                        queueEntityDelete(eEnt);
                     }
-                    processEntityCreate(eIdx, serial, dtClass, message, stream);
+                    queueEntityCreate(eIdx, serial, dtClass, message, stream);
                     break;
 
                 case 0: // UPDATE
                     if (eEnt == null) {
-                        int lastHandle = entities.getLastHandle(eIdx);
-                        eEnt = entityRegistry.get(lastHandle);
-                        if (eEnt == null) {
-                            throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
-                        }
-                        processEntityUpdate(eEnt, stream, true);
-                        break;
+                        throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
                     }
-                    processEntityUpdate(eEnt, stream, false);
+                    queueEntityUpdate(eEnt, stream, false);
                     break;
 
                 case 1: // LEAVE
                     if (eEnt != null && eEnt.isActive()) {
-                        processEntityLeave(eEnt);
+                        queueEntityLeave(eEnt);
                     }
                     break;
 
                 case 3: // DELETE
                     if (eEnt != null) {
                         if (eEnt.isActive()) {
-                            processEntityLeave(eEnt);
+                            queueEntityLeave(eEnt);
                         }
-                        processEntityDelete(eEnt);
+                        queueEntityDelete(eEnt);
                     }
                     break;
             }
@@ -389,24 +399,32 @@ public class Entities {
                 eEnt = entities.getEntity(eIdx);
                 if (eEnt != null) {
                     if (eEnt.isActive()) {
-                        processEntityLeave(eEnt);
+                        queueEntityLeave(eEnt);
                     }
-                    processEntityDelete(eEnt);
+                    queueEntityDelete(eEnt);
                 }
             }
         }
 
         log.debug("update finished for tick %d", serverTick);
 
-        if (!resetInProgress) {
-            evUpdatesCompleted.raise();
+    }
+
+    private void switchBaselines(int iFrom) {
+        int iTo = 1 - iFrom;
+        for (Baseline[] baseline : entityBaselines) {
+            baseline[iTo].copyFrom(baseline[iFrom]);
         }
     }
 
-    private void processEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
+        queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
+    }
+
+    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
         Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         EntityState newState = baseline.state.copy();
-        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
         changes.applyTo(newState);
         Entity entity = entityRegistry.create(
                 eIdx, serial,
@@ -417,7 +435,7 @@ public class Entities {
         entities.setEntity(entity);
         logModification("CREATE", entity);
         emitCreatedEvent(entity);
-        processEntityEnter(entity);
+        executeEntityEnter(entity);
         if (message.getUpdateBaseline()) {
             Baseline updatedBaseline = entityBaselines[eIdx][1 - message.getBaseline()];
             updatedBaseline.dtClassId = dtClass.getClassId();
@@ -425,9 +443,13 @@ public class Entities {
         }
     }
 
-    private void processEntityUpdate(Entity entity, BitStream stream, boolean silent) {
-        assert silent || (entity.isExistent() && entity.isActive());
+    private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
         FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
+    }
+
+    private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
+        assert silent || (entity.isExistent() && entity.isActive());
         boolean capacityChanged = changes.applyTo(entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
@@ -438,21 +460,33 @@ public class Entities {
         }
     }
 
-    private void processEntityEnter(Entity entity) {
+    private void queueEntityEnter(Entity entity) {
+        queueUpdate(() -> executeEntityEnter(entity));
+    }
+
+    private void executeEntityEnter(Entity entity) {
         assert !entity.isActive();
         entity.setActive(true);
         logModification("ENTER", entity);
         emitEnteredEvent(entity);
     }
 
-    private void processEntityLeave(Entity entity) {
+    private void queueEntityLeave(Entity entity) {
+        queueUpdate(() -> executeEntityLeave(entity));
+    }
+
+    private void executeEntityLeave(Entity entity) {
         assert entity.isActive();
         entity.setActive(false);
         logModification("LEAVE", entity);
         emitLeftEvent(entity);
     }
 
-    private void processEntityDelete(Entity entity) {
+    private void queueEntityDelete(Entity entity) {
+        queueUpdate(() -> executeEntityDelete(entity));
+    }
+
+    private void executeEntityDelete(Entity entity) {
         assert entity.isExistent();
         entity.setExistent(false);
         entities.removeEntity(entity);

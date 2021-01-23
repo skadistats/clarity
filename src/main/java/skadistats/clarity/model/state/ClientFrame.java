@@ -5,17 +5,14 @@ import skadistats.clarity.model.Entity;
 public class ClientFrame {
 
     private final Entity[] entity;
-    private final int[] lastHandle;
 
     public ClientFrame(int size) {
         this.entity = new Entity[size];
-        this.lastHandle = new int[size];
     }
 
     public void setEntity(Entity e) {
         int eIdx = e.getIndex();
         this.entity[eIdx] = e;
-        this.lastHandle[eIdx] = e.getHandle();
     }
 
     public void removeEntity(Entity e) {
@@ -25,10 +22,6 @@ public class ClientFrame {
 
     public Entity getEntity(int eIdx) {
         return entity[eIdx];
-    }
-
-    public int getLastHandle(int eIdx) {
-        return lastHandle[eIdx];
     }
 
     public int getSize() {
