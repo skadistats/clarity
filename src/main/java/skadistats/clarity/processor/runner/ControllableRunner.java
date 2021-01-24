@@ -195,15 +195,20 @@ public class ControllableRunner extends AbstractFileRunner {
         if (resetRelevantPackets.tailSet(wanted, true).size() == 0) {
             PacketPosition basePos = resetRelevantPackets.floor(wanted);
             source.setPosition(basePos.getOffset());
+            int lastFullFoundAtTick = basePos.getTick();
             try {
                 while (true) {
                     int at = source.getPosition();
                     PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
                     PacketPosition pp = newResetRelevantPacketPosition(pi.getTick(), pi.getResetRelevantKind(), at);
                     if (pp != null) {
+                        lastFullFoundAtTick = pp.getTick();
                         addResetRelevant(pp);
                     }
                     if (pi.getTick() >= wantedTick) {
+                        break;
+                    }
+                    if (pi.getTick() >= lastFullFoundAtTick + engineType.getExpectedFullPacketInterval() + 100) {
                         break;
                     }
                     pi.skip();
