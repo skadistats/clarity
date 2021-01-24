@@ -30,11 +30,7 @@ public class NormalBitStream32 extends BitStream {
         int end = (pos + n - 1) >> 5;
         int s = pos & 31;
         pos += n;
-        if (start == end) {
-            return (data[start] >>> s) & (int)MASKS[n];
-        } else { // wrap around
-            return ((data[start] >>> s) | (data[end] << (32 - s))) & (int)MASKS[n];
-        }
+        return ((data[start] >>> s) | (data[end] << (32 - s))) & (int)MASKS[n];
     }
 
     public long readUBitLong(int n) {

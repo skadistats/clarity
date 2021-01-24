@@ -23,13 +23,8 @@ public class UnsafeBitStream64 extends UnsafeBitStreamBase {
         int end = ((pos + n - 1) >> 3) & 0xFFFFFFF8;
         int s = pos & 63;
         pos += n;
-        if (start == end) {
-            checkAccessRelative(start, 8);
-            return (int)((unsafe.getLong(data, base + start) >>> s) & MASKS[n]);
-        } else { // wrap around
-            checkAccessRelative(start, 16);
-            return (int)(((unsafe.getLong(data, base + start) >>> s) | (unsafe.getLong(data, base + end) << (64 - s))) & MASKS[n]);
-        }
+        checkAccessRelative(start, 8);
+        return (int)(((unsafe.getLong(data, base + start) >>> s) | (unsafe.getLong(data, base + end) << (64 - s))) & MASKS[n]);
     }
 
     @Override
@@ -39,13 +34,8 @@ public class UnsafeBitStream64 extends UnsafeBitStreamBase {
         int end = ((pos + n - 1) >> 3) & 0xFFFFFFF8;
         int s = pos & 63;
         pos += n;
-        if (start == end) {
-            checkAccessRelative(start, 8);
-            return (unsafe.getLong(data, base + start) >>> s) & MASKS[n];
-        } else { // wrap around
-            checkAccessRelative(start, 16);
-            return ((unsafe.getLong(data, base + start) >>> s) | (unsafe.getLong(data, base + end) << (64 - s))) & MASKS[n];
-        }
+        checkAccessRelative(start, 16);
+        return ((unsafe.getLong(data, base + start) >>> s) | (unsafe.getLong(data, base + end) << (64 - s))) & MASKS[n];
     }
 
     @Override

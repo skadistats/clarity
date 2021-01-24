@@ -29,11 +29,7 @@ public class NormalBitStream64 extends BitStream {
         int end = (pos + n - 1) >> 6;
         int s = pos & 63;
         pos += n;
-        if (start == end) {
-            return (int)((data[start] >>> s) & MASKS[n]);
-        } else { // wrap around
-            return (int)(((data[start] >>> s) | (data[end] << (64 - s))) & MASKS[n]);
-        }
+        return (int)(((data[start] >>> s) | (data[end] << (64 - s))) & MASKS[n]);
     }
 
     @Override
@@ -43,11 +39,7 @@ public class NormalBitStream64 extends BitStream {
         int end = (pos + n - 1) >> 6;
         int s = pos & 63;
         pos += n;
-        if (start == end) {
-            return (data[start] >>> s) & MASKS[n];
-        } else { // wrap around
-            return ((data[start] >>> s) | (data[end] << (64 - s))) & MASKS[n];
-        }
+        return ((data[start] >>> s) | (data[end] << (64 - s))) & MASKS[n];
     }
 
     @Override
