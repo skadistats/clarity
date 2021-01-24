@@ -65,6 +65,7 @@ public class Entities {
     private int entityCount;
     private FieldReader<DTClass> fieldReader;
     private int[] deletions;
+    private int entitiesServerTick;
     private int serverTick;
     private EntityRegistry entityRegistry = new EntityRegistry();
 
@@ -89,6 +90,9 @@ public class Entities {
     private ClientFrame.Capsule resetCapsule;
 
     private List<Runnable> queuedUpdates = new ArrayList<>();
+
+    private NetMessages.CSVCMsg_PacketEntities deferredMessage;
+    private int deferredMessageTick;
 
     @Insert
     private EngineType engineType;
@@ -193,6 +197,8 @@ public class Entities {
                     entityBaselines[i][0].reset();
                     entityBaselines[i][1].reset();
                 }
+                deferredMessageTick = 0;
+                deferredMessage = null;
                 break;
 
             case COMPLETE:
@@ -289,38 +295,57 @@ public class Entities {
 
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+        if (message.getIsDelta()) {
+            if (serverTick == message.getDeltaFrom()) {
+                throw new ClarityException("received self-referential delta update for tick %d", serverTick);
+            }
+            if (entitiesServerTick < message.getDeltaFrom()) {
+                if (deferredMessage == null || deferredMessage.getDeltaFrom() == message.getDeltaFrom()) {
+                    log.debug("defer message with delta from %d, since we are only at %d", message.getDeltaFrom(), entitiesServerTick);
+                    deferredMessageTick = serverTick;
+                    deferredMessage = message;
+                    return;
+                } else if (deferredMessage.getDeltaFrom() < message.getDeltaFrom()) {
+                    log.debug("must run deferred message, new delta from %d", message.getDeltaFrom());
+                    processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+                    deferredMessageTick = 0;
+                    deferredMessage = null;
+                }
+            }
+        }
+        processAndRunPacketEntities(message, serverTick);
+        if (deferredMessage != null) {
+            log.debug("executing deferred message, now back at tick %d", deferredMessageTick);
+            processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+            deferredMessageTick = 0;
+            deferredMessage = null;
+        }
+    }
+
+    private void processAndRunPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int serverTick) {
         try {
-            processPacketEntities(message);
+            processPacketEntities(message, serverTick);
+            entitiesServerTick = serverTick;
+            log.debug("executing %d changes", queuedUpdates.size());
             queuedUpdates.forEach(Runnable::run);
             if (!resetInProgress) {
                 evUpdatesCompleted.raise();
             }
-        } catch (ClarityException e) {
-            throw e;
         } finally {
             queuedUpdates.clear();
         }
     }
 
-    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int actualTick) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s",
-                    serverTick,
+                    actualTick,
                     message.getDeltaFrom(),
                     message.getUpdatedEntries(),
                     message.getBaseline(),
                     message.getUpdateBaseline()
             );
-        }
-
-        if (message.getIsDelta()) {
-            if (serverTick == message.getDeltaFrom()) {
-                throw new ClarityException("received self-referential delta update for tick %d", serverTick);
-            }
-            log.debug("performing delta update, using previous frame from tick %d", message.getDeltaFrom());
-        } else {
-            log.debug("performing full update");
         }
 
         if (message.getUpdateBaseline()) {
@@ -406,7 +431,7 @@ public class Entities {
             }
         }
 
-        log.debug("update finished for tick %d", serverTick);
+        log.debug("update finished for tick %d", actualTick);
 
     }
 
