@@ -25,8 +25,9 @@ public class ObjectArrayEntityState implements EntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object value) {
+    public boolean setValueForFieldPath(FieldPath fp, Object value) {
         state[fp.s1().idx()] = value;
+        return false;
     }
 
     @Override

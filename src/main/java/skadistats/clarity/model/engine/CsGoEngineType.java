@@ -2,11 +2,11 @@ package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.decoder.FieldReader;
-import skadistats.clarity.decoder.Util;
-import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.decoder.s1.CsGoFieldReader;
 import skadistats.clarity.event.Insert;
+import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.Util;
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.s1.CsGoFieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
@@ -45,6 +45,11 @@ public class CsGoEngineType extends AbstractEngineType {
     @Override
     public boolean isFullPacketSeekAllowed() {
         return false;
+    }
+
+    @Override
+    public Integer getExpectedFullPacketInterval() {
+        return null;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.packet;
 
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.source.Source;
 

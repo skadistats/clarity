@@ -1,9 +1,9 @@
 package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
-import skadistats.clarity.decoder.FieldReader;
-import skadistats.clarity.decoder.bitstream.BitStream;
-import skadistats.clarity.decoder.s1.DotaS1FieldReader;
+import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.s1.DotaS1FieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.proto.Demo;

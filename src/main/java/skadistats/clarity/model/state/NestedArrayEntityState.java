@@ -1,8 +1,9 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.decoder.s2.Serializer;
+import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -12,18 +13,20 @@ import java.util.List;
 
 public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
-    private final Serializer serializer;
+    private final SerializerField rootField;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
-    public NestedArrayEntityState(Serializer serializer) {
-        this.serializer = serializer;
+    boolean capacityChanged;
+
+    public NestedArrayEntityState(SerializerField field) {
+        rootField = field;
         entries = new ArrayList<>(20);
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        serializer = other.serializer;
+        rootField = other.rootField;
         int otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
         for (int i = 0; i < otherSize; i++) {
@@ -89,20 +92,56 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object value) {
-        serializer.setValueForFieldPath(fp.s2(), 0, this, value);
+    public boolean setValueForFieldPath(FieldPath fpX, Object value) {
+        S2FieldPath fp = fpX.s2();
+
+        Field field = rootField;
+        Entry entry = rootEntry();
+        int last = fp.last();
+
+        capacityChanged = false;
+        int i = 0;
+        while (true) {
+            int idx = fp.get(i);
+            if (!entry.has(idx)) {
+                field.ensureArrayEntityStateCapacity(entry, idx + 1);
+            }
+            field = field.getChild(idx);
+            if (i == last) {
+                field.setArrayEntityState(entry, idx, value);
+                return capacityChanged;
+            }
+            entry = entry.subEntry(idx);
+            i++;
+        }
     }
 
     @Override
-    public <T> T getValueForFieldPath(FieldPath fp) {
-        return (T) serializer.getValueForFieldPath(fp.s2(), 0, this);
+    public <T> T getValueForFieldPath(FieldPath fpX) {
+        S2FieldPath fp = fpX.s2();
+
+        Field field = rootField;
+        Entry entry = rootEntry();
+        int last = fp.last();
+
+        int i = 0;
+        while (true) {
+            int idx = fp.get(i);
+            field = field.getChild(idx);
+            if (i == last) {
+                return (T) field.getArrayEntityState(entry, idx);
+            }
+            if (!entry.isSub(idx)) {
+                return null;
+            }
+            entry = entry.subEntry(idx);
+            i++;
+        }
     }
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        List<FieldPath> result = new ArrayList<>();
-        serializer.collectFieldPaths(S2ModifiableFieldPath.newInstance(), result, this);
-        return result.iterator();
+        return new NestedArrayEntityStateIterator(rootEntry());
     }
 
     private EntryRef createEntryRef(Entry entry) {
@@ -201,7 +240,11 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
         @Override
         public ArrayEntityState sub(int idx) {
-            if (!has(idx)) {
+            return subEntry(idx);
+        }
+
+        private Entry subEntry(int idx) {
+            if (!isSub(idx)) {
                 set(idx, createEntryRef(new Entry()));
             }
             EntryRef entryRef = (EntryRef) get(idx);
@@ -234,13 +277,14 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
                 System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
                 state = newState;
                 modifiable = true;
+                capacityChanged = true;
             }
             return this;
         }
 
         @Override
         public String toString() {
-            return "Entry[modifiable=" + modifiable + "]";
+            return "Entry[modifiable=" + modifiable + ", size=" + state.length + "]";
         }
 
     }

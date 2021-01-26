@@ -3,7 +3,7 @@ package skadistats.clarity.processor.runner;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityExceptionHandler;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.decoder.Util;
+import skadistats.clarity.io.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;

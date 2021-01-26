@@ -1,7 +1,7 @@
 package skadistats.clarity.util;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.io.bitstream.BitStream;
 
 import java.io.IOException;
 

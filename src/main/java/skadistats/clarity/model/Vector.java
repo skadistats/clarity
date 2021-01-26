@@ -23,4 +23,19 @@ public class Vector {
         return Arrays.toString(v);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Vector vector = (Vector) o;
+
+        return Arrays.equals(v, vector.v);
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.hashCode(v);
+    }
+
 }

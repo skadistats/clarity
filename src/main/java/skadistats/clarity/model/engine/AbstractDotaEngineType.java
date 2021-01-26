@@ -30,6 +30,11 @@ public abstract class AbstractDotaEngineType extends AbstractEngineType {
         return true;
     }
 
+    @Override
+    public Integer getExpectedFullPacketInterval() {
+        return 1800;
+    }
+
     public int determineLastTick(Source source) throws IOException {
         int backup = source.getPosition();
         source.setPosition(8);

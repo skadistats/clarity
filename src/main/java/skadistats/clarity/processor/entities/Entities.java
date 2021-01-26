@@ -4,14 +4,15 @@ import com.google.protobuf.ByteString;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.decoder.FieldReader;
-import skadistats.clarity.decoder.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.FieldChanges;
+import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
@@ -32,16 +33,28 @@ import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
+import skadistats.clarity.util.StateDifferenceEvaluator;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
 import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-@Provides({UsesEntities.class, OnEntityCreated.class, OnEntityUpdated.class, OnEntityDeleted.class, OnEntityEntered.class, OnEntityLeft.class, OnEntityUpdatesCompleted.class})
+@Provides({
+        UsesEntities.class,
+        OnEntityCreated.class,
+        OnEntityUpdated.class,
+        OnEntityPropertyCountChanged.class,
+        OnEntityDeleted.class,
+        OnEntityEntered.class,
+        OnEntityLeft.class,
+        OnEntityUpdatesCompleted.class
+})
 @UsesDTClasses
 public class Entities {
 
@@ -52,6 +65,7 @@ public class Entities {
     private int entityCount;
     private FieldReader<DTClass> fieldReader;
     private int[] deletions;
+    private int entitiesServerTick;
     private int serverTick;
     private EntityRegistry entityRegistry = new EntityRegistry();
 
@@ -70,12 +84,15 @@ public class Entities {
     private Baseline[] classBaselines;
     private Baseline[][] entityBaselines;
 
-    private final FieldPath[] updatedFieldPaths = new FieldPath[FieldReader.MAX_PROPERTIES];
-
     private ClientFrame entities;
 
     private boolean resetInProgress;
     private ClientFrame.Capsule resetCapsule;
+
+    private List<Runnable> queuedUpdates = new ArrayList<>();
+
+    private NetMessages.CSVCMsg_PacketEntities deferredMessage;
+    private int deferredMessageTick;
 
     @Insert
     private EngineType engineType;
@@ -86,6 +103,8 @@ public class Entities {
     private Event<OnEntityCreated> evCreated;
     @InsertEvent
     private Event<OnEntityUpdated> evUpdated;
+    @InsertEvent
+    private Event<OnEntityPropertyCountChanged> evPropertyCountChanged;
     @InsertEvent
     private Event<OnEntityDeleted> evDeleted;
     @InsertEvent
@@ -107,6 +126,11 @@ public class Entities {
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final EventListener<OnEntityUpdated> listener) {
+        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+    }
+
+    @Initializer(OnEntityPropertyCountChanged.class)
+    public void initPropertyCountChanged(final EventListener<OnEntityPropertyCountChanged> listener) {
         listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
     }
 
@@ -173,6 +197,8 @@ public class Entities {
                     entityBaselines[i][0].reset();
                     entityBaselines[i][1].reset();
                 }
+                deferredMessageTick = 0;
+                deferredMessage = null;
                 break;
 
             case COMPLETE:
@@ -198,13 +224,30 @@ public class Entities {
                             if (entity.isActive()) {
                                 emitEnteredEvent(entity);
                             }
-                        } else {
-                            Iterator<FieldPath> iter = entity.getState().fieldPathIterator();
-                            int n = 0;
-                            while (iter.hasNext()) {
-                                updatedFieldPaths[n++] = iter.next();
+                        } else if (evUpdated.isListenedTo() || evPropertyCountChanged.isListenedTo()) {
+                            List<FieldPath> changedFieldPaths = new ArrayList<>();
+                            boolean[] countChanged = { false };
+                            new StateDifferenceEvaluator(resetCapsule.getState(eIdx), entity.getState()) {
+                                @Override
+                                protected void onPropertiesDeleted(List<FieldPath> fieldPaths) {
+                                    countChanged[0] = true;
+                                }
+                                @Override
+                                protected void onPropertiesAdded(List<FieldPath> fieldPaths) {
+                                    countChanged[0] = true;
+                                    changedFieldPaths.addAll(fieldPaths);
+                                }
+                                @Override
+                                protected void onPropertyChanged(FieldPath fieldPath) {
+                                    changedFieldPaths.add(fieldPath);
+                                }
+                            }.work();
+                            if (countChanged[0]) {
+                                emitPropertyCountChangedEvent(entity);
                             }
-                            emitUpdatedEvent(entity, n);
+                            if (evUpdated.isListenedTo() && !changedFieldPaths.isEmpty()) {
+                                emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[changedFieldPaths.size()]));
+                            }
                         }
                     }
                 }
@@ -246,12 +289,58 @@ public class Entities {
         );
     }
 
+    private void queueUpdate(Runnable update) {
+        queuedUpdates.add(update);
+    }
+
     @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+        if (message.getIsDelta()) {
+            if (serverTick == message.getDeltaFrom()) {
+                throw new ClarityException("received self-referential delta update for tick %d", serverTick);
+            }
+            if (entitiesServerTick < message.getDeltaFrom()) {
+                if (deferredMessage == null || deferredMessage.getDeltaFrom() == message.getDeltaFrom()) {
+                    log.debug("defer message with delta from %d, since we are only at %d", message.getDeltaFrom(), entitiesServerTick);
+                    deferredMessageTick = serverTick;
+                    deferredMessage = message;
+                    return;
+                } else if (deferredMessage.getDeltaFrom() < message.getDeltaFrom()) {
+                    log.debug("must run deferred message, new delta from %d", message.getDeltaFrom());
+                    processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+                    deferredMessageTick = 0;
+                    deferredMessage = null;
+                }
+            }
+        }
+        processAndRunPacketEntities(message, serverTick);
+        if (deferredMessage != null) {
+            log.debug("executing deferred message, now back at tick %d", deferredMessageTick);
+            processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+            deferredMessageTick = 0;
+            deferredMessage = null;
+        }
+    }
+
+    private void processAndRunPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int serverTick) {
+        try {
+            processPacketEntities(message, serverTick);
+            entitiesServerTick = serverTick;
+            log.debug("executing %d changes", queuedUpdates.size());
+            queuedUpdates.forEach(Runnable::run);
+            if (!resetInProgress) {
+                evUpdatesCompleted.raise();
+            }
+        } finally {
+            queuedUpdates.clear();
+        }
+    }
+
+    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int actualTick) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s",
-                    serverTick,
+                    actualTick,
                     message.getDeltaFrom(),
                     message.getUpdatedEntries(),
                     message.getBaseline(),
@@ -259,21 +348,8 @@ public class Entities {
             );
         }
 
-        if (message.getIsDelta()) {
-            if (serverTick == message.getDeltaFrom()) {
-                throw new ClarityException("received self-referential delta update for tick %d", serverTick);
-            }
-            log.debug("performing delta update, using previous frame from tick %d", message.getDeltaFrom());
-        } else {
-            log.debug("performing full update");
-        }
-
         if (message.getUpdateBaseline()) {
-            int iFrom = message.getBaseline();
-            int iTo = 1 - message.getBaseline();
-            for (Baseline[] baseline : entityBaselines) {
-                baseline[iTo].copyFrom(baseline[iFrom]);
-            }
+            queueUpdate(() -> switchBaselines(message.getBaseline()));
         }
 
         BitStream stream = BitStream.createBitStream(message.getEntityData());
@@ -304,44 +380,38 @@ public class Entities {
                     if (eEnt != null) {
                         if (eEnt.getHandle() == engineType.handleForIndexAndSerial(eIdx, serial)) {
                             if (!eEnt.isActive()) {
-                                processEntityEnter(eEnt);
+                                queueEntityEnter(eEnt);
                             }
-                            processEntityUpdate(eEnt, stream, false);
+                            queueEntityUpdate(eEnt, stream, false);
                             break;
                         }
                         if (eEnt.isActive()) {
-                            processEntityLeave(eEnt);
+                            queueEntityLeave(eEnt);
                         }
-                        processEntityDelete(eEnt);
+                        queueEntityDelete(eEnt);
                     }
-                    processEntityCreate(eIdx, serial, dtClass, message, stream);
+                    queueEntityCreate(eIdx, serial, dtClass, message, stream);
                     break;
 
                 case 0: // UPDATE
                     if (eEnt == null) {
-                        int lastHandle = entities.getLastHandle(eIdx);
-                        eEnt = entityRegistry.get(lastHandle);
-                        if (eEnt == null) {
-                            throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
-                        }
-                        processEntityUpdate(eEnt, stream, true);
-                        break;
+                        throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
                     }
-                    processEntityUpdate(eEnt, stream, false);
+                    queueEntityUpdate(eEnt, stream, false);
                     break;
 
                 case 1: // LEAVE
                     if (eEnt != null && eEnt.isActive()) {
-                        processEntityLeave(eEnt);
+                        queueEntityLeave(eEnt);
                     }
                     break;
 
                 case 3: // DELETE
                     if (eEnt != null) {
                         if (eEnt.isActive()) {
-                            processEntityLeave(eEnt);
+                            queueEntityLeave(eEnt);
                         }
-                        processEntityDelete(eEnt);
+                        queueEntityDelete(eEnt);
                     }
                     break;
             }
@@ -354,24 +424,33 @@ public class Entities {
                 eEnt = entities.getEntity(eIdx);
                 if (eEnt != null) {
                     if (eEnt.isActive()) {
-                        processEntityLeave(eEnt);
+                        queueEntityLeave(eEnt);
                     }
-                    processEntityDelete(eEnt);
+                    queueEntityDelete(eEnt);
                 }
             }
         }
 
-        log.debug("update finished for tick %d", serverTick);
+        log.debug("update finished for tick %d", actualTick);
 
-        if (!resetInProgress) {
-            evUpdatesCompleted.raise();
+    }
+
+    private void switchBaselines(int iFrom) {
+        int iTo = 1 - iFrom;
+        for (Baseline[] baseline : entityBaselines) {
+            baseline[iTo].copyFrom(baseline[iFrom]);
         }
     }
 
-    private void processEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
+        queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
+    }
+
+    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
         Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         EntityState newState = baseline.state.copy();
-        fieldReader.readFields(stream, dtClass, newState, null, debug);
+        changes.applyTo(newState);
         Entity entity = entityRegistry.create(
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
@@ -381,7 +460,7 @@ public class Entities {
         entities.setEntity(entity);
         logModification("CREATE", entity);
         emitCreatedEvent(entity);
-        processEntityEnter(entity);
+        executeEntityEnter(entity);
         if (message.getUpdateBaseline()) {
             Baseline updatedBaseline = entityBaselines[eIdx][1 - message.getBaseline()];
             updatedBaseline.dtClassId = dtClass.getClassId();
@@ -389,30 +468,50 @@ public class Entities {
         }
     }
 
-    private void processEntityUpdate(Entity entity, BitStream stream, boolean silent) {
+    private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
+        FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
+    }
+
+    private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        int nUpdated = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), (i, f) -> updatedFieldPaths[i] = f, debug);
+        boolean capacityChanged = changes.applyTo(entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
-            emitUpdatedEvent(entity, nUpdated);
+            if (capacityChanged) {
+                emitPropertyCountChangedEvent(entity);
+            }
+            emitUpdatedEvent(entity, changes.getFieldPaths());
         }
     }
 
-    private void processEntityEnter(Entity entity) {
+    private void queueEntityEnter(Entity entity) {
+        queueUpdate(() -> executeEntityEnter(entity));
+    }
+
+    private void executeEntityEnter(Entity entity) {
         assert !entity.isActive();
         entity.setActive(true);
         logModification("ENTER", entity);
         emitEnteredEvent(entity);
     }
 
-    private void processEntityLeave(Entity entity) {
+    private void queueEntityLeave(Entity entity) {
+        queueUpdate(() -> executeEntityLeave(entity));
+    }
+
+    private void executeEntityLeave(Entity entity) {
         assert entity.isActive();
         entity.setActive(false);
         logModification("LEAVE", entity);
         emitLeftEvent(entity);
     }
 
-    private void processEntityDelete(Entity entity) {
+    private void queueEntityDelete(Entity entity) {
+        queueUpdate(() -> executeEntityDelete(entity));
+    }
+
+    private void executeEntityDelete(Entity entity) {
         assert entity.isExistent();
         entity.setExistent(false);
         entities.removeEntity(entity);
@@ -432,10 +531,16 @@ public class Entities {
         evEntered.raise(entity);
     }
 
-    private void emitUpdatedEvent(Entity entity, int nUpdated) {
+    private void emitUpdatedEvent(Entity entity, FieldPath[] updatedFieldPaths) {
         if (resetInProgress || !evUpdated.isListenedTo()) return;
         debugUpdateEvent("UPDATE", entity);
-        evUpdated.raise(entity, updatedFieldPaths, nUpdated);
+        evUpdated.raise(entity, updatedFieldPaths, updatedFieldPaths.length);
+    }
+
+    private void emitPropertyCountChangedEvent(Entity entity) {
+        if (resetInProgress || !evPropertyCountChanged.isListenedTo()) return;
+        debugUpdateEvent("PROPERTYCOUNTCHANGE", entity);
+        evPropertyCountChanged.raise(entity);
     }
 
     private void emitLeftEvent(Entity entity) {
@@ -483,7 +588,8 @@ public class Entities {
             log.error("Baseline for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
         } else {
             BitStream stream = BitStream.createBitStream(raw);
-            fieldReader.readFields(stream, cls, b.state, null, false);
+            FieldChanges changes = fieldReader.readFields(stream, cls, false);
+            changes.applyTo(b.state);
         }
         return b;
     }

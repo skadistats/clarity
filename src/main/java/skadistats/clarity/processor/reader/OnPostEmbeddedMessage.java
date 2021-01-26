@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.reader;
 
 import com.google.protobuf.GeneratedMessage;
-import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointType;
 

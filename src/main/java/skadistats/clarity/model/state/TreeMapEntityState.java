@@ -23,8 +23,12 @@ public class TreeMapEntityState implements EntityState {
     }
 
     @Override
-    public void setValueForFieldPath(FieldPath fp, Object value) {
-        state.put(fp, value);
+    public boolean setValueForFieldPath(FieldPath fp, Object value) {
+        if (value != null) {
+            return state.put(fp, value) == null;
+        } else {
+            return state.remove(fp) != null;
+        }
     }
 
     @Override

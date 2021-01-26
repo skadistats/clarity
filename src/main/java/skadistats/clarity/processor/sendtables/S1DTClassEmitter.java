@@ -1,11 +1,11 @@
 package skadistats.clarity.processor.sendtables;
 
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.decoder.Util;
-import skadistats.clarity.decoder.s1.S1DTClass;
-import skadistats.clarity.decoder.s1.SendProp;
-import skadistats.clarity.decoder.s1.SendTable;
-import skadistats.clarity.decoder.s1.SendTableFlattener;
+import skadistats.clarity.io.Util;
+import skadistats.clarity.io.s1.S1DTClass;
+import skadistats.clarity.io.s1.SendProp;
+import skadistats.clarity.io.s1.SendTable;
+import skadistats.clarity.io.s1.SendTableFlattener;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
@@ -41,7 +41,7 @@ public class S1DTClassEmitter {
             return;
         }
 
-        LinkedList<SendProp> props = new LinkedList<SendProp>();
+        LinkedList<SendProp> props = new LinkedList<>();
         SendTable st = new SendTable(
             message.getNetTableName(),
             props

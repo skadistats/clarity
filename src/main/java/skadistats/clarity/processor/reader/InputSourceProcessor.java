@@ -5,7 +5,7 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.decoder.bitstream.BitStream;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
