@@ -312,6 +312,10 @@ public class Entities {
                     deferredMessage = null;
                 }
             }
+        } else if (deferredMessage != null) {
+            log.debug("received full packet, disposing deferred message");
+            deferredMessageTick = 0;
+            deferredMessage = null;
         }
         processAndRunPacketEntities(message, serverTick);
         if (deferredMessage != null) {
