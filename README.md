@@ -2,20 +2,29 @@
 
 Clarity is a parser for Dota 2 and CSGO replay files, written in Java.
 
-# Version 2.5 (last updated March 28, 2020)
+## January 26, 2021: New releases and versioning model update!
 
-Version 2.5 has been quite a lot slower and buggy, because of overly accurate reproduction of client frame handling
-in the Source engine. Today I refactored a lot of the handling, to get back to how clarity 2.4 does things.
+Starting today, I will switch to a semantic versioning theme (MAJOR.MINOR.PATCH)
 
-The result is worth it: Speeds are back to 2.4 level, while console replays and live data will work fine.
-  
-2.5 has already been battle tested with some closed source parsers, but you might still
-find problems - so use 2.5-SNAPSHOT with caution, and report bugs!
+* MAJOR will probably not change in a long time
+* MINOR will be increased when there are changes that I believe to be disruptive (and want you to test them first)
+* PATCH will be for bugfixes, like we had with the latest 7.28 update.
 
-# Version 2.4.1 released
+Today, I made two releases:
+* Version 2.5: this is simply the last snapshot as a release
+* Version 2.6.0: the first version using the new scheme
 
-The fall update of Dota 2 contains a bugfix that are needed for replays from that new patch. If you get 
-an exception saying that `highLowMultiplier is zero`, be sure to use the fixed version!
+There will be no bugfix releases for 2.5, so please migrate your code in a timely manner.
+
+## Changes in 2.6.0
+
+* lots of restructuring / code cleanup regarding the field update parsing code (should not be noticeable)
+* package rename `skadistats.clarity.decoder` -> `skadistats.clarity.io` (global search/replace should suffice)
+* package rename `skadistats.clarity.io.unpacker` -> `skadistats.clarity.io.decoder` (global search/replace should suffice)
+* new event `OnEntityPropertyCountChanged`, which is raised when the amount of properties in an entity changed
+* with ControllableRunner (seeking), improved `OnEntityUpdated` to only contain FieldPaths that have been changed
+* small performance increase for BitStream
+* added proper handling of a special case with Dota 2 console recorded replays, which would throw an exception before
 
 # Replay Data
 
@@ -35,46 +44,18 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Requirements
 
-* Java 7 (for 2.4) or 8 (2.5)
+* Java 7 (for 2.4) or 8 (2.5 and later)
 * Maven
 
 # Usage
 
-Fetch the current stable version (2.4.1) from Maven Central with
+Fetch the current stable version (2.6.0) from Maven Central with
+
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.4.1</version>
-</dependency>
-```
-
-Clarity 2.5 is work in progress and only available as a snapshot, so you got to add a pointer to the
-repository to your pom.xml (see the [pom.xml of clarity-examples](https://github.com/skadistats/clarity-examples/blob/master/pom.xml), which already does that)
-
-To add the snapshot repository, add the following:
-```XML
-<repositories>
-	<repository>
-		<id>sonatype.oss.snapshots</id>
-		<name>Sonatype OSS Snapshot Repository</name>
-		<url>http://oss.sonatype.org/content/repositories/snapshots</url>
-		<releases>
-			<enabled>false</enabled>
-		</releases>
-		<snapshots>
-			<enabled>true</enabled>
-		</snapshots>
-	</repository>
-</repositories>
-```
-
-and then fetch the dependency with:
-```XML
-<dependency>
-	<groupId>com.skadistats</groupId>
-	<artifactId>clarity</artifactId>
-	<version>2.5-SNAPSHOT</version>
+	<version>2.6.0</version>
 </dependency>
 ```
 
