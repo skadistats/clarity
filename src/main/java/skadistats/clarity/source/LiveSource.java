@@ -6,10 +6,10 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.platform.ClarityPlatform;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.wire.common.proto.Demo;
-import sun.nio.ch.DirectBuffer;
 
 import java.io.EOFException;
 import java.io.File;
@@ -152,7 +152,7 @@ public class LiveSource extends Source {
                 channel = null;
             }
             if (file != null) {
-                ((DirectBuffer) file).cleaner().clean();
+                ClarityPlatform.disposeMappedByteBuffer(file);
                 file = null;
             }
         } finally {

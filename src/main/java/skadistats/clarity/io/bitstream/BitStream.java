@@ -1,11 +1,13 @@
 package skadistats.clarity.io.bitstream;
 
 import com.google.protobuf.ByteString;
+import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.FieldOpType;
+import skadistats.clarity.platform.ClarityPlatform;
+import skadistats.clarity.platform.buffer.Buffer;
 
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Constructor;
 
 public abstract class BitStream {
 
@@ -48,21 +50,21 @@ public abstract class BitStream {
     protected int pos;
     private final byte[] stringTemp = new byte[32768];
 
-    private static final Constructor<BitStream> bitStreamConstructor = BitStreamImplementations.determineConstructor();
-
     public static BitStream createBitStream(ByteString input) {
-        try {
-            return bitStreamConstructor.newInstance(input);
-        } catch (Exception e) {
-            Util.uncheckedThrow(e);
-            return null;
-        }
+        BitStream bs = ClarityPlatform.createBitStream(ZeroCopy.extract(input));
+        bs.len = input.size() * 8;
+        return bs;
     }
 
     protected abstract int peekBit(int pos);
     public abstract int readUBitInt(int n);
     public abstract long readUBitLong(int n);
-    public abstract void readBitsIntoByteArray(byte[] dest, int n);
+    public abstract void readBitsIntoByteArray(Buffer dest, int n);
+
+    public void readBitsIntoByteArray(byte[] dest, int n) {
+        readBitsIntoByteArray(ClarityPlatform.createBuffer(dest), n);
+    }
+
     public abstract FieldOpType readFieldOp();
 
     public int len() {

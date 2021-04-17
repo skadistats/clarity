@@ -1,6 +1,6 @@
 package skadistats.clarity.source;
 
-import sun.nio.ch.DirectBuffer;
+import skadistats.clarity.platform.ClarityPlatform;
 
 import java.io.EOFException;
 import java.io.File;
@@ -60,13 +60,12 @@ public class MappedFileSource extends Source {
 
     @Override
     public void close() throws IOException {
-        // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
         if (channel != null) {
             channel.close();
             channel = null;
         }
         if (buf != null) {
-            ((DirectBuffer) buf).cleaner().clean();
+            ClarityPlatform.disposeMappedByteBuffer(buf);
             buf = null;
         }
     }
