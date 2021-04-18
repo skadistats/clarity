@@ -5,7 +5,6 @@ import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.FieldOpType;
 import skadistats.clarity.platform.ClarityPlatform;
-import skadistats.clarity.platform.buffer.Buffer;
 
 import java.io.UnsupportedEncodingException;
 
@@ -59,11 +58,7 @@ public abstract class BitStream {
     protected abstract int peekBit(int pos);
     public abstract int readUBitInt(int n);
     public abstract long readUBitLong(int n);
-    public abstract void readBitsIntoByteArray(Buffer dest, int n);
-
-    public void readBitsIntoByteArray(byte[] dest, int n) {
-        readBitsIntoByteArray(ClarityPlatform.createBuffer(dest), n);
-    }
+    public abstract void readBitsIntoByteArray(byte[] dest, int n);
 
     public abstract FieldOpType readFieldOp();
 

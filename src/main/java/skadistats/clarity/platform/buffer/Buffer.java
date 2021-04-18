@@ -2,12 +2,12 @@ package skadistats.clarity.platform.buffer;
 
 public interface Buffer {
 
-    byte getByte(int offs);
-    int getInt(int offs);
-    long getLong(int offs);
+    interface B32 {
+        int get(int n);
+    }
 
-    void copy(int offs, Buffer dest, int nBytes);
-    void putInt(int offs, int value);
-    void putLong(int offs, long value);
+    interface B64 {
+        long get(int n);
+    }
 
 }

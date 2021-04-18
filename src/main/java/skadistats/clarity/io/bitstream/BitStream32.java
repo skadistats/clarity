@@ -6,87 +6,65 @@ import skadistats.clarity.platform.buffer.Buffer;
 
 public class BitStream32 extends BitStream {
 
-    private final Buffer buffer;
+    private final Buffer.B32 buffer;
 
-    public BitStream32(Buffer buffer) {
+    public BitStream32(Buffer.B32 buffer) {
         this.buffer = buffer;
     }
 
     protected int peekBit(int pos) {
-        int pb = pos >> 3;
-        return buffer.getByte(pb) >> (pos & 7) & 1;
+        return buffer.get(pos >> 5) >> (pos & 31) & 1;
     }
 
     @Override
     public int readUBitInt(int n) {
         assert n <= 32;
-        int start = (pos >> 3) & 0xFFFFFFFC;
-        int end = ((pos + n - 1) >> 3) & 0xFFFFFFFC;
+        int start = pos >> 5;
+        int end = (pos + n - 1) >> 5;
         int s = pos & 31;
         pos += n;
-        return ((buffer.getInt(start) >>> s) | (buffer.getInt(end) << (32 - s))) & (int)MASKS[n];
+        return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (32 - s))) & MASKS[n]);
     }
 
     @Override
     public long readUBitLong(int n) {
         assert n <= 64;
-        int start = (pos >> 3) & 0xFFFFFFF8;
-        int end = ((pos + n - 1) >> 3) & 0xFFFFFFF8;
-        int s = pos & 63;
-        pos += n;
-        return ((buffer.getLong(start) >>> s) | (buffer.getLong(end) << (64 - s))) & MASKS[n];
+        if (n > 32) {
+            long l = readUBitInt(32);
+            long h = readUBitInt(n - 32);
+            return h << 32 | l;
+        } else {
+            return readUBitInt(n);
+        }
     }
 
     @Override
-    public void readBitsIntoByteArray(Buffer dest, int n) {
-        int pb = pos >> 3;
-        int nBytes = (n + 7) >> 3;
-        if ((pos & 7) == 0) {
-            buffer.copy(pb, dest, nBytes);
-            pos += n;
-            return;
-        }
-        int src = pb & 0xFFFFFFFC;
-        int dst = 0;
-        int s = pos & 31;
-        pos += n;
-        int v;
-        while (n >= 32) {
-            v = buffer.getInt(src) >>> s;
-            src += 4;
-            v |= buffer.getInt(src) << (32 - s);
-            dest.putInt(dst, v);
-            dst += 4;
-            n -= 32;
+    public void readBitsIntoByteArray(byte[] dest, int n) {
+        int o = 0;
+        while (n > 8) {
+            dest[o++] = (byte)readUBitInt(8);
+            n -= 8;
         }
         if (n > 0) {
-            int m = (int)MASKS[n];
-            v = buffer.getInt(src) >>> s;
-            src += 4;
-            v |= buffer.getInt(src) << (32 - s);
-            v &= m;
-            v |= dest.getInt(dst) & ~m;
-            dest.putInt(dst, v);
+            dest[o] = (byte)readUBitInt(n);
         }
     }
 
     @Override
     public FieldOpType readFieldOp() {
-        int offs = pos >> 3 & 0xFFFFFFFC;
-        int v = buffer.getInt(offs);
-        int s = 1 << (pos & 31);
+        int offs = pos >> 5;
+        int s = pos & 31;
         int i = 0;
+        int v = buffer.get(offs);
         while (true) {
             pos++;
-            i = FieldOpHuffmanTree.tree[i][(v & s) != 0 ? 1 : 0];
+            i = FieldOpHuffmanTree.tree[i][v >>> s & 1];
             if (i < 0) {
                 return FieldOpHuffmanTree.ops[-i - 1];
             }
-            s = s << 1;
-            if (s == 0) {
-                offs += 4;
-                v = buffer.getInt(offs);
-                s = 1;
+            if (++s == 32) {
+                v = buffer.get(++offs);
+                s = 0;
             }
         }
     }

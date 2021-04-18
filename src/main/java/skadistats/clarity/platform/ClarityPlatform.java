@@ -3,7 +3,6 @@ package skadistats.clarity.platform;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.bitstream.BitStream32;
 import skadistats.clarity.io.bitstream.BitStream64;
-import skadistats.clarity.platform.buffer.Buffer;
 import skadistats.clarity.platform.buffer.CompatibleBuffer;
 import skadistats.clarity.platform.buffer.UnsafeBuffer;
 
@@ -17,23 +16,14 @@ public class ClarityPlatform {
     private static final boolean VM_64BIT = System.getProperty("os.arch").contains("64");
     private static final boolean VM_PRE_JAVA_9 = System.getProperty("java.specification.version","9").startsWith("1.");
 
-    private static Function<byte[], Buffer> bufferConstructor;
-    private static Function<Buffer, BitStream> bitStreamConstructor;
+    private static Function<byte[], BitStream> bitStreamConstructor;
     private static Consumer<MappedByteBuffer> byteBufferDisposer;
 
-    public static Function<byte[], Buffer> getBufferConstructor() {
-        return bufferConstructor;
-    }
-
-    public static void setBufferConstructor(Function<byte[], Buffer> bufferConstructor) {
-        ClarityPlatform.bufferConstructor = bufferConstructor;
-    }
-
-    public static Function<Buffer, BitStream> getBitStreamConstructor() {
+    public static Function<byte[], BitStream> getBitStreamConstructor() {
         return bitStreamConstructor;
     }
 
-    public static void setBitStreamConstructor(Function<Buffer, BitStream> bitStreamConstructor) {
+    public static void setBitStreamConstructor(Function<byte[], BitStream> bitStreamConstructor) {
         ClarityPlatform.bitStreamConstructor = bitStreamConstructor;
     }
 
@@ -45,40 +35,41 @@ public class ClarityPlatform {
         ClarityPlatform.byteBufferDisposer = byteBufferDisposer;
     }
 
-    public static Buffer createBuffer(byte[] data) {
-        if (bufferConstructor == null) {
-            bufferConstructor = determineBufferConstructor();
-        }
-        return bufferConstructor.apply(data);
-    }
-
     public static BitStream createBitStream(byte[] data) {
         if (bitStreamConstructor == null) {
-            bitStreamConstructor = determineBitStreamConstructor();
+            synchronized (ClarityPlatform.class) {
+                if (bitStreamConstructor == null) {
+                    bitStreamConstructor = determineBitStreamConstructor();
+                }
+            }
         }
-        return bitStreamConstructor.apply(createBuffer(data));
+        return bitStreamConstructor.apply(data);
     }
 
     public static void disposeMappedByteBuffer(MappedByteBuffer buf) {
         if (byteBufferDisposer == null) {
-            byteBufferDisposer = determineByteBufferDisposer();
+            synchronized (ClarityPlatform.class) {
+                if (byteBufferDisposer == null) {
+                    byteBufferDisposer = determineByteBufferDisposer();
+                }
+            }
         }
         byteBufferDisposer.accept(buf);
     }
 
-    private static Function<byte[], Buffer> determineBufferConstructor() {
-        if (UnsafeBuffer.available) {
-            return UnsafeBuffer::new;
-        } else {
-            return CompatibleBuffer::new;
-        }
-    }
-
-    private static Function<Buffer, BitStream> determineBitStreamConstructor() {
+    private static Function<byte[], BitStream> determineBitStreamConstructor() {
         if (ClarityPlatform.VM_64BIT) {
-            return BitStream64::new;
+            if (UnsafeBuffer.available) {
+                return data -> new BitStream64(new UnsafeBuffer.B64(data));
+            } else {
+                return data -> new BitStream64(new CompatibleBuffer.B64(data));
+            }
         } else {
-            return BitStream32::new;
+            if (UnsafeBuffer.available) {
+                return data -> new BitStream32(new UnsafeBuffer.B32(data));
+            } else {
+                return data -> new BitStream32(new CompatibleBuffer.B32(data));
+            }
         }
     }
 
