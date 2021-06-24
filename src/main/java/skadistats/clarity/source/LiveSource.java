@@ -242,7 +242,11 @@ public class LiveSource extends Source {
                 setPosition(Math.min(pos, file.capacity() - 1));
                 scanForLastTick();
             }
-            log.debug("file change  for %s, existing: %s, fileSize: %d", filePath, file != null, file.capacity());
+            if (file != null) {
+                log.debug("file change for %s, existing: true, fileSize: %d", filePath, file.capacity());
+            } else {
+                log.debug("file change for %s, existing: false", filePath);
+            }
             fileChanged.signalAll();
         } catch (IOException e) {
             throw new RuntimeException(e);
