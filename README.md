@@ -2,9 +2,10 @@
 
 Clarity is a parser for Dota 2 and CSGO replay files, written in Java.
 
-## June 24, 2021: Version 2.6.1 released
+## June 24, 2021: Version 2.6.2 released
 
-Contains a bugfix for replays with the new Nemestice update.
+Contains a bugfix for replays with the new Nemestice update, as well as a fix for an NPE when using the LiveSource.
+Sorry for the double jump in patch level.
 
 ## January 26, 2021: New releases and versioning model update!
 
