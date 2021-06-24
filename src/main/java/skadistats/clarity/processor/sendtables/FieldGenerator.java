@@ -224,7 +224,13 @@ public class FieldGenerator {
 
         private boolean determineIsVector() {
             if (serializerId != null) return true;
-            return "CUtlVector".equals(fieldType.getBaseType());
+            switch(fieldType.getBaseType()) {
+                case "CUtlVector":
+                case "CNetworkUtlVectorBase":
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         private boolean determineIsArray() {
