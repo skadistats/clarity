@@ -1,7 +1,7 @@
 package skadistats.clarity.platform.buffer;
 
 import skadistats.clarity.io.Util;
-import skadistats.clarity.util.ClassReflector;
+import skadistats.clarity.platform.UnsafeReflector;
 
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
@@ -16,17 +16,13 @@ public class UnsafeBuffer {
     public static final boolean available;
 
     static {
-        ClassReflector reflector = new ClassReflector("sun.misc.Unsafe");
-
-        Object unsafe = reflector.getDeclaredField(null, "theUnsafe");
-
-        Integer bo = (Integer) reflector.getDeclaredField(null, "ARRAY_BYTE_BASE_OFFSET");
-        base = bo != null ? bo.longValue() : 0L;
+        UnsafeReflector reflector = UnsafeReflector.INSTANCE;
+        base = reflector.getByteArrayBaseOffset();
 
         // public int getInt(Object o, long offset)
-        mhGetInt = reflector.getPublicVirtual("getInt", MethodType.methodType(int.class, Object.class, long.class)).bindTo(unsafe);
+        mhGetInt = reflector.getPublicVirtual("getInt", MethodType.methodType(int.class, Object.class, long.class));
         // public long getLong(Object o, long offset)
-        mhGetLong = reflector.getPublicVirtual("getLong", MethodType.methodType(long.class, Object.class, long.class)).bindTo(unsafe);
+        mhGetLong = reflector.getPublicVirtual("getLong", MethodType.methodType(long.class, Object.class, long.class));
 
         available = base != 0L
                 && mhGetInt != null

@@ -9,14 +9,29 @@ public class ClassReflector {
 
     private final Class<?> cls;
 
-    public ClassReflector(String className) {
-        Class<?> clsTemp;
-        try {
-            clsTemp = Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            clsTemp = null;
+    public ClassReflector(String... classNames) {
+        Class<?> clsTemp = null;
+        for (String className : classNames) {
+            try {
+                clsTemp = Class.forName(className);
+                break;
+            } catch (ClassNotFoundException e) {
+                // silently ignore
+            }
         }
         cls = clsTemp;
+    }
+
+    public ClassReflector(Class<?> cls) {
+        this.cls = cls;
+    }
+
+    public boolean isValid() {
+        return cls != null;
+    }
+
+    public Class<?> getCls() {
+        return cls;
     }
 
     public Object getDeclaredField(Object object, String name) {
