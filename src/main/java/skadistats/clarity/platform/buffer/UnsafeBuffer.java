@@ -29,6 +29,9 @@ public class UnsafeBuffer {
                 && mhGetLong != null;
     }
 
+    private UnsafeBuffer() {
+        // please instantiate a subclass
+    }
 
     public static class B32 implements Buffer.B32 {
 

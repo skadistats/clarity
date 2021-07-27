@@ -4,6 +4,10 @@ import skadistats.clarity.io.Util;
 
 public class CompatibleBuffer {
 
+    private CompatibleBuffer() {
+        // please instantiate a subclass
+    }
+
     public static class B32 implements Buffer.B32 {
 
         private final int[] data;
