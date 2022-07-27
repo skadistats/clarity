@@ -1,18 +1,19 @@
 package skadistats.clarity.model.state;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.Entity;
 
 public class EntityRegistry {
 
-    private final Int2ObjectOpenHashMap<Entity> entities = new Int2ObjectOpenHashMap<>();
+    private final Long2ObjectOpenHashMap<Entity> entities = new Long2ObjectOpenHashMap<>();
 
-    public Entity create(int index, int serial, int handle, DTClass dtClass) {
-        Entity entity = entities.get(handle);
+    public Entity create(int dtClassId, int index, int serial, int handle, DTClass dtClass) {
+        long uid = Entity.uid(dtClassId, handle);
+        Entity entity = entities.get(uid);
         if (entity == null) {
             entity = new Entity(index, serial, handle, dtClass);
-            entities.put(handle, entity);
+            entities.put(uid, entity);
         }
         entity.setState(null);
         entity.setExistent(false);
@@ -20,8 +21,8 @@ public class EntityRegistry {
         return entity;
     }
 
-    public Entity get(int handle) {
-        return entities.get(handle);
+    public Entity get(long uid) {
+        return entities.get(uid);
     }
 
 }

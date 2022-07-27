@@ -210,8 +210,8 @@ public class Entities {
                 for (int eIdx = 0; eIdx < entityCount; eIdx++) {
                     entity = entities.getEntity(eIdx);
                     if (resetCapsule.isExistent(eIdx)) {
-                        if (entity == null || entity.getHandle() != resetCapsule.getHandle(eIdx)) {
-                            Entity deletedEntity = entityRegistry.get(resetCapsule.getHandle(eIdx));
+                        if (entity == null || entity.getUid() != resetCapsule.getUid(eIdx)) {
+                            Entity deletedEntity = entityRegistry.get(resetCapsule.getUid(eIdx));
                             if (resetCapsule.isActive(eIdx)) {
                                 emitLeftEvent(deletedEntity);
                             }
@@ -219,7 +219,7 @@ public class Entities {
                         }
                     }
                     if (entity != null) {
-                        if (!resetCapsule.isExistent(eIdx) || entity.getHandle() != resetCapsule.getHandle(eIdx)) {
+                        if (!resetCapsule.isExistent(eIdx) || entity.getUid() != resetCapsule.getUid(eIdx)) {
                             emitCreatedEvent(entity);
                             if (entity.isActive()) {
                                 emitEnteredEvent(entity);
@@ -382,7 +382,8 @@ public class Entities {
                         stream.readVarUInt();
                     }
                     if (eEnt != null) {
-                        if (eEnt.getHandle() == engineType.handleForIndexAndSerial(eIdx, serial)) {
+                        int handle = engineType.handleForIndexAndSerial(eIdx, serial);
+                        if (eEnt.getUid() == Entity.uid(dtClassId, handle)) {
                             if (!eEnt.isActive()) {
                                 queueEntityEnter(eEnt);
                             }
@@ -456,6 +457,7 @@ public class Entities {
         EntityState newState = baseline.state.copy();
         changes.applyTo(newState);
         Entity entity = entityRegistry.create(
+                dtClass.getClassId(),
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
                 dtClass);

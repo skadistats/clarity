@@ -34,33 +34,33 @@ public class ClientFrame {
 
     public static class Capsule {
 
-        private final int[] handle;
+        private final long[] uid;
         private final boolean[] active;
         private EntityState[] state;
 
         private Capsule(ClientFrame frame) {
             int size = frame.getSize();
-            handle = new int[size];
+            uid = new long[size];
             active = new boolean[size];
             state = new EntityState[size];
             for (int i = 0; i < size; i++) {
                 Entity e = frame.entity[i];
-                handle[i] = e != null ? e.getHandle() : -1;
+                uid[i] = e != null ? e.getUid() : -1L;
                 active[i] = e != null && e.isActive();
                 state[i] = e != null ? e.getState().copy() : null;
             }
         }
 
         public boolean isExistent(int eIdx) {
-            return handle[eIdx] != -1;
+            return uid[eIdx] != -1;
         }
 
         public boolean isActive(int eIdx) {
             return active[eIdx];
         }
 
-        public int getHandle(int eIdx) {
-            return handle[eIdx];
+        public long getUid(int eIdx) {
+            return uid[eIdx];
         }
 
         public EntityState getState(int eIdx) {

@@ -104,4 +104,12 @@ public class Entity {
         return getState().dump(title, getDtClass()::getNameForFieldPath);
     }
 
+    public long getUid() {
+        return uid(dtClass.getClassId(), handle);
+    }
+
+    public static long uid(int dtClassId, int handle) {
+        return (long) dtClassId << 32 | handle;
+    }
+
 }
