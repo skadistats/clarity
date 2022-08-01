@@ -1,6 +1,8 @@
 package skadistats.clarity.processor.entities;
 
 import com.google.protobuf.ByteString;
+import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
@@ -60,6 +62,8 @@ public class Entities {
 
     public static final String BASELINE_TABLE = "instancebaseline";
 
+    private static final int DEFERRED_MESSAGE_MAX = 20;
+
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private int entityCount;
@@ -91,8 +95,7 @@ public class Entities {
 
     private List<Runnable> queuedUpdates = new ArrayList<>();
 
-    private NetMessages.CSVCMsg_PacketEntities deferredMessage;
-    private int deferredMessageTick;
+    private Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
     @Insert
     private EngineType engineType;
@@ -197,8 +200,7 @@ public class Entities {
                     entityBaselines[i][0].reset();
                     entityBaselines[i][1].reset();
                 }
-                deferredMessageTick = 0;
-                deferredMessage = null;
+                deferredMessages.clear();
                 break;
 
             case COMPLETE:
@@ -300,30 +302,34 @@ public class Entities {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
             }
             if (entitiesServerTick < message.getDeltaFrom()) {
-                if (deferredMessage == null || deferredMessage.getDeltaFrom() == message.getDeltaFrom()) {
-                    log.debug("defer message with delta from %d, since we are only at %d", message.getDeltaFrom(), entitiesServerTick);
-                    deferredMessageTick = serverTick;
-                    deferredMessage = message;
-                    return;
-                } else if (deferredMessage.getDeltaFrom() < message.getDeltaFrom()) {
-                    log.debug("must run deferred message, new delta from %d", message.getDeltaFrom());
-                    processAndRunPacketEntities(deferredMessage, deferredMessageTick);
-                    deferredMessageTick = 0;
-                    deferredMessage = null;
+                log.debug("defer message with delta from %d at %d, since we are only at %d", message.getDeltaFrom(), serverTick, entitiesServerTick);
+                deferredMessages.put(serverTick, message);
+                if (deferredMessages.size() > DEFERRED_MESSAGE_MAX) {
+                    log.warn("more than %d deferred messages, forcing execution, here be dragons", DEFERRED_MESSAGE_MAX);
+                    deferredMessages.forEach((deferredMessageTick, deferredMessage) -> {
+                        log.warn("forcing executing deferred message with delta %d, we are now at tick %d", deferredMessage.getDeltaFrom(), deferredMessageTick);
+                        processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+                    });
+                    deferredMessages.clear();
                 }
+                return;
             }
-        } else if (deferredMessage != null) {
+        } else if (!deferredMessages.isEmpty()) {
             log.debug("received full packet, disposing deferred message");
-            deferredMessageTick = 0;
-            deferredMessage = null;
+            deferredMessages.clear();
+        }
+        if (!deferredMessages.isEmpty()) {
+            Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredToExecute = deferredMessages.headMap(serverTick);
+            if (!deferredToExecute.isEmpty()) {
+                log.debug("server is now at tick %d", serverTick);
+                deferredToExecute.forEach((deferredMessageTick, deferredMessage) -> {
+                    log.debug("executing deferred message with delta %d, we are now at tick %d", deferredMessage.getDeltaFrom(), deferredMessageTick);
+                    processAndRunPacketEntities(deferredMessage, deferredMessageTick);
+                });
+                deferredToExecute.clear();
+            }
         }
         processAndRunPacketEntities(message, serverTick);
-        if (deferredMessage != null) {
-            log.debug("executing deferred message, now back at tick %d", deferredMessageTick);
-            processAndRunPacketEntities(deferredMessage, deferredMessageTick);
-            deferredMessageTick = 0;
-            deferredMessage = null;
-        }
     }
 
     private void processAndRunPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int serverTick) {
