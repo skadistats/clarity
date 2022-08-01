@@ -2,6 +2,10 @@
 
 Clarity is a parser for Dota 2 and CSGO replay files, written in Java.
 
+## August 01, 2022: Version 2.7.3 released
+
+Fixes an issue with console recorded replays on a bad connection, where more than one entity update needs to be deferred.
+
 ## July 27, 2022: Version 2.7.2 released
 
 Fixes an issue with CSGO replays where entities with the same handle but different dtClass are created.
@@ -67,13 +71,13 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Fetch the current stable version (2.7.2) from Maven Central with
+Fetch the current stable version (2.7.3) from Maven Central with
 
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.7.2</version>
+	<version>2.7.3</version>
 </dependency>
 ```
 
