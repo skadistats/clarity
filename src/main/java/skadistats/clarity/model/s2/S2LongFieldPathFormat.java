@@ -2,7 +2,7 @@ package skadistats.clarity.model.s2;
 
 public class S2LongFieldPathFormat {
 
-    private static final int[] BITS_PER_COMPONENT = { 11, 11, 11, 9, 8, 8 };
+    private static final int[] BITS_PER_COMPONENT = { 11, 11, 11, 8, 8, 4, 4 };
 
     private static final long[] CLEAR_MASK = new long[BITS_PER_COMPONENT.length - 1];
     private static final long[] PRESENT_BIT = new long[BITS_PER_COMPONENT.length - 1];

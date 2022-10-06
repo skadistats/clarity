@@ -1,7 +1,7 @@
 package skadistats.clarity.io.s2;
 
-import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
@@ -50,6 +50,7 @@ public class S2DTClass implements DTClass {
             case 3: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3));
             case 4: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3)).getChild(fp.get(4));
             case 5: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3)).getChild(fp.get(4)).getChild(fp.get(5));
+            case 6: return field.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2)).getChild(fp.get(3)).getChild(fp.get(4)).getChild(fp.get(5)).getChild(fp.get(6));
             default: throw new UnsupportedOperationException();
         }
     }
