@@ -4,11 +4,13 @@ public class S2LongFieldPathFormat {
 
     private static final int[] BITS_PER_COMPONENT = { 11, 11, 11, 8, 8, 4, 4 };
 
-    private static final long[] CLEAR_MASK = new long[BITS_PER_COMPONENT.length - 1];
-    private static final long[] PRESENT_BIT = new long[BITS_PER_COMPONENT.length - 1];
-    private static final long[] VALUE_SHIFT = new long[BITS_PER_COMPONENT.length];
-    private static final long[] VALUE_MASK = new long[BITS_PER_COMPONENT.length];
-    private static final long[] OFFSET = new long[BITS_PER_COMPONENT.length];
+    public static final int MAX_FIELDPATH_LENGTH = BITS_PER_COMPONENT.length;
+
+    private static final long[] CLEAR_MASK = new long[MAX_FIELDPATH_LENGTH - 1];
+    private static final long[] PRESENT_BIT = new long[MAX_FIELDPATH_LENGTH - 1];
+    private static final long[] VALUE_SHIFT = new long[MAX_FIELDPATH_LENGTH];
+    private static final long[] VALUE_MASK = new long[MAX_FIELDPATH_LENGTH];
+    private static final long[] OFFSET = new long[MAX_FIELDPATH_LENGTH];
     private static final long PRESENT_MASK;
 
     static long set(long id, int i, int v) {
@@ -42,7 +44,7 @@ public class S2LongFieldPathFormat {
 
     static {
         int bitCount = -1;
-        for (int i = 0; i < BITS_PER_COMPONENT.length; i++) {
+        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             bitCount += BITS_PER_COMPONENT[i] + 1;
         }
         if (bitCount > 63) {
@@ -50,7 +52,7 @@ public class S2LongFieldPathFormat {
         }
         int cur = bitCount;
         long presentMaskAkku = 0L;
-        for (int i = 0; i < BITS_PER_COMPONENT.length; i++) {
+        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             OFFSET[i] = i == 0 ? 1L : 0L;
             if (i != 0) {
                 CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);
