@@ -61,7 +61,16 @@ public class Util {
     }
 
     public static String arrayIdxToString(int idx) {
-        return String.format("%04d", idx);
+        StringBuilder sb = new StringBuilder(4);
+        if (idx < 10) {
+            sb.append("000");
+        } else if (idx < 100) {
+            sb.append("00");
+        } else if (idx < 1000) {
+            sb.append("0");
+        }
+        sb.append(idx);
+        return sb.toString();
     }
 
     public static int stringToArrayIdx(String value) {
