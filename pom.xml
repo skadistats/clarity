@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.skadistats</groupId>
     <artifactId>clarity</artifactId>
-    <version>2.7.5</version>
+    <version>2.7.6-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>clarity</name>
     <description>Clarity is a fast, almost complete replay parser for Dota 2.</description>
@@ -46,38 +46,33 @@
         <dependency>
             <groupId>com.skadistats</groupId>
             <artifactId>clarity-protobuf</artifactId>
-            <version>[4.17,5.0)</version>
+            <version>4.28-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.xerial.snappy</groupId>
             <artifactId>snappy-java</artifactId>
-            <version>1.1.2.6</version>
-        </dependency>
-        <dependency>
-            <groupId>it.unimi.dsi</groupId>
-            <artifactId>fastutil</artifactId>
-            <version>8.3.0</version>
+            <version>1.1.8.4</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.13</version>
+            <version>2.0.5</version>
         </dependency>
         <dependency>
             <groupId>org.atteo.classindex</groupId>
             <artifactId>classindex</artifactId>
-            <version>3.3</version>
+            <version>3.13</version>
         </dependency>
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>6.14.2</version>
+            <version>7.7.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
-            <version>1.2.3</version>
+            <version>1.4.5</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -87,14 +82,14 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <release>8</release>
                 </configuration>
             </plugin>
             <plugin>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
+                <version>3.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
@@ -106,10 +101,11 @@
             </plugin>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.10.1</version>
+                <version>3.4.1</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
                     <docencoding>UTF-8</docencoding>
+                    <doclint>all</doclint>
                 </configuration>
                 <executions>
                     <execution>
@@ -122,7 +118,7 @@
             </plugin>
             <plugin>
                 <artifactId>maven-gpg-plugin</artifactId>
-                <version>1.6</version>
+                <version>3.0.1</version>
                 <executions>
                     <execution>
                         <id>sign-artifacts</id>
@@ -143,7 +139,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.8</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>
@@ -154,7 +150,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>animal-sniffer-maven-plugin</artifactId>
-                <version>1.20</version>
+                <version>1.22</version>
                 <configuration>
                     <signature>
                         <groupId>org.codehaus.mojo.signature</groupId>
