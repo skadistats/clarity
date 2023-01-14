@@ -760,6 +760,46 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getAttackerHasScepter();
     }
 
+    @Override
+    public boolean hasNeutralCampTeam() {
+        return e.hasNeutralCampTeam();
+    }
+
+    @Override
+    public int getNeutralCampTeam() {
+        return e.getNeutralCampTeam();
+    }
+
+    @Override
+    public boolean hasRegeneratedHealth() {
+        return e.hasRegeneratedHealth();
+    }
+
+    @Override
+    public float getRegeneratedHealth() {
+        return e.getRegeneratedHealth();
+    }
+
+    @Override
+    public boolean hasWillReincarnate() {
+        return e.hasWillReincarnate();
+    }
+
+    @Override
+    public boolean isWillReincarnate() {
+        return e.getWillReincarnate();
+    }
+
+    @Override
+    public boolean hasUsesCharges() {
+        return e.hasUsesCharges();
+    }
+
+    @Override
+    public boolean isUsesCharges() {
+        return e.getUsesCharges();
+    }
+
     public String toString() {
         return e.toString();
     }

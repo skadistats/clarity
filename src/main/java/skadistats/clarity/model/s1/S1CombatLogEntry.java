@@ -764,6 +764,46 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return false;
     }
 
+    @Override
+    public boolean hasNeutralCampTeam() {
+        return false;
+    }
+
+    @Override
+    public int getNeutralCampTeam() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasRegeneratedHealth() {
+        return false;
+    }
+
+    @Override
+    public float getRegeneratedHealth() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasWillReincarnate() {
+        return false;
+    }
+
+    @Override
+    public boolean isWillReincarnate() {
+        return false;
+    }
+
+    @Override
+    public boolean hasUsesCharges() {
+        return false;
+    }
+
+    @Override
+    public boolean isUsesCharges() {
+        return false;
+    }
+
     public String toString() {
         return e.toString();
     }

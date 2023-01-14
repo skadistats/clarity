@@ -152,5 +152,12 @@ public interface CombatLogEntry {
     boolean isAtNightTime();
     boolean hasAttackerHasScepter();
     boolean isAttackerHasScepter();
-
+    boolean hasNeutralCampTeam();
+    int getNeutralCampTeam();
+    boolean hasRegeneratedHealth();
+    float getRegeneratedHealth();
+    boolean hasWillReincarnate();
+    boolean isWillReincarnate();
+    boolean hasUsesCharges();
+    boolean isUsesCharges();
 }
