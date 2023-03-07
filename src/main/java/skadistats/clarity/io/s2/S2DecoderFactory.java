@@ -3,6 +3,7 @@ package skadistats.clarity.io.s2;
 import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.BoolDecoder;
 import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;
 import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
@@ -82,6 +83,7 @@ public class S2DecoderFactory {
 
         // Specials
         DECODERS.put("HSequence", new IntMinusOneDecoder());
+        DECODERS.put("GameTime_t", new FloatNoScaleDecoder());
     }
 
 
