@@ -2,9 +2,15 @@
 
 Clarity is an open-source parser for Dota 2 and CSGO replay files, written in Java.
 
+## March 08, 2023: Version 2.7.7 released
+
+Yesterday, Valve released "The Dead Reckoning" update.
+This release adds a new "GameTime_t" data type to be able to parse new replays.
+The protobufs have also been updated to 4.29.
+
 ## January 14, 2023: Version 2.7.6 released
 
-Finally, protobufs have been updated to version 4.2.8.
+Finally, protobufs have been updated to version 4.28.
 
 You can use the new protobufs with older versions (they will use them automatically), 
 however there have been some additions to the combatlog, and if you want to be able 
@@ -94,13 +100,13 @@ clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Fetch the current stable version (2.7.6) from Maven Central with
+Fetch the current stable version from Maven Central with
 
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.7.6</version>
+	<version>2.7.7</version>
 </dependency>
 ```
 
