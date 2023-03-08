@@ -106,6 +106,14 @@ public class GameEvents {
                 case 7:
                     value = key.getValUint64();
                     break;
+                case 8:
+                    // TODO: this is something special encoded as a long. Find out what it is.
+                    value = key.getValLong();
+                    break;
+                case 9:
+                    // TODO: this is something special encoded as a short. Find out what it is.
+                    value = key.getValShort();
+                    break;
                 default:
                     throw new ClarityException("cannot handle game event key type %s", key.getType());
             }
