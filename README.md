@@ -2,7 +2,11 @@
 
 Clarity is an open-source parser for Dota 2 and CSGO replay files, written in Java.
 
-## March 08, 2023: Version 2.7.7 released
+## March 08, 2023: Version 2.7.8 released
+
+Fix game events not correctly parsing.
+
+## March 07, 2023: Version 2.7.7 released
 
 Yesterday, Valve released "The Dead Reckoning" update.
 This release adds a new "GameTime_t" data type to be able to parse new replays.
@@ -106,7 +110,7 @@ Fetch the current stable version from Maven Central with
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>2.7.7</version>
+	<version>2.7.8</version>
 </dependency>
 ```
 
