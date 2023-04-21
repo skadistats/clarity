@@ -18,17 +18,19 @@ public class StringTable {
     private final int userDataSize;
     private final int userDataSizeBits;
     private final int flags;
+    private final boolean varIntBitCounts;
 
     private List<Entry> entries;
     private List<Entry> initialEntries;
 
-    public StringTable(String name, Integer maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags) {
+    public StringTable(String name, Integer maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags, boolean varIntBitCounts) {
         this.name = name;
         this.maxEntries = maxEntries;
         this.userDataFixedSize = userDataFixedSize;
         this.userDataSize = userDataSize;
         this.userDataSizeBits = userDataSizeBits;
         this.flags = flags;
+        this.varIntBitCounts = varIntBitCounts;
         this.entries = new ArrayList<>();
         this.initialEntries = Collections.emptyList();
     }
@@ -85,9 +87,13 @@ public class StringTable {
     public String getName() {
         return name;
     }
-    
+
     public int getFlags() {
         return flags;
+    }
+
+    public boolean isVarIntBitCounts() {
+        return varIntBitCounts;
     }
 
     public int getEntryCount() {

@@ -47,7 +47,8 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 message.getUserDataFixedSize(),
                 message.getUserDataSize(),
                 message.getUserDataSizeBits(),
-                message.getFlags()
+                message.getFlags(),
+                message.getUsingVarintBitcounts()
             );
 
             ByteString data = message.getStringData();
@@ -114,7 +115,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                         // this is the case for the instancebaseline for console recorded replays
                         isCompressed = stream.readBitFlag();
                     }
-                    bitLength = stream.readUBitInt(17) * 8;
+                    bitLength = (table.isVarIntBitCounts() ? stream.readUBitVar() : stream.readUBitInt(17)) * 8;
                 }
 
                 int byteLength = (bitLength + 7) / 8;

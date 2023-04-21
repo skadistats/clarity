@@ -27,7 +27,8 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 message.getUserDataFixedSize(),
                 message.getUserDataSize(),
                 message.getUserDataSizeBits(),
-                message.getFlags()
+                message.getFlags(),
+   false
             );
             decodeEntries(table, message.getStringData(), message.getNumEntries());
             table.markInitialState();
