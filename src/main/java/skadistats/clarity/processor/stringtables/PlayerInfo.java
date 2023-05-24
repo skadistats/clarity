@@ -12,7 +12,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 
-@Provides(value = {UsesPlayerInfo.class, OnPlayerInfo.class}, engine = { EngineId.CSGO })
+@Provides(value = {UsesPlayerInfo.class, OnPlayerInfo.class}, engine = { EngineId.CSGO_S1})
 @UsesStringTable("userinfo")
 public class PlayerInfo {
 

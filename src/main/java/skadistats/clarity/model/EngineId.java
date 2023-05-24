@@ -7,9 +7,9 @@ import skadistats.clarity.model.engine.DotaS2EngineType;
 
 public enum EngineId {
 
-    SOURCE1("PBUFDEM\0", DotaS1EngineType.class),
-    SOURCE2("PBDEMS2\0", DotaS2EngineType.class),
-    CSGO("HL2DEMO\0", CsGoEngineType.class);
+    DOTA_S1("PBUFDEM\0", DotaS1EngineType.class),
+    DOTA_S2("PBDEMS2\0", DotaS2EngineType.class),
+    CSGO_S1("HL2DEMO\0", CsGoEngineType.class);
 
     public static EngineType typeForMagic(String magic) {
         for (EngineId et : values()) {

@@ -14,7 +14,7 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 
 import java.util.Objects;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.SOURCE1, EngineId.CSGO })
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S1, EngineId.CSGO_S1})
 @StringTableEmitter
 public class S1StringTableEmitter extends BaseStringTableEmitter {
 

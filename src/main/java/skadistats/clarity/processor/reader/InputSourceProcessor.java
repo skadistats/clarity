@@ -267,7 +267,7 @@ public class InputSourceProcessor {
 
     @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
     public void processServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
-        if (engineType.getId() != EngineId.SOURCE2) {
+        if (engineType.getId() != EngineId.DOTA_S2) {
             return;
         }
         Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());

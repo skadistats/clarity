@@ -18,7 +18,7 @@ import skadistats.clarity.wire.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 
-@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineId.SOURCE2)
+@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineId.DOTA_S2)
 public class S2DTClassEmitter {
 
     @Insert

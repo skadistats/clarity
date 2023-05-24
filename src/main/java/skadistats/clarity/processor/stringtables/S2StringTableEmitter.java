@@ -21,7 +21,7 @@ import java.util.Objects;
 
 import static skadistats.clarity.LogChannel.stringtables;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.SOURCE2)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.DOTA_S2)
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 

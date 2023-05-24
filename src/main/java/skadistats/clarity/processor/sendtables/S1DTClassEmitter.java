@@ -21,7 +21,7 @@ import skadistats.clarity.wire.s1.proto.S1NetMessages;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = { EngineId.SOURCE1, EngineId.CSGO })
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = { EngineId.DOTA_S1, EngineId.CSGO_S1})
 public class S1DTClassEmitter {
 
     @Insert

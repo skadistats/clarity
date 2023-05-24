@@ -383,7 +383,7 @@ public class Entities {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
                     int serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType.getId() == EngineId.SOURCE2) {
+                    if (engineType.getId() == EngineId.DOTA_S2) {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
