@@ -10,6 +10,9 @@ import java.io.IOException;
 @Provides({ UsesPacketReader.class })
 public class PacketReader {
 
+    public PacketReader() {
+    }
+
     public byte[] readFromSource(Source source, int size, boolean isCompressed) throws IOException {
         byte[] buf = new byte[size];
         source.readBytes(buf, 0, size);

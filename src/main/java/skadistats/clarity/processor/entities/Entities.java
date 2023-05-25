@@ -265,10 +265,14 @@ public class Entities {
 
     @OnStringTableEntry(BASELINE_TABLE)
     public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
-        Integer dtClassId = Integer.valueOf(key);
-        rawBaselines.put(dtClassId, value);
-        if (classBaselines != null) {
-            classBaselines[dtClassId].reset();
+        try {
+            Integer dtClassId = Integer.valueOf(key);
+            rawBaselines.put(dtClassId, value);
+            if (classBaselines != null) {
+                classBaselines[dtClassId].reset();
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("BASELINE KEY NaN: " + key);
         }
     }
 
@@ -383,7 +387,7 @@ public class Entities {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
                     int serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType.getId() == EngineId.DOTA_S2) {
+                    if (engineType.getId().isEntitySkipExtraVarint()) {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }

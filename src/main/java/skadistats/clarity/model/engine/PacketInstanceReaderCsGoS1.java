@@ -2,88 +2,21 @@ package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.event.Insert;
-import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.s1.CsGoFieldReader;
-import skadistats.clarity.model.EngineId;
-import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
-import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.csgo.EmbeddedPackets;
-import skadistats.clarity.wire.csgo.UserMessagePackets;
-import skadistats.clarity.wire.csgo.proto.CsGoClarityMessages;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
 
 import java.io.IOException;
 
-public class CsGoEngineType extends AbstractEngineType {
-
-    @Insert
-    private Context ctx;
-    private CsGoClarityMessages.CsGoDemoHeader header;
-    private float millisPerTick;
-
-    public CsGoEngineType(EngineId identifier) {
-        super(identifier,
-                true,   // CDemoSendTables is container
-                11,
-                10
-        );
-    }
+public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CsGoClarityMessages.CsGoDemoHeader> {
 
     @Override
-    public float getMillisPerTick() {
-        return millisPerTick;
-    }
-
-    @Override
-    public boolean isFullPacketSeekAllowed() {
-        return false;
-    }
-
-    @Override
-    public Integer getExpectedFullPacketInterval() {
-        return null;
-    }
-
-    @Override
-    public boolean handleDeletions() {
-        return false;
-    }
-
-    @Override
-    public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
-        return EmbeddedPackets.classForKind(kind);
-    }
-
-    @Override
-    public Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind) {
-        return UserMessagePackets.classForKind(kind);
-    }
-
-    @Override
-    public boolean isUserMessage(Class<? extends GeneratedMessage> clazz) {
-        return UserMessagePackets.isKnownClass(clazz);
-    }
-
-    @Override
-    public FieldReader getNewFieldReader() {
-        return new CsGoFieldReader();
-    }
-
-    private String readHeaderString(Source source) throws IOException {
-        return Util.readFixedZeroTerminated(source, 260);
-    }
-
-    @Override
-    public void readHeader(Source source) throws IOException {
-        header = CsGoClarityMessages.CsGoDemoHeader.newBuilder()
+    public CsGoClarityMessages.CsGoDemoHeader readHeader(Source source) throws IOException {
+        return CsGoClarityMessages.CsGoDemoHeader.newBuilder()
                 .setDemoprotocol(source.readFixedInt32())
                 .setNetworkprotocol(source.readFixedInt32())
                 .setServername(readHeaderString(source))
@@ -95,30 +28,14 @@ public class CsGoEngineType extends AbstractEngineType {
                 .setPlaybackFrames(source.readFixedInt32())
                 .setSignonlength(source.readFixedInt32())
                 .build();
-        millisPerTick = header.getPlaybackTime() * 1000.0f / header.getPlaybackTicks();
+    }
+
+    private String readHeaderString(Source source) throws IOException {
+        return Util.readFixedZeroTerminated(source, 260);
     }
 
     @Override
-    public void skipHeader(Source source) throws IOException {
-        source.skipBytes(1064);
-    }
-
-    @Override
-    public void emitHeader() {
-        ctx.createEvent(OnMessage.class, CsGoClarityMessages.CsGoDemoHeader.class).raise(header);
-    }
-
-    @Override
-    public int determineLastTick(Source source) throws IOException {
-        return header.getPlaybackTicks();
-    }
-
-    @Override
-    public int readEmbeddedKind(BitStream bs) {
-        return bs.readVarUInt();
-    }
-
-    public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(final Source source) throws IOException {
+    public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException {
         final int kind = source.readByte() & 0xFF;
         final int tick = source.readFixedInt32();
         source.skipBytes(1); // playerSlot
@@ -152,21 +69,6 @@ public class CsGoEngineType extends AbstractEngineType {
                 handler.skip(source);
             }
         };
-    }
-
-    @OnPostEmbeddedMessage(S1NetMessages.CSVCMsg_SendTable.class)
-    public void onPostSendTable(S1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
-        if (message.getIsEnd()) {
-            Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
-            int n = bs.readSBitInt(16);
-            for (int i = 0; i < n; i++) {
-                b.addClassesBuilder()
-                        .setClassId(bs.readSBitInt(16))
-                        .setNetworkName(bs.readString(255))
-                        .setTableName(bs.readString(255));
-            }
-            ctx.createEvent(OnMessage.class, Demo.CDemoClassInfo.class).raise(b.build());
-        }
     }
 
     public static final byte dem_signon       = 1; // it's a startup message, process as fast as possible
@@ -346,5 +248,7 @@ public class CsGoEngineType extends AbstractEngineType {
     {
         handlers[0] = handlers[1];
     }
+
+
 
 }

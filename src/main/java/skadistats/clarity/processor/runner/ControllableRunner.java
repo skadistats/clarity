@@ -230,7 +230,7 @@ public class ControllableRunner extends AbstractFileRunner {
     }
 
     public ControllableRunner(Source s) throws IOException {
-        super(s, s.readEngineType());
+        super(s, s.readEngineMagic().determineEngineType(s));
         upcomingTick = tick;
         wantedTick = tick;
         this.loopController = new LockingLoopController(normalLoopControl);

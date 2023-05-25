@@ -6,11 +6,11 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.S2FieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.dota.s2.EmbeddedPackets;
+import skadistats.clarity.wire.csgo.s2.EmbeddedPackets;
 
-public class DotaS2EngineType extends AbstractProtobufDemoEngineType {
+public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
 
-    public DotaS2EngineType(EngineId id, PacketInstanceReader<Demo.CDemoFileHeader> packetInstanceReader, Demo.CDemoFileHeader header, int infoOffset) {
+    public CsgoS2EngineType(EngineId id, PacketInstanceReader<Demo.CDemoFileHeader> packetInstanceReader, Demo.CDemoFileHeader header, int infoOffset) {
         super(
                 id,
                 packetInstanceReader,

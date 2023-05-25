@@ -9,7 +9,7 @@ import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s2.proto.S2DotaMatchMetadata;
+import skadistats.clarity.wire.dota.s2.proto.S2DotaMatchMetadata;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -48,8 +48,8 @@ public class Clarity {
      * @see Source
      */
     public static Demo.CDemoFileInfo infoForSource(final Source source) throws IOException {
-        EngineType engineType = source.readEngineType();
-        source.setPosition(source.readFixedInt32());
+        EngineType engineType = source.readEngineMagic().determineEngineType(source);
+        source.setPosition(engineType.getInfoOffset());
         PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
         return (Demo.CDemoFileInfo) pi.parse();
     }

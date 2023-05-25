@@ -17,7 +17,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
 
 @Provides({ OnTempEntity.class })
 @UsesDTClasses

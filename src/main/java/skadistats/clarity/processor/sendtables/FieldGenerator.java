@@ -16,7 +16,7 @@ import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.ValueField;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.BuildNumberRange;
-import skadistats.clarity.wire.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.dota.s2.proto.S2NetMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;

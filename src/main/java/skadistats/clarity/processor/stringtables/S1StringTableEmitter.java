@@ -10,7 +10,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
 
 import java.util.Objects;
 

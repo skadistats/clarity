@@ -16,14 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
-import java.nio.file.WatchKey;
-import java.nio.file.WatchService;
+import java.nio.file.*;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -277,8 +270,7 @@ public class LiveSource extends Source {
             while (nextTickOffset <= file.capacity()) {
                 if (nextTickOffset == 0) {
                     file.position(0);
-                    engineType = readEngineType();
-                    engineType.skipHeader(this);
+                    engineType = readEngineMagic().determineEngineType(this);
                     nextTickOffset = file.position();
                 } else {
                     file.position(nextTickOffset);

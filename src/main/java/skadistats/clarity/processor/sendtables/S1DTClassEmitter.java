@@ -16,12 +16,12 @@ import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = { EngineId.DOTA_S1, EngineId.CSGO_S1})
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = {EngineId.DOTA_S1, EngineId.CSGO_S1})
 public class S1DTClassEmitter {
 
     @Insert

@@ -1,7 +1,7 @@
 package skadistats.clarity.source;
 
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.model.EngineId;
+import skadistats.clarity.model.EngineMagic;
 import skadistats.clarity.model.EngineType;
 
 import java.io.IOException;
@@ -154,13 +154,13 @@ public abstract class Source {
      *
      * @throws IOException if there is not enough data or the if no valid magic was found
      */
-    public EngineType readEngineType() throws IOException {
+    public EngineMagic readEngineMagic() throws IOException {
         try {
-            engineType = EngineId.typeForMagic(new String(readBytes(8)));
-            if (engineType == null) {
+            EngineMagic engineMagic = EngineMagic.magicForString(new String(readBytes(8)));
+            if (engineMagic == null) {
                 throw new IOException();
             }
-            return engineType;
+            return engineMagic;
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }

@@ -2,7 +2,6 @@ package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
@@ -12,44 +11,25 @@ import skadistats.clarity.wire.common.proto.Demo;
 
 import java.io.IOException;
 
-public abstract class AbstractDotaEngineType extends AbstractEngineType {
+public class PacketInstanceReaderProtobufDemo extends PacketInstanceReader<Demo.CDemoFileHeader> {
 
-    public AbstractDotaEngineType(EngineId identifier, boolean sendTablesContainer, int indexBits, int serialBits) {
-        super(identifier, sendTablesContainer, indexBits, serialBits);
-    }
+    private final int compressedFlag;
 
-    protected abstract int getCompressedFlag();
-
-    @Override
-    public float getMillisPerTick() {
-        return 1000.0f / 30.0f;
+    public PacketInstanceReaderProtobufDemo(int compressedFlag) {
+        this.compressedFlag = compressedFlag;
     }
 
     @Override
-    public boolean isFullPacketSeekAllowed() {
-        return true;
+    public Demo.CDemoFileHeader readHeader(Source source) throws IOException {
+        PacketInstance<Demo.CDemoFileHeader> nextPacketInstance = getNextPacketInstance(source);
+        return nextPacketInstance.parse();
     }
 
     @Override
-    public Integer getExpectedFullPacketInterval() {
-        return 1800;
-    }
-
-    public int determineLastTick(Source source) throws IOException {
-        int backup = source.getPosition();
-        source.setPosition(8);
-        source.setPosition(source.readFixedInt32());
-        source.skipVarInt32();
-        int lastTick = source.readVarInt32();
-        source.setPosition(backup);
-        return lastTick;
-    }
-
-    @Override
-    public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(final Source source) throws IOException {
+    public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException {
         int rawKind = source.readVarInt32();
-        final boolean isCompressed = (rawKind & getCompressedFlag()) == getCompressedFlag();
-        final int kind = rawKind &~ getCompressedFlag();
+        final boolean isCompressed = (rawKind & compressedFlag) == compressedFlag;
+        final int kind = rawKind &~ compressedFlag;
         final int tick = source.readVarInt32();
         final int size = source.readVarInt32();
         final Class<T> messageClass = (Class<T>) DemoPackets.classForKind(kind);

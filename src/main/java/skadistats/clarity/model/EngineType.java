@@ -22,6 +22,7 @@ public interface EngineType {
     int emptyHandle();
 
     float getMillisPerTick();
+    int getInfoOffset();
 
     boolean isFullPacketSeekAllowed();
     Integer getExpectedFullPacketInterval();
@@ -32,12 +33,12 @@ public interface EngineType {
 
     FieldReader getNewFieldReader();
 
-    void readHeader(Source source) throws IOException;
-    void skipHeader(Source source) throws IOException;
     void emitHeader();
 
     int determineLastTick(Source source) throws IOException;
     int readEmbeddedKind(BitStream bs);
 
     <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException;
+
+    Object[] getRegisteredProcessors();
 }

@@ -14,11 +14,11 @@ import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.common.proto.Demo;
 import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.dota.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 
-@Provides(value =  {OnDTClass.class, OnDTClassesComplete.class}, engine = EngineId.DOTA_S2)
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = {EngineId.DOTA_S2, EngineId.CSGO_S2})
 public class S2DTClassEmitter {
 
     @Insert

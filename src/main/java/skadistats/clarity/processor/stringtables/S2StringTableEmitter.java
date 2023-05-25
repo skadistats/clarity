@@ -14,14 +14,14 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.LZSS;
 import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.dota.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 import java.util.Objects;
 
 import static skadistats.clarity.LogChannel.stringtables;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.DOTA_S2)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S2, EngineId.CSGO_S2})
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 
