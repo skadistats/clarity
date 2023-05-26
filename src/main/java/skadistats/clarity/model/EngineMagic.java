@@ -1,9 +1,14 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.engine.*;
+import skadistats.clarity.model.engine.CsGoS1EngineType;
+import skadistats.clarity.model.engine.CsgoS2EngineType;
+import skadistats.clarity.model.engine.DotaS1EngineType;
+import skadistats.clarity.model.engine.DotaS2EngineType;
+import skadistats.clarity.model.engine.PacketInstanceReaderCsGoS1;
+import skadistats.clarity.model.engine.PacketInstanceReaderProtobufDemo;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
 import skadistats.clarity.wire.shared.common.proto.Demo;
-import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
 
 import java.io.IOException;
 
@@ -22,7 +27,7 @@ public enum EngineMagic {
         @Override
         public EngineType determineEngineType(Source source) throws IOException {
             PacketInstanceReaderCsGoS1 packetInstanceReader = new PacketInstanceReaderCsGoS1();
-            CsGoClarityMessages.CsGoDemoHeader header = packetInstanceReader.readHeader(source);
+            CSGOS1ClarityMessages.CsGoDemoHeader header = packetInstanceReader.readHeader(source);
             return new CsGoS1EngineType(EngineId.CSGO_S1, packetInstanceReader, header);
         }
     },

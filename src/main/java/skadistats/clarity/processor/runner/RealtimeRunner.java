@@ -2,8 +2,8 @@ package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
 import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.csgo.s1.proto.CsGoNetMessages;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -68,8 +68,8 @@ public class RealtimeRunner extends SimpleRunner {
         tickInterval = Duration.ofNanos((long) (SECOND_TO_NANOSECOND * tickIntervalFloat));
     }
 
-    @OnMessage(CsGoNetMessages.CSVCMsg_ServerInfo.class)
-    protected void onCsgoServerInfo(CsGoNetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(CSGOS1NetMessages.CSVCMsg_ServerInfo.class)
+    protected void onCsgoServerInfo(CSGOS1NetMessages.CSVCMsg_ServerInfo serverInfo) {
         setTickInterval(serverInfo.getTickInterval());
     }
 

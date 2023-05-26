@@ -8,18 +8,17 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.csgo.s1.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.s1.UserMessagePackets;
-import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
-import skadistats.clarity.wire.csgo.s1.proto.CsGoNetMessages;
-import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
+import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 
 import java.io.IOException;
 
-public class CsGoS1EngineType extends AbstractEngineType<CsGoClarityMessages.CsGoDemoHeader> {
+public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.CsGoDemoHeader> {
 
-    public CsGoS1EngineType(EngineId id, PacketInstanceReader<CsGoClarityMessages.CsGoDemoHeader> packetInstanceReader, CsGoClarityMessages.CsGoDemoHeader header) {
+    public CsGoS1EngineType(EngineId id, PacketInstanceReader<CSGOS1ClarityMessages.CsGoDemoHeader> packetInstanceReader, CSGOS1ClarityMessages.CsGoDemoHeader header) {
         super(
                 id,
                 packetInstanceReader,
@@ -30,8 +29,8 @@ public class CsGoS1EngineType extends AbstractEngineType<CsGoClarityMessages.CsG
         );
     }
 
-    @OnMessage(CsGoNetMessages.CSVCMsg_ServerInfo.class)
-    protected void onServerInfo(CsGoNetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(CSGOS1NetMessages.CSVCMsg_ServerInfo.class)
+    protected void onServerInfo(CSGOS1NetMessages.CSVCMsg_ServerInfo serverInfo) {
         this.millisPerTick = serverInfo.getTickInterval() * 1000.0f;
     }
 
@@ -85,8 +84,8 @@ public class CsGoS1EngineType extends AbstractEngineType<CsGoClarityMessages.CsG
         return bs.readVarUInt();
     }
 
-    @OnPostEmbeddedMessage(S1NetMessages.CSVCMsg_SendTable.class)
-    public void onPostSendTable(S1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
+    @OnPostEmbeddedMessage(CSGOS1NetMessages.CSVCMsg_SendTable.class)
+    public void onPostSendTable(CSGOS1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
         if (message.getIsEnd()) {
             Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
             int n = bs.readSBitInt(16);
