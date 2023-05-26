@@ -11,7 +11,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
-import skadistats.clarity.wire.common.proto.DotaModifiers;
+import skadistats.clarity.wire.dota.common.proto.DotaModifiers;
 
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {

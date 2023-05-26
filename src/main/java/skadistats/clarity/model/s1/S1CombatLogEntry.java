@@ -3,7 +3,7 @@ package skadistats.clarity.model.s1;
 import skadistats.clarity.model.CombatLogEntry;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.wire.common.proto.DotaUserMessages;
+import skadistats.clarity.wire.dota.common.proto.DotaUserMessages;
 
 import java.util.ArrayList;
 import java.util.List;

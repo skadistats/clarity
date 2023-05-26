@@ -1,5 +1,5 @@
 package skadistats.clarity.model;
-import skadistats.clarity.wire.common.proto.DotaUserMessages;
+import skadistats.clarity.wire.dota.common.proto.DotaUserMessages;
 
 import java.util.List;
 
