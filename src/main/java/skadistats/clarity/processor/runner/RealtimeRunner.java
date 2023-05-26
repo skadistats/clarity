@@ -2,7 +2,7 @@ package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
 import skadistats.clarity.wire.csgo.s1.proto.CsGoNetMessages;
 
 import java.io.IOException;

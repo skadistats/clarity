@@ -23,9 +23,9 @@ import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
 
 import java.io.EOFException;
 import java.io.IOException;

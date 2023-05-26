@@ -2,7 +2,7 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.model.engine.*;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
 
 import java.io.IOException;

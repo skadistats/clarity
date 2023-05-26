@@ -10,13 +10,13 @@ import skadistats.clarity.io.s2.S2DecoderFactory;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerId;
 import skadistats.clarity.io.s2.field.ArrayField;
-import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.ValueField;
+import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.BuildNumberRange;
-import skadistats.clarity.wire.dota.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -36,9 +36,9 @@ import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
 
 import java.util.ArrayList;
 import java.util.HashMap;

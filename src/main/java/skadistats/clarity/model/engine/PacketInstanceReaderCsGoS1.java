@@ -7,7 +7,7 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
 
 import java.io.IOException;

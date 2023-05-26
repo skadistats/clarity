@@ -5,7 +5,7 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s1.DotaS1FieldReader;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.dota.s1.EmbeddedPackets;
 import skadistats.clarity.wire.dota.s1.UserMessagePackets;
 

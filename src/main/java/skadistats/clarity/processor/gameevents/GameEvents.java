@@ -9,8 +9,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
 
 import java.util.ArrayList;
 import java.util.List;

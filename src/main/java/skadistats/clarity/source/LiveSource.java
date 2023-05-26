@@ -9,7 +9,7 @@ import skadistats.clarity.model.EngineType;
 import skadistats.clarity.platform.ClarityPlatform;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 
 import java.io.EOFException;
 import java.io.File;

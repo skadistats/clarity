@@ -9,8 +9,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.util.LZSS;
 import skadistats.clarity.util.MurmurHash;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
 
 import java.io.IOException;
 import java.util.ArrayList;

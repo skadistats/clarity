@@ -2,19 +2,19 @@ package skadistats.clarity.processor.sendtables;
 
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.io.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.Util;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.dota.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 

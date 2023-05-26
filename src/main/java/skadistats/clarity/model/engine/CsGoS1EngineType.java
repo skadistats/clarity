@@ -8,7 +8,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.csgo.s1.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.s1.UserMessagePackets;
 import skadistats.clarity.wire.csgo.s1.proto.CsGoClarityMessages;
