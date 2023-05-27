@@ -264,14 +264,19 @@ public class Entities {
 
     @OnStringTableEntry(BASELINE_TABLE)
     public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
-        try {
-            Integer dtClassId = Integer.valueOf(key);
-            rawBaselines.put(dtClassId, value);
-            if (classBaselines != null) {
-                classBaselines[dtClassId].reset();
-            }
-        } catch (NumberFormatException e) {
-            System.out.println("BASELINE KEY NaN: " + key);
+        Integer dtClassId;
+
+        int separatorIdx = key.indexOf(':');
+        if (separatorIdx != -1) {
+            // TODO: This is new in CSGO2, for now only for CCSGOViewModel(0)
+            // TODO: No idea what to do. For now just ignore, and update baseline, this is probably not correct
+            dtClassId = Integer.valueOf(key.substring(0, separatorIdx));
+        } else {
+            dtClassId = Integer.valueOf(key);
+        }
+        rawBaselines.put(dtClassId, value);
+        if (classBaselines != null) {
+            classBaselines[dtClassId].reset();
         }
     }
 
