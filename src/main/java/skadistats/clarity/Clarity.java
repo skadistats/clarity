@@ -8,7 +8,7 @@ import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.dota.s2.proto.S2DotaMatchMetadata;
+import skadistats.clarity.wire.dota.s2.proto.DOTAS2MatchMetadata;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.FileInputStream;
@@ -61,7 +61,7 @@ public class Clarity {
      * @return the {@code CDOTAMatchMetadataFile} protobuf message
      * @throws IOException if the given file is non-existing or is no valid metadata-file
      */
-    public static S2DotaMatchMetadata.CDOTAMatchMetadataFile metadataForFile(String fileName) throws IOException {
+    public static DOTAS2MatchMetadata.CDOTAMatchMetadataFile metadataForFile(String fileName) throws IOException {
         return metadataForStream(new FileInputStream(fileName));
     }
 
@@ -72,8 +72,8 @@ public class Clarity {
      * @return the {@code CDOTAMatchMetadataFile} protobuf message
      * @throws IOException if the given stream is invalid
      */
-    private static S2DotaMatchMetadata.CDOTAMatchMetadataFile metadataForStream(InputStream stream) throws IOException {
-        return Packet.parse(S2DotaMatchMetadata.CDOTAMatchMetadataFile.class, ByteString.readFrom(stream));
+    private static DOTAS2MatchMetadata.CDOTAMatchMetadataFile metadataForStream(InputStream stream) throws IOException {
+        return Packet.parse(DOTAS2MatchMetadata.CDOTAMatchMetadataFile.class, ByteString.readFrom(stream));
     }
 
 }
