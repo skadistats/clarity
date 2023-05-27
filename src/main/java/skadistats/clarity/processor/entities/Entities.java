@@ -17,7 +17,6 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.FieldPath;
@@ -36,9 +35,9 @@ import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
-import skadistats.clarity.wire.shared.common.proto.Demo;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,7 +94,7 @@ public class Entities {
 
     private List<Runnable> queuedUpdates = new ArrayList<>();
 
-    private Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
+    private Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
     @Insert
     private EngineType engineType;
@@ -276,8 +275,8 @@ public class Entities {
         }
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_Tick.class)
-    public void onMessage(NetworkBaseTypes.CNETMsg_Tick message) {
+    @OnMessage(CommonNetworkBaseTypes.CNETMsg_Tick.class)
+    public void onMessage(CommonNetworkBaseTypes.CNETMsg_Tick message) {
         serverTick = message.getTick();
     }
 
@@ -299,8 +298,8 @@ public class Entities {
         queuedUpdates.add(update);
     }
 
-    @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
-    public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+    @OnMessage(CommonNetMessages.CSVCMsg_PacketEntities.class)
+    public void onPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message) {
         if (message.getIsDelta()) {
             if (serverTick == message.getDeltaFrom()) {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
@@ -323,7 +322,7 @@ public class Entities {
             deferredMessages.clear();
         }
         if (!deferredMessages.isEmpty()) {
-            Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredToExecute = deferredMessages.headMap(serverTick);
+            Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredToExecute = deferredMessages.headMap(serverTick);
             if (!deferredToExecute.isEmpty()) {
                 log.debug("server is now at tick %d", serverTick);
                 deferredToExecute.forEach((deferredMessageTick, deferredMessage) -> {
@@ -336,7 +335,7 @@ public class Entities {
         processAndRunPacketEntities(message, serverTick);
     }
 
-    private void processAndRunPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int serverTick) {
+    private void processAndRunPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message, int serverTick) {
         try {
             processPacketEntities(message, serverTick);
             entitiesServerTick = serverTick;
@@ -350,7 +349,7 @@ public class Entities {
         }
     }
 
-    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int actualTick) {
+    private void processPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message, int actualTick) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s",
@@ -457,12 +456,12 @@ public class Entities {
         }
     }
 
-    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
     }
 
-    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
+    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
         Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         EntityState newState = baseline.state.copy();
         changes.applyTo(newState);

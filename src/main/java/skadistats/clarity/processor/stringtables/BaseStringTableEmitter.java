@@ -11,7 +11,7 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.util.HashSet;
 import java.util.Map;

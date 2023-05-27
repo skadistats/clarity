@@ -5,13 +5,13 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
@@ -23,9 +23,9 @@ import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.shared.common.proto.Demo;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -241,13 +241,13 @@ public class InputSourceProcessor {
             } else {
                 Event<OnMessage> ev = evOnMessage(messageClass);
                 Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
-                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
                     GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
-                    if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
-                        NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
+                    if (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class) {
+                        CommonNetworkBaseTypes.CSVCMsg_UserMessage userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
                         Class<? extends GeneratedMessage> umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             logUnknownMessage("usermessage", userMessage.getMsgType());
@@ -265,8 +265,8 @@ public class InputSourceProcessor {
         }
     }
 
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    public void processServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
+    public void processServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
         if (engineType.getId() != EngineId.DOTA_S2) {
             return;
         }

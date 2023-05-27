@@ -3,14 +3,14 @@ package skadistats.clarity.processor.stringtables;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.util.Objects;
 
@@ -37,8 +37,8 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         numTables++;
     }
 
-    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(NetMessages.CSVCMsg_UpdateStringTable message) {
+    @OnMessage(CommonNetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(CommonNetMessages.CSVCMsg_UpdateStringTable message) {
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
             decodeEntries(table, message.getStringData(), message.getNumChangedEntries());

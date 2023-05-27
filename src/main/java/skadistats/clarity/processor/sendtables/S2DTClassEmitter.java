@@ -12,8 +12,8 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.shared.common.proto.Demo;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
 import java.io.IOException;
@@ -61,9 +61,9 @@ public class S2DTClassEmitter {
         evClassesComplete.raise();
     }
 
-    @OnMessage(NetMessages.CSVCMsg_ClassInfo.class)
-    public void onServerClassInfo(NetMessages.CSVCMsg_ClassInfo message) {
-        for (NetMessages.CSVCMsg_ClassInfo.class_t ct : message.getClassesList()) {
+    @OnMessage(CommonNetMessages.CSVCMsg_ClassInfo.class)
+    public void onServerClassInfo(CommonNetMessages.CSVCMsg_ClassInfo message) {
+        for (CommonNetMessages.CSVCMsg_ClassInfo.class_t ct : message.getClassesList()) {
             DTClass dt = fieldGenerator.createDTClass(ct.getClassName());
             evDtClass.raise(dt);
             dt.setClassId(ct.getClassId());

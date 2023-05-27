@@ -8,8 +8,8 @@ import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.dota.s2.proto.S2DotaMatchMetadata;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.FileInputStream;
 import java.io.IOException;

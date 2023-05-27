@@ -3,8 +3,8 @@ package skadistats.clarity.model.engine;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.shared.common.proto.Demo;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.io.IOException;
 
@@ -17,8 +17,8 @@ public abstract class AbstractProtobufDemoEngineType extends AbstractEngineType<
         this.infoOffset = infoOffset;
     }
 
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    protected void onServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
+    protected void onServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
         this.millisPerTick = serverInfo.getTickInterval() * 1000.0f;
     }
 

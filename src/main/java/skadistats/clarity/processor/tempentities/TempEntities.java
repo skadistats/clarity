@@ -9,6 +9,7 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s1.ReceiveProp;
 import skadistats.clarity.io.s1.S1DTClass;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.state.EntityState;
@@ -17,9 +18,9 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
-import skadistats.clarity.wire.dota.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
-@Provides({ OnTempEntity.class })
+@Provides(value = { OnTempEntity.class }, engine = { EngineId.CSGO_S1, EngineId.CSGO_S1 })
 @UsesDTClasses
 public class TempEntities {
 

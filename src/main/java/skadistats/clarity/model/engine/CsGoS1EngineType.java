@@ -12,7 +12,8 @@ import skadistats.clarity.wire.csgo.s1.EmbeddedPackets;
 import skadistats.clarity.wire.csgo.s1.UserMessagePackets;
 import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
 import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
-import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.io.IOException;
 
@@ -84,8 +85,8 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
         return bs.readVarUInt();
     }
 
-    @OnPostEmbeddedMessage(CSGOS1NetMessages.CSVCMsg_SendTable.class)
-    public void onPostSendTable(CSGOS1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
+    @OnPostEmbeddedMessage(S1NetMessages.CSVCMsg_SendTable.class)
+    public void onPostSendTable(S1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
         if (message.getIsEnd()) {
             Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
             int n = bs.readSBitInt(16);

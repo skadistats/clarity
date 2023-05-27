@@ -2,7 +2,7 @@ package skadistats.clarity.processor.reader;
 
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointType;
-import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

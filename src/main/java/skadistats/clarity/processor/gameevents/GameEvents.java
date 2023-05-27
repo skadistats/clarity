@@ -9,8 +9,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +22,7 @@ public class GameEvents {
 
     private final Map<Integer, GameEventDescriptor> byId = new TreeMap<>();
     private final Map<String, GameEventDescriptor> byName = new TreeMap<>();
-    private List<NetworkBaseTypes.CSVCMsg_GameEvent> preListBuffer;
+    private List<CommonNetworkBaseTypes.CSVCMsg_GameEvent> preListBuffer;
 
     @InsertEvent
     private Event<OnGameEventDescriptor> evGameEventDescriptor;
@@ -47,12 +47,12 @@ public class GameEvents {
         });
     }
 
-    @OnMessage(NetMessages.CSVCMsg_GameEventList.class)
-    public void onGameEventList(NetMessages.CSVCMsg_GameEventList message) {
-        for (NetMessages.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
+    @OnMessage(CommonNetMessages.CSVCMsg_GameEventList.class)
+    public void onGameEventList(CommonNetMessages.CSVCMsg_GameEventList message) {
+        for (CommonNetMessages.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
             String[] keys = new String[d.getKeysCount()];
             for (int i = 0; i < d.getKeysCount(); i++) {
-                NetMessages.CSVCMsg_GameEventList.key_t k = d.getKeys(i);
+                CommonNetMessages.CSVCMsg_GameEventList.key_t k = d.getKeys(i);
                 keys[i] = k.getName();
             }
             GameEventDescriptor gev = new GameEventDescriptor(
@@ -70,8 +70,8 @@ public class GameEvents {
         }
     }
 
-    @OnMessage(NetworkBaseTypes.CSVCMsg_GameEvent.class)
-    public void onGameEvent(NetworkBaseTypes.CSVCMsg_GameEvent message) {
+    @OnMessage(CommonNetworkBaseTypes.CSVCMsg_GameEvent.class)
+    public void onGameEvent(CommonNetworkBaseTypes.CSVCMsg_GameEvent message) {
         if (byId.isEmpty()) {
             if (preListBuffer == null) {
                 preListBuffer = new ArrayList<>();
@@ -82,7 +82,7 @@ public class GameEvents {
         GameEventDescriptor desc = byId.get(message.getEventid());
         GameEvent e = new GameEvent(desc);
         for (int i = 0; i < message.getKeysCount(); i++) {
-            NetworkBaseTypes.CSVCMsg_GameEvent.key_t key = message.getKeys(i);
+            CommonNetworkBaseTypes.CSVCMsg_GameEvent.key_t key = message.getKeys(i);
             Object value;
             switch (key.getType()) {
                 case 1:
@@ -111,8 +111,8 @@ public class GameEvents {
                     value = key.getValLong();
                     break;
                 case 9:
-                    // TODO: this is something special encoded as a short. Find out what it is.
-                    value = key.getValShort();
+                    // TODO: this is something special encoded as a byte string. Find out what it is.
+                    value = key.getValWstring();
                     break;
                 default:
                     throw new ClarityException("cannot handle game event key type %s", key.getType());

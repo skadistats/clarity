@@ -3,7 +3,7 @@ package skadistats.clarity.processor.runner;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -74,8 +74,8 @@ public class RealtimeRunner extends SimpleRunner {
     }
 
 
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    protected void onDotaServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
+    protected void onDotaServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
         setTickInterval(serverInfo.getTickInterval());
     }
 

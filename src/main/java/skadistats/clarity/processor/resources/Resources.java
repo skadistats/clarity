@@ -3,14 +3,15 @@ package skadistats.clarity.processor.resources;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.util.LZSS;
 import skadistats.clarity.util.MurmurHash;
-import skadistats.clarity.wire.shared.common.proto.NetMessages;
-import skadistats.clarity.wire.shared.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
+import skadistats.clarity.wire.shared.s2.proto.S2NetworkBaseTypes;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Provides({UsesResources.class})
+@Provides(value = {UsesResources.class}, engine = {EngineId.DOTA_S2, EngineId.CSGO_S2})
 public class Resources {
 
     /*
@@ -47,15 +48,15 @@ public class Resources {
         resourceHandles.clear();
     }
 
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    public void onServerInfo(NetMessages.CSVCMsg_ServerInfo message) throws IOException {
+    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
+    public void onServerInfo(DemoNetMessages.CSVCMsg_ServerInfo message) throws IOException {
         clear();
         gameSessionManifest = new GameSessionManifest();
         addManifestData(gameSessionManifest, message.getGameSessionManifest());
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_Load.class)
-    public void onLoad(NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
+    @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Load.class)
+    public void onLoad(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
         if (spawnGroupManifests.containsKey(message.getSpawngrouphandle())) {
             throw new ClarityException("CNETMsg_SpawnGroup_Load for an already existing handle: %d", message.getSpawngrouphandle());
         }
@@ -68,8 +69,8 @@ public class Resources {
         addManifestData(m, message.getSpawngroupmanifest());
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate.class)
-    public void onManifestUpdate(NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
+    @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate.class)
+    public void onManifestUpdate(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
         SpawnGroupManifest m = spawnGroupManifests.get(message.getSpawngrouphandle());
         if (m == null) {
             throw new ClarityException("CNETMsg_SpawnGroup_ManifestUpdate for an unknown handle: %d", message.getSpawngrouphandle());
@@ -79,16 +80,16 @@ public class Resources {
         addManifestData(m, message.getSpawngroupmanifest());
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted.class)
-    public void onLoadCompleted(NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted message) {
+    @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted.class)
+    public void onLoadCompleted(S2NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted message) {
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick.class)
-    public void onSetCreationTick(NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick message) {
+    @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick.class)
+    public void onSetCreationTick(S2NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick message) {
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_SpawnGroup_Unload.class)
-    public void onUnload(NetworkBaseTypes.CNETMsg_SpawnGroup_Unload message) {
+    @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Unload.class)
+    public void onUnload(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Unload message) {
     }
 
     public Entry getEntryForResourceHandle(long resourceHandle) {

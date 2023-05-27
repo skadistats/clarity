@@ -8,7 +8,7 @@ import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
-import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.IOException;
 

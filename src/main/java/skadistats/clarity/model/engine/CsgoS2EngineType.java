@@ -5,8 +5,8 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.S2FieldReader;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.wire.shared.common.proto.Demo;
 import skadistats.clarity.wire.csgo.s2.EmbeddedPackets;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
 

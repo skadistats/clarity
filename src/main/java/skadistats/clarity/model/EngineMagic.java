@@ -8,7 +8,7 @@ import skadistats.clarity.model.engine.PacketInstanceReaderCsGoS1;
 import skadistats.clarity.model.engine.PacketInstanceReaderProtobufDemo;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
-import skadistats.clarity.wire.shared.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.IOException;
 
