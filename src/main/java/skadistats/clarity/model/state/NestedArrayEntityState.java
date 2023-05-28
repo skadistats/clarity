@@ -103,7 +103,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         int i = 0;
         while (true) {
             int idx = fp.get(i);
-            if (!entry.has(idx)) {
+            if (entry.length() <= idx) {
                 field.ensureArrayEntityStateCapacity(entry, idx + 1);
             }
             field = field.getChild(idx);
@@ -224,6 +224,9 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             }
             if (state[idx] instanceof EntryRef) {
                 clearEntryRef((EntryRef) state[idx]);
+            }
+            if ((state[idx] == null) ^ (value == null)) {
+                capacityChanged = true;
             }
             state[idx] = value;
         }
