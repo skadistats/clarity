@@ -111,9 +111,14 @@ public class GameEvents {
                     value = key.getValLong();
                     break;
                 case 9:
-                    // TODO: this is something special encoded as a byte string. Find out what it is.
-                    value = key.getValWstring();
+                    // TODO: this is something special encoded as a short. Find out what it is.
+                    value = key.getValShort();
                     break;
+
+                // TODO: protobuf has a type wstring
+                // TODO: this is probably how to interpret it
+                // new String(ZeroCopy.extract(key.getValWstring()), StandardCharsets.UTF_16LE);
+
                 default:
                     throw new ClarityException("cannot handle game event key type %s", key.getType());
             }
