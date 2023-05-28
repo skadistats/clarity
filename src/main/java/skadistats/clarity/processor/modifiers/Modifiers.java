@@ -11,7 +11,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
-import skadistats.clarity.wire.dota.common.proto.DotaModifiers;
+import skadistats.clarity.wire.dota.common.proto.DOTAModifiers;
 
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {
@@ -24,11 +24,11 @@ public class Modifiers {
     @OnStringTableEntry("ActiveModifiers")
     public void onTableEntry(StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {
         if (value != null) {
-            DotaModifiers.CDOTAModifierBuffTableEntry message;
+            DOTAModifiers.CDOTAModifierBuffTableEntry message;
             try {
-                message = DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
+                message = DOTAModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
             } catch (InvalidProtocolBufferException ex) {
-                message = (DotaModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
+                message = (DOTAModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
                 byte[] b = ZeroCopy.extract(value);
                 log.error("failed to parse CDOTAModifierBuffTableEntry, returning incomplete message. Only %d/%d bytes parsed.", message.getSerializedSize(), value.size());
                 for (String line : formatHexDump(b, 0, b.length).split("\n")) {

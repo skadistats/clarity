@@ -3,7 +3,7 @@ package skadistats.clarity.model.s1;
 import skadistats.clarity.model.CombatLogEntry;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.wire.dota.common.proto.DotaUserMessages;
+import skadistats.clarity.wire.dota.common.proto.DOTAUserMessages;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,8 +30,8 @@ public class S1CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public DotaUserMessages.DOTA_COMBATLOG_TYPES getType() {
-        return DotaUserMessages.DOTA_COMBATLOG_TYPES.valueOf((int) e.getProperty(indices.typeIdx));
+    public DOTAUserMessages.DOTA_COMBATLOG_TYPES getType() {
+        return DOTAUserMessages.DOTA_COMBATLOG_TYPES.valueOf((int) e.getProperty(indices.typeIdx));
     }
 
     @Override
