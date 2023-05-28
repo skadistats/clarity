@@ -64,14 +64,16 @@ public class InputSourceProcessor {
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
-        listener.setParameterClasses(listener.getAnnotation().value());
-        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
+        Class<? extends GeneratedMessage> messageClass = listener.getAnnotation().value();
+        listener.setParameterClasses(messageClass);
+        unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnPostEmbeddedMessage.class)
     public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
-        listener.setParameterClasses(listener.getAnnotation().value(), BitStream.class);
-        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
+        Class<? extends GeneratedMessage> messageClass = listener.getAnnotation().value();
+        listener.setParameterClasses(messageClass, BitStream.class);
+        unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnMessageContainer.class)
