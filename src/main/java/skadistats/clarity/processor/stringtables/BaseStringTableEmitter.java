@@ -13,7 +13,9 @@ import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -44,6 +46,8 @@ public class BaseStringTableEmitter {
     @InsertEvent
     protected Event<OnStringTableClear> evClear;
 
+    private List<Runnable> updateEntryEvents = new ArrayList<>();
+
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final UsagePoint<UsesStringTable> usagePoint) {
         requestedTables.add(usagePoint.getAnnotation().value());
@@ -68,8 +72,13 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void raise(StringTable table, int index, String name, ByteString value) {
-        updateEvent.raise(table, index, name, value);
+    protected void queueUpdateEntryEvent(StringTable table, int index, String name, ByteString value) {
+        updateEntryEvents.add(() -> updateEvent.raise(table, index, name, value));
+    }
+
+    protected void raiseUpdateEntryEvents() {
+        updateEntryEvents.forEach(Runnable::run);
+        updateEntryEvents.clear();
     }
 
     @OnReset
@@ -92,8 +101,9 @@ public class BaseStringTableEmitter {
                 if (tt != null) {
                     applyFullStringTables(table, tt);
                     for (int i = 0; i < table.getEntryCount(); i++) {
-                        raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
+                        queueUpdateEntryEvent(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
                     }
+                    raiseUpdateEntryEvents();
                 }
             }
         }
@@ -108,8 +118,9 @@ public class BaseStringTableEmitter {
             }
             applyFullStringTables(table, tt);
             for (int i = 0; i < table.getEntryCount(); i++) {
-                raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
+                queueUpdateEntryEvent(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
             }
+            raiseUpdateEntryEvents();
         }
     }
 

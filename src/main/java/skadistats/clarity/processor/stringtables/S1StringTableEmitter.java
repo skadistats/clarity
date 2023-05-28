@@ -33,6 +33,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             decodeEntries(table, message.getStringData(), message.getNumEntries());
             table.markInitialState();
             evCreated.raise(numTables, table);
+            raiseUpdateEntryEvents();
         }
         numTables++;
     }
@@ -42,6 +43,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
         StringTable table = stringTables.forId(message.getTableId());
         if (table != null) {
             decodeEntries(table, message.getStringData(), message.getNumChangedEntries());
+            raiseUpdateEntryEvents();
         }
     }
 
@@ -106,7 +108,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
 
             keyHistory[i & KEY_HISTORY_MASK] = name;
 
-            raise(table, index, name, data);
+            queueUpdateEntryEvent(table, index, name, data);
         }
     }
 
