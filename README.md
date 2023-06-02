@@ -54,4 +54,4 @@ For example code, please see the separate project [clarity-examples](https://git
 
 # License
 
-See LICENSE in the project root.
+See ![LICENSE](/LICENSE) in the project root.
