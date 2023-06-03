@@ -8,10 +8,8 @@ import skadistats.clarity.io.bitstream.BitStream64;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.platform.buffer.CompatibleBuffer;
 import skadistats.clarity.platform.buffer.UnsafeBuffer;
-import skadistats.clarity.util.ClassReflector;
 import skadistats.clarity.util.ThrowingRunnable;
 
-import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodType;
 import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
@@ -23,7 +21,6 @@ public class ClarityPlatform {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
     private static final boolean VM_64BIT = System.getProperty("os.arch").contains("64");
-    private static final boolean VM_PRE_JAVA_9 = System.getProperty("java.specification.version","9").startsWith("1.");
 
     private static Function<byte[], BitStream> bitStreamConstructor;
     private static Consumer<MappedByteBuffer> byteBufferDisposer;
@@ -84,31 +81,14 @@ public class ClarityPlatform {
 
     private static Consumer<MappedByteBuffer> determineByteBufferDisposer() {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
-        if (VM_PRE_JAVA_9) {
-            var cleanerReflector = new ClassReflector("sun.misc.Cleaner");
-            // public void clean()
-            var mhClean = cleanerReflector.getPublicVirtual(
-                    "clean", MethodType.methodType(void.class));
+        var mhInvokeCleaner = UnsafeReflector.INSTANCE.getPublicVirtual(
+            "invokeCleaner",
+            MethodType.methodType(void.class, ByteBuffer.class));
 
-            var bufReflector = new ClassReflector("sun.nio.ch.DirectBuffer");
-            // public Cleaner cleaner()
-            var mhCleaner = bufReflector.getPublicVirtual(
-                    "cleaner", MethodType.methodType(cleanerReflector.getCls()));
-
-            return buf -> runCleaner(
-                    () -> mhClean.invoke(mhCleaner.invoke(buf)),
-                    mhClean, mhCleaner
-            );
-        } else {
-            var mhInvokeCleaner = UnsafeReflector.INSTANCE.getPublicVirtual(
-                    "invokeCleaner",
-                    MethodType.methodType(void.class, ByteBuffer.class));
-
-            return buf -> runCleaner(
-                    () -> mhInvokeCleaner.invoke(buf),
-                    mhInvokeCleaner
-            );
-        }
+        return buf -> runCleaner(
+            () -> mhInvokeCleaner.invoke(buf),
+            mhInvokeCleaner
+        );
     }
 
     private static void runCleaner(ThrowingRunnable runnable, Object... nonNulls) {
