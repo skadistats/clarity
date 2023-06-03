@@ -24,7 +24,7 @@ public class PlayerInfo {
     @InsertEvent
     private Event<OnPlayerInfo> evPlayerInfo;
 
-    private Map<Integer, PlayerInfoType> playerInfos = new TreeMap<>();
+    private final Map<Integer, PlayerInfoType> playerInfos = new TreeMap<>();
 
     @OnStringTableEntry("userinfo")
     public void onEntry(StringTable table, int index, String key, ByteString value) throws IOException {

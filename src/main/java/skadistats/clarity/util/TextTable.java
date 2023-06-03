@@ -19,9 +19,9 @@ public class TextTable {
     }
 
     private static class ColDef {
-        private String header;
-        private Alignment alignment;
-        private String conversion = "s";
+        private final String header;
+        private final Alignment alignment;
+        private final String conversion = "s";
         public ColDef(String header, Alignment alignment) {
             this.header = header;
             this.alignment = alignment;
@@ -30,7 +30,7 @@ public class TextTable {
 
     public static class Builder {
         private String title;
-        private List<ColDef> columns = new ArrayList<>();
+        private final List<ColDef> columns = new ArrayList<>();
         private int paddingLeft = 1;
         private int paddingRight = 1;
         private boolean framed = true;

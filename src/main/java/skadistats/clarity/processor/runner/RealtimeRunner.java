@@ -20,7 +20,7 @@ public class RealtimeRunner extends SimpleRunner {
     private static final long SECOND_TO_NANOSECOND = NANOSECONDS.convert(1, SECONDS);
 
     private final Instant startTime;
-    private AtomicReference<Duration> delay = new AtomicReference<>();
+    private final AtomicReference<Duration> delay = new AtomicReference<>();
     private Duration tickInterval;
 
     public RealtimeRunner(Source s) throws IOException {

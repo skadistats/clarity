@@ -49,7 +49,7 @@ public class PropertyChange {
             }
         }
 
-        private Predicate<Object[]> invocationPredicate = new Predicate<Object[]>() {
+        private final Predicate<Object[]> invocationPredicate = new Predicate<Object[]>() {
             @Override
             public boolean apply(Object[] value) {
                 return applyInternal(value);

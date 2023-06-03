@@ -31,7 +31,7 @@ public class BaseStringTableEmitter {
 
     protected int numTables = 0;
 
-    private Set<String> requestedTables = new HashSet<>();
+    private final Set<String> requestedTables = new HashSet<>();
     private Set<String> updateEventTables = new HashSet<>();
 
     private final Map<String, Demo.CDemoStringTables.table_t> resetStringTables = new TreeMap<>();
@@ -46,7 +46,7 @@ public class BaseStringTableEmitter {
     @InsertEvent
     protected Event<OnStringTableClear> evClear;
 
-    private List<Runnable> updateEntryEvents = new ArrayList<>();
+    private final List<Runnable> updateEntryEvents = new ArrayList<>();
 
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final UsagePoint<UsesStringTable> usagePoint) {

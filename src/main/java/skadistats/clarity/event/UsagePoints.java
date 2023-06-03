@@ -18,7 +18,7 @@ public class UsagePoints {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.executionModel);
 
-    private static Map<Class<? extends Annotation>, List<UsagePointProvider>> PROVIDERS = new HashMap<>();
+    private static final Map<Class<? extends Annotation>, List<UsagePointProvider>> PROVIDERS = new HashMap<>();
 
     static {
         for (Class<?> providerClass : ClassIndex.getAnnotated(Provides.class)) {

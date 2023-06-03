@@ -12,7 +12,7 @@ public enum GameRulesStateType {
     PLAYING(5),
     POST_GAME(6);
     
-    private int id;
+    private final int id;
 
     GameRulesStateType(int id) {
         this.id = id;

@@ -20,7 +20,7 @@ public class StringTable {
     private final int flags;
     private final boolean varIntBitCounts;
 
-    private List<Entry> entries;
+    private final List<Entry> entries;
     private List<Entry> initialEntries;
 
     public StringTable(String name, Integer maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags, boolean varIntBitCounts) {
@@ -121,7 +121,7 @@ public class StringTable {
 
     private static class Entry {
 
-        private String name;
+        private final String name;
         private ByteString value;
 
         private Entry(String name, ByteString value) {

@@ -9,7 +9,7 @@ public class GameEventDescriptor {
     private final int eventId;
     private final String name;
     private final String[] keys;
-    private Map<String, Integer> indexByKey = new HashMap<>();
+    private final Map<String, Integer> indexByKey = new HashMap<>();
 
 
     public GameEventDescriptor(int eventId, String name, String[] keys) {

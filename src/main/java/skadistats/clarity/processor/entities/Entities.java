@@ -69,7 +69,7 @@ public class Entities {
     private int[] deletions;
     private int entitiesServerTick;
     private int serverTick;
-    private EntityRegistry entityRegistry = new EntityRegistry();
+    private final EntityRegistry entityRegistry = new EntityRegistry();
 
     private BaselineRegistry baselineRegistry;
 
@@ -78,9 +78,9 @@ public class Entities {
     private boolean resetInProgress;
     private ClientFrame.Capsule resetCapsule;
 
-    private List<Runnable> queuedUpdates = new ArrayList<>();
+    private final List<Runnable> queuedUpdates = new ArrayList<>();
 
-    private Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
+    private final Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
     @Insert
     private EngineType engineType;

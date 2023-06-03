@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Vector {
 
-    private float[] v;
+    private final float[] v;
 
     public Vector(float... v) {
         this.v = v;

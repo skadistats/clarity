@@ -7,7 +7,7 @@ import java.io.IOException;
 
 public class LZSS {
 
-    private static int MAGIC = 'L' | 'Z' << 8 | 'S' << 16 | 'S' << 24;
+    private static final int MAGIC = 'L' | 'Z' << 8 | 'S' << 16 | 'S' << 24;
 
     public static byte[] unpack(ByteString raw) throws IOException {
         return unpack(BitStream.createBitStream(raw));

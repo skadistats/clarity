@@ -12,8 +12,8 @@ public abstract class StateDifferenceEvaluator {
 
     private final EntityState prevState;
     private final EntityState curState;
-    private Iterator<FieldPath> prevIter;
-    private Iterator<FieldPath> curIter;
+    private final Iterator<FieldPath> prevIter;
+    private final Iterator<FieldPath> curIter;
     private FieldPath prev = null;
     private FieldPath cur = null;
 

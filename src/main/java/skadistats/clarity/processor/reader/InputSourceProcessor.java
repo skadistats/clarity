@@ -58,9 +58,9 @@ public class InputSourceProcessor {
     @InsertEvent
     private Event<OnMessageContainer> evMessageContainer;
 
-    private Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
-    private Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
-    private Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
+    private final Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
+    private final Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
+    private final Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {

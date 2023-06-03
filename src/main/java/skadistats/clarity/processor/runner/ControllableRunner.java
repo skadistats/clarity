@@ -23,7 +23,7 @@ public class ControllableRunner extends AbstractFileRunner {
     private Thread runnerThread;
     private Exception runnerException;
 
-    private TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
+    private final TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
     private int resetRelevantOffset = -1;
     private LinkedList<ResetStep> resetSteps;
 

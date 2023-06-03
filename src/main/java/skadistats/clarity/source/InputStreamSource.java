@@ -12,7 +12,7 @@ public class InputStreamSource extends Source {
 
     private final InputStream stream;
     private int position;
-    private byte[] dummy = new byte[65536];
+    private final byte[] dummy = new byte[65536];
 
     public InputStreamSource(String fileName) throws IOException {
         this(new BufferedInputStream(new FileInputStream(fileName)));

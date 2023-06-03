@@ -17,11 +17,11 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(decoder);
 
-    private String fieldName;
+    private final String fieldName;
     private int bitCount;
     private float minValue;
     private float maxValue;
-    private int flags;
+    private final int flags;
     private int encodeFlags;
 
     private float highLowMultiplier;

@@ -36,7 +36,7 @@ public class ClientFrame {
 
         private final long[] uid;
         private final boolean[] active;
-        private EntityState[] state;
+        private final EntityState[] state;
 
         private Capsule(ClientFrame frame) {
             int size = frame.getSize();
