@@ -230,7 +230,7 @@ public class Entities {
             emitPropertyCountChangedEvent(entity);
         }
         if (!changedFieldPaths.isEmpty()) {
-            emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[changedFieldPaths.size()]));
+            emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[0]));
         }
     }
 
