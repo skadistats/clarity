@@ -85,14 +85,14 @@ public class ClarityPlatform {
     private static Consumer<MappedByteBuffer> determineByteBufferDisposer() {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
         if (VM_PRE_JAVA_9) {
-            ClassReflector cleanerReflector = new ClassReflector("sun.misc.Cleaner");
+            var cleanerReflector = new ClassReflector("sun.misc.Cleaner");
             // public void clean()
-            MethodHandle mhClean = cleanerReflector.getPublicVirtual(
+            var mhClean = cleanerReflector.getPublicVirtual(
                     "clean", MethodType.methodType(void.class));
 
-            ClassReflector bufReflector = new ClassReflector("sun.nio.ch.DirectBuffer");
+            var bufReflector = new ClassReflector("sun.nio.ch.DirectBuffer");
             // public Cleaner cleaner()
-            MethodHandle mhCleaner = bufReflector.getPublicVirtual(
+            var mhCleaner = bufReflector.getPublicVirtual(
                     "cleaner", MethodType.methodType(cleanerReflector.getCls()));
 
             return buf -> runCleaner(
@@ -100,7 +100,7 @@ public class ClarityPlatform {
                     mhClean, mhCleaner
             );
         } else {
-            MethodHandle mhInvokeCleaner = UnsafeReflector.INSTANCE.getPublicVirtual(
+            var mhInvokeCleaner = UnsafeReflector.INSTANCE.getPublicVirtual(
                     "invokeCleaner",
                     MethodType.methodType(void.class, ByteBuffer.class));
 
@@ -112,7 +112,7 @@ public class ClarityPlatform {
     }
 
     private static void runCleaner(ThrowingRunnable runnable, Object... nonNulls) {
-        for (Object nonNull : nonNulls) {
+        for (var nonNull : nonNulls) {
             if (nonNull == null) {
                 log.error("Cannot run cleaner because method was not found. Please file an issue!");
                 return;

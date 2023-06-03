@@ -29,9 +29,9 @@ public class Modifiers {
                 message = DOTAModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
             } catch (InvalidProtocolBufferException ex) {
                 message = (DOTAModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
-                byte[] b = ZeroCopy.extract(value);
+                var b = ZeroCopy.extract(value);
                 log.error("failed to parse CDOTAModifierBuffTableEntry, returning incomplete message. Only %d/%d bytes parsed.", message.getSerializedSize(), value.size());
-                for (String line : formatHexDump(b, 0, b.length).split("\n")) {
+                for (var line : formatHexDump(b, 0, b.length).split("\n")) {
                     log.info("%s", line);
                 }
             }
@@ -40,10 +40,10 @@ public class Modifiers {
     }
 
     public static String formatHexDump(byte[] array, int offset, int length) {
-        StringBuilder builder = new StringBuilder();
-        for (int rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
+        var builder = new StringBuilder();
+        for (var rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
             builder.append(String.format("%06d:  ", rowOffset));
-            for (int index = 0; index < 16; index++) {
+            for (var index = 0; index < 16; index++) {
                 if (rowOffset + index < array.length) {
                     builder.append(String.format("%02x ", array[rowOffset + index]));
                 } else {

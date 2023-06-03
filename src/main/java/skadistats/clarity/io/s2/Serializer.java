@@ -29,9 +29,9 @@ public class Serializer {
     }
 
     public Integer getFieldIndex(String name) {
-        int searchHash = name.hashCode();
-        for (int i = 0; i < fields.length; i++) {
-            String fieldName = fieldNames[i];
+        var searchHash = name.hashCode();
+        for (var i = 0; i < fields.length; i++) {
+            var fieldName = fieldNames[i];
             if (searchHash != fieldName.hashCode()) continue;
             if (name.equals(fieldName)) return i;
         }

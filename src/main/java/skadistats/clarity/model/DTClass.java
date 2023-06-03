@@ -24,7 +24,7 @@ public interface DTClass {
     @Deprecated
     default List<FieldPath> collectFieldPaths(EntityState state) {
         List<FieldPath> result = new ArrayList<>();
-        Iterator<FieldPath> iter = state.fieldPathIterator();
+        var iter = state.fieldPathIterator();
         while (iter.hasNext()) {
             result.add(iter.next());
         }

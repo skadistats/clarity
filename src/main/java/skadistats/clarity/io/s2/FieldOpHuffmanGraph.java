@@ -46,11 +46,11 @@ public class FieldOpHuffmanGraph {
     }
 
     public static void main(String[] args) {
-        String graph = new FieldOpHuffmanGraph().generate();
+        var graph = new FieldOpHuffmanGraph().generate();
         try {
-            ProcessBuilder builder = new ProcessBuilder("/usr/bin/bash", "-c", "dot -Tpng | feh -");
-            Process dotProcess = builder.start();
-            OutputStream os = dotProcess.getOutputStream();
+            var builder = new ProcessBuilder("/usr/bin/bash", "-c", "dot -Tpng | feh -");
+            var dotProcess = builder.start();
+            var os = dotProcess.getOutputStream();
             os.write(graph.getBytes());
             os.close();
         } catch (IOException e) {

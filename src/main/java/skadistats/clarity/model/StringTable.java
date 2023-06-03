@@ -101,16 +101,16 @@ public class StringTable {
     }
 
     public String toString() {
-        TextTable t = new TextTable.Builder()
+        var t = new TextTable.Builder()
             .setTitle(getName())
             .setFrame(TextTable.FRAME_COMPAT)
             .addColumn("Index", Alignment.RIGHT)
             .addColumn("Key", Alignment.RIGHT)
             .addColumn("Value", Alignment.RIGHT)
             .build();
-        int n = entries.size();
-        for (int i = 0; i < n; i++) {
-            ByteString v = getValueByIndex(i);
+        var n = entries.size();
+        for (var i = 0; i < n; i++) {
+            var v = getValueByIndex(i);
 
             t.setData(i, 0, i);
             t.setData(i, 1, getNameByIndex(i));

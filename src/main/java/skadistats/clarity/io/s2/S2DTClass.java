@@ -56,26 +56,26 @@ public class S2DTClass implements DTClass {
     }
 
     public Decoder getDecoderForFieldPath(S2FieldPath fp) {
-        Field f = getFieldForFieldPath(fp);
+        var f = getFieldForFieldPath(fp);
         return f != null ? f.getDecoder() : null;
     }
 
     public FieldType getTypeForFieldPath(S2FieldPath fp) {
-        Field f = getFieldForFieldPath(fp);
+        var f = getFieldForFieldPath(fp);
         return f != null ? f.getType() : null;
     }
 
     @Override
     public String getNameForFieldPath(FieldPath fpX) {
-        S2FieldPath fp = fpX.s2();
-        StringBuilder sb = new StringBuilder();
+        var fp = fpX.s2();
+        var sb = new StringBuilder();
 
         Field currentField = field;
-        int i = 0;
-        int last = fp.last();
+        var i = 0;
+        var last = fp.last();
         while(true) {
-            int idx = fp.get(i);
-            String segment = currentField.getChildNameSegment(idx);
+            var idx = fp.get(i);
+            var segment = currentField.getChildNameSegment(idx);
             if (segment == null) return null;
             if (i != 0) sb.append('.');
             sb.append(segment);
@@ -87,15 +87,15 @@ public class S2DTClass implements DTClass {
 
     @Override
     public S2FieldPath getFieldPathForName(String fieldName) {
-        S2ModifiableFieldPath fp = S2ModifiableFieldPath.newInstance();
+        var fp = S2ModifiableFieldPath.newInstance();
 
         Field currentField = field;
-        String search = fieldName;
+        var search = fieldName;
         while(true) {
-            int dotIdx = search.indexOf('.');
-            boolean last = (dotIdx == -1);
-            String segment = last ? search : search.substring(0, dotIdx);
-            Integer fieldIdx = currentField.getChildIndex(segment);
+            var dotIdx = search.indexOf('.');
+            var last = (dotIdx == -1);
+            var segment = last ? search : search.substring(0, dotIdx);
+            var fieldIdx = currentField.getChildIndex(segment);
             if (fieldIdx == null) return null;
             fp.cur(fieldIdx);
             if (last) return fp.unmodifiable();

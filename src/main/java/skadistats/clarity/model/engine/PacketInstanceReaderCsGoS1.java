@@ -36,13 +36,13 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
 
     @Override
     public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException {
-        final int kind = source.readByte() & 0xFF;
-        final int tick = source.readFixedInt32();
+        final var kind = source.readByte() & 0xFF;
+        final var tick = source.readFixedInt32();
         source.skipBytes(1); // playerSlot
         if (kind > handlers.length) {
             throw new UnsupportedOperationException("kind " + kind + " not implemented");
         }
-        final Handler<T> handler = (Handler<T>) handlers[kind - 1];
+        final var handler = (Handler<T>) handlers[kind - 1];
         return new PacketInstance<T>() {
             @Override
             public int getKind() {
@@ -82,7 +82,7 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
     public static final byte dem_stringtables = 9; // alternative to 6? Similar to dota?
 
     private byte[] readPacket(Source source) throws IOException {
-        int size = source.readFixedInt32();
+        var size = source.readFixedInt32();
         return packetReader.readFromSource(source, size, false);
     }
 
@@ -211,19 +211,19 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
             new Handler<Demo.CDemoStringTables>(Demo.CDemoStringTables.class, ResetRelevantKind.STRINGTABLE) {
                 @Override
                 public Demo.CDemoStringTables parse(Source source) throws IOException {
-                    BitStream bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));
-                    Demo.CDemoStringTables.Builder b = Demo.CDemoStringTables.newBuilder();
-                    int nTables = bs.readUBitInt(8);
-                    for (int t = 0; t < nTables; t++) {
-                        Demo.CDemoStringTables.table_t.Builder tb = b.addTablesBuilder();
+                    var bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));
+                    var b = Demo.CDemoStringTables.newBuilder();
+                    var nTables = bs.readUBitInt(8);
+                    for (var t = 0; t < nTables; t++) {
+                        var tb = b.addTablesBuilder();
                         tb.setTableName(bs.readString(4095));
-                        int nStrings = bs.readUBitInt(16);
-                        for (int s = 0; s < nStrings; s++) {
+                        var nStrings = bs.readUBitInt(16);
+                        for (var s = 0; s < nStrings; s++) {
                             readItem(bs, tb.addItemsBuilder());
                         }
                         if (bs.readBitFlag()) {
                             nStrings = bs.readUBitInt(16);
-                            for (int s = 0; s < nStrings; s++) {
+                            for (var s = 0; s < nStrings; s++) {
                                 readItem(bs, tb.addItemsClientsideBuilder());
                             }
                         }
@@ -237,7 +237,7 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
                 private void readItem(BitStream bs, Demo.CDemoStringTables.items_t.Builder ib) {
                     ib.setStr(bs.readString(255));
                     if (bs.readBitFlag()) {
-                        byte[] data = new byte[bs.readUBitInt(16)];
+                        var data = new byte[bs.readUBitInt(16)];
                         bs.readBitsIntoByteArray(data, data.length * 8);
                         ib.setData(ZeroCopy.wrap(data));
                     }

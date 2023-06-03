@@ -8,8 +8,8 @@ public interface S2FieldPath<F extends S2FieldPath> extends FieldPath<F> {
     int last();
 
     default String asString() {
-        final StringBuilder sb = new StringBuilder();
-        for (int i = 0; i <= last(); i++) {
+        final var sb = new StringBuilder();
+        for (var i = 0; i <= last(); i++) {
             if (i != 0) {
                 sb.append('/');
             }

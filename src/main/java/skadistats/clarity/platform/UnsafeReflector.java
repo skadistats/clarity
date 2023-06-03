@@ -30,13 +30,13 @@ public class UnsafeReflector {
 
     public int getByteArrayBaseOffset() {
         if (!isValid()) return 0;
-        Integer bo = (Integer) reflector.getDeclaredField(null, "ARRAY_BYTE_BASE_OFFSET");
+        var bo = (Integer) reflector.getDeclaredField(null, "ARRAY_BYTE_BASE_OFFSET");
         return bo != null ? bo : 0;
     }
 
     public MethodHandle getPublicVirtual(String name, MethodType methodType) {
         if (!isValid()) return null;
-        MethodHandle handle = reflector.getPublicVirtual(name, methodType);
+        var handle = reflector.getPublicVirtual(name, methodType);
         if (handle == null) return null;
         return handle.bindTo(unsafe);
     }

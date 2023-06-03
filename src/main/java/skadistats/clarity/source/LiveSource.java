@@ -72,7 +72,7 @@ public class LiveSource extends Source {
         resetLastTick();
         handleFileChange();
 
-        final Thread watcherThread = new Thread(this::watcherThread);
+        final var watcherThread = new Thread(this::watcherThread);
         watcherThread.setName("clarity-livesource-watcher");
         watcherThread.setDaemon(true);
         watcherThread.start();
@@ -190,7 +190,7 @@ public class LiveSource extends Source {
                     StandardWatchEventKinds.ENTRY_DELETE,
                     StandardWatchEventKinds.ENTRY_MODIFY
             );
-            boolean stillValid = true;
+            var stillValid = true;
             while (stillValid) {
                 if (watchService.poll(250, TimeUnit.MILLISECONDS) == null) {
                     try {
@@ -201,10 +201,10 @@ public class LiveSource extends Source {
                     }
                     continue;
                 }
-                for (WatchEvent<?> event : watchKey.pollEvents()) {
-                    WatchEvent.Kind<?> kind = event.kind();
+                for (var event : watchKey.pollEvents()) {
+                    var kind = event.kind();
                     if (Path.class.isAssignableFrom(kind.type())) {
-                        Path affectedPath = (Path) event.context();
+                        var affectedPath = (Path) event.context();
                         if (filePath.getParent().resolve(affectedPath).equals(filePath)) {
                             handleFileChange();
                         }
@@ -228,7 +228,7 @@ public class LiveSource extends Source {
     private void handleFileChange() {
         lock.lock();
         try {
-            boolean nowExisting = Files.isReadable(filePath);
+            var nowExisting = Files.isReadable(filePath);
             if (nowExisting ^ (file != null)) {
                 demoStopSeen = false;
                 resetLastTick();
@@ -237,7 +237,7 @@ public class LiveSource extends Source {
                 }
             }
             if (nowExisting) {
-                int pos = getPosition();
+                var pos = getPosition();
                 open();
                 setPosition(Math.min(pos, file.capacity() - 1));
                 scanForLastTick();
@@ -282,7 +282,7 @@ public class LiveSource extends Source {
                 } else {
                     file.position(nextTickOffset);
                 }
-                PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(this);
+                var pi = engineType.getNextPacketInstance(this);
                 if (lastTickOffset < nextTickOffset) {
                     setLastTick(pi.getTick());
                     lastTickOffset = nextTickOffset;
@@ -307,7 +307,7 @@ public class LiveSource extends Source {
 
     private void blockUntilDataAvailable(int length) throws IOException {
         lock.lock();
-        boolean dispose = true;
+        var dispose = true;
         try {
             while (true) {
                 if (aborted) {

@@ -7,7 +7,7 @@ import skadistats.clarity.model.s1.PropFlag;
 public class IntDecoderFactory implements DecoderFactory<Integer> {
 
     public static Decoder<Integer> createDecoderStatic(SendProp prop) {
-        int flags = prop.getFlags();
+        var flags = prop.getFlags();
         if ((flags & PropFlag.ENCODED_AS_VARINT) != 0) {
             if ((flags & PropFlag.UNSIGNED) != 0) {
                 return new IntVarUnsignedDecoder();

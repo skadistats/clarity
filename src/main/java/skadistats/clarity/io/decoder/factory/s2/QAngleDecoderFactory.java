@@ -11,7 +11,7 @@ import skadistats.clarity.model.Vector;
 public class QAngleDecoderFactory implements DecoderFactory<Vector> {
 
     public static Decoder<Vector> createDecoderStatic(DecoderProperties f) {
-        int bc = f.getBitCountOrDefault(0);
+        var bc = f.getBitCountOrDefault(0);
         if ("qangle_pitch_yaw".equals(f.getEncoderType())) {
             return new QAnglePitchYawOnlyDecoder(bc);
         }

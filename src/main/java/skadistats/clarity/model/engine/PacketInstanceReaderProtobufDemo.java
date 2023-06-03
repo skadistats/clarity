@@ -27,12 +27,12 @@ public class PacketInstanceReaderProtobufDemo extends PacketInstanceReader<Demo.
 
     @Override
     public <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException {
-        int rawKind = source.readVarInt32();
-        final boolean isCompressed = (rawKind & compressedFlag) == compressedFlag;
-        final int kind = rawKind &~ compressedFlag;
-        final int tick = source.readVarInt32();
-        final int size = source.readVarInt32();
-        final Class<T> messageClass = (Class<T>) DemoPackets.classForKind(kind);
+        var rawKind = source.readVarInt32();
+        final var isCompressed = (rawKind & compressedFlag) == compressedFlag;
+        final var kind = rawKind &~ compressedFlag;
+        final var tick = source.readVarInt32();
+        final var size = source.readVarInt32();
+        final var messageClass = (Class<T>) DemoPackets.classForKind(kind);
         return new PacketInstance<T>() {
 
             @Override

@@ -42,7 +42,7 @@ public class FieldGenerator {
         this.fieldData = new FieldData[protoMessage.getFieldsCount()];
         this.checkedNames = new IntOpenHashSet();
         this.patchFuncs = new ArrayList<>();
-        for (Map.Entry<BuildNumberRange, PatchFunc> patchEntry : PATCHES.entrySet()) {
+        for (var patchEntry : PATCHES.entrySet()) {
             if (patchEntry.getKey().appliesTo(buildNumber)) {
                 this.patchFuncs.add(patchEntry.getValue());
             }
@@ -50,17 +50,17 @@ public class FieldGenerator {
     }
 
     public void createFields() {
-        for (int i = 0; i < fieldData.length; i++) {
+        for (var i = 0; i < fieldData.length; i++) {
             fieldData[i] = generateFieldData(protoMessage.getFields(i));
         }
-        for (int i = 0; i < protoMessage.getSerializersCount(); i++) {
-            Serializer serializer = generateSerializer(protoMessage.getSerializers(i));
+        for (var i = 0; i < protoMessage.getSerializersCount(); i++) {
+            var serializer = generateSerializer(protoMessage.getSerializers(i));
             serializers.put(serializer.getId(), serializer);
         }
     }
 
     public S2DTClass createDTClass(String name) {
-        SerializerField field = new SerializerField(
+        var field = new SerializerField(
                 FieldType.forString(name),
                 serializers.get(new SerializerId(name, 0))
         );
@@ -87,14 +87,14 @@ public class FieldGenerator {
     }
 
     private Serializer generateSerializer(S2NetMessages.ProtoFlattenedSerializer_t proto) {
-        SerializerId sid = new SerializerId(
+        var sid = new SerializerId(
                 sym(proto.getSerializerNameSym()),
                 proto.getSerializerVersion()
         );
-        Field[] fields = new Field[proto.getFieldsIndexCount()];
-        String[] fieldNames = new String[proto.getFieldsIndexCount()];
-        for (int i = 0; i < fields.length; i++) {
-            int fi = proto.getFieldsIndex(i);
+        var fields = new Field[proto.getFieldsIndexCount()];
+        var fieldNames = new String[proto.getFieldsIndexCount()];
+        for (var i = 0; i < fields.length; i++) {
+            var fi = proto.getFieldsIndex(i);
             if (fieldData[fi].field == null) {
                 fieldData[fi].field = createField(sid, fieldData[fi]);
             }
@@ -105,7 +105,7 @@ public class FieldGenerator {
     }
 
     private Field createField(SerializerId sId, FieldData fd) {
-        for (PatchFunc patchFunc : patchFuncs) {
+        for (var patchFunc : patchFuncs) {
             patchFunc.execute(sId, fd);
         }
 
@@ -163,8 +163,8 @@ public class FieldGenerator {
     }
 
     private String fieldNameFunction(S2NetMessages.ProtoFlattenedSerializerField_t field) {
-        int nameSym = field.getVarNameSym();
-        String name = sym(nameSym);
+        var nameSym = field.getVarNameSym();
+        var name = sym(nameSym);
         if (!checkedNames.contains(nameSym)) {
             if (name.indexOf('.') != -1) {
                 log.warn("replay contains field with invalid name '%s'. Please open a github issue!", name);
@@ -238,7 +238,7 @@ public class FieldGenerator {
         }
 
         private int getArrayElementCount() {
-            String elementCount = fieldType.getElementCount();
+            var elementCount = fieldType.getElementCount();
             switch (elementCount) {
                 case "MAX_ITEM_STOCKS":
                     return 8;
@@ -266,7 +266,7 @@ public class FieldGenerator {
             switch (field.name) {
                 case "m_flMana":
                 case "m_flMaxMana":
-                    ProtoDecoderProperties up = field.decoderProperties;
+                    var up = field.decoderProperties;
                     if (up.highValue == 3.4028235E38f) {
                         up.lowValue = null;
                         up.highValue = 8192.0f;
@@ -341,7 +341,7 @@ public class FieldGenerator {
         PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
             switch (field.name) {
                 case "m_flRuneTime":
-                    ProtoDecoderProperties up = field.decoderProperties;
+                    var up = field.decoderProperties;
                     if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
                         up.lowValue = null;
                         up.highValue = null;

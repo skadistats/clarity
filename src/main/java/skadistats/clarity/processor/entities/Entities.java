@@ -136,9 +136,9 @@ public class Entities {
         if (".*".equals(classPattern)) {
             return null;
         }
-        final Pattern p = Pattern.compile(classPattern);
+        final var p = Pattern.compile(classPattern);
         return value -> {
-            Entity e = (Entity) value[0];
+            var e = (Entity) value[0];
             return p.matcher(e.getDtClass().getDtName()).matches();
         };
     }
@@ -173,11 +173,11 @@ public class Entities {
                 //updateEventDebug = true;
 
                 Entity entity;
-                for (int eIdx = 0; eIdx < entityCount; eIdx++) {
+                for (var eIdx = 0; eIdx < entityCount; eIdx++) {
                     entity = entities.getEntity(eIdx);
                     if (resetCapsule.isExistent(eIdx)) {
                         if (entity == null || entity.getUid() != resetCapsule.getUid(eIdx)) {
-                            Entity deletedEntity = entityRegistry.get(resetCapsule.getUid(eIdx));
+                            var deletedEntity = entityRegistry.get(resetCapsule.getUid(eIdx));
                             if (resetCapsule.isActive(eIdx)) {
                                 emitLeftEvent(deletedEntity);
                             }
@@ -210,7 +210,7 @@ public class Entities {
             return;
         }
         List<FieldPath> changedFieldPaths = new ArrayList<>();
-        boolean[] countChanged = { false };
+        var countChanged = new boolean[]{false};
         new StateDifferenceEvaluator(oldState, entity.getState()) {
             @Override
             protected void onPropertiesDeleted(List<FieldPath> fieldPaths) {
@@ -245,7 +245,7 @@ public class Entities {
     @OnStringTableEntry(BASELINE_TABLE)
     public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
         baselineRegistry.markClassBaselineDirty(index);
-        int separatorIdx = key.indexOf(':');
+        var separatorIdx = key.indexOf(':');
         if (separatorIdx != -1) {
             // alternate baseline, do not register
             return;
@@ -300,7 +300,7 @@ public class Entities {
             deferredMessages.clear();
         }
         if (!deferredMessages.isEmpty()) {
-            Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredToExecute = deferredMessages.headMap(serverTick);
+            var deferredToExecute = deferredMessages.headMap(serverTick);
             if (!deferredToExecute.isEmpty()) {
                 log.debug("server is now at tick %d", serverTick);
                 deferredToExecute.forEach((deferredMessageTick, deferredMessage) -> {
@@ -343,15 +343,15 @@ public class Entities {
             queueUpdate(() -> baselineRegistry.switchEntityBaselines(message.getBaseline()));
         }
 
-        for (CommonNetMessages.CSVCMsg_PacketEntities.alternate_baseline_t ab : message.getAlternateBaselinesList()) {
+        for (var ab : message.getAlternateBaselinesList()) {
             baselineRegistry.updateEntityAlternateBaselineIndex(ab.getEntityIndex(), ab.getBaselineIndex());
         }
 
-        BitStream stream = BitStream.createBitStream(message.getEntityData());
+        var stream = BitStream.createBitStream(message.getEntityData());
 
-        int updateCount = message.getUpdatedEntries();
+        var updateCount = message.getUpdatedEntries();
         int updateType;
-        int eIdx = -1;
+        var eIdx = -1;
         Entity eEnt;
 
         while (updateCount-- != 0) {
@@ -362,18 +362,18 @@ public class Entities {
             switch (updateType) {
 
                 case 2: // CREATE
-                    int dtClassId = stream.readUBitInt(dtClasses.getClassBits());
-                    DTClass dtClass = dtClasses.forClassId(dtClassId);
+                    var dtClassId = stream.readUBitInt(dtClasses.getClassBits());
+                    var dtClass = dtClasses.forClassId(dtClassId);
                     if (dtClass == null) {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
-                    int serial = stream.readUBitInt(engineType.getSerialBits());
+                    var serial = stream.readUBitInt(engineType.getSerialBits());
                     if (engineType.getId().isEntitySkipExtraVarint()) {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
                     if (eEnt != null) {
-                        int handle = engineType.handleForIndexAndSerial(eIdx, serial);
+                        var handle = engineType.handleForIndexAndSerial(eIdx, serial);
                         if (eEnt.getUid() == Entity.uid(dtClassId, handle)) {
                             queueEntityRecreate(eEnt, message, stream);
                             break;
@@ -411,8 +411,8 @@ public class Entities {
         }
 
         if (engineType.handleDeletions() && message.getIsDelta()) {
-            int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
-            for (int i = 0; i < n; i++) {
+            var n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
+            for (var i = 0; i < n; i++) {
                 eIdx = deletions[i];
                 eEnt = entities.getEntity(eIdx);
                 if (eEnt != null) {
@@ -429,14 +429,14 @@ public class Entities {
     }
 
     private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
+        var changes = fieldReader.readFields(stream, dtClass, debug);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
     }
 
     private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
-        EntityState newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
+        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
         changes.applyTo(newState);
-        Entity entity = entityRegistry.create(
+        var entity = entityRegistry.create(
                 dtClass.getClassId(),
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
@@ -458,17 +458,17 @@ public class Entities {
     }
 
     private void queueEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
         queueUpdate(() -> executeEntityRecreate(entity, message, changes));
     }
 
     private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
-        EntityState oldState = entity.getState();
-        boolean wasActive = entity.isActive();
-        int eIdx = entity.getIndex();
+        var oldState = entity.getState();
+        var wasActive = entity.isActive();
+        var eIdx = entity.getIndex();
 
-        DTClass dtClass = entity.getDtClass();
-        EntityState newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
+        var dtClass = entity.getDtClass();
+        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
         changes.applyTo(newState);
         entity.setState(newState);
         entity.setActive(true);
@@ -488,13 +488,13 @@ public class Entities {
     }
 
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
-        FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
     }
 
     private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        boolean capacityChanged = changes.applyTo(entity.getState());
+        var capacityChanged = changes.applyTo(entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
             if (capacityChanged) {
@@ -593,11 +593,11 @@ public class Entities {
                 return s;
             }
         }
-        DTClass cls = dtClasses.forClassId(clsId);
+        var cls = dtClasses.forClassId(clsId);
         if (cls == null) {
             throw new ClarityException("DTClass for id %d not found.", clsId);
         }
-        int baselineIdx = baselineRegistry.getClassBaselineIndex(clsId, entityIdx);
+        var baselineIdx = baselineRegistry.getClassBaselineIndex(clsId, entityIdx);
         if (baselineIdx == -1) {
             log.error("Baseline index for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
             return cls.getEmptyState();
@@ -606,14 +606,14 @@ public class Entities {
         if (s != null) {
             return s;
         }
-        ByteString raw = baselineRegistry.getClassBaselineData(baselineIdx);
+        var raw = baselineRegistry.getClassBaselineData(baselineIdx);
         if (raw == null || raw.size() == 0) {
             log.error("Baseline data for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
             return cls.getEmptyState();
         }
         s = cls.getEmptyState();
-        BitStream stream = BitStream.createBitStream(raw);
-        FieldChanges changes = fieldReader.readFields(stream, cls, false);
+        var stream = BitStream.createBitStream(raw);
+        var changes = fieldReader.readFields(stream, cls, false);
         changes.applyTo(s);
         baselineRegistry.setClassBaselineState(baselineIdx, s);
         return s;
@@ -624,7 +624,7 @@ public class Entities {
     }
 
     public Entity getByHandle(int handle) {
-        Entity e = getByIndex(engineType.indexForHandle(handle));
+        var e = getByIndex(engineType.indexForHandle(handle));
         return e == null || e.getHandle() != handle ? null : e;
     }
 
@@ -635,7 +635,7 @@ public class Entities {
             @Override
             public Entity readNext() {
                 while (++i < entityCount) {
-                    Entity e = getByIndex(i);
+                    var e = getByIndex(i);
                     if (e != null && predicate.apply(e)) {
                         return e;
                     }
@@ -646,7 +646,7 @@ public class Entities {
     }
 
     public Entity getByPredicate(Predicate<Entity> predicate) {
-        Iterator<Entity> iter = getAllByPredicate(predicate);
+        var iter = getAllByPredicate(predicate);
         return iter.hasNext() ? iter.next() : null;
     }
 
@@ -656,7 +656,7 @@ public class Entities {
     }
 
     public Entity getByDtName(final String dtClassName) {
-        Iterator<Entity> iter = getAllByDtName(dtClassName);
+        var iter = getAllByDtName(dtClassName);
         return iter.hasNext() ? iter.next() : null;
     }
 

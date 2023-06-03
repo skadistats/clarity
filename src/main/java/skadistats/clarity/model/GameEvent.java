@@ -20,7 +20,7 @@ public class GameEvent {
     }
 
     public <T> T getProperty(String property) {
-        Integer index = descriptor.getIndexForKey(property);
+        var index = descriptor.getIndexForKey(property);
         if (index == null) {
             throw new IllegalArgumentException(String.format("property %s not found on game event of class %s", property, descriptor.getName()));
         }
@@ -37,8 +37,8 @@ public class GameEvent {
 	
     @Override
     public String toString() {
-        StringBuilder buf = new StringBuilder();
-        for (int i = 0; i < state.length; i++) {
+        var buf = new StringBuilder();
+        for (var i = 0; i < state.length; i++) {
             if (i > 0) {
                 buf.append(", ");
             }

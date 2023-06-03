@@ -7,7 +7,7 @@ import skadistats.clarity.model.s1.PropFlag;
 public class FloatDecoderFactory implements DecoderFactory<Float> {
 
     public static Decoder<Float> createDecoderStatic(SendProp prop) {
-        int flags = prop.getFlags();
+        var flags = prop.getFlags();
 //        if ((flags & PropFlag.ROUND_DOWN) != 0) {
 //            System.out.println("unhandled ROUND_DOWN for " + prop.getVarName());
 //        }

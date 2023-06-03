@@ -41,13 +41,13 @@ public class S1DTClassEmitter {
             return;
         }
 
-        LinkedList<SendProp> props = new LinkedList<>();
-        SendTable st = new SendTable(
+        var props = new LinkedList<SendProp>();
+        var st = new SendTable(
             message.getNetTableName(),
             props
         );
 
-        for (S1NetMessages.CSVCMsg_SendTable.sendprop_t sp : message.getPropsList()) {
+        for (var sp : message.getPropsList()) {
             props.add(
                 new SendProp(
                     st,
@@ -70,8 +70,8 @@ public class S1DTClassEmitter {
 
     @OnMessage(Demo.CDemoClassInfo.class)
     public void onClassInfo(Demo.CDemoClassInfo message) {
-        for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
-            DTClass dt = dtClasses.forDtName(ct.getTableName());
+        for (var ct : message.getClassesList()) {
+            var dt = dtClasses.forDtName(ct.getTableName());
             if (dt == null) {
                 throw new ClarityException("DTClass for '%s' not found.", ct.getTableName());
             }
@@ -83,17 +83,17 @@ public class S1DTClassEmitter {
 
     @OnMessage(Demo.CDemoSyncTick.class)
     public void onSyncTick(Demo.CDemoSyncTick message) {
-        Iterator<DTClass> iter = dtClasses.iterator();
+        var iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            S1DTClass dtc = (S1DTClass) iter.next();
-            SendTableFlattener.Result flattened = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
+            var dtc = (S1DTClass) iter.next();
+            var flattened = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
             dtc.setReceiveProps(flattened.receiveProps);
             dtc.setIndexMapping(flattened.indexMapping);
         }
         iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            S1DTClass dtc = (S1DTClass) iter.next();
-            String superClassName = dtc.getSendTable().getBaseClass();
+            var dtc = (S1DTClass) iter.next();
+            var superClassName = dtc.getSendTable().getBaseClass();
             if (superClassName != null) {
                 dtc.setSuperClass((S1DTClass) dtClasses.forDtName(superClassName));
             }

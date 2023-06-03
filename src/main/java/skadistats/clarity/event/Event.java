@@ -19,8 +19,8 @@ public class Event<A extends Annotation> {
         this.runner = runner;
         this.eventType = eventType;
         orderedListeners = new TreeMap<>();
-        for (EventListener<A> listener : listeners) {
-            Set<EventListener<A>> container = orderedListeners.get(listener.order);
+        for (var listener : listeners) {
+            var container = orderedListeners.get(listener.order);
             if (container == null) {
                 container = new HashSet<>();
                 orderedListeners.put(listener.order, container);
@@ -34,8 +34,8 @@ public class Event<A extends Annotation> {
     }
 
     public void raise(Object... args){
-        for (Set<EventListener<A>> listeners : orderedListeners.values()) {
-            for (EventListener<A> listener : listeners) {
+        for (var listeners : orderedListeners.values()) {
+            for (var listener : listeners) {
                 if (listener.isInvokedForArguments(args)) {
                     try {
                         listener.invoke(args);

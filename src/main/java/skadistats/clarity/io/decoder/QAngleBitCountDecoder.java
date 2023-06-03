@@ -13,7 +13,7 @@ public class QAngleBitCountDecoder implements Decoder<Vector> {
 
     @Override
     public Vector decode(BitStream bs) {
-        float[] v = new float[3];
+        var v = new float[3];
         v[0] = bs.readBitAngle(nBits);
         v[1] = bs.readBitAngle(nBits);
         v[2] = bs.readBitAngle(nBits);

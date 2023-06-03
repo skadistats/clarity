@@ -26,8 +26,8 @@ public class S1DecoderFactory {
     }
 
     public static Decoder createDecoder(SendProp prop) {
-        PropType type = prop.getType();
-        DecoderFactory decoderFactory = FACTORIES.get(type);
+        var type = prop.getType();
+        var decoderFactory = FACTORIES.get(type);
         if (decoderFactory != null) {
             return decoderFactory.createDecoder(prop);
         }

@@ -18,9 +18,9 @@ public class FieldOpHuffmanTree {
     }
 
     private static Node buildTree() {
-        PriorityQueue<Node> queue = new PriorityQueue<>();
-        int n = 0;
-        for (FieldOpType op : ops) {
+        var queue = new PriorityQueue<Node>();
+        var n = 0;
+        for (var op : ops) {
             queue.offer(new LeafNode(op, n++));
         }
         while (queue.size() > 1) {
@@ -40,11 +40,11 @@ public class FieldOpHuffmanTree {
     }
 
     private static int[][] reverseTree(List<int[]> akku) {
-        int r = akku.size() - 1;
-        int[][] reverse = new int[r + 1][2];
-        for (int i = 0; i <= r; i++) {
-            for (int j = 0; j <= 1; j++) {
-                int s = akku.get(r - i)[j];
+        var r = akku.size() - 1;
+        var reverse = new int[r + 1][2];
+        for (var i = 0; i <= r; i++) {
+            for (var j = 0; j <= 1; j++) {
+                var s = akku.get(r - i)[j];
                 reverse[i][j] = s < 0 ? s : r - s;
             }
         }
@@ -52,7 +52,7 @@ public class FieldOpHuffmanTree {
     }
 
     private void dump(int i, String prefix) {
-        for (int s = 0; s < 2; s++) {
+        for (var s = 0; s < 2; s++) {
             if (tree[i][s] < 0) {
                 System.out.println(ops[- tree[i][s] - 1] + ": " + prefix + s);
             } else {
@@ -73,7 +73,7 @@ public class FieldOpHuffmanTree {
         }
         @Override
         public int compareTo(Node o) {
-            int r = Integer.compare(weight, o.weight);
+            var r = Integer.compare(weight, o.weight);
             return r != 0 ? r : Integer.compare(o.num, num);
         }
     }

@@ -38,14 +38,14 @@ public class InputStreamSource extends Source {
             throw new UnsupportedOperationException("cannot rewind input stream");
         }
         while (position != newPosition) {
-            int r = Math.min(dummy.length, newPosition - position);
+            var r = Math.min(dummy.length, newPosition - position);
             readBytes(dummy, 0, r);
         }
     }
 
     @Override
     public byte readByte() throws IOException {
-        int i = stream.read();
+        var i = stream.read();
         if (i == -1) {
             throw new EOFException();
         }
@@ -56,7 +56,7 @@ public class InputStreamSource extends Source {
     @Override
     public void readBytes(byte[] dest, int offset, int length) throws IOException {
         while (length > 0) {
-            int r = stream.read(dest, offset, length);
+            var r = stream.read(dest, offset, length);
             if (r == -1) {
                 throw new EOFException();
             }

@@ -9,15 +9,15 @@ public class TriStateTable {
     }
 
     private int getInternal(int n) {
-        int offs = n >> 4;
-        int shift = (n & 15) << 1;
+        var offs = n >> 4;
+        var shift = (n & 15) << 1;
         return (field[offs] >> shift) & 3;
     }
 
     private void setInternal(int n, int v) {
-        int offs = n >> 4;
-        int shift = (n & 15) << 1;
-        int mask = ~(3 << shift);
+        var offs = n >> 4;
+        var shift = (n & 15) << 1;
+        var mask = ~(3 << shift);
         field[offs] = (field[offs] & mask) | (v << shift);
     }
 

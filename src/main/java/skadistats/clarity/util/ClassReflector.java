@@ -11,7 +11,7 @@ public class ClassReflector {
 
     public ClassReflector(String... classNames) {
         Class<?> clsTemp = null;
-        for (String className : classNames) {
+        for (var className : classNames) {
             try {
                 clsTemp = Class.forName(className);
                 break;
@@ -36,7 +36,7 @@ public class ClassReflector {
 
     public Object getDeclaredField(Object object, String name) {
         try {
-            Field f = cls.getDeclaredField(name);
+            var f = cls.getDeclaredField(name);
             f.setAccessible(true);
             return f.get(object);
         } catch (Exception e) {

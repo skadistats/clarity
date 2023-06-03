@@ -77,7 +77,7 @@ public class ControllableRunner extends AbstractFileRunner {
         private void handleDemandedTick() throws IOException {
             wantedTick = demandedTick;
             demandedTick = null;
-            int diff = wantedTick - tick;
+            var diff = wantedTick - tick;
 
             if (diff >= 0 && diff <= 5) {
                 return;
@@ -86,10 +86,10 @@ public class ControllableRunner extends AbstractFileRunner {
             resetSteps = new LinkedList<>();
             resetSteps.add(new ResetStep(LoopController.Command.RESET_START, null));
             if (diff < 0 || engineType.isFullPacketSeekAllowed()) {
-                TreeSet<PacketPosition> seekPositions = getResetPacketsBeforeTick(wantedTick);
+                var seekPositions = getResetPacketsBeforeTick(wantedTick);
                 resetSteps.add(new ResetStep(LoopController.Command.RESET_CLEAR, null));
                 while (seekPositions.size() > 0) {
-                    PacketPosition pp = seekPositions.pollFirst();
+                    var pp = seekPositions.pollFirst();
                     switch (pp.getKind()) {
                         case STRINGTABLE:
                         case FULL_PACKET:
@@ -118,7 +118,7 @@ public class ControllableRunner extends AbstractFileRunner {
         @Override
         public LoopController.Command doLoopControl(int nextTickWithData) throws Exception {
             upcomingTick = nextTickWithData;
-            ResetStep step = resetSteps.peekFirst();
+            var step = resetSteps.peekFirst();
             switch (step.command) {
                 case CONTINUE:
                     resetSteps.pollFirst();
@@ -167,7 +167,7 @@ public class ControllableRunner extends AbstractFileRunner {
         public void markResetRelevantPacket(int tick, ResetRelevantKind kind, int offset) throws IOException {
             lock.lock();
             try {
-                PacketPosition pp = newResetRelevantPacketPosition(tick, kind, offset);
+                var pp = newResetRelevantPacketPosition(tick, kind, offset);
                 if (pp == null) {
                     throw new ClarityException("tried to mark non reset relevant packet");
                 }
@@ -190,17 +190,17 @@ public class ControllableRunner extends AbstractFileRunner {
     }
 
     private TreeSet<PacketPosition> getResetPacketsBeforeTick(int wantedTick) throws IOException {
-        int backup = source.getPosition();
-        PacketPosition wanted = PacketPosition.createPacketPosition(wantedTick, ResetRelevantKind.FULL_PACKET, 0);
+        var backup = source.getPosition();
+        var wanted = PacketPosition.createPacketPosition(wantedTick, ResetRelevantKind.FULL_PACKET, 0);
         if (resetRelevantPackets.tailSet(wanted, true).size() == 0) {
-            PacketPosition basePos = resetRelevantPackets.floor(wanted);
+            var basePos = resetRelevantPackets.floor(wanted);
             source.setPosition(basePos.getOffset());
-            int lastFullFoundAtTick = basePos.getTick();
+            var lastFullFoundAtTick = basePos.getTick();
             try {
                 while (true) {
-                    int at = source.getPosition();
-                    PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
-                    PacketPosition pp = newResetRelevantPacketPosition(pi.getTick(), pi.getResetRelevantKind(), at);
+                    var at = source.getPosition();
+                    var pi = engineType.getNextPacketInstance(source);
+                    var pp = newResetRelevantPacketPosition(pi.getTick(), pi.getResetRelevantKind(), at);
                     if (pp != null) {
                         lastFullFoundAtTick = pp.getTick();
                         addResetRelevant(pp);

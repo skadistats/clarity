@@ -103,7 +103,7 @@ public class TextTable {
         if (column >= columns.length) {
             throw new IndexOutOfBoundsException("column must be smaller than " + columns.length);
         }
-        TreeMap<Integer, Object> rowMap = data.get(row);
+        var rowMap = data.get(row);
         if (rowMap == null) {
             rowMap = new TreeMap<>();
             data.put(row, rowMap);
@@ -115,7 +115,7 @@ public class TextTable {
         if (column >= columns.length) {
             throw new IndexOutOfBoundsException("column must be smaller than " + columns.length);
         }
-        TreeMap<Integer, Object> rowMap = data.get(row);
+        var rowMap = data.get(row);
         return rowMap != null ? rowMap.get(column) : null;
     }
 
@@ -128,8 +128,8 @@ public class TextTable {
     }
 
     public void print(PrintWriter writer) {
-        int[] widths = calculateColumnWidths();
-        String f = calcFormatString(widths);
+        var widths = calculateColumnWidths();
+        var f = calcFormatString(widths);
         if (title != null) {
             if (framed) {
                 writer.println(calcTitleSeparatorString(widths, 0));
@@ -149,7 +149,7 @@ public class TextTable {
         if (framed) {
             writer.println(calcSeparatorString(widths, 1));
         }
-        for (int r = 0; r < getRowCount(); r++) {
+        for (var r = 0; r < getRowCount(); r++) {
             writer.format(f, getObjects(r));
             writer.println();
             if (framed) {
@@ -164,7 +164,7 @@ public class TextTable {
     }
 
     public String toString() {
-        StringWriter w = new StringWriter();
+        var w = new StringWriter();
         print(new PrintWriter(w));
         return w.toString();
     }
@@ -174,11 +174,11 @@ public class TextTable {
     }
 
     private String calcFormatString(int[] widths) {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         if (framed) {
             buf.append(frame[0]);
         }
-        for (int i = 0; i < columns.length; i++) {
+        for (var i = 0; i < columns.length; i++) {
             buf.append(paddingLeft);
             buf.append('%');
             if (columns[i].alignment == Alignment.LEFT) {
@@ -195,7 +195,7 @@ public class TextTable {
     }
 
     private String calcTitleFormatString(int[] widths) {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         if (framed) {
             buf.append(frame[0]);
         }
@@ -213,9 +213,9 @@ public class TextTable {
 
 
     private String calcSeparatorString(int[] widths, int pos) {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         buf.append(frame[2 + pos]);
-        for (int i = 0; i < columns.length; i++) {
+        for (var i = 0; i < columns.length; i++) {
             buf.append(repeat(paddingLeft.length() + widths[i] + paddingRight.length(), frame[1]));
             buf.append(frame[(i + 1 == columns.length ? 8 : 5) + pos]);
         }
@@ -223,9 +223,9 @@ public class TextTable {
     }
 
     private String calcTitleSeparatorString(int[] widths, int pos) {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         buf.append(frame[2 + pos]);
-        for (int i = 0; i < columns.length; i++) {
+        for (var i = 0; i < columns.length; i++) {
             buf.append(repeat(paddingLeft.length() + widths[i] + paddingRight.length(), frame[1]));
             if (i + 1 == columns.length) {
                 buf.append(frame[8 + pos]);
@@ -238,28 +238,28 @@ public class TextTable {
 
 
     private int[] calculateColumnWidths() {
-        int[] widths = new int[columns.length + 1];
-        for (int i = 0; i < columns.length; i++) {
+        var widths = new int[columns.length + 1];
+        for (var i = 0; i < columns.length; i++) {
             widths[i] = columns[i].header.length();
         }
-        for (TreeMap<Integer, Object> rowMap : data.values()) {
-            for (Map.Entry<Integer, Object> entry : rowMap.entrySet()) {
+        for (var rowMap : data.values()) {
+            for (var entry : rowMap.entrySet()) {
                 if (entry.getValue() != null) {
                     widths[entry.getKey()] = Math.max(widths[entry.getKey()], convertToString(entry.getKey(), entry.getValue()).length());
                 }
             }
         }
-        int complete = framed ? 1 : 0;
-        for (int i = 0; i < columns.length; i++) {
+        var complete = framed ? 1 : 0;
+        for (var i = 0; i < columns.length; i++) {
             complete += widths[i] + paddingLeft.length() + paddingRight.length() + (framed ? 1 : 0);
         }
-        int usedMin = Math.max(minWidth != null ? minWidth : 0, (title != null ? title.length() : 0) + paddingLeft.length() + paddingRight.length() + (framed ? 2 : 0));
+        var usedMin = Math.max(minWidth != null ? minWidth : 0, (title != null ? title.length() : 0) + paddingLeft.length() + paddingRight.length() + (framed ? 2 : 0));
         if (usedMin > complete) {
-            float p = ((float)(usedMin - complete)) / columns.length;
-            float c = 0.01f;
-            for (int i = 0; i < columns.length; i++) {
+            var p = ((float)(usedMin - complete)) / columns.length;
+            var c = 0.01f;
+            for (var i = 0; i < columns.length; i++) {
                 c += p;
-                int x = (int) Math.floor(c);
+                var x = (int) Math.floor(c);
                 widths[i] += x;
                 c -= x;
             }
@@ -274,17 +274,17 @@ public class TextTable {
     }
 
     private Object[] getHeaders() {
-        Object[] result = new Object[columns.length];
-        for (int i = 0; i < columns.length; i++) {
+        var result = new Object[columns.length];
+        for (var i = 0; i < columns.length; i++) {
             result[i] = columns[i].header;
         }
         return result;
     }
 
     private Object[] getObjects(int row) {
-        Object[] result = new Object[columns.length];
-        for (int i = 0; i < columns.length; i++) {
-            Object v = getData(row, i);
+        var result = new Object[columns.length];
+        for (var i = 0; i < columns.length; i++) {
+            var v = getData(row, i);
             result[i] = v == null ? "-" : v;
         }
         return result;

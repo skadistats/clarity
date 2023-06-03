@@ -19,7 +19,7 @@ public enum GameRulesStateType {
     }
     
     public static GameRulesStateType forId(int id) {
-        for (GameRulesStateType t : values()) {
+        for (var t : values()) {
             if (t.id == id) {
                 return t;
             }

@@ -21,19 +21,19 @@ public class UsagePoints {
     private static final Map<Class<? extends Annotation>, List<UsagePointProvider>> PROVIDERS = new HashMap<>();
 
     static {
-        for (Class<?> providerClass : ClassIndex.getAnnotated(Provides.class)) {
+        for (var providerClass : ClassIndex.getAnnotated(Provides.class)) {
             log.debug("provider found on ClassIndex: %s", providerClass.getName());
-            Provides provideAnnotation = providerClass.getAnnotation(Provides.class);
+            var provideAnnotation = providerClass.getAnnotation(Provides.class);
             if (provideAnnotation == null) {
                 // ClassIndex does not reflect real class. Can sometimes happen when working in the IDE.
                 continue;
             }
 
-            for (Class<? extends Annotation> usagePointClass : provideAnnotation.value()) {
+            for (var usagePointClass : provideAnnotation.value()) {
                 if (!usagePointClass.isAnnotationPresent(UsagePointMarker.class)) {
                     throw new ClarityException("Class %s provides %s, which is not marked as a usage point.", providerClass.getName(), usagePointClass.getName());
                 }
-                List<UsagePointProvider> providersForClass = PROVIDERS.get(usagePointClass);
+                var providersForClass = PROVIDERS.get(usagePointClass);
                 if (providersForClass == null) {
                     providersForClass = new LinkedList<>();
                     PROVIDERS.put(usagePointClass, providersForClass);
@@ -41,7 +41,7 @@ public class UsagePoints {
                 providersForClass.add(new UsagePointProvider(usagePointClass, providerClass, provideAnnotation));
             }
 
-            for (List<UsagePointProvider> providersForClass : PROVIDERS.values()) {
+            for (var providersForClass : PROVIDERS.values()) {
                 Collections.sort(providersForClass, Comparator.comparingInt(o -> o.getProvidesAnnotation().precedence()));
             }
         }

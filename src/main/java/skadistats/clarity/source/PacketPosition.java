@@ -36,7 +36,7 @@ public class PacketPosition implements Comparable<PacketPosition> {
 
     @Override
     public int compareTo(PacketPosition o) {
-        int r = Integer.compare(tick, o.tick);
+        var r = Integer.compare(tick, o.tick);
         return r != 0 ? r : kind.compareTo(o.kind);
     }
 
@@ -44,21 +44,21 @@ public class PacketPosition implements Comparable<PacketPosition> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        PacketPosition that = (PacketPosition) o;
+        var that = (PacketPosition) o;
         return tick == that.tick && kind == that.kind;
     }
 
 
     @Override
     public int hashCode() {
-        int result = tick;
+        var result = tick;
         result = 31 * result + kind.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PacketPosition{");
+        final var sb = new StringBuilder("PacketPosition{");
         sb.append("tick=").append(tick);
         sb.append(", kind=").append(kind);
         sb.append(", offset=").append(offset);

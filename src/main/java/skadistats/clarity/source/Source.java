@@ -76,7 +76,7 @@ public abstract class Source {
      * @throws IOException if the data cannot be read
      */
     public byte[] readBytes(int length) throws IOException {
-        byte[] dst = new byte[length];
+        var dst = new byte[length];
         readBytes(dst, 0, length);
         return dst;
     }
@@ -88,11 +88,11 @@ public abstract class Source {
      * @throws IOException if the data cannot be read, or is not a valid variable int32
      */
     public int readVarInt32() throws IOException {
-        byte tmp = readByte();
+        var tmp = readByte();
         if (tmp >= 0) {
             return tmp;
         }
-        int result = tmp & 0x7f;
+        var result = tmp & 0x7f;
         if ((tmp = readByte()) >= 0) {
             result |= tmp << 7;
         } else {
@@ -156,7 +156,7 @@ public abstract class Source {
      */
     public EngineMagic readEngineMagic() throws IOException {
         try {
-            EngineMagic engineMagic = EngineMagic.magicForString(new String(readBytes(8)));
+            var engineMagic = EngineMagic.magicForString(new String(readBytes(8)));
             if (engineMagic == null) {
                 throw new IOException();
             }

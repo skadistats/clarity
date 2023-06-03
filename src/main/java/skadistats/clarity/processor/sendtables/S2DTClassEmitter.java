@@ -35,8 +35,8 @@ public class S2DTClassEmitter {
 
     @OnMessage(Demo.CDemoSendTables.class)
     public void onSendTables(Demo.CDemoSendTables sendTables) throws IOException {
-        CodedInputStream cis = CodedInputStream.newInstance(ZeroCopy.extract(sendTables.getData()));
-        S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage = Packet.parse(
+        var cis = CodedInputStream.newInstance(ZeroCopy.extract(sendTables.getData()));
+        var protoMessage = Packet.parse(
                 S2NetMessages.CSVCMsg_FlattenedSerializer.class,
                 ZeroCopy.wrap(cis.readRawBytes(cis.readRawVarint32()))
         );
@@ -51,7 +51,7 @@ public class S2DTClassEmitter {
 
     @OnMessage(Demo.CDemoClassInfo.class)
     public void onDemoClassInfo(Demo.CDemoClassInfo message) {
-        for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
+        for (var ct : message.getClassesList()) {
             DTClass dt = fieldGenerator.createDTClass(ct.getNetworkName());
             evDtClass.raise(dt);
             dt.setClassId(ct.getClassId());
@@ -63,7 +63,7 @@ public class S2DTClassEmitter {
 
     @OnMessage(CommonNetMessages.CSVCMsg_ClassInfo.class)
     public void onServerClassInfo(CommonNetMessages.CSVCMsg_ClassInfo message) {
-        for (CommonNetMessages.CSVCMsg_ClassInfo.class_t ct : message.getClassesList()) {
+        for (var ct : message.getClassesList()) {
             DTClass dt = fieldGenerator.createDTClass(ct.getClassName());
             evDtClass.raise(dt);
             dt.setClassId(ct.getClassId());

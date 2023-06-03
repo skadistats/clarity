@@ -42,8 +42,8 @@ public class PlayerInfo {
             }
         }
 
-        int i = index + 1;
-        PlayerInfoType last = playerInfos.get(i);
+        var i = index + 1;
+        var last = playerInfos.get(i);
 
         if (current == last) return;
         if (current != null && current.equals(last)) return;
@@ -61,7 +61,7 @@ public class PlayerInfo {
     }
 
     public Integer getEntityIndexForUserId(final int userId) {
-        for (Map.Entry<Integer, PlayerInfoType> e : playerInfos.entrySet()) {
+        for (var e : playerInfos.entrySet()) {
             if (e.getValue().getUserId() == userId) {
                 return e.getKey();
             }

@@ -22,14 +22,14 @@ public class BaselineRegistry {
 
         this.classBaselineIdx = new int[classCount];
         this.baselineStateCache = new EntityState[classCount];
-        for (int i = 0; i < classCount; i++) {
+        for (var i = 0; i < classCount; i++) {
             classBaselineIdx[i] = -1;
         }
 
         this.entityAlternateBaselineIdx = new int[entityCount];
         this.entityBaselineDtClass = new int[entityCount][2];
         this.entityBaselineStateCache = new EntityState[entityCount][2];
-        for (int i = 0; i < entityCount; i++) {
+        for (var i = 0; i < entityCount; i++) {
             entityBaselineDtClass[i][0] = -1;
             entityBaselineDtClass[i][1] = -1;
             this.entityAlternateBaselineIdx[i] = -1;
@@ -37,10 +37,10 @@ public class BaselineRegistry {
     }
 
     public void clear() {
-        for (int i = 0; i < classCount; i++) {
+        for (var i = 0; i < classCount; i++) {
             baselineStateCache[i] = null;
         }
-        for (int i = 0; i < entityCount; i++) {
+        for (var i = 0; i < entityCount; i++) {
             entityBaselineDtClass[i][0] = -1;
             entityBaselineDtClass[i][1] = -1;
             entityAlternateBaselineIdx[i] = -1;
@@ -90,14 +90,14 @@ public class BaselineRegistry {
     }
 
     public void updateEntityBaseline(int iFrom, int entityIdx, int dtClassId, EntityState state) {
-        int iTo = 1 - iFrom;
+        var iTo = 1 - iFrom;
         entityBaselineDtClass[entityIdx][iTo] = dtClassId;
         entityBaselineStateCache[entityIdx][iTo] = state;
     }
 
     public void switchEntityBaselines(int iFrom) {
-        int iTo = 1 - iFrom;
-        for (int j = 0; j < entityCount; j++) {
+        var iTo = 1 - iFrom;
+        for (var j = 0; j < entityCount; j++) {
             entityBaselineDtClass[j][iTo] = entityBaselineDtClass[j][iFrom];
             entityBaselineStateCache[j][iTo] = entityBaselineStateCache[j][iFrom];
         }

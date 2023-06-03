@@ -225,9 +225,9 @@ public enum FieldOpType {
     PushN(0) {
         @Override
         public void execute(S2ModifiableFieldPath fp, BitStream bs) {
-            int n = bs.readUBitVar();
+            var n = bs.readUBitVar();
             fp.inc(bs.readUBitVar());
-            for (int i = 0; i < n; i++) {
+            for (var i = 0; i < n; i++) {
                 fp.down();
                 fp.inc(bs.readUBitVarFieldPath());
             }
@@ -236,13 +236,13 @@ public enum FieldOpType {
     PushNAndNonTopographical(310) {
         @Override
         public void execute(S2ModifiableFieldPath fp, BitStream bs) {
-            for (int i = 0; i <= fp.last(); i++) {
+            for (var i = 0; i <= fp.last(); i++) {
                 if (bs.readBitFlag()) {
                     fp.inc(i, bs.readVarSInt() + 1);
                 }
             }
-            int c = bs.readUBitVar();
-            for (int i = 0; i < c; i++) {
+            var c = bs.readUBitVar();
+            for (var i = 0; i < c; i++) {
                 fp.down();
                 fp.inc(bs.readUBitVarFieldPath());
             }
@@ -308,7 +308,7 @@ public enum FieldOpType {
         @Override
         public void execute(S2ModifiableFieldPath fp, BitStream bs) {
             fp.up(bs.readUBitVarFieldPath());
-            for (int i = 0; i <= fp.last(); i++) {
+            for (var i = 0; i <= fp.last(); i++) {
                 if (bs.readBitFlag()) {
                     fp.inc(i, bs.readVarSInt());
                 }
@@ -318,7 +318,7 @@ public enum FieldOpType {
     NonTopoComplex(76) {
         @Override
         public void execute(S2ModifiableFieldPath fp, BitStream bs) {
-            for (int i = 0; i <= fp.last(); i++) {
+            for (var i = 0; i <= fp.last(); i++) {
                 if (bs.readBitFlag()) {
                     fp.inc(i, bs.readVarSInt());
                 }
@@ -334,7 +334,7 @@ public enum FieldOpType {
     NonTopoComplexPack4Bits(99) {
         @Override
         public void execute(S2ModifiableFieldPath fp, BitStream bs) {
-            for (int i = 0; i <= fp.last(); i++) {
+            for (var i = 0; i <= fp.last(); i++) {
                 if (bs.readBitFlag()) {
                     fp.inc(i, bs.readUBitInt(4) - 7);
                 }

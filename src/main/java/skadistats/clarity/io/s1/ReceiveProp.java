@@ -27,7 +27,7 @@ public class ReceiveProp {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("ReceiveProp [source=");
         builder.append(sendProp.getSrc());
         builder.append(", name=");

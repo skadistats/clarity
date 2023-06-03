@@ -74,7 +74,7 @@ public class CombatLog {
 
     @OnTickEnd
     public void onTickEnd(boolean synthetic) {
-        for (CombatLogEntry e : logEntries) {
+        for (var e : logEntries) {
             evCombatLogEntry.raise(e);
         }
         logEntries.clear();

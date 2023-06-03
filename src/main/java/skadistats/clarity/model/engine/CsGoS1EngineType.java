@@ -88,9 +88,9 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
     @OnPostEmbeddedMessage(S1NetMessages.CSVCMsg_SendTable.class)
     public void onPostSendTable(S1NetMessages.CSVCMsg_SendTable message, BitStream bs) {
         if (message.getIsEnd()) {
-            Demo.CDemoClassInfo.Builder b = Demo.CDemoClassInfo.newBuilder();
-            int n = bs.readSBitInt(16);
-            for (int i = 0; i < n; i++) {
+            var b = Demo.CDemoClassInfo.newBuilder();
+            var n = bs.readSBitInt(16);
+            for (var i = 0; i < n; i++) {
                 b.addClassesBuilder()
                         .setClassId(bs.readSBitInt(16))
                         .setNetworkName(bs.readString(255))

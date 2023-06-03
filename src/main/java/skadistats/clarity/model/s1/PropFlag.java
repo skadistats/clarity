@@ -47,8 +47,8 @@ public class PropFlag {
     };
 
     public static String descriptionForFlags(int flags) {
-        StringBuilder buf = new StringBuilder();
-        for (String name : NAMES) {
+        var buf = new StringBuilder();
+        for (var name : NAMES) {
             if ((flags & 1) != 0) {
                 if (buf.length() > 0) {
                     buf.append(", ");

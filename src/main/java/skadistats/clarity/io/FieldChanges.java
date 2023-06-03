@@ -15,8 +15,8 @@ public class FieldChanges {
     }
 
     public boolean applyTo(EntityState state) {
-        boolean capacityChanged = false;
-        for (int i = 0; i < fieldPaths.length; i++) {
+        var capacityChanged = false;
+        for (var i = 0; i < fieldPaths.length; i++) {
             capacityChanged |= state.setValueForFieldPath(fieldPaths[i], values[i]);
         }
         return capacityChanged;

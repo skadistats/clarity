@@ -32,8 +32,8 @@ public class GameEvents {
     @Initializer(OnGameEventDescriptor.class)
     public void initOnGameEventDescriptor(final EventListener<OnGameEventDescriptor> eventListener) {
         eventListener.setInvocationPredicate(args -> {
-            String v = eventListener.getAnnotation().value();
-            GameEventDescriptor ev = (GameEventDescriptor) args[0];
+            var v = eventListener.getAnnotation().value();
+            var ev = (GameEventDescriptor) args[0];
             return v.length() == 0 || v.equals(ev.getName());
         });
     }
@@ -41,21 +41,21 @@ public class GameEvents {
     @Initializer(OnGameEvent.class)
     public void initOnGameEvent(final EventListener<OnGameEvent> eventListener) {
         eventListener.setInvocationPredicate(args -> {
-            String v = eventListener.getAnnotation().value();
-            GameEvent ev = (GameEvent) args[0];
+            var v = eventListener.getAnnotation().value();
+            var ev = (GameEvent) args[0];
             return v.length() == 0 || v.equals(ev.getName());
         });
     }
 
     @OnMessage(CommonNetMessages.CSVCMsg_GameEventList.class)
     public void onGameEventList(CommonNetMessages.CSVCMsg_GameEventList message) {
-        for (CommonNetMessages.CSVCMsg_GameEventList.descriptor_t d : message.getDescriptorsList()) {
-            String[] keys = new String[d.getKeysCount()];
-            for (int i = 0; i < d.getKeysCount(); i++) {
-                CommonNetMessages.CSVCMsg_GameEventList.key_t k = d.getKeys(i);
+        for (var d : message.getDescriptorsList()) {
+            var keys = new String[d.getKeysCount()];
+            for (var i = 0; i < d.getKeysCount(); i++) {
+                var k = d.getKeys(i);
                 keys[i] = k.getName();
             }
-            GameEventDescriptor gev = new GameEventDescriptor(
+            var gev = new GameEventDescriptor(
                 d.getEventid(),
                 d.getName(),
                 keys
@@ -79,10 +79,10 @@ public class GameEvents {
             preListBuffer.add(message);
             return;
         }
-        GameEventDescriptor desc = byId.get(message.getEventid());
-        GameEvent e = new GameEvent(desc);
-        for (int i = 0; i < message.getKeysCount(); i++) {
-            CommonNetworkBaseTypes.CSVCMsg_GameEvent.key_t key = message.getKeys(i);
+        var desc = byId.get(message.getEventid());
+        var e = new GameEvent(desc);
+        for (var i = 0; i < message.getKeysCount(); i++) {
+            var key = message.getKeys(i);
             Object value;
             switch (key.getType()) {
                 case 1:

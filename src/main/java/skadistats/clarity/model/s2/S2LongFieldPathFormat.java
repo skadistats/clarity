@@ -43,16 +43,16 @@ public class S2LongFieldPathFormat {
     }
 
     static {
-        int bitCount = -1;
-        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        var bitCount = -1;
+        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             bitCount += BITS_PER_COMPONENT[i] + 1;
         }
         if (bitCount > 63) {
             throw new UnsupportedOperationException("too many bits used");
         }
-        int cur = bitCount;
-        long presentMaskAkku = 0L;
-        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        var cur = bitCount;
+        var presentMaskAkku = 0L;
+        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             OFFSET[i] = i == 0 ? 1L : 0L;
             if (i != 0) {
                 CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);

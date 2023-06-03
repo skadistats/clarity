@@ -18,7 +18,7 @@ public class FloatDefaultDecoder implements Decoder<Float> {
 
     @Override
     public Float decode(BitStream bs) {
-        float v = bs.readUBitInt(bitCount) * decodeMultiplier;
+        var v = bs.readUBitInt(bitCount) * decodeMultiplier;
         return minValue + (maxValue - minValue) * v;
     }
 

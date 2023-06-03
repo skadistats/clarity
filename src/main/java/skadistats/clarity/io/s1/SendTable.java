@@ -21,7 +21,7 @@ public class SendTable {
     }
 
     public String getBaseClass() {
-        for (SendProp sp : props) {
+        for (var sp : props) {
             if ("baseclass".equals(sp.getVarName())) {
                 return sp.getDtName();
             }

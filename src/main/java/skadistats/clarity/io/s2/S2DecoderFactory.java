@@ -93,7 +93,7 @@ public class S2DecoderFactory {
 
     public static DecoderHolder createDecoder(DecoderProperties decoderProperties, String type) {
         Decoder decoder;
-        DecoderFactory decoderFactory = FACTORIES.get(type);
+        var decoderFactory = FACTORIES.get(type);
         if (decoderFactory != null) {
             decoder = decoderFactory.createDecoder(decoderProperties);
         } else {

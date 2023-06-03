@@ -46,7 +46,7 @@ public class S1DTClass implements DTClass {
 
     @Override
     public S1FieldPath getFieldPathForName(String name){
-        Integer idx = this.propsByName.get(name);
+        var idx = this.propsByName.get(name);
         return idx != null ? new S1FieldPath(idx) : null;
     }
 
@@ -63,7 +63,7 @@ public class S1DTClass implements DTClass {
     }
 
     public boolean instanceOf(String dtName) {
-        S1DTClass s = this;
+        var s = this;
         while (s != null) {
             if (s.getDtName().equals(dtName)) {
                 return true;
@@ -74,7 +74,7 @@ public class S1DTClass implements DTClass {
     }
 
     public boolean instanceOf(int classId) {
-        S1DTClass s = this;
+        var s = this;
         while (s != null) {
             if (s.getClassId() == classId) {
                 return true;
@@ -95,7 +95,7 @@ public class S1DTClass implements DTClass {
     public void setReceiveProps(ReceiveProp[] receiveProps) {
         this.receiveProps = receiveProps;
         this.propsByName = new HashMap<>();
-        for(int i = 0; i < receiveProps.length; ++i) {
+        for(var i = 0; i < receiveProps.length; ++i) {
             this.propsByName.put(receiveProps[i].getVarName(), i);
         }
     }

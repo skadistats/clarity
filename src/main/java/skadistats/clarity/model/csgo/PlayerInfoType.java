@@ -29,19 +29,19 @@ public class PlayerInfoType {
     private final int[] customFiles;
 
     public static PlayerInfoType createS1(ByteString byteString) throws IOException {
-        ByteBuffer buf = ByteBuffer.wrap(ZeroCopy.extract(byteString)).order(ByteOrder.BIG_ENDIAN);
-        long version = buf.getLong();
-        long xuid = buf.getLong();
-        String name = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
-        int userId = buf.getInt();
-        String guid = readZeroTerminated(buf, SIGNED_GUID_LEN + 1);
-        int friendsId = buf.getInt();
+        var buf = ByteBuffer.wrap(ZeroCopy.extract(byteString)).order(ByteOrder.BIG_ENDIAN);
+        var version = buf.getLong();
+        var xuid = buf.getLong();
+        var name = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
+        var userId = buf.getInt();
+        var guid = readZeroTerminated(buf, SIGNED_GUID_LEN + 1);
+        var friendsId = buf.getInt();
         buf.position(buf.position() + 3);
-        String friendsName = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
-        boolean fakePlayer = buf.get() == (byte)1;
-        boolean isHltv = buf.get() == (byte)1;
-        int[] customFiles = new int[MAX_CUSTOM_FILES];
-        for (int i = 0; i < MAX_CUSTOM_FILES; i++) {
+        var friendsName = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
+        var fakePlayer = buf.get() == (byte)1;
+        var isHltv = buf.get() == (byte)1;
+        var customFiles = new int[MAX_CUSTOM_FILES];
+        for (var i = 0; i < MAX_CUSTOM_FILES; i++) {
             customFiles[i] = buf.getInt();
         }
         // TODO: still 6 bytes remaining, so something is wrong...
@@ -49,7 +49,7 @@ public class PlayerInfoType {
     }
 
     public static PlayerInfoType createS2(ByteString byteString) {
-        CSGOS2ClarityMessages.PlayerInfo msg = Packet.parse(CSGOS2ClarityMessages.PlayerInfo.class, byteString);
+        var msg = Packet.parse(CSGOS2ClarityMessages.PlayerInfo.class, byteString);
         return new PlayerInfoType(
                 -1L,
                 msg.getXuid(),
@@ -123,7 +123,7 @@ public class PlayerInfoType {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PlayerInfoType{");
+        final var sb = new StringBuilder("PlayerInfoType{");
         sb.append("version=").append(version);
         sb.append(", xuid=").append(xuid);
         sb.append(", name='").append(name).append('\'');
@@ -137,7 +137,7 @@ public class PlayerInfoType {
         if (customFiles == null) sb.append("null");
         else {
             sb.append('[');
-            for (int i = 0; i < customFiles.length; ++i)
+            for (var i = 0; i < customFiles.length; ++i)
                 sb.append(i == 0 ? "" : ", ").append(customFiles[i]);
             sb.append(']');
         }
@@ -150,7 +150,7 @@ public class PlayerInfoType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PlayerInfoType that = (PlayerInfoType) o;
+        var that = (PlayerInfoType) o;
 
         if (version != that.version) return false;
         if (xuid != that.xuid) return false;
@@ -166,7 +166,7 @@ public class PlayerInfoType {
 
     @Override
     public int hashCode() {
-        int result = (int) (version ^ (version >>> 32));
+        var result = (int) (version ^ (version >>> 32));
         result = 31 * result + (int) (xuid ^ (xuid >>> 32));
         result = 31 * result + name.hashCode();
         result = 31 * result + userId;

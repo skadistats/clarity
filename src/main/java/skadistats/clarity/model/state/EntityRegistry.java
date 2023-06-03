@@ -9,8 +9,8 @@ public class EntityRegistry {
     private final Long2ObjectOpenHashMap<Entity> entities = new Long2ObjectOpenHashMap<>();
 
     public Entity create(int dtClassId, int index, int serial, int handle, DTClass dtClass) {
-        long uid = Entity.uid(dtClassId, handle);
-        Entity entity = entities.get(uid);
+        var uid = Entity.uid(dtClassId, handle);
+        var entity = entities.get(uid);
         if (entity == null) {
             entity = new Entity(index, serial, handle, dtClass);
             entities.put(uid, entity);

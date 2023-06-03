@@ -77,7 +77,7 @@ public class Entity {
      * @return True, if and only if the given properties are present in this entity
      */
     public boolean hasProperties(String... properties) {
-        for (String property : properties) {
+        for (var property : properties) {
             if (!hasProperty(property)) {
                 return false;
             }
@@ -87,7 +87,7 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        FieldPath fp = getDtClass().getFieldPathForName(property);
+        var fp = getDtClass().getFieldPathForName(property);
         if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
@@ -100,7 +100,7 @@ public class Entity {
 
     @Override
     public String toString() {
-        String title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
+        var title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
         return getState().dump(title, getDtClass()::getNameForFieldPath);
     }
 

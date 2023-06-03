@@ -23,9 +23,9 @@ class NestedArrayEntityStateIterator implements Iterator<FieldPath> {
 
     private S2FieldPath advance() {
         while (true) {
-            int last = fp.last();
-            Entry e = entry[last];
-            int idx = fp.get(last);
+            var last = fp.last();
+            var e = entry[last];
+            var idx = fp.get(last);
             if (e.length() <= idx) {
                 if (last == 0) {
                     return null;
@@ -43,7 +43,7 @@ class NestedArrayEntityStateIterator implements Iterator<FieldPath> {
                 fp.down();
                 continue;
             }
-            S2FieldPath result = fp.unmodifiable();
+            var result = fp.unmodifiable();
             fp.inc(1);
             return result;
         }
@@ -59,7 +59,7 @@ class NestedArrayEntityStateIterator implements Iterator<FieldPath> {
         if (next == null) {
             throw new NoSuchElementException();
         }
-        S2FieldPath result = next;
+        var result = next;
         next = advance();
         return result;
     }

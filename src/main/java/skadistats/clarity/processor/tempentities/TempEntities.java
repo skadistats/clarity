@@ -42,22 +42,22 @@ public class TempEntities {
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
     public void onTempEntities(S1NetMessages.CSVCMsg_TempEntities message) {
         if (evTempEntity.isListenedTo()) {
-            BitStream stream = BitStream.createBitStream(message.getEntityData());
+            var stream = BitStream.createBitStream(message.getEntityData());
             S1DTClass cls = null;
             ReceiveProp[] receiveProps = null;
-            int count = message.getNumEntries();
+            var count = message.getNumEntries();
             while (count-- > 0) {
                 stream.readUBitInt(1); // seems to be always 0
                 if (stream.readBitFlag()) {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                EntityState state = EntityStateFactory.forS1(receiveProps);
-                FieldChanges changes = fieldReader.readFields(stream, cls, false);
+                var state = EntityStateFactory.forS1(receiveProps);
+                var changes = fieldReader.readFields(stream, cls, false);
                 changes.applyTo(state);
 
-                int handle = engineType.emptyHandle();
-                Entity te = new Entity(
+                var handle = engineType.emptyHandle();
+                var te = new Entity(
                         engineType.indexForHandle(handle),
                         engineType.serialForHandle(handle),
                         handle,

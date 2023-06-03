@@ -38,11 +38,11 @@ public abstract class AbstractProtobufDemoEngineType extends AbstractEngineType<
     }
 
     public int determineLastTick(Source source) throws IOException {
-        int backup = source.getPosition();
+        var backup = source.getPosition();
         source.setPosition(8);
         source.setPosition(source.readFixedInt32());
         source.skipVarInt32();
-        int lastTick = source.readVarInt32();
+        var lastTick = source.readVarInt32();
         source.setPosition(backup);
         return lastTick;
     }

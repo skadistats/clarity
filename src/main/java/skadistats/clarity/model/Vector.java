@@ -28,7 +28,7 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Vector vector = (Vector) o;
+        var vector = (Vector) o;
 
         return Arrays.equals(v, vector.v);
     }

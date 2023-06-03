@@ -41,10 +41,10 @@ public class PropertyChange {
         public ListenerAdapter(EventListener<OnEntityPropertyChanged> listener) {
             classPattern = Pattern.compile(listener.getAnnotation().classPattern());
             propertyPattern = Pattern.compile(listener.getAnnotation().propertyPattern());
-            int count = 1 << engineType.getIndexBits();
+            var count = 1 << engineType.getIndexBits();
             classMatchesForEntity = new TriStateTable(count);
             propertyMatchesForEntity = new Map[count];
-            for (int i = 0; i < count; i++) {
+            for (var i = 0; i < count; i++) {
                 propertyMatchesForEntity[i] = new HashMap<>();
             }
         }
@@ -56,9 +56,9 @@ public class PropertyChange {
             }
 
             boolean applyInternal(Object[] value) {
-                Entity e = (Entity) value[0];
-                int eIdx = e.getIndex();
-                TriState classMatchState = classMatchesForEntity.get(eIdx);
+                var e = (Entity) value[0];
+                var eIdx = e.getIndex();
+                var classMatchState = classMatchesForEntity.get(eIdx);
                 if (classMatchState == TriState.UNSET) {
                     classMatchState = TriState.fromBoolean(classPattern.matcher(e.getDtClass().getDtName()).matches());
                     classMatchesForEntity.set(eIdx, classMatchState);
@@ -66,8 +66,8 @@ public class PropertyChange {
                 if (classMatchState != TriState.YES) {
                     return false;
                 }
-                FieldPath fp = (FieldPath) value[1];
-                TriState propertyMatchState = propertyMatchesForEntity[eIdx].get(fp);
+                var fp = (FieldPath) value[1];
+                var propertyMatchState = propertyMatchesForEntity[eIdx].get(fp);
                 if (propertyMatchState == null) {
                     propertyMatchState = TriState.fromBoolean(propertyPattern.matcher(e.getDtClass().getNameForFieldPath(fp)).matches());
                     propertyMatchesForEntity[eIdx].put(fp, propertyMatchState);
@@ -80,7 +80,7 @@ public class PropertyChange {
         };
 
         private void clear(Entity e) {
-            int eIdx = e.getIndex();
+            var eIdx = e.getIndex();
             classMatchesForEntity.set(eIdx, TriState.UNSET);
             propertyMatchesForEntity[eIdx].clear();
         }
@@ -88,7 +88,7 @@ public class PropertyChange {
 
     @Initializer(OnEntityPropertyChanged.class)
     public void initListener(final EventListener<OnEntityPropertyChanged> listener) {
-        ListenerAdapter adapter = new ListenerAdapter(listener);
+        var adapter = new ListenerAdapter(listener);
         adapters.add(adapter);
         listener.setInvocationPredicate(adapter.invocationPredicate);
     }
@@ -96,7 +96,7 @@ public class PropertyChange {
     @OnEntityCreated
     @Order(1000)
     public void onEntityCreated(Entity e) {
-        final Iterator<FieldPath> iter = e.getState().fieldPathIterator();
+        final var iter = e.getState().fieldPathIterator();
         while(iter.hasNext()) {
             evPropertyChanged.raise(e, iter.next());
         }
@@ -105,7 +105,7 @@ public class PropertyChange {
     @OnEntityUpdated
     @Order(1000)
     public void onUpdate(Entity e, FieldPath[] fieldPaths, int num) {
-        for (int i = 0; i < num; i++) {
+        for (var i = 0; i < num; i++) {
             evPropertyChanged.raise(e, fieldPaths[i]);
         }
     }
@@ -113,7 +113,7 @@ public class PropertyChange {
     @OnEntityDeleted
     @Order(1000)
     public void onDeleted(Entity e) {
-        for (ListenerAdapter adapter : adapters) {
+        for (var adapter : adapters) {
             adapter.clear(e);
         }
     }

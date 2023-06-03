@@ -45,7 +45,7 @@ public class UsagePoint<A extends Annotation> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UsagePoint that = (UsagePoint) o;
+        var that = (UsagePoint) o;
 
         if (!annotation.equals(that.annotation)) return false;
         if (method != null ? !method.equals(that.method) : that.method != null) return false;
@@ -56,7 +56,7 @@ public class UsagePoint<A extends Annotation> {
 
     @Override
     public int hashCode() {
-        int result = annotation.hashCode();
+        var result = annotation.hashCode();
         result = 31 * result + processorClass.hashCode();
         result = 31 * result + (method != null ? method.hashCode() : 0);
         return result;

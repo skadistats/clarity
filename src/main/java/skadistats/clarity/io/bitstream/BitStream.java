@@ -50,7 +50,7 @@ public abstract class BitStream {
     private final byte[] stringTemp = new byte[32768];
 
     public static BitStream createBitStream(ByteString input) {
-        BitStream bs = ClarityPlatform.createBitStream(ZeroCopy.extract(input));
+        var bs = ClarityPlatform.createBitStream(ZeroCopy.extract(input));
         bs.len = input.size() * 8;
         return bs;
     }
@@ -94,19 +94,19 @@ public abstract class BitStream {
     }
 
     public long readSBitLong(int n) {
-        long v = readUBitLong(n);
+        var v = readUBitLong(n);
         return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
     }
 
     public int readSBitInt(int n) {
-        int v = readUBitInt(n);
+        var v = readUBitInt(n);
         return (v & (1 << (n - 1))) == 0 ? v : v | ((int)MASKS[32 - n] << n);
     }
 
     public String readString(int n) {
-        int o = 0;
+        var o = 0;
         while (o < n) {
-            byte c = (byte) readUBitInt(8);
+            var c = (byte) readUBitInt(8);
             if (c == 0) {
                 break;
             }
@@ -122,9 +122,9 @@ public abstract class BitStream {
     }
 
     public long readVarU(int max) {
-        int m = ((max + 6) / 7) * 7;
-        int s = 0;
-        long v = 0L;
+        var m = ((max + 6) / 7) * 7;
+        var s = 0;
+        var v = 0L;
         long b;
         while (true) {
             b = readUBitInt(8);
@@ -137,7 +137,7 @@ public abstract class BitStream {
     }
 
     public long readVarS(int max) {
-        long v = readVarU(max);
+        var v = readVarU(max);
         return (v >>> 1) ^ -(v & 1L);
     }
 
@@ -166,8 +166,8 @@ public abstract class BitStream {
         // X set -> read 8
         // X + Y set -> read 28
 
-        int v = readUBitInt(6);
-        int a = v >> 4;
+        var v = readUBitInt(6);
+        var a = v >> 4;
         if (a == 0) {
             return v;
         } else {
@@ -176,7 +176,7 @@ public abstract class BitStream {
     }
 
     public int readUBitVarFieldPath() {
-        int i = -1;
+        var i = -1;
         while (++i < 4) {
             if (readBitFlag()) break;
         }
@@ -184,18 +184,18 @@ public abstract class BitStream {
     }
 
     public float readBitCoord() {
-        boolean i = readBitFlag(); // integer component present?
-        boolean f = readBitFlag(); // fractional component present?
-        float v = 0.0f;
+        var i = readBitFlag(); // integer component present?
+        var f = readBitFlag(); // fractional component present?
+        var v = 0.0f;
         if (!(i || f)) return v;
-        boolean s = readBitFlag();
+        var s = readBitFlag();
         if (i) v = (float)(readUBitInt(COORD_INTEGER_BITS) + 1);
         if (f) v += readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
         return s ? -v : v;
     }
 
     public float readCellCoord(int n, boolean integral, boolean lowPrecision) {
-        float v = (float)(readUBitInt(n));
+        var v = (float)(readUBitInt(n));
         if (integral) {
             // TODO: something weird is going on here in alice, we might need to adjust the sign?
             return v;
@@ -207,12 +207,12 @@ public abstract class BitStream {
     }
 
     public float readCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
-        int i = 0;
-        int f = 0;
-        boolean sign = false;
-        float value = 0.0f;
+        var i = 0;
+        var f = 0;
+        var sign = false;
+        var value = 0.0f;
 
-        boolean inBounds = stream.readBitFlag();
+        var inBounds = stream.readBitFlag();
         if (integral) {
             if (readBitFlag()) {
                 sign = stream.readBitFlag();
@@ -236,36 +236,36 @@ public abstract class BitStream {
     }
 
     public float readBitNormal() {
-        boolean s = readBitFlag();
-        float v = (float) readUBitInt(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
+        var s = readBitFlag();
+        var v = (float) readUBitInt(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
         return s ? -v : v;
     }
 
     public float[] read3BitNormal() {
-        float[] v = new float[3];
-        boolean x = readBitFlag();
-        boolean y = readBitFlag();
+        var v = new float[3];
+        var x = readBitFlag();
+        var y = readBitFlag();
         if (x) v[0] = readBitNormal();
         if (y) v[1] = readBitNormal();
-        boolean s = readBitFlag();
-        float p = v[0] * v[0] + v[1] * v[1];
+        var s = readBitFlag();
+        var p = v[0] * v[0] + v[1] * v[1];
         if (p < 1.0f) v[2] = (float) Math.sqrt(1.0f - p);
         if (s) v[2] = -v[2];
         return v;
     }
 
     public String toString() {
-        StringBuilder buf = new StringBuilder();
+        var buf = new StringBuilder();
         buf.append('[');
         buf.append(pos);
         buf.append('/');
         buf.append(len);
         buf.append(']');
         buf.append(' ');
-        int prefixLen = buf.length();
-        int min = Math.max(0, (pos - 32));
-        int max = Math.min(len - 1, pos + 64);
-        for (int i = min; i <= max; i++) {
+        var prefixLen = buf.length();
+        var min = Math.max(0, (pos - 32));
+        var max = Math.min(len - 1, pos + 64);
+        for (var i = min; i <= max; i++) {
             buf.append(peekBit(i));
         }
         buf.insert(pos - min + prefixLen, '*');
@@ -273,8 +273,8 @@ public abstract class BitStream {
     }
 
     public String toString(int from, int to) {
-        StringBuilder buf = new StringBuilder();
-        for (int i = from; i < to; i++) {
+        var buf = new StringBuilder();
+        for (var i = from; i < to; i++) {
             buf.append(peekBit(i));
         }
         return buf.toString();

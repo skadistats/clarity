@@ -60,7 +60,7 @@ public class Resources {
         if (spawnGroupManifests.containsKey(message.getSpawngrouphandle())) {
             throw new ClarityException("CNETMsg_SpawnGroup_Load for an already existing handle: %d", message.getSpawngrouphandle());
         }
-        SpawnGroupManifest m = new SpawnGroupManifest();
+        var m = new SpawnGroupManifest();
         m.spawnGroupHandle = message.getSpawngrouphandle();
         m.creationSequence = message.getCreationsequence();
         m.incomplete = message.getManifestincomplete();
@@ -71,7 +71,7 @@ public class Resources {
 
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate.class)
     public void onManifestUpdate(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
-        SpawnGroupManifest m = spawnGroupManifests.get(message.getSpawngrouphandle());
+        var m = spawnGroupManifests.get(message.getSpawngrouphandle());
         if (m == null) {
             throw new ClarityException("CNETMsg_SpawnGroup_ManifestUpdate for an unknown handle: %d", message.getSpawngrouphandle());
         }
@@ -108,9 +108,9 @@ public class Resources {
 
     protected void addManifestData(Manifest manifest, ByteString raw) throws IOException {
 
-        BitStream bs = BitStream.createBitStream(raw);
-        boolean isCompressed = bs.readBitFlag();
-        int size = bs.readUBitInt(24);
+        var bs = BitStream.createBitStream(raw);
+        var isCompressed = bs.readBitFlag();
+        var size = bs.readUBitInt(24);
 
         byte[] data;
         if (isCompressed) {
@@ -124,25 +124,25 @@ public class Resources {
         List<Long> extHashes = new ArrayList<>();
         List<Long> dirHashes = new ArrayList<>();
 
-        int nTypes = bs.readUBitInt(16);
-        int nDirs = bs.readUBitInt(16);
-        int nEntries = bs.readUBitInt(16);
+        var nTypes = bs.readUBitInt(16);
+        var nDirs = bs.readUBitInt(16);
+        var nEntries = bs.readUBitInt(16);
 
-        for (int i = 0; i < nTypes; i++) {
+        for (var i = 0; i < nTypes; i++) {
             extHashes.add(storeHash(exts, bs.readString(Integer.MAX_VALUE)));
         }
-        for (int i = 0; i < nDirs; i++) {
+        for (var i = 0; i < nDirs; i++) {
             dirHashes.add(storeHash(dirs, bs.readString(Integer.MAX_VALUE)));
         }
-        int bitsForType = Math.max(1, Util.calcBitsNeededFor(nTypes - 1));
-        int bitsForDir = Math.max(1, Util.calcBitsNeededFor(nDirs - 1));
+        var bitsForType = Math.max(1, Util.calcBitsNeededFor(nTypes - 1));
+        var bitsForDir = Math.max(1, Util.calcBitsNeededFor(nDirs - 1));
 
-        for (int i = 0; i < nEntries; i++) {
+        for (var i = 0; i < nEntries; i++) {
 
-            int dirIdx = bs.readUBitInt(bitsForDir);
-            String file = bs.readString(Integer.MAX_VALUE);
-            int extIdx = bs.readUBitInt(bitsForType);
-            Entry entry = new Entry(dirHashes.get(dirIdx), file, extHashes.get(extIdx));
+            var dirIdx = bs.readUBitInt(bitsForDir);
+            var file = bs.readString(Integer.MAX_VALUE);
+            var extIdx = bs.readUBitInt(bitsForType);
+            var entry = new Entry(dirHashes.get(dirIdx), file, extHashes.get(extIdx));
 
             manifest.entries.add(entry);
 
@@ -153,8 +153,8 @@ public class Resources {
     }
 
     private long storeHash(Map<Long, String> map, String value) {
-        long hash = hash(value);
-        String existingValue = map.get(hash);
+        var hash = hash(value);
+        var existingValue = map.get(hash);
         if (existingValue != null) {
             if (!existingValue.equals(value)) {
                 throw new ClarityException("hash collision for value %s", value);

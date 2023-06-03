@@ -48,9 +48,9 @@ public class Clarity {
      * @see Source
      */
     public static Demo.CDemoFileInfo infoForSource(final Source source) throws IOException {
-        EngineType engineType = source.readEngineMagic().determineEngineType(source);
+        var engineType = source.readEngineMagic().determineEngineType(source);
         source.setPosition(engineType.getInfoOffset());
-        PacketInstance<GeneratedMessage> pi = engineType.getNextPacketInstance(source);
+        var pi = engineType.getNextPacketInstance(source);
         return (Demo.CDemoFileInfo) pi.parse();
     }
 

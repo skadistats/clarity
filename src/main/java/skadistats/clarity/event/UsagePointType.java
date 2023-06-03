@@ -12,7 +12,7 @@ public enum UsagePointType {
     FEATURE;
 
     public static <A extends Annotation> UsagePoint<A> newInstance(A annotation, Class<?> processorClass, Method method) {
-        UsagePointMarker marker = annotation.annotationType().getAnnotation(UsagePointMarker.class);
+        var marker = annotation.annotationType().getAnnotation(UsagePointMarker.class);
         switch(marker.value()) {
             case EVENT_LISTENER:
                 return new EventListener(annotation, processorClass, method, marker);

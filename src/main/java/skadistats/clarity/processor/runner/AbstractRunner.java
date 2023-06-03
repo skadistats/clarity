@@ -27,13 +27,13 @@ public abstract class AbstractRunner implements Runner {
     }
 
     private ExecutionModel createExecutionModel(Object... processors) {
-        ExecutionModel executionModel = new ExecutionModel(this);
+        var executionModel = new ExecutionModel(this);
         addProcessorsToModel(executionModel, processors);
         return executionModel;
     }
 
     private void addProcessorsToModel(ExecutionModel executionModel, Object[] processors) {
-        for (Object p : processors) {
+        for (var p : processors) {
             if (p instanceof Object[]) {
                 addProcessorsToModel(executionModel, (Object[]) p);
             } else {
@@ -43,7 +43,7 @@ public abstract class AbstractRunner implements Runner {
     }
 
     protected void initWithProcessors(Object... processors) {
-        ExecutionModel em = createExecutionModel(processors);
+        var em = createExecutionModel(processors);
         context = new Context(em);
         em.initialize(context);
         if (evInitRun != null) {

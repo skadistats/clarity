@@ -21,7 +21,7 @@ public class FloatDecoderFactory implements DecoderFactory<Float> {
         if ("simulationtime".equals(f.getEncoderType())) {
             return new FloatSimulationTimeDecoder();
         }
-        int bc = f.getBitCountOrDefault(0);
+        var bc = f.getBitCountOrDefault(0);
         if (bc <= 0 || bc >= 32) {
             return new FloatNoScaleDecoder();
         }

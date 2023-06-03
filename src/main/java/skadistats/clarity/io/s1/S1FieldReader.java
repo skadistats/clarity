@@ -35,18 +35,18 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
                 debugTable.clear();
             }
 
-            int n = readIndices(bs, dtClass);
-            FieldChanges result = new FieldChanges(fieldPaths, n);
+            var n = readIndices(bs, dtClass);
+            var result = new FieldChanges(fieldPaths, n);
 
-            ReceiveProp[] receiveProps = dtClass.getReceiveProps();
-            for (int ci = 0; ci < n; ci++) {
-                int offsBefore = bs.pos();
-                int o = fieldPaths[ci].s1().idx();
+            var receiveProps = dtClass.getReceiveProps();
+            for (var ci = 0; ci < n; ci++) {
+                var offsBefore = bs.pos();
+                var o = fieldPaths[ci].s1().idx();
                 result.setValue(ci, receiveProps[o].decode(bs));
 
                 if (debug) {
-                    SendProp sp = receiveProps[o].getSendProp();
-                    Object subState = result.getValue(ci);
+                    var sp = receiveProps[o].getSendProp();
+                    var subState = result.getValue(ci);
                     debugTable.setData(ci, 0, o);
                     debugTable.setData(ci, 1, receiveProps[o].getVarName());
                     debugTable.setData(ci, 2, sp.getLowValue());
@@ -70,7 +70,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
 
     @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
-        int n = 0;
+        var n = 0;
         while (bs.readBitFlag()) {
             deletions[n++]= bs.readUBitInt(indexBits);
         }

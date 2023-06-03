@@ -44,8 +44,8 @@ public class RealtimeRunner extends SimpleRunner {
     private void delayUntil(int upcomingTick) {
         try {
             while(true) {
-                Instant shouldBeAt = startTime.plus(delay.get()).plus(tickInterval.multipliedBy(upcomingTick));
-                long milliDelay = Duration.between(now(), shouldBeAt).toMillis();
+                var shouldBeAt = startTime.plus(delay.get()).plus(tickInterval.multipliedBy(upcomingTick));
+                var milliDelay = Duration.between(now(), shouldBeAt).toMillis();
                 if (milliDelay <= 0L) {
                     return;
                 }

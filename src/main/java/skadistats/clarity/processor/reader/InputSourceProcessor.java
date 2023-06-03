@@ -64,14 +64,14 @@ public class InputSourceProcessor {
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
-        Class<? extends GeneratedMessage> messageClass = listener.getAnnotation().value();
+        var messageClass = listener.getAnnotation().value();
         listener.setParameterClasses(messageClass);
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnPostEmbeddedMessage.class)
     public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
-        Class<? extends GeneratedMessage> messageClass = listener.getAnnotation().value();
+        var messageClass = listener.getAnnotation().value();
         listener.setParameterClasses(messageClass, BitStream.class);
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
@@ -79,13 +79,13 @@ public class InputSourceProcessor {
     @Initializer(OnMessageContainer.class)
     public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
         listener.setInvocationPredicate(args -> {
-            Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) args[0];
+            var clazz = (Class<? extends GeneratedMessage>) args[0];
             return listener.getAnnotation().value().isAssignableFrom(clazz);
         });
     }
 
     public Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
-        Event<OnMessage> ev = evOnMessages.get(messageClass);
+        var ev = evOnMessages.get(messageClass);
         if (ev == null) {
             ev = ctx.createEvent(OnMessage.class, messageClass);
             evOnMessages.put(messageClass, ev);
@@ -94,7 +94,7 @@ public class InputSourceProcessor {
     }
 
     private Event<OnPostEmbeddedMessage> evOnPostEmbeddedMessage(Class<? extends GeneratedMessage> messageClass) {
-        Event<OnPostEmbeddedMessage> ev = evOnPostEmbeddedMessages.get(messageClass);
+        var ev = evOnPostEmbeddedMessages.get(messageClass);
         if (ev == null) {
             ev = ctx.createEvent(OnPostEmbeddedMessage.class, messageClass, BitStream.class);
             evOnPostEmbeddedMessages.put(messageClass, ev);
@@ -103,7 +103,7 @@ public class InputSourceProcessor {
     }
 
     private void logUnknownMessage(String where, int type) {
-        int hash = (where.hashCode() * 31 + engineType.hashCode()) * 31 + type;
+        var hash = (where.hashCode() * 31 + engineType.hashCode()) * 31 + type;
         if (!alreadyLoggedUnknowns.contains(hash)) {
             alreadyLoggedUnknowns.add(hash);
             log.warn("unknown %s message of kind %s/%d. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
@@ -167,19 +167,19 @@ public class InputSourceProcessor {
                 }
             }
 
-            Class<? extends GeneratedMessage> messageClass = pi.getMessageClass();
+            var messageClass = pi.getMessageClass();
             if (messageClass == null) {
                 logUnknownMessage("top level", pi.getKind());
                 pi.skip();
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) pi.parse();
+                var message = (Demo.CDemoPacket) pi.parse();
                 evMessageContainer.raise(Demo.CDemoPacket.class, message.getData());
             } else if (engineType.isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) pi.parse();
+                var message = (Demo.CDemoSendTables) pi.parse();
                 evMessageContainer.raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                    Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) pi.parse();
+                    var message = (Demo.CDemoFullPacket) pi.parse();
                     evFull.raise(message);
                     if (evReset.isListenedTo()) {
                         ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
@@ -194,15 +194,15 @@ public class InputSourceProcessor {
                     pi.skip();
                 }
             } else {
-                boolean isStringTables = messageClass == Demo.CDemoStringTables.class;
-                boolean isSyncTick = messageClass == Demo.CDemoSyncTick.class;
-                boolean resetRelevant = evReset != null && (isStringTables || isSyncTick);
+                var isStringTables = messageClass == Demo.CDemoStringTables.class;
+                var isSyncTick = messageClass == Demo.CDemoSyncTick.class;
+                var resetRelevant = evReset != null && (isStringTables || isSyncTick);
                 if (isSyncTick) {
                     ctl.setSyncTickSeen(true);
                 }
-                Event<OnMessage> ev = evOnMessage(messageClass);
+                var ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || resetRelevant) {
-                    GeneratedMessage message = pi.parse();
+                    var message = pi.parse();
                     ev.raise(message);
                     if (resetRelevant) {
                         ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
@@ -223,34 +223,34 @@ public class InputSourceProcessor {
 
     @OnMessageContainer
     public void processEmbedded(Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
-        BitStream bs = BitStream.createBitStream(bytes);
+        var bs = BitStream.createBitStream(bytes);
         while (bs.remaining() >= 8) {
-            int kind = engineType.readEmbeddedKind(bs);
+            var kind = engineType.readEmbeddedKind(bs);
             if (kind == 0) {
                 // this seems to happen with console recorded replays
                 break;
             }
-            int size = bs.readVarUInt();
+            var size = bs.readVarUInt();
             if (size < 0 || bs.remaining() < size * 8) {
                 throw new IOException(
                         String.format("invalid embedded packet size: got %d remaining bits, but size is %d bits.", bs.remaining(), size * 8)
                 );
             }
-            Class<? extends GeneratedMessage> messageClass = engineType.embeddedPacketClassForKind(kind);
+            var messageClass = engineType.embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
             } else {
-                Event<OnMessage> ev = evOnMessage(messageClass);
-                Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
+                var ev = evOnMessage(messageClass);
+                var evPost = evOnPostEmbeddedMessage(messageClass);
                 if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
+                    var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
                     if (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class) {
-                        CommonNetworkBaseTypes.CSVCMsg_UserMessage userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
-                        Class<? extends GeneratedMessage> umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
+                        var userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
+                        var umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             logUnknownMessage("usermessage", userMessage.getMsgType());
                         } else {
@@ -272,9 +272,9 @@ public class InputSourceProcessor {
         if (engineType.getId() != EngineId.DOTA_S2) {
             return;
         }
-        Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
+        var matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
         if (matcher.find()) {
-            int num = Integer.parseInt(matcher.group(1));
+            var num = Integer.parseInt(matcher.group(1));
             ctx.setBuildNumber(num);
             if (num < 928) {
                 log.warn("This replay is from an early beta version of Dota 2 Reborn (build number %d).", num);

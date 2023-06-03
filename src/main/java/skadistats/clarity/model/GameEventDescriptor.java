@@ -16,7 +16,7 @@ public class GameEventDescriptor {
         this.eventId = eventId;
         this.name = name;
         this.keys = keys;
-        for (int i = 0; i < keys.length; i++) {
+        for (var i = 0; i < keys.length; i++) {
             indexByKey.put(keys[i], i);
         }
     }
@@ -39,7 +39,7 @@ public class GameEventDescriptor {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("GameEventDescriptor [");
+        final var sb = new StringBuilder("GameEventDescriptor [");
         sb.append("eventId=").append(eventId);
         sb.append(", name='").append(name).append('\'');
         sb.append(']');

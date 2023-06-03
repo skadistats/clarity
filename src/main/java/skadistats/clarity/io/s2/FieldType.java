@@ -18,7 +18,7 @@ public class FieldType {
     private final FieldType elementType;
 
     public FieldType(String typeString) {
-        Matcher m = FIELD_TYPE_PATTERN.matcher(typeString);
+        var m = FIELD_TYPE_PATTERN.matcher(typeString);
         if (!m.matches()) {
             throw new ClarityException("cannot parse field type");
         }
@@ -59,7 +59,7 @@ public class FieldType {
     }
 
     private String toString(boolean omitElementCount) {
-        final StringBuilder sb = new StringBuilder();
+        final var sb = new StringBuilder();
         sb.append(baseType);
         if (genericType != null) {
             sb.append("< ");
@@ -80,7 +80,7 @@ public class FieldType {
     private static final Map<String, FieldType> FIELD_TYPE_MAP = new HashMap<>();
 
     public static FieldType forString(String fieldTypeString) {
-        FieldType result = FIELD_TYPE_MAP.get(fieldTypeString);
+        var result = FIELD_TYPE_MAP.get(fieldTypeString);
         if (result == null) {
             synchronized (FIELD_TYPE_MAP) {
                 result = FIELD_TYPE_MAP.get(fieldTypeString);
