@@ -27,7 +27,7 @@ public class PlayerInfo {
     private final Map<Integer, PlayerInfoType> playerInfos = new TreeMap<>();
 
     @OnStringTableEntry("userinfo")
-    public void onEntry(StringTable table, int index, String key, ByteString value) throws IOException {
+    public void onEntry(StringTable table, int index, String key, ByteString value) {
         PlayerInfoType current = null;
         if (value != null && value.size() != 0) {
             switch (engineType.getId()) {

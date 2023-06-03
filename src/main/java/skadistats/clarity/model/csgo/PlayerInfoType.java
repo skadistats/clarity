@@ -28,7 +28,7 @@ public class PlayerInfoType {
     private final boolean isHltv;
     private final int[] customFiles;
 
-    public static PlayerInfoType createS1(ByteString byteString) throws IOException {
+    public static PlayerInfoType createS1(ByteString byteString) {
         var buf = ByteBuffer.wrap(ZeroCopy.extract(byteString)).order(ByteOrder.BIG_ENDIAN);
         var version = buf.getLong();
         var xuid = buf.getLong();
@@ -64,7 +64,7 @@ public class PlayerInfoType {
         );
     }
 
-    private static String readZeroTerminated(ByteBuffer buffer, int size) throws IOException {
+    private static String readZeroTerminated(ByteBuffer buffer, int size) {
         return Util.readFixedZeroTerminated(buffer, size);
     }
 

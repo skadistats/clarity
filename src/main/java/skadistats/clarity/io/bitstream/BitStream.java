@@ -2,11 +2,10 @@ package skadistats.clarity.io.bitstream;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.FieldOpType;
 import skadistats.clarity.platform.ClarityPlatform;
 
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 
 public abstract class BitStream {
 
@@ -113,12 +112,7 @@ public abstract class BitStream {
             stringTemp[o] = c;
             o++;
         }
-        try {
-            return new String(stringTemp, 0, o, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Util.uncheckedThrow(e);
-            return null;
-        }
+        return new String(stringTemp, 0, o, StandardCharsets.UTF_8);
     }
 
     public long readVarU(int max) {

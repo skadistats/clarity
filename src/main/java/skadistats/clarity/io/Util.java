@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Util {
 
@@ -42,7 +43,7 @@ public class Util {
         }
     }
 
-    public static String readFixedZeroTerminated(ByteBuffer buffer, int length) throws IOException {
+    public static String readFixedZeroTerminated(ByteBuffer buffer, int length) {
         var buf = new byte[length];
         buffer.get(buf);
         return zeroTerminatedToString(buf);
@@ -54,10 +55,10 @@ public class Util {
         return zeroTerminatedToString(buf);
     }
 
-    public static String zeroTerminatedToString(byte[] buf) throws IOException {
+    public static String zeroTerminatedToString(byte[] buf) {
         var i = 0;
         while (buf[i] != 0) i++;
-        return new String(buf, 0, i, "UTF-8");
+        return new String(buf, 0, i, StandardCharsets.UTF_8);
     }
 
     public static String arrayIdxToString(int idx) {
