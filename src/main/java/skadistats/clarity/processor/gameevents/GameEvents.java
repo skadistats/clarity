@@ -1,11 +1,14 @@
 package skadistats.clarity.processor.gameevents;
 
+import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.GameEvent;
 import skadistats.clarity.model.GameEventDescriptor;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -14,14 +17,13 @@ import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 @Provides({ OnGameEventDescriptor.class, OnGameEvent.class})
 public class GameEvents {
 
-    private final Map<Integer, GameEventDescriptor> byId = new TreeMap<>();
-    private final Map<String, GameEventDescriptor> byName = new TreeMap<>();
+    private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
+
+    private GameEventDescriptor[] descriptors;
     private List<CommonNetworkBaseTypes.CSVCMsg_GameEvent> preListBuffer;
 
     @InsertEvent
@@ -49,19 +51,25 @@ public class GameEvents {
 
     @OnMessage(CommonNetMessages.CSVCMsg_GameEventList.class)
     public void onGameEventList(CommonNetMessages.CSVCMsg_GameEventList message) {
+        var descriptorMax = message.getDescriptors(message.getDescriptorsCount() - 1).getEventid();
+        descriptors = new GameEventDescriptor[descriptorMax + 1];
         for (var d : message.getDescriptorsList()) {
-            var keys = new String[d.getKeysCount()];
-            for (var i = 0; i < d.getKeysCount(); i++) {
-                var k = d.getKeys(i);
-                keys[i] = k.getName();
+            var i = d.getEventid();
+
+            var keyCount = d.getKeysCount();
+            var keys = new String[keyCount];
+            for (var k = 0; k < keyCount; k++) {
+                var key = d.getKeys(k);
+                keys[k] = key.getName();
             }
+
             var gev = new GameEventDescriptor(
-                d.getEventid(),
+                i,
                 d.getName(),
                 keys
             );
-            byName.put(gev.getName(), gev);
-            byId.put(gev.getEventId(), gev);
+
+            descriptors[i] = gev;
             evGameEventDescriptor.raise(gev);
         }
         if (preListBuffer != null) {
@@ -72,15 +80,19 @@ public class GameEvents {
 
     @OnMessage(CommonNetworkBaseTypes.CSVCMsg_GameEvent.class)
     public void onGameEvent(CommonNetworkBaseTypes.CSVCMsg_GameEvent message) {
-        if (byId.isEmpty()) {
+        if (descriptors == null) {
             if (preListBuffer == null) {
                 preListBuffer = new ArrayList<>();
             }
             preListBuffer.add(message);
             return;
         }
-        var desc = byId.get(message.getEventid());
-        var e = new GameEvent(desc);
+        var descriptor = descriptors[message.getEventid()];
+        if (descriptor == null) {
+            log.warn("received game event with unknown event-id %d", message.getEventid());
+            return;
+        }
+        var e = new GameEvent(descriptor);
         for (var i = 0; i < message.getKeysCount(); i++) {
             var key = message.getKeys(i);
             Object value;
