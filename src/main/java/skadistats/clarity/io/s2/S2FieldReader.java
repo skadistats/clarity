@@ -4,12 +4,11 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.util.TextTable;
 
-public class S2FieldReader extends FieldReader<S2DTClass> {
+public class S2FieldReader extends FieldReader {
 
     private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -38,7 +37,8 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public FieldChanges readFields(BitStream bs, S2DTClass dtClass, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
+        var dtClass = dtClassGeneric.s2();
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());

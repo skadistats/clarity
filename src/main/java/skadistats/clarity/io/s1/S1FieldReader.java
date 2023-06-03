@@ -3,12 +3,13 @@ package skadistats.clarity.io.s1;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
 
-public abstract class S1FieldReader extends FieldReader<S1DTClass> {
+public abstract class S1FieldReader extends FieldReader {
 
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -28,7 +29,8 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public FieldChanges readFields(BitStream bs, S1DTClass dtClass, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
+        var dtClass = dtClassGeneric.s1();
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());

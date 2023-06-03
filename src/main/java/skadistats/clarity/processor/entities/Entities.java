@@ -65,7 +65,7 @@ public class Entities {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private int entityCount;
-    private FieldReader<DTClass> fieldReader;
+    private FieldReader fieldReader;
     private int[] deletions;
     private int entitiesServerTick;
     private int serverTick;
