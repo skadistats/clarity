@@ -22,11 +22,11 @@ repositories {
 
 dependencies {
     api("com.skadistats:clarity-protobuf:[5.0,6.0)")
-    api("org.xerial.snappy:snappy-java:1.1.8.4")
-    api("org.slf4j:slf4j-api:2.0.5")
+    api("org.xerial.snappy:snappy-java:1.1.10.0")
+    api("org.slf4j:slf4j-api:2.0.7")
     api("org.atteo.classindex:classindex:3.13")
     annotationProcessor("org.atteo.classindex:classindex:3.13")
-    testImplementation("org.testng:testng:7.5.1")
+    testImplementation("org.testng:testng:7.8.0")
 }
 
 tasks.named<Test>("test") {
