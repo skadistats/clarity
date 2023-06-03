@@ -4,7 +4,7 @@ import java.util.Iterator;
 
 public final class Iterators {
 
-    private static final Iterator<Object> EMPTY  = new SimpleIterator<Object>() {
+    private static final Iterator<Object> EMPTY  = new SimpleIterator<>() {
         @Override
         public Object readNext() {
             return null;

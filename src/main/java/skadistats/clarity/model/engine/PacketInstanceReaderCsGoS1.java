@@ -43,27 +43,32 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
             throw new UnsupportedOperationException("kind " + kind + " not implemented");
         }
         final var handler = (Handler<T>) handlers[kind - 1];
-        return new PacketInstance<T>() {
+        return new PacketInstance<>() {
             @Override
             public int getKind() {
                 return kind;
             }
+
             @Override
             public int getTick() {
                 return tick;
             }
+
             @Override
             public Class<T> getMessageClass() {
                 return handler.clazz;
             }
+
             @Override
             public ResetRelevantKind getResetRelevantKind() {
                 return handler.resetRelevantKind;
             }
+
             @Override
             public T parse() throws IOException {
                 return handler.parse(source);
             }
+
             @Override
             public void skip() throws IOException {
                 handler.skip(source);
@@ -113,136 +118,144 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
             //(1) dem_signon (will be set below)
             null,
             //(2) dem_packet
-            new Handler<Demo.CDemoPacket>(Demo.CDemoPacket.class, null) {
-                @Override
-                public Demo.CDemoPacket parse(Source source) throws IOException {
-                    readCommandInfo(source);
-                    return Demo.CDemoPacket.newBuilder()
-                            .setSequenceIn(source.readFixedInt32())
-                            .setSequenceOutAck(source.readFixedInt32())
-                            .setData(ZeroCopy.wrap(readPacket(source)))
-                            .build();
-                }
+        new Handler<>(Demo.CDemoPacket.class, null) {
+            @Override
+            public Demo.CDemoPacket parse(Source source) throws IOException {
+                readCommandInfo(source);
+                return Demo.CDemoPacket.newBuilder()
+                    .setSequenceIn(source.readFixedInt32())
+                    .setSequenceOutAck(source.readFixedInt32())
+                    .setData(ZeroCopy.wrap(readPacket(source)))
+                    .build();
+            }
 
-                @Override
-                public void skip(Source source) throws IOException {
-                    skipCommandInfo(source);
-                    source.skipBytes(8);
-                    skipPacket(source);
-                }
-            },
+            @Override
+            public void skip(Source source) throws IOException {
+                skipCommandInfo(source);
+                source.skipBytes(8);
+                skipPacket(source);
+            }
+        },
             //(3) dem_synctick
-            new Handler<Demo.CDemoSyncTick>(Demo.CDemoSyncTick.class, ResetRelevantKind.SYNC) {
-                @Override
-                public Demo.CDemoSyncTick parse(Source source) throws IOException {
-                    return Demo.CDemoSyncTick.newBuilder().build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    // do nothing
-                }
-            },
+        new Handler<>(Demo.CDemoSyncTick.class, ResetRelevantKind.SYNC) {
+            @Override
+            public Demo.CDemoSyncTick parse(Source source) throws IOException {
+                return Demo.CDemoSyncTick.newBuilder().build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                // do nothing
+            }
+        },
             //(4) dem_consolecmd
-            new Handler<Demo.CDemoConsoleCmd>(Demo.CDemoConsoleCmd.class, null) {
-                @Override
-                public Demo.CDemoConsoleCmd parse(Source source) throws IOException {
-                    return Demo.CDemoConsoleCmd.newBuilder()
-                            .setCmdstringBytes(ZeroCopy.wrap(readPacket(source)))
-                            .build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    skipPacket(source);
-                }
-            },
+        new Handler<>(Demo.CDemoConsoleCmd.class, null) {
+            @Override
+            public Demo.CDemoConsoleCmd parse(Source source) throws IOException {
+                return Demo.CDemoConsoleCmd.newBuilder()
+                    .setCmdstringBytes(ZeroCopy.wrap(readPacket(source)))
+                    .build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                skipPacket(source);
+            }
+        },
             //(5) dem_usercmd
-            new Handler<Demo.CDemoUserCmd>(Demo.CDemoUserCmd.class, null) {
-                @Override
-                public Demo.CDemoUserCmd parse(Source source) throws IOException {
-                    return Demo.CDemoUserCmd.newBuilder()
-                            .setCmdNumber(source.readFixedInt32())
-                            .setData(ZeroCopy.wrap(readPacket(source)))
-                            .build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    source.skipBytes(4);
-                    skipPacket(source);
-                }
-            },
+        new Handler<>(Demo.CDemoUserCmd.class, null) {
+            @Override
+            public Demo.CDemoUserCmd parse(Source source) throws IOException {
+                return Demo.CDemoUserCmd.newBuilder()
+                    .setCmdNumber(source.readFixedInt32())
+                    .setData(ZeroCopy.wrap(readPacket(source)))
+                    .build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                source.skipBytes(4);
+                skipPacket(source);
+            }
+        },
             //(6) dem_datatables
-            new Handler<Demo.CDemoSendTables>(Demo.CDemoSendTables.class, null) {
-                @Override
-                public Demo.CDemoSendTables parse(Source source) throws IOException {
-                    return Demo.CDemoSendTables.newBuilder()
-                            .setData(ZeroCopy.wrap(readPacket(source)))
-                            .build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    skipPacket(source);
-                }
-            },
+        new Handler<>(Demo.CDemoSendTables.class, null) {
+            @Override
+            public Demo.CDemoSendTables parse(Source source) throws IOException {
+                return Demo.CDemoSendTables.newBuilder()
+                    .setData(ZeroCopy.wrap(readPacket(source)))
+                    .build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                skipPacket(source);
+            }
+        },
             //(7) dem_stop
-            new Handler<Demo.CDemoStop>(Demo.CDemoStop.class, null) {
-                @Override
-                public Demo.CDemoStop parse(Source source) throws IOException {
-                    return Demo.CDemoStop.newBuilder().build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    // do nothing
-                }
-            },
+        new Handler<>(Demo.CDemoStop.class, null) {
+            @Override
+            public Demo.CDemoStop parse(Source source) throws IOException {
+                return Demo.CDemoStop.newBuilder().build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                // do nothing
+            }
+        },
             //(8) dem_customdata
-            new Handler<Demo.CDemoCustomData>(Demo.CDemoCustomData.class, null) {
-                @Override
-                public Demo.CDemoCustomData parse(Source source) throws IOException {
-                    return Demo.CDemoCustomData.newBuilder()
-                            .setData(ZeroCopy.wrap(readPacket(source)))
-                            .build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    skipPacket(source);
-                }
-            },
+        new Handler<>(Demo.CDemoCustomData.class, null) {
+            @Override
+            public Demo.CDemoCustomData parse(Source source) throws IOException {
+                return Demo.CDemoCustomData.newBuilder()
+                    .setData(ZeroCopy.wrap(readPacket(source)))
+                    .build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                skipPacket(source);
+            }
+        },
             //(9) dem_stringtables
-            new Handler<Demo.CDemoStringTables>(Demo.CDemoStringTables.class, ResetRelevantKind.STRINGTABLE) {
-                @Override
-                public Demo.CDemoStringTables parse(Source source) throws IOException {
-                    var bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));
-                    var b = Demo.CDemoStringTables.newBuilder();
-                    var nTables = bs.readUBitInt(8);
-                    for (var t = 0; t < nTables; t++) {
-                        var tb = b.addTablesBuilder();
-                        tb.setTableName(bs.readString(4095));
-                        var nStrings = bs.readUBitInt(16);
-                        for (var s = 0; s < nStrings; s++) {
-                            readItem(bs, tb.addItemsBuilder());
-                        }
-                        if (bs.readBitFlag()) {
-                            nStrings = bs.readUBitInt(16);
-                            for (var s = 0; s < nStrings; s++) {
-                                readItem(bs, tb.addItemsClientsideBuilder());
-                            }
-                        }
+        new Handler<>(Demo.CDemoStringTables.class, ResetRelevantKind.STRINGTABLE) {
+            @Override
+            public Demo.CDemoStringTables parse(Source source) throws IOException {
+                var bs = BitStream.createBitStream(ZeroCopy.wrap(readPacket(source)));
+                var b = Demo.CDemoStringTables.newBuilder();
+                var nTables = bs.readUBitInt(8);
+                for (var t = 0; t < nTables; t++) {
+                    var tb = b.addTablesBuilder();
+                    tb.setTableName(bs.readString(4095));
+                    var nStrings = bs.readUBitInt(16);
+                    for (var s = 0; s < nStrings; s++) {
+                        readItem(bs, tb.addItemsBuilder());
                     }
-                    return b.build();
-                }
-                @Override
-                public void skip(Source source) throws IOException {
-                    skipPacket(source);
-                }
-                private void readItem(BitStream bs, Demo.CDemoStringTables.items_t.Builder ib) {
-                    ib.setStr(bs.readString(255));
                     if (bs.readBitFlag()) {
-                        var data = new byte[bs.readUBitInt(16)];
-                        bs.readBitsIntoByteArray(data, data.length * 8);
-                        ib.setData(ZeroCopy.wrap(data));
+                        nStrings = bs.readUBitInt(16);
+                        for (var s = 0; s < nStrings; s++) {
+                            readItem(bs, tb.addItemsClientsideBuilder());
+                        }
                     }
+                }
+                return b.build();
+            }
+
+            @Override
+            public void skip(Source source) throws IOException {
+                skipPacket(source);
+            }
+
+            private void readItem(BitStream bs, Demo.CDemoStringTables.items_t.Builder ib) {
+                ib.setStr(bs.readString(255));
+                if (bs.readBitFlag()) {
+                    var data = new byte[bs.readUBitInt(16)];
+                    bs.readBitsIntoByteArray(data, data.length * 8);
+                    ib.setData(ZeroCopy.wrap(data));
                 }
             }
+        }
     };
 
     {

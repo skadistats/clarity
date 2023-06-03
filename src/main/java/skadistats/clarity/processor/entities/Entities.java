@@ -629,7 +629,7 @@ public class Entities {
     }
 
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
-        return new SimpleIterator<Entity>() {
+        return new SimpleIterator<>() {
             int i = -1;
 
             @Override

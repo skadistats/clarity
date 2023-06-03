@@ -33,7 +33,7 @@ public class PacketInstanceReaderProtobufDemo extends PacketInstanceReader<Demo.
         final var tick = source.readVarInt32();
         final var size = source.readVarInt32();
         final var messageClass = (Class<T>) DemoPackets.classForKind(kind);
-        return new PacketInstance<T>() {
+        return new PacketInstance<>() {
 
             @Override
             public int getKind() {
@@ -52,7 +52,7 @@ public class PacketInstanceReaderProtobufDemo extends PacketInstanceReader<Demo.
 
             @Override
             public ResetRelevantKind getResetRelevantKind() {
-                switch(kind) {
+                switch (kind) {
                     case Demo.EDemoCommands.DEM_SyncTick_VALUE:
                         return ResetRelevantKind.SYNC;
                     case Demo.EDemoCommands.DEM_StringTables_VALUE:
@@ -67,8 +67,8 @@ public class PacketInstanceReaderProtobufDemo extends PacketInstanceReader<Demo.
             @Override
             public T parse() throws IOException {
                 return Packet.parse(
-                        messageClass,
-                        ZeroCopy.wrap(packetReader.readFromSource(source, size, isCompressed))
+                    messageClass,
+                    ZeroCopy.wrap(packetReader.readFromSource(source, size, isCompressed))
                 );
             }
 
