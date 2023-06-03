@@ -33,11 +33,11 @@ public abstract class StateDifferenceEvaluator {
     }
 
     private boolean prevHigher() {
-        return cur != null && (prev == null || prev.compareTo(cur) > 0);
+        return cur != null && (prev == null || FieldPathUtil.compare(prev, cur) > 0);
     }
 
     private boolean curHigher() {
-        return prev != null && (cur == null || cur.compareTo(prev) > 0);
+        return prev != null && (cur == null || FieldPathUtil.compare(cur, prev) > 0);
     }
 
     protected abstract void onPropertiesDeleted(List<FieldPath> fieldPaths);

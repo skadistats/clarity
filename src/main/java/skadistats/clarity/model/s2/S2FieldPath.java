@@ -2,7 +2,7 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.model.FieldPath;
 
-public interface S2FieldPath<F extends S2FieldPath> extends FieldPath<F> {
+public interface S2FieldPath extends FieldPath {
 
     int get(int i);
     int last();
