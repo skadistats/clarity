@@ -1,8 +1,6 @@
 package skadistats.clarity.processor.runner;
 
-import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.PacketPosition;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;

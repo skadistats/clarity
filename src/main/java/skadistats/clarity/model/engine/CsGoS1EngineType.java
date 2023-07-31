@@ -32,7 +32,7 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
 
     @OnMessage(CSGOS1NetMessages.CSVCMsg_ServerInfo.class)
     protected void onServerInfo(CSGOS1NetMessages.CSVCMsg_ServerInfo serverInfo) {
-        this.millisPerTick = serverInfo.getTickInterval() * 1000.0f;
+        contextData.setMillisPerTick(serverInfo.getTickInterval() * 1000.0f);
     }
 
     @Override

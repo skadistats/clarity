@@ -10,10 +10,15 @@ import skadistats.clarity.model.state.ArrayEntityState;
 
 public class PointerField extends SerializerField {
 
-    private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("bool");
+    private final DecoderHolder decoderHolder;
 
     public PointerField(FieldType fieldType, Serializer serializer) {
         super(fieldType, serializer);
+        if ("CCSGameModeRules".equals(serializer.getId().getName())) {
+            decoderHolder = S2DecoderFactory.createDecoder("gamerulesmode_fix");
+        } else {
+            decoderHolder = S2DecoderFactory.createDecoder("bool");
+        }
     }
 
     @Override

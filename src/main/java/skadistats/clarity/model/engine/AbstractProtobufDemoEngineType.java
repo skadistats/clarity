@@ -15,12 +15,23 @@ public abstract class AbstractProtobufDemoEngineType extends AbstractEngineType<
     public AbstractProtobufDemoEngineType(EngineId id, PacketInstanceReader<Demo.CDemoFileHeader> packetInstanceReader, Demo.CDemoFileHeader header, int infoOffset, boolean sendTablesContainer, int indexBits, int serialBits) {
         super(id, packetInstanceReader, header, sendTablesContainer, indexBits, serialBits);
         this.infoOffset = infoOffset;
+        if (header.hasBuildNum()) {
+            contextData.setBuildNumber(header.getBuildNum());
+        }
     }
 
     @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
     protected void onServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
-        this.millisPerTick = serverInfo.getTickInterval() * 1000.0f;
+        contextData.setMillisPerTick(serverInfo.getTickInterval() * 1000.0f);
+        var gameVersion = determineGameVersion(serverInfo);
+        if (gameVersion != null) {
+            contextData.setGameVersion(gameVersion);
+        } else if (getId().canExtractGameVersion()) {
+            log.warn("received CSVCMsg_ServerInfo, but could not read game version from it. (game dir '%s')", serverInfo.getGameDir());
+        }
     }
+
+    protected abstract Integer determineGameVersion(DemoNetMessages.CSVCMsg_ServerInfo serverInfo);
 
     @Override
     public int getInfoOffset() {

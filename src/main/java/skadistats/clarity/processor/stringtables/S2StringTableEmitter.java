@@ -54,7 +54,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             var data = message.getStringData();
             if (message.getDataCompressed()) {
                 byte[] dst;
-                if (context.getBuildNumber() != -1 && context.getBuildNumber() <= 962) {
+                if (context.getEngineType().getId() == EngineId.DOTA_S2 && context.getGameVersion() != -1 && context.getGameVersion() <= 962) {
                     dst = LZSS.unpack(data);
                 } else {
                     dst = Snappy.uncompress(ZeroCopy.extract(data));

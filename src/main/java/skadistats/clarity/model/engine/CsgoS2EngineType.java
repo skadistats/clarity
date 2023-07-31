@@ -7,6 +7,9 @@ import skadistats.clarity.io.s2.S2FieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.wire.csgo.s2.EmbeddedPackets;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
+
+import java.util.regex.Pattern;
 
 public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
 
@@ -20,6 +23,15 @@ public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
                 14,
                 17
         );
+    }
+
+    @Override
+    protected Integer determineGameVersion(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
+        var matcher = Pattern.compile("csgo_v20*(\\d+)").matcher(serverInfo.getGameDir());
+        if (!matcher.find()) {
+            return null;
+        }
+        return Integer.parseInt(matcher.group(1));
     }
 
     @Override

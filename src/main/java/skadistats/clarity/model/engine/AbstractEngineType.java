@@ -1,7 +1,10 @@
 package skadistats.clarity.model.engine;
 
 import com.google.protobuf.GeneratedMessage;
+import org.slf4j.Logger;
+import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Insert;
+import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.reader.OnMessage;
@@ -12,6 +15,8 @@ import skadistats.clarity.source.Source;
 import java.io.IOException;
 
 public abstract class AbstractEngineType<H extends GeneratedMessage> implements EngineType {
+
+    protected static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
     @Insert
     protected Context ctx;
@@ -25,7 +30,7 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     private final int indexMask;
     private final int emptyHandle;
 
-    protected float millisPerTick = Float.NaN;
+    protected final ContextData contextData = new ContextData();
 
     AbstractEngineType(EngineId id, PacketInstanceReader<H> packetInstanceReader, H header, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.id = id;
@@ -41,11 +46,6 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     @Override
     public EngineId getId() {
         return id;
-    }
-
-    @Override
-    public float getMillisPerTick() {
-        return millisPerTick;
     }
 
     @Override
@@ -111,6 +111,11 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     @Override
     public String toString() {
         return id.toString();
+    }
+
+    @Override
+    public ContextData getContextData() {
+        return contextData;
     }
 
 }

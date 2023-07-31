@@ -8,6 +8,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.wire.dota.s1.EmbeddedPackets;
 import skadistats.clarity.wire.dota.s1.UserMessagePackets;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 public class DotaS1EngineType extends AbstractProtobufDemoEngineType {
 
@@ -21,6 +22,12 @@ public class DotaS1EngineType extends AbstractProtobufDemoEngineType {
                 11,
                 10
         );
+    }
+
+    @Override
+    protected Integer determineGameVersion(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
+        // nothing to do for Dota S1
+        return null;
     }
 
     @Override

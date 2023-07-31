@@ -15,12 +15,10 @@ import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.ValueField;
 import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.BuildNumberRange;
+import skadistats.clarity.processor.sendtables.FieldGeneratorPatches.PatchFunc;
 import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -37,16 +35,11 @@ public class FieldGenerator {
 
     private final Map<SerializerId, Serializer> serializers = new HashMap<>();
 
-    public FieldGenerator(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage, int buildNumber) {
+    FieldGenerator(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage, List<PatchFunc> patchFuncs) {
         this.protoMessage = protoMessage;
         this.fieldData = new FieldData[protoMessage.getFieldsCount()];
         this.checkedNames = new IntOpenHashSet();
-        this.patchFuncs = new ArrayList<>();
-        for (var patchEntry : PATCHES.entrySet()) {
-            if (patchEntry.getKey().appliesTo(buildNumber)) {
-                this.patchFuncs.add(patchEntry.getValue());
-            }
-        }
+        this.patchFuncs = patchFuncs;
     }
 
     public void createFields() {
@@ -183,14 +176,14 @@ public class FieldGenerator {
         VALUE
     }
 
-    private static class FieldData {
-        private final FieldType fieldType;
-        private final String name;
-        private final ProtoDecoderProperties decoderProperties;
-        private final SerializerId serializerId;
+    static class FieldData {
+        final FieldType fieldType;
+        final String name;
+        final ProtoDecoderProperties decoderProperties;
+        final SerializerId serializerId;
 
-        private final FieldCategory category;
-        private Field field;
+        final FieldCategory category;
+        Field field;
 
         public FieldData(FieldType fieldType, String name, ProtoDecoderProperties decoderProperties, SerializerId serializerId) {
             this.fieldType = fieldType;
@@ -248,106 +241,6 @@ public class FieldGenerator {
                     return Integer.parseInt(elementCount);
             }
         }
-
-    }
-
-
-
-    private static final SerializerId SID_PITCH_YAW = new SerializerId("CBodyComponentBaseAnimatingOverlay", 3);
-
-    private interface PatchFunc {
-        void execute(SerializerId serializerId, FieldData field);
-    }
-
-    private static final Map<BuildNumberRange, PatchFunc> PATCHES = new LinkedHashMap<>();
-    static {
-
-        PATCHES.put(new BuildNumberRange(null, 954), (serializerId, field) -> {
-            switch (field.name) {
-                case "m_flMana":
-                case "m_flMaxMana":
-                    var up = field.decoderProperties;
-                    if (up.highValue == 3.4028235E38f) {
-                        up.lowValue = null;
-                        up.highValue = 8192.0f;
-                    }
-            }
-        });
-
-        PATCHES.put(new BuildNumberRange(null, 990), (serializerId, field) -> {
-            switch (field.name) {
-                case "dirPrimary":
-                case "localSound":
-                case "m_attachmentPointBoneSpace":
-                case "m_attachmentPointRagdollSpace":
-                case "m_flElasticity":
-                case "m_location":
-                case "m_poolOrigin":
-                case "m_ragPos":
-                case "m_vecEndPos":
-                case "m_vecEyeExitEndpoint":
-                case "m_vecGunCrosshair":
-                case "m_vecLadderDir":
-                case "m_vecPlayerMountPositionBottom":
-                case "m_vecPlayerMountPositionTop":
-                case "m_viewtarget":
-                case "m_WorldMaxs":
-                case "m_WorldMins":
-                case "origin":
-                case "vecExtraLocalOrigin":
-                case "vecLocalOrigin":
-                    field.decoderProperties.encoderType = "coord";
-                    break;
-
-                case "angExtraLocalAngles":
-                case "angLocalAngles":
-                case "m_angInitialAngles":
-                case "m_ragAngles":
-                case "m_vLightDirection":
-                    field.decoderProperties.encoderType = "QAngle";
-                    break;
-
-                case "m_vecLadderNormal":
-                    field.decoderProperties.encoderType = "normal";
-                    break;
-
-                case "m_angRotation":
-                    field.decoderProperties.encoderType = SID_PITCH_YAW.equals(serializerId) ? "qangle_pitch_yaw" : "QAngle";
-                    break;
-            }
-        });
-
-        PATCHES.put(new BuildNumberRange(1016, 1026), (serializerId, field) -> {
-            switch (field.name) {
-                case "m_bWorldTreeState":
-                case "m_ulTeamLogo":
-                case "m_ulTeamBaseLogo":
-                case "m_ulTeamBannerLogo":
-                case "m_iPlayerIDsInControl":
-                case "m_bItemWhiteList":
-                case "m_iPlayerSteamID":
-                    field.decoderProperties.encoderType = "fixed64";
-            }
-        });
-
-        PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
-            switch (field.name) {
-                case "m_flSimulationTime":
-                case "m_flAnimTime":
-                    field.decoderProperties.encoderType = "simulationtime";
-            }
-        });
-
-        PATCHES.put(new BuildNumberRange(null, null), (serializerId, field) -> {
-            switch (field.name) {
-                case "m_flRuneTime":
-                    var up = field.decoderProperties;
-                    if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
-                        up.lowValue = null;
-                        up.highValue = null;
-                    }
-            }
-        });
 
     }
 

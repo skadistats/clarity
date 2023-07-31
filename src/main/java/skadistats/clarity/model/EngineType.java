@@ -3,6 +3,7 @@ package skadistats.clarity.model;
 import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.model.engine.ContextData;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.Source;
 
@@ -21,7 +22,6 @@ public interface EngineType {
     int handleForIndexAndSerial(int index, int serial);
     int emptyHandle();
 
-    float getMillisPerTick();
     int getInfoOffset();
 
     boolean isFullPacketSeekAllowed();
@@ -41,4 +41,6 @@ public interface EngineType {
     <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException;
 
     Object[] getRegisteredProcessors();
+
+    ContextData getContextData();
 }

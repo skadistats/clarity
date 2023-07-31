@@ -13,7 +13,6 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.packet.PacketReader;
 import skadistats.clarity.processor.packet.UsesPacketReader;
@@ -25,7 +24,6 @@ import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
-import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,7 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 @UsesPacketReader
@@ -263,26 +260,6 @@ public class InputSourceProcessor {
                     bs.skip(size * 8);
                 }
             }
-        }
-    }
-
-    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
-    public void processServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
-        if (engineType.getId() != EngineId.DOTA_S2) {
-            return;
-        }
-        var matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
-        if (matcher.find()) {
-            var num = Integer.parseInt(matcher.group(1));
-            ctx.setBuildNumber(num);
-            if (num < 928) {
-                log.warn("This replay is from an early beta version of Dota 2 Reborn (build number %d).", num);
-                log.warn("Entities in this replay probably cannot be read.");
-                log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
-                log.warn("If you wanna help, send it to github@martin.schrodt.org, or contact me on github.");
-            }
-        } else {
-            log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '%s')", serverInfo.getGameDir());
         }
     }
 

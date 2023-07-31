@@ -1,5 +1,6 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.model.engine.CsGoS1EngineType;
 import skadistats.clarity.model.engine.CsgoS2EngineType;
 import skadistats.clarity.model.engine.DotaS1EngineType;
@@ -7,10 +8,10 @@ import skadistats.clarity.model.engine.DotaS2EngineType;
 import skadistats.clarity.model.engine.PacketInstanceReaderCsGoS1;
 import skadistats.clarity.model.engine.PacketInstanceReaderProtobufDemo;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public enum EngineMagic {
 
@@ -32,16 +33,31 @@ public enum EngineMagic {
         }
     },
     S2("PBDEMS2\0") {
+        private final Pattern GAMEDIR_MATCH = Pattern.compile(".*[/\\\\](\\w+)$");
         @Override
         public EngineType determineEngineType(Source source) throws IOException {
             var infoOffset = source.readFixedInt32();
             source.skipBytes(4);
             var packetInstanceReader = new PacketInstanceReaderProtobufDemo(Demo.EDemoCommands.DEM_IsCompressed_S2_VALUE);
             var header = packetInstanceReader.readHeader(source);
-            if (header.hasGame() && "csgo".equals(header.getGame())) {
-                return new CsgoS2EngineType(EngineId.CSGO_S2, packetInstanceReader, header, infoOffset);
-            } else {
-                return new DotaS2EngineType(EngineId.DOTA_S2, packetInstanceReader, header, infoOffset);
+
+            String gameId = null;
+
+            if (header.hasGame()) {
+                gameId = header.getGame();
+            } else if (header.hasGameDirectory()) {
+                var m = GAMEDIR_MATCH.matcher(header.getGameDirectory());
+                if (m.matches()) {
+                    gameId = m.group(1);
+                }
+            }
+            switch(gameId) {
+                case "csgo":
+                    return new CsgoS2EngineType(EngineId.CSGO_S2, packetInstanceReader, header, infoOffset);
+                case "dota":
+                    return new DotaS2EngineType(EngineId.DOTA_S2, packetInstanceReader, header, infoOffset);
+                default:
+                    throw new ClarityException("Unable to determine engine type");
             }
         }
     };

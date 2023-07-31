@@ -44,8 +44,10 @@ public class S2DTClassEmitter {
     }
 
     @OnMessage(S2NetMessages.CSVCMsg_FlattenedSerializer.class)
-    public void onFlattenedSerializers(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage) throws IOException {
-        fieldGenerator = new FieldGenerator(protoMessage, ctx.getBuildNumber());
+    public void onFlattenedSerializers(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage) {
+        fieldGenerator = new FieldGenerator(
+            protoMessage,
+            FieldGeneratorPatches.getPatches(ctx.getEngineType().getId(), ctx.getGameVersion()));
         fieldGenerator.createFields();
     }
 
