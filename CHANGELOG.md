@@ -1,6 +1,6 @@
 # Clarity 2 Changelog
 
-## TBD: Version 3.0.0 released
+## Novemver 18, 2023: Version 3.0.0 released
 
 Major release with a lot of new features:
 
