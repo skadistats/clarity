@@ -3,6 +3,8 @@ package skadistats.clarity.model.csgo;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.io.Util;
+import skadistats.clarity.wire.Packet;
+import skadistats.clarity.wire.csgo.s2.proto.CSGOS2ClarityMessages;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -26,27 +28,57 @@ public class PlayerInfoType {
     private final boolean isHltv;
     private final int[] customFiles;
 
-    public PlayerInfoType(ByteString byteString) throws IOException {
-        ByteBuffer buf = ByteBuffer.wrap(ZeroCopy.extract(byteString)).order(ByteOrder.BIG_ENDIAN);
-        version = buf.getLong();
-        xuid = buf.getLong();
-        name = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
-        userId = buf.getInt();
-        guid = readZeroTerminated(buf, SIGNED_GUID_LEN + 1);
-        friendsId = buf.getInt();
+    public static PlayerInfoType createS1(ByteString byteString) {
+        var buf = ByteBuffer.wrap(ZeroCopy.extract(byteString)).order(ByteOrder.BIG_ENDIAN);
+        var version = buf.getLong();
+        var xuid = buf.getLong();
+        var name = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
+        var userId = buf.getInt();
+        var guid = readZeroTerminated(buf, SIGNED_GUID_LEN + 1);
+        var friendsId = buf.getInt();
         buf.position(buf.position() + 3);
-        friendsName = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
-        fakePlayer = buf.get() == (byte)1;
-        isHltv = buf.get() == (byte)1;
-        customFiles = new int[MAX_CUSTOM_FILES];
-        for (int i = 0; i < MAX_CUSTOM_FILES; i++) {
+        var friendsName = readZeroTerminated(buf, MAX_PLAYER_NAME_LENGTH);
+        var fakePlayer = buf.get() == (byte)1;
+        var isHltv = buf.get() == (byte)1;
+        var customFiles = new int[MAX_CUSTOM_FILES];
+        for (var i = 0; i < MAX_CUSTOM_FILES; i++) {
             customFiles[i] = buf.getInt();
         }
         // TODO: still 6 bytes remaining, so something is wrong...
+        return new PlayerInfoType(version, xuid, name, userId, guid, friendsId, friendsName, fakePlayer, isHltv, customFiles);
     }
 
-    private String readZeroTerminated(ByteBuffer buffer, int size) throws IOException {
+    public static PlayerInfoType createS2(ByteString byteString) {
+        var msg = Packet.parse(CSGOS2ClarityMessages.PlayerInfo.class, byteString);
+        return new PlayerInfoType(
+                -1L,
+                msg.getXuid(),
+                msg.getName(),
+                -1,
+                "",
+                -1,
+                "",
+                msg.getFakePlayer(),
+                msg.getIsHlTv(),
+                new int[MAX_CUSTOM_FILES]
+        );
+    }
+
+    private static String readZeroTerminated(ByteBuffer buffer, int size) {
         return Util.readFixedZeroTerminated(buffer, size);
+    }
+
+    private PlayerInfoType(long version, long xuid, String name, int userId, String guid, int friendsId, String friendsName, boolean fakePlayer, boolean isHltv, int[] customFiles) {
+        this.version = version;
+        this.xuid = xuid;
+        this.name = name;
+        this.userId = userId;
+        this.guid = guid;
+        this.friendsId = friendsId;
+        this.friendsName = friendsName;
+        this.fakePlayer = fakePlayer;
+        this.isHltv = isHltv;
+        this.customFiles = customFiles;
     }
 
     public long getVersion() {
@@ -91,7 +123,7 @@ public class PlayerInfoType {
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder("PlayerInfoType{");
+        final var sb = new StringBuilder("PlayerInfoType{");
         sb.append("version=").append(version);
         sb.append(", xuid=").append(xuid);
         sb.append(", name='").append(name).append('\'');
@@ -105,7 +137,7 @@ public class PlayerInfoType {
         if (customFiles == null) sb.append("null");
         else {
             sb.append('[');
-            for (int i = 0; i < customFiles.length; ++i)
+            for (var i = 0; i < customFiles.length; ++i)
                 sb.append(i == 0 ? "" : ", ").append(customFiles[i]);
             sb.append(']');
         }
@@ -118,7 +150,7 @@ public class PlayerInfoType {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        PlayerInfoType that = (PlayerInfoType) o;
+        var that = (PlayerInfoType) o;
 
         if (version != that.version) return false;
         if (xuid != that.xuid) return false;
@@ -134,7 +166,7 @@ public class PlayerInfoType {
 
     @Override
     public int hashCode() {
-        int result = (int) (version ^ (version >>> 32));
+        var result = (int) (version ^ (version >>> 32));
         result = 31 * result + (int) (xuid ^ (xuid >>> 32));
         result = 31 * result + name.hashCode();
         result = 31 * result + userId;

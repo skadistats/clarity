@@ -8,7 +8,7 @@ import java.io.IOException;
 
 public interface PacketInstance<T extends GeneratedMessage> {
 
-    PacketInstance<GeneratedMessage> EOF = new PacketInstance<GeneratedMessage>() {
+    PacketInstance<GeneratedMessage> EOF = new PacketInstance<>() {
         @Override
         public int getKind() {
             return -1;

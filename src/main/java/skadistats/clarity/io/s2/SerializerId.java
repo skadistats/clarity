@@ -23,7 +23,7 @@ public class SerializerId {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        SerializerId that = (SerializerId) o;
+        var that = (SerializerId) o;
 
         if (version != that.version) return false;
         return name.equals(that.name);
@@ -32,14 +32,14 @@ public class SerializerId {
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
+        var result = name.hashCode();
         result = 31 * result + version;
         return result;
     }
 
     @Override
     public String toString() {
-        final StringBuilder sb = new StringBuilder(name);
+        final var sb = new StringBuilder(name);
         sb.append('(');
         sb.append(version);
         sb.append(')');

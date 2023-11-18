@@ -31,7 +31,7 @@ public class UsagePointProvider {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        UsagePointProvider that = (UsagePointProvider) o;
+        var that = (UsagePointProvider) o;
 
         if (!eventClass.equals(that.eventClass)) return false;
         if (!providerClass.equals(that.providerClass)) return false;
@@ -42,7 +42,7 @@ public class UsagePointProvider {
 
     @Override
     public int hashCode() {
-        int result = eventClass.hashCode();
+        var result = eventClass.hashCode();
         result = 31 * result + providerClass.hashCode();
         result = 31 * result + providesAnnotation.hashCode();
         return result;

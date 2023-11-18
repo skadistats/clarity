@@ -17,7 +17,7 @@ public interface EntityState {
     Iterator<FieldPath> fieldPathIterator();
 
     default String dump(String title, Function<FieldPath, String> nameResolver) {
-        final TextTable table = new TextTable.Builder()
+        final var table = new TextTable.Builder()
                 .setFrame(TextTable.FRAME_COMPAT)
                 .addColumn("FP")
                 .addColumn("Property")
@@ -25,10 +25,10 @@ public interface EntityState {
                 .setTitle(title)
                 .build();
 
-        int i = 0;
-        final Iterator<FieldPath> iter = fieldPathIterator();
+        var i = 0;
+        final var iter = fieldPathIterator();
         while (iter.hasNext()) {
-            FieldPath fp = iter.next();
+            var fp = iter.next();
             table.setData(i, 0, fp);
             table.setData(i, 1, nameResolver.apply(fp));
             table.setData(i, 2, getValueForFieldPath(fp));

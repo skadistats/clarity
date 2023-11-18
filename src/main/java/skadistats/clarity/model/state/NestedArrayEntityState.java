@@ -27,15 +27,15 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
         rootField = other.rootField;
-        int otherSize = other.entries.size();
+        var otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
-        for (int i = 0; i < otherSize; i++) {
-            Entry e = other.entries.get(i);
+        for (var i = 0; i < otherSize; i++) {
+            var e = other.entries.get(i);
             if (e == null) {
                 entries.add(null);
                 markFree(i);
             } else {
-                boolean modifiable = e.state.length == 0;
+                var modifiable = e.state.length == 0;
                 e.modifiable = modifiable;
                 entries.add(new Entry(e.state, modifiable));
             }
@@ -93,17 +93,17 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     @Override
     public boolean setValueForFieldPath(FieldPath fpX, Object value) {
-        S2FieldPath fp = fpX.s2();
+        var fp = fpX.s2();
 
         Field field = rootField;
-        Entry entry = rootEntry();
-        int last = fp.last();
+        var entry = rootEntry();
+        var last = fp.last();
 
         capacityChanged = false;
-        int i = 0;
+        var i = 0;
         while (true) {
-            int idx = fp.get(i);
-            if (!entry.has(idx)) {
+            var idx = fp.get(i);
+            if (entry.length() <= idx) {
                 field.ensureArrayEntityStateCapacity(entry, idx + 1);
             }
             field = field.getChild(idx);
@@ -118,15 +118,15 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     @Override
     public <T> T getValueForFieldPath(FieldPath fpX) {
-        S2FieldPath fp = fpX.s2();
+        var fp = fpX.s2();
 
         Field field = rootField;
-        Entry entry = rootEntry();
-        int last = fp.last();
+        var entry = rootEntry();
+        var last = fp.last();
 
-        int i = 0;
+        var i = 0;
         while (true) {
-            int idx = fp.get(i);
+            var idx = fp.get(i);
             field = field.getChild(idx);
             if (i == last) {
                 return (T) field.getArrayEntityState(entry, idx);
@@ -217,13 +217,16 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         @Override
         public void set(int idx, Object value) {
             if (!modifiable) {
-                Object[] newState = new Object[state.length];
+                var newState = new Object[state.length];
                 System.arraycopy(state, 0, newState, 0, state.length);
                 state = newState;
                 modifiable = true;
             }
             if (state[idx] instanceof EntryRef) {
                 clearEntryRef((EntryRef) state[idx]);
+            }
+            if ((state[idx] == null) ^ (value == null)) {
+                capacityChanged = true;
             }
             state[idx] = value;
         }
@@ -247,13 +250,13 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             if (!isSub(idx)) {
                 set(idx, createEntryRef(new Entry()));
             }
-            EntryRef entryRef = (EntryRef) get(idx);
+            var entryRef = (EntryRef) get(idx);
             return entries.get(entryRef.idx);
         }
 
         @Override
         public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
-            int curSize = state.length;
+            var curSize = state.length;
             if (wantedSize == curSize) {
                 return this;
             }

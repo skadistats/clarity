@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s2;
 
-public class S2LongModifiableFieldPath implements S2ModifiableFieldPath<S2LongModifiableFieldPath> {
+public class S2LongModifiableFieldPath implements S2ModifiableFieldPath, Comparable<S2LongModifiableFieldPath> {
 
     private long id;
 

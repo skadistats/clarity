@@ -14,9 +14,9 @@ public class ArrayDecoder<T> implements Decoder<T[]> {
 
     @Override
     public T[] decode(BitStream bs) {
-        int count = bs.readUBitInt(nSizeBits);
-        T[] result = (T[]) new Object[count];
-        int i = 0;
+        var count = bs.readUBitInt(nSizeBits);
+        var result = (T[]) new Object[count];
+        var i = 0;
         while (i < count) {
             result[i++] = decoder.decode(bs);
         }

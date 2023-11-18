@@ -93,7 +93,7 @@ public class SendProp {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
+        var builder = new StringBuilder();
         builder.append("SendProp [name=");
         builder.append(getVarName());
         builder.append(", type=");

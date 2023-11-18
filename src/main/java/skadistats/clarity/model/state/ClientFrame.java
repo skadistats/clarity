@@ -11,12 +11,12 @@ public class ClientFrame {
     }
 
     public void setEntity(Entity e) {
-        int eIdx = e.getIndex();
+        var eIdx = e.getIndex();
         this.entity[eIdx] = e;
     }
 
     public void removeEntity(Entity e) {
-        int eIdx = e.getIndex();
+        var eIdx = e.getIndex();
         this.entity[eIdx] = null;
     }
 
@@ -36,15 +36,15 @@ public class ClientFrame {
 
         private final long[] uid;
         private final boolean[] active;
-        private EntityState[] state;
+        private final EntityState[] state;
 
         private Capsule(ClientFrame frame) {
-            int size = frame.getSize();
+            var size = frame.getSize();
             uid = new long[size];
             active = new boolean[size];
             state = new EntityState[size];
-            for (int i = 0; i < size; i++) {
-                Entity e = frame.entity[i];
+            for (var i = 0; i < size; i++) {
+                var e = frame.entity[i];
                 uid[i] = e != null ? e.getUid() : -1L;
                 active[i] = e != null && e.isActive();
                 state[i] = e != null ? e.getState().copy() : null;

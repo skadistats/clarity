@@ -21,12 +21,12 @@ public class SendTableFlattener {
     }
 
     private SendTable sendTableForDtName(String dtName) {
-        S1DTClass dtClass = (S1DTClass) dtClasses.forDtName(dtName);
+        var dtClass = (S1DTClass) dtClasses.forDtName(dtName);
         return dtClass.getSendTable();
     }
 
     private void aggregateExclusions(SendTable table) {
-        for (SendProp sp : table.getSendProps()) {
+        for (var sp : table.getSendProps()) {
             if ((sp.getFlags() & PropFlag.EXCLUDE) != 0) {
                 exclusions.add(sp.getExcludeIdentifier());
             } else if (sp.getType() == PropType.DATATABLE) {
@@ -37,8 +37,8 @@ public class SendTableFlattener {
 
     private void gather(SendTable ancestor, List<SendProp> accumulator, StringBuilder nameBuf) {
         gatherCollapsible(ancestor, accumulator, nameBuf);
-        int l = nameBuf.length();
-        for (SendProp sp : accumulator) {
+        var l = nameBuf.length();
+        for (var sp : accumulator) {
             nameBuf.append(sp.getVarName());
             receiveProps.add(new ReceiveProp(sp, nameBuf.toString()));
             nameBuf.setLength(l);
@@ -46,7 +46,7 @@ public class SendTableFlattener {
     }
 
     private void gatherCollapsible(SendTable ancestor, List<SendProp> accumulator, StringBuilder nameBuf) {
-        for (SendProp sp : ancestor.getSendProps()) {
+        for (var sp : ancestor.getSendProps()) {
             if (((PropFlag.EXCLUDE | PropFlag.INSIDE_ARRAY) & sp.getFlags()) != 0) {
                 continue;
             }
@@ -57,7 +57,7 @@ public class SendTableFlattener {
                 if ((sp.getFlags() & PropFlag.COLLAPSIBLE) != 0) {
                     gatherCollapsible(sendTableForDtName(sp.getDtName()), accumulator, nameBuf);
                 } else {
-                    int l = nameBuf.length();
+                    var l = nameBuf.length();
                     nameBuf.append(sp.getVarName());
                     nameBuf.append('.');
                     gather(sendTableForDtName(sp.getDtName()), new LinkedList<>(), nameBuf);
@@ -70,26 +70,26 @@ public class SendTableFlattener {
     }
 
     private int[] computeIndexMapping() {
-        int[] mapping =  new int[receiveProps.size()];
-        for (int i = 0; i < mapping.length; i++) {
+        var mapping =  new int[receiveProps.size()];
+        for (var i = 0; i < mapping.length; i++) {
             mapping[i] = i;
         }
 
         Set<Integer> priorities = new TreeSet<>();
         priorities.add(64);
-        for (ReceiveProp rp : receiveProps) {
+        for (var rp : receiveProps) {
             priorities.add(rp.getSendProp().getPriority());
         }
-        int hole = 0;
+        var hole = 0;
 
-        for (Integer priority : priorities) {
-            int cursor = hole;
+        for (var priority : priorities) {
+            var cursor = hole;
             while (cursor < mapping.length) {
-                ReceiveProp rp = receiveProps.get(mapping[cursor]);
-                SendProp sp = rp.getSendProp();
-                boolean changesOften = (sp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
+                var rp = receiveProps.get(mapping[cursor]);
+                var sp = rp.getSendProp();
+                var changesOften = (sp.getFlags() & PropFlag.CHANGES_OFTEN) != 0 && priority == 64;
                 if (changesOften || sp.getPriority() == priority) {
-                    int temp = mapping[cursor];
+                    var temp = mapping[cursor];
                     mapping[cursor] = mapping[hole];
                     mapping[hole] = temp;
                     hole++;
@@ -103,7 +103,7 @@ public class SendTableFlattener {
     public Result flatten() {
         aggregateExclusions(table);
         gather(table, new LinkedList<>(), new StringBuilder());
-        Result r = new Result();
+        var r = new Result();
         r.receiveProps = receiveProps.toArray(new ReceiveProp[] {});
         r.indexMapping = computeIndexMapping();
         return r;

@@ -2,16 +2,18 @@ package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.event.Event;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.engine.ContextData;
 
 import java.lang.annotation.Annotation;
 
 public class Context {
 
     private final ExecutionModel executionModel;
-    private int buildNumber = -1;
+    private final ContextData contextData;
 
-    public Context(ExecutionModel executionModel) {
+    public Context(ExecutionModel executionModel, ContextData contextData) {
         this.executionModel = executionModel;
+        this.contextData = contextData;
     }
 
     public <T> T getProcessor(Class<T> processorClass) {
@@ -26,12 +28,16 @@ public class Context {
         return executionModel.getRunner().getEngineType();
     }
 
-    public int getBuildNumber() {
-        return buildNumber;
+    public float getMillisPerTick() {
+        return contextData.getMillisPerTick();
     }
 
-    public void setBuildNumber(int buildNumber) {
-        this.buildNumber = buildNumber;
+    public int getBuildNumber() {
+        return contextData.getBuildNumber();
+    }
+
+    public int getGameVersion() {
+        return contextData.getGameVersion();
     }
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {

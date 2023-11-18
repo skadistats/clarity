@@ -4,12 +4,11 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.util.TextTable;
 
-public class S2FieldReader extends FieldReader<S2DTClass> {
+public class S2FieldReader extends FieldReader {
 
     private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -38,7 +37,8 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
         .build();
 
     @Override
-    public FieldChanges readFields(BitStream bs, S2DTClass dtClass, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
+        var dtClass = dtClassGeneric.s2();
         try {
             if (debug) {
                 dataDebugTable.setTitle(dtClass.toString());
@@ -46,11 +46,11 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 opDebugTable.clear();
             }
 
-            int n = 0;
-            S2ModifiableFieldPath mfp = S2ModifiableFieldPath.newInstance();
+            var n = 0;
+            var mfp = S2ModifiableFieldPath.newInstance();
             while (true) {
-                int offsBefore = bs.pos();
-                FieldOpType op = bs.readFieldOp();
+                var offsBefore = bs.pos();
+                var op = bs.readFieldOp();
                 op.execute(mfp, bs);
                 if (debug) {
                     opDebugTable.setData(n, 0, op);
@@ -64,20 +64,20 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
                 fieldPaths[n++] = mfp.unmodifiable();
             }
 
-            FieldChanges result = new FieldChanges(fieldPaths, n);
+            var result = new FieldChanges(fieldPaths, n);
 
-            for (int r = 0; r < n; r++) {
-                S2FieldPath fp = fieldPaths[r].s2();
-                Decoder decoder = dtClass.getDecoderForFieldPath(fp);
+            for (var r = 0; r < n; r++) {
+                var fp = fieldPaths[r].s2();
+                var decoder = dtClass.getDecoderForFieldPath(fp);
                 if (decoder == null) {
                     throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
                 }
-                int offsBefore = bs.pos();
+                var offsBefore = bs.pos();
                 result.setValue(r, decoder.decode(bs));
 
                 if (debug) {
-                    DecoderProperties props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
-                    FieldType type = dtClass.getTypeForFieldPath(fp);
+                    var props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
+                    var type = dtClass.getTypeForFieldPath(fp);
                     dataDebugTable.setData(r, 0, fp);
                     dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
                     dataDebugTable.setData(r, 2, props.getLowValue());
@@ -102,9 +102,9 @@ public class S2FieldReader extends FieldReader<S2DTClass> {
 
     @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
-        int n = bs.readUBitVar();
-        int c = 0;
-        int idx = -1;
+        var n = bs.readUBitVar();
+        var c = 0;
+        var idx = -1;
         while (c < n) {
             idx += bs.readUBitVar();
             deletions[c++] = idx;

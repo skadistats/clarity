@@ -1,8 +1,6 @@
-/target
-/.settings
-/.classpath
-/.project
 /.idea
 /*.iml
-/release.bat
+/.gradle
+/build
 jitwatch.*
+/replays

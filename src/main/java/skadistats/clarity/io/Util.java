@@ -9,12 +9,13 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.ParameterizedType;
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 public class Util {
 
     public static int calcBitsNeededFor(long x) {
         if (x == 0) return (0);
-        int n = 32;
+        var n = 32;
         if (x <= 0x0000FFFF) {
             n = n - 16; x = x << 16;
         }
@@ -42,26 +43,26 @@ public class Util {
         }
     }
 
-    public static String readFixedZeroTerminated(ByteBuffer buffer, int length) throws IOException {
-        byte[] buf = new byte[length];
+    public static String readFixedZeroTerminated(ByteBuffer buffer, int length) {
+        var buf = new byte[length];
         buffer.get(buf);
         return zeroTerminatedToString(buf);
     }
 
     public static String readFixedZeroTerminated(Source source, int length) throws IOException {
-        byte[] buf = new byte[length];
+        var buf = new byte[length];
         source.readBytes(buf, 0, length);
         return zeroTerminatedToString(buf);
     }
 
-    public static String zeroTerminatedToString(byte[] buf) throws IOException {
-        int i = 0;
+    public static String zeroTerminatedToString(byte[] buf) {
+        var i = 0;
         while (buf[i] != 0) i++;
-        return new String(buf, 0, i, "UTF-8");
+        return new String(buf, 0, i, StandardCharsets.UTF_8);
     }
 
     public static String arrayIdxToString(int idx) {
-        StringBuilder sb = new StringBuilder(4);
+        var sb = new StringBuilder(4);
         if (idx < 10) {
             sb.append("000");
         } else if (idx < 100) {
@@ -78,7 +79,7 @@ public class Util {
     }
 
     public static <T> Class<T> valueClassForDecoder(Decoder<T> decoder) {
-        ParameterizedType interfaceType = (ParameterizedType) decoder.getClass().getGenericInterfaces()[0];
+        var interfaceType = (ParameterizedType) decoder.getClass().getGenericInterfaces()[0];
         return (Class<T>)interfaceType.getActualTypeArguments()[0];
     }
 

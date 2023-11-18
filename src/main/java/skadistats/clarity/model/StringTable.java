@@ -20,7 +20,7 @@ public class StringTable {
     private final int flags;
     private final boolean varIntBitCounts;
 
-    private List<Entry> entries;
+    private final List<Entry> entries;
     private List<Entry> initialEntries;
 
     public StringTable(String name, Integer maxEntries, boolean userDataFixedSize, int userDataSize, int userDataSizeBits, int flags, boolean varIntBitCounts) {
@@ -101,16 +101,16 @@ public class StringTable {
     }
 
     public String toString() {
-        TextTable t = new TextTable.Builder()
+        var t = new TextTable.Builder()
             .setTitle(getName())
             .setFrame(TextTable.FRAME_COMPAT)
             .addColumn("Index", Alignment.RIGHT)
             .addColumn("Key", Alignment.RIGHT)
             .addColumn("Value", Alignment.RIGHT)
             .build();
-        int n = entries.size();
-        for (int i = 0; i < n; i++) {
-            ByteString v = getValueByIndex(i);
+        var n = entries.size();
+        for (var i = 0; i < n; i++) {
+            var v = getValueByIndex(i);
 
             t.setData(i, 0, i);
             t.setData(i, 1, getNameByIndex(i));
@@ -121,7 +121,7 @@ public class StringTable {
 
     private static class Entry {
 
-        private String name;
+        private final String name;
         private ByteString value;
 
         private Entry(String name, ByteString value) {

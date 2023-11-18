@@ -17,11 +17,11 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.StringTable;
+import skadistats.clarity.model.state.BaselineRegistry;
 import skadistats.clarity.model.state.ClientFrame;
 import skadistats.clarity.model.state.EntityRegistry;
 import skadistats.clarity.model.state.EntityState;
@@ -30,21 +30,19 @@ import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
-import skadistats.clarity.processor.sendtables.OnDTClassesComplete;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
+import skadistats.clarity.processor.stringtables.OnStringTableCreated;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 @Provides({
@@ -67,35 +65,22 @@ public class Entities {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private int entityCount;
-    private FieldReader<DTClass> fieldReader;
+    private FieldReader fieldReader;
     private int[] deletions;
     private int entitiesServerTick;
     private int serverTick;
-    private EntityRegistry entityRegistry = new EntityRegistry();
+    private final EntityRegistry entityRegistry = new EntityRegistry();
 
-    private Map<Integer, ByteString> rawBaselines = new HashMap<>();
-    private class Baseline {
-        private int dtClassId = -1;
-        private EntityState state;
-        private void reset() {
-            state = null;
-        }
-        private void copyFrom(Baseline other) {
-            this.dtClassId = other.dtClassId;
-            this.state = other.state;
-        }
-    }
-    private Baseline[] classBaselines;
-    private Baseline[][] entityBaselines;
+    private BaselineRegistry baselineRegistry;
 
     private ClientFrame entities;
 
     private boolean resetInProgress;
     private ClientFrame.Capsule resetCapsule;
 
-    private List<Runnable> queuedUpdates = new ArrayList<>();
+    private final List<Runnable> queuedUpdates = new ArrayList<>();
 
-    private Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
+    private final Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
     @Insert
     private EngineType engineType;
@@ -151,9 +136,9 @@ public class Entities {
         if (".*".equals(classPattern)) {
             return null;
         }
-        final Pattern p = Pattern.compile(classPattern);
+        final var p = Pattern.compile(classPattern);
         return value -> {
-            Entity e = (Entity) value[0];
+            var e = (Entity) value[0];
             return p.matcher(e.getDtClass().getDtName()).matches();
         };
     }
@@ -166,21 +151,6 @@ public class Entities {
         fieldReader = engineType.getNewFieldReader();
 
         deletions = new int[entityCount];
-
-        entityBaselines = new Baseline[entityCount][2];
-        for (int i = 0; i < entityCount; i++) {
-            entityBaselines[i][0] = new Baseline();
-            entityBaselines[i][1] = new Baseline();
-        }
-    }
-
-    @OnDTClassesComplete
-    public void onDTClassesComplete() {
-        classBaselines = new Baseline[dtClasses.getClassCount()];
-        for (int i = 0; i < classBaselines.length; i++) {
-            classBaselines[i] = new Baseline();
-            classBaselines[i].dtClassId = i;
-        }
     }
 
     @OnReset
@@ -193,13 +163,7 @@ public class Entities {
 
             case CLEAR:
                 entities = new ClientFrame(entityCount);
-                for (int i = 0; i < classBaselines.length; i++) {
-                    classBaselines[i].reset();
-                }
-                for (int i = 0; i < entityBaselines.length; i++) {
-                    entityBaselines[i][0].reset();
-                    entityBaselines[i][1].reset();
-                }
+                baselineRegistry.clear();
                 deferredMessages.clear();
                 break;
 
@@ -209,11 +173,11 @@ public class Entities {
                 //updateEventDebug = true;
 
                 Entity entity;
-                for (int eIdx = 0; eIdx < entityCount; eIdx++) {
+                for (var eIdx = 0; eIdx < entityCount; eIdx++) {
                     entity = entities.getEntity(eIdx);
                     if (resetCapsule.isExistent(eIdx)) {
                         if (entity == null || entity.getUid() != resetCapsule.getUid(eIdx)) {
-                            Entity deletedEntity = entityRegistry.get(resetCapsule.getUid(eIdx));
+                            var deletedEntity = entityRegistry.get(resetCapsule.getUid(eIdx));
                             if (resetCapsule.isActive(eIdx)) {
                                 emitLeftEvent(deletedEntity);
                             }
@@ -226,30 +190,8 @@ public class Entities {
                             if (entity.isActive()) {
                                 emitEnteredEvent(entity);
                             }
-                        } else if (evUpdated.isListenedTo() || evPropertyCountChanged.isListenedTo()) {
-                            List<FieldPath> changedFieldPaths = new ArrayList<>();
-                            boolean[] countChanged = { false };
-                            new StateDifferenceEvaluator(resetCapsule.getState(eIdx), entity.getState()) {
-                                @Override
-                                protected void onPropertiesDeleted(List<FieldPath> fieldPaths) {
-                                    countChanged[0] = true;
-                                }
-                                @Override
-                                protected void onPropertiesAdded(List<FieldPath> fieldPaths) {
-                                    countChanged[0] = true;
-                                    changedFieldPaths.addAll(fieldPaths);
-                                }
-                                @Override
-                                protected void onPropertyChanged(FieldPath fieldPath) {
-                                    changedFieldPaths.add(fieldPath);
-                                }
-                            }.work();
-                            if (countChanged[0]) {
-                                emitPropertyCountChangedEvent(entity);
-                            }
-                            if (evUpdated.isListenedTo() && !changedFieldPaths.isEmpty()) {
-                                emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[changedFieldPaths.size()]));
-                            }
+                        } else {
+                            emitCompleteEntityChangeUpdatedEvents(resetCapsule.getState(eIdx), entity);
                         }
                     }
                 }
@@ -263,17 +205,56 @@ public class Entities {
         }
     }
 
-    @OnStringTableEntry(BASELINE_TABLE)
-    public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
-        Integer dtClassId = Integer.valueOf(key);
-        rawBaselines.put(dtClassId, value);
-        if (classBaselines != null) {
-            classBaselines[dtClassId].reset();
+    private void emitCompleteEntityChangeUpdatedEvents(EntityState oldState, Entity entity) {
+        if (resetInProgress || (!evUpdated.isListenedTo() && !evPropertyCountChanged.isListenedTo())) {
+            return;
+        }
+        List<FieldPath> changedFieldPaths = new ArrayList<>();
+        var countChanged = new boolean[]{false};
+        new StateDifferenceEvaluator(oldState, entity.getState()) {
+            @Override
+            protected void onPropertiesDeleted(List<FieldPath> fieldPaths) {
+                countChanged[0] = true;
+            }
+            @Override
+            protected void onPropertiesAdded(List<FieldPath> fieldPaths) {
+                countChanged[0] = true;
+                changedFieldPaths.addAll(fieldPaths);
+            }
+            @Override
+            protected void onPropertyChanged(FieldPath fieldPath) {
+                changedFieldPaths.add(fieldPath);
+            }
+        }.work();
+        if (countChanged[0]) {
+            emitPropertyCountChangedEvent(entity);
+        }
+        if (!changedFieldPaths.isEmpty()) {
+            emitUpdatedEvent(entity, changedFieldPaths.toArray(new FieldPath[0]));
         }
     }
 
-    @OnMessage(NetworkBaseTypes.CNETMsg_Tick.class)
-    public void onMessage(NetworkBaseTypes.CNETMsg_Tick message) {
+    @OnStringTableCreated
+    public void onStringTableCreated(int numTables, StringTable table) {
+        if (!BASELINE_TABLE.equals(table.getName())) {
+            return;
+        }
+        baselineRegistry = new BaselineRegistry(table, entityCount);
+    }
+
+    @OnStringTableEntry(BASELINE_TABLE)
+    public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
+        baselineRegistry.markClassBaselineDirty(index);
+        var separatorIdx = key.indexOf(':');
+        if (separatorIdx != -1) {
+            // alternate baseline, do not register
+            return;
+        }
+        baselineRegistry.updateClassBaselineIndex(Integer.parseInt(key), index);
+    }
+
+    @OnMessage(CommonNetworkBaseTypes.CNETMsg_Tick.class)
+    public void onMessage(CommonNetworkBaseTypes.CNETMsg_Tick message) {
         serverTick = message.getTick();
     }
 
@@ -295,8 +276,8 @@ public class Entities {
         queuedUpdates.add(update);
     }
 
-    @OnMessage(NetMessages.CSVCMsg_PacketEntities.class)
-    public void onPacketEntities(NetMessages.CSVCMsg_PacketEntities message) {
+    @OnMessage(CommonNetMessages.CSVCMsg_PacketEntities.class)
+    public void onPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message) {
         if (message.getIsDelta()) {
             if (serverTick == message.getDeltaFrom()) {
                 throw new ClarityException("received self-referential delta update for tick %d", serverTick);
@@ -319,7 +300,7 @@ public class Entities {
             deferredMessages.clear();
         }
         if (!deferredMessages.isEmpty()) {
-            Int2ObjectSortedMap<NetMessages.CSVCMsg_PacketEntities> deferredToExecute = deferredMessages.headMap(serverTick);
+            var deferredToExecute = deferredMessages.headMap(serverTick);
             if (!deferredToExecute.isEmpty()) {
                 log.debug("server is now at tick %d", serverTick);
                 deferredToExecute.forEach((deferredMessageTick, deferredMessage) -> {
@@ -332,7 +313,7 @@ public class Entities {
         processAndRunPacketEntities(message, serverTick);
     }
 
-    private void processAndRunPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int serverTick) {
+    private void processAndRunPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message, int serverTick) {
         try {
             processPacketEntities(message, serverTick);
             entitiesServerTick = serverTick;
@@ -346,7 +327,7 @@ public class Entities {
         }
     }
 
-    private void processPacketEntities(NetMessages.CSVCMsg_PacketEntities message, int actualTick) {
+    private void processPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message, int actualTick) {
         if (log.isDebugEnabled()) {
             log.debug(
                     "processing packet entities: now: %6d, delta-from: %6d, update-count: %5d, baseline: %d, update-baseline: %5s",
@@ -359,14 +340,18 @@ public class Entities {
         }
 
         if (message.getUpdateBaseline()) {
-            queueUpdate(() -> switchBaselines(message.getBaseline()));
+            queueUpdate(() -> baselineRegistry.switchEntityBaselines(message.getBaseline()));
         }
 
-        BitStream stream = BitStream.createBitStream(message.getEntityData());
+        for (var ab : message.getAlternateBaselinesList()) {
+            baselineRegistry.updateEntityAlternateBaselineIndex(ab.getEntityIndex(), ab.getBaselineIndex());
+        }
 
-        int updateCount = message.getUpdatedEntries();
+        var stream = BitStream.createBitStream(message.getEntityData());
+
+        var updateCount = message.getUpdatedEntries();
         int updateType;
-        int eIdx = -1;
+        var eIdx = -1;
         Entity eEnt;
 
         while (updateCount-- != 0) {
@@ -377,23 +362,20 @@ public class Entities {
             switch (updateType) {
 
                 case 2: // CREATE
-                    int dtClassId = stream.readUBitInt(dtClasses.getClassBits());
-                    DTClass dtClass = dtClasses.forClassId(dtClassId);
+                    var dtClassId = stream.readUBitInt(dtClasses.getClassBits());
+                    var dtClass = dtClasses.forClassId(dtClassId);
                     if (dtClass == null) {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
-                    int serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType.getId() == EngineId.SOURCE2) {
+                    var serial = stream.readUBitInt(engineType.getSerialBits());
+                    if (engineType.getId().isEntitySkipExtraVarint()) {
                         // TODO: there is an extra VarInt encoded here for S2, figure out what it is
                         stream.readVarUInt();
                     }
                     if (eEnt != null) {
-                        int handle = engineType.handleForIndexAndSerial(eIdx, serial);
+                        var handle = engineType.handleForIndexAndSerial(eIdx, serial);
                         if (eEnt.getUid() == Entity.uid(dtClassId, handle)) {
-                            if (!eEnt.isActive()) {
-                                queueEntityEnter(eEnt);
-                            }
-                            queueEntityUpdate(eEnt, stream, false);
+                            queueEntityRecreate(eEnt, message, stream);
                             break;
                         }
                         if (eEnt.isActive()) {
@@ -429,8 +411,8 @@ public class Entities {
         }
 
         if (engineType.handleDeletions() && message.getIsDelta()) {
-            int n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
-            for (int i = 0; i < n; i++) {
+            var n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
+            for (var i = 0; i < n; i++) {
                 eIdx = deletions[i];
                 eEnt = entities.getEntity(eIdx);
                 if (eEnt != null) {
@@ -446,23 +428,15 @@ public class Entities {
 
     }
 
-    private void switchBaselines(int iFrom) {
-        int iTo = 1 - iFrom;
-        for (Baseline[] baseline : entityBaselines) {
-            baseline[iTo].copyFrom(baseline[iFrom]);
-        }
-    }
-
-    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        FieldChanges changes = fieldReader.readFields(stream, dtClass, debug);
+    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+        var changes = fieldReader.readFields(stream, dtClass, debug);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
     }
 
-    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, NetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
-        Baseline baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
-        EntityState newState = baseline.state.copy();
+    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
+        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
         changes.applyTo(newState);
-        Entity entity = entityRegistry.create(
+        var entity = entityRegistry.create(
                 dtClass.getClassId(),
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
@@ -474,20 +448,53 @@ public class Entities {
         emitCreatedEvent(entity);
         executeEntityEnter(entity);
         if (message.getUpdateBaseline()) {
-            Baseline updatedBaseline = entityBaselines[eIdx][1 - message.getBaseline()];
-            updatedBaseline.dtClassId = dtClass.getClassId();
-            updatedBaseline.state = newState.copy();
+            baselineRegistry.updateEntityBaseline(
+                    message.getBaseline(),
+                    eIdx,
+                    dtClass.getClassId(),
+                    newState.copy()
+            );
         }
     }
 
+    private void queueEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        queueUpdate(() -> executeEntityRecreate(entity, message, changes));
+    }
+
+    private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
+        var oldState = entity.getState();
+        var wasActive = entity.isActive();
+        var eIdx = entity.getIndex();
+
+        var dtClass = entity.getDtClass();
+        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
+        changes.applyTo(newState);
+        entity.setState(newState);
+        entity.setActive(true);
+        logModification("RECREATE", entity);
+        if (message.getUpdateBaseline()) {
+            baselineRegistry.updateEntityBaseline(
+                    message.getBaseline(),
+                    eIdx,
+                    dtClass.getClassId(),
+                    newState.copy()
+            );
+        }
+        if (!wasActive) {
+            emitEnteredEvent(entity);
+        }
+        emitCompleteEntityChangeUpdatedEvents(oldState, entity);
+    }
+
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
-        FieldChanges changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
     }
 
     private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        boolean capacityChanged = changes.applyTo(entity.getState());
+        var capacityChanged = changes.applyTo(entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
             if (capacityChanged) {
@@ -578,32 +585,38 @@ public class Entities {
         );
     }
 
-    private Baseline getBaseline(int clsId, int baseline, int entityIdx, boolean delta) {
-        Baseline b;
+    private EntityState getBaseline(int clsId, int baseline, int entityIdx, boolean delta) {
+        EntityState s;
         if (delta) {
-            b = entityBaselines[entityIdx][baseline];
-            if (b.dtClassId == clsId && b.state != null) {
-                return b;
+            s = baselineRegistry.getEntityBaselineState(entityIdx, baseline, clsId);
+            if (s != null) {
+                return s;
             }
         }
-        b = classBaselines[clsId];
-        if (b.state != null) {
-            return b;
-        }
-        DTClass cls = dtClasses.forClassId(clsId);
+        var cls = dtClasses.forClassId(clsId);
         if (cls == null) {
             throw new ClarityException("DTClass for id %d not found.", clsId);
         }
-        b.state = cls.getEmptyState();
-        ByteString raw = rawBaselines.get(clsId);
-        if (raw == null || raw.size() == 0) {
-            log.error("Baseline for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
-        } else {
-            BitStream stream = BitStream.createBitStream(raw);
-            FieldChanges changes = fieldReader.readFields(stream, cls, false);
-            changes.applyTo(b.state);
+        var baselineIdx = baselineRegistry.getClassBaselineIndex(clsId, entityIdx);
+        if (baselineIdx == -1) {
+            log.error("Baseline index for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
+            return cls.getEmptyState();
         }
-        return b;
+        s = baselineRegistry.getClassBaselineState(baselineIdx);
+        if (s != null) {
+            return s;
+        }
+        var raw = baselineRegistry.getClassBaselineData(baselineIdx);
+        if (raw == null || raw.size() == 0) {
+            log.error("Baseline data for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
+            return cls.getEmptyState();
+        }
+        s = cls.getEmptyState();
+        var stream = BitStream.createBitStream(raw);
+        var changes = fieldReader.readFields(stream, cls, false);
+        changes.applyTo(s);
+        baselineRegistry.setClassBaselineState(baselineIdx, s);
+        return s;
     }
 
     public Entity getByIndex(int index) {
@@ -611,18 +624,18 @@ public class Entities {
     }
 
     public Entity getByHandle(int handle) {
-        Entity e = getByIndex(engineType.indexForHandle(handle));
+        var e = getByIndex(engineType.indexForHandle(handle));
         return e == null || e.getHandle() != handle ? null : e;
     }
 
     public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
-        return new SimpleIterator<Entity>() {
+        return new SimpleIterator<>() {
             int i = -1;
 
             @Override
             public Entity readNext() {
                 while (++i < entityCount) {
-                    Entity e = getByIndex(i);
+                    var e = getByIndex(i);
                     if (e != null && predicate.apply(e)) {
                         return e;
                     }
@@ -633,7 +646,7 @@ public class Entities {
     }
 
     public Entity getByPredicate(Predicate<Entity> predicate) {
-        Iterator<Entity> iter = getAllByPredicate(predicate);
+        var iter = getAllByPredicate(predicate);
         return iter.hasNext() ? iter.next() : null;
     }
 
@@ -643,7 +656,7 @@ public class Entities {
     }
 
     public Entity getByDtName(final String dtClassName) {
-        Iterator<Entity> iter = getAllByDtName(dtClassName);
+        var iter = getAllByDtName(dtClassName);
         return iter.hasNext() ? iter.next() : null;
     }
 

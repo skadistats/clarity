@@ -3,25 +3,25 @@ package skadistats.clarity.processor.stringtables;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.util.Objects;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.SOURCE1, EngineId.CSGO })
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S1, EngineId.CSGO_S1})
 @StringTableEmitter
 public class S1StringTableEmitter extends BaseStringTableEmitter {
 
     @OnMessage(S1NetMessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(S1NetMessages.CSVCMsg_CreateStringTable message) {
         if (isProcessed(message.getName())) {
-            StringTable table = new StringTable(
+            var table = new StringTable(
                 message.getName(),
                 message.getMaxEntries(),
                 message.getUserDataFixedSize(),
@@ -33,26 +33,28 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
             decodeEntries(table, message.getStringData(), message.getNumEntries());
             table.markInitialState();
             evCreated.raise(numTables, table);
+            raiseUpdateEntryEvents();
         }
         numTables++;
     }
 
-    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(NetMessages.CSVCMsg_UpdateStringTable message) {
-        StringTable table = stringTables.forId(message.getTableId());
+    @OnMessage(CommonNetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(CommonNetMessages.CSVCMsg_UpdateStringTable message) {
+        var table = stringTables.forId(message.getTableId());
         if (table != null) {
             decodeEntries(table, message.getStringData(), message.getNumChangedEntries());
+            raiseUpdateEntryEvents();
         }
     }
 
     private void decodeEntries(StringTable table, ByteString encodedData, int numEntries) {
-        BitStream stream = BitStream.createBitStream(encodedData);
-        int bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
-        String[] keyHistory = new String[KEY_HISTORY_SIZE];
+        var stream = BitStream.createBitStream(encodedData);
+        var bitsPerIndex = Util.calcBitsNeededFor(table.getMaxEntries() - 1);
+        var keyHistory = new String[KEY_HISTORY_SIZE];
 
-        boolean mysteryFlag = stream.readBitFlag();
-        int index = -1;
-        for (int i = 0; i < numEntries; i++) {
+        var mysteryFlag = stream.readBitFlag();
+        var index = -1;
+        for (var i = 0; i < numEntries; i++) {
             // read index
             if (stream.readBitFlag()) {
                 index++;
@@ -67,10 +69,10 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                     throw new ClarityException("mystery_flag assert failed!");
                 }
                 if (stream.readBitFlag()) {
-                    int base = i > KEY_HISTORY_SIZE ? i : 0;
-                    int offs = stream.readUBitInt(5);
-                    int len = stream.readUBitInt(5);
-                    String str = keyHistory[(base + offs) & KEY_HISTORY_MASK];
+                    var base = i > KEY_HISTORY_SIZE ? i : 0;
+                    var offs = stream.readUBitInt(5);
+                    var len = stream.readUBitInt(5);
+                    var str = keyHistory[(base + offs) & KEY_HISTORY_MASK];
                     name = str.substring(0, len) + stream.readString(MAX_NAME_LENGTH);
                 } else {
                     name = stream.readString(MAX_NAME_LENGTH);
@@ -85,12 +87,12 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
                 } else {
                     bitLength = stream.readUBitInt(14) * 8;
                 }
-                byte[] valueBuf = new byte[(bitLength + 7) / 8];
+                var valueBuf = new byte[(bitLength + 7) / 8];
                 stream.readBitsIntoByteArray(valueBuf, bitLength);
                 data = ZeroCopy.wrap(valueBuf);
             }
 
-            int entryCount = table.getEntryCount();
+            var entryCount = table.getEntryCount();
             if (index < entryCount) {
                 // update old entry
                 table.setValueForIndex(index, data);
@@ -106,7 +108,7 @@ public class S1StringTableEmitter extends BaseStringTableEmitter {
 
             keyHistory[i & KEY_HISTORY_MASK] = name;
 
-            raise(table, index, name, data);
+            queueUpdateEntryEvent(table, index, name, data);
         }
     }
 

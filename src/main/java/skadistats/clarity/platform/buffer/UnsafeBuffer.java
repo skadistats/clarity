@@ -16,7 +16,7 @@ public class UnsafeBuffer {
     public static final boolean available;
 
     static {
-        UnsafeReflector reflector = UnsafeReflector.INSTANCE;
+        var reflector = UnsafeReflector.INSTANCE;
         base = reflector.getByteArrayBaseOffset();
 
         // public int getInt(Object o, long offset)

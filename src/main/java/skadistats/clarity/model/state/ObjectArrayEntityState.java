@@ -37,8 +37,9 @@ public class ObjectArrayEntityState implements EntityState {
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        return new SimpleIterator<FieldPath>() {
+        return new SimpleIterator<>() {
             int i = 0;
+
             @Override
             public FieldPath readNext() {
                 return i < state.length ? new S1FieldPath(i++) : null;

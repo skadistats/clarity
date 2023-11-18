@@ -5,15 +5,14 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.processor.packet.PacketReader;
 import skadistats.clarity.processor.packet.UsesPacketReader;
@@ -23,9 +22,8 @@ import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.common.proto.NetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -33,8 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 @UsesPacketReader
@@ -58,32 +54,34 @@ public class InputSourceProcessor {
     @InsertEvent
     private Event<OnMessageContainer> evMessageContainer;
 
-    private Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
-    private Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
-    private Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
+    private final Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
+    private final Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
+    private final Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
-        listener.setParameterClasses(listener.getAnnotation().value());
-        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
+        var messageClass = listener.getAnnotation().value();
+        listener.setParameterClasses(messageClass);
+        unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnPostEmbeddedMessage.class)
     public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
-        listener.setParameterClasses(listener.getAnnotation().value(), BitStream.class);
-        unpackUserMessages |= engineType.isUserMessage(listener.getAnnotation().value());
+        var messageClass = listener.getAnnotation().value();
+        listener.setParameterClasses(messageClass, BitStream.class);
+        unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnMessageContainer.class)
     public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
         listener.setInvocationPredicate(args -> {
-            Class<? extends GeneratedMessage> clazz = (Class<? extends GeneratedMessage>) args[0];
+            var clazz = (Class<? extends GeneratedMessage>) args[0];
             return listener.getAnnotation().value().isAssignableFrom(clazz);
         });
     }
 
     public Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
-        Event<OnMessage> ev = evOnMessages.get(messageClass);
+        var ev = evOnMessages.get(messageClass);
         if (ev == null) {
             ev = ctx.createEvent(OnMessage.class, messageClass);
             evOnMessages.put(messageClass, ev);
@@ -92,7 +90,7 @@ public class InputSourceProcessor {
     }
 
     private Event<OnPostEmbeddedMessage> evOnPostEmbeddedMessage(Class<? extends GeneratedMessage> messageClass) {
-        Event<OnPostEmbeddedMessage> ev = evOnPostEmbeddedMessages.get(messageClass);
+        var ev = evOnPostEmbeddedMessages.get(messageClass);
         if (ev == null) {
             ev = ctx.createEvent(OnPostEmbeddedMessage.class, messageClass, BitStream.class);
             evOnPostEmbeddedMessages.put(messageClass, ev);
@@ -101,7 +99,7 @@ public class InputSourceProcessor {
     }
 
     private void logUnknownMessage(String where, int type) {
-        int hash = (where.hashCode() * 31 + engineType.hashCode()) * 31 + type;
+        var hash = (where.hashCode() * 31 + engineType.hashCode()) * 31 + type;
         if (!alreadyLoggedUnknowns.contains(hash)) {
             alreadyLoggedUnknowns.add(hash);
             log.warn("unknown %s message of kind %s/%d. Please report this in the corresponding issue: https://github.com/skadistats/clarity/issues/58", where, engineType, type);
@@ -165,19 +163,19 @@ public class InputSourceProcessor {
                 }
             }
 
-            Class<? extends GeneratedMessage> messageClass = pi.getMessageClass();
+            var messageClass = pi.getMessageClass();
             if (messageClass == null) {
                 logUnknownMessage("top level", pi.getKind());
                 pi.skip();
             } else if (messageClass == Demo.CDemoPacket.class) {
-                Demo.CDemoPacket message = (Demo.CDemoPacket) pi.parse();
+                var message = (Demo.CDemoPacket) pi.parse();
                 evMessageContainer.raise(Demo.CDemoPacket.class, message.getData());
             } else if (engineType.isSendTablesContainer() && messageClass == Demo.CDemoSendTables.class) {
-                Demo.CDemoSendTables message = (Demo.CDemoSendTables) pi.parse();
+                var message = (Demo.CDemoSendTables) pi.parse();
                 evMessageContainer.raise(Demo.CDemoSendTables.class, message.getData());
             } else if (messageClass == Demo.CDemoFullPacket.class) {
                 if (evFull.isListenedTo() || evReset.isListenedTo()) {
-                    Demo.CDemoFullPacket message = (Demo.CDemoFullPacket) pi.parse();
+                    var message = (Demo.CDemoFullPacket) pi.parse();
                     evFull.raise(message);
                     if (evReset.isListenedTo()) {
                         ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
@@ -192,15 +190,15 @@ public class InputSourceProcessor {
                     pi.skip();
                 }
             } else {
-                boolean isStringTables = messageClass == Demo.CDemoStringTables.class;
-                boolean isSyncTick = messageClass == Demo.CDemoSyncTick.class;
-                boolean resetRelevant = evReset != null && (isStringTables || isSyncTick);
+                var isStringTables = messageClass == Demo.CDemoStringTables.class;
+                var isSyncTick = messageClass == Demo.CDemoSyncTick.class;
+                var resetRelevant = evReset != null && (isStringTables || isSyncTick);
                 if (isSyncTick) {
                     ctl.setSyncTickSeen(true);
                 }
-                Event<OnMessage> ev = evOnMessage(messageClass);
+                var ev = evOnMessage(messageClass);
                 if (ev.isListenedTo() || resetRelevant) {
-                    GeneratedMessage message = pi.parse();
+                    var message = pi.parse();
                     ev.raise(message);
                     if (resetRelevant) {
                         ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
@@ -221,34 +219,34 @@ public class InputSourceProcessor {
 
     @OnMessageContainer
     public void processEmbedded(Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
-        BitStream bs = BitStream.createBitStream(bytes);
+        var bs = BitStream.createBitStream(bytes);
         while (bs.remaining() >= 8) {
-            int kind = engineType.readEmbeddedKind(bs);
+            var kind = engineType.readEmbeddedKind(bs);
             if (kind == 0) {
                 // this seems to happen with console recorded replays
                 break;
             }
-            int size = bs.readVarUInt();
+            var size = bs.readVarUInt();
             if (size < 0 || bs.remaining() < size * 8) {
                 throw new IOException(
                         String.format("invalid embedded packet size: got %d remaining bits, but size is %d bits.", bs.remaining(), size * 8)
                 );
             }
-            Class<? extends GeneratedMessage> messageClass = engineType.embeddedPacketClassForKind(kind);
+            var messageClass = engineType.embeddedPacketClassForKind(kind);
             if (messageClass == null) {
                 logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
             } else {
-                Event<OnMessage> ev = evOnMessage(messageClass);
-                Event<OnPostEmbeddedMessage> evPost = evOnPostEmbeddedMessage(messageClass);
-                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class)) {
-                    GeneratedMessage subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
+                var ev = evOnMessage(messageClass);
+                var evPost = evOnPostEmbeddedMessage(messageClass);
+                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                    var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
                     if (ev.isListenedTo()) {
                         ev.raise(subMessage);
                     }
-                    if (unpackUserMessages && messageClass == NetworkBaseTypes.CSVCMsg_UserMessage.class) {
-                        NetworkBaseTypes.CSVCMsg_UserMessage userMessage = (NetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
-                        Class<? extends GeneratedMessage> umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
+                    if (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class) {
+                        var userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
+                        var umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             logUnknownMessage("usermessage", userMessage.getMsgType());
                         } else {
@@ -262,26 +260,6 @@ public class InputSourceProcessor {
                     bs.skip(size * 8);
                 }
             }
-        }
-    }
-
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    public void processServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
-        if (engineType.getId() != EngineId.SOURCE2) {
-            return;
-        }
-        Matcher matcher = Pattern.compile("dota_v(\\d+)").matcher(serverInfo.getGameDir());
-        if (matcher.find()) {
-            int num = Integer.parseInt(matcher.group(1));
-            ctx.setBuildNumber(num);
-            if (num < 928) {
-                log.warn("This replay is from an early beta version of Dota 2 Reborn (build number %d).", num);
-                log.warn("Entities in this replay probably cannot be read.");
-                log.warn("However, I have not had the opportunity to analyze a replay with that build number.");
-                log.warn("If you wanna help, send it to github@martin.schrodt.org, or contact me on github.");
-            }
-        } else {
-            log.warn("received CSVCMsg_ServerInfo, but could not read build number from it. (game dir '%s')", serverInfo.getGameDir());
         }
     }
 

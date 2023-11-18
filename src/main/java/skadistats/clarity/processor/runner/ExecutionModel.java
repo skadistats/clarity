@@ -59,7 +59,7 @@ public class ExecutionModel {
     }
 
     private boolean hasProcessorForClass(Class<?> processorClass) {
-        for (Class<?> existingClass : processors.keySet()) {
+        for (var existingClass : processors.keySet()) {
             if (processorClass.isAssignableFrom(existingClass)) {
                 return true;
             }
@@ -71,8 +71,8 @@ public class ExecutionModel {
         if (!hasProcessorForClass(processorClass)) {
             log.debug("require processor %s", processorClass.getName());
             processors.put(processorClass, null);
-            List<UsagePoint<? extends Annotation>> ups = findUsagePoints(processorClass);
-            for (UsagePoint<? extends Annotation> up : ups) {
+            var ups = findUsagePoints(processorClass);
+            for (var up : ups) {
                 usagePoints.add(up);
                 if (up instanceof EventListener) {
                     requireEventListener((EventListener) up);
@@ -86,7 +86,7 @@ public class ExecutionModel {
     }
 
     private boolean supportsRunner(Provides provides) {
-        for (Class<? extends Runner> supportedRunner : provides.runnerClass()) {
+        for (var supportedRunner : provides.runnerClass()) {
             if (supportedRunner.isAssignableFrom(runner.getClass())) {
                 return true;
             }
@@ -95,7 +95,7 @@ public class ExecutionModel {
     }
 
     private boolean supportsEngineType(Provides provides) {
-        for (EngineId id : provides.engine()) {
+        for (var id : provides.engine()) {
             if (id == runner.getEngineType().getId()) {
                 return true;
             }
@@ -104,16 +104,16 @@ public class ExecutionModel {
     }
 
     private void requireProvider(UsagePoint<? extends Annotation> up) {
-        Class<? extends Annotation> usagePointClass = up.getUsagePointClass();
-        List<UsagePointProvider> providers = UsagePoints.getProvidersFor(usagePointClass);
+        var usagePointClass = up.getUsagePointClass();
+        var providers = UsagePoints.getProvidersFor(usagePointClass);
         if (providers != null) {
-            for (UsagePointProvider usagePointProvider : providers) {
-                Provides a = usagePointProvider.getProvidesAnnotation();
+            for (var usagePointProvider : providers) {
+                var a = usagePointProvider.getProvidesAnnotation();
                 if (isInvalidProvider(a)) continue;
                 if (hasProcessorForClass(usagePointProvider.getProviderClass())) return;
             }
-            for (UsagePointProvider usagePointProvider : providers) {
-                Provides a = usagePointProvider.getProvidesAnnotation();
+            for (var usagePointProvider : providers) {
+                var a = usagePointProvider.getProvidesAnnotation();
                 if (isInvalidProvider(a)) continue;
                 requireProcessorClass(usagePointProvider.getProviderClass());
                 return;
@@ -135,7 +135,7 @@ public class ExecutionModel {
 
     private void requireEventListener(EventListener eventListener) {
         log.debug("require event listener %s", eventListener.getUsagePointClass());
-        Set<EventListener> eventListeners = processedEvents.get(eventListener.getUsagePointClass());
+        var eventListeners = processedEvents.get(eventListener.getUsagePointClass());
         if (eventListeners == null) {
             eventListeners = new HashSet<>();
             processedEvents.put(eventListener.getUsagePointClass(), eventListeners);
@@ -159,7 +159,7 @@ public class ExecutionModel {
 
         c = searchedClass;
         while (c != Object.class) {
-            for (Annotation classAnnotation : c.getAnnotations()) {
+            for (var classAnnotation : c.getAnnotations()) {
                 if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
                     ups.add(UsagePointType.newInstance(classAnnotation, searchedClass, null));
                 }
@@ -169,8 +169,8 @@ public class ExecutionModel {
 
         c = searchedClass;
         while (c != Object.class) {
-            for (Method method : c.getDeclaredMethods()) {
-                for (Annotation methodAnnotation : method.getAnnotations()) {
+            for (var method : c.getDeclaredMethods()) {
+                for (var methodAnnotation : method.getAnnotations()) {
                     if (methodAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
                         method.setAccessible(true);
                         ups.add(UsagePointType.newInstance(methodAnnotation, searchedClass, method));
@@ -184,7 +184,7 @@ public class ExecutionModel {
     }
 
     private void instantiateMissingProcessors() {
-        for (Map.Entry<Class<?>, Object> entry : processors.entrySet()) {
+        for (var entry : processors.entrySet()) {
             if (entry.getValue() == null) {
                 try {
                     entry.setValue(entry.getKey().newInstance());
@@ -196,7 +196,7 @@ public class ExecutionModel {
     }
 
     private void bindInvocationPoints(skadistats.clarity.processor.runner.Context context) {
-        for (UsagePoint up : usagePoints) {
+        for (var up : usagePoints) {
             if (up instanceof InvocationPoint) {
                 try {
                     ((InvocationPoint) up).bind(context);
@@ -208,11 +208,11 @@ public class ExecutionModel {
     }
 
     private void processInjections() {
-        for (Object processor : processors.values()) {
-            Class<?> c = processor.getClass();
+        for (var processor : processors.values()) {
+            var c = processor.getClass();
             while (true) {
-                for (Field field : c.getDeclaredFields()) {
-                    for (Annotation fieldAnnotation : field.getAnnotations()) {
+                for (var field : c.getDeclaredFields()) {
+                    for (var fieldAnnotation : field.getAnnotations()) {
                         if (fieldAnnotation instanceof Insert) {
                             if (field.getType().isAssignableFrom(Context.class)) {
                                 injectValue(processor, field, runner.getContext(), "cannot inject context");
@@ -233,12 +233,12 @@ public class ExecutionModel {
     }
 
     private void injectEvent(Object processor, Field field, InsertEvent fieldAnnotation) {
-        Class<? extends Annotation> eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+        var eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
         Class<?>[] parameterTypes;
         if (fieldAnnotation.override()) {
             parameterTypes = fieldAnnotation.parameterTypes();
         } else {
-            UsagePointMarker marker = eventType.getAnnotation(UsagePointMarker.class);
+            var marker = eventType.getAnnotation(UsagePointMarker.class);
             parameterTypes = marker.parameterClasses();
         }
         injectValue(processor, field, createEvent(eventType, parameterTypes), "cannot inject event");
@@ -246,7 +246,7 @@ public class ExecutionModel {
 
     private void injectProcessor(Object processor, Field field) {
         Object injectedValue = null;
-        for (Object p : processors.values()) {
+        for (var p : processors.values()) {
             if (field.getType().isAssignableFrom(p.getClass())) {
                 injectedValue = p;
                 break;
@@ -278,11 +278,11 @@ public class ExecutionModel {
     }
 
     private void callInitializers() {
-        for (UsagePoint up : usagePoints) {
+        for (var up : usagePoints) {
             if (up instanceof InitializerMethod) {
                 continue;
             }
-            InitializerMethod im = initializers.get(up.getUsagePointClass());
+            var im = initializers.get(up.getUsagePointClass());
             if (im != null) {
                 try {
                     im.invoke(up);
@@ -301,13 +301,13 @@ public class ExecutionModel {
     }
 
     public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
-        Set<EventListener<A>> listeners = computeListenersForEvent(eventType, parameterTypes);
+        var listeners = computeListenersForEvent(eventType, parameterTypes);
         return new Event<>(runner, eventType, listeners);
     }
 
     private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {
         Set<EventListener<A>> listeners = new HashSet<>();
-        Set<EventListener> eventListeners = processedEvents.get(eventType);
+        var eventListeners = processedEvents.get(eventType);
         if (eventListeners != null) {
             for (@SuppressWarnings("unchecked") EventListener<A> listener : eventListeners) {
                 if (listener.isInvokedForParameterClasses(parameterTypes)) {

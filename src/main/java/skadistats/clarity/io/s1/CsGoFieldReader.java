@@ -7,9 +7,9 @@ public class CsGoFieldReader extends S1FieldReader{
 
     @Override
     protected int readIndices(BitStream bs, S1DTClass dtClass) {
-        boolean nway = bs.readBitFlag();
-        int n = 0;
-        int cursor = -1;
+        var nway = bs.readBitFlag();
+        var n = 0;
+        var cursor = -1;
         while (true) {
             if (nway && bs.readBitFlag()) {
                 // 1, 1 = increment
@@ -18,7 +18,7 @@ public class CsGoFieldReader extends S1FieldReader{
                 // 1, 0, 1 = new index is 3 bits
                 cursor += 1 + bs.readUBitInt(3);
             } else {
-                int v = bs.readUBitInt(7);
+                var v = bs.readUBitInt(7);
                 switch (v & ( 32 | 64)) {
                     case 32:
                         v = ((v &~ 96) | (bs.readUBitInt(2) << 5));

@@ -19,9 +19,9 @@ public class BitStream64 extends BitStream {
     @Override
     public int readUBitInt(int n) {
         assert n <= 32;
-        int start = pos >> 6;
-        int end = (pos + n - 1) >> 6;
-        int s = pos & 63;
+        var start = pos >> 6;
+        var end = (pos + n - 1) >> 6;
+        var s = pos & 63;
         pos += n;
         return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & MASKS[n]);
     }
@@ -29,16 +29,16 @@ public class BitStream64 extends BitStream {
     @Override
     public long readUBitLong(int n) {
         assert n <= 64;
-        int start = pos >> 6;
-        int end = (pos + n - 1) >> 6;
-        int s = pos & 63;
+        var start = pos >> 6;
+        var end = (pos + n - 1) >> 6;
+        var s = pos & 63;
         pos += n;
         return ((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & MASKS[n];
     }
 
     @Override
     public void readBitsIntoByteArray(byte[] dest, int n) {
-        int o = 0;
+        var o = 0;
         while (n > 8) {
             dest[o++] = (byte)readUBitInt(8);
             n -= 8;
@@ -51,10 +51,10 @@ public class BitStream64 extends BitStream {
 
     @Override
     public FieldOpType readFieldOp() {
-        int offs = pos >> 6;
-        int s = pos & 63;
-        int i = 0;
-        long v = buffer.get(offs);
+        var offs = pos >> 6;
+        var s = pos & 63;
+        var i = 0;
+        var v = buffer.get(offs);
         while (true) {
             pos++;
             i = FieldOpHuffmanTree.tree[i][(int)((v >>> s) & 1L)];

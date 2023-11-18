@@ -2,7 +2,7 @@ package skadistats.clarity.model.s2;
 
 public class S2LongFieldPathFormat {
 
-    private static final int[] BITS_PER_COMPONENT = { 11, 11, 11, 8, 8, 4, 4 };
+    private static final int[] BITS_PER_COMPONENT = { 11, 12, 11, 8, 7, 4, 4 };
 
     public static final int MAX_FIELDPATH_LENGTH = BITS_PER_COMPONENT.length;
 
@@ -43,16 +43,16 @@ public class S2LongFieldPathFormat {
     }
 
     static {
-        int bitCount = -1;
-        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        var bitCount = -1;
+        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             bitCount += BITS_PER_COMPONENT[i] + 1;
         }
         if (bitCount > 63) {
             throw new UnsupportedOperationException("too many bits used");
         }
-        int cur = bitCount;
-        long presentMaskAkku = 0L;
-        for (int i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        var cur = bitCount;
+        var presentMaskAkku = 0L;
+        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
             OFFSET[i] = i == 0 ? 1L : 0L;
             if (i != 0) {
                 CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);

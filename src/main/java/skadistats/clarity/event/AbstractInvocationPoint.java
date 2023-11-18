@@ -37,7 +37,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     }
 
     private boolean hasContextParameter() {
-        Class<?>[] parameterTypes = method.getParameterTypes();
+        var parameterTypes = method.getParameterTypes();
         if (parameterTypes.length == 0) {
             return false;
         }
@@ -50,7 +50,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
     @Override
     public void bind(Context ctx) throws IllegalAccessException {
         log.debug("bind %s to context", method);
-        MethodHandle boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass));
+        var boundHandle = MethodHandles.publicLookup().unreflect(method).bindTo(ctx.getProcessor(processorClass));
         if (hasContextParameter()) {
             boundHandle = boundHandle.bindTo(ctx);
         }
@@ -62,7 +62,7 @@ public abstract class AbstractInvocationPoint<A extends Annotation> extends Usag
         if (classes.length != arity){
             throw new IllegalArgumentException("supplied parameter classes have wrong arity");
         }
-        for (int a = 0; a < arity; a++){
+        for (var a = 0; a < arity; a++){
             if (!parameterClasses[a].isAssignableFrom(classes[a])){
                 return false;
             }

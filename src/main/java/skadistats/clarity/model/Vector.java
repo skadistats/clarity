@@ -4,7 +4,7 @@ import java.util.Arrays;
 
 public class Vector {
 
-    private float[] v;
+    private final float[] v;
 
     public Vector(float... v) {
         this.v = v;
@@ -28,7 +28,7 @@ public class Vector {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Vector vector = (Vector) o;
+        var vector = (Vector) o;
 
         return Arrays.equals(v, vector.v);
     }

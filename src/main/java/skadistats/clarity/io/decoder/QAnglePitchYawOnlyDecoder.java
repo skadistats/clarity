@@ -13,7 +13,7 @@ public class QAnglePitchYawOnlyDecoder implements Decoder<Vector> {
 
     @Override
     public Vector decode(BitStream bs) {
-        float[] v = new float[3];
+        var v = new float[3];
         if ((nBits | 0x20) == 0x20) {
             v[0] = Float.intBitsToFloat(bs.readUBitInt(32));
             v[1] = Float.intBitsToFloat(bs.readUBitInt(32));

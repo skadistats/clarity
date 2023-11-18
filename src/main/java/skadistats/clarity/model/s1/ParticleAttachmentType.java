@@ -14,7 +14,7 @@ public enum ParticleAttachmentType {
     
     
     public static ParticleAttachmentType forId(int id) {
-        for (ParticleAttachmentType t : values()) {
+        for (var t : values()) {
             if (t.ordinal() == id) {
                 return t;
             }

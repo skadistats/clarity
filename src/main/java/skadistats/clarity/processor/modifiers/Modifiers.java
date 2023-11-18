@@ -11,7 +11,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
-import skadistats.clarity.wire.common.proto.DotaModifiers;
+import skadistats.clarity.wire.dota.common.proto.DOTAModifiers;
 
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {
@@ -24,14 +24,14 @@ public class Modifiers {
     @OnStringTableEntry("ActiveModifiers")
     public void onTableEntry(StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {
         if (value != null) {
-            DotaModifiers.CDOTAModifierBuffTableEntry message;
+            DOTAModifiers.CDOTAModifierBuffTableEntry message;
             try {
-                message = DotaModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
+                message = DOTAModifiers.CDOTAModifierBuffTableEntry.parseFrom(value);
             } catch (InvalidProtocolBufferException ex) {
-                message = (DotaModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
-                byte[] b = ZeroCopy.extract(value);
+                message = (DOTAModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
+                var b = ZeroCopy.extract(value);
                 log.error("failed to parse CDOTAModifierBuffTableEntry, returning incomplete message. Only %d/%d bytes parsed.", message.getSerializedSize(), value.size());
-                for (String line : formatHexDump(b, 0, b.length).split("\n")) {
+                for (var line : formatHexDump(b, 0, b.length).split("\n")) {
                     log.info("%s", line);
                 }
             }
@@ -40,10 +40,10 @@ public class Modifiers {
     }
 
     public static String formatHexDump(byte[] array, int offset, int length) {
-        StringBuilder builder = new StringBuilder();
-        for (int rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
+        var builder = new StringBuilder();
+        for (var rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
             builder.append(String.format("%06d:  ", rowOffset));
-            for (int index = 0; index < 16; index++) {
+            for (var index = 0; index < 16; index++) {
                 if (rowOffset + index < array.length) {
                     builder.append(String.format("%02x ", array[rowOffset + index]));
                 } else {

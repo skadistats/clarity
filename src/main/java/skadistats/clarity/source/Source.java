@@ -1,7 +1,7 @@
 package skadistats.clarity.source;
 
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.model.EngineId;
+import skadistats.clarity.model.EngineMagic;
 import skadistats.clarity.model.EngineType;
 
 import java.io.IOException;
@@ -76,7 +76,7 @@ public abstract class Source {
      * @throws IOException if the data cannot be read
      */
     public byte[] readBytes(int length) throws IOException {
-        byte[] dst = new byte[length];
+        var dst = new byte[length];
         readBytes(dst, 0, length);
         return dst;
     }
@@ -88,11 +88,11 @@ public abstract class Source {
      * @throws IOException if the data cannot be read, or is not a valid variable int32
      */
     public int readVarInt32() throws IOException {
-        byte tmp = readByte();
+        var tmp = readByte();
         if (tmp >= 0) {
             return tmp;
         }
-        int result = tmp & 0x7f;
+        var result = tmp & 0x7f;
         if ((tmp = readByte()) >= 0) {
             result |= tmp << 7;
         } else {
@@ -154,13 +154,13 @@ public abstract class Source {
      *
      * @throws IOException if there is not enough data or the if no valid magic was found
      */
-    public EngineType readEngineType() throws IOException {
+    public EngineMagic readEngineMagic() throws IOException {
         try {
-            engineType = EngineId.typeForMagic(new String(readBytes(8)));
-            if (engineType == null) {
+            var engineMagic = EngineMagic.magicForString(new String(readBytes(8)));
+            if (engineMagic == null) {
                 throw new IOException();
             }
-            return engineType;
+            return engineMagic;
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }

@@ -13,10 +13,10 @@ public class PrintfLoggerFactory {
 
     static {
         try {
-            ILoggerFactory f = LoggerFactory.getILoggerFactory();
-            Class<? extends ILoggerFactory> c = f.getClass();
+            var f = LoggerFactory.getILoggerFactory();
+            var c = f.getClass();
             if (c.getName().equals("ch.qos.logback.classic.LoggerContext")) {
-                List<String> frameworkPackages = (List<String>) c.getMethod("getFrameworkPackages").invoke(f);
+                var frameworkPackages = (List<String>) c.getMethod("getFrameworkPackages").invoke(f);
                 frameworkPackages.add("skadistats.clarity.logger");
             }
         } catch (Exception e) {}
@@ -27,7 +27,7 @@ public class PrintfLoggerFactory {
     }
 
     public static PrintfLogger getLogger(String name) {
-        PrintfLogger logger = loggerCache.get(name);
+        var logger = loggerCache.get(name);
         if (logger == null) {
             logger = new PrintfLogger(org.slf4j.LoggerFactory.getLogger(name));
             loggerCache.put(name, logger);

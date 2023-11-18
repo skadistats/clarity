@@ -1,5 +1,6 @@
 package skadistats.clarity.io.decoder.factory.s2;
 
+import skadistats.clarity.io.decoder.QAnglePreciseDecoder;
 import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.decoder.QAngleBitCountDecoder;
 import skadistats.clarity.io.decoder.QAngleNoBitCountDecoder;
@@ -11,9 +12,12 @@ import skadistats.clarity.model.Vector;
 public class QAngleDecoderFactory implements DecoderFactory<Vector> {
 
     public static Decoder<Vector> createDecoderStatic(DecoderProperties f) {
-        int bc = f.getBitCountOrDefault(0);
+        var bc = f.getBitCountOrDefault(0);
         if ("qangle_pitch_yaw".equals(f.getEncoderType())) {
             return new QAnglePitchYawOnlyDecoder(bc);
+        }
+        if ("qangle_precise".equals(f.getEncoderType())) {
+            return new QAnglePreciseDecoder();
         }
         if (bc == 0) {
             return new QAngleNoBitCountDecoder();

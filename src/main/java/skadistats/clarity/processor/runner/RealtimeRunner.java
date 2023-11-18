@@ -2,8 +2,8 @@ package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.csgo.proto.CsGoNetMessages;
+import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
+import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.io.IOException;
 import java.time.Duration;
@@ -20,7 +20,7 @@ public class RealtimeRunner extends SimpleRunner {
     private static final long SECOND_TO_NANOSECOND = NANOSECONDS.convert(1, SECONDS);
 
     private final Instant startTime;
-    private AtomicReference<Duration> delay = new AtomicReference<>();
+    private final AtomicReference<Duration> delay = new AtomicReference<>();
     private Duration tickInterval;
 
     public RealtimeRunner(Source s) throws IOException {
@@ -44,8 +44,8 @@ public class RealtimeRunner extends SimpleRunner {
     private void delayUntil(int upcomingTick) {
         try {
             while(true) {
-                Instant shouldBeAt = startTime.plus(delay.get()).plus(tickInterval.multipliedBy(upcomingTick));
-                long milliDelay = Duration.between(now(), shouldBeAt).toMillis();
+                var shouldBeAt = startTime.plus(delay.get()).plus(tickInterval.multipliedBy(upcomingTick));
+                var milliDelay = Duration.between(now(), shouldBeAt).toMillis();
                 if (milliDelay <= 0L) {
                     return;
                 }
@@ -68,14 +68,14 @@ public class RealtimeRunner extends SimpleRunner {
         tickInterval = Duration.ofNanos((long) (SECOND_TO_NANOSECOND * tickIntervalFloat));
     }
 
-    @OnMessage(CsGoNetMessages.CSVCMsg_ServerInfo.class)
-    protected void onCsgoServerInfo(CsGoNetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(CSGOS1NetMessages.CSVCMsg_ServerInfo.class)
+    protected void onCsgoServerInfo(CSGOS1NetMessages.CSVCMsg_ServerInfo serverInfo) {
         setTickInterval(serverInfo.getTickInterval());
     }
 
 
-    @OnMessage(NetMessages.CSVCMsg_ServerInfo.class)
-    protected void onDotaServerInfo(NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
+    protected void onDotaServerInfo(DemoNetMessages.CSVCMsg_ServerInfo serverInfo) {
         setTickInterval(serverInfo.getTickInterval());
     }
 

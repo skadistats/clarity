@@ -25,7 +25,7 @@ public class SimpleRunner extends AbstractFileRunner {
     };
 
     public SimpleRunner(Source s) throws IOException {
-        super(s, s.readEngineType());
+        super(s, s.readEngineMagic().determineEngineType(s));
         this.loopController = new LoopController(controllerFunc);
     }
 

@@ -4,24 +4,24 @@ import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.util.LZSS;
-import skadistats.clarity.wire.common.proto.NetMessages;
-import skadistats.clarity.wire.s2.proto.S2NetMessages;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
+import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 import java.util.Objects;
 
 import static skadistats.clarity.LogChannel.stringtables;
 
-@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = EngineId.SOURCE2)
+@Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S2, EngineId.CSGO_S2})
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {
 
@@ -41,7 +41,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
     @OnMessage(S2NetMessages.CSVCMsg_CreateStringTable.class)
     public void onCreateStringTable(S2NetMessages.CSVCMsg_CreateStringTable message) throws IOException {
         if (isProcessed(message.getName())) {
-            StringTable table = new StringTable(
+            var table = new StringTable(
                 message.getName(),
                 null,
                 message.getUserDataFixedSize(),
@@ -51,10 +51,10 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 message.getUsingVarintBitcounts()
             );
 
-            ByteString data = message.getStringData();
+            var data = message.getStringData();
             if (message.getDataCompressed()) {
                 byte[] dst;
-                if (context.getBuildNumber() != -1 && context.getBuildNumber() <= 962) {
+                if (context.getEngineType().getId() == EngineId.DOTA_S2 && context.getGameVersion() != -1 && context.getGameVersion() <= 962) {
                     dst = LZSS.unpack(data);
                 } else {
                     dst = Snappy.uncompress(ZeroCopy.extract(data));
@@ -64,24 +64,26 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             decodeEntries(table, data, message.getNumEntries());
             table.markInitialState();
             evCreated.raise(numTables, table);
+            raiseUpdateEntryEvents();
         }
         numTables++;
     }
 
-    @OnMessage(NetMessages.CSVCMsg_UpdateStringTable.class)
-    public void onUpdateStringTable(NetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
-        StringTable table = stringTables.forId(message.getTableId());
+    @OnMessage(CommonNetMessages.CSVCMsg_UpdateStringTable.class)
+    public void onUpdateStringTable(CommonNetMessages.CSVCMsg_UpdateStringTable message) throws IOException {
+        var table = stringTables.forId(message.getTableId());
         if (table != null) {
             decodeEntries(table, message.getStringData(), message.getNumChangedEntries());
+            raiseUpdateEntryEvents();
         }
     }
 
     private void decodeEntries(StringTable table, ByteString encodedData, int numEntries) throws IOException {
-        BitStream stream = BitStream.createBitStream(encodedData);
-        String[] keyHistory = new String[KEY_HISTORY_SIZE];
+        var stream = BitStream.createBitStream(encodedData);
+        var keyHistory = new String[KEY_HISTORY_SIZE];
 
-        int index = -1;
-        for (int i = 0; i < numEntries; i++) {
+        var index = -1;
+        for (var i = 0; i < numEntries; i++) {
             // read index
             if (stream.readBitFlag()) {
                 index++;
@@ -93,10 +95,10 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             String name = null;
             if (stream.readBitFlag()) {
                 if (stream.readBitFlag()) {
-                    int base = i > KEY_HISTORY_SIZE ? i : 0;
-                    int offs = stream.readUBitInt(5);
-                    int len = stream.readUBitInt(5);
-                    String str = keyHistory[(base + offs) & KEY_HISTORY_MASK];
+                    var base = i > KEY_HISTORY_SIZE ? i : 0;
+                    var offs = stream.readUBitInt(5);
+                    var len = stream.readUBitInt(5);
+                    var str = keyHistory[(base + offs) & KEY_HISTORY_MASK];
                     name = str.substring(0, len) + stream.readString(MAX_NAME_LENGTH);
                 } else {
                     name = stream.readString(MAX_NAME_LENGTH);
@@ -106,7 +108,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
             // read value
             ByteString data = null;
             if (stream.readBitFlag()) {
-                boolean isCompressed = false;
+                var isCompressed = false;
                 int bitLength;
                 if (table.getUserDataFixedSize()) {
                     bitLength = table.getUserDataSizeBits();
@@ -118,11 +120,11 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                     bitLength = (table.isVarIntBitCounts() ? stream.readUBitVar() : stream.readUBitInt(17)) * 8;
                 }
 
-                int byteLength = (bitLength + 7) / 8;
+                var byteLength = (bitLength + 7) / 8;
                 byte[] valueBuf;
                 if (isCompressed) {
                     stream.readBitsIntoByteArray(tempBuf, bitLength);
-                    int byteLengthUncompressed = Snappy.uncompressedLength(tempBuf, 0, byteLength);
+                    var byteLengthUncompressed = Snappy.uncompressedLength(tempBuf, 0, byteLength);
                     valueBuf = new byte[byteLengthUncompressed];
                     Snappy.rawUncompress(tempBuf, 0, byteLength, valueBuf, 0);
                 } else {
@@ -132,7 +134,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
                 data = ZeroCopy.wrap(valueBuf);
             }
 
-            int entryCount = table.getEntryCount();
+            var entryCount = table.getEntryCount();
             if (index < entryCount) {
                 // update old entry
                 table.setValueForIndex(index, data);
@@ -148,7 +150,7 @@ public class S2StringTableEmitter extends BaseStringTableEmitter {
 
             keyHistory[i & KEY_HISTORY_MASK] = name;
 
-            raise(table, index, name, data);
+            queueUpdateEntryEvent(table, index, name, data);
         }
     }
 

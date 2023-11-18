@@ -11,9 +11,11 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
-import skadistats.clarity.wire.common.proto.Demo;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -29,7 +31,7 @@ public class BaseStringTableEmitter {
 
     protected int numTables = 0;
 
-    private Set<String> requestedTables = new HashSet<>();
+    private final Set<String> requestedTables = new HashSet<>();
     private Set<String> updateEventTables = new HashSet<>();
 
     private final Map<String, Demo.CDemoStringTables.table_t> resetStringTables = new TreeMap<>();
@@ -44,6 +46,8 @@ public class BaseStringTableEmitter {
     @InsertEvent
     protected Event<OnStringTableClear> evClear;
 
+    private final List<Runnable> updateEntryEvents = new ArrayList<>();
+
     @Initializer(UsesStringTable.class)
     public void initStringTableUsage(final UsagePoint<UsesStringTable> usagePoint) {
         requestedTables.add(usagePoint.getAnnotation().value());
@@ -51,7 +55,7 @@ public class BaseStringTableEmitter {
 
     @Initializer(OnStringTableEntry.class)
     public void initStringTableEntryEvent(final EventListener<OnStringTableEntry> eventListener) {
-        final String tableName = eventListener.getAnnotation().value();
+        final var tableName = eventListener.getAnnotation().value();
         requestedTables.add(tableName);
         if ("*".equals(tableName)) {
             updateEventTables = requestedTables;
@@ -59,7 +63,7 @@ public class BaseStringTableEmitter {
             updateEventTables.add(tableName);
         }
         eventListener.setInvocationPredicate(args -> {
-            StringTable t = (StringTable) args[0];
+            var t = (StringTable) args[0];
             return "*".equals(tableName) || t.getName().equals(tableName);
         });
     }
@@ -68,32 +72,38 @@ public class BaseStringTableEmitter {
         return requestedTables.contains("*") || requestedTables.contains(tableName);
     }
 
-    protected void raise(StringTable table, int index, String name, ByteString value) {
-        updateEvent.raise(table, index, name, value);
+    protected void queueUpdateEntryEvent(StringTable table, int index, String name, ByteString value) {
+        updateEntryEvents.add(() -> updateEvent.raise(table, index, name, value));
+    }
+
+    protected void raiseUpdateEntryEvents() {
+        updateEntryEvents.forEach(Runnable::run);
+        updateEntryEvents.clear();
     }
 
     @OnReset
     public void onReset(Demo.CDemoStringTables packet, ResetPhase phase) {
         if (phase == ResetPhase.CLEAR) {
             resetStringTables.clear();
-            for (StringTable table : stringTables.byName.values()) {
+            for (var table : stringTables.byName.values()) {
                 table.reset();
             }
         } else if (phase == ResetPhase.ACCUMULATE) {
-            for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
+            for (var tt : packet.getTablesList()) {
                 if (!stringTables.byName.containsKey(tt.getTableName())) {
                     continue;
                 }
                 resetStringTables.put(tt.getTableName(), tt);
             }
         } else if (phase == ResetPhase.APPLY) {
-            for (StringTable table : stringTables.byName.values()) {
-                Demo.CDemoStringTables.table_t tt = resetStringTables.get(table.getName());
+            for (var table : stringTables.byName.values()) {
+                var tt = resetStringTables.get(table.getName());
                 if (tt != null) {
                     applyFullStringTables(table, tt);
-                    for (int i = 0; i < table.getEntryCount(); i++) {
-                        raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
+                    for (var i = 0; i < table.getEntryCount(); i++) {
+                        queueUpdateEntryEvent(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
                     }
+                    raiseUpdateEntryEvents();
                 }
             }
         }
@@ -101,36 +111,37 @@ public class BaseStringTableEmitter {
 
     @OnMessage(Demo.CDemoStringTables.class)
     public void onStringTables(Demo.CDemoStringTables packet) {
-        for (Demo.CDemoStringTables.table_t tt : packet.getTablesList()) {
-            StringTable table = stringTables.byName.get(tt.getTableName());
+        for (var tt : packet.getTablesList()) {
+            var table = stringTables.byName.get(tt.getTableName());
             if (table == null) {
                 continue;
             }
             applyFullStringTables(table, tt);
-            for (int i = 0; i < table.getEntryCount(); i++) {
-                raise(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
+            for (var i = 0; i < table.getEntryCount(); i++) {
+                queueUpdateEntryEvent(table, i, table.getNameByIndex(i), table.getValueByIndex(i));
             }
+            raiseUpdateEntryEvents();
         }
     }
 
     private void applyFullStringTables(StringTable table, Demo.CDemoStringTables.table_t tt) {
-        int ic = tt.getItemsCount();
-        int ec = table.getEntryCount();
+        var ic = tt.getItemsCount();
+        var ec = table.getEntryCount();
 
         if (ic < ec) {
             throw new UnsupportedOperationException("removing entries is not supported");
         }
 
-        for (int i = 0; i < ec; i++) {
-            Demo.CDemoStringTables.items_t it = tt.getItems(i);
+        for (var i = 0; i < ec; i++) {
+            var it = tt.getItems(i);
             assert(Objects.equals(it.getStr(), table.getNameByIndex(i)));
             if (it.hasData()) {
                 table.setValueForIndex(i, it.getData());
             }
         }
 
-        for (int i = ec; i < ic; i++) {
-            Demo.CDemoStringTables.items_t it = tt.getItems(i);
+        for (var i = ec; i < ic; i++) {
+            var it = tt.getItems(i);
             table.addEntry(it.getStr(), it.getData());
         }
     }

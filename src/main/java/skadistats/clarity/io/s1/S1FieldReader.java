@@ -3,12 +3,13 @@ package skadistats.clarity.io.s1;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
 
-public abstract class S1FieldReader extends FieldReader<S1DTClass> {
+public abstract class S1FieldReader extends FieldReader {
 
     private final TextTable debugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -28,25 +29,26 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public FieldChanges readFields(BitStream bs, S1DTClass dtClass, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
+        var dtClass = dtClassGeneric.s1();
         try {
             if (debug) {
                 debugTable.setTitle(dtClass.getDtName());
                 debugTable.clear();
             }
 
-            int n = readIndices(bs, dtClass);
-            FieldChanges result = new FieldChanges(fieldPaths, n);
+            var n = readIndices(bs, dtClass);
+            var result = new FieldChanges(fieldPaths, n);
 
-            ReceiveProp[] receiveProps = dtClass.getReceiveProps();
-            for (int ci = 0; ci < n; ci++) {
-                int offsBefore = bs.pos();
-                int o = fieldPaths[ci].s1().idx();
+            var receiveProps = dtClass.getReceiveProps();
+            for (var ci = 0; ci < n; ci++) {
+                var offsBefore = bs.pos();
+                var o = fieldPaths[ci].s1().idx();
                 result.setValue(ci, receiveProps[o].decode(bs));
 
                 if (debug) {
-                    SendProp sp = receiveProps[o].getSendProp();
-                    Object subState = result.getValue(ci);
+                    var sp = receiveProps[o].getSendProp();
+                    var subState = result.getValue(ci);
                     debugTable.setData(ci, 0, o);
                     debugTable.setData(ci, 1, receiveProps[o].getVarName());
                     debugTable.setData(ci, 2, sp.getLowValue());
@@ -70,7 +72,7 @@ public abstract class S1FieldReader extends FieldReader<S1DTClass> {
 
     @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
-        int n = 0;
+        var n = 0;
         while (bs.readBitFlag()) {
             deletions[n++]= bs.readUBitInt(indexBits);
         }

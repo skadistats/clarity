@@ -15,8 +15,8 @@ public class VectorDefaultDecoder implements Decoder<Vector> {
 
     @Override
     public Vector decode(BitStream bs) {
-        float[] result = new float[dim];
-        for (int i = 0; i < dim; i++) {
+        var result = new float[dim];
+        for (var i = 0; i < dim; i++) {
             result[i] = floatDecoder.decode(bs);
         }
         return new Vector(result);

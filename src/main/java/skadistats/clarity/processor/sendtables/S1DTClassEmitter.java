@@ -1,27 +1,27 @@
 package skadistats.clarity.processor.sendtables;
 
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.event.Event;
+import skadistats.clarity.event.Insert;
+import skadistats.clarity.event.InsertEvent;
+import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.io.s1.SendProp;
 import skadistats.clarity.io.s1.SendTable;
 import skadistats.clarity.io.s1.SendTableFlattener;
-import skadistats.clarity.event.Event;
-import skadistats.clarity.event.Insert;
-import skadistats.clarity.event.InsertEvent;
-import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.s1.PropType;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.wire.common.proto.Demo;
-import skadistats.clarity.wire.s1.proto.S1NetMessages;
+import skadistats.clarity.wire.shared.demo.proto.Demo;
+import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 
-@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = { EngineId.SOURCE1, EngineId.CSGO })
+@Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = {EngineId.DOTA_S1, EngineId.CSGO_S1})
 public class S1DTClassEmitter {
 
     @Insert
@@ -41,13 +41,13 @@ public class S1DTClassEmitter {
             return;
         }
 
-        LinkedList<SendProp> props = new LinkedList<>();
-        SendTable st = new SendTable(
+        var props = new LinkedList<SendProp>();
+        var st = new SendTable(
             message.getNetTableName(),
             props
         );
 
-        for (S1NetMessages.CSVCMsg_SendTable.sendprop_t sp : message.getPropsList()) {
+        for (var sp : message.getPropsList()) {
             props.add(
                 new SendProp(
                     st,
@@ -70,8 +70,8 @@ public class S1DTClassEmitter {
 
     @OnMessage(Demo.CDemoClassInfo.class)
     public void onClassInfo(Demo.CDemoClassInfo message) {
-        for (Demo.CDemoClassInfo.class_t ct : message.getClassesList()) {
-            DTClass dt = dtClasses.forDtName(ct.getTableName());
+        for (var ct : message.getClassesList()) {
+            var dt = dtClasses.forDtName(ct.getTableName());
             if (dt == null) {
                 throw new ClarityException("DTClass for '%s' not found.", ct.getTableName());
             }
@@ -83,17 +83,17 @@ public class S1DTClassEmitter {
 
     @OnMessage(Demo.CDemoSyncTick.class)
     public void onSyncTick(Demo.CDemoSyncTick message) {
-        Iterator<DTClass> iter = dtClasses.iterator();
+        var iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            S1DTClass dtc = (S1DTClass) iter.next();
-            SendTableFlattener.Result flattened = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
+            var dtc = (S1DTClass) iter.next();
+            var flattened = new SendTableFlattener(dtClasses, dtc.getSendTable()).flatten();
             dtc.setReceiveProps(flattened.receiveProps);
             dtc.setIndexMapping(flattened.indexMapping);
         }
         iter = dtClasses.iterator();
         while (iter.hasNext()) {
-            S1DTClass dtc = (S1DTClass) iter.next();
-            String superClassName = dtc.getSendTable().getBaseClass();
+            var dtc = (S1DTClass) iter.next();
+            var superClassName = dtc.getSendTable().getBaseClass();
             if (superClassName != null) {
                 dtc.setSuperClass((S1DTClass) dtClasses.forDtName(superClassName));
             }

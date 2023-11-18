@@ -19,9 +19,9 @@ public class BitStream32 extends BitStream {
     @Override
     public int readUBitInt(int n) {
         assert n <= 32;
-        int start = pos >> 5;
-        int end = (pos + n - 1) >> 5;
-        int s = pos & 31;
+        var start = pos >> 5;
+        var end = (pos + n - 1) >> 5;
+        var s = pos & 31;
         pos += n;
         return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (32 - s))) & MASKS[n]);
     }
@@ -40,7 +40,7 @@ public class BitStream32 extends BitStream {
 
     @Override
     public void readBitsIntoByteArray(byte[] dest, int n) {
-        int o = 0;
+        var o = 0;
         while (n > 8) {
             dest[o++] = (byte)readUBitInt(8);
             n -= 8;
@@ -52,10 +52,10 @@ public class BitStream32 extends BitStream {
 
     @Override
     public FieldOpType readFieldOp() {
-        int offs = pos >> 5;
-        int s = pos & 31;
-        int i = 0;
-        int v = buffer.get(offs);
+        var offs = pos >> 5;
+        var s = pos & 31;
+        var i = 0;
+        var v = buffer.get(offs);
         while (true) {
             pos++;
             i = FieldOpHuffmanTree.tree[i][v >>> s & 1];

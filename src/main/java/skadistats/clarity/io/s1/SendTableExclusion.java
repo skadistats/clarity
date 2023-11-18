@@ -20,8 +20,8 @@ public class SendTableExclusion {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 1;
+        final var prime = 31;
+        var result = 1;
         result = prime * result + ((dtName == null) ? 0 : dtName.hashCode());
         result = prime * result + ((varName == null) ? 0 : varName.hashCode());
         return result;
@@ -35,7 +35,7 @@ public class SendTableExclusion {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        SendTableExclusion other = (SendTableExclusion) obj;
+        var other = (SendTableExclusion) obj;
         if (dtName == null) {
             if (other.dtName != null)
                 return false;

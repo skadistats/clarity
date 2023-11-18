@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.BoolDecoder;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
+import skadistats.clarity.io.decoder.GameRulesModeFixDecoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;
 import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
@@ -84,6 +85,8 @@ public class S2DecoderFactory {
         // Specials
         DECODERS.put("HSequence", new IntMinusOneDecoder());
         DECODERS.put("GameTime_t", new FloatNoScaleDecoder());
+
+        DECODERS.put("gamerulesmode_fix", new GameRulesModeFixDecoder());
     }
 
 
@@ -93,7 +96,7 @@ public class S2DecoderFactory {
 
     public static DecoderHolder createDecoder(DecoderProperties decoderProperties, String type) {
         Decoder decoder;
-        DecoderFactory decoderFactory = FACTORIES.get(type);
+        var decoderFactory = FACTORIES.get(type);
         if (decoderFactory != null) {
             decoder = decoderFactory.createDecoder(decoderProperties);
         } else {

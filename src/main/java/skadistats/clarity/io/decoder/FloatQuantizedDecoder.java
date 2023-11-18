@@ -17,11 +17,11 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(decoder);
 
-    private String fieldName;
+    private final String fieldName;
     private int bitCount;
     private float minValue;
     private float maxValue;
-    private int flags;
+    private final int flags;
     private int encodeFlags;
 
     private float highLowMultiplier;
@@ -74,7 +74,7 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
 
     private void initialize() {
         float offset;
-        int quanta = (1 << bitCount);
+        var quanta = (1 << bitCount);
 
         if ((flags & (QFE_ROUNDDOWN | QFE_ROUNDUP)) == (QFE_ROUNDDOWN | QFE_ROUNDUP)) {
             log.warn("Field %s was flagged to both round up and down, these flags are mutually exclusive [%f->%f]\n", fieldName, minValue, maxValue);
@@ -89,10 +89,10 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
         }
 
         if ((flags & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
-            int delta = ((int) minValue) - ((int) maxValue);
-            int trueRange = (1 << Util.calcBitsNeededFor(Math.max(delta, 1)));
+            var delta = ((int) minValue) - ((int) maxValue);
+            var trueRange = (1 << Util.calcBitsNeededFor(Math.max(delta, 1)));
 
-            int nBits = this.bitCount;
+            var nBits = this.bitCount;
             while ((1 << nBits) < trueRange) {
                 ++nBits;
             }
@@ -102,7 +102,7 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
                 quanta = (1 << bitCount);
             }
 
-            float floatRange = (float) trueRange;
+            var floatRange = (float) trueRange;
             offset = (floatRange / (float) quanta);
             maxValue = minValue + floatRange - offset;
         }
@@ -178,7 +178,7 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
             }
             return maxValue;
         }
-        int i = (int) ((value - minValue) * highLowMultiplier);
+        var i = (int) ((value - minValue) * highLowMultiplier);
         return minValue + (maxValue - minValue) * ((float) i * decodeMultiplier);
     }
 
@@ -193,7 +193,7 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
         if ((encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0 && bs.readBitFlag()) {
             return 0.0f;
         }
-        float v = bs.readUBitInt(bitCount) * decodeMultiplier;
+        var v = bs.readUBitInt(bitCount) * decodeMultiplier;
         return minValue + (maxValue - minValue) * v;
     }
 

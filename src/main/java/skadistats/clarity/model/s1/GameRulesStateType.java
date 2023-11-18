@@ -12,14 +12,14 @@ public enum GameRulesStateType {
     PLAYING(5),
     POST_GAME(6);
     
-    private int id;
+    private final int id;
 
     GameRulesStateType(int id) {
         this.id = id;
     }
     
     public static GameRulesStateType forId(int id) {
-        for (GameRulesStateType t : values()) {
+        for (var t : values()) {
             if (t.id == id) {
                 return t;
             }

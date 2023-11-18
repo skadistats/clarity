@@ -3,7 +3,7 @@ package skadistats.clarity.model;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 
-public interface FieldPath<F extends FieldPath> extends Comparable<F> {
+public interface FieldPath {
 
     default S1FieldPath s1() {
         return (S1FieldPath) this;

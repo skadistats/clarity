@@ -5,7 +5,6 @@ import skadistats.clarity.io.s2.S2DTClass;
 import skadistats.clarity.model.state.EntityState;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.function.Function;
 
@@ -24,7 +23,7 @@ public interface DTClass {
     @Deprecated
     default List<FieldPath> collectFieldPaths(EntityState state) {
         List<FieldPath> result = new ArrayList<>();
-        Iterator<FieldPath> iter = state.fieldPathIterator();
+        var iter = state.fieldPathIterator();
         while (iter.hasNext()) {
             result.add(iter.next());
         }
@@ -37,6 +36,14 @@ public interface DTClass {
         } else {
             return s1.apply((S1DTClass) this);
         }
+    }
+
+    default S1DTClass s1() {
+        return (S1DTClass) this;
+    }
+
+    default S2DTClass s2() {
+        return (S2DTClass) this;
     }
 
 }

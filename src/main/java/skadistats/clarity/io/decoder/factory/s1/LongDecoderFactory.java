@@ -7,7 +7,7 @@ import skadistats.clarity.model.s1.PropFlag;
 public class LongDecoderFactory implements DecoderFactory<Long> {
 
     public static Decoder<Long> createDecoderStatic(SendProp prop) {
-        int flags = prop.getFlags();
+        var flags = prop.getFlags();
         if ((flags & PropFlag.ENCODED_AS_VARINT) != 0) {
             if ((flags & PropFlag.UNSIGNED) != 0) {
                 return new LongVarUnsignedDecoder();

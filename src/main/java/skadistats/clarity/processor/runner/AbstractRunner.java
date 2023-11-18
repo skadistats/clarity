@@ -3,10 +3,10 @@ package skadistats.clarity.processor.runner;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityExceptionHandler;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.io.Util;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.io.Util;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 
@@ -27,13 +27,13 @@ public abstract class AbstractRunner implements Runner {
     }
 
     private ExecutionModel createExecutionModel(Object... processors) {
-        ExecutionModel executionModel = new ExecutionModel(this);
+        var executionModel = new ExecutionModel(this);
         addProcessorsToModel(executionModel, processors);
         return executionModel;
     }
 
     private void addProcessorsToModel(ExecutionModel executionModel, Object[] processors) {
-        for (Object p : processors) {
+        for (var p : processors) {
             if (p instanceof Object[]) {
                 addProcessorsToModel(executionModel, (Object[]) p);
             } else {
@@ -43,8 +43,8 @@ public abstract class AbstractRunner implements Runner {
     }
 
     protected void initWithProcessors(Object... processors) {
-        ExecutionModel em = createExecutionModel(processors);
-        context = new Context(em);
+        var em = createExecutionModel(processors);
+        context = new Context(em, engineType.getContextData());
         em.initialize(context);
         if (evInitRun != null) {
             evInitRun.raise();
