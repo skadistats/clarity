@@ -3,7 +3,7 @@
 Clarity is an open-source parser for Dota 2, CSGO and CS2 replay files, written in Java.
 
 ## Changelog
-see the ![Changelog](/CHANGELOG.md) for recent project activity.
+see the [Changelog](/CHANGELOG.md) for recent project activity.
 
 # Replay Data
 
@@ -54,4 +54,4 @@ For example code, please see the separate project [clarity-examples](https://git
 
 # License
 
-See ![LICENSE](/LICENSE) in the project root.
+See [LICENSE](/LICENSE) in the project root.
