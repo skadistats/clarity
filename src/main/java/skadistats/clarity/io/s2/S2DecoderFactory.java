@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.BoolDecoder;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
-import skadistats.clarity.io.decoder.GameRulesModeFixDecoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;
 import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
@@ -14,6 +13,7 @@ import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
 import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
+import skadistats.clarity.io.decoder.factory.s2.PointerFactory;
 import skadistats.clarity.io.decoder.factory.s2.QAngleDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.VectorDecoderFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -45,6 +45,9 @@ public class S2DecoderFactory {
         FACTORIES.put("Vector", new VectorDecoderFactory(3));
         FACTORIES.put("Vector4D", new VectorDecoderFactory(4));
         FACTORIES.put("Quaternion", new VectorDecoderFactory(4));
+
+        // Pointer
+        FACTORIES.put("Pointer", new PointerFactory());
     }
 
     private static final Map<String, Decoder> DECODERS = new HashMap<>();
@@ -85,8 +88,6 @@ public class S2DecoderFactory {
         // Specials
         DECODERS.put("HSequence", new IntMinusOneDecoder());
         DECODERS.put("GameTime_t", new FloatNoScaleDecoder());
-
-        DECODERS.put("gamerulesmode_fix", new GameRulesModeFixDecoder());
     }
 
 

@@ -7,7 +7,7 @@ import skadistats.clarity.model.state.ArrayEntityState;
 
 public class SerializerField extends Field {
 
-    protected final Serializer serializer;
+    protected Serializer serializer;
 
     public SerializerField(FieldType fieldType, Serializer serializer) {
         super(fieldType);

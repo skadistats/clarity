@@ -1,6 +1,7 @@
 package skadistats.clarity.processor.sendtables;
 
 import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.s2.SerializerId;
 
 public class ProtoDecoderProperties implements DecoderProperties {
 
@@ -9,13 +10,15 @@ public class ProtoDecoderProperties implements DecoderProperties {
     Float lowValue;
     Float highValue;
     String encoderType;
+    SerializerId[] polymorphicTypes;
 
-    ProtoDecoderProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType) {
+    ProtoDecoderProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType, SerializerId[] polymorphicTypes) {
         this.encodeFlags = encodeFlags;
         this.bitCount = bitCount;
         this.lowValue = lowValue;
         this.highValue = highValue;
         this.encoderType = encoderType;
+        this.polymorphicTypes = polymorphicTypes;
     }
 
     @Override
@@ -62,4 +65,10 @@ public class ProtoDecoderProperties implements DecoderProperties {
     public float getHighValueOrDefault(float defaultValue) {
         return highValue != null ? highValue : defaultValue;
     }
+
+    @Override
+    public SerializerId[] getPolymorphicTypes() {
+        return polymorphicTypes;
+    }
+
 }

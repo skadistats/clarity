@@ -61,21 +61,41 @@ public class FieldGenerator {
     }
 
     private FieldData generateFieldData(S2NetMessages.ProtoFlattenedSerializerField_t proto) {
+        SerializerId serializerId = null;
+        SerializerId[] polymorphicTypes = null;
+
+        if (proto.hasFieldSerializerNameSym()) {
+            serializerId = new SerializerId(
+                sym(proto.getFieldSerializerNameSym()),
+                proto.getFieldSerializerVersion()
+            );
+
+            var nPolymorphic = proto.getPolymorphicTypesCount();
+            polymorphicTypes = new SerializerId[nPolymorphic + 1];
+            polymorphicTypes[0] = serializerId;
+            for (int i = 0; i < nPolymorphic; i++) {
+                var ps = proto.getPolymorphicTypes(i);
+                polymorphicTypes[i + 1] = new SerializerId(
+                    sym(ps.getPolymorphicFieldSerializerNameSym()),
+                    ps.getPolymorphicFieldSerializerVersion()
+                );
+            }
+        }
+
+        var decoderProperties = new ProtoDecoderProperties(
+            proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
+            proto.hasBitCount() ? proto.getBitCount() : null,
+            proto.hasLowValue() ? proto.getLowValue() : null,
+            proto.hasHighValue() ? proto.getHighValue() : null,
+            proto.hasVarEncoderSym() ? sym(proto.getVarEncoderSym()) : null,
+            polymorphicTypes
+        );
+
         return new FieldData(
-                FieldType.forString(sym(proto.getVarTypeSym())),
-                fieldNameFunction(proto),
-                new ProtoDecoderProperties(
-                        proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
-                        proto.hasBitCount() ? proto.getBitCount() : null,
-                        proto.hasLowValue() ? proto.getLowValue() : null,
-                        proto.hasHighValue() ? proto.getHighValue() : null,
-                        proto.hasVarEncoderSym() ? sym(proto.getVarEncoderSym()) : null
-                ),
-                proto.hasFieldSerializerNameSym() ?
-                        new SerializerId(
-                                sym(proto.getFieldSerializerNameSym()),
-                                proto.getFieldSerializerVersion()
-                        ) : null
+            FieldType.forString(sym(proto.getVarTypeSym())),
+            fieldNameFunction(proto),
+            decoderProperties,
+            serializerId
         );
     }
 
@@ -117,9 +137,15 @@ public class FieldGenerator {
         Field elementField;
         if (fd.serializerId != null) {
             if (fd.category == FieldCategory.POINTER) {
+                var types = fd.decoderProperties.polymorphicTypes;
+                var typeSerializers = new Serializer[types.length];
+                for (int i = 0; i < types.length; i++) {
+                    typeSerializers[i] = serializers.get(types[i]);
+                }
                 elementField = new PointerField(
-                        elementType,
-                        serializers.get(fd.serializerId)
+                    elementType,
+                    S2DecoderFactory.createDecoder(fd.decoderProperties, "Pointer"),
+                    typeSerializers
                 );
             } else {
                 elementField = new SerializerField(
@@ -220,6 +246,7 @@ public class FieldGenerator {
             switch(fieldType.getBaseType()) {
                 case "CUtlVector":
                 case "CNetworkUtlVectorBase":
+                case "CUtlVectorEmbeddedNetworkVar":
                     return true;
                 default:
                     return false;

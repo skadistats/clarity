@@ -12,6 +12,7 @@ public interface DecoderProperties {
     int getBitCountOrDefault(int defaultValue);
     float getLowValueOrDefault(float defaultValue);
     float getHighValueOrDefault(float defaultValue);
+    SerializerId[] getPolymorphicTypes();
 
     DecoderProperties DEFAULT = new DecoderProperties() {
         @Override
@@ -57,6 +58,10 @@ public interface DecoderProperties {
         @Override
         public float getHighValueOrDefault(float defaultValue) {
             return defaultValue;
+        }
+        @Override
+        public SerializerId[] getPolymorphicTypes() {
+            return new SerializerId[0];
         }
     };
 
