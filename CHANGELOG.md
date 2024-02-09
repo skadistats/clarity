@@ -1,5 +1,11 @@
 # Clarity 2 Changelog
 
+## Febuary 09, 2024: Version 3.0.1 released
+
+Fix CS2: Arms Race Update
+
+* add support for polymorphic pointers
+
 ## November 18, 2023: Version 3.0.0 released
 
 Major release with a lot of new features:
