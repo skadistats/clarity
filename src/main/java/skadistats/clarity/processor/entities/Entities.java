@@ -390,6 +390,13 @@ public class Entities {
                     if (eEnt == null) {
                         throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
                     }
+                    if (message.getHasPvsVisBits() != 0) {
+                        var pvs = stream.readUBitInt(2);
+                        eEnt.setActive((pvs & 0x02) != 0);
+                        if ((pvs & 0x01) == 1) {
+                            break;
+                        }
+                    }
                     queueEntityUpdate(eEnt, stream, false);
                     break;
 
