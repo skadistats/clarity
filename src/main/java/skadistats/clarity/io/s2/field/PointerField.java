@@ -12,11 +12,14 @@ public class PointerField extends SerializerField {
 
     private final DecoderHolder decoderHolder;
     private final Serializer[] serializers;
+    private final Serializer defaultSerializer;
 
     public PointerField(FieldType fieldType, DecoderHolder decoderHolder, Serializer[] serializers) {
-        super(fieldType, serializers.length == 1 ? serializers[0] : null);
+        super(fieldType, null);
         this.decoderHolder = decoderHolder;
         this.serializers = serializers;
+        this.defaultSerializer = serializers.length == 1 ? serializers[0] : null;
+        this.serializer = defaultSerializer;
     }
 
     @Override
@@ -41,7 +44,7 @@ public class PointerField extends SerializerField {
         var newSerializer = typeIndex != null ? serializers[typeIndex] : null;
         if (state.has(idx)) {
             if (typeIndex == null || this.serializer != newSerializer) {
-                this.serializer = null;
+                this.serializer = defaultSerializer;
                 state.clear(idx);
             }
         }
