@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## Febuary 15, 2024: Version 3.0.2 released
+
+Some additional fixes to support PVS bits.
+
 ## Febuary 09, 2024: Version 3.0.1 released
 
 Fix CS2: Arms Race Update
