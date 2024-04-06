@@ -1,9 +1,6 @@
 package skadistats.clarity;
 
 import com.google.protobuf.ByteString;
-import com.google.protobuf.GeneratedMessage;
-import skadistats.clarity.model.EngineType;
-import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
@@ -48,7 +45,7 @@ public class Clarity {
      * @see Source
      */
     public static Demo.CDemoFileInfo infoForSource(final Source source) throws IOException {
-        var engineType = source.readEngineMagic().determineEngineType(source);
+        var engineType = source.determineEngineType();
         source.setPosition(engineType.getInfoOffset());
         var pi = engineType.getNextPacketInstance(source);
         return (Demo.CDemoFileInfo) pi.parse();

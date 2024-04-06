@@ -152,15 +152,16 @@ public abstract class Source {
     /**
      * reads the magic of a demo file, identifying the engine type
      *
-     * @throws IOException if there is not enough data or the if no valid magic was found
+     * @throws IOException if there is not enough data or if no valid magic was found
      */
-    public EngineMagic readEngineMagic() throws IOException {
+    public EngineType determineEngineType() throws IOException {
         try {
             var engineMagic = EngineMagic.magicForString(new String(readBytes(8)));
             if (engineMagic == null) {
                 throw new IOException();
             }
-            return engineMagic;
+            engineType = engineMagic.determineEngineType(this);
+            return engineType;
         } catch (IOException e) {
             throw new IOException("given stream does not seem to contain a valid replay");
         }

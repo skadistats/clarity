@@ -1,6 +1,5 @@
 package skadistats.clarity.source;
 
-import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
@@ -8,7 +7,6 @@ import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.platform.ClarityPlatform;
 import skadistats.clarity.processor.reader.OnMessage;
-import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.EOFException;
@@ -21,7 +19,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardWatchEventKinds;
-import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
 import java.util.concurrent.TimeUnit;
@@ -277,7 +274,7 @@ public class LiveSource extends Source {
             while (nextTickOffset <= file.capacity()) {
                 if (nextTickOffset == 0) {
                     file.position(0);
-                    engineType = readEngineMagic().determineEngineType(this);
+                    engineType = determineEngineType();
                     nextTickOffset = file.position();
                 } else {
                     file.position(nextTickOffset);
