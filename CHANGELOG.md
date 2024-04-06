@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## April 06, 2024: Version 3.0.3 released
+
+Fix clarity-examples #60: cannot determine last tick before engine type is known
+
 ## Febuary 15, 2024: Version 3.0.2 released
 
 Some additional fixes to support PVS bits.

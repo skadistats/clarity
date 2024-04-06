@@ -34,18 +34,18 @@ Depending on your project build, use one of the following
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>3.0.2</version>
+	<version>3.0.3</version>
 </dependency>
 ```
 
 ### Gradle (Groovy)
 ```
-    implementation group: 'com.skadistats', name: 'clarity', version: '3.0.2'
+    implementation group: 'com.skadistats', name: 'clarity', version: '3.0.3'
 ```
 
 ### Gradle (Kotlin)
 ```
-    implementation("com.skadistats:clarity:3.0.2")
+    implementation("com.skadistats:clarity:3.0.3")
 ```
 
 # Example Code
