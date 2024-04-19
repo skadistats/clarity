@@ -41,6 +41,10 @@ public class DotaS2EngineType extends AbstractProtobufDemoEngineType {
         return num;
     }
 
+    public boolean handleDeletions() {
+        return false;
+    }
+
     @Override
     public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
         return EmbeddedPackets.classForKind(kind);
