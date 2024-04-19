@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## April 19, 2024: Version 3.0.4 released
+
+Workaround #311: Deletions are not encoded correctly. Maybe Valve removed them?
+
 ## April 06, 2024: Version 3.0.3 released
 
 Fix clarity-examples #60: cannot determine last tick before engine type is known
