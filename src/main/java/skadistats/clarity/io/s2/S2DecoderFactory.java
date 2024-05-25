@@ -5,6 +5,7 @@ import skadistats.clarity.io.decoder.BoolDecoder;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.IntMinusOneDecoder;
+import skadistats.clarity.io.decoder.IntUnsignedDecoder;
 import skadistats.clarity.io.decoder.IntVarSignedDecoder;
 import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
 import skadistats.clarity.io.decoder.LongVarSignedDecoder;
@@ -88,6 +89,8 @@ public class S2DecoderFactory {
         // Specials
         DECODERS.put("HSequence", new IntMinusOneDecoder());
         DECODERS.put("GameTime_t", new FloatNoScaleDecoder());
+        DECODERS.put("HeroFacetKey_t", new LongVarUnsignedDecoder());
+        DECODERS.put("BloodType", new IntUnsignedDecoder(8));
     }
 
 
