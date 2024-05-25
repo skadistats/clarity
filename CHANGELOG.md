@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## May 25, 2024: Version 3.0.5 released
+
+Compatibility with patch 7.36
+
 ## April 19, 2024: Version 3.0.4 released
 
 Workaround #311: Deletions are not encoded correctly. Maybe Valve removed them?
