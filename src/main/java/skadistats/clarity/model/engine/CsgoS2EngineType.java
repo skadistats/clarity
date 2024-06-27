@@ -34,6 +34,10 @@ public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
         return Integer.parseInt(matcher.group(1));
     }
 
+    public boolean handleDeletions() {
+        return false;
+    }
+
     @Override
     public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
         return EmbeddedPackets.classForKind(kind);
