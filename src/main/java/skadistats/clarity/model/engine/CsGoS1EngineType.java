@@ -51,7 +51,7 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
     }
 
     @Override
-    public boolean handleDeletions() {
+    public boolean shouldHandleDeletions(BitStream bs) {
         return false;
     }
 

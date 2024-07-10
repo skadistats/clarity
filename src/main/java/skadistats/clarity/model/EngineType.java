@@ -13,7 +13,7 @@ public interface EngineType {
 
     EngineId getId();
     boolean isSendTablesContainer();
-    boolean handleDeletions();
+    boolean shouldHandleDeletions(BitStream bs);
 
     int getIndexBits();
     int getSerialBits();

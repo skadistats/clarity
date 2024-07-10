@@ -4,6 +4,7 @@ import com.google.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Insert;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
@@ -54,7 +55,7 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     }
 
     @Override
-    public boolean handleDeletions() {
+    public boolean shouldHandleDeletions(BitStream bs) {
         return true;
     }
 

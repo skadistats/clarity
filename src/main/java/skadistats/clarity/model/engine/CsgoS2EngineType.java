@@ -34,6 +34,10 @@ public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
         return Integer.parseInt(matcher.group(1));
     }
 
+    public boolean shouldHandleDeletions(BitStream bs) {
+        return bs.remaining() > 12;
+    }
+
     @Override
     public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
         return EmbeddedPackets.classForKind(kind);

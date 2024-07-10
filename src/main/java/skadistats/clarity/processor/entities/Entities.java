@@ -417,7 +417,7 @@ public class Entities {
             }
         }
 
-        if (engineType.handleDeletions() && message.getIsDelta()) {
+        if (message.getIsDelta() && engineType.shouldHandleDeletions(stream)) {
             var n = fieldReader.readDeletions(stream, engineType.getIndexBits(), deletions);
             for (var i = 0; i < n; i++) {
                 eIdx = deletions[i];

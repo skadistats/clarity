@@ -41,8 +41,8 @@ public class DotaS2EngineType extends AbstractProtobufDemoEngineType {
         return num;
     }
 
-    public boolean handleDeletions() {
-        return false;
+    public boolean shouldHandleDeletions(BitStream bs) {
+        return bs.remaining() > 12;
     }
 
     @Override
