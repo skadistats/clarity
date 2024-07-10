@@ -1,5 +1,11 @@
 # Clarity 2 Changelog
 
+## July 10, 2024: Version 3.0.6 released
+
+* CS2 stopped sending deletions as well
+* implemented a fix that should be backwards compatible
+  (in replays that still have deletions, they are read)
+
 ## May 25, 2024: Version 3.0.5 released
 
 Compatibility with patch 7.36
