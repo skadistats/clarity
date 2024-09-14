@@ -91,6 +91,7 @@ public class S2DecoderFactory {
         DECODERS.put("GameTime_t", new FloatNoScaleDecoder());
         DECODERS.put("HeroFacetKey_t", new LongVarUnsignedDecoder());
         DECODERS.put("BloodType", new IntUnsignedDecoder(8));
+        DECODERS.put("HeroID_t", new IntVarSignedDecoder());
     }
 
 
