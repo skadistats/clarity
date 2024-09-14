@@ -1,5 +1,10 @@
 # Clarity 2 Changelog
 
+## September 14, 2024: Version 3.1.0 released
+
+* add support for Deadlock
+* update protobufs
+
 ## July 10, 2024: Version 3.0.6 released
 
 * CS2 stopped sending deletions as well

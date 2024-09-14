@@ -1,6 +1,6 @@
 # Clarity
 
-Clarity is an open-source parser for Dota 2, CSGO and CS2 replay files, written in Java.
+Clarity is an open-source parser for Dota 2, CSGO, CS2 and Deadlock replay files, written in Java.
 
 ## Changelog
 see the [Changelog](/CHANGELOG.md) for recent project activity.
@@ -34,18 +34,18 @@ Depending on your project build, use one of the following
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>3.0.6</version>
+	<version>3.1.0</version>
 </dependency>
 ```
 
 ### Gradle (Groovy)
 ```
-    implementation group: 'com.skadistats', name: 'clarity', version: '3.0.6'
+    implementation group: 'com.skadistats', name: 'clarity', version: '3.1.0'
 ```
 
 ### Gradle (Kotlin)
 ```
-    implementation("com.skadistats:clarity:3.0.6")
+    implementation("com.skadistats:clarity:3.1.0")
 ```
 
 # Example Code
