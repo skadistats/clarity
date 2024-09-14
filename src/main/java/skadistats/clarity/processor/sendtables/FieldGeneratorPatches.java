@@ -1,5 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
+import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.SerializerId;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.GameVersionRange;
@@ -141,7 +142,7 @@ public class FieldGeneratorPatches {
         switch (field.name) {
             case "m_flSimulationTime":
             case "m_flAnimTime":
-                field.decoderProperties.encoderType = "simulationtime";
+                field.fieldType = FieldType.forString("uint32");
         }
     }
 

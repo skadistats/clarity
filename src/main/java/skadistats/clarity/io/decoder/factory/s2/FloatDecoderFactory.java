@@ -1,11 +1,10 @@
 package skadistats.clarity.io.decoder.factory.s2;
 
-import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.FloatCoordDecoder;
 import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.FloatQuantizedDecoder;
-import skadistats.clarity.io.decoder.FloatSimulationTimeDecoder;
-import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.s2.DecoderProperties;
 
 public class FloatDecoderFactory implements DecoderFactory<Float> {
 
@@ -17,9 +16,6 @@ public class FloatDecoderFactory implements DecoderFactory<Float> {
     public static Decoder<Float> createDecoderStatic(DecoderProperties f) {
         if ("coord".equals(f.getEncoderType())) {
             return new FloatCoordDecoder();
-        }
-        if ("simulationtime".equals(f.getEncoderType())) {
-            return new FloatSimulationTimeDecoder();
         }
         var bc = f.getBitCountOrDefault(0);
         if (bc <= 0 || bc >= 32) {

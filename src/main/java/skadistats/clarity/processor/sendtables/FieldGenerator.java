@@ -203,7 +203,7 @@ public class FieldGenerator {
     }
 
     static class FieldData {
-        final FieldType fieldType;
+        FieldType fieldType;
         final String name;
         final ProtoDecoderProperties decoderProperties;
         final SerializerId serializerId;
