@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.skadistats"
-version = "3.0.6"
+version = "3.1.0"
 
 java {
     toolchain {
@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    api("com.skadistats:clarity-protobuf:[5.0,6.0)")
+    api("com.skadistats:clarity-protobuf:[5.3,6.0)")
     api("org.xerial.snappy:snappy-java:1.1.10.4")
     api("org.slf4j:slf4j-api:2.0.7")
     api("org.atteo.classindex:classindex:3.13")
@@ -40,7 +40,7 @@ publishing {
 
             pom {
                 name.set(rootProject.name)
-                description.set("Clarity is an open source replay parser for Dota 2 and CSGO 1 and 2 written in Java.")
+                description.set("Clarity is an open source replay parser for Dota 2, CSGO, CS2 and Deadlock written in Java.")
                 url.set("https://github.com/skadistats/clarity")
                 licenses {
                     license {
