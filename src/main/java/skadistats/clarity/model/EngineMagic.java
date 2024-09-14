@@ -3,6 +3,7 @@ package skadistats.clarity.model;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.model.engine.CsGoS1EngineType;
 import skadistats.clarity.model.engine.CsgoS2EngineType;
+import skadistats.clarity.model.engine.DeadlockEngineType;
 import skadistats.clarity.model.engine.DotaS1EngineType;
 import skadistats.clarity.model.engine.DotaS2EngineType;
 import skadistats.clarity.model.engine.PacketInstanceReaderCsGoS1;
@@ -51,11 +52,16 @@ public enum EngineMagic {
                     gameId = m.group(1);
                 }
             }
+            if (gameId == null) {
+                throw new ClarityException("Unable to extract game id");
+            }
             switch(gameId) {
                 case "csgo":
                     return new CsgoS2EngineType(EngineId.CSGO_S2, packetInstanceReader, header, infoOffset);
                 case "dota":
                     return new DotaS2EngineType(EngineId.DOTA_S2, packetInstanceReader, header, infoOffset);
+                case "citadel":
+                    return new DeadlockEngineType(EngineId.DEADLOCK, packetInstanceReader, header, infoOffset);
                 default:
                     throw new ClarityException("Unable to determine engine type");
             }
