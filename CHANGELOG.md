@@ -4,6 +4,7 @@
 
 * add support for Deadlock
 * update protobufs
+* properly support HeroID_t type
 
 ## July 10, 2024: Version 3.0.6 released
 
