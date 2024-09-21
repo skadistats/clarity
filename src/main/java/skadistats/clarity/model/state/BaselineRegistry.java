@@ -10,7 +10,6 @@ public class BaselineRegistry {
     private final int classCount;
     private final int[] classBaselineIdx;
     private final EntityState[] baselineStateCache;
-    private final int[][] entityBaselineDtClass;
     private final int[] entityAlternateBaselineIdx;
     private final EntityState[][] entityBaselineStateCache;
 
@@ -27,11 +26,8 @@ public class BaselineRegistry {
         }
 
         this.entityAlternateBaselineIdx = new int[entityCount];
-        this.entityBaselineDtClass = new int[entityCount][2];
         this.entityBaselineStateCache = new EntityState[entityCount][2];
         for (var i = 0; i < entityCount; i++) {
-            entityBaselineDtClass[i][0] = -1;
-            entityBaselineDtClass[i][1] = -1;
             this.entityAlternateBaselineIdx[i] = -1;
         }
     }
@@ -41,12 +37,14 @@ public class BaselineRegistry {
             baselineStateCache[i] = null;
         }
         for (var i = 0; i < entityCount; i++) {
-            entityBaselineDtClass[i][0] = -1;
-            entityBaselineDtClass[i][1] = -1;
-            entityAlternateBaselineIdx[i] = -1;
-            entityBaselineStateCache[i][0] = null;
-            entityBaselineStateCache[i][1] = null;
+            clearEntity(i);
         }
+    }
+
+    public void clearEntity(int entityIdx) {
+        entityAlternateBaselineIdx[entityIdx] = -1;
+        entityBaselineStateCache[entityIdx][0] = null;
+        entityBaselineStateCache[entityIdx][1] = null;
     }
 
     public void updateClassBaselineIndex(int dtClassId, int baselineIdx) {
@@ -81,24 +79,21 @@ public class BaselineRegistry {
         baselineStateCache[baselineIdx] = state;
     }
 
-    public EntityState getEntityBaselineState(int entityIdx, int baseline, int dtClassId) {
+    public EntityState getEntityBaselineState(int entityIdx, int baseline) {
         // FIXME: not sure whether to ignore entity baselines when an alternate baseline is found
         // FIXME: do so for now, remove next line if entity baseline should be preferred
         if (entityAlternateBaselineIdx[entityIdx] != -1) return null;
-        if (entityBaselineDtClass[entityIdx][baseline] != dtClassId) return null;
         return entityBaselineStateCache[entityIdx][baseline];
     }
 
-    public void updateEntityBaseline(int iFrom, int entityIdx, int dtClassId, EntityState state) {
+    public void updateEntityBaseline(int iFrom, int entityIdx, EntityState state) {
         var iTo = 1 - iFrom;
-        entityBaselineDtClass[entityIdx][iTo] = dtClassId;
         entityBaselineStateCache[entityIdx][iTo] = state;
     }
 
     public void switchEntityBaselines(int iFrom) {
         var iTo = 1 - iFrom;
         for (var j = 0; j < entityCount; j++) {
-            entityBaselineDtClass[j][iTo] = entityBaselineDtClass[j][iFrom];
             entityBaselineStateCache[j][iTo] = entityBaselineStateCache[j][iFrom];
         }
     }
