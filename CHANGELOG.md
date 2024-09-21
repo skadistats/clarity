@@ -1,5 +1,10 @@
 # Clarity 2 Changelog
 
+## September 21, 2024: Version 3.1.1 released
+
+* fix #321: cleanup baselines when entity is deleted
+* remove SimulationTimeDecoder, as it depends on ticks/second, and return uint32 instead
+
 ## September 14, 2024: Version 3.1.0 released
 
 * add support for Deadlock
