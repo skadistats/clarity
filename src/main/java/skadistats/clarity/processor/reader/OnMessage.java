@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 @UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { GeneratedMessage.class })
 public @interface OnMessage {
-    Class<? extends AbstractMessage> value() default GeneratedMessage.class;
+    Class<? extends AbstractMessage> value() default AbstractMessage.class;
 }
