@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## October 29, 2025: Version 3.1.2 released
+
+* fix #345: new type VectoWS
+
 ## September 21, 2024: Version 3.1.1 released
 
 * fix #321: cleanup baselines when entity is deleted
