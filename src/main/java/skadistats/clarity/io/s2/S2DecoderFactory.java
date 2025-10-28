@@ -1,16 +1,7 @@
 package skadistats.clarity.io.s2;
 
 import org.slf4j.Logger;
-import skadistats.clarity.io.decoder.BoolDecoder;
-import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
-import skadistats.clarity.io.decoder.IntMinusOneDecoder;
-import skadistats.clarity.io.decoder.IntUnsignedDecoder;
-import skadistats.clarity.io.decoder.IntVarSignedDecoder;
-import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
-import skadistats.clarity.io.decoder.LongVarSignedDecoder;
-import skadistats.clarity.io.decoder.LongVarUnsignedDecoder;
-import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
+import skadistats.clarity.io.decoder.*;
 import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
@@ -46,6 +37,7 @@ public class S2DecoderFactory {
         FACTORIES.put("Vector", new VectorDecoderFactory(3));
         FACTORIES.put("Vector4D", new VectorDecoderFactory(4));
         FACTORIES.put("Quaternion", new VectorDecoderFactory(4));
+        FACTORIES.put("VectorWS", new VectorDecoderFactory(3));
 
         // Pointer
         FACTORIES.put("Pointer", new PointerFactory());
