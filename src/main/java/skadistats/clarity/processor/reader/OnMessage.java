@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.reader;
 
-import com.google.protobuf.GeneratedMessage;
+import com.google.protobuf.AbstractMessage;
 import skadistats.clarity.event.UsagePointMarker;
 import skadistats.clarity.event.UsagePointType;
 
@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 @UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { GeneratedMessage.class })
 public @interface OnMessage {
-    Class<? extends GeneratedMessage> value() default GeneratedMessage.class;
+    Class<? extends AbstractMessage> value() default AbstractMessage.class;
 }
