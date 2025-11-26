@@ -108,13 +108,13 @@ public class ExecutionModel {
         var providers = UsagePoints.getProvidersFor(usagePointClass);
         if (providers != null) {
             for (var usagePointProvider : providers) {
-                var a = usagePointProvider.getProvidesAnnotation();
-                if (isInvalidProvider(a)) continue;
+                var providesAnnotation = usagePointProvider.getProvidesAnnotation();
+                if (isInvalidProvider(providesAnnotation)) continue;
                 if (hasProcessorForClass(usagePointProvider.getProviderClass())) return;
             }
             for (var usagePointProvider : providers) {
-                var a = usagePointProvider.getProvidesAnnotation();
-                if (isInvalidProvider(a)) continue;
+                var providesAnnotation = usagePointProvider.getProvidesAnnotation();
+                if (isInvalidProvider(providesAnnotation)) continue;
                 requireProcessorClass(usagePointProvider.getProviderClass());
                 return;
             }
