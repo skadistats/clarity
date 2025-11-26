@@ -253,7 +253,11 @@ public class TextTable {
         for (var i = 0; i < columns.length; i++) {
             complete += widths[i] + paddingLeft.length() + paddingRight.length() + (framed ? 1 : 0);
         }
-        var usedMin = Math.max(minWidth != null ? minWidth : 0, (title != null ? title.length() : 0) + paddingLeft.length() + paddingRight.length() + (framed ? 2 : 0));
+        var effectiveMinWidth = minWidth != null ? minWidth : 0;
+        var titleLength = title != null ? title.length() : 0;
+        var frameBorder = framed ? 2 : 0;
+        var titleWithPadding = titleLength + paddingLeft.length() + paddingRight.length() + frameBorder;
+        var usedMin = Math.max(effectiveMinWidth, titleWithPadding);
         if (usedMin > complete) {
             var p = ((float)(usedMin - complete)) / columns.length;
             var c = 0.01f;
