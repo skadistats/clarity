@@ -155,9 +155,13 @@ public class ExecutionModel {
 
     private List<UsagePoint<? extends Annotation>> findUsagePoints(Class<?> searchedClass) {
         List<UsagePoint<? extends Annotation>> ups = new ArrayList<>();
-        Class<?> c;
+        collectClassAnnotationUsagePoints(searchedClass, ups);
+        collectMethodAnnotationUsagePoints(searchedClass, ups);
+        return ups;
+    }
 
-        c = searchedClass;
+    private void collectClassAnnotationUsagePoints(Class<?> searchedClass, List<UsagePoint<? extends Annotation>> ups) {
+        Class<?> c = searchedClass;
         while (c != Object.class) {
             for (var classAnnotation : c.getAnnotations()) {
                 if (classAnnotation.annotationType().isAnnotationPresent(UsagePointMarker.class)) {
@@ -166,8 +170,10 @@ public class ExecutionModel {
             }
             c = c.getSuperclass();
         }
+    }
 
-        c = searchedClass;
+    private void collectMethodAnnotationUsagePoints(Class<?> searchedClass, List<UsagePoint<? extends Annotation>> ups) {
+        Class<?> c = searchedClass;
         while (c != Object.class) {
             for (var method : c.getDeclaredMethods()) {
                 for (var methodAnnotation : method.getAnnotations()) {
@@ -179,8 +185,6 @@ public class ExecutionModel {
             }
             c = c.getSuperclass();
         }
-
-        return ups;
     }
 
     private void instantiateMissingProcessors() {
