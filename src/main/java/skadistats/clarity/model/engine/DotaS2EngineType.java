@@ -41,10 +41,6 @@ public class DotaS2EngineType extends AbstractProtobufDemoEngineType {
         return num;
     }
 
-    public boolean shouldHandleDeletions(BitStream bs) {
-        return bs.remaining() > 12;
-    }
-
     @Override
     public Class<? extends GeneratedMessage> embeddedPacketClassForKind(int kind) {
         return EmbeddedPackets.classForKind(kind);
