@@ -100,4 +100,20 @@ public class Util {
         throw (E) e;
     }
 
+    public static String formatHexDump(byte[] array, int offset, int length) {
+        var builder = new StringBuilder();
+        for (var rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
+            builder.append(String.format("%06d:  ", rowOffset));
+            for (var index = 0; index < 16; index++) {
+                if (rowOffset + index < array.length) {
+                    builder.append(String.format("%02x ", array[rowOffset + index]));
+                } else {
+                    break;
+                }
+            }
+            builder.append(String.format("%n"));
+        }
+        return builder.toString();
+    }
+
 }
