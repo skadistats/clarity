@@ -1,5 +1,6 @@
 package skadistats.clarity.model.engine;
 
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.source.Source;
@@ -46,6 +47,11 @@ public abstract class AbstractProtobufDemoEngineType extends AbstractEngineType<
     @Override
     public Integer getExpectedFullPacketInterval() {
         return 1800;
+    }
+
+    @Override
+    public boolean shouldHandleDeletions(BitStream bs) {
+        return bs.remaining() > 12;
     }
 
     public int determineLastTick(Source source) throws IOException {

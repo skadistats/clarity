@@ -11,6 +11,7 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.util.StringUtil;
 import skadistats.clarity.wire.dota.common.proto.DOTAModifiers;
 
 @Provides({OnModifierTableEntry.class})
@@ -31,28 +32,12 @@ public class Modifiers {
                 message = (DOTAModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
                 var b = ZeroCopy.extract(value);
                 log.error("failed to parse CDOTAModifierBuffTableEntry, returning incomplete message. Only %d/%d bytes parsed.", message.getSerializedSize(), value.size());
-                for (var line : formatHexDump(b, 0, b.length).split("\n")) {
+                for (var line : StringUtil.formatHexDump(b, 0, b.length).split("\n")) {
                     log.info("%s", line);
                 }
             }
             evEntry.raise(message);
         }
-    }
-
-    public static String formatHexDump(byte[] array, int offset, int length) {
-        var builder = new StringBuilder();
-        for (var rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {
-            builder.append(String.format("%06d:  ", rowOffset));
-            for (var index = 0; index < 16; index++) {
-                if (rowOffset + index < array.length) {
-                    builder.append(String.format("%02x ", array[rowOffset + index]));
-                } else {
-                    break;
-                }
-            }
-            builder.append(String.format("%n"));
-        }
-        return builder.toString();
     }
 
 }
