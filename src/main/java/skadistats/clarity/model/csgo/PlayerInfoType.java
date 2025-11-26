@@ -2,7 +2,7 @@ package skadistats.clarity.model.csgo;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.io.Util;
+import skadistats.clarity.util.StringUtil;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.csgo.s2.proto.CSGOS2ClarityMessages;
 
@@ -65,7 +65,7 @@ public class PlayerInfoType {
     }
 
     private static String readZeroTerminated(ByteBuffer buffer, int size) {
-        return Util.readFixedZeroTerminated(buffer, size);
+        return StringUtil.readFixedZeroTerminated(buffer, size);
     }
 
     private PlayerInfoType(long version, long xuid, String name, int userId, String guid, int friendsId, String friendsName, boolean fakePlayer, boolean isHltv, int[] customFiles) {

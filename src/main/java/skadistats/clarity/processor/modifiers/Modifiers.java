@@ -8,10 +8,10 @@ import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.io.Util;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
+import skadistats.clarity.util.StringUtil;
 import skadistats.clarity.wire.dota.common.proto.DOTAModifiers;
 
 @Provides({OnModifierTableEntry.class})
@@ -32,7 +32,7 @@ public class Modifiers {
                 message = (DOTAModifiers.CDOTAModifierBuffTableEntry) ex.getUnfinishedMessage();
                 var b = ZeroCopy.extract(value);
                 log.error("failed to parse CDOTAModifierBuffTableEntry, returning incomplete message. Only %d/%d bytes parsed.", message.getSerializedSize(), value.size());
-                for (var line : Util.formatHexDump(b, 0, b.length).split("\n")) {
+                for (var line : StringUtil.formatHexDump(b, 0, b.length).split("\n")) {
                     log.info("%s", line);
                 }
             }
