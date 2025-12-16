@@ -131,7 +131,7 @@ public class FieldGeneratorPatches {
         switch (field.name) {
             case "m_flRuneTime":
                 var up = field.decoderProperties;
-                if (up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
+                if (up.highValue != null && up.lowValue != null && up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
                     up.lowValue = null;
                     up.highValue = null;
                 }
