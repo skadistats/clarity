@@ -1,5 +1,9 @@
 # Clarity 2 Changelog
 
+## December 16, 2025: Version 3.1.3 released
+
+* fix #349: m_flRuneTime low and high value are null for 7.40
+
 ## October 29, 2025: Version 3.1.2 released
 
 * fix #345: new type VectoWS
