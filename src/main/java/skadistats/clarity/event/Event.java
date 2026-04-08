@@ -4,44 +4,41 @@ package skadistats.clarity.event;
 import skadistats.clarity.processor.runner.Runner;
 
 import java.lang.annotation.Annotation;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Set;
-import java.util.TreeMap;
 
 public class Event<A extends Annotation> {
 
     private final Runner runner;
     private final Class<A> eventType;
-    private final Map<Integer, Set<EventListener<A>>> orderedListeners;
+    /**
+     * Listeners flattened and pre-sorted by {@link EventListener#order} at
+     * construction time. Iteration over a flat array is significantly cheaper
+     * than walking a TreeMap of HashSets per dispatch — and the listener set
+     * never changes after Event construction, so no invalidation is needed.
+     */
+    private final EventListener<A>[] listeners;
 
+    @SuppressWarnings("unchecked")
     public Event(Runner runner, Class<A> eventType, Set<EventListener<A>> listeners) {
         this.runner = runner;
         this.eventType = eventType;
-        orderedListeners = new TreeMap<>();
-        for (var listener : listeners) {
-            var container = orderedListeners.get(listener.order);
-            if (container == null) {
-                container = new HashSet<>();
-                orderedListeners.put(listener.order, container);
-            }
-            container.add(listener);
-        }
+        this.listeners = listeners.toArray(new EventListener[listeners.size()]);
+        Arrays.sort(this.listeners, Comparator.comparingInt(l -> l.order));
     }
 
     public boolean isListenedTo() {
-        return orderedListeners.size() > 0;
+        return listeners.length > 0;
     }
 
-    public void raise(Object... args){
-        for (var listeners : orderedListeners.values()) {
-            for (var listener : listeners) {
-                if (listener.isInvokedForArguments(args)) {
-                    try {
-                        listener.invoke(args);
-                    } catch (Throwable throwable) {
-                        runner.getExceptionHandler().handleException(eventType, args, throwable);
-                    }
+    public void raise(Object... args) {
+        for (var listener : listeners) {
+            if (listener.isInvokedForArguments(args)) {
+                try {
+                    listener.invoke(args);
+                } catch (Throwable throwable) {
+                    runner.getExceptionHandler().handleException(eventType, args, throwable);
                 }
             }
         }
