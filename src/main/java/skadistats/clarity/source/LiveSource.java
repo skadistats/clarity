@@ -144,6 +144,8 @@ public class LiveSource extends Source {
     public void close() throws IOException {
         lock.lock();
         try {
+            aborted = true;
+            fileChanged.signalAll();
             if (channel != null) {
                 channel.close();
                 channel = null;
@@ -151,6 +153,13 @@ public class LiveSource extends Source {
             if (file != null) {
                 ClarityPlatform.disposeMappedByteBuffer(file);
                 file = null;
+            }
+            if (watchService != null) {
+                try {
+                    watchService.close();
+                } catch (IOException ignored) {
+                }
+                watchService = null;
             }
         } finally {
             lock.unlock();
@@ -162,6 +171,13 @@ public class LiveSource extends Source {
         try {
             aborted = true;
             fileChanged.signalAll();
+            if (watchService != null) {
+                try {
+                    watchService.close();
+                } catch (IOException ignored) {
+                }
+                watchService = null;
+            }
         } finally {
             lock.unlock();
         }
@@ -188,7 +204,7 @@ public class LiveSource extends Source {
                     StandardWatchEventKinds.ENTRY_MODIFY
             );
             var stillValid = true;
-            while (stillValid) {
+            while (stillValid && !aborted) {
                 if (watchService.poll(250, TimeUnit.MILLISECONDS) == null) {
                     try {
                         // workaround Windows not detecting modified events
@@ -209,6 +225,8 @@ public class LiveSource extends Source {
                 }
                 stillValid = watchKey.reset();
             }
+        } catch (java.nio.file.ClosedWatchServiceException | InterruptedException e) {
+            // shutdown requested via close()/stop() — exit cleanly
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
@@ -217,7 +235,7 @@ public class LiveSource extends Source {
     }
 
     private void disposeWatchService() {
-        if (watchKey.isValid()) {
+        if (watchKey != null && watchKey.isValid()) {
             watchKey.cancel();
         }
     }
