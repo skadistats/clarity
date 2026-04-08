@@ -20,7 +20,7 @@ import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
-@Provides(value = { OnTempEntity.class }, engine = { EngineId.DOTA_S1 })
+@Provides(value = { OnTempEntity.class }, engine = { EngineId.DOTA_S1, EngineId.CSGO_S1 })
 @UsesDTClasses
 public class TempEntities {
 
@@ -45,9 +45,14 @@ public class TempEntities {
             var stream = BitStream.createBitStream(message.getEntityData());
             S1DTClass cls = null;
             ReceiveProp[] receiveProps = null;
-            var count = message.getNumEntries();
+            // Source 1 sends num_entries=0 to mean "1 entry"
+            var count = Math.max(1, message.getNumEntries());
             while (count-- > 0) {
-                stream.readUBitInt(1); // seems to be always 0
+                // hasFireDelay flag — if set, an 8-bit signed delay value follows
+                // (× 10ms in the Source engine, currently discarded by clarity)
+                if (stream.readBitFlag()) {
+                    stream.readUBitInt(8);
+                }
                 if (stream.readBitFlag()) {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
