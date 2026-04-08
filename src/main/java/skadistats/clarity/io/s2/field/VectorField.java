@@ -1,5 +1,6 @@
 package skadistats.clarity.io.s2.field;
 
+import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.s2.DecoderHolder;
@@ -7,6 +8,7 @@ import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.S2DecoderFactory;
+import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class VectorField extends Field {
@@ -56,8 +58,23 @@ public class VectorField extends Field {
     }
 
     @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
-        state.sub(idx).capacity((Integer) value, true);
+    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
+        var count = (Integer) value;
+        // A vector's elements live at childDepth in the field path. The
+        // FieldPath format imposes a hard cap on indices at every depth
+        // (see S2LongFieldPathFormat). A length larger than that is
+        // structurally unaddressable and therefore a decoder desync,
+        // almost always caused by an unknown field type earlier in the
+        // stream falling back to the wrong decoder.
+        var maxLength = S2LongFieldPathFormat.maxIndexAtDepth(childDepth) + 1;
+        if (count < 0 || count > maxLength) {
+            throw new ClarityException(
+                "decoder desync: vector length %d for field %s at depth %d exceeds the structural maximum of %d. " +
+                "This usually means an unknown field type earlier in the stream was decoded with the wrong decoder.",
+                count, getType(), childDepth, maxLength
+            );
+        }
+        state.sub(idx).capacity(count, true);
     }
 
     @Override

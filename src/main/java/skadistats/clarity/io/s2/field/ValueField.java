@@ -27,7 +27,7 @@ public class ValueField extends Field {
     }
 
     @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
+    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
         state.set(idx, value);
     }
 

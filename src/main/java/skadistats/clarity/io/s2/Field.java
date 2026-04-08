@@ -39,7 +39,7 @@ public abstract class Field {
         return null;
     }
 
-    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
+    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 

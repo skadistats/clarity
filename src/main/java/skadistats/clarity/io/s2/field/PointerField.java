@@ -38,7 +38,7 @@ public class PointerField extends SerializerField {
     }
 
     @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, Object value) {
+    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
         Pointer p = (Pointer) value;
         var typeIndex = p.getTypeIndex();
         var newSerializer = typeIndex != null ? serializers[typeIndex] : null;

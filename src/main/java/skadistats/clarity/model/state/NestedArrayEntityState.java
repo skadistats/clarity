@@ -108,7 +108,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
             }
             field = field.getChild(idx);
             if (i == last) {
-                field.setArrayEntityState(entry, idx, value);
+                field.setArrayEntityState(entry, idx, i + 1, value);
                 return capacityChanged;
             }
             entry = entry.subEntry(idx);
