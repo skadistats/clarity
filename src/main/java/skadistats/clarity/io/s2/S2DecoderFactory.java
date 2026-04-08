@@ -73,6 +73,7 @@ public class S2DecoderFactory {
         DECODERS.put("CGameSceneNodeHandle", new IntVarUnsignedDecoder());
         DECODERS.put("CBaseVRHandAttachmentHandle", new IntVarUnsignedDecoder());
         DECODERS.put("CStrongHandle", new LongVarUnsignedDecoder());
+        DECODERS.put("ResourceId_t", new LongVarUnsignedDecoder());
 
         // Colors
         DECODERS.put("Color", new IntVarUnsignedDecoder());
