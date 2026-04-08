@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.skadistats"
-version = "3.1.3"
+version = "3.1.4-SNAPSHOT"
 
 java {
     toolchain {
@@ -76,6 +76,7 @@ nexusPublishing {
 
 signing {
     useGpgCmd()
+    setRequired({ gradle.taskGraph.hasTask("publishMavenJavaPublicationToSonatypeRepository") })
     sign(publishing.publications["mavenJava"])
 }
 
