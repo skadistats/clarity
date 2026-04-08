@@ -2,7 +2,6 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
-    id("io.github.gradle-nexus.publish-plugin") version "1.3.0"
 }
 
 group = "com.skadistats"
@@ -65,18 +64,11 @@ publishing {
     }
 }
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl.set(uri("https://ossrh-staging-api.central.sonatype.com/service/local/"))
-            snapshotRepositoryUrl.set(uri("https://central.sonatype.com/repository/maven-snapshots/"))
-        }
-    }
-}
-
 signing {
     useGpgCmd()
-    setRequired({ gradle.taskGraph.hasTask("publishMavenJavaPublicationToSonatypeRepository") })
+    setRequired({
+        gradle.taskGraph.allTasks.any { it.name.startsWith("publishAggregation") }
+    })
     sign(publishing.publications["mavenJava"])
 }
 
