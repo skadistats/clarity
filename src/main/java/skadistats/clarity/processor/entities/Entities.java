@@ -621,7 +621,11 @@ public class Entities {
         s = cls.getEmptyState();
         var stream = BitStream.createBitStream(raw);
         var changes = fieldReader.readFields(stream, cls, false);
-        changes.applyTo(s);
+        try {
+            changes.applyTo(s);
+        } catch (RuntimeException ex) {
+            throw new RuntimeException("baseline applyTo failed for class " + cls.getDtName() + " (id=" + clsId + ")", ex);
+        }
         baselineRegistry.setClassBaselineState(baselineIdx, s);
         return s;
     }
