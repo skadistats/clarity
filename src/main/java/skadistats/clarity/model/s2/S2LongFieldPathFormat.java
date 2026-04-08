@@ -1,10 +1,25 @@
 package skadistats.clarity.model.s2;
 
+import skadistats.clarity.ClarityException;
+
 public class S2LongFieldPathFormat {
 
     private static final int[] BITS_PER_COMPONENT = { 11, 12, 11, 8, 7, 4, 4 };
 
     public static final int MAX_FIELDPATH_LENGTH = BITS_PER_COMPONENT.length;
+
+    /**
+     * Returns the highest index value that can be addressed at the given
+     * field path depth, i.e. {@code (1 << bitsAt(depth)) - 1}. Returns -1
+     * if {@code depth} is outside the supported field path range, meaning
+     * no element at that depth can be addressed at all.
+     */
+    public static int maxIndexAtDepth(int depth) {
+        if (depth < 0 || depth >= MAX_FIELDPATH_LENGTH) {
+            return -1;
+        }
+        return (1 << BITS_PER_COMPONENT[depth]) - 1;
+    }
 
     private static final long[] CLEAR_MASK = new long[MAX_FIELDPATH_LENGTH - 1];
     private static final long[] PRESENT_BIT = new long[MAX_FIELDPATH_LENGTH - 1];
@@ -14,7 +29,14 @@ public class S2LongFieldPathFormat {
     private static final long PRESENT_MASK;
 
     static long set(long id, int i, int v) {
-        assert v <= (1 << BITS_PER_COMPONENT[i]) - 1;
+        if (v < 0 || v > maxIndexAtDepth(i)) {
+            throw new ClarityException(
+                "field path component %d cannot hold the value %d (max is %d). " +
+                "This is a limitation of clarity's packed long field path format, " +
+                "not a problem with the replay. Please open a github issue and attach the demo so the bit layout can be adjusted.",
+                i, v, maxIndexAtDepth(i)
+            );
+        }
         return id & ~VALUE_MASK[i] | ((long)v + OFFSET[i]) << VALUE_SHIFT[i];
     }
 
@@ -23,7 +45,16 @@ public class S2LongFieldPathFormat {
     }
 
     static long down(long id) {
-        return id | PRESENT_BIT[last(id)];
+        var l = last(id);
+        if (l + 1 >= MAX_FIELDPATH_LENGTH) {
+            throw new ClarityException(
+                "field path depth would exceed clarity's maximum of %d. " +
+                "This is a limitation of clarity's packed long field path format, " +
+                "not a problem with the replay. Please open a github issue and attach the demo so the bit layout can be adjusted.",
+                MAX_FIELDPATH_LENGTH
+            );
+        }
+        return id | PRESENT_BIT[l];
     }
 
     static long up(long id, int n) {
