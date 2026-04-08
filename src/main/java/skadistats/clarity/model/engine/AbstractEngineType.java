@@ -50,6 +50,11 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     }
 
     @Override
+    public H getHeader() {
+        return header;
+    }
+
+    @Override
     public boolean isSendTablesContainer() {
         return sendTablesContainer;
     }

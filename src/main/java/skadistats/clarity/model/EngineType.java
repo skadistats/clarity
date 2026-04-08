@@ -24,6 +24,8 @@ public interface EngineType {
 
     int getInfoOffset();
 
+    GeneratedMessage getHeader();
+
     boolean isFullPacketSeekAllowed();
     Integer getExpectedFullPacketInterval();
 

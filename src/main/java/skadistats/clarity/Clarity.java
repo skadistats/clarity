@@ -52,6 +52,57 @@ public class Clarity {
     }
 
     /**
+     * Retrieves the {@code CDemoFileHeader} from the given demo-file without
+     * iterating the rest of the replay.
+     *
+     * <p>Supported for Dota S1, Dota S2, CSGO S2 (CS2) and Deadlock demos. CSGO
+     * Source 1 demos use a different header type ({@code CsGoDemoHeader}) and
+     * are not supported by this helper.
+     *
+     * @param fileName path and name of the file on disk
+     * @return the {@code CDemoFileHeader} protobuf message
+     * @throws IOException if the given file is non-existing, is no valid
+     *                     demo-file, or is a CSGO Source 1 demo
+     */
+    public static Demo.CDemoFileHeader headerForFile(String fileName) throws IOException {
+        try (var source = new MappedFileSource(fileName)) {
+            return headerForSource(source);
+        }
+    }
+
+    /**
+     * Retrieves the {@code CDemoFileHeader} from the given input stream.
+     *
+     * @see #headerForFile(String)
+     * @param stream an {@code InputStream}, containing replay data, positioned at the beginning
+     * @return the {@code CDemoFileHeader} protobuf message
+     * @throws IOException if the given stream is invalid or is a CSGO Source 1 demo
+     */
+    public static Demo.CDemoFileHeader headerForStream(final InputStream stream) throws IOException {
+        return headerForSource(new InputStreamSource(stream));
+    }
+
+    /**
+     * Retrieves the {@code CDemoFileHeader} from the given input source.
+     *
+     * @see #headerForFile(String)
+     * @param source the {@code Source} providing the replay data
+     * @return the {@code CDemoFileHeader} protobuf message
+     * @throws IOException if the given source is invalid or is a CSGO Source 1 demo
+     */
+    public static Demo.CDemoFileHeader headerForSource(final Source source) throws IOException {
+        var engineType = source.determineEngineType();
+        var header = engineType.getHeader();
+        if (!(header instanceof Demo.CDemoFileHeader cdh)) {
+            throw new IOException("demo type " + engineType.getId()
+                    + " has no CDemoFileHeader (got "
+                    + (header == null ? "null" : header.getClass().getSimpleName())
+                    + ")");
+        }
+        return cdh;
+    }
+
+    /**
      * reads a metadata file and returns it's contents
      *
      * @param fileName path and name of the file on disk
