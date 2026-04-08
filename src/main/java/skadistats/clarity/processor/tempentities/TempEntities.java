@@ -20,7 +20,7 @@ import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
-@Provides(value = { OnTempEntity.class }, engine = { EngineId.CSGO_S1, EngineId.CSGO_S1 })
+@Provides(value = { OnTempEntity.class }, engine = { EngineId.DOTA_S1 })
 @UsesDTClasses
 public class TempEntities {
 
