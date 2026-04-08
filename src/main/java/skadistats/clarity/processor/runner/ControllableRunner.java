@@ -12,6 +12,26 @@ import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Asynchronous runner that processes a replay in a background thread and supports
+ * seeking and tick-by-tick advance via {@link #tick()}, {@link #seek(int)}, etc.
+ *
+ * <p>The runner does <b>not</b> own the {@link Source}: the caller is responsible
+ * for closing it, but must wait for the runner thread to terminate first via
+ * {@link #join()}. The recommended pattern is try-with-resources:
+ *
+ * <pre>{@code
+ * try (var source = new MappedFileSource(path)) {
+ *     var runner = new ControllableRunner(source).runWith(processor);
+ *     // ... seek/tick ...
+ *     runner.halt();
+ *     runner.join();
+ * }
+ * }</pre>
+ *
+ * <p>Failing to close the source will leak file descriptors and memory mappings
+ * until the JVM Cleaner releases them — see issue #289.
+ */
 public class ControllableRunner extends AbstractFileRunner {
 
     private final ReentrantLock lock = new ReentrantLock();
@@ -336,6 +356,18 @@ public class ControllableRunner extends AbstractFileRunner {
     public void halt() {
         if (runnerThread != null && runnerThread.isAlive()) {
             runnerThread.interrupt();
+        }
+    }
+
+    /**
+     * Waits for the runner thread to terminate. Call after {@link #halt()} (or
+     * after {@link #isAtEnd()} returns true) before closing the {@link Source}
+     * — otherwise the thread may still be reading from it.
+     */
+    public void join() throws InterruptedException {
+        Thread t = runnerThread;
+        if (t != null) {
+            t.join();
         }
     }
 

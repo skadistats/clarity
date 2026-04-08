@@ -4,6 +4,21 @@ import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 
+/**
+ * Synchronous runner that processes a replay from start to finish in a single pass.
+ *
+ * <p>The runner does <b>not</b> own the {@link Source}: the caller is responsible
+ * for closing it. The recommended pattern is try-with-resources:
+ *
+ * <pre>{@code
+ * try (var source = new MappedFileSource(path)) {
+ *     new SimpleRunner(source).runWith(processor);
+ * }
+ * }</pre>
+ *
+ * <p>Failing to close the source will leak file descriptors and memory mappings
+ * until the JVM Cleaner releases them — see issue #289.
+ */
 public class SimpleRunner extends AbstractFileRunner {
 
     private final LoopController.Func controllerFunc = upcomingTick -> {

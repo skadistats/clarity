@@ -4,6 +4,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.model.EngineMagic;
 import skadistats.clarity.model.EngineType;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -24,7 +25,7 @@ import java.nio.ByteOrder;
  *     </li>
  * </ul>
  */
-public abstract class Source {
+public abstract class Source implements Closeable {
 
     private Runnable onLastTickChanged;
     private EngineType engineType;
