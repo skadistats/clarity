@@ -191,11 +191,10 @@ public abstract class BitStream {
     public float readCellCoord(int n, boolean integral, boolean lowPrecision) {
         var v = (float)(readUBitInt(n));
         if (integral) {
-            // TODO: something weird is going on here in alice, we might need to adjust the sign?
             return v;
         }
         if (lowPrecision) {
-            throw new UnsupportedOperationException();
+            return v + readUBitInt(COORD_FRACTIONAL_BITS_MP_LOWPRECISION) * COORD_RESOLUTION_LOWPRECISION;
         }
         return v + readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
     }
