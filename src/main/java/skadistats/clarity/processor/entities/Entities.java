@@ -41,8 +41,11 @@ import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @Provides({
@@ -132,15 +135,40 @@ public class Entities {
         listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
     }
 
+    /**
+     * Lazily-compiled Pattern + per-DTClass match cache, shared across all
+     * entity-event listeners that use the same classPattern string. The match
+     * result depends only on (classPattern, DTClass), so listeners for different
+     * event types (Created/Updated/Deleted/...) with the same pattern share
+     * one entry. The Pattern itself is only compiled on the first cache miss —
+     * if no entity ever needs to be matched (e.g. the listener fires for a
+     * DTClass that's already cached by an earlier listener, or never fires at
+     * all), the regex is never compiled.
+     */
+    private static final class ClassPatternMatcher {
+        private final String classPattern;
+        private Pattern pattern;
+        private final IdentityHashMap<DTClass, Boolean> cache = new IdentityHashMap<>();
+        ClassPatternMatcher(String classPattern) { this.classPattern = classPattern; }
+        boolean matches(DTClass dtClass) {
+            var hit = cache.get(dtClass);
+            if (hit == null) {
+                if (pattern == null) pattern = Pattern.compile(classPattern);
+                hit = pattern.matcher(dtClass.getDtName()).matches();
+                cache.put(dtClass, hit);
+            }
+            return hit;
+        }
+    }
+
+    private final Map<String, ClassPatternMatcher> classPatternMatchers = new HashMap<>();
+
     private Predicate<Object[]> getInvocationPredicate(String classPattern) {
         if (".*".equals(classPattern)) {
             return null;
         }
-        final var p = Pattern.compile(classPattern);
-        return value -> {
-            var e = (Entity) value[0];
-            return p.matcher(e.getDtClass().getDtName()).matches();
-        };
+        final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+        return value -> matcher.matches(((Entity) value[0]).getDtClass());
     }
 
     @OnInit
