@@ -7,6 +7,10 @@ public class EventListener<A extends Annotation> extends AbstractInvocationPoint
 
     final int order;
 
+    public int getOrder() {
+        return order;
+    }
+
     public EventListener(A annotation, Class<?> processorClass, Method method, UsagePointMarker marker) {
         super(annotation, processorClass, method, marker);
         var ordering = method.getAnnotation(Order.class);

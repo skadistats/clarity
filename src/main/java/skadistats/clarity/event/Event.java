@@ -47,4 +47,14 @@ public class Event<A extends Annotation> {
         }
     }
 
+    /**
+     * Routes a listener-thrown exception through the runner's exception
+     * handler, exactly as {@link #raise} would. Intended for providers that
+     * dispatch listeners themselves (bypassing {@link #raise}) but still
+     * want uniform exception handling.
+     */
+    public void handleListenerException(Object[] args, Throwable throwable) {
+        runner.getExceptionHandler().handleException(eventType, args, throwable);
+    }
+
 }
