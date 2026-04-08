@@ -11,6 +11,7 @@ public class Entity {
 
     private boolean existent;
     private boolean active;
+    private int spawnGroupHandle;
     private EntityState state;
 
     public Entity(int index, int serial, int handle, DTClass dtClass) {
@@ -50,6 +51,24 @@ public class Entity {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    /**
+     * Get the spawn group handle this entity belongs to. Source 2 only;
+     * always 0 for Source 1 engines.
+     *
+     * <p>Spawn groups are the Source 2 mechanism for batch-loading and
+     * unloading entities. Handle 0 is the system spawn group containing
+     * always-resident resource entities (CWorld, player controllers, team,
+     * game rules, observer pawns). Higher handles correspond to map sections
+     * loaded later (main map, sub-areas, mod content).
+     */
+    public int getSpawnGroupHandle() {
+        return spawnGroupHandle;
+    }
+
+    public void setSpawnGroupHandle(int spawnGroupHandle) {
+        this.spawnGroupHandle = spawnGroupHandle;
     }
 
     public EntityState getState() {

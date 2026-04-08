@@ -368,9 +368,9 @@ public class Entities {
                         throw new ClarityException("class for new entity %d is %d, but no dtClass found!.", eIdx, dtClassId);
                     }
                     var serial = stream.readUBitInt(engineType.getSerialBits());
-                    if (engineType.getId().isEntitySkipExtraVarint()) {
-                        // TODO: there is an extra VarInt encoded here for S2, figure out what it is
-                        stream.readVarUInt();
+                    int spawnGroupHandle = 0;
+                    if (engineType.getId().hasSpawnGroups()) {
+                        spawnGroupHandle = stream.readVarUInt();
                     }
                     if (eEnt != null) {
                         var handle = engineType.handleForIndexAndSerial(eIdx, serial);
@@ -383,7 +383,7 @@ public class Entities {
                         }
                         queueEntityDelete(eEnt);
                     }
-                    queueEntityCreate(eIdx, serial, dtClass, message, stream);
+                    queueEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, stream);
                     break;
 
                 case 0: // UPDATE
@@ -435,18 +435,19 @@ public class Entities {
 
     }
 
-    private void queueEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
+    private void queueEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         var changes = fieldReader.readFields(stream, dtClass, debug);
-        queueUpdate(() -> executeEntityCreate(eIdx, serial, dtClass, message, changes));
+        queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, changes));
     }
 
-    private void executeEntityCreate(int eIdx, int serial, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
+    private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
         var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
         changes.applyTo(newState);
         var entity = entityRegistry.create(
                 dtClass.getClassId(),
                 eIdx, serial,
                 engineType.handleForIndexAndSerial(eIdx, serial),
+                spawnGroupHandle,
                 dtClass);
         entity.setExistent(true);
         entity.setState(newState);

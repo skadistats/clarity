@@ -8,7 +8,7 @@ public enum EngineId {
     CSGO_S2,
     DEADLOCK;
 
-    public boolean isEntitySkipExtraVarint() {
+    public boolean hasSpawnGroups() {
         switch(this) {
             case DOTA_S2:
             case CSGO_S2:

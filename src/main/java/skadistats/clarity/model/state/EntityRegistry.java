@@ -8,7 +8,7 @@ public class EntityRegistry {
 
     private final Long2ObjectOpenHashMap<Entity> entities = new Long2ObjectOpenHashMap<>();
 
-    public Entity create(int dtClassId, int index, int serial, int handle, DTClass dtClass) {
+    public Entity create(int dtClassId, int index, int serial, int handle, int spawnGroupHandle, DTClass dtClass) {
         var uid = Entity.uid(dtClassId, handle);
         var entity = entities.get(uid);
         if (entity == null) {
@@ -18,6 +18,7 @@ public class EntityRegistry {
         entity.setState(null);
         entity.setExistent(false);
         entity.setActive(false);
+        entity.setSpawnGroupHandle(spawnGroupHandle);
         return entity;
     }
 
