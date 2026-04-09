@@ -40,8 +40,8 @@ public class Context {
         return contextData.getGameVersion();
     }
 
-    public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
-        return executionModel.createEvent(eventType, parameterTypes);
+    public <A extends Annotation> Event<A> createEvent(Class<A> eventType) {
+        return executionModel.createEvent(eventType);
     }
 
 }

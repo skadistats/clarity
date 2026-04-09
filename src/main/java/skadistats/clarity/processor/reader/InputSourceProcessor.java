@@ -5,7 +5,6 @@ import com.google.protobuf.GeneratedMessage;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
@@ -27,9 +26,7 @@ import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
@@ -48,54 +45,36 @@ public class InputSourceProcessor {
     private PacketReader packetReader;
 
     @InsertEvent
-    private Event<OnReset> evReset;
+    private OnReset.Event evReset;
     @InsertEvent
-    private Event<OnFullPacket> evFull;
+    private OnFullPacket.Event evFull;
     @InsertEvent
-    private Event<OnMessageContainer> evMessageContainer;
+    private OnMessageContainer.Event evMessageContainer;
+    @InsertEvent
+    private OnMessage.Event evOnMessage;
+    @InsertEvent
+    private OnPostEmbeddedMessage.Event evOnPostEmbeddedMessage;
 
-    private final Map<Class<? extends GeneratedMessage>, Event<OnMessage>> evOnMessages = new HashMap<>();
-    private final Map<Class<? extends GeneratedMessage>, Event<OnPostEmbeddedMessage>> evOnPostEmbeddedMessages = new HashMap<>();
     private final Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
         var messageClass = listener.getAnnotation().value();
-        listener.setParameterClasses(messageClass);
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnPostEmbeddedMessage.class)
     public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
         var messageClass = listener.getAnnotation().value();
-        listener.setParameterClasses(messageClass, BitStream.class);
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
     @Initializer(OnMessageContainer.class)
     public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
-        listener.setInvocationPredicate(args -> {
-            var clazz = (Class<? extends GeneratedMessage>) args[0];
-            return listener.getAnnotation().value().isAssignableFrom(clazz);
-        });
-    }
-
-    public Event<OnMessage> evOnMessage(Class<? extends GeneratedMessage> messageClass) {
-        var ev = evOnMessages.get(messageClass);
-        if (ev == null) {
-            ev = ctx.createEvent(OnMessage.class, messageClass);
-            evOnMessages.put(messageClass, ev);
+        var containerClass = listener.getAnnotation().value();
+        if (containerClass != GeneratedMessage.class) {
+            listener.setFilter((OnMessageContainer.Filter) (clazz, bytes) -> containerClass.isAssignableFrom(clazz));
         }
-        return ev;
-    }
-
-    private Event<OnPostEmbeddedMessage> evOnPostEmbeddedMessage(Class<? extends GeneratedMessage> messageClass) {
-        var ev = evOnPostEmbeddedMessages.get(messageClass);
-        if (ev == null) {
-            ev = ctx.createEvent(OnPostEmbeddedMessage.class, messageClass, BitStream.class);
-            evOnPostEmbeddedMessages.put(messageClass, ev);
-        }
-        return ev;
     }
 
     private void logUnknownMessage(String where, int type) {
@@ -196,16 +175,15 @@ public class InputSourceProcessor {
                 if (isSyncTick) {
                     ctl.setSyncTickSeen(true);
                 }
-                var ev = evOnMessage(messageClass);
-                if (ev.isListenedTo() || resetRelevant) {
+                if (evOnMessage.isListenedTo(messageClass) || resetRelevant) {
                     var message = pi.parse();
-                    ev.raise(message);
+                    evOnMessage.raise(message);
                     if (resetRelevant) {
                         ctl.markResetRelevantPacket(pi.getTick(), pi.getResetRelevantKind(), offset);
                         if (isStringTables) {
                             switch (loopCtl) {
                                 case RESET_ACCUMULATE:
-                                    evReset.raise(message, ResetPhase.ACCUMULATE);
+                                    evReset.raise((Demo.CDemoStringTables) message, ResetPhase.ACCUMULATE);
                                     break;
                             }
                         }
@@ -237,12 +215,10 @@ public class InputSourceProcessor {
                 logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
             } else {
-                var ev = evOnMessage(messageClass);
-                var evPost = evOnPostEmbeddedMessage(messageClass);
-                if (ev.isListenedTo() || evPost.isListenedTo() || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                if (evOnMessage.isListenedTo(messageClass) || evOnPostEmbeddedMessage.isListenedTo(messageClass) || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
                     var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
-                    if (ev.isListenedTo()) {
-                        ev.raise(subMessage);
+                    if (evOnMessage.isListenedTo(messageClass)) {
+                        evOnMessage.raise(subMessage);
                     }
                     if (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class) {
                         var userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
@@ -250,11 +226,11 @@ public class InputSourceProcessor {
                         if (umClazz == null) {
                             logUnknownMessage("usermessage", userMessage.getMsgType());
                         } else {
-                            evOnMessage(umClazz).raise(Packet.parse(umClazz, userMessage.getMsgData()));
+                            evOnMessage.raise(Packet.parse(umClazz, userMessage.getMsgData()));
                         }
                     }
-                    if (evPost.isListenedTo()) {
-                        evPost.raise(subMessage, bs);
+                    if (evOnPostEmbeddedMessage.isListenedTo(messageClass)) {
+                        evOnPostEmbeddedMessage.raise(subMessage, bs);
                     }
                 } else {
                     bs.skip(size * 8);

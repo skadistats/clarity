@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.runner;
 
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
@@ -14,9 +13,9 @@ import java.io.IOException;
 public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
 
     @InsertEvent
-    private Event<OnTickStart> evTickStart;
+    private OnTickStart.Event evTickStart;
     @InsertEvent
-    private Event<OnTickEnd> evTickEnd;
+    private OnTickEnd.Event evTickEnd;
 
     protected final Source source;
     protected LoopController loopController;
@@ -35,7 +34,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected void initAndRunWith(Object... processors) throws IOException {
         initWithProcessors(this, getEngineType().getRegisteredProcessors(), source, processors);
         engineType.emitHeader();
-        context.createEvent(OnInputSource.class, Source.class, LoopController.class).raise(source, loopController);
+        ((OnInputSource.Event) context.createEvent(OnInputSource.class)).raise(source, loopController);
     }
 
     protected void endTicksUntil(int untilTick) {

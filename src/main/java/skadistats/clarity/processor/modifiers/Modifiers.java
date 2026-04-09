@@ -5,7 +5,6 @@ import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -19,7 +18,7 @@ public class Modifiers {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.modifiers);
 
     @InsertEvent
-    private Event<OnModifierTableEntry> evEntry;
+    private OnModifierTableEntry.Event evEntry;
 
     @OnStringTableEntry("ActiveModifiers")
     public void onTableEntry(StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {

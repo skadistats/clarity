@@ -32,26 +32,24 @@ public class Event<A extends Annotation> {
         return listeners.length > 0;
     }
 
-    public void raise(Object... args) {
-        for (var listener : listeners) {
-            if (listener.isInvokedForArguments(args)) {
-                try {
-                    listener.invoke(args);
-                } catch (Throwable throwable) {
-                    runner.getExceptionHandler().handleException(eventType, args, throwable);
-                }
-            }
-        }
+    protected EventListener<A>[] listeners() {
+        return listeners;
+    }
+
+    protected Runner getRunner() {
+        return runner;
+    }
+
+    protected Class<A> getEventType() {
+        return eventType;
     }
 
     /**
      * Routes a listener-thrown exception through the runner's exception
-     * handler, exactly as {@link #raise} would. Intended for providers that
-     * dispatch listeners themselves (bypassing {@link #raise}) but still
-     * want uniform exception handling.
+     * handler, identified by listener index.
      */
-    public void handleListenerException(Object[] args, Throwable throwable) {
-        runner.getExceptionHandler().handleException(eventType, args, throwable);
+    protected void handleListenerException(int listenerIndex, Throwable throwable) {
+        runner.getExceptionHandler().handleException(eventType, new Object[] { listenerIndex }, throwable);
     }
 
 }

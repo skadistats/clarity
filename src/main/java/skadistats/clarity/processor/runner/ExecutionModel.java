@@ -5,6 +5,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.event.Event;
+import skadistats.clarity.event.EventContractDiscovery;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.InitializerMethod;
 import skadistats.clarity.event.Insert;
@@ -232,16 +233,18 @@ public class ExecutionModel {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void injectEvent(Object processor, Field field, InsertEvent fieldAnnotation) {
-        var eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
-        Class<?>[] parameterTypes;
-        if (fieldAnnotation.override()) {
-            parameterTypes = fieldAnnotation.parameterTypes();
+        Class<? extends Annotation> eventType;
+        var fieldType = field.getType();
+
+        if (Event.class.isAssignableFrom(fieldType) && fieldType != Event.class) {
+            eventType = (Class<? extends Annotation>) fieldType.getEnclosingClass();
         } else {
-            var marker = eventType.getAnnotation(UsagePointMarker.class);
-            parameterTypes = marker.parameterClasses();
+            eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
         }
-        injectValue(processor, field, createEvent(eventType, parameterTypes), "cannot inject event");
+
+        injectValue(processor, field, createEvent(eventType), "cannot inject event");
     }
 
     private void injectProcessor(Object processor, Field field) {
@@ -300,22 +303,25 @@ public class ExecutionModel {
         callInitializers();
     }
 
-    public <A extends Annotation> Event<A> createEvent(Class<A> eventType, Class... parameterTypes) {
-        var listeners = computeListenersForEvent(eventType, parameterTypes);
-        return new Event<>(runner, eventType, listeners);
-    }
-
-    private <A extends Annotation> Set<EventListener<A>> computeListenersForEvent(Class<A> eventType, Class... parameterTypes) {
+    @SuppressWarnings("unchecked")
+    public <A extends Annotation> Event<A> createEvent(Class<A> eventType) {
         Set<EventListener<A>> listeners = new HashSet<>();
         var eventListeners = processedEvents.get(eventType);
         if (eventListeners != null) {
-            for (@SuppressWarnings("unchecked") EventListener<A> listener : eventListeners) {
-                if (listener.isInvokedForParameterClasses(parameterTypes)) {
-                    listeners.add(listener);
-                }
+            for (EventListener<A> listener : (Set<EventListener<A>>) (Set<?>) eventListeners) {
+                listeners.add(listener);
             }
         }
-        return listeners;
+        var contract = EventContractDiscovery.discover(eventType);
+        if (contract.hasEventClass()) {
+            try {
+                var ctor = contract.eventClass().getConstructor(Runner.class, Class.class, Set.class);
+                return (Event<A>) ctor.newInstance(runner, eventType, listeners);
+            } catch (Exception e) {
+                throw new ClarityException("Failed to instantiate typed Event for %s: %s", eventType.getName(), e.getMessage());
+            }
+        }
+        return new Event<>(runner, eventType, listeners);
     }
 
 }

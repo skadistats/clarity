@@ -96,7 +96,7 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
                         .setNetworkName(bs.readString(255))
                         .setTableName(bs.readString(255));
             }
-            ctx.createEvent(OnMessage.class, Demo.CDemoClassInfo.class).raise(b.build());
+            ((OnMessage.Event) ctx.createEvent(OnMessage.class)).raise(b.build());
         }
     }
 

@@ -110,7 +110,7 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     @Override
     public void emitHeader() {
         if (header != null) {
-            ctx.createEvent(OnMessage.class, header.getClass()).raise(header);
+            ((OnMessage.Event) ctx.createEvent(OnMessage.class)).raise(header);
         }
     }
 

@@ -10,4 +10,5 @@ import java.lang.annotation.Target;
 public @interface UsagePointMarker {
     UsagePointType value();
     Class[] parameterClasses();
+    boolean dynamicParameters() default false;
 }

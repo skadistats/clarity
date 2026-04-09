@@ -3,7 +3,6 @@ package skadistats.clarity.processor.gameevents;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.InsertEvent;
@@ -27,26 +26,24 @@ public class GameEvents {
     private List<CommonNetworkBaseTypes.CSVCMsg_GameEvent> preListBuffer;
 
     @InsertEvent
-    private Event<OnGameEventDescriptor> evGameEventDescriptor;
+    private OnGameEventDescriptor.Event evGameEventDescriptor;
     @InsertEvent
-    private Event<OnGameEvent> evGameEvent;
+    private OnGameEvent.Event evGameEvent;
 
     @Initializer(OnGameEventDescriptor.class)
     public void initOnGameEventDescriptor(final EventListener<OnGameEventDescriptor> eventListener) {
-        eventListener.setInvocationPredicate(args -> {
-            var v = eventListener.getAnnotation().value();
-            var ev = (GameEventDescriptor) args[0];
-            return v.length() == 0 || v.equals(ev.getName());
-        });
+        var v = eventListener.getAnnotation().value();
+        if (v.length() > 0) {
+            eventListener.setFilter((OnGameEventDescriptor.Filter) ev -> v.equals(ev.getName()));
+        }
     }
 
     @Initializer(OnGameEvent.class)
     public void initOnGameEvent(final EventListener<OnGameEvent> eventListener) {
-        eventListener.setInvocationPredicate(args -> {
-            var v = eventListener.getAnnotation().value();
-            var ev = (GameEvent) args[0];
-            return v.length() == 0 || v.equals(ev.getName());
-        });
+        var v = eventListener.getAnnotation().value();
+        if (v.length() > 0) {
+            eventListener.setFilter((OnGameEvent.Filter) ev -> v.equals(ev.getName()));
+        }
     }
 
     @OnMessage(CommonNetMessages.CSVCMsg_GameEventList.class)

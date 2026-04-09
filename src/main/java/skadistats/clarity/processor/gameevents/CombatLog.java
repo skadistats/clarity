@@ -2,7 +2,6 @@ package skadistats.clarity.processor.gameevents;
 
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -33,7 +32,7 @@ public class CombatLog {
     @Insert
     private StringTables stringTables;
     @InsertEvent
-    private Event<OnCombatLogEntry> evCombatLogEntry;
+    private OnCombatLogEntry.Event evCombatLogEntry;
 
     private S1CombatLogIndices indices = null;
 

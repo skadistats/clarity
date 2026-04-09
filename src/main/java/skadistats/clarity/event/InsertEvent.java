@@ -10,6 +10,4 @@ import java.lang.annotation.Target;
 @Retention(value= RetentionPolicy.RUNTIME)
 @Documented
 public @interface InsertEvent {
-    boolean override() default false;
-    Class<?>[] parameterTypes() default {};
 }

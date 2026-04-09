@@ -15,6 +15,13 @@ java {
     withJavadocJar()
 }
 
+sourceSets {
+    create("processor") {
+        java.srcDir("src/processor/java")
+        resources.srcDir("src/processor/resources")
+    }
+}
+
 repositories {
     mavenCentral()
 }
@@ -23,9 +30,21 @@ dependencies {
     api("com.skadistats:clarity-protobuf:[5.3,6.0)")
     api("org.xerial.snappy:snappy-java:1.1.10.4")
     api("org.slf4j:slf4j-api:2.0.7")
-    api("org.atteo.classindex:classindex:3.13")
-    annotationProcessor("org.atteo.classindex:classindex:3.13")
+    annotationProcessor(sourceSets["processor"].output)
     testImplementation("org.testng:testng:7.8.0")
+}
+
+tasks.named("compileJava") {
+    dependsOn("compileProcessorJava")
+}
+
+tasks.named<ProcessResources>("processProcessorResources") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.named<Jar>("jar") {
+    from(sourceSets["processor"].output)
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.named<Test>("test") {

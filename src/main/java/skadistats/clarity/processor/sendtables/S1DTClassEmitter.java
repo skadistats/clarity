@@ -1,7 +1,6 @@
 package skadistats.clarity.processor.sendtables;
 
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -30,9 +29,9 @@ public class S1DTClassEmitter {
     private EngineType engineType;
 
     @InsertEvent
-    private Event<OnDTClassesComplete> evClassesComplete;
+    private OnDTClassesComplete.Event evClassesComplete;
     @InsertEvent
-    private Event<OnDTClass> evDtClass;
+    private OnDTClass.Event evDtClass;
 
     @OnMessage(S1NetMessages.CSVCMsg_SendTable.class)
     public void onSendTable(S1NetMessages.CSVCMsg_SendTable message) {

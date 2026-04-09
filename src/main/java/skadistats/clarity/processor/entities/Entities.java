@@ -6,7 +6,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.LogChannel;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
@@ -33,7 +32,6 @@ import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableCreated;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
-import skadistats.clarity.util.Predicate;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
 import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
@@ -91,48 +89,72 @@ public class Entities {
     private DTClasses dtClasses;
 
     @InsertEvent
-    private Event<OnEntityCreated> evCreated;
+    private OnEntityCreated.Event evCreated;
     @InsertEvent
-    private Event<OnEntityUpdated> evUpdated;
+    private OnEntityUpdated.Event evUpdated;
     @InsertEvent
-    private Event<OnEntityPropertyCountChanged> evPropertyCountChanged;
+    private OnEntityPropertyCountChanged.Event evPropertyCountChanged;
     @InsertEvent
-    private Event<OnEntityDeleted> evDeleted;
+    private OnEntityDeleted.Event evDeleted;
     @InsertEvent
-    private Event<OnEntityEntered> evEntered;
+    private OnEntityEntered.Event evEntered;
     @InsertEvent
-    private Event<OnEntityLeft> evLeft;
+    private OnEntityLeft.Event evLeft;
     @InsertEvent
-    private Event<OnEntityUpdatesCompleted> evUpdatesCompleted;
+    private OnEntityUpdatesCompleted.Event evUpdatesCompleted;
 
     @Initializer(OnEntityCreated.class)
     public void initOnEntityCreated(final EventListener<OnEntityCreated> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityCreated.Filter) e -> matcher.matches(e.getDtClass()));
+        }
     }
 
     @Initializer(OnEntityDeleted.class)
     public void initOnEntityDeleted(final EventListener<OnEntityDeleted> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityDeleted.Filter) e -> matcher.matches(e.getDtClass()));
+        }
     }
 
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final EventListener<OnEntityUpdated> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityUpdated.Filter) (e, fps, n) -> matcher.matches(e.getDtClass()));
+        }
     }
 
     @Initializer(OnEntityPropertyCountChanged.class)
     public void initPropertyCountChanged(final EventListener<OnEntityPropertyCountChanged> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityPropertyCountChanged.Filter) e -> matcher.matches(e.getDtClass()));
+        }
     }
 
     @Initializer(OnEntityEntered.class)
     public void initOnEntityEntered(final EventListener<OnEntityEntered> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityEntered.Filter) e -> matcher.matches(e.getDtClass()));
+        }
     }
 
     @Initializer(OnEntityLeft.class)
     public void initOnEntityLeft(final EventListener<OnEntityLeft> listener) {
-        listener.setInvocationPredicate(getInvocationPredicate(listener.getAnnotation().classPattern()));
+        var classPattern = listener.getAnnotation().classPattern();
+        if (!".*".equals(classPattern)) {
+            final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
+            listener.setFilter((OnEntityLeft.Filter) e -> matcher.matches(e.getDtClass()));
+        }
     }
 
     /**
@@ -163,13 +185,6 @@ public class Entities {
 
     private final Map<String, ClassPatternMatcher> classPatternMatchers = new HashMap<>();
 
-    private Predicate<Object[]> getInvocationPredicate(String classPattern) {
-        if (".*".equals(classPattern)) {
-            return null;
-        }
-        final var matcher = classPatternMatchers.computeIfAbsent(classPattern, ClassPatternMatcher::new);
-        return value -> matcher.matches(((Entity) value[0]).getDtClass());
-    }
 
     @OnInit
     public void onInit() {
@@ -667,7 +682,7 @@ public class Entities {
         return e == null || e.getHandle() != handle ? null : e;
     }
 
-    public Iterator<Entity> getAllByPredicate(final Predicate<Entity> predicate) {
+    public Iterator<Entity> getAllByPredicate(final java.util.function.Predicate<Entity> predicate) {
         return new SimpleIterator<>() {
             int i = -1;
 
@@ -675,7 +690,7 @@ public class Entities {
             public Entity readNext() {
                 while (++i < entityCount) {
                     var e = getByIndex(i);
-                    if (e != null && predicate.apply(e)) {
+                    if (e != null && predicate.test(e)) {
                         return e;
                     }
                 }
@@ -684,7 +699,7 @@ public class Entities {
         };
     }
 
-    public Entity getByPredicate(Predicate<Entity> predicate) {
+    public Entity getByPredicate(java.util.function.Predicate<Entity> predicate) {
         var iter = getAllByPredicate(predicate);
         return iter.hasNext() ? iter.next() : null;
     }

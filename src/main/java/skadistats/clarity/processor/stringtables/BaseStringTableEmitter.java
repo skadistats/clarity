@@ -1,7 +1,6 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
@@ -40,11 +39,11 @@ public class BaseStringTableEmitter {
     protected StringTables stringTables;
 
     @InsertEvent
-    private Event<OnStringTableEntry> updateEvent;
+    private OnStringTableEntry.Event updateEvent;
     @InsertEvent
-    protected Event<OnStringTableCreated> evCreated;
+    protected OnStringTableCreated.Event evCreated;
     @InsertEvent
-    protected Event<OnStringTableClear> evClear;
+    protected OnStringTableClear.Event evClear;
 
     private final List<Runnable> updateEntryEvents = new ArrayList<>();
 
@@ -62,10 +61,9 @@ public class BaseStringTableEmitter {
         } else {
             updateEventTables.add(tableName);
         }
-        eventListener.setInvocationPredicate(args -> {
-            var t = (StringTable) args[0];
-            return "*".equals(tableName) || t.getName().equals(tableName);
-        });
+        if (!"*".equals(tableName)) {
+            eventListener.setFilter((OnStringTableEntry.Filter) (t, index, key, value) -> t.getName().equals(tableName));
+        }
     }
 
     protected boolean isProcessed(String tableName) {

@@ -1,6 +1,5 @@
 package skadistats.clarity.processor.tempentities;
 
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -30,7 +29,7 @@ public class TempEntities {
     private DTClasses dtClasses;
 
     @InsertEvent
-    private Event<OnTempEntity> evTempEntity;
+    private OnTempEntity.Event evTempEntity;
 
     private FieldReader fieldReader;
 

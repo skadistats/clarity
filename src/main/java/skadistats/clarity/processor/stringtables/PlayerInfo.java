@@ -1,7 +1,6 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
-import skadistats.clarity.event.Event;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
@@ -22,7 +21,7 @@ public class PlayerInfo {
     private EngineType engineType;
 
     @InsertEvent
-    private Event<OnPlayerInfo> evPlayerInfo;
+    private OnPlayerInfo.Event evPlayerInfo;
 
     private final Map<Integer, PlayerInfoType> playerInfos = new TreeMap<>();
 
