@@ -53,8 +53,23 @@ public class BitStream64 extends BitStream {
     public FieldOpType readFieldOp() {
         var offs = pos >> 6;
         var s = pos & 63;
-        var i = 0;
         var v = buffer.get(offs);
+
+        // Fast path: 8-bit lookup resolves ~99.7% of ops in one step
+        var peek = (v >>> s) | (s > 56 ? buffer.get(offs + 1) << (64 - s) : 0);
+        var entry = FieldOpHuffmanTree.lookup[(int)(peek & 0xFFL)];
+        var bits = entry & 0xFF;
+        if (bits != 0) {
+            pos += bits;
+            return FieldOpHuffmanTree.ops[(entry >>> 8) & 0xFF];
+        }
+
+        // Slow path: skip lookup bits, continue tree walk from saved node
+        var i = (entry >>> 8) & 0xFF;
+        pos += FieldOpHuffmanTree.LOOKUP_BITS;
+        offs = pos >> 6;
+        s = pos & 63;
+        v = buffer.get(offs);
         while (true) {
             pos++;
             i = FieldOpHuffmanTree.tree[i][(int)((v >>> s) & 1L)];

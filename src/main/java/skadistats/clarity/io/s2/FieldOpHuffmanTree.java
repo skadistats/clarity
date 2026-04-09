@@ -10,11 +10,39 @@ public class FieldOpHuffmanTree {
     public static final int[][] tree;
     public static final FieldOpType[] ops = FieldOpType.values();
 
+    /**
+     * N-bit lookup table for fast Huffman decoding.
+     * Encoding per entry:
+     *   bits 0-7:  consumed bit count (1+ = resolved, 0 = unresolved)
+     *   bits 8-15: op ordinal (if resolved) or tree node index (if unresolved)
+     */
+    public static final int LOOKUP_BITS = 8;
+    public static final int[] lookup = new int[1 << LOOKUP_BITS];
+
     static {
         root = buildTree();
         List<int[]> akku = new ArrayList<>();
         buildFixedTreeR(akku, root);
         tree = reverseTree(akku);
+        buildLookup();
+    }
+
+    private static void buildLookup() {
+        for (int v = 0; v < lookup.length; v++) {
+            int node = 0;
+            boolean resolved = false;
+            for (int bit = 0; bit < LOOKUP_BITS; bit++) {
+                node = tree[node][(v >> bit) & 1];
+                if (node < 0) {
+                    lookup[v] = (bit + 1) | ((-node - 1) << 8);
+                    resolved = true;
+                    break;
+                }
+            }
+            if (!resolved) {
+                lookup[v] = node << 8;
+            }
+        }
     }
 
     private static Node buildTree() {
