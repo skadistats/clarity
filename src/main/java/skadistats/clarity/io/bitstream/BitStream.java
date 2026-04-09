@@ -112,7 +112,10 @@ public abstract class BitStream {
             stringTemp[o] = c;
             o++;
         }
-        return new String(stringTemp, 0, o, StandardCharsets.UTF_8);
+        if (o == 0) {
+            return "";
+        }
+        return new String(stringTemp, 0, o, StandardCharsets.UTF_8).intern();
     }
 
     public long readVarU(int max) {
