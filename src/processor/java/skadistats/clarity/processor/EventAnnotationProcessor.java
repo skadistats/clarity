@@ -187,10 +187,6 @@ public class EventAnnotationProcessor extends AbstractProcessor {
         var listenerArrayType = ArrayTypeName.of(listenerType);
         classBuilder.addField(FieldSpec.builder(listenerArrayType, "listeners", Modifier.PRIVATE, Modifier.FINAL).build());
 
-        if (filterType != null) {
-            classBuilder.addField(FieldSpec.builder(ArrayTypeName.of(filterType), "filters", Modifier.PRIVATE, Modifier.FINAL).build());
-        }
-
         // Constructor
         var ctor = MethodSpec.constructorBuilder()
                 .addModifiers(Modifier.PUBLIC)
@@ -201,15 +197,9 @@ public class EventAnnotationProcessor extends AbstractProcessor {
                 .addStatement("var els = listeners()");
 
         ctor.addStatement("listeners = new $T[els.length]", listenerType);
-        if (filterType != null) {
-            ctor.addStatement("filters = new $T[els.length]", filterType);
-        }
 
         ctor.beginControlFlow("for (int i = 0; i < els.length; i++)");
         ctor.addStatement("listeners[i] = ($T) els[i].getListenerSam()", listenerType);
-        if (filterType != null) {
-            ctor.addStatement("filters[i] = ($T) els[i].getFilterSam()", filterType);
-        }
         ctor.endControlFlow();
 
         classBuilder.addMethod(ctor.build());
@@ -229,7 +219,7 @@ public class EventAnnotationProcessor extends AbstractProcessor {
                 .beginControlFlow("for (int i = 0; i < listeners.length; i++)");
 
         if (filterType != null) {
-            raise.addStatement("var f = filters[i]");
+            raise.addStatement("var f = ($T) listeners()[i].getFilterSam()", filterType);
             raise.beginControlFlow("if (f != null && !f.test($L))", paramNames)
                     .addStatement("continue")
                     .endControlFlow();
