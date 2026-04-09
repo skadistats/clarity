@@ -6,12 +6,8 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.bitstream.BitStream32;
 import skadistats.clarity.io.bitstream.BitStream64;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.platform.buffer.CompatibleBuffer;
-import skadistats.clarity.platform.buffer.UnsafeBuffer;
-import skadistats.clarity.util.ThrowingRunnable;
+import skadistats.clarity.platform.buffer.VarHandleBuffer;
 
-import java.lang.invoke.MethodType;
-import java.nio.ByteBuffer;
 import java.nio.MappedByteBuffer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -65,43 +61,30 @@ public class ClarityPlatform {
 
     private static Function<byte[], BitStream> determineBitStreamConstructor() {
         if (ClarityPlatform.VM_64BIT) {
-            if (UnsafeBuffer.available) {
-                return data -> new BitStream64(new UnsafeBuffer.B64(data));
-            } else {
-                return data -> new BitStream64(new CompatibleBuffer.B64(data));
-            }
+            return data -> new BitStream64(new VarHandleBuffer.B64(data));
         } else {
-            if (UnsafeBuffer.available) {
-                return data -> new BitStream32(new UnsafeBuffer.B32(data));
-            } else {
-                return data -> new BitStream32(new CompatibleBuffer.B32(data));
-            }
+            return data -> new BitStream32(new VarHandleBuffer.B32(data));
         }
     }
 
     private static Consumer<MappedByteBuffer> determineByteBufferDisposer() {
         // see http://stackoverflow.com/questions/2972986/how-to-unmap-a-file-from-memory-mapped-using-filechannel-in-java
-        var mhInvokeCleaner = UnsafeReflector.INSTANCE.getPublicVirtual(
-            "invokeCleaner",
-            MethodType.methodType(void.class, ByteBuffer.class));
-
-        return buf -> runCleaner(
-            () -> mhInvokeCleaner.invoke(buf),
-            mhInvokeCleaner
-        );
-    }
-
-    private static void runCleaner(ThrowingRunnable runnable, Object... nonNulls) {
-        for (var nonNull : nonNulls) {
-            if (nonNull == null) {
-                log.error("Cannot run cleaner because method was not found. Please file an issue!");
-                return;
-            }
-        }
         try {
-            runnable.run();
-        } catch (Throwable e) {
-            throw new RuntimeException(e);
+            var unsafeClass = Class.forName("sun.misc.Unsafe");
+            var theUnsafe = unsafeClass.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            var unsafe = theUnsafe.get(null);
+            var invokeCleaner = unsafeClass.getMethod("invokeCleaner", java.nio.ByteBuffer.class);
+            return buf -> {
+                try {
+                    invokeCleaner.invoke(unsafe, buf);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            };
+        } catch (Exception e) {
+            log.error("Cannot set up MappedByteBuffer disposer. Please file an issue!");
+            return buf -> {};
         }
     }
 
