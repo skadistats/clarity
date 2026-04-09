@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.METHOD })
-@UsagePointMarker(value = UsagePointType.FEATURE, parameterClasses = { UsagePoint.class })
+@UsagePointMarker(value = UsagePointType.FEATURE)
 public @interface UsesStringTable {
     String value();
 }

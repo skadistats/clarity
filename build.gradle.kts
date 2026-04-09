@@ -26,11 +26,15 @@ repositories {
     mavenCentral()
 }
 
+val processorImplementation by configurations
+
 dependencies {
+    processorImplementation("com.palantir.javapoet:javapoet:0.14.0")
     api("com.skadistats:clarity-protobuf:[5.3,6.0)")
     api("org.xerial.snappy:snappy-java:1.1.10.4")
     api("org.slf4j:slf4j-api:2.0.7")
     annotationProcessor(sourceSets["processor"].output)
+    annotationProcessor("com.palantir.javapoet:javapoet:0.14.0")
     testImplementation("org.testng:testng:7.8.0")
 }
 
@@ -44,6 +48,9 @@ tasks.named<ProcessResources>("processProcessorResources") {
 
 tasks.named<Jar>("jar") {
     from(sourceSets["processor"].output)
+    from(configurations.named("processorRuntimeClasspath").map { config ->
+        config.map { if (it.isDirectory) it else zipTree(it) }
+    })
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 

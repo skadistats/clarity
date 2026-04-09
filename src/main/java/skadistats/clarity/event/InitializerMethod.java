@@ -27,10 +27,12 @@ public class InitializerMethod extends AbstractInvocationPoint<Initializer> {
             var lookup = MethodHandles.privateLookupIn(processorClass, MethodHandles.lookup());
             var handle = lookup.unreflect(method).bindTo(ctx.getProcessor(processorClass));
             var parameterTypes = method.getParameterTypes();
-            if (parameterTypes.length > 0 && parameterTypes[0].isAssignableFrom(Context.class)) {
+            int paramCount = parameterTypes.length;
+            if (paramCount > 0 && parameterTypes[0].isAssignableFrom(Context.class)) {
                 handle = handle.bindTo(ctx);
+                paramCount--;
             }
-            this.methodHandle = handle.asSpreader(Object[].class, usagePointMarker.parameterClasses().length);
+            this.methodHandle = handle.asSpreader(Object[].class, paramCount);
         } catch (IllegalAccessException e) {
             throw e;
         } catch (Throwable t) {

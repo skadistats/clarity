@@ -238,7 +238,10 @@ public class ExecutionModel {
         Class<? extends Annotation> eventType;
         var fieldType = field.getType();
 
-        if (Event.class.isAssignableFrom(fieldType) && fieldType != Event.class) {
+        var enclosing = fieldType.getEnclosingClass();
+        if (enclosing != null && enclosing.isAnnotation()) {
+            eventType = (Class<? extends Annotation>) enclosing;
+        } else if (Event.class.isAssignableFrom(fieldType) && fieldType != Event.class) {
             eventType = (Class<? extends Annotation>) fieldType.getEnclosingClass();
         } else {
             eventType = (Class<? extends Annotation>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];

@@ -38,6 +38,16 @@ public class EventContractDiscovery {
             }
         }
 
+        // Fallback: look for generated <Annotation>_Event class on classpath
+        if (eventClass == null) {
+            try {
+                var generatedName = annotationType.getName() + "_Event";
+                eventClass = Class.forName(generatedName).asSubclass(Event.class);
+            } catch (ClassNotFoundException ignored) {
+                // no generated event class
+            }
+        }
+
         return new Contract(listenerClass, listenerMethod, filterClass, filterMethod, eventClass);
     }
 

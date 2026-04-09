@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
-@UsagePointMarker(value = UsagePointType.EVENT_LISTENER, parameterClasses = { Entity.class, FieldPath.class })
+@UsagePointMarker(value = UsagePointType.EVENT_LISTENER)
 public @interface OnEntityPropertyChanged {
     String classPattern() default ".*";
     String propertyPattern() default ".*";

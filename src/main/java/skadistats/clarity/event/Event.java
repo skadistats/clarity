@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Set;
 
-public class Event<A extends Annotation> {
+public class Event<A extends Annotation> implements EventBase {
 
     private final Runner runner;
     private final Class<A> eventType;
