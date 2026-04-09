@@ -664,6 +664,10 @@ public class Entities {
         s = cls.getEmptyState();
         var stream = BitStream.createBitStream(raw);
         var changes = fieldReader.readFields(stream, cls, false);
+        var remaining = stream.remaining();
+        if (remaining < 0 || remaining > 7) {
+            log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);
+        }
         try {
             changes.applyTo(s);
         } catch (RuntimeException ex) {
