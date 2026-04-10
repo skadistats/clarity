@@ -136,6 +136,7 @@ public class LiveSource extends Source {
 
     private void open() throws IOException {
         close();
+        aborted = false;
         channel = FileChannel.open(filePath);
         file = channel.map(FileChannel.MapMode.READ_ONLY, 0L, Files.size(filePath));
     }
