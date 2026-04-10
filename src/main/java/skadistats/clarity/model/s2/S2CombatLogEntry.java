@@ -2,16 +2,16 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.model.CombatLogEntry;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.wire.dota.common.proto.DOTAUserMessages;
+import skadistats.clarity.wire.dota.common.proto.DOTACombatLog;
 
 import java.util.List;
 
 public class S2CombatLogEntry implements CombatLogEntry {
 
     private final StringTable combatLogNames;
-    private final DOTAUserMessages.CMsgDOTACombatLogEntry e;
+    private final DOTACombatLog.CMsgDOTACombatLogEntry e;
 
-    public S2CombatLogEntry(StringTable combatLogNames, DOTAUserMessages.CMsgDOTACombatLogEntry entry) {
+    public S2CombatLogEntry(StringTable combatLogNames, DOTACombatLog.CMsgDOTACombatLogEntry entry) {
         this.combatLogNames = combatLogNames;
         this.e = entry;
     }
@@ -26,7 +26,7 @@ public class S2CombatLogEntry implements CombatLogEntry {
     }
 
     @Override
-    public DOTAUserMessages.DOTA_COMBATLOG_TYPES getType() {
+    public DOTACombatLog.DOTA_COMBATLOG_TYPES getType() {
         return e.getType();
     }
 

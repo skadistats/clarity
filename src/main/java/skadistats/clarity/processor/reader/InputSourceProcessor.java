@@ -21,7 +21,7 @@ import skadistats.clarity.processor.runner.LoopController;
 import skadistats.clarity.processor.runner.OnInputSource;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
+import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.EOFException;
@@ -215,13 +215,13 @@ public class InputSourceProcessor {
                 logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
             } else {
-                if (evOnMessage.isListenedTo(messageClass) || evOnPostEmbeddedMessage.isListenedTo(messageClass) || (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class)) {
+                if (evOnMessage.isListenedTo(messageClass) || evOnPostEmbeddedMessage.isListenedTo(messageClass) || (unpackUserMessages && messageClass == CommonNetMessages.CSVCMsg_UserMessage.class)) {
                     var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
                     if (evOnMessage.isListenedTo(messageClass)) {
                         evOnMessage.raise(subMessage);
                     }
-                    if (unpackUserMessages && messageClass == CommonNetworkBaseTypes.CSVCMsg_UserMessage.class) {
-                        var userMessage = (CommonNetworkBaseTypes.CSVCMsg_UserMessage) subMessage;
+                    if (unpackUserMessages && messageClass == CommonNetMessages.CSVCMsg_UserMessage.class) {
+                        var userMessage = (CommonNetMessages.CSVCMsg_UserMessage) subMessage;
                         var umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
                         if (umClazz == null) {
                             logUnknownMessage("usermessage", userMessage.getMsgType());

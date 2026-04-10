@@ -16,6 +16,7 @@ import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.stringtables.StringTables;
 import skadistats.clarity.processor.stringtables.UsesStringTable;
+import skadistats.clarity.wire.dota.common.proto.DOTACombatLog;
 import skadistats.clarity.wire.dota.common.proto.DOTAUserMessages;
 
 import java.util.LinkedList;
@@ -63,8 +64,8 @@ public class CombatLog {
         }
     }
 
-    @OnMessage(DOTAUserMessages.CMsgDOTACombatLogEntry.class)
-    public void onCombatLogEntry(DOTAUserMessages.CMsgDOTACombatLogEntry message) {
+    @OnMessage(DOTACombatLog.CMsgDOTACombatLogEntry.class)
+    public void onCombatLogEntry(DOTACombatLog.CMsgDOTACombatLogEntry message) {
         logEntries.add(new S2CombatLogEntry(
             stringTables.forName(STRING_TABLE_NAME),
             message

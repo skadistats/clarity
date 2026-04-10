@@ -1,12 +1,12 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.wire.dota.common.proto.DOTAUserMessages;
+import skadistats.clarity.wire.dota.common.proto.DOTACombatLog;
 
 import java.util.List;
 
 public interface CombatLogEntry {
     boolean hasType();
-    DOTAUserMessages.DOTA_COMBATLOG_TYPES getType();
+    DOTACombatLog.DOTA_COMBATLOG_TYPES getType();
     boolean hasTargetName();
     String getTargetName();
     int getTargetNameIdx();
