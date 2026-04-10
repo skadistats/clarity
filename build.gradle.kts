@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
+    id("org.gradlex.extra-java-module-info") version "1.14"
 }
 
 group = "com.skadistats"
@@ -36,6 +37,11 @@ dependencies {
     annotationProcessor(sourceSets["processor"].output)
     annotationProcessor("com.palantir.javapoet:javapoet:0.14.0")
     testImplementation("org.testng:testng:7.8.0")
+}
+
+extraJavaModuleInfo {
+    failOnMissingModuleInfo.set(false)
+    automaticModule("org.xerial.snappy:snappy-java", "snappy.java")
 }
 
 tasks.named("compileJava") {
