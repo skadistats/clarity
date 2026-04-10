@@ -804,6 +804,26 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return false;
     }
 
+    @Override
+    public boolean hasTrackedStatId() {
+        return false;
+    }
+
+    @Override
+    public int getTrackedStatId() {
+        return 0;
+    }
+
+    @Override
+    public boolean hasModifierPurgedDuration() {
+        return false;
+    }
+
+    @Override
+    public float getModifierPurgedDuration() {
+        return 0;
+    }
+
     public String toString() {
         return e.toString();
     }

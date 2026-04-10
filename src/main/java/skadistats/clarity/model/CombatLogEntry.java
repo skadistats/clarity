@@ -161,4 +161,8 @@ public interface CombatLogEntry {
     boolean isWillReincarnate();
     boolean hasUsesCharges();
     boolean isUsesCharges();
+    boolean hasTrackedStatId();
+    int getTrackedStatId();
+    boolean hasModifierPurgedDuration();
+    float getModifierPurgedDuration();
 }

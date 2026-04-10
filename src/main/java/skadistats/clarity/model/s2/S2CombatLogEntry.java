@@ -800,6 +800,26 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getUsesCharges();
     }
 
+    @Override
+    public boolean hasTrackedStatId() {
+        return e.hasTrackedStatId();
+    }
+
+    @Override
+    public int getTrackedStatId() {
+        return e.getTrackedStatId();
+    }
+
+    @Override
+    public boolean hasModifierPurgedDuration() {
+        return e.hasModifierPurgedDuration();
+    }
+
+    @Override
+    public float getModifierPurgedDuration() {
+        return e.getModifierPurgedDuration();
+    }
+
     public String toString() {
         return e.toString();
     }
