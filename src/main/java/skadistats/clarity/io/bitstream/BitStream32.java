@@ -1,7 +1,6 @@
 package skadistats.clarity.io.bitstream;
 
 import skadistats.clarity.io.s2.FieldOpHuffmanTree;
-import skadistats.clarity.io.s2.FieldOpType;
 import skadistats.clarity.platform.buffer.Buffer;
 
 public class BitStream32 extends BitStream {
@@ -51,7 +50,7 @@ public class BitStream32 extends BitStream {
     }
 
     @Override
-    public FieldOpType readFieldOp() {
+    public int readFieldOpId() {
         var offs = pos >> 5;
         var s = pos & 31;
         var v = buffer.get(offs);
@@ -62,7 +61,7 @@ public class BitStream32 extends BitStream {
         var bits = entry & 0xFF;
         if (bits != 0) {
             pos += bits;
-            return FieldOpHuffmanTree.ops[(entry >>> 8) & 0xFF];
+            return (entry >>> 8) & 0xFF;
         }
 
         // Slow path: skip lookup bits, continue tree walk from saved node
@@ -75,7 +74,7 @@ public class BitStream32 extends BitStream {
             pos++;
             i = FieldOpHuffmanTree.tree[i][v >>> s & 1];
             if (i < 0) {
-                return FieldOpHuffmanTree.ops[-i - 1];
+                return -i - 1;
             }
             if (++s == 32) {
                 v = buffer.get(++offs);

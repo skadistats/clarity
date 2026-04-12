@@ -28,7 +28,7 @@ public class FieldOpHuffmanGraph {
             if (node.right != null)
                 genNodesRecursive(node.right, path + "1");
         } else {
-            g.append(String.format("%s [shape=record, label=\"{{%s|%s}|%s}\"];\n", node.num, path, node.weight, node.op));
+            g.append(String.format("%s [shape=record, label=\"{{%s|%s}|%s}\"];\n", node.num, path, node.weight, node.opIndex >= 0 ? FieldOp.OPS[node.opIndex].name() : "?"));
         }
     }
 

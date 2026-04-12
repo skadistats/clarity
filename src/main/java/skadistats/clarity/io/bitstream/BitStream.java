@@ -2,7 +2,6 @@ package skadistats.clarity.io.bitstream;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
-import skadistats.clarity.io.s2.FieldOpType;
 import skadistats.clarity.platform.ClarityPlatform;
 
 import java.nio.charset.StandardCharsets;
@@ -59,7 +58,7 @@ public abstract class BitStream {
     public abstract long readUBitLong(int n);
     public abstract void readBitsIntoByteArray(byte[] dest, int n);
 
-    public abstract FieldOpType readFieldOp();
+    public abstract int readFieldOpId();
 
     public int len() {
         return len;

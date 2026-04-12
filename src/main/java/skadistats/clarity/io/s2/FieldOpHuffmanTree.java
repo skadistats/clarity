@@ -8,13 +8,12 @@ public class FieldOpHuffmanTree {
 
     public static final Node root;
     public static final int[][] tree;
-    public static final FieldOpType[] ops = FieldOpType.values();
 
     /**
      * N-bit lookup table for fast Huffman decoding.
      * Encoding per entry:
      *   bits 0-7:  consumed bit count (1+ = resolved, 0 = unresolved)
-     *   bits 8-15: op ordinal (if resolved) or tree node index (if unresolved)
+     *   bits 8-15: op index (if resolved) or tree node index (if unresolved)
      */
     public static final int LOOKUP_BITS = 8;
     public static final int[] lookup = new int[1 << LOOKUP_BITS];
@@ -46,10 +45,11 @@ public class FieldOpHuffmanTree {
     }
 
     private static Node buildTree() {
+        var ops = FieldOp.OPS;
         var queue = new PriorityQueue<Node>();
         var n = 0;
         for (var op : ops) {
-            queue.offer(new LeafNode(op, n++));
+            queue.offer(new LeafNode(op, n, n++));
         }
         while (queue.size() > 1) {
             queue.offer(new InternalNode(queue.poll(), queue.poll(), n++));
@@ -60,8 +60,8 @@ public class FieldOpHuffmanTree {
     private static int buildFixedTreeR(List<int[]> akku, Node n) {
         akku.add(
             new int[] {
-                (n.left  instanceof LeafNode) ? - n.left.op.ordinal() - 1 : buildFixedTreeR(akku, n.left),
-                (n.right instanceof LeafNode) ? - n.right.op.ordinal() - 1 : buildFixedTreeR(akku, n.right)
+                (n.left  instanceof LeafNode) ? - n.left.opIndex - 1 : buildFixedTreeR(akku, n.left),
+                (n.right instanceof LeafNode) ? - n.right.opIndex - 1 : buildFixedTreeR(akku, n.right)
             }
         );
         return akku.size() - 1;
@@ -82,7 +82,7 @@ public class FieldOpHuffmanTree {
     private void dump(int i, String prefix) {
         for (var s = 0; s < 2; s++) {
             if (tree[i][s] < 0) {
-                System.out.println(ops[- tree[i][s] - 1] + ": " + prefix + s);
+                System.out.println(FieldOp.OPS[- tree[i][s] - 1].name() + ": " + prefix + s);
             } else {
                 dump(tree[i][s], prefix + s);
             }
@@ -92,7 +92,7 @@ public class FieldOpHuffmanTree {
     static abstract class Node implements Comparable<Node> {
         final int weight;
         final int num;
-        FieldOpType op;
+        int opIndex = -1;
         Node left;
         Node right;
         public Node(int weight, int num) {
@@ -107,13 +107,13 @@ public class FieldOpHuffmanTree {
     }
 
     static class LeafNode extends Node {
-        public LeafNode(FieldOpType op, int num) {
-            super(Math.max(op.getWeight(), 1), num);
-            this.op = op;
+        public LeafNode(FieldOp op, int opIndex, int num) {
+            super(Math.max(op.weight(), 1), num);
+            this.opIndex = opIndex;
         }
         @Override
         public String toString() {
-            return String.format("[%s]", op.toString());
+            return String.format("[%s]", FieldOp.OPS[opIndex].name());
         }
     }
 
@@ -128,6 +128,5 @@ public class FieldOpHuffmanTree {
             return String.format("(%s)", weight);
         }
     }
-
 
 }
