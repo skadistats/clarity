@@ -3,6 +3,7 @@ package skadistats.clarity.model;
 import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.io.s2.S2DTClass;
 import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public interface DTClass {
     int getClassId();
     void setClassId(int classId);
 
+    void setEntityStateFactory(EntityStateFactory factory);
     EntityState getEmptyState();
 
     String getNameForFieldPath(FieldPath fp);

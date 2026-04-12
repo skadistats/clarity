@@ -3,7 +3,6 @@ package skadistats.clarity.processor.tempentities;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s1.ReceiveProp;
@@ -11,8 +10,6 @@ import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.EntityStateFactory;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
@@ -56,7 +53,7 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                     receiveProps = cls.getReceiveProps();
                 }
-                var state = EntityStateFactory.forS1(receiveProps);
+                var state = cls.getEmptyState();
                 var changes = fieldReader.readFields(stream, cls, false);
                 changes.applyTo(state);
 

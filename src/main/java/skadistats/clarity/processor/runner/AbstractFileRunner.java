@@ -3,6 +3,9 @@ package skadistats.clarity.processor.runner;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineType;
+import skadistats.clarity.model.state.EntityStateFactory;
+import skadistats.clarity.model.state.S1EntityStateType;
+import skadistats.clarity.model.state.S2EntityStateType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.source.Source;
@@ -19,6 +22,8 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
 
     protected final Source source;
     protected LoopController loopController;
+    protected S1EntityStateType s1EntityStateType = S1EntityStateType.OBJECT_ARRAY;
+    protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
 
     /* tick the user is at the end of */
     protected int tick;
@@ -32,7 +37,8 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     }
 
     protected void initAndRunWith(Object... processors) throws IOException {
-        initWithProcessors(this, getEngineType().getRegisteredProcessors(), source, processors);
+        var entityStateFactory = new EntityStateFactory(s1EntityStateType, s2EntityStateType);
+        initWithProcessors(this, getEngineType().getRegisteredProcessors(), source, entityStateFactory, processors);
         engineType.emitHeader();
         ((OnInputSource.Event) context.createEvent(OnInputSource.class)).raise(source, loopController);
     }
@@ -66,6 +72,16 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     @Override
     public Source getSource() {
         return source;
+    }
+
+    public AbstractFileRunner withS1EntityState(S1EntityStateType type) {
+        this.s1EntityStateType = type;
+        return this;
+    }
+
+    public AbstractFileRunner withS2EntityState(S2EntityStateType type) {
+        this.s2EntityStateType = type;
+        return this;
     }
 
     public int getLastTick() throws IOException {

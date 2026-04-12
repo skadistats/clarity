@@ -1,7 +1,9 @@
 package skadistats.clarity.processor.sendtables;
 
+import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.state.EntityStateFactory;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -10,12 +12,16 @@ import java.util.TreeMap;
 @Provides(UsesDTClasses.class)
 public class DTClasses {
 
+    @Insert
+    private EntityStateFactory entityStateFactory;
+
     final Map<Integer, DTClass> byClassId = new TreeMap<>();
     private final Map<String, DTClass> byDtName = new TreeMap<>();
     int classBits;
 
     @OnDTClass
     public void onDTClass(DTClass dtClass) {
+        dtClass.setEntityStateFactory(entityStateFactory);
         byDtName.put(dtClass.getDtName(), dtClass);
     }
 

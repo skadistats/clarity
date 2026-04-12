@@ -18,6 +18,7 @@ public class S1DTClass implements DTClass {
     private int[] indexMapping;
     private Map<String, Integer> propsByName;
     private S1DTClass superClass;
+    private EntityStateFactory entityStateFactory;
 
     public S1DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
@@ -35,8 +36,13 @@ public class S1DTClass implements DTClass {
     }
 
     @Override
+    public void setEntityStateFactory(EntityStateFactory factory) {
+        this.entityStateFactory = factory;
+    }
+
+    @Override
     public EntityState getEmptyState() {
-        return EntityStateFactory.forS1(receiveProps);
+        return entityStateFactory.forS1(receiveProps);
     }
 
     @Override

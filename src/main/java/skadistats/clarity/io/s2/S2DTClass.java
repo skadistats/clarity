@@ -13,6 +13,7 @@ public class S2DTClass implements DTClass {
 
     private final SerializerField field;
     private int classId = -1;
+    private EntityStateFactory entityStateFactory;
 
     public S2DTClass(SerializerField field) {
         this.field = field;
@@ -38,8 +39,13 @@ public class S2DTClass implements DTClass {
     }
 
     @Override
+    public void setEntityStateFactory(EntityStateFactory factory) {
+        this.entityStateFactory = factory;
+    }
+
+    @Override
     public EntityState getEmptyState() {
-        return EntityStateFactory.forS2(field);
+        return entityStateFactory.forS2(field);
     }
 
     public Field getFieldForFieldPath(S2FieldPath fp) {
