@@ -3,7 +3,7 @@ package skadistats.clarity.io.s2.field;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Serializer;
-import skadistats.clarity.model.state.ArrayEntityState;
+import skadistats.clarity.model.state.NestedEntityState;
 
 public class SerializerField extends Field {
 
@@ -34,8 +34,8 @@ public class SerializerField extends Field {
     }
 
     @Override
-    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
-        state.capacity(serializer.getFieldCount());
+    public void ensureCapacity(NestedEntityState state, int capacity) {
+        state.capacity(serializer.getFieldCount(), false);
     }
 
 }

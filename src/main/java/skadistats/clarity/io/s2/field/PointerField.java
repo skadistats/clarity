@@ -5,7 +5,7 @@ import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Pointer;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerProperties;
-import skadistats.clarity.model.state.ArrayEntityState;
+import skadistats.clarity.model.state.NestedEntityState;
 
 public class PointerField extends SerializerField {
 
@@ -39,7 +39,7 @@ public class PointerField extends SerializerField {
     }
 
     @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
+    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
         Pointer p = (Pointer) value;
         var typeIndex = p.getTypeIndex();
         var newSerializer = typeIndex != null ? serializers[typeIndex] : null;
@@ -58,7 +58,7 @@ public class PointerField extends SerializerField {
     }
 
     @Override
-    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+    public Object getValue(NestedEntityState state, int idx) {
         return state.isSub(idx);
     }
 

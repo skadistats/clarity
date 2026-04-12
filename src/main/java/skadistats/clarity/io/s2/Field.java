@@ -1,7 +1,7 @@
 package skadistats.clarity.io.s2;
 
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.state.ArrayEntityState;
+import skadistats.clarity.model.state.NestedEntityState;
 
 public abstract class Field {
 
@@ -35,15 +35,15 @@ public abstract class Field {
         return null;
     }
 
-    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+    public Object getValue(NestedEntityState state, int idx) {
         return null;
     }
 
-    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
+    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 
-    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
+    public void ensureCapacity(NestedEntityState state, int capacity) {
         throw new UnsupportedOperationException(getClass().getSimpleName());
     }
 

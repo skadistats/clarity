@@ -28,7 +28,7 @@ public class S2LongFieldPathFormat {
     private static final long[] OFFSET = new long[MAX_FIELDPATH_LENGTH];
     private static final long PRESENT_MASK;
 
-    static long set(long id, int i, int v) {
+    public static long set(long id, int i, int v) {
         if (v < 0 || v > maxIndexAtDepth(i)) {
             throw new ClarityException(
                 "field path component %d cannot hold the value %d (max is %d). " +
@@ -40,11 +40,11 @@ public class S2LongFieldPathFormat {
         return id & ~VALUE_MASK[i] | ((long)v + OFFSET[i]) << VALUE_SHIFT[i];
     }
 
-    static int get(long id, int i) {
+    public static int get(long id, int i) {
         return (int)(((id & VALUE_MASK[i]) >> VALUE_SHIFT[i]) - OFFSET[i]);
     }
 
-    static long down(long id) {
+    public static long down(long id) {
         var l = last(id);
         if (l + 1 >= MAX_FIELDPATH_LENGTH) {
             throw new ClarityException(
@@ -57,19 +57,19 @@ public class S2LongFieldPathFormat {
         return id | PRESENT_BIT[l];
     }
 
-    static long up(long id, int n) {
+    public static long up(long id, int n) {
         return id & CLEAR_MASK[last(id) - n];
     }
 
-    static int last(long id) {
+    public static int last(long id) {
         return Long.bitCount(id & PRESENT_MASK);
     }
 
-    static int hashCode(long id) {
+    public static int hashCode(long id) {
         return Long.hashCode(id);
     }
 
-    static int compareTo(long id1, long id2) {
+    public static int compareTo(long id1, long id2) {
         return Long.compare(id1, id2);
     }
 

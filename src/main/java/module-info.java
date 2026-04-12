@@ -4,6 +4,7 @@ module com.skadistats.clarity {
     requires org.slf4j;
     requires snappy.java;
     requires java.compiler;
+    requires it.unimi.dsi.fastutil.core;
 
     exports skadistats.clarity;
     exports skadistats.clarity.event;

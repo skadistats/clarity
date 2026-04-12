@@ -1,9 +1,7 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -11,22 +9,19 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-public class NestedArrayEntityState implements EntityState, ArrayEntityState {
+public class NestedArrayEntityState extends S2EntityState {
 
-    private final SerializerField rootField;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
 
-    boolean capacityChanged;
-
     public NestedArrayEntityState(SerializerField field) {
-        rootField = field;
+        super(field);
         entries = new ArrayList<>(20);
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        rootField = other.rootField;
+        super(other.rootField);
         var otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
         for (var i = 0; i < otherSize; i++) {
@@ -77,66 +72,18 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
     }
 
     @Override
-    public ArrayEntityState sub(int idx) {
+    public NestedEntityState sub(int idx) {
         return rootEntry().sub(idx);
     }
 
     @Override
-    public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
+    public NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
         return rootEntry().capacity(wantedSize, shrinkIfNeeded);
     }
 
     @Override
     public EntityState copy() {
         return new NestedArrayEntityState(this);
-    }
-
-    @Override
-    public boolean setValueForFieldPath(FieldPath fpX, Object value) {
-        var fp = fpX.s2();
-
-        Field field = rootField;
-        var entry = rootEntry();
-        var last = fp.last();
-
-        capacityChanged = false;
-        var i = 0;
-        while (true) {
-            var idx = fp.get(i);
-            if (entry.length() <= idx) {
-                field.ensureArrayEntityStateCapacity(entry, idx + 1);
-            }
-            field = field.getChild(idx);
-            if (i == last) {
-                field.setArrayEntityState(entry, idx, i + 1, value);
-                return capacityChanged;
-            }
-            entry = entry.subEntry(idx);
-            i++;
-        }
-    }
-
-    @Override
-    public <T> T getValueForFieldPath(FieldPath fpX) {
-        var fp = fpX.s2();
-
-        Field field = rootField;
-        var entry = rootEntry();
-        var last = fp.last();
-
-        var i = 0;
-        while (true) {
-            var idx = fp.get(i);
-            field = field.getChild(idx);
-            if (i == last) {
-                return (T) field.getArrayEntityState(entry, idx);
-            }
-            if (!entry.isSub(idx)) {
-                return null;
-            }
-            entry = entry.subEntry(idx);
-            i++;
-        }
     }
 
     @Override
@@ -185,7 +132,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
 
     private static final Object[] EMPTY_STATE = {};
 
-    public class Entry implements ArrayEntityState {
+    public class Entry implements NestedEntityState {
 
         private Object[] state;
         private boolean modifiable;
@@ -242,11 +189,11 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         }
 
         @Override
-        public ArrayEntityState sub(int idx) {
+        public NestedEntityState sub(int idx) {
             return subEntry(idx);
         }
 
-        private Entry subEntry(int idx) {
+        Entry subEntry(int idx) {
             if (!isSub(idx)) {
                 set(idx, createEntryRef(new Entry()));
             }
@@ -255,7 +202,7 @@ public class NestedArrayEntityState implements EntityState, ArrayEntityState {
         }
 
         @Override
-        public ArrayEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
+        public NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
             var curSize = state.length;
             if (wantedSize == curSize) {
                 return this;

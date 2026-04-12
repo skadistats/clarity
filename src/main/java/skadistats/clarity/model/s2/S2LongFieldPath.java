@@ -4,8 +4,12 @@ public class S2LongFieldPath implements S2FieldPath, Comparable<S2LongFieldPath>
 
     private final long id;
 
-    S2LongFieldPath(long id) {
+    public S2LongFieldPath(long id) {
         this.id = id;
+    }
+
+    public long id() {
+        return id;
     }
 
     @Override

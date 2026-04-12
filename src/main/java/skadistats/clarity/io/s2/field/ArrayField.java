@@ -3,7 +3,7 @@ package skadistats.clarity.io.s2.field;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.model.state.ArrayEntityState;
+import skadistats.clarity.model.state.NestedEntityState;
 
 public class ArrayField extends Field {
 
@@ -32,12 +32,12 @@ public class ArrayField extends Field {
     }
 
     @Override
-    public void ensureArrayEntityStateCapacity(ArrayEntityState state, int capacity) {
-        state.capacity(length);
+    public void ensureCapacity(NestedEntityState state, int capacity) {
+        state.capacity(length, false);
     }
 
     @Override
-    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+    public Object getValue(NestedEntityState state, int idx) {
         return state.sub(idx).length();
     }
 

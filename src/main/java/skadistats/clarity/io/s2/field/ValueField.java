@@ -4,7 +4,7 @@ import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.SerializerProperties;
-import skadistats.clarity.model.state.ArrayEntityState;
+import skadistats.clarity.model.state.NestedEntityState;
 
 public class ValueField extends Field {
 
@@ -28,12 +28,12 @@ public class ValueField extends Field {
     }
 
     @Override
-    public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
+    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
         state.set(idx, value);
     }
 
     @Override
-    public Object getArrayEntityState(ArrayEntityState state, int idx) {
+    public Object getValue(NestedEntityState state, int idx) {
         return state.get(idx);
     }
 
