@@ -2,18 +2,12 @@ package skadistats.clarity.io.decoder.factory.s2;
 
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.PointerDecoder;
-import skadistats.clarity.io.s2.DecoderProperties;
-import skadistats.clarity.io.s2.Pointer;
+import skadistats.clarity.io.s2.SerializerProperties;
 
-public class PointerFactory implements DecoderFactory<Pointer> {
+public class PointerFactory {
 
-    public static Decoder<Pointer> createDecoderStatic(DecoderProperties f) {
+    public static Decoder createDecoder(SerializerProperties f) {
         return new PointerDecoder(f.getPolymorphicTypes());
-    }
-
-    @Override
-    public Decoder<Pointer> createDecoder(DecoderProperties f) {
-        return createDecoderStatic(f);
     }
 
 }

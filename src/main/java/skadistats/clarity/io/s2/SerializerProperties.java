@@ -1,6 +1,6 @@
 package skadistats.clarity.io.s2;
 
-public interface DecoderProperties {
+public interface SerializerProperties {
 
     Integer getEncodeFlags();
     Integer getBitCount();
@@ -14,7 +14,7 @@ public interface DecoderProperties {
     float getHighValueOrDefault(float defaultValue);
     SerializerId[] getPolymorphicTypes();
 
-    DecoderProperties DEFAULT = new DecoderProperties() {
+    SerializerProperties DEFAULT = new SerializerProperties() {
         @Override
         public Integer getEncodeFlags() {
             return null;

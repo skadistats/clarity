@@ -3,19 +3,19 @@ package skadistats.clarity.io.decoder;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
 
-public class VectorXYDecoder implements Decoder<Vector> {
+@RegisterDecoder
+public final class VectorXYDecoder extends Decoder {
 
-    private final Decoder<Float> floatDecoder;
+    private final Decoder floatDecoder;
 
-    public VectorXYDecoder(Decoder<Float> floatDecoder) {
+    public VectorXYDecoder(Decoder floatDecoder) {
         this.floatDecoder = floatDecoder;
     }
 
-    @Override
-    public Vector decode(BitStream bs) {
+    public static Vector decode(BitStream bs, VectorXYDecoder d) {
         return new Vector(
-            floatDecoder.decode(bs),
-            floatDecoder.decode(bs)
+            (Float) DecoderDispatch.decode(bs, d.floatDecoder),
+            (Float) DecoderDispatch.decode(bs, d.floatDecoder)
         );
     }
 

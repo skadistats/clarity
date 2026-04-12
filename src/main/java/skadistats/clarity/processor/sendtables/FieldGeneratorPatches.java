@@ -61,7 +61,7 @@ public class FieldGeneratorPatches {
         switch (field.name) {
             case "m_flMana":
             case "m_flMaxMana":
-                var up = field.decoderProperties;
+                var up = field.serializerProperties;
                 if (up.highValue == 3.4028235E38f) {
                     up.lowValue = null;
                     up.highValue = 8192.0f;
@@ -93,7 +93,7 @@ public class FieldGeneratorPatches {
             case "origin":
             case "vecExtraLocalOrigin":
             case "vecLocalOrigin":
-                field.decoderProperties.encoderType = "coord";
+                field.serializerProperties.encoderType = "coord";
                 break;
 
             case "angExtraLocalAngles":
@@ -101,15 +101,15 @@ public class FieldGeneratorPatches {
             case "m_angInitialAngles":
             case "m_ragAngles":
             case "m_vLightDirection":
-                field.decoderProperties.encoderType = "QAngle";
+                field.serializerProperties.encoderType = "QAngle";
                 break;
 
             case "m_vecLadderNormal":
-                field.decoderProperties.encoderType = "normal";
+                field.serializerProperties.encoderType = "normal";
                 break;
 
             case "m_angRotation":
-                field.decoderProperties.encoderType = SID_PITCH_YAW.equals(serializerId) ? "qangle_pitch_yaw" : "QAngle";
+                field.serializerProperties.encoderType = SID_PITCH_YAW.equals(serializerId) ? "qangle_pitch_yaw" : "QAngle";
                 break;
         }
     }
@@ -123,14 +123,14 @@ public class FieldGeneratorPatches {
             case "m_iPlayerIDsInControl":
             case "m_bItemWhiteList":
             case "m_iPlayerSteamID":
-                field.decoderProperties.encoderType = "fixed64";
+                field.serializerProperties.encoderType = "fixed64";
         }
     }
 
     private static void patchDotaS2RuneTime(SerializerId serializerId, FieldGenerator.FieldData field) {
         switch (field.name) {
             case "m_flRuneTime":
-                var up = field.decoderProperties;
+                var up = field.serializerProperties;
                 if (up.highValue != null && up.lowValue != null && up.highValue == Float.MAX_VALUE && up.lowValue == -Float.MAX_VALUE) {
                     up.lowValue = null;
                     up.highValue = null;

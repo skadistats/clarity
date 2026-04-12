@@ -2,6 +2,7 @@ package skadistats.clarity.io.s1;
 
 
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.DecoderDispatch;
 
 public class ReceiveProp {
 
@@ -22,7 +23,7 @@ public class ReceiveProp {
     }
 
     public Object decode(BitStream stream) {
-        return sendProp.getDecoder().decode(stream);
+        return DecoderDispatch.decode(stream, sendProp.getDecoder());
     }
 
     @Override

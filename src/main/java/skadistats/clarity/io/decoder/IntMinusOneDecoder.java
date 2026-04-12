@@ -2,10 +2,10 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class IntMinusOneDecoder implements Decoder<Integer> {
+@RegisterDecoder
+public final class IntMinusOneDecoder extends Decoder {
 
-    @Override
-    public Integer decode(BitStream bs) {
+    public static Integer decode(BitStream bs) {
         return bs.readVarUInt() - 1;
     }
 

@@ -4,6 +4,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.util.TextTable;
@@ -62,7 +63,7 @@ public class S2FieldReader extends FieldReader {
             if (decoder == null) {
                 throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
             }
-            result.setValue(r, decoder.decode(bs));
+            result.setValue(r, DecoderDispatch.decode(bs, decoder));
         }
 
         return result;
@@ -100,9 +101,9 @@ public class S2FieldReader extends FieldReader {
                     throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
                 }
                 var offsBefore = bs.pos();
-                result.setValue(r, decoder.decode(bs));
+                result.setValue(r, DecoderDispatch.decode(bs, decoder));
 
-                var props = dtClass.getFieldForFieldPath(fp).getDecoderProperties();
+                var props = dtClass.getFieldForFieldPath(fp).getSerializerProperties();
                 var type = dtClass.getTypeForFieldPath(fp);
                 dataDebugTable.setData(r, 0, fp);
                 dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));

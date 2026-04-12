@@ -7,17 +7,18 @@ import skadistats.clarity.model.s1.PropType;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class S1DecoderFactory {
 
-    private static final Map<PropType, DecoderFactory> FACTORIES = new HashMap<>();
+    private static final Map<PropType, Function<SendProp, Decoder>> FACTORIES = new HashMap<>();
     static {
-        FACTORIES.put(PropType.INT, new IntDecoderFactory());
-        FACTORIES.put(PropType.INT64, new LongDecoderFactory());
-        FACTORIES.put(PropType.FLOAT, new FloatDecoderFactory());
-        FACTORIES.put(PropType.VECTOR, new VectorDecoderFactory(3));
-        FACTORIES.put(PropType.VECTOR_XY, new VectorDecoderFactory(2));
-        FACTORIES.put(PropType.ARRAY, new ArrayDecoderFactory());
+        FACTORIES.put(PropType.INT, IntDecoderFactory::createDecoder);
+        FACTORIES.put(PropType.INT64, LongDecoderFactory::createDecoder);
+        FACTORIES.put(PropType.FLOAT, FloatDecoderFactory::createDecoder);
+        FACTORIES.put(PropType.VECTOR, prop -> VectorDecoderFactory.createDecoder(3, prop));
+        FACTORIES.put(PropType.VECTOR_XY, prop -> VectorDecoderFactory.createDecoder(2, prop));
+        FACTORIES.put(PropType.ARRAY, ArrayDecoderFactory::createDecoder);
     }
 
     private static final Map<PropType, Decoder> DECODERS = new HashMap<>();
@@ -27,9 +28,9 @@ public class S1DecoderFactory {
 
     public static Decoder createDecoder(SendProp prop) {
         var type = prop.getType();
-        var decoderFactory = FACTORIES.get(type);
-        if (decoderFactory != null) {
-            return decoderFactory.createDecoder(prop);
+        var factory = FACTORIES.get(type);
+        if (factory != null) {
+            return factory.apply(prop);
         }
         return DECODERS.get(type);
     }

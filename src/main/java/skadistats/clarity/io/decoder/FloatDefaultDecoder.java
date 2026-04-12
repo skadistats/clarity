@@ -2,7 +2,8 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class FloatDefaultDecoder implements Decoder<Float> {
+@RegisterDecoder
+public final class FloatDefaultDecoder extends Decoder {
 
     private final int bitCount;
     private final float minValue;
@@ -16,10 +17,9 @@ public class FloatDefaultDecoder implements Decoder<Float> {
         this.decodeMultiplier = 1.0f / ((1 << bitCount) - 1);
     }
 
-    @Override
-    public Float decode(BitStream bs) {
-        var v = bs.readUBitInt(bitCount) * decodeMultiplier;
-        return minValue + (maxValue - minValue) * v;
+    public static Float decode(BitStream bs, FloatDefaultDecoder d) {
+        var v = bs.readUBitInt(d.bitCount) * d.decodeMultiplier;
+        return d.minValue + (d.maxValue - d.minValue) * v;
     }
 
 }

@@ -4,16 +4,10 @@ import skadistats.clarity.io.s1.SendProp;
 import skadistats.clarity.io.decoder.*;
 import skadistats.clarity.model.s1.PropFlag;
 
-public class FloatDecoderFactory implements DecoderFactory<Float> {
+public class FloatDecoderFactory {
 
-    public static Decoder<Float> createDecoderStatic(SendProp prop) {
+    public static Decoder createDecoder(SendProp prop) {
         var flags = prop.getFlags();
-//        if ((flags & PropFlag.ROUND_DOWN) != 0) {
-//            System.out.println("unhandled ROUND_DOWN for " + prop.getVarName());
-//        }
-//        if ((flags & PropFlag.ROUND_UP) != 0) {
-//            System.out.println("unhandled ROUND_UP for " + prop.getVarName());
-//        }
         if ((flags & PropFlag.COORD) != 0) {
             return new FloatCoordDecoder();
         } else if ((flags & (PropFlag.COORD_MP | PropFlag.COORD_MP_LOW_PRECISION | PropFlag.COORD_MP_INTEGRAL)) != 0) {
@@ -36,8 +30,4 @@ public class FloatDecoderFactory implements DecoderFactory<Float> {
         }
     }
 
-    @Override
-    public Decoder<Float> createDecoder(SendProp prop) {
-        return createDecoderStatic(prop);
-    }
 }

@@ -2,7 +2,8 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class FloatCellCoordDecoder implements Decoder<Float> {
+@RegisterDecoder
+public final class FloatCellCoordDecoder extends Decoder {
 
     private final int nBits;
     private final boolean integral;
@@ -14,9 +15,8 @@ public class FloatCellCoordDecoder implements Decoder<Float> {
         this.lowPrecision = lowPrecision;
     }
 
-    @Override
-    public Float decode(BitStream bs) {
-        return bs.readCellCoord(nBits, integral, lowPrecision);
+    public static Float decode(BitStream bs, FloatCellCoordDecoder d) {
+        return bs.readCellCoord(d.nBits, d.integral, d.lowPrecision);
     }
 
 }

@@ -3,7 +3,8 @@ package skadistats.clarity.io.decoder;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
 
-public class QAngleBitCountDecoder implements Decoder<Vector> {
+@RegisterDecoder
+public final class QAngleBitCountDecoder extends Decoder {
 
     private final int nBits;
 
@@ -11,12 +12,11 @@ public class QAngleBitCountDecoder implements Decoder<Vector> {
         this.nBits = nBits;
     }
 
-    @Override
-    public Vector decode(BitStream bs) {
+    public static Vector decode(BitStream bs, QAngleBitCountDecoder d) {
         var v = new float[3];
-        v[0] = bs.readBitAngle(nBits);
-        v[1] = bs.readBitAngle(nBits);
-        v[2] = bs.readBitAngle(nBits);
+        v[0] = bs.readBitAngle(d.nBits);
+        v[1] = bs.readBitAngle(d.nBits);
+        v[2] = bs.readBitAngle(d.nBits);
         return new Vector(v);
     }
 

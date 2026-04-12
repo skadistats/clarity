@@ -1,35 +1,36 @@
 package skadistats.clarity.io.s2.field;
 
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.io.s2.DecoderHolder;
-import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Pointer;
 import skadistats.clarity.io.s2.Serializer;
+import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class PointerField extends SerializerField {
 
-    private final DecoderHolder decoderHolder;
+    private final Decoder decoder;
+    private final SerializerProperties serializerProperties;
     private final Serializer[] serializers;
     private final Serializer defaultSerializer;
 
-    public PointerField(FieldType fieldType, DecoderHolder decoderHolder, Serializer[] serializers) {
+    public PointerField(FieldType fieldType, Decoder decoder, SerializerProperties serializerProperties, Serializer[] serializers) {
         super(fieldType, null);
-        this.decoderHolder = decoderHolder;
+        this.decoder = decoder;
+        this.serializerProperties = serializerProperties;
         this.serializers = serializers;
         this.defaultSerializer = serializers.length == 1 ? serializers[0] : null;
         this.serializer = defaultSerializer;
     }
 
     @Override
-    public DecoderProperties getDecoderProperties() {
-        return decoderHolder.getDecoderProperties();
+    public SerializerProperties getSerializerProperties() {
+        return serializerProperties;
     }
 
     @Override
-    public Decoder<?> getDecoder() {
-        return decoderHolder.getDecoder();
+    public Decoder getDecoder() {
+        return decoder;
     }
 
     @Override

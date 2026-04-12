@@ -1,9 +1,9 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.io.s2.SerializerId;
 
-public class ProtoDecoderProperties implements DecoderProperties {
+public class ProtoSerializerProperties implements SerializerProperties {
 
     Integer encodeFlags;
     Integer bitCount;
@@ -12,7 +12,7 @@ public class ProtoDecoderProperties implements DecoderProperties {
     String encoderType;
     SerializerId[] polymorphicTypes;
 
-    ProtoDecoderProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType, SerializerId[] polymorphicTypes) {
+    ProtoSerializerProperties(Integer encodeFlags, Integer bitCount, Float lowValue, Float highValue, String encoderType, SerializerId[] polymorphicTypes) {
         this.encodeFlags = encodeFlags;
         this.bitCount = bitCount;
         this.lowValue = lowValue;

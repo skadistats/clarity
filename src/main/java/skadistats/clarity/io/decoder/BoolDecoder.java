@@ -2,10 +2,10 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class BoolDecoder implements Decoder<Boolean> {
+@RegisterDecoder
+public final class BoolDecoder extends Decoder {
 
-    @Override
-    public Boolean decode(BitStream bs) {
+    public static Boolean decode(BitStream bs) {
         return bs.readBitFlag();
     }
 

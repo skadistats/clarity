@@ -1,1 +1,4 @@
-skadistats.clarity.processor.EventAnnotationProcessor
+skadistats.clarity.processor.ListenerValidationProcessor
+skadistats.clarity.processor.ProvidesIndexProcessor
+skadistats.clarity.processor.EventGenerationProcessor
+skadistats.clarity.processor.DecoderAnnotationProcessor

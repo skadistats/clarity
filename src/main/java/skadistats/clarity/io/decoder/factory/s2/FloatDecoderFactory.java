@@ -4,16 +4,11 @@ import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.FloatCoordDecoder;
 import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.FloatQuantizedDecoder;
-import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.s2.SerializerProperties;
 
-public class FloatDecoderFactory implements DecoderFactory<Float> {
+public class FloatDecoderFactory {
 
-    @Override
-    public Decoder<Float> createDecoder(DecoderProperties f) {
-        return createDecoderStatic(f);
-    }
-
-    public static Decoder<Float> createDecoderStatic(DecoderProperties f) {
+    public static Decoder createDecoder(SerializerProperties f) {
         if ("coord".equals(f.getEncoderType())) {
             return new FloatCoordDecoder();
         }

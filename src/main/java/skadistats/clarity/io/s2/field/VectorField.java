@@ -3,17 +3,16 @@ package skadistats.clarity.io.s2.field;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.io.s2.DecoderHolder;
-import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.S2DecoderFactory;
+import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class VectorField extends Field {
 
-    private static final DecoderHolder decoderHolder = S2DecoderFactory.createDecoder("uint32");
+    private static final IntVarUnsignedDecoder LENGTH_DECODER = new IntVarUnsignedDecoder();
 
     private final Field elementField;
 
@@ -23,13 +22,13 @@ public class VectorField extends Field {
     }
 
     @Override
-    public DecoderProperties getDecoderProperties() {
-        return decoderHolder.getDecoderProperties();
+    public SerializerProperties getSerializerProperties() {
+        return SerializerProperties.DEFAULT;
     }
 
     @Override
-    public Decoder<?> getDecoder() {
-        return decoderHolder.getDecoder();
+    public Decoder getDecoder() {
+        return LENGTH_DECODER;
     }
 
     @Override
@@ -60,12 +59,6 @@ public class VectorField extends Field {
     @Override
     public void setArrayEntityState(ArrayEntityState state, int idx, int childDepth, Object value) {
         var count = (Integer) value;
-        // A vector's elements live at childDepth in the field path. The
-        // FieldPath format imposes a hard cap on indices at every depth
-        // (see S2LongFieldPathFormat). A length larger than that is
-        // structurally unaddressable and therefore a decoder desync,
-        // almost always caused by an unknown field type earlier in the
-        // stream falling back to the wrong decoder.
         var maxLength = S2LongFieldPathFormat.maxIndexAtDepth(childDepth) + 1;
         if (count < 0 || count > maxLength) {
             throw new ClarityException(

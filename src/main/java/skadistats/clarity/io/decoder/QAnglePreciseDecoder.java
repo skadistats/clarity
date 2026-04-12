@@ -3,10 +3,10 @@ package skadistats.clarity.io.decoder;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
 
-public class QAnglePreciseDecoder implements Decoder<Vector> {
+@RegisterDecoder
+public final class QAnglePreciseDecoder extends Decoder {
 
-    @Override
-    public Vector decode(BitStream bs) {
+    public static Vector decode(BitStream bs) {
         var v = new float[3];
         boolean hasX = bs.readBitFlag();
         boolean hasY = bs.readBitFlag();

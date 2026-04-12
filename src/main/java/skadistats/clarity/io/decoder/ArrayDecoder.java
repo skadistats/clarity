@@ -2,23 +2,23 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class ArrayDecoder<T> implements Decoder<T[]> {
+@RegisterDecoder
+public final class ArrayDecoder extends Decoder {
 
-    private final Decoder<T> decoder;
+    private final Decoder decoder;
     private final int nSizeBits;
 
-    public ArrayDecoder(Decoder<T> decoder, int nSizeBits) {
+    public ArrayDecoder(Decoder decoder, int nSizeBits) {
         this.decoder = decoder;
         this.nSizeBits = nSizeBits;
     }
 
-    @Override
-    public T[] decode(BitStream bs) {
-        var count = bs.readUBitInt(nSizeBits);
-        var result = (T[]) new Object[count];
+    public static Object[] decode(BitStream bs, ArrayDecoder d) {
+        var count = bs.readUBitInt(d.nSizeBits);
+        var result = new Object[count];
         var i = 0;
         while (i < count) {
-            result[i++] = decoder.decode(bs);
+            result[i++] = DecoderDispatch.decode(bs, d.decoder);
         }
         return result;
     }

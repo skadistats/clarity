@@ -82,7 +82,7 @@ public class FieldGenerator {
             }
         }
 
-        var decoderProperties = new ProtoDecoderProperties(
+        var serializerProperties = new ProtoSerializerProperties(
             proto.hasEncodeFlags() ? proto.getEncodeFlags() : null,
             proto.hasBitCount() ? proto.getBitCount() : null,
             proto.hasLowValue() ? proto.getLowValue() : null,
@@ -94,7 +94,7 @@ public class FieldGenerator {
         return new FieldData(
             FieldType.forString(sym(proto.getVarTypeSym())),
             fieldNameFunction(proto),
-            decoderProperties,
+            serializerProperties,
             serializerId
         );
     }
@@ -137,14 +137,15 @@ public class FieldGenerator {
         Field elementField;
         if (fd.serializerId != null) {
             if (fd.category == FieldCategory.POINTER) {
-                var types = fd.decoderProperties.polymorphicTypes;
+                var types = fd.serializerProperties.polymorphicTypes;
                 var typeSerializers = new Serializer[types.length];
                 for (int i = 0; i < types.length; i++) {
                     typeSerializers[i] = serializers.get(types[i]);
                 }
                 elementField = new PointerField(
                     elementType,
-                    S2DecoderFactory.createDecoder(fd.decoderProperties, "Pointer"),
+                    S2DecoderFactory.createDecoder(fd.serializerProperties, "Pointer"),
+                    fd.serializerProperties,
                     typeSerializers
                 );
             } else {
@@ -156,7 +157,8 @@ public class FieldGenerator {
         } else {
             elementField = new ValueField(
                     elementType,
-                    S2DecoderFactory.createDecoder(fd.decoderProperties, elementType.getBaseType())
+                    S2DecoderFactory.createDecoder(fd.serializerProperties, elementType.getBaseType()),
+                    fd.serializerProperties
             );
         }
 
@@ -205,16 +207,16 @@ public class FieldGenerator {
     static class FieldData {
         FieldType fieldType;
         final String name;
-        final ProtoDecoderProperties decoderProperties;
+        final ProtoSerializerProperties serializerProperties;
         final SerializerId serializerId;
 
         final FieldCategory category;
         Field field;
 
-        public FieldData(FieldType fieldType, String name, ProtoDecoderProperties decoderProperties, SerializerId serializerId) {
+        public FieldData(FieldType fieldType, String name, ProtoSerializerProperties serializerProperties, SerializerId serializerId) {
             this.fieldType = fieldType;
             this.name = name;
-            this.decoderProperties = decoderProperties;
+            this.serializerProperties = serializerProperties;
             this.serializerId = serializerId;
 
             if (determineIsPointer()) {

@@ -6,17 +6,13 @@ import skadistats.clarity.io.s1.SendProp;
 import skadistats.clarity.io.decoder.ArrayDecoder;
 import skadistats.clarity.io.decoder.Decoder;
 
-public class ArrayDecoderFactory<T> implements DecoderFactory<T> {
+public class ArrayDecoderFactory {
 
-    public static Decoder<?> createDecoderStatic(SendProp prop) {
+    public static Decoder createDecoder(SendProp prop) {
         return new ArrayDecoder(
             S1DecoderFactory.createDecoder(prop.getTemplate()),
             Util.calcBitsNeededFor(prop.getNumElements())
         );
     }
 
-    @Override
-    public Decoder<T> createDecoder(SendProp prop) {
-        return (Decoder<T>) createDecoderStatic(prop);
-    }
 }

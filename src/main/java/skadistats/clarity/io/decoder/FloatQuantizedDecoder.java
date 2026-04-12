@@ -8,7 +8,8 @@ import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import static skadistats.clarity.LogChannel.decoder;
 
-public class FloatQuantizedDecoder implements Decoder<Float> {
+@RegisterDecoder
+public final class FloatQuantizedDecoder extends Decoder {
 
     private static final int QFE_ROUNDDOWN = 0x1;
     private static final int QFE_ROUNDUP = 0x2;
@@ -41,12 +42,10 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
     }
 
     private int computeEncodeFlags(int f) {
-        // If the min or max value is exactly zero and we are encoding min or max exactly, then don't need zero flag
         if ((minValue == 0.0f && (f & QFE_ROUNDDOWN) != 0) || (maxValue == 0.0f && (f & QFE_ROUNDUP) != 0)) {
             f &= ~QFE_ENCODE_ZERO_EXACTLY;
         }
 
-        // If specified encode zero but min or max actual value is zero, then convert that encode directive to be encode min or max exactly instead
         if (minValue == 0.0f && (f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
             f |= QFE_ROUNDDOWN;
             f &= ~QFE_ENCODE_ZERO_EXACTLY;
@@ -56,7 +55,6 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
             f &= ~QFE_ENCODE_ZERO_EXACTLY;
         }
 
-        // If the range doesn't span across zero, then also don't need the zero flag
         if (!(minValue < 0.0f && maxValue > 0.0f)) {
             if ((f & QFE_ENCODE_ZERO_EXACTLY) != 0) {
                 log.warn("Field %s was flagged to encode zero exactly, but min/max range doesn't span zero [%f->%f]", fieldName, minValue, maxValue);
@@ -65,7 +63,6 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
         }
 
         if ((f & QFE_ENCODE_INTEGERS_EXACTLY) != 0) {
-            // Wipes out all other flags
             f &= ~(QFE_ROUNDUP | QFE_ROUNDDOWN | QFE_ENCODE_ZERO_EXACTLY);
         }
 
@@ -146,10 +143,7 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
             highLowMul = highValue / range;
         }
 
-        // If the precision is messing us up, then adjust it so it won't.
         if ((long) (highLowMul * range) > highValue || (highLowMul * range) > (double) highValue) {
-            // Squeeze it down smaller and smaller until it's going to produce an integer
-            // in the valid range when given the highest value.
             float multipliers[] = {0.9999f, 0.99f, 0.9f, 0.8f, 0.7f};
             int i;
             for (i = 0; i < multipliers.length; i++) {
@@ -182,19 +176,18 @@ public class FloatQuantizedDecoder implements Decoder<Float> {
         return minValue + (maxValue - minValue) * ((float) i * decodeMultiplier);
     }
 
-    @Override
-    public Float decode(BitStream bs) {
-        if ((encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) {
-            return minValue;
+    public static Float decode(BitStream bs, FloatQuantizedDecoder d) {
+        if ((d.encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) {
+            return d.minValue;
         }
-        if ((encodeFlags & QFE_ROUNDUP) != 0 && bs.readBitFlag()) {
-            return maxValue;
+        if ((d.encodeFlags & QFE_ROUNDUP) != 0 && bs.readBitFlag()) {
+            return d.maxValue;
         }
-        if ((encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0 && bs.readBitFlag()) {
+        if ((d.encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0 && bs.readBitFlag()) {
             return 0.0f;
         }
-        var v = bs.readUBitInt(bitCount) * decodeMultiplier;
-        return minValue + (maxValue - minValue) * v;
+        var v = bs.readUBitInt(d.bitCount) * d.decodeMultiplier;
+        return d.minValue + (d.maxValue - d.minValue) * v;
     }
 
 }

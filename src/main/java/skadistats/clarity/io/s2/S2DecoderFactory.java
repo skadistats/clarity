@@ -2,7 +2,6 @@ package skadistats.clarity.io.s2;
 
 import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.*;
-import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.PointerFactory;
@@ -12,6 +11,7 @@ import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static skadistats.clarity.LogChannel.decoder;
 
@@ -21,26 +21,26 @@ public class S2DecoderFactory {
 
     private static final Decoder DEFAULT_DECODER = new IntVarUnsignedDecoder();
 
-    private static final Map<String, DecoderFactory> FACTORIES = new HashMap<>();
+    private static final Map<String, Function<SerializerProperties, Decoder>> FACTORIES = new HashMap<>();
 
     static {
         // Unsigned ints
-        FACTORIES.put("uint64", new LongUnsignedDecoderFactory());
+        FACTORIES.put("uint64", LongUnsignedDecoderFactory::createDecoder);
 
         // Floats
-        FACTORIES.put("float32", new FloatDecoderFactory());
-        FACTORIES.put("CNetworkedQuantizedFloat", new FloatDecoderFactory());
-        FACTORIES.put("QAngle", new QAngleDecoderFactory());
+        FACTORIES.put("float32", FloatDecoderFactory::createDecoder);
+        FACTORIES.put("CNetworkedQuantizedFloat", FloatDecoderFactory::createDecoder);
+        FACTORIES.put("QAngle", QAngleDecoderFactory::createDecoder);
 
         // Specials
-        FACTORIES.put("Vector2D", new VectorDecoderFactory(2));
-        FACTORIES.put("Vector", new VectorDecoderFactory(3));
-        FACTORIES.put("Vector4D", new VectorDecoderFactory(4));
-        FACTORIES.put("Quaternion", new VectorDecoderFactory(4));
-        FACTORIES.put("VectorWS", new VectorDecoderFactory(3));
+        FACTORIES.put("Vector2D", props -> VectorDecoderFactory.createDecoder(2, props));
+        FACTORIES.put("Vector", props -> VectorDecoderFactory.createDecoder(3, props));
+        FACTORIES.put("Vector4D", props -> VectorDecoderFactory.createDecoder(4, props));
+        FACTORIES.put("Quaternion", props -> VectorDecoderFactory.createDecoder(4, props));
+        FACTORIES.put("VectorWS", props -> VectorDecoderFactory.createDecoder(3, props));
 
         // Pointer
-        FACTORIES.put("Pointer", new PointerFactory());
+        FACTORIES.put("Pointer", PointerFactory::createDecoder);
     }
 
     private static final Map<String, Decoder> DECODERS = new HashMap<>();
@@ -88,23 +88,21 @@ public class S2DecoderFactory {
     }
 
 
-    public static DecoderHolder createDecoder(String type) {
-        return createDecoder(DecoderProperties.DEFAULT, type);
+    public static Decoder createDecoder(String type) {
+        return createDecoder(SerializerProperties.DEFAULT, type);
     }
 
-    public static DecoderHolder createDecoder(DecoderProperties decoderProperties, String type) {
-        Decoder decoder;
-        var decoderFactory = FACTORIES.get(type);
-        if (decoderFactory != null) {
-            decoder = decoderFactory.createDecoder(decoderProperties);
-        } else {
-            decoder = DECODERS.get(type);
-            if (decoder == null) {
-                log.debug("don't know how to create decoder for %s, assuming int.", type);
-                decoder = DEFAULT_DECODER;
-            }
+    public static Decoder createDecoder(SerializerProperties serializerProperties, String type) {
+        var factory = FACTORIES.get(type);
+        if (factory != null) {
+            return factory.apply(serializerProperties);
         }
-        return new DecoderHolder(decoderProperties, decoder);
+        var decoder = DECODERS.get(type);
+        if (decoder == null) {
+            log.debug("don't know how to create decoder for %s, assuming int.", type);
+            decoder = DEFAULT_DECODER;
+        }
+        return decoder;
     }
 
 }

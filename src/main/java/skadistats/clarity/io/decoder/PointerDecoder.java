@@ -4,7 +4,8 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.Pointer;
 import skadistats.clarity.io.s2.SerializerId;
 
-public class PointerDecoder implements Decoder<Pointer> {
+@RegisterDecoder
+public final class PointerDecoder extends Decoder {
 
     private final SerializerId[] types;
 
@@ -12,14 +13,13 @@ public class PointerDecoder implements Decoder<Pointer> {
         this.types = types;
     }
 
-    @Override
-    public Pointer decode(BitStream bs) {
+    public static Pointer decode(BitStream bs, PointerDecoder d) {
         var enabled = bs.readBitFlag();
         Integer index = null;
-        if (enabled && types.length > 1) {
+        if (enabled && d.types.length > 1) {
             index = bs.readUBitVar();
         }
-        var description = index == null ? "null" : types[index].toString();
+        var description = index == null ? "null" : d.types[index].toString();
         return new Pointer(index, description);
     }
 

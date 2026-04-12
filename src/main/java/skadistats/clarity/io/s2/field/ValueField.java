@@ -1,29 +1,30 @@
 package skadistats.clarity.io.s2.field;
 
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.io.s2.DecoderHolder;
-import skadistats.clarity.io.s2.DecoderProperties;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
+import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.model.state.ArrayEntityState;
 
 public class ValueField extends Field {
 
-    private final DecoderHolder decoderHolder;
+    private final Decoder decoder;
+    private final SerializerProperties serializerProperties;
 
-    public ValueField(FieldType fieldType, DecoderHolder decoderHolder) {
+    public ValueField(FieldType fieldType, Decoder decoder, SerializerProperties serializerProperties) {
         super(fieldType);
-        this.decoderHolder = decoderHolder;
+        this.decoder = decoder;
+        this.serializerProperties = serializerProperties;
     }
 
     @Override
-    public DecoderProperties getDecoderProperties() {
-        return decoderHolder.getDecoderProperties();
+    public SerializerProperties getSerializerProperties() {
+        return serializerProperties;
     }
 
     @Override
-    public Decoder<?> getDecoder() {
-        return decoderHolder.getDecoder();
+    public Decoder getDecoder() {
+        return decoder;
     }
 
     @Override

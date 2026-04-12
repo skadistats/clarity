@@ -2,7 +2,8 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class LongUnsignedDecoder implements Decoder<Long> {
+@RegisterDecoder
+public final class LongUnsignedDecoder extends Decoder {
 
     private final int nBits;
 
@@ -10,9 +11,8 @@ public class LongUnsignedDecoder implements Decoder<Long> {
         this.nBits = nBits;
     }
 
-    @Override
-    public Long decode(BitStream bs) {
-        return bs.readUBitLong(nBits);
+    public static Long decode(BitStream bs, LongUnsignedDecoder d) {
+        return bs.readUBitLong(d.nBits);
     }
 
 }

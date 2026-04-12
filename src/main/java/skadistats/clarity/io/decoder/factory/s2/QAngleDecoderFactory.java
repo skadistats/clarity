@@ -1,17 +1,16 @@
 package skadistats.clarity.io.decoder.factory.s2;
 
-import skadistats.clarity.io.decoder.QAnglePreciseDecoder;
-import skadistats.clarity.io.s2.DecoderProperties;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.QAngleBitCountDecoder;
 import skadistats.clarity.io.decoder.QAngleNoBitCountDecoder;
 import skadistats.clarity.io.decoder.QAngleNoScaleDecoder;
 import skadistats.clarity.io.decoder.QAnglePitchYawOnlyDecoder;
-import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.Vector;
+import skadistats.clarity.io.decoder.QAnglePreciseDecoder;
+import skadistats.clarity.io.s2.SerializerProperties;
 
-public class QAngleDecoderFactory implements DecoderFactory<Vector> {
+public class QAngleDecoderFactory {
 
-    public static Decoder<Vector> createDecoderStatic(DecoderProperties f) {
+    public static Decoder createDecoder(SerializerProperties f) {
         var bc = f.getBitCountOrDefault(0);
         if ("qangle_pitch_yaw".equals(f.getEncoderType())) {
             return new QAnglePitchYawOnlyDecoder(bc);
@@ -26,11 +25,6 @@ public class QAngleDecoderFactory implements DecoderFactory<Vector> {
             return new QAngleNoScaleDecoder();
         }
         return new QAngleBitCountDecoder(bc);
-    }
-
-    @Override
-    public Decoder<Vector> createDecoder(DecoderProperties f) {
-        return createDecoderStatic(f);
     }
 
 }

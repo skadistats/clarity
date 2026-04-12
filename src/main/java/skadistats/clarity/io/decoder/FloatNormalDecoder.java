@@ -2,10 +2,10 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class FloatNormalDecoder implements Decoder<Float> {
+@RegisterDecoder
+public final class FloatNormalDecoder extends Decoder {
 
-    @Override
-    public Float decode(BitStream bs) {
+    public static Float decode(BitStream bs) {
         return bs.readBitNormal();
     }
 

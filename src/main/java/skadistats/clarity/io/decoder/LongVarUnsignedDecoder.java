@@ -2,10 +2,10 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 
-public class LongVarUnsignedDecoder implements Decoder<Long> {
+@RegisterDecoder
+public final class LongVarUnsignedDecoder extends Decoder {
 
-    @Override
-    public Long decode(BitStream bs) {
+    public static Long decode(BitStream bs) {
         return bs.readVarULong();
     }
 

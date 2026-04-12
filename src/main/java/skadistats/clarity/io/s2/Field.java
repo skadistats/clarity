@@ -15,11 +15,11 @@ public abstract class Field {
         return fieldType;
     }
 
-    public DecoderProperties getDecoderProperties() {
-        return null;
+    public SerializerProperties getSerializerProperties() {
+        return SerializerProperties.DEFAULT;
     }
 
-    public Decoder<?> getDecoder() {
+    public Decoder getDecoder() {
         return null;
     }
 

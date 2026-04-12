@@ -2,12 +2,12 @@ package skadistats.clarity.io;
 
 import com.google.protobuf.ByteString;
 import org.xerial.snappy.Snappy;
-import skadistats.clarity.io.decoder.Decoder;
+
 import skadistats.clarity.source.Source;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.ParameterizedType;
+
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
@@ -78,10 +78,6 @@ public class Util {
         return Integer.parseInt(value);
     }
 
-    public static <T> Class<T> valueClassForDecoder(Decoder<T> decoder) {
-        var interfaceType = (ParameterizedType) decoder.getClass().getGenericInterfaces()[0];
-        return (Class<T>)interfaceType.getActualTypeArguments()[0];
-    }
 
     public static void byteCopy(Object src, int srcOffset, Object dst, int dstOffset, int n) {
         try {

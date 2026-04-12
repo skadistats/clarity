@@ -64,6 +64,10 @@ tasks.named<Test>("test") {
     useTestNG()
 }
 
+tasks.named<Javadoc>("javadoc") {
+    source(files("build/generated/sources/annotationProcessor/java/main"))
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
