@@ -4,6 +4,7 @@ import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.util.TextTable;
 
@@ -44,11 +45,12 @@ public abstract class S1FieldReader extends FieldReader {
             for (var ci = 0; ci < n; ci++) {
                 var offsBefore = bs.pos();
                 var o = fieldPaths[ci].s1().idx();
-                result.setValue(ci, receiveProps[o].decode(bs));
+                var decoded = receiveProps[o].decode(bs);
+                result.setMutation(ci, new StateMutation.WriteValue(decoded));
 
                 if (debug) {
                     var sp = receiveProps[o].getSendProp();
-                    var subState = result.getValue(ci);
+                    var subState = decoded;
                     debugTable.setData(ci, 0, o);
                     debugTable.setData(ci, 1, receiveProps[o].getVarName());
                     debugTable.setData(ci, 2, sp.getLowValue());

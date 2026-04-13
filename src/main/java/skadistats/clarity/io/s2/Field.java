@@ -1,7 +1,7 @@
 package skadistats.clarity.io.s2;
 
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.state.NestedEntityState;
+import skadistats.clarity.model.state.StateMutation;
 
 public abstract class Field {
 
@@ -35,21 +35,8 @@ public abstract class Field {
         return null;
     }
 
-    public Object getValue(NestedEntityState state, int idx) {
-        return null;
-    }
-
-    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
-        throw new UnsupportedOperationException(getClass().getSimpleName());
-    }
-
-    public void ensureCapacity(NestedEntityState state, int capacity) {
-        throw new UnsupportedOperationException(getClass().getSimpleName());
-    }
-
-    public boolean isHiddenFieldPath() {
-        // true, if this field's state value is hidden
-        return false;
+    public StateMutation createMutation(Object decodedValue, int depth) {
+        return new StateMutation.WriteValue(decodedValue);
     }
 
     public String toString() {

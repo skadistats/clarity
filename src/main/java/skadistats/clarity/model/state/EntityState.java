@@ -11,7 +11,7 @@ public interface EntityState {
     EntityState copy();
 
     // returns true if capacity has changed
-    boolean setValueForFieldPath(FieldPath fp, Object value);
+    boolean applyMutation(FieldPath fp, StateMutation mutation);
     <T> T getValueForFieldPath(FieldPath fp);
 
     Iterator<FieldPath> fieldPathIterator();

@@ -25,8 +25,9 @@ public class ObjectArrayEntityState implements EntityState {
     }
 
     @Override
-    public boolean setValueForFieldPath(FieldPath fp, Object value) {
-        state[fp.s1().idx()] = value;
+    public boolean applyMutation(FieldPath fp, StateMutation mutation) {
+        var wv = (StateMutation.WriteValue) mutation;
+        state[fp.s1().idx()] = wv.value();
         return false;
     }
 

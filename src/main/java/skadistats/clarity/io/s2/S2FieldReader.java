@@ -59,11 +59,12 @@ public class S2FieldReader extends FieldReader {
         var result = new FieldChanges(fieldPaths, n);
         for (var r = 0; r < n; r++) {
             var fp = fieldPaths[r].s2();
-            var decoder = dtClass.getDecoderForFieldPath(fp);
-            if (decoder == null) {
-                throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
+            var field = dtClass.getFieldForFieldPath(fp);
+            if (field == null) {
+                throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
             }
-            result.setValue(r, DecoderDispatch.decode(bs, decoder));
+            var decoded = DecoderDispatch.decode(bs, field.getDecoder());
+            result.setMutation(r, field.createMutation(decoded, fp.last() + 1));
         }
 
         return result;
@@ -96,14 +97,16 @@ public class S2FieldReader extends FieldReader {
 
             for (var r = 0; r < n; r++) {
                 var fp = fieldPaths[r].s2();
-                var decoder = dtClass.getDecoderForFieldPath(fp);
-                if (decoder == null) {
-                    throw new ClarityException("no decoder for class %s at %s!", dtClass.getDtName(), fp);
+                var field = dtClass.getFieldForFieldPath(fp);
+                if (field == null) {
+                    throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
                 }
+                var decoder = field.getDecoder();
                 var offsBefore = bs.pos();
-                result.setValue(r, DecoderDispatch.decode(bs, decoder));
+                var decoded = DecoderDispatch.decode(bs, decoder);
+                result.setMutation(r, field.createMutation(decoded, fp.last() + 1));
 
-                var props = dtClass.getFieldForFieldPath(fp).getSerializerProperties();
+                var props = field.getSerializerProperties();
                 var type = dtClass.getTypeForFieldPath(fp);
                 dataDebugTable.setData(r, 0, fp);
                 dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
@@ -113,7 +116,7 @@ public class S2FieldReader extends FieldReader {
                 dataDebugTable.setData(r, 5, props.getEncodeFlags() != null ? Integer.toHexString(props.getEncodeFlags()) : "-");
                 dataDebugTable.setData(r, 6, decoder.getClass().getSimpleName());
                 dataDebugTable.setData(r, 7, String.format("%s%s", type, props.getEncoderType() != null ? String.format(" {%s}", props.getEncoderType()) : ""));
-                dataDebugTable.setData(r, 8, result.getValue(r));
+                dataDebugTable.setData(r, 8, decoded);
                 dataDebugTable.setData(r, 9, bs.pos() - offsBefore);
                 dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
             }

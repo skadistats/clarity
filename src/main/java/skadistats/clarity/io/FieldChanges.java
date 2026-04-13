@@ -2,32 +2,33 @@ package skadistats.clarity.io;
 
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.StateMutation;
 
 public class FieldChanges {
 
     private final FieldPath[] fieldPaths;
-    private final Object[] values;
+    private final StateMutation[] mutations;
 
     public FieldChanges(FieldPath[] source, int n) {
         this.fieldPaths = new FieldPath[n];
         System.arraycopy(source, 0, this.fieldPaths, 0, n);
-        this.values = new Object[n];
+        this.mutations = new StateMutation[n];
     }
 
     public boolean applyTo(EntityState state) {
         var capacityChanged = false;
         for (var i = 0; i < fieldPaths.length; i++) {
-            capacityChanged |= state.setValueForFieldPath(fieldPaths[i], values[i]);
+            capacityChanged |= state.applyMutation(fieldPaths[i], mutations[i]);
         }
         return capacityChanged;
     }
 
-    public Object getValue(int idx) {
-        return values[idx];
+    public StateMutation getMutation(int idx) {
+        return mutations[idx];
     }
 
-    public void setValue(int idx, Object value) {
-        values[idx] = value;
+    public void setMutation(int idx, StateMutation mutation) {
+        mutations[idx] = mutation;
     }
 
     public FieldPath[] getFieldPaths() {

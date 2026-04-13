@@ -8,7 +8,7 @@ import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
-import skadistats.clarity.model.state.NestedEntityState;
+import skadistats.clarity.model.state.StateMutation;
 
 public class VectorField extends Field {
 
@@ -47,32 +47,17 @@ public class VectorField extends Field {
     }
 
     @Override
-    public void ensureCapacity(NestedEntityState state, int capacity) {
-        state.capacity(capacity, false);
-    }
-
-    @Override
-    public boolean isHiddenFieldPath() {
-        return true;
-    }
-
-    @Override
-    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
-        var count = (Integer) value;
-        var maxLength = S2LongFieldPathFormat.maxIndexAtDepth(childDepth) + 1;
+    public StateMutation createMutation(Object decodedValue, int depth) {
+        var count = (Integer) decodedValue;
+        var maxLength = S2LongFieldPathFormat.maxIndexAtDepth(depth) + 1;
         if (count < 0 || count > maxLength) {
             throw new ClarityException(
                 "decoder desync: vector length %d for field %s at depth %d exceeds the structural maximum of %d. " +
                 "This usually means an unknown field type earlier in the stream was decoded with the wrong decoder.",
-                count, getType(), childDepth, maxLength
+                count, getType(), depth, maxLength
             );
         }
-        state.sub(idx).capacity(count, true);
-    }
-
-    @Override
-    public Object getValue(NestedEntityState state, int idx) {
-        return state.sub(idx).length();
+        return new StateMutation.ResizeVector(count);
     }
 
 }

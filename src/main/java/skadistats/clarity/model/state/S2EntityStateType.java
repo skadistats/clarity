@@ -14,7 +14,7 @@ public enum S2EntityStateType {
     TREE_MAP {
         @Override
         public EntityState createState(SerializerField field) {
-            return new TreeMapEntityState(field);
+            return new TreeMapEntityState();
         }
     };
 

@@ -5,7 +5,7 @@ import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Pointer;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerProperties;
-import skadistats.clarity.model.state.NestedEntityState;
+import skadistats.clarity.model.state.StateMutation;
 
 public class PointerField extends SerializerField {
 
@@ -33,33 +33,20 @@ public class PointerField extends SerializerField {
         return decoder;
     }
 
-    @Override
-    public boolean isHiddenFieldPath() {
-        return true;
+    public void resetSerializer() {
+        this.serializer = defaultSerializer;
+    }
+
+    public void activateSerializer(Serializer newSerializer) {
+        this.serializer = newSerializer;
     }
 
     @Override
-    public void setValue(NestedEntityState state, int idx, int childDepth, Object value) {
-        Pointer p = (Pointer) value;
+    public StateMutation createMutation(Object decodedValue, int depth) {
+        var p = (Pointer) decodedValue;
         var typeIndex = p.getTypeIndex();
         var newSerializer = typeIndex != null ? serializers[typeIndex] : null;
-        if (state.has(idx)) {
-            if (typeIndex == null || this.serializer != newSerializer) {
-                this.serializer = defaultSerializer;
-                state.clear(idx);
-            }
-        }
-        if (newSerializer != null) {
-            if (!state.has(idx)) {
-                this.serializer = newSerializer;
-                state.sub(idx);
-            }
-        }
-    }
-
-    @Override
-    public Object getValue(NestedEntityState state, int idx) {
-        return state.isSub(idx);
+        return new StateMutation.SwitchPointer(newSerializer);
     }
 
 }
