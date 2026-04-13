@@ -8,6 +8,7 @@ import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.SerializerProperties;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
+import skadistats.clarity.model.state.AbstractS2EntityState;
 import skadistats.clarity.model.state.StateMutation;
 
 public class VectorField extends Field {
@@ -37,17 +38,17 @@ public class VectorField extends Field {
     }
 
     @Override
-    public Field getChild(int idx) {
+    public Field getChild(AbstractS2EntityState state, int idx) {
         return elementField;
     }
 
     @Override
-    public Integer getChildIndex(String nameSegment) {
+    public Integer getChildIndex(AbstractS2EntityState state, String nameSegment) {
         return Util.stringToArrayIdx(nameSegment);
     }
 
     @Override
-    public String getChildNameSegment(int idx) {
+    public String getChildNameSegment(AbstractS2EntityState state, int idx) {
         return Util.arrayIdxToString(idx);
     }
 

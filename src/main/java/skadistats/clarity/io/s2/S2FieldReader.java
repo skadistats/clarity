@@ -5,11 +5,24 @@ import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
+import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.state.AbstractS2EntityState;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.util.TextTable;
 
+import java.util.Arrays;
+
 public class S2FieldReader extends FieldReader {
+
+    private final Serializer[] pointerOverrides;
+
+    public S2FieldReader(int pointerCount) {
+        this.pointerOverrides = new Serializer[pointerCount];
+    }
 
     private final TextTable dataDebugTable = new TextTable.Builder()
         .setFrame(TextTable.FRAME_COMPAT)
@@ -38,12 +51,28 @@ public class S2FieldReader extends FieldReader {
         .build();
 
     @Override
-    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
-        return debug ? readFieldsDebug(bs, dtClassGeneric) : readFieldsFast(bs, dtClassGeneric);
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug) {
+        return debug ? readFieldsDebug(bs, dtClassGeneric, state) : readFieldsFast(bs, dtClassGeneric, state);
     }
 
-    private FieldChanges readFieldsFast(BitStream bs, DTClass dtClassGeneric) {
+    private Field resolveField(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
+        Field f = state.getRootField();
+        for (int i = 0; i <= fp.last(); i++) {
+            if (f instanceof PointerField pf) {
+                f = pf.getChild(fp.get(i), state, pointerOverrides[pf.getPointerId()]);
+            } else {
+                f = f.getChild(state, fp.get(i));
+            }
+            if (f == null) {
+                throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
+            }
+        }
+        return f;
+    }
+
+    private FieldChanges readFieldsFast(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
         var dtClass = dtClassGeneric.s2();
+        var state = (AbstractS2EntityState) entityState;
         var n = 0;
         var mfp = S2ModifiableFieldPath.newInstance();
 
@@ -57,21 +86,24 @@ public class S2FieldReader extends FieldReader {
         }
 
         var result = new FieldChanges(fieldPaths, n);
+        Arrays.fill(pointerOverrides, null);
         for (var r = 0; r < n; r++) {
             var fp = fieldPaths[r].s2();
-            var field = dtClass.getFieldForFieldPath(fp);
-            if (field == null) {
-                throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
-            }
+            var field = resolveField(state, dtClass, fp);
             var decoded = DecoderDispatch.decode(bs, field.getDecoder());
-            result.setMutation(r, field.createMutation(decoded, fp.last() + 1));
+            var mutation = field.createMutation(decoded, fp.last() + 1);
+            result.setMutation(r, mutation);
+            if (mutation instanceof StateMutation.SwitchPointer sp) {
+                pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+            }
         }
 
         return result;
     }
 
-    private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric) {
+    private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
         var dtClass = dtClassGeneric.s2();
+        var state = (AbstractS2EntityState) entityState;
         try {
             dataDebugTable.setTitle(dtClass.toString());
             dataDebugTable.clear();
@@ -94,22 +126,23 @@ public class S2FieldReader extends FieldReader {
             }
 
             var result = new FieldChanges(fieldPaths, n);
-
+            Arrays.fill(pointerOverrides, null);
             for (var r = 0; r < n; r++) {
                 var fp = fieldPaths[r].s2();
-                var field = dtClass.getFieldForFieldPath(fp);
-                if (field == null) {
-                    throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
-                }
+                var field = resolveField(state, dtClass, fp);
                 var decoder = field.getDecoder();
                 var offsBefore = bs.pos();
                 var decoded = DecoderDispatch.decode(bs, decoder);
-                result.setMutation(r, field.createMutation(decoded, fp.last() + 1));
+                var mutation = field.createMutation(decoded, fp.last() + 1);
+                result.setMutation(r, mutation);
+                if (mutation instanceof StateMutation.SwitchPointer sp) {
+                    pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+                }
 
                 var props = field.getSerializerProperties();
-                var type = dtClass.getTypeForFieldPath(fp);
+                var type = state.getTypeForFieldPath(fp);
                 dataDebugTable.setData(r, 0, fp);
-                dataDebugTable.setData(r, 1, dtClass.getNameForFieldPath(fp));
+                dataDebugTable.setData(r, 1, state.getNameForFieldPath(fp));
                 dataDebugTable.setData(r, 2, props.getLowValue());
                 dataDebugTable.setData(r, 3, props.getHighValue());
                 dataDebugTable.setData(r, 4, props.getBitCount());

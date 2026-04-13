@@ -7,10 +7,15 @@ public class EntityStateFactory {
 
     private final S1EntityStateType s1Type;
     private final S2EntityStateType s2Type;
+    private int pointerCount;
 
     public EntityStateFactory(S1EntityStateType s1Type, S2EntityStateType s2Type) {
         this.s1Type = s1Type;
         this.s2Type = s2Type;
+    }
+
+    public void setPointerCount(int pointerCount) {
+        this.pointerCount = pointerCount;
     }
 
     public EntityState forS1(ReceiveProp[] receiveProps) {
@@ -18,7 +23,7 @@ public class EntityStateFactory {
     }
 
     public EntityState forS2(SerializerField field) {
-        return s2Type.createState(field);
+        return s2Type.createState(field, pointerCount);
     }
 
 }

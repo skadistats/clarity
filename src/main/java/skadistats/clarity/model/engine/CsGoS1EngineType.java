@@ -71,7 +71,7 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
     }
 
     @Override
-    public FieldReader getNewFieldReader() {
+    public FieldReader getNewFieldReader(int pointerCount) {
         return new CsGoFieldReader();
     }
 

@@ -59,6 +59,8 @@ public class S2DTClassEmitter {
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
         dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
+        dtClasses.pointerCount = fieldGenerator.getPointerCount();
+        dtClasses.entityStateFactory.setPointerCount(dtClasses.pointerCount);
         evClassesComplete.raise();
     }
 
@@ -71,6 +73,8 @@ public class S2DTClassEmitter {
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
         dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
+        dtClasses.pointerCount = fieldGenerator.getPointerCount();
+        dtClasses.entityStateFactory.setPointerCount(dtClasses.pointerCount);
         evClassesComplete.raise();
     }
 

@@ -45,12 +45,10 @@ public class S1DTClass implements DTClass {
         return entityStateFactory.forS1(receiveProps);
     }
 
-    @Override
     public String getNameForFieldPath(FieldPath fp) {
         return this.receiveProps[fp.s1().idx()].getVarName();
     }
 
-    @Override
     public S1FieldPath getFieldPathForName(String name){
         var idx = this.propsByName.get(name);
         return idx != null ? new S1FieldPath(idx) : null;

@@ -1,5 +1,9 @@
 package skadistats.clarity.model;
 
+import skadistats.clarity.io.s1.S1DTClass;
+import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.model.s2.S2FieldPath;
+import skadistats.clarity.model.state.AbstractS2EntityState;
 import skadistats.clarity.model.state.EntityState;
 
 public class Entity {
@@ -79,6 +83,24 @@ public class Entity {
         this.state = state;
     }
 
+    public String getNameForFieldPath(FieldPath fp) {
+        if (state instanceof AbstractS2EntityState s2s) {
+            return s2s.getNameForFieldPath(fp);
+        }
+        return ((S1DTClass) dtClass).getNameForFieldPath(fp);
+    }
+
+    public FieldPath getFieldPathForName(String property) {
+        if (state instanceof AbstractS2EntityState s2s) {
+            return s2s.getFieldPathForName(property);
+        }
+        return ((S1DTClass) dtClass).getFieldPathForName(property);
+    }
+
+    public Field getFieldForFieldPath(FieldPath fp) {
+        return ((AbstractS2EntityState) state).getFieldForFieldPath((S2FieldPath) fp);
+    }
+
     /**
      * Check if this entity contains the given property.
      *
@@ -86,7 +108,7 @@ public class Entity {
      * @return True, if and only if the given property is present in this entity
      */
     public boolean hasProperty(String property) {
-        return getDtClass().getFieldPathForName(property) != null;
+        return getFieldPathForName(property) != null;
     }
 
     /**
@@ -106,7 +128,7 @@ public class Entity {
 
     @SuppressWarnings("unchecked")
     public <T> T getProperty(String property) {
-        var fp = getDtClass().getFieldPathForName(property);
+        var fp = getFieldPathForName(property);
         if (fp == null) {
             throw new IllegalArgumentException(String.format("property %s not found on entity of class %s", property, getDtClass().getDtName()));
         }
@@ -120,7 +142,7 @@ public class Entity {
     @Override
     public String toString() {
         var title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-        return getState().dump(title, getDtClass()::getNameForFieldPath);
+        return getState().dump(title, this::getNameForFieldPath);
     }
 
     public long getUid() {

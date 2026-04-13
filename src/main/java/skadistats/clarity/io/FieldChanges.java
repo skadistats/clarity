@@ -23,10 +23,6 @@ public class FieldChanges {
         return capacityChanged;
     }
 
-    public StateMutation getMutation(int idx) {
-        return mutations[idx];
-    }
-
     public void setMutation(int idx, StateMutation mutation) {
         mutations[idx] = mutation;
     }

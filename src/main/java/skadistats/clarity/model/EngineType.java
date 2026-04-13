@@ -33,7 +33,7 @@ public interface EngineType {
     Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     boolean isUserMessage(Class<? extends GeneratedMessage> clazz);
 
-    FieldReader getNewFieldReader();
+    FieldReader getNewFieldReader(int pointerCount);
 
     void emitHeader();
 

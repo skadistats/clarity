@@ -1,281 +1,192 @@
 ## Context
 
-`PointerField` extends `SerializerField` and inherits a mutable `serializer` field. When a `SwitchPointer` mutation is applied, `NestedArrayEntityState.handlePointerSwitch()` calls `pf.activateSerializer(newSerializer)` — mutating the shared Field object. All entities of the same DTClass share this Field, so one entity's pointer update corrupts another's navigation.
+`PointerField` extends `SerializerField` and inherits a mutable `serializer` field. When a `SwitchPointer` mutation is applied, `NestedArrayEntityState` calls `pf.activateSerializer(newSerializer)` — mutating the shared Field object. All entities of the same DTClass share this Field hierarchy, but each entity can have a different active serializer for its pointer fields (e.g., `CBodyComponent` → `CBodyComponentPoint` vs. `CBodyComponentBaseAnimGraph`). When entity A's `SwitchPointer` sets the serializer on the shared `PointerField`, entity B's subsequent traversal through that pointer uses the wrong serializer — leading to silent data corruption or wrong decoders.
 
-The affected navigation methods on `S2DTClass` — `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName` — all chain `field.getChild(idx)` calls, which on `PointerField` delegates to `this.serializer.getField(idx)`. The same bug affects `NestedArrayEntityState.applyMutation()` and `getValueForFieldPath()` which also traverse via `field.getChild()`.
-
-Analysis across Dota 2, CS2, and Deadlock replays confirms:
-- All pointer fields are at **root serializer level** (never nested in sub-serializers or vectors)
+Analysis across Dota 2, CS2, and Deadlock replays shows:
+- **Nested pointers exist in CS2**: `CCSGameRulesProxy.m_pGameRules → CCSGameRules` contains `m_pGameModeRules → CCSGameModeRules*` (a pointer inside a pointer target). Dota 2 and Deadlock currently have no nested pointers, but the solution must handle them.
 - Maximum **7 pointer fields** per entity (Deadlock `CCitadelObserverPawn`)
-- CBodyComponent: 12–17 variants across 3 types (Point, BaseModelEntity, BaseAnimGraph) with **0 common fields** in Deadlock/Dota 2 — no meaningful schema view without per-entity state
-- Most other pointer types are single-variant and work correctly with `defaultSerializer`
+- 9–22 unique PointerField objects per game
+- CBodyComponent: 12–17 variants across 3 types with **0 common fields** in Deadlock/Dota 2
+
+All existing open-source parsers (demoinfocs-golang, demoparser, source2-demo) either share the same mutable-state bug or ignore SwitchPointer entirely.
 
 ## Goals / Non-Goals
 
 **Goals:**
-- Eliminate shared mutable state on PointerField — each entity gets its own PointerField instances via cloned rootField
-- Move S2 field navigation from S2DTClass to EntityState (where the per-entity state lives)
+- Eliminate shared mutable state on PointerField — each entity tracks its own active serializers
+- Pointer state lives on the EntityState (not on the shared Field hierarchy) so it travels with `copy()` and baseline caching
+- Support nested pointers (pointer inside a pointer target's serializer)
+- PointerField becomes immutable — `serializer` field removed, replaced by per-entity lookup
 - Entity becomes the unified public API for field navigation (S1 and S2)
 - Remove navigation methods from DTClass interface
-- PointerField stays mutable (safe because per-entity)
-- Null-safe navigation through unset pointers (multi-variant pointer before SwitchPointer)
 
 **Non-Goals:**
-- Supporting nested pointers (inside sub-serializers or vectors) — not observed in any game
 - Changes to S1 navigation logic (stays on S1DTClass)
-- Fixing the `OnEntityPropertyChanged` cache for pointer paths (pre-existing bug, different entities of same DTClass can have different names for same FieldPath)
+- Fixing the `OnEntityPropertyChanged` cache for pointer paths (pre-existing bug)
 
 ## Decisions
 
-### D1: Clone rootField per EntityState with own PointerField instances
+### D1: Each PointerField gets a globally unique `pointerId`
 
-When creating an S2 EntityState, the root Serializer's `Field[]` array is cloned. Each `PointerField` in it is replaced with a copy (via new copy constructor). Non-pointer fields are shared (immutable).
-
-```java
-static SerializerField cloneWithOwnPointers(SerializerField original) {
-    var origSer = original.getSerializer();
-    var newFields = new Field[origSer.getFieldCount()];
-    for (int i = 0; i < newFields.length; i++) {
-        var f = origSer.getField(i);
-        newFields[i] = (f instanceof PointerField pf) ? new PointerField(pf) : f;
-    }
-    var newSer = new Serializer(origSer.getId(), newFields, origSer.getFieldNames());
-    return new SerializerField(original.getType(), newSer);
-}
-```
-
-Cost: 1 Serializer + 1 Field[] + 2–7 PointerField copies per entity. ~10 objects. With ~2000 entities in a Dota 2 replay, ~20K small objects — noise relative to the millions a replay parse creates.
-
-On `copy()`: **copy-on-write.** Both original and copy share the rootField. Both set `rootFieldOwned = false`. When either needs to mutate a PointerField (in `handlePointerSwitch`), `ensureOwnRootField()` clones first:
+During `FieldGenerator.createFields()`, each unique PointerField object is assigned a sequential `pointerId` (0, 1, 2, ...). The total count (`pointerCount`) is stored and passed through `EntityStateFactory` to each new EntityState.
 
 ```java
-protected boolean rootFieldOwned;
+// In FieldGenerator
+private int nextPointerId = 0;
 
-protected void ensureOwnRootField() {
-    if (!rootFieldOwned) {
-        rootField = cloneWithOwnPointers(rootField);
-        rootFieldOwned = true;
-    }
-}
+// When creating a PointerField:
+var pf = new PointerField(fieldType, decoder, serializerProperties, serializers);
+pf.setPointerId(nextPointerId++);
 ```
 
-On `copy()`, the original also sets `rootFieldOwned = false` — it no longer exclusively owns the rootField. Whichever state mutates first pays the clone cost; the other keeps sharing until it mutates too.
+Typical values: 9 (Deadlock), 13 (Dota 2), 22 (CS2).
 
-The initial constructor (from `S2EntityStateType.createState`) clones the DTClass's shared rootField and sets `rootFieldOwned = true`.
+### D2: PointerField becomes immutable
 
-Most entities never change their pointer state after creation — they inherit the baseline's pointer and keep it. COW avoids ~10 object allocations per `copy()` for these entities.
+`PointerField` no longer has a mutable `serializer` field. It retains:
+- `pointerId` — index into the EntityState's pointer array
+- `defaultSerializer` — the single-variant default (null for multi-variant)
+- `serializers[]` — all polymorphic variants (immutable)
+- `decoder`, `serializerProperties` — unchanged
 
-**Why clone over Serializer[] parameter:** The Serializer[] approach required `instanceof PointerField` checks in every navigation method, unrolled pointer resolution at root level, `UnsupportedOperationException` overrides on PointerField.getChild(), and a new parameter on 5+ methods. Cloning eliminates all of that — `getChild()` just works because each entity's PointerField has the correct serializer set.
+`activateSerializer()` and `resetSerializer()` are removed.
 
-### D2: AbstractS2EntityState holds cloned rootField and navigation methods
+`getChild()` can no longer work standalone — it needs the active serializer from the EntityState. See D4.
 
-New abstract class between `EntityState` interface and concrete S2 implementations:
+### D3: EntityState holds a `Serializer[]` for pointer state
+
+Each S2 EntityState holds a `Serializer[pointerCount]` array tracking the active serializer for each pointer:
 
 ```java
 public abstract class AbstractS2EntityState implements EntityState {
-    protected final SerializerField rootField;
+    protected final Serializer[] pointerSerializers;
 
-    protected AbstractS2EntityState(SerializerField sharedField) {
-        this.rootField = cloneWithOwnPointers(sharedField);
+    protected AbstractS2EntityState(int pointerCount) {
+        this.pointerSerializers = new Serializer[pointerCount];
     }
 
+    // copy constructor
     protected AbstractS2EntityState(AbstractS2EntityState other) {
-        this.rootField = cloneWithOwnPointers(other.rootField);
+        this.pointerSerializers = other.pointerSerializers.clone();
     }
+}
+```
 
-    public Field getFieldForFieldPath(S2FieldPath fp) {
-        return switch (fp.last()) {
-            case 0 -> rootField.getChild(fp.get(0));
-            case 1 -> rootField.getChild(fp.get(0)).getChild(fp.get(1));
-            case 2 -> rootField.getChild(fp.get(0)).getChild(fp.get(1)).getChild(fp.get(2));
-            // ... same structure as current S2DTClass, just rootField instead of field
-            default -> throw new UnsupportedOperationException();
-        };
+`copy()` clones the pointer array. At 9–22 entries, this is trivial.
+
+`pointerCount` flows: `FieldGenerator` → `EntityStateFactory` → `S2EntityStateType.createState()` → `AbstractS2EntityState` constructor.
+
+### D4: Navigation resolves pointers through the EntityState's pointer array
+
+All Field-tree traversal on the EntityState uses a helper instead of `field.getChild()` when encountering a PointerField:
+
+```java
+protected Field resolveChild(Field field, int idx) {
+    if (field instanceof PointerField pf) {
+        var ser = pointerSerializers[pf.getPointerId()];
+        if (ser == null) ser = pf.getDefaultSerializer();
+        return ser != null ? ser.getField(idx) : null;
     }
-
-    public String getNameForFieldPath(FieldPath fpX) { /* same body as current S2DTClass */ }
-    public FieldPath getFieldPathForName(String name) { /* same body as current S2DTClass */ }
-    public FieldType getTypeForFieldPath(S2FieldPath fp) { /* delegates to getFieldForFieldPath */ }
-    public Decoder getDecoderForFieldPath(S2FieldPath fp) { /* delegates to getFieldForFieldPath */ }
+    return field.getChild(idx);
 }
 ```
 
-`NestedArrayEntityState` and `TreeMapEntityState` extend this class.
+This is used in:
+- `AbstractS2EntityState.getFieldForFieldPath()` — replaces chained `getChild()` calls
+- `AbstractS2EntityState.getNameForFieldPath()` — replaces `currentField.getChild(idx)`
+- `AbstractS2EntityState.getFieldPathForName()` — replaces `currentField.getChild(fieldIdx)`
+- `NestedArrayEntityState.applyMutation()` — replaces `field.getChild(idx)` in traversal
+- `NestedArrayEntityState.getValueForFieldPath()` — replaces `field.getChild(idx)` in traversal
+- `TreeMapEntityState.applyMutation()` — for PointerField resolution in SwitchPointer handling
 
-**Why not on the EntityState interface:** S1 EntityState implementations don't have a field tree. S1 navigation lives on S1DTClass. Putting S2-specific navigation on the generic interface would force S1 implementations to carry dead methods.
+The shared Field hierarchy is never mutated. `PointerField.getChild()` is no longer called during navigation.
 
-### D3: PointerField copy constructor and null-safe getChild()
+### D5: SwitchPointer updates the EntityState's pointer array
 
-`PointerField` gains a copy constructor:
-
-```java
-public PointerField(PointerField other) {
-    super(other.getType(), other.defaultSerializer);
-    this.decoder = other.decoder;
-    this.serializerProperties = other.serializerProperties;
-    this.serializers = other.serializers;           // shared, immutable
-    this.defaultSerializer = other.defaultSerializer; // immutable
-}
-```
-
-`getChild()` becomes null-safe for multi-variant pointers where no SwitchPointer has been received:
+When `applyMutation` encounters a `SwitchPointer`:
 
 ```java
-@Override
-public Field getChild(int idx) {
-    return serializer != null ? serializer.getField(idx) : null;
-}
-```
-
-The existing null checks in `getNameForFieldPath` (`if (segment == null) return null`) catch this gracefully — returns null instead of NPE.
-
-`activateSerializer()` and `resetSerializer()` stay unchanged. They now mutate the entity's own copy, which is safe.
-
-### D4: S2DTClass loses navigation, S1DTClass keeps it
-
-`S2DTClass` loses `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`. These are now on `AbstractS2EntityState`.
-
-`DTClass` interface loses `getNameForFieldPath(FieldPath)` and `getFieldPathForName(String)`.
-
-`S1DTClass` keeps its navigation methods as concrete (non-override) methods. S1 has no pointer concept — navigation is a stateless lookup in `receiveProps[]` and `propsByName`, no per-entity variation.
-
-### D5: Entity as unified public API
-
-`Entity` gains navigation methods that dispatch based on engine:
-
-```java
-public String getNameForFieldPath(FieldPath fp) {
-    if (state instanceof AbstractS2EntityState s2s) {
-        return s2s.getNameForFieldPath(fp);
+case StateMutation.SwitchPointer sp -> {
+    if (field instanceof PointerField pf) {
+        pointerSerializers[pf.getPointerId()] = sp.newSerializer();
     }
-    return ((S1DTClass) dtClass).getNameForFieldPath(fp);
-}
-
-public FieldPath getFieldPathForName(String property) {
-    if (state instanceof AbstractS2EntityState s2s) {
-        return s2s.getFieldPathForName(property);
-    }
-    return ((S1DTClass) dtClass).getFieldPathForName(property);
+    // ... existing entry clearing logic
 }
 ```
 
-Uses direct `instanceof` check on the state — no lambda allocation, no boxing. In any given replay all entities are the same engine type, so HotSpot profiles this as monomorphic.
+No Field mutation. The pointer state change is local to this EntityState.
 
-Existing methods updated to use own navigation:
+### D6: S2DTClass loses navigation, Entity becomes unified API
 
-```java
-public boolean hasProperty(String property) {
-    return getFieldPathForName(property) != null;
-}
+Same as before:
+- `S2DTClass` loses `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`
+- `DTClass` interface loses `getNameForFieldPath`, `getFieldPathForName`
+- `S1DTClass` keeps navigation as concrete methods
+- `Entity` gains navigation methods dispatching S1 → S1DTClass, S2 → state
 
-public <T> T getProperty(String property) {
-    var fp = getFieldPathForName(property);
-    if (fp == null) throw new IllegalArgumentException(...);
-    return getPropertyForFieldPath(fp);
-}
+### D7: S2FieldReader uses EntityState + local batch overrides for field resolution
 
-public String toString() {
-    var title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();
-    return getState().dump(title, this::getNameForFieldPath);
-}
-```
+`readFields` gains an `EntityState` parameter. The FieldReader needs to resolve fields through pointers during decode — before `FieldChanges.applyTo()` runs. FieldPaths in a batch are ascending: a SwitchPointer at `[P]` comes before child fields at `[P, ...]`. The child fields are encoded with the **new** serializer (after the switch). The old code (4.0.0) handled this by mutating the shared PointerField directly during decode.
 
-External callers switch from `entity.getDtClass().getXxx(...)` to `entity.getXxx(...)`.
+The FieldReader maintains a local `Serializer[] batchPointerOverrides` array, allocated lazily on first use and reused across batches (cleared with `Arrays.fill(null)` at batch end). The size is obtained from `state.getPointerCount()` on first allocation.
 
-### D6: S2FieldReader — local batch tracking, state is read-only during decode
-
-`readFields` gains an `EntityState` parameter (nullable):
-
-```java
-public FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug)
-```
-
-**Critical invariant:** The FieldReader MUST NOT mutate the state during decode. Pointer mutations are deferred to `FieldChanges.applyTo()`. This is essential because (a) COW means multiple states can share a rootField, and (b) decode and mutation application are separate phases.
-
-For field resolution, the reader uses the state's `getFieldForFieldPath()` for non-pointer paths. For intra-batch pointer changes (SwitchPointer followed by child fields in the same batch), the reader maintains a **local `batchPointerOverrides` array**, indexed by root field position (`fp.get(0)`):
+Field resolution first checks `batchPointerOverrides`, then falls back to the EntityState's `pointerSerializers`:
 
 ```java
 private Serializer[] batchPointerOverrides;
 
-private Field resolveField(AbstractS2EntityState state, S2FieldPath fp) {
-    var f0 = state.getRootField().getChild(fp.get(0));
-    if (fp.last() == 0) return f0;
-
-    Field f1;
-    if (f0 instanceof PointerField pf) {
-        var ser = (batchPointerOverrides != null) ? batchPointerOverrides[fp.get(0)] : null;
-        if (ser == null) ser = pf.getSerializer();
+private Field resolveField(AbstractS2EntityState state, Field field, int idx) {
+    if (field instanceof PointerField pf) {
+        var pid = pf.getPointerId();
+        var ser = (batchPointerOverrides != null) ? batchPointerOverrides[pid] : null;
+        if (ser == null) ser = state.getPointerSerializer(pid);
         if (ser == null) ser = pf.getDefaultSerializer();
-        f1 = (ser != null) ? ser.getField(fp.get(1)) : null;
-    } else {
-        f1 = f0.getChild(fp.get(1));
+        return ser != null ? ser.getField(idx) : null;
     }
-    if (fp.last() == 1) return f1;
-
-    var f = f1;
-    for (int i = 2; i <= fp.last(); i++) {
-        f = f.getChild(fp.get(i));
-    }
-    return f;
+    return field.getChild(idx);
 }
 ```
 
-When a `SwitchPointer` mutation is created during decode:
+When a SwitchPointer mutation is created during decode, the new serializer is stored in `batchPointerOverrides`:
 
 ```java
-if (mutation instanceof StateMutation.SwitchPointer sp) {
+if (mutation instanceof StateMutation.SwitchPointer sp && field instanceof PointerField pf) {
     if (batchPointerOverrides == null) {
-        batchPointerOverrides = new Serializer[rootFieldCount];
+        batchPointerOverrides = new Serializer[s2state.getPointerCount()];
     }
-    batchPointerOverrides[fp.get(0)] = sp.newSerializer();
+    batchPointerOverrides[pf.getPointerId()] = sp.newSerializer();
 }
 ```
 
-This is the **only place in the system** with pointer-aware resolution logic. It's local to the FieldReader and scoped to a single batch. The `batchPointerOverrides` array is nulled at the end of each `readFields` call.
+This works for nested pointers because every PointerField (regardless of depth) has a unique `pointerId` — the lookup is flat, not tree-based.
 
-For baseline parse: state is the fresh empty state being built (cloned rootField with default pointers).
+At batch end, only the entries that were actually set need clearing. The array is reused across batches to avoid allocation.
 
 **Callers in Entities.java:**
 - Entity update: pass `entity.getState()`
-- Entity create: restructure `queueEntityCreate` to get baseline before `readFields`, pass baseline state
+- Entity create: get baseline before `readFields`, pass baseline state
 - Entity recreate: pass baseline state
 - Baseline parse: pass the new empty state
-- TempEntities: pass null or empty state
+- TempEntities (S1 only): pass null
 
 `S1FieldReader.readFields()` accepts and ignores the `EntityState` parameter.
 
-### D7: NestedArrayEntityState — minimal changes
+### D8: OnEntityPropertyChanged uses Entity
 
-`NestedArrayEntityState` extends `AbstractS2EntityState` instead of implementing `EntityState` directly. Constructor passes the `SerializerField` to super. Copy constructor passes `other` to super.
+Same as before — `propertyMatches` takes `Entity` instead of `DTClass`.
 
-`handlePointerSwitch` stays almost identical — calls `pf.activateSerializer()` on the entity's own PointerField copy (safe).
+### D9: No nested pointer validation needed
 
-`applyMutation` traversal via `field.getChild()` works correctly because the PointerField is entity-specific.
-
-`getValueForFieldPath` traversal works correctly for the same reason.
-
-### D8: TreeMapEntityState — gains rootField
-
-`TreeMapEntityState` extends `AbstractS2EntityState`. Constructor now accepts `SerializerField` (previously ignored it).
-
-On `SwitchPointer` in `applyMutation`: in addition to existing `clearSubEntries` logic, also activates the new serializer on the entity's PointerField copy. This is needed so that navigation through the state's rootField resolves correctly.
-
-### D9: OnEntityPropertyChanged uses Entity
-
-`propertyMatches` changes signature from `(DTClass dtClass, FieldPath fp)` to `(Entity entity, FieldPath fp)`. Uses `entity.getNameForFieldPath(fp)` instead of `dtClass.getNameForFieldPath(fp)`. The `raise()` method already has the Entity available.
-
-The cache keyed by `(DTClass, FieldPath) → Boolean` has a pre-existing correctness issue: different entities of the same DTClass can have different active pointer serializers, so the same FieldPath can map to different names. This pre-dates this change and is not addressed here.
+Nested pointers are now fully supported. The `validateNoNestedPointers` check is removed. Every PointerField, regardless of nesting depth, gets a `pointerId` and is tracked in the EntityState's `Serializer[]` array.
 
 ## Risks / Trade-offs
 
-**[Root-level-only assumption]** All current games have pointers at root level only. If Valve introduces nested pointers, the FieldGenerator validation will throw immediately, making the issue visible.
+**[Pointer array on every EntityState]** Every S2 EntityState carries a `Serializer[9..22]` array. At ~2000 entities per replay, this is ~40K references — negligible.
 
-**[Memory cost]** ~10 extra objects per entity for the cloned rootField. Negligible compared to the millions of objects a replay parse creates.
+**[resolveChild on every navigation step]** Each `getChild()` in the traversal goes through `resolveChild`, which does an `instanceof PointerField` check. This is a fast type check that HotSpot optimizes well, and only fires at pointer boundaries (not for every field).
 
 **[readFields signature change]** Adding `EntityState` to `readFields` is a breaking change for the `FieldReader` interface. S1FieldReader ignores the parameter.
 
-**[Entity create restructuring]** `queueEntityCreate` must get the baseline before calling `readFields` (to have a state for field resolution). This changes the ordering in `Entities.java` but not the semantics.
-
-**[DTClass interface breaking change]** Removing navigation methods from DTClass forces all callers to go through Entity. This is intentional — it makes the pointer-state dependency explicit and prevents silent bugs.
+**[DTClass interface breaking change]** Removing navigation methods from DTClass forces all callers to go through Entity. This is intentional.
 
 **[OnEntityPropertyChanged cache]** The existing cache may return stale results for pointer paths. This is a pre-existing bug not introduced by this change.

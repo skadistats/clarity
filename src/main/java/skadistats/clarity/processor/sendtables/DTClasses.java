@@ -13,11 +13,12 @@ import java.util.TreeMap;
 public class DTClasses {
 
     @Insert
-    private EntityStateFactory entityStateFactory;
+    EntityStateFactory entityStateFactory;
 
     final Map<Integer, DTClass> byClassId = new TreeMap<>();
     private final Map<String, DTClass> byDtName = new TreeMap<>();
     int classBits;
+    int pointerCount;
 
     @OnDTClass
     public void onDTClass(DTClass dtClass) {
@@ -43,6 +44,10 @@ public class DTClasses {
 
     public int getClassBits() {
         return classBits;
+    }
+
+    public int getPointerCount() {
+        return pointerCount;
     }
 
 }

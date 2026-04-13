@@ -4,8 +4,9 @@ import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public abstract class S1FieldReader extends FieldReader {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug) {
         var dtClass = dtClassGeneric.s1();
         try {
             if (debug) {

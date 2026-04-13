@@ -1,107 +1,101 @@
 ## 1. PointerField Changes
 
-- [ ] 1.1 Add copy constructor to `PointerField` — copies immutable state, initializes mutable `serializer` from source
-- [ ] 1.2 Make `PointerField.getChild()` null-safe: return null when `serializer` is null
-- [ ] 1.3 Similarly null-safe `getChildIndex()` and `getChildNameSegment()` for consistency
+- [x] 1.1 Make `PointerField.getChild()` null-safe: return null when `serializer` is null
+- [x] 1.2 Similarly null-safe `getChildIndex()` and `getChildNameSegment()` for consistency
+- [x] 1.3 Add `pointerId` field to `PointerField`, with setter and getter
+- [x] 1.4 Add `getDefaultSerializer()` and `getSerializers()` accessors (already done)
+- [x] 1.5 Remove `activateSerializer()` and `resetSerializer()` — PointerField becomes immutable
+- [x] 1.6 Remove copy constructor (no longer needed — no cloning)
 
-## 2. Serializer Cloning Support
+## 2. PointerId Assignment in FieldGenerator
 
-- [ ] 2.1 Add `getFieldNames()` (or equivalent) to `Serializer` to expose the fieldNames array for cloning
-- [ ] 2.2 Ensure `Serializer` constructor accepts externally-provided `Field[]` and `String[]` arrays (already does)
+- [x] 2.1 Add `nextPointerId` counter to `FieldGenerator`
+- [x] 2.2 Assign `pointerId` to each PointerField when created in `createField()`
+- [x] 2.3 Expose `getPointerCount()` on `FieldGenerator`
 
-## 3. AbstractS2EntityState
+## 3. pointerCount Flow
 
-- [ ] 3.1 Create `AbstractS2EntityState` abstract class implementing `EntityState`
-- [ ] 3.2 Implement rootField cloning in constructor: clone root Serializer's Field[], replace PointerFields with copies via copy constructor, set `rootFieldOwned = true`
-- [ ] 3.3 Implement copy constructor with COW: share rootField from source, set `rootFieldOwned = false` on **both** original and copy
-- [ ] 3.4 Implement `ensureOwnRootField()`: if `!rootFieldOwned`, clone rootField and set flag to true. Called before any PointerField mutation
-- [ ] 3.4 Move `getFieldForFieldPath(S2FieldPath)` from S2DTClass — same body, `field` → `rootField`
-- [ ] 3.5 Move `getNameForFieldPath(FieldPath)` from S2DTClass — same body, `field` → `rootField`
-- [ ] 3.6 Move `getFieldPathForName(String)` from S2DTClass — same body, `field` → `rootField`
-- [ ] 3.7 Move `getTypeForFieldPath(S2FieldPath)` from S2DTClass — delegates to getFieldForFieldPath
-- [ ] 3.8 Move `getDecoderForFieldPath(S2FieldPath)` from S2DTClass — delegates to getFieldForFieldPath
-- [ ] 3.9 Expose rootField to subclasses (protected) for traversal in applyMutation etc.
+- [x] 3.1 Add `pointerCount` field to `EntityStateFactory`, set from `S2DTClassEmitter`
+- [x] 3.2 Pass `pointerCount` through `EntityStateFactory.forS2()` → `S2EntityStateType.createState()`
+- [x] 3.3 Update `S2EntityStateType.createState()` signature to accept `pointerCount`
 
-## 4. NestedArrayEntityState
+## 4. AbstractS2EntityState
 
-- [ ] 4.1 Change `NestedArrayEntityState` to extend `AbstractS2EntityState` instead of implementing `EntityState` directly
-- [ ] 4.2 Update constructor to pass `SerializerField` to super
-- [ ] 4.3 Update copy constructor to pass `other` to super (for rootField cloning)
-- [ ] 4.4 Remove `rootField` field (now inherited from AbstractS2EntityState)
-- [ ] 4.5 Verify `handlePointerSwitch` works correctly — calls `pf.activateSerializer()` on own copy, no changes needed
-- [ ] 4.6 Verify `applyMutation` traversal works correctly — `field.getChild()` uses own PointerField, no changes needed
-- [ ] 4.7 Verify `getValueForFieldPath` traversal works correctly — same reason, no changes needed
+- [x] 4.1 Create `AbstractS2EntityState` abstract class implementing `EntityState`
+- [x] 4.2 Replace rootField cloning with `Serializer[] pointerSerializers` array (sized by `pointerCount`)
+- [x] 4.3 Constructor takes `SerializerField` (shared, not cloned) + `pointerCount`
+- [x] 4.4 Copy constructor: `pointerSerializers = other.pointerSerializers.clone()`
+- [x] 4.5 Add `resolveChild(Field field, int idx)` — checks PointerField, looks up `pointerSerializers[pointerId]`, falls back to `defaultSerializer`
+- [x] 4.6 Add `getPointerSerializer(int pointerId)` and `getPointerCount()` accessors
+- [x] 4.7 Rewrite `getFieldForFieldPath(S2FieldPath)` to use `resolveChild`
+- [x] 4.8 Rewrite `getNameForFieldPath(FieldPath)` to use `resolveChild`
+- [x] 4.9 Rewrite `getFieldPathForName(String)` to use `resolveChild`
+- [x] 4.10 `getTypeForFieldPath` / `getDecoderForFieldPath` — delegate to getFieldForFieldPath (already done)
+- [x] 4.11 Remove `rootFieldOwned`, `ensureOwnRootField()`, `cloneWithOwnPointers()`, `validateNoNestedPointers()`
+- [x] 4.12 Keep shared `SerializerField rootField` (not cloned) for Field-tree traversal
 
-## 5. TreeMapEntityState
+## 5. NestedArrayEntityState
 
-- [ ] 5.1 Change `TreeMapEntityState` to extend `AbstractS2EntityState`
-- [ ] 5.2 Update constructor to accept `SerializerField` and pass to super
-- [ ] 5.3 Update copy constructor to pass `other` to super
-- [ ] 5.4 Update `S2EntityStateType.TREE_MAP.createState()` to pass the `SerializerField` to constructor
-- [ ] 5.5 Update `applyMutation` SwitchPointer handling: activate new serializer on own PointerField copy (in addition to existing `clearSubEntries`)
-- [ ] 5.6 Update `applyMutation` SwitchPointer handling: need to resolve the PointerField from rootField at the given FieldPath position
+- [x] 5.1 Extends `AbstractS2EntityState`
+- [x] 5.2 Update constructor to pass `pointerCount` to super
+- [x] 5.3 Update copy constructor — super handles pointerSerializers clone
+- [x] 5.4 Rewrite `applyMutation` traversal to use `resolveChild` instead of `field.getChild()`
+- [x] 5.5 Rewrite `handlePointerSwitch`: set `pointerSerializers[pf.getPointerId()]` instead of mutating the PointerField
+- [x] 5.6 Rewrite `getValueForFieldPath` traversal to use `resolveChild`
 
-## 6. S2DTClass
+## 6. TreeMapEntityState
 
-- [ ] 6.1 Remove `getFieldForFieldPath(S2FieldPath)`
-- [ ] 6.2 Remove `getNameForFieldPath(FieldPath)` (was `@Override`)
-- [ ] 6.3 Remove `getFieldPathForName(String)` (was `@Override`)
-- [ ] 6.4 Remove `getTypeForFieldPath(S2FieldPath)`
-- [ ] 6.5 Remove `getDecoderForFieldPath(S2FieldPath)`
+- [x] 6.1 Extends `AbstractS2EntityState`
+- [x] 6.2 Update constructor to pass `pointerCount` to super
+- [x] 6.3 Update copy constructor
+- [x] 6.4 Rewrite `applyMutation` SwitchPointer handling: set `pointerSerializers[pf.getPointerId()]`
 
-## 7. DTClass Interface and S1DTClass
+## 7. S2EntityStateType and EntityStateFactory
 
-- [ ] 7.1 Remove `getNameForFieldPath(FieldPath)` from `DTClass` interface
-- [ ] 7.2 Remove `getFieldPathForName(String)` from `DTClass` interface
-- [ ] 7.3 Remove `@Override` annotations from `S1DTClass.getNameForFieldPath()` and `getFieldPathForName()`
+- [x] 7.1 Update `createState` signature: `createState(SerializerField field, int pointerCount)`
+- [x] 7.2 Update `EntityStateFactory.forS2()` to pass `pointerCount`
 
-## 8. Entity Convenience Methods
+## 8. S2DTClass
 
-- [ ] 8.1 Add `Entity.getNameForFieldPath(FieldPath)` — dispatches via `dtClass.evaluate()` to S1DTClass or AbstractS2EntityState
-- [ ] 8.2 Add `Entity.getFieldPathForName(String)` — same dispatch pattern
-- [ ] 8.3 Add `Entity.getFieldForFieldPath(FieldPath)` — S2 only, delegates to AbstractS2EntityState
-- [ ] 8.4 Update `Entity.hasProperty()` to use `this.getFieldPathForName()`
-- [ ] 8.5 Update `Entity.getProperty()` to use `this.getFieldPathForName()`
-- [ ] 8.6 Update `Entity.toString()` to use `this::getNameForFieldPath` as name resolver
+- [x] 8.1 Remove navigation methods (already done)
 
-## 9. S2FieldReader
+## 9. DTClass Interface and S1DTClass
 
-- [ ] 9.1 Add `EntityState` parameter to `FieldReader.readFields()` interface
-- [ ] 9.2 Add local `batchPointerOverrides` (Serializer[]) field to S2FieldReader, null between batches
-- [ ] 9.3 Add private `resolveField(AbstractS2EntityState, S2FieldPath)` — uses state's rootField for normal fields, checks `batchPointerOverrides` at root level for pointer fields
-- [ ] 9.4 Update `readFieldsFast`: use `resolveField()` for field resolution; on SwitchPointer mutation, store new serializer in `batchPointerOverrides`; null the array at end of batch
-- [ ] 9.5 Update `readFieldsDebug`: same changes + use state's `getNameForFieldPath()`, `getTypeForFieldPath()` for debug output
-- [ ] 9.6 Critical: FieldReader MUST NOT mutate the state during decode — pointer mutations are deferred to `FieldChanges.applyTo()`
-- [ ] 9.7 Update `S1FieldReader.readFields()` to accept and ignore `EntityState` parameter
+- [x] 9.1 Remove `getNameForFieldPath` / `getFieldPathForName` from `DTClass` interface (already done)
+- [x] 9.2 Remove `@Override` annotations from `S1DTClass` (already done)
 
-## 10. Entities.java Caller Updates
+## 10. Entity Convenience Methods
 
-- [ ] 10.1 Update `queueEntityUpdate`: pass `entity.getState()` to `readFields`
-- [ ] 10.2 Restructure `queueEntityCreate`: get baseline state before `readFields`, pass baseline state
-- [ ] 10.3 Update `queueEntityRecreate`: pass baseline state to `readFields`
-- [ ] 10.4 Update baseline parse in `getBaseline`: pass the new empty state to `readFields`
-- [ ] 10.5 Update `TempEntities` if it calls `readFields`
+- [x] 10.1–10.6 All done (navigation methods, hasProperty, getProperty, toString)
 
-## 11. OnEntityPropertyChanged
+## 11. S2FieldReader
 
-- [ ] 11.1 Change `Adapter.propertyMatches` signature from `(DTClass, FieldPath)` to `(Entity, FieldPath)`
-- [ ] 11.2 Use `entity.getNameForFieldPath(fp)` instead of `dtClass.getNameForFieldPath(fp)`
-- [ ] 11.3 Update `raise()` to pass entity instead of dtClass to `propertyMatches`
+- [x] 11.1 Add `EntityState` parameter to `FieldReader.readFields()` interface
+- [x] 11.2 Add `Serializer[] batchPointerOverrides` field — lazy allocated, reused across batches
+- [x] 11.3 Implement `resolveChild` + `resolveField` — checks batchPointerOverrides by pointerId first, then state's pointerSerializers, then field.getChild() fallback
+- [x] 11.4 Update `readFieldsFast`: resolve fields via `resolveField`; on SwitchPointer, store in `batchPointerOverrides[pf.getPointerId()]`; clear at batch end
+- [x] 11.5 Update `readFieldsDebug`: same + use state's navigation for debug output
+- [x] 11.6 Update `S1FieldReader.readFields()` to accept and ignore `EntityState` parameter
 
-## 12. FieldGenerator Validation
+## 12. Entities.java Caller Updates
 
-- [ ] 12.1 Throw `ClarityException` if `PointerField` is created inside a sub-serializer or vector element (non-root level)
+- [x] 12.1–12.5 All done (pass state to readFields, restructure create/recreate, baseline, TempEntities)
 
-## 13. External Projects
+## 13. OnEntityPropertyChanged
 
-- [ ] 13.1 Update `clarity-analyzer` `ObservableEntity.java`: switch from `dtClass.getXxx()` to `entity.getXxx()`
-- [ ] 13.2 Update `clarity-analyzer` PositionBinders: switch to `entity.getXxx()`
-- [ ] 13.3 Update `clarity-examples` affected examples: `resources`, `matchend`, `propertychange`, `position`, `cooldowns`, `dumpmana`, `lifestate`
+- [x] 13.1–13.3 All done (Entity instead of DTClass)
 
-## 14. Verification
+## 14. Cleanup
 
-- [ ] 14.1 Run `clarity-examples` entityrun against Deadlock replay — verify no errors
-- [ ] 14.2 Run `clarity-examples` entityrun against Dota 2 replay — verify no errors
-- [ ] 14.3 Run `clarity-examples` entityrun against CS2 replay — verify no errors
-- [ ] 14.4 Run `clarity-analyzer` — verify it builds and loads a replay without errors
-- [ ] 14.5 Run `clarity-examples` dtinspector against Deadlock replay — verify pointer navigation works
+- [x] 14.1 Remove `getFieldNames()` from `Serializer` (added for cloning, no longer needed)
+
+## 15. External Projects
+
+- [x] 15.1–15.5 All done (clarity-analyzer, clarity-examples, clarity-diff, dumpbaselines)
+
+## 16. Verification
+
+- [x] 16.1 Run `clarity-examples` entityrun against Deadlock replay — verify no errors
+- [x] 16.2 Run `clarity-examples` entityrun against Dota 2 replay — verify no errors
+- [x] 16.3 Run `clarity-examples` entityrun against CS2 replay — verify no errors
+- [x] 16.4 Run `clarity-analyzer` — verify it builds and loads a replay without errors

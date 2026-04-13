@@ -54,8 +54,8 @@ public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
     }
 
     @Override
-    public FieldReader getNewFieldReader() {
-        return new S2FieldReader();
+    public FieldReader getNewFieldReader(int pointerCount) {
+        return new S2FieldReader(pointerCount);
     }
 
     @Override

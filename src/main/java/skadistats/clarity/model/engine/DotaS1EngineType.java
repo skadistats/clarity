@@ -46,7 +46,7 @@ public class DotaS1EngineType extends AbstractProtobufDemoEngineType {
     }
 
     @Override
-    public FieldReader getNewFieldReader() {
+    public FieldReader getNewFieldReader(int pointerCount) {
         return new DotaS1FieldReader();
     }
 

@@ -1,83 +1,99 @@
 ## ADDED Requirements
 
-### Requirement: Each S2 EntityState has a cloned rootField with own PointerField instances
+### Requirement: Each PointerField gets a globally unique pointerId
 
-Each S2 `EntityState` implementation SHALL hold a cloned copy of the root `SerializerField` where each `PointerField` in the root Serializer's `Field[]` is replaced with an independent copy. Non-pointer fields SHALL be shared. The cloned rootField SHALL be accessible to subclasses via `AbstractS2EntityState`.
+Each `PointerField` created by `FieldGenerator` SHALL be assigned a sequential `pointerId` (0, 1, 2, ...). The total count (`pointerCount`) SHALL be available to `EntityStateFactory` for allocating per-EntityState pointer arrays. `PointerField` SHALL be immutable — no mutable `serializer` field. It retains `pointerId`, `defaultSerializer`, `serializers[]`, `decoder`, `serializerProperties`.
+
+#### Scenario: PointerField IDs are sequential
+- **WHEN** `FieldGenerator.createFields()` creates N unique PointerField objects
+- **THEN** they receive pointerId values 0 through N-1
+- **AND** `pointerCount` equals N
+
+#### Scenario: PointerField is immutable
+- **WHEN** a PointerField is created
+- **THEN** it has no mutable `serializer` field
+- **AND** `activateSerializer()` and `resetSerializer()` do not exist
+
+### Requirement: Each S2 EntityState holds a Serializer[] for pointer state
+
+Each S2 `EntityState` implementation SHALL hold a `Serializer[pointerCount]` array tracking the active serializer for each pointer. The array SHALL be initialized with null values (defaultSerializer is used as fallback during navigation). `copy()` SHALL clone the pointer array.
 
 #### Scenario: Two entities of same DTClass have independent pointer state
 - **WHEN** entity A and entity B share the same DTClass
-- **AND** entity A receives `SwitchPointer(CBodyComponentBaseAnimGraph)`
-- **AND** entity B receives `SwitchPointer(CBodyComponentPoint)`
-- **THEN** entity A's rootField PointerField has serializer `CBodyComponentBaseAnimGraph`
-- **AND** entity B's rootField PointerField has serializer `CBodyComponentPoint`
-- **AND** neither affects the other
+- **AND** entity A receives `SwitchPointer(CBodyComponentBaseAnimGraph)` for pointerId 0
+- **AND** entity B receives `SwitchPointer(CBodyComponentPoint)` for pointerId 0
+- **THEN** entity A's `pointerSerializers[0]` is `CBodyComponentBaseAnimGraph`
+- **AND** entity B's `pointerSerializers[0]` is `CBodyComponentPoint`
 
-#### Scenario: copy() uses copy-on-write for rootField
+#### Scenario: copy() clones pointer state
 - **WHEN** an S2 EntityState is copied via `copy()`
-- **THEN** original and copy share the same rootField
-- **AND** both have `rootFieldOwned = false`
+- **THEN** the copy has its own `pointerSerializers` array
+- **AND** modifying one does not affect the other
 
-#### Scenario: SwitchPointer after copy triggers clone
-- **WHEN** an S2 EntityState that shares a rootField receives a SwitchPointer
-- **THEN** `ensureOwnRootField()` clones the rootField before mutation
-- **AND** the other state sharing the rootField is unaffected
+#### Scenario: Fresh state has null pointers (defaults used)
+- **WHEN** a new S2 EntityState is created
+- **THEN** all entries in `pointerSerializers` are null
+- **AND** navigation falls back to `PointerField.getDefaultSerializer()`
 
-#### Scenario: Fresh state has PointerFields at default
-- **WHEN** a new S2 EntityState is created from a shared SerializerField
-- **THEN** each PointerField in the cloned rootField has its `serializer` set to `defaultSerializer`
-- **AND** `rootFieldOwned` is true
+### Requirement: Navigation resolves pointers through EntityState's pointer array
 
-### Requirement: PointerField has a copy constructor and null-safe getChild()
+All field-tree traversal on S2 EntityState SHALL use a `resolveChild(Field, int)` helper that checks if the field is a PointerField and resolves the active serializer from the EntityState's `pointerSerializers` array, falling back to `defaultSerializer`.
 
-`PointerField` SHALL provide a copy constructor that copies all immutable state (`decoder`, `serializerProperties`, `serializers[]`, `defaultSerializer`) and initializes the mutable `serializer` field from the source's current value.
+#### Scenario: Navigation through pointer with active serializer
+- **WHEN** `resolveChild(field, idx)` is called where `field` is a PointerField with pointerId P
+- **AND** `pointerSerializers[P]` is `SerializerX`
+- **THEN** the method returns `SerializerX.getField(idx)`
 
-`PointerField.getChild(idx)` SHALL return null when `serializer` is null (multi-variant pointer before any SwitchPointer), instead of throwing NullPointerException.
+#### Scenario: Navigation through unset pointer uses default
+- **WHEN** `resolveChild(field, idx)` is called where `field` is a PointerField with pointerId P
+- **AND** `pointerSerializers[P]` is null
+- **AND** `defaultSerializer` is `SerializerY`
+- **THEN** the method returns `SerializerY.getField(idx)`
 
-#### Scenario: Copy constructor preserves active serializer
-- **WHEN** a PointerField with active serializer X is copied
-- **THEN** the copy's `getChild()` delegates to serializer X
+#### Scenario: Navigation through unset multi-variant pointer returns null
+- **WHEN** `resolveChild(field, idx)` is called where `field` is a PointerField with pointerId P
+- **AND** `pointerSerializers[P]` is null
+- **AND** `defaultSerializer` is null (multi-variant, no default)
+- **THEN** the method returns null
 
-#### Scenario: getChild() on unset multi-variant pointer
-- **WHEN** `getChild(idx)` is called on a PointerField with `serializer == null`
-- **THEN** null is returned
+#### Scenario: Navigation through nested pointer
+- **WHEN** `resolveChild` is called for a PointerField inside another pointer's serializer
+- **THEN** the same `pointerSerializers` array is used (flat lookup by pointerId)
+- **AND** nesting depth does not affect the resolution
 
-#### Scenario: getChild() on single-variant pointer without SwitchPointer
-- **WHEN** `getChild(idx)` is called on a PointerField with one variant
-- **THEN** the default serializer is used (set at construction)
+#### Scenario: Name resolution for non-pointer path
+- **WHEN** `getNameForFieldPath` is called with a path that does not go through any PointerField
+- **THEN** the result is identical to the previous S2DTClass implementation
+
+### Requirement: SwitchPointer updates EntityState's pointer array
+
+When `applyMutation` encounters a `SwitchPointer`, it SHALL update `pointerSerializers[pf.getPointerId()]` with the new serializer. No Field objects are mutated.
+
+#### Scenario: SwitchPointer sets pointer state
+- **WHEN** `applyMutation` receives a `SwitchPointer(SerializerX)` at a PointerField with pointerId P
+- **THEN** `pointerSerializers[P]` is set to `SerializerX`
+
+#### Scenario: SwitchPointer to null clears pointer state
+- **WHEN** `applyMutation` receives a `SwitchPointer(null)` at a PointerField with pointerId P
+- **THEN** `pointerSerializers[P]` is set to null
 
 ### Requirement: AbstractS2EntityState provides field navigation
 
 A new abstract class `AbstractS2EntityState` SHALL implement `EntityState` and provide:
-- `getFieldForFieldPath(S2FieldPath)` — navigates the cloned rootField tree via `getChild()` chains
-- `getNameForFieldPath(FieldPath)` — resolves field names through the cloned rootField tree
-- `getFieldPathForName(String)` — resolves a dotted field name to a FieldPath through the cloned rootField tree
-- `getTypeForFieldPath(S2FieldPath)` — returns the FieldType for a field path
-- `getDecoderForFieldPath(S2FieldPath)` — returns the Decoder for a field path
+- `resolveChild(Field, int)` — resolves through pointer array or delegates to `field.getChild()`
+- `getFieldForFieldPath(S2FieldPath)` — navigates using `resolveChild`
+- `getNameForFieldPath(FieldPath)` — navigates using `resolveChild`
+- `getFieldPathForName(String)` — navigates using `resolveChild`
+- `getTypeForFieldPath(S2FieldPath)` — delegates to getFieldForFieldPath
+- `getDecoderForFieldPath(S2FieldPath)` — delegates to getFieldForFieldPath
+- `getPointerSerializer(int pointerId)` — returns `pointerSerializers[pointerId]`
+- `getPointerCount()` — returns `pointerSerializers.length`
 
 Both `NestedArrayEntityState` and `TreeMapEntityState` SHALL extend `AbstractS2EntityState`.
 
-#### Scenario: Navigation through pointer with active serializer
-- **WHEN** `getFieldForFieldPath` is called with path `[P, C1]` where field at `P` is a PointerField
-- **AND** the PointerField's serializer is `SerializerX`
-- **THEN** the method returns `SerializerX.getField(C1)` via normal `getChild()` delegation
-
-#### Scenario: Navigation through unset pointer returns null
-- **WHEN** `getNameForFieldPath` is called with a path through a multi-variant PointerField
-- **AND** no SwitchPointer has been applied
-- **THEN** the method returns null (via null-safe getChild())
-
-#### Scenario: Name resolution for non-pointer path
-- **WHEN** `getNameForFieldPath` is called with a path that does not go through any PointerField
-- **THEN** the result is identical to the current S2DTClass implementation
-
-#### Scenario: getFieldPathForName through pointer
-- **WHEN** `getFieldPathForName` is called with a name like `CBodyComponent.m_cellX`
-- **AND** the PointerField's active serializer has field `m_cellX`
-- **THEN** the correct FieldPath is returned
-
 ### Requirement: S2DTClass loses navigation methods
 
-`S2DTClass` SHALL NOT provide `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, or `getDecoderForFieldPath`. These methods are on `AbstractS2EntityState`.
+`S2DTClass` SHALL NOT provide `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, or `getDecoderForFieldPath`.
 
 ### Requirement: DTClass interface loses navigation methods
 
@@ -86,79 +102,37 @@ Both `NestedArrayEntityState` and `TreeMapEntityState` SHALL extend `AbstractS2E
 ### Requirement: Entity provides unified navigation API
 
 `Entity` SHALL provide:
-- `getNameForFieldPath(FieldPath)` — dispatches to S1DTClass or AbstractS2EntityState based on engine
-- `getFieldPathForName(String)` — dispatches to S1DTClass or AbstractS2EntityState based on engine
+- `getNameForFieldPath(FieldPath)` — dispatches to S1DTClass or AbstractS2EntityState
+- `getFieldPathForName(String)` — dispatches to S1DTClass or AbstractS2EntityState
 - `getFieldForFieldPath(FieldPath)` — dispatches to AbstractS2EntityState (S2 only)
 
 `Entity.hasProperty(String)` SHALL use `this.getFieldPathForName()`.
 `Entity.getProperty(String)` SHALL use `this.getFieldPathForName()`.
 `Entity.toString()` SHALL use `this::getNameForFieldPath` as name resolver.
 
-#### Scenario: S2 entity navigation uses own state
-- **WHEN** `entity.getNameForFieldPath(fp)` is called on an S2 entity
-- **THEN** it delegates to the entity's state's `getNameForFieldPath`
+### Requirement: S2FieldReader uses EntityState + batch overrides for field resolution
 
-#### Scenario: S1 entity navigation uses DTClass
-- **WHEN** `entity.getNameForFieldPath(fp)` is called on an S1 entity
-- **THEN** it delegates to the entity's S1DTClass `getNameForFieldPath`
+`readFields` SHALL accept an `EntityState` parameter. The FieldReader SHALL resolve fields using `resolveField()` which checks a local `batchPointerOverrides` array first, then the EntityState's pointer array, then the PointerField's default.
 
-#### Scenario: hasProperty through pointer
-- **WHEN** `entity.hasProperty("CBodyComponent.m_cellX")` is called
-- **AND** the entity's PointerField is set to a variant that has `m_cellX`
-- **THEN** the method returns true
+The `batchPointerOverrides` array SHALL be allocated lazily on first use (sized from `state.getPointerCount()`) and reused across batches. At batch end, set entries SHALL be cleared.
 
-### Requirement: S2FieldReader uses EntityState for field resolution without mutating it
-
-`readFields` SHALL accept an `EntityState` parameter (nullable). The reader SHALL use the state's rootField for field resolution during decode. The reader MUST NOT mutate the state or its rootField during decode — all mutations are deferred to `FieldChanges.applyTo()`.
-
-For intra-batch pointer resolution (SwitchPointer followed by child fields in the same batch), the reader SHALL maintain a local `batchPointerOverrides` array indexed by root field position. When a SwitchPointer is decoded, the new serializer is stored in this array. When resolving a field path whose root field is a `PointerField`, the reader SHALL check this array first, falling back to the PointerField's current serializer.
-
-#### Scenario: Entity update — field resolution from existing state
-- **WHEN** `readFields` is called with an entity's current state
-- **AND** a field path navigates through a pointer that was set in a previous tick
-- **THEN** the pointer is resolved using the state's PointerField's active serializer
+When a SwitchPointer mutation is created during decode, the new serializer SHALL be stored in `batchPointerOverrides[pf.getPointerId()]`.
 
 #### Scenario: Intra-batch SwitchPointer followed by child fields
-- **WHEN** a decode batch contains a SwitchPointer at root position P followed by child field paths through P
-- **THEN** the SwitchPointer stores the new serializer in the local `batchPointerOverrides[P]`
-- **AND** subsequent child paths at P resolve through this local override
-- **AND** the state's rootField is NOT mutated
+- **WHEN** a decode batch contains a SwitchPointer for pointerId P followed by child field paths through that pointer
+- **THEN** the SwitchPointer stores the new serializer in `batchPointerOverrides[P]`
+- **AND** subsequent child paths resolve through this local override
+- **AND** the EntityState's pointer array is NOT mutated during decode
 
-#### Scenario: State is not mutated during decode
-- **WHEN** `readFields` decodes a batch containing SwitchPointer mutations
-- **THEN** the state's rootField PointerFields are unchanged after `readFields` returns
-- **AND** the SwitchPointer mutations are in the returned `FieldChanges` for later application
-
-#### Scenario: Baseline parse
-- **WHEN** `readFields` is called for baseline parsing with a fresh empty state
-- **THEN** PointerFields start at default serializer
-- **AND** SwitchPointer mutations in the batch are tracked in the local override array for subsequent paths
-
-### Requirement: TreeMapEntityState activates PointerField on SwitchPointer
-
-`TreeMapEntityState.applyMutation` SHALL, on `SwitchPointer`, activate the new serializer on its own rootField's PointerField (in addition to existing `clearSubEntries` logic). This ensures navigation through the state's rootField resolves correctly.
-
-#### Scenario: SwitchPointer on TreeMapEntityState
-- **WHEN** `applyMutation` receives a `SwitchPointer(SerializerX)` at a PointerField
-- **THEN** the PointerField on the state's rootField has serializer `SerializerX`
-- **AND** sub-entries under the pointer are cleared
+#### Scenario: Nested pointer switch in batch
+- **WHEN** a batch contains SwitchPointer at `[0]` (pointerId 1) then SwitchPointer at `[0, 75]` (pointerId 5)
+- **THEN** both are stored in `batchPointerOverrides` by their respective pointerId
+- **AND** child fields under `[0, 75, ...]` resolve through pointerId 5's override
 
 ### Requirement: OnEntityPropertyChanged uses Entity for name resolution
 
-`OnEntityPropertyChanged.Adapter.propertyMatches` SHALL accept an `Entity` parameter and use `entity.getNameForFieldPath(fp)` for property name resolution, instead of `dtClass.getNameForFieldPath(fp)`.
+`OnEntityPropertyChanged.Adapter.propertyMatches` SHALL accept an `Entity` parameter and use `entity.getNameForFieldPath(fp)` for property name resolution.
 
-#### Scenario: Property matching uses entity's pointer state
-- **WHEN** a property change event is raised for an entity with an active pointer
-- **THEN** the property name is resolved through the entity's own pointer state
+### Requirement: pointerCount flows through EntityStateFactory
 
-### Requirement: FieldGenerator validates pointer field constraints
-
-`FieldGenerator` SHALL throw `ClarityException` if a `PointerField` is created at a non-root level (inside a sub-serializer or vector element).
-
-#### Scenario: Pointer at root level — valid
-- **WHEN** a PointerField is encountered at the root level of a serializer
-- **THEN** it is created normally
-
-#### Scenario: Pointer nested in sub-serializer — rejected
-- **WHEN** a PointerField would be created inside a sub-serializer
-- **THEN** a `ClarityException` is thrown
+`EntityStateFactory` SHALL receive `pointerCount` (from `FieldGenerator` via `S2DTClassEmitter`/`DTClasses`) and pass it to `S2EntityStateType.createState()` for allocation of the per-state pointer array.

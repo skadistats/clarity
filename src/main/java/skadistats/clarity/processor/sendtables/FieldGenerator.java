@@ -34,6 +34,7 @@ public class FieldGenerator {
     private final List<PatchFunc> patchFuncs;
 
     private final Map<SerializerId, Serializer> serializers = new HashMap<>();
+    private int pointerCount = 0;
 
     FieldGenerator(S2NetMessages.CSVCMsg_FlattenedSerializer protoMessage, List<PatchFunc> patchFuncs) {
         this.protoMessage = protoMessage;
@@ -50,6 +51,10 @@ public class FieldGenerator {
             var serializer = generateSerializer(protoMessage.getSerializers(i));
             serializers.put(serializer.getId(), serializer);
         }
+    }
+
+    public int getPointerCount() {
+        return pointerCount;
     }
 
     public S2DTClass createDTClass(String name) {
@@ -142,12 +147,14 @@ public class FieldGenerator {
                 for (int i = 0; i < types.length; i++) {
                     typeSerializers[i] = serializers.get(types[i]);
                 }
-                elementField = new PointerField(
+                var pf = new PointerField(
                     elementType,
                     S2DecoderFactory.createDecoder(fd.serializerProperties, "Pointer"),
                     fd.serializerProperties,
                     typeSerializers
                 );
+                pf.setPointerId(pointerCount++);
+                elementField = pf;
             } else {
                 elementField = new SerializerField(
                         elementType,

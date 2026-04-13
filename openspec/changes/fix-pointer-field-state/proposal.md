@@ -6,16 +6,17 @@ Analysis across Dota 2, CS2, and Deadlock replays confirms CBodyComponent has 12
 
 ## What Changes
 
-- Each S2 `EntityState` gets a **cloned rootField** with its own `PointerField` instances. `PointerField` stays mutable — safe because no longer shared. New copy constructor on `PointerField`, null-safe `getChild()`
-- New `AbstractS2EntityState` abstract class holds the cloned rootField and all **field navigation methods** (moved from `S2DTClass`): `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`. Method bodies are identical to the current S2DTClass versions — only the root reference changes
+- Each `PointerField` gets a globally unique `pointerId` assigned by `FieldGenerator`. PointerField becomes **immutable** — no mutable `serializer` field
+- Each S2 `EntityState` holds a `Serializer[pointerCount]` array tracking the active serializer for each pointer. `copy()` clones this array
+- New `AbstractS2EntityState` abstract class holds the pointer array and all **field navigation methods** (moved from `S2DTClass`): `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`. Navigation uses `resolveChild()` which looks up the active serializer from the pointer array instead of `field.getChild()`
 - `NestedArrayEntityState` and `TreeMapEntityState` extend `AbstractS2EntityState`
 - `S2DTClass` loses all navigation methods
 - `DTClass` interface loses `getNameForFieldPath` and `getFieldPathForName`. S1DTClass keeps them as own (non-override) methods
 - `Entity` becomes the unified public API for field navigation, dispatching S1 → S1DTClass, S2 → state
 - Existing `Entity.hasProperty()`, `getProperty()`, `toString()` updated to use the new Entity-level methods
-- `S2FieldReader.readFields` gains an `EntityState` parameter. Uses state's navigation for field resolution during decode. Mutates state's PointerFields directly on SwitchPointer within a batch
+- `S2FieldReader.readFields` gains an `EntityState` parameter. Uses state's pointer array + local `batchPointerOverrides` for field resolution during decode. Does NOT mutate the state — SwitchPointer overrides are tracked locally in the FieldReader during the batch
 - `OnEntityPropertyChanged.propertyMatches` uses Entity instead of DTClass for name resolution
-- All pointer fields in Dota 2, CS2, and Deadlock are at root serializer level. Nested pointer fields are not supported and will throw a `ClarityException` at `FieldGenerator` construction time if encountered
+- Nested pointer fields (pointer inside a pointer target's serializer) are fully supported — CS2 has `CCSGameRules.m_pGameModeRules` as a nested pointer. Each PointerField gets a flat `pointerId` regardless of nesting depth
 
 ## Capabilities
 

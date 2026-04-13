@@ -19,9 +19,6 @@ public interface DTClass {
     void setEntityStateFactory(EntityStateFactory factory);
     EntityState getEmptyState();
 
-    String getNameForFieldPath(FieldPath fp);
-    FieldPath getFieldPathForName(String property);
-
     @Deprecated
     default List<FieldPath> collectFieldPaths(EntityState state) {
         List<FieldPath> result = new ArrayList<>();

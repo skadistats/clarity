@@ -29,6 +29,7 @@ import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
+import skadistats.clarity.processor.sendtables.OnDTClassesComplete;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.processor.stringtables.OnStringTableCreated;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
@@ -190,10 +191,12 @@ public class Entities {
     public void onInit() {
         entityCount = 1 << engineType.getIndexBits();
         entities = new ClientFrame(entityCount);
-
-        fieldReader = engineType.getNewFieldReader();
-
         deletions = new int[entityCount];
+    }
+
+    @OnDTClassesComplete
+    public void onDTClassesComplete() {
+        fieldReader = engineType.getNewFieldReader(dtClasses.getPointerCount());
     }
 
     @OnReset
@@ -479,12 +482,13 @@ public class Entities {
     }
 
     private void queueEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        var changes = fieldReader.readFields(stream, dtClass, debug);
-        queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, changes));
+        var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
+        var changes = fieldReader.readFields(stream, dtClass, baseline, debug);
+        queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, baseline, changes));
     }
 
-    private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
-        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
+    private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState baseline, FieldChanges changes) {
+        var newState = baseline.copy();
         changes.applyTo(newState);
         var entity = entityRegistry.create(
                 dtClass.getClassId(),
@@ -508,17 +512,18 @@ public class Entities {
     }
 
     private void queueEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
-        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
-        queueUpdate(() -> executeEntityRecreate(entity, message, changes));
+        var dtClass = entity.getDtClass();
+        var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), entity.getIndex(), message.getIsDelta());
+        var changes = fieldReader.readFields(stream, dtClass, baseline, debug);
+        queueUpdate(() -> executeEntityRecreate(entity, message, baseline, changes));
     }
 
-    private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, FieldChanges changes) {
+    private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState baseline, FieldChanges changes) {
         var oldState = entity.getState();
         var wasActive = entity.isActive();
         var eIdx = entity.getIndex();
 
-        var dtClass = entity.getDtClass();
-        var newState = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta()).copy();
+        var newState = baseline.copy();
         changes.applyTo(newState);
         entity.setState(newState);
         entity.setActive(true);
@@ -537,7 +542,7 @@ public class Entities {
     }
 
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
-        var changes = fieldReader.readFields(stream, entity.getDtClass(), debug);
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), debug);
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
     }
 
@@ -663,7 +668,7 @@ public class Entities {
         }
         s = cls.getEmptyState();
         var stream = BitStream.createBitStream(raw);
-        var changes = fieldReader.readFields(stream, cls, false);
+        var changes = fieldReader.readFields(stream, cls, s, false);
         var remaining = stream.remaining();
         if (remaining < 0 || remaining > 7) {
             log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);

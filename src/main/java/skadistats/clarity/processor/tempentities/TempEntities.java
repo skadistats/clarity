@@ -32,7 +32,7 @@ public class TempEntities {
 
     @OnInit
     public void onInit() {
-        fieldReader = engineType.getNewFieldReader();
+        fieldReader = engineType.getNewFieldReader(0);
     }
 
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
@@ -54,7 +54,7 @@ public class TempEntities {
                     receiveProps = cls.getReceiveProps();
                 }
                 var state = cls.getEmptyState();
-                var changes = fieldReader.readFields(stream, cls, false);
+                var changes = fieldReader.readFields(stream, cls, null, false);
                 changes.applyTo(state);
 
                 var handle = engineType.emptyHandle();

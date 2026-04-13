@@ -1,7 +1,6 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.io.s2.Field;
-import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.ArrayField;
 import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
@@ -13,21 +12,20 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-public class NestedArrayEntityState implements EntityState {
+public class NestedArrayEntityState extends AbstractS2EntityState {
 
-    private final SerializerField rootField;
     private final List<Entry> entries;
     private Deque<Integer> freeEntries;
     private boolean capacityChanged;
 
-    public NestedArrayEntityState(SerializerField field) {
-        this.rootField = field;
+    public NestedArrayEntityState(SerializerField field, int pointerCount) {
+        super(field, pointerCount);
         entries = new ArrayList<>(20);
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
-        this.rootField = other.rootField;
+        super(other);
         var otherSize = other.entries.size();
         entries = new ArrayList<>(otherSize + 4);
         for (var i = 0; i < otherSize; i++) {
@@ -66,7 +64,7 @@ public class NestedArrayEntityState implements EntityState {
             if (node.length() <= idx) {
                 ensureNodeCapacity(field, node, idx);
             }
-            field = field.getChild(idx);
+            var child = field.getChild(this, idx);
             if (i == last) {
                 if (mutation instanceof StateMutation.WriteValue wv) {
                     node.set(idx, wv.value());
@@ -75,10 +73,11 @@ public class NestedArrayEntityState implements EntityState {
                     node.subEntry(idx).capacity(rv.count(), true);
                     return true;
                 } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-                    return handlePointerSwitch(node, idx, field, sp);
+                    return handlePointerSwitch(node, idx, child, sp);
                 }
                 throw new IllegalStateException();
             }
+            field = child;
             node = node.subEntry(idx);
             i++;
         }
@@ -96,20 +95,16 @@ public class NestedArrayEntityState implements EntityState {
 
     private boolean handlePointerSwitch(Entry node, int idx, Field field, StateMutation.SwitchPointer sp) {
         var newSerializer = sp.newSerializer();
-        if (node.has(idx)) {
-            var currentSerializer = (field instanceof PointerField pf) ? pf.getSerializer() : null;
-            if (newSerializer == null || currentSerializer != newSerializer) {
-                if (field instanceof PointerField pf) {
-                    pf.resetSerializer();
+        if (field instanceof PointerField pf) {
+            var currentSerializer = pointerSerializers[pf.getPointerId()];
+            if (node.has(idx)) {
+                if (newSerializer == null || currentSerializer != newSerializer) {
+                    pointerSerializers[pf.getPointerId()] = null;
+                    node.clear(idx);
                 }
-                node.clear(idx);
             }
-        }
-        if (newSerializer != null) {
-            if (!node.has(idx)) {
-                if (field instanceof PointerField pf) {
-                    pf.activateSerializer(newSerializer);
-                }
+            if (newSerializer != null && !node.has(idx)) {
+                pointerSerializers[pf.getPointerId()] = newSerializer;
                 node.subEntry(idx);
             }
         }
@@ -127,10 +122,10 @@ public class NestedArrayEntityState implements EntityState {
         var i = 0;
         while (true) {
             var idx = fp.get(i);
-            field = field.getChild(idx);
             if (i == last) {
                 return (T) node.get(idx);
             }
+            field = field.getChild(this, idx);
             if (!node.isSub(idx)) {
                 return null;
             }

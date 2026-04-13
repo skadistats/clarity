@@ -6,18 +6,18 @@ public enum S2EntityStateType {
 
     NESTED_ARRAY {
         @Override
-        public EntityState createState(SerializerField field) {
-            return new NestedArrayEntityState(field);
+        public EntityState createState(SerializerField field, int pointerCount) {
+            return new NestedArrayEntityState(field, pointerCount);
         }
     },
 
     TREE_MAP {
         @Override
-        public EntityState createState(SerializerField field) {
-            return new TreeMapEntityState();
+        public EntityState createState(SerializerField field, int pointerCount) {
+            return new TreeMapEntityState(field, pointerCount);
         }
     };
 
-    public abstract EntityState createState(SerializerField field);
+    public abstract EntityState createState(SerializerField field, int pointerCount);
 
 }

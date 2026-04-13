@@ -1,21 +1,25 @@
 package skadistats.clarity.model.state;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
+import skadistats.clarity.io.s2.field.PointerField;
+import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 
 import java.util.Iterator;
 
-public class TreeMapEntityState implements EntityState {
+public class TreeMapEntityState extends AbstractS2EntityState {
 
     private final Object2ObjectAVLTreeMap<S2LongFieldPath, Object> state;
 
-    public TreeMapEntityState() {
+    public TreeMapEntityState(SerializerField field, int pointerCount) {
+        super(field, pointerCount);
         state = new Object2ObjectAVLTreeMap<>();
     }
 
     private TreeMapEntityState(TreeMapEntityState other) {
+        super(other);
         state = other.state.clone();
     }
 
@@ -36,8 +40,13 @@ public class TreeMapEntityState implements EntityState {
             }
         } else if (mutation instanceof StateMutation.ResizeVector rv) {
             return trimEntries(fp, rv.count());
-        } else if (mutation instanceof StateMutation.SwitchPointer) {
-            return clearSubEntries(fp);
+        } else if (mutation instanceof StateMutation.SwitchPointer sp) {
+            var cleared = clearSubEntries(fp);
+            var field = getFieldForFieldPath(fp);
+            if (field instanceof PointerField pf) {
+                pointerSerializers[pf.getPointerId()] = sp.newSerializer();
+            }
+            return cleared;
         }
         throw new IllegalStateException();
     }

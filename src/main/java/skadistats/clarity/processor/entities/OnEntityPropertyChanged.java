@@ -61,8 +61,9 @@ public @interface OnEntityPropertyChanged {
                 return classPattern == null || classPattern.matcher(dtClass.getDtName()).matches();
             }
 
-            boolean propertyMatches(DTClass dtClass, FieldPath fp) {
+            boolean propertyMatches(Entity entity, FieldPath fp) {
                 if (propertyPattern == null) return true;
+                var dtClass = entity.getDtClass();
                 var fpMap = propertyMatches.get(dtClass);
                 if (fpMap == null) {
                     fpMap = new HashMap<>();
@@ -70,7 +71,7 @@ public @interface OnEntityPropertyChanged {
                 }
                 var hit = fpMap.get(fp);
                 if (hit == null) {
-                    hit = propertyPattern.matcher(dtClass.getNameForFieldPath(fp)).matches();
+                    hit = propertyPattern.matcher(entity.getNameForFieldPath(fp)).matches();
                     fpMap.put(fp, hit);
                 }
                 return hit;
@@ -101,9 +102,8 @@ public @interface OnEntityPropertyChanged {
 
         public void raise(Entity e, FieldPath fp) {
             var interested = adaptersFor(e.getDtClass());
-            var dtClass = e.getDtClass();
             for (var a : interested) {
-                if (!a.propertyMatches(dtClass, fp)) continue;
+                if (!a.propertyMatches(e, fp)) continue;
                 try {
                     a.listener.invoke(e, fp);
                 } catch (Throwable t) {
