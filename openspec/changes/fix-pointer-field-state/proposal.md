@@ -2,44 +2,50 @@
 
 `PointerField` stores the active serializer as mutable state on a shared Field object. All entities of the same DTClass share the same Field hierarchy, but each entity can have a different active serializer for its pointer fields (e.g., `CBodyComponent` → `CBodyComponentPoint` vs. `CBodyComponentBaseAnimGraph`). When entity A's `SwitchPointer` sets the serializer on the shared `PointerField`, entity B's subsequent traversal through that pointer uses the wrong serializer — leading to silent data corruption or wrong decoders. This was confirmed in Deadlock replays where entity-index recycling causes pointer variant changes across entities of the same DTClass.
 
+Analysis across Dota 2, CS2, and Deadlock replays confirms CBodyComponent has 12–17 variants across 3 fundamental types with **0 common fields** in Deadlock/Dota 2. There is no meaningful "schema view" without per-entity state.
+
 ## What Changes
 
-- `PointerField` becomes immutable: the mutable `serializer` field is removed. It retains `serializers[]` (all possible variants), `defaultSerializer`, and a new `pointerIndex` (small integer assigned at construction time)
-- `EntityState` gains a `Serializer[]` array to track the active serializer per pointer position. Updated on `SwitchPointer` application. Cloned on `copy()`
-- `FieldChanges` tracks new pointer serializers decoded in the current batch, so that child field paths after a `SwitchPointer` in the same decode round can be resolved correctly
-- `S2FieldReader` maintains a local `Serializer[]` array, primed from the `EntityState` before each decode batch, updated when `SwitchPointer` mutations are decoded. Field resolution uses this array instead of the `PointerField`'s mutable state
-- All field-navigating methods on `S2DTClass` (`getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`) gain a `Serializer[]` parameter for pointer resolution. All three currently use `field.getChild()` which has the same pointer bug
-- `readFields` gains an `EntityState` parameter (nullable for first baseline parse). Callers pass the entity's state (for updates), the baseline state (for creates), or null (for initial baseline parse)
-- Pointer fields nested inside sub-serializers or vectors are not supported and will throw a `ClarityException` at FieldGenerator construction time if encountered — currently all pointer fields in Dota 2, CS2, and Deadlock replays are at root serializer level
-- Maximum 8 pointer fields per entity (current maximum across all games: 7 in Deadlock `CCitadelObserverPawn`). Exceeding this throws a `ClarityException` at construction time
+- Each S2 `EntityState` gets a **cloned rootField** with its own `PointerField` instances. `PointerField` stays mutable — safe because no longer shared. New copy constructor on `PointerField`, null-safe `getChild()`
+- New `AbstractS2EntityState` abstract class holds the cloned rootField and all **field navigation methods** (moved from `S2DTClass`): `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`. Method bodies are identical to the current S2DTClass versions — only the root reference changes
+- `NestedArrayEntityState` and `TreeMapEntityState` extend `AbstractS2EntityState`
+- `S2DTClass` loses all navigation methods
+- `DTClass` interface loses `getNameForFieldPath` and `getFieldPathForName`. S1DTClass keeps them as own (non-override) methods
+- `Entity` becomes the unified public API for field navigation, dispatching S1 → S1DTClass, S2 → state
+- Existing `Entity.hasProperty()`, `getProperty()`, `toString()` updated to use the new Entity-level methods
+- `S2FieldReader.readFields` gains an `EntityState` parameter. Uses state's navigation for field resolution during decode. Mutates state's PointerFields directly on SwitchPointer within a batch
+- `OnEntityPropertyChanged.propertyMatches` uses Entity instead of DTClass for name resolution
+- All pointer fields in Dota 2, CS2, and Deadlock are at root serializer level. Nested pointer fields are not supported and will throw a `ClarityException` at `FieldGenerator` construction time if encountered
 
 ## Capabilities
 
 ### New Capabilities
-- `pointer-state-tracking`: Active pointer serializer tracking in EntityState and FieldChanges, with immutable PointerField and per-decode-batch resolution in S2FieldReader
+- `pointer-state-tracking`: Per-entity pointer serializer tracking via cloned rootField in AbstractS2EntityState, with navigation methods on the state and Entity as unified API
 
 ### Modified Capabilities
 
 ## Impact
 
-- `skadistats.clarity.io.s2.field.PointerField` — remove mutable `serializer`, add immutable `pointerIndex`
-- `skadistats.clarity.io.s2.field.SerializerField` — `serializer` field becomes final again
-- `skadistats.clarity.io.s2.S2FieldReader` — `resolveField` with pointer-aware loop, local `Serializer[]` primed from state, `readFields` gains `EntityState` parameter
-- `skadistats.clarity.io.s2.S2DTClass` — `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName` all gain `Serializer[]` parameter
+- `skadistats.clarity.io.s2.field.PointerField` — add copy constructor, make `getChild()` null-safe
+- `skadistats.clarity.io.s2.Serializer` — expose `fieldNames` for cloning
+- `skadistats.clarity.io.s2.S2DTClass` — remove `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, `getDecoderForFieldPath`
+- `skadistats.clarity.io.s2.S2FieldReader` — `readFields` gains `EntityState` parameter, uses state for field resolution, mutates PointerField on SwitchPointer during decode
 - `skadistats.clarity.io.FieldReader` — `readFields` signature change (+ `EntityState`)
-- `skadistats.clarity.io.FieldChanges` — tracks pointer serializers for current decode batch
-- `skadistats.clarity.model.state.EntityState` — `Serializer[]` for pointer tracking, `fillPointerSerializers` method
-- `skadistats.clarity.model.state.NestedArrayEntityState` — stores and copies pointer serializer array, uses it during own traversal instead of `field.getChild()` through pointers
-- `skadistats.clarity.model.state.TreeMapEntityState` — stores pointer serializer array
-- `skadistats.clarity.processor.entities.Entities` — passes `EntityState` to `readFields` calls (entity state for updates, baseline for creates, null for baseline parse)
-- `skadistats.clarity.processor.sendtables.FieldGenerator` — assigns `pointerIndex` to `PointerField`, throws on nested pointer fields
 - `skadistats.clarity.io.s1.S1FieldReader` — `readFields` signature change (state parameter ignored)
-
-- `skadistats.clarity.model.Entity` — convenience methods `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName` that delegate to DTClass with the state's pointer serializers. Simplifies external callers
+- `skadistats.clarity.io.s1.S1DTClass` — remove `@Override` on navigation methods
+- `skadistats.clarity.model.DTClass` — remove `getNameForFieldPath`, `getFieldPathForName`
+- `skadistats.clarity.model.Entity` — add `getNameForFieldPath`, `getFieldPathForName`, `getFieldForFieldPath`; update `hasProperty`, `getProperty`, `toString`
+- `skadistats.clarity.model.state.AbstractS2EntityState` — **NEW**: abstract class with cloned rootField + navigation methods
+- `skadistats.clarity.model.state.NestedArrayEntityState` — extends `AbstractS2EntityState`
+- `skadistats.clarity.model.state.TreeMapEntityState` — extends `AbstractS2EntityState`, adds PointerField activation on SwitchPointer
+- `skadistats.clarity.model.state.S2EntityStateType` — passes `SerializerField` to `TreeMapEntityState` constructor
+- `skadistats.clarity.processor.entities.Entities` — passes `EntityState` to `readFields` calls
+- `skadistats.clarity.processor.entities.OnEntityPropertyChanged` — `propertyMatches` uses Entity instead of DTClass
+- `skadistats.clarity.processor.tempentities.TempEntities` — `readFields` signature update
 
 **External projects (clarity-analyzer, clarity-examples):**
 
-All external callers of `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, and `getTypeForFieldPath` have access to the entity's State and need to pass the `pointerSerializers` array. Affected files:
+All external callers switch from `entity.getDtClass().getXxx(...)` to `entity.getXxx(...)`:
 
-- `clarity-analyzer`: `ObservableEntity.java` (4 call sites), `CSGOS2AndDeadlockPositionBinder.java`, `DOTAS2PositionBinder.java`
+- `clarity-analyzer`: `ObservableEntity.java`, `CSGOS2AndDeadlockPositionBinder.java`, `DOTAS2PositionBinder.java`
 - `clarity-examples`: `resources/Main.java`, `matchend/Main.java`, `propertychange/Main.java`, `position/Main.java`, `cooldowns/Cooldowns.java`, `dumpmana/Main.java`, `lifestate/SpawnsAndDeaths.java`
