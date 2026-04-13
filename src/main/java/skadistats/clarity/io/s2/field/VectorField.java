@@ -22,6 +22,11 @@ public class VectorField extends Field {
     }
 
     @Override
+    public boolean isHiddenFieldPath() {
+        return true;
+    }
+
+    @Override
     public SerializerProperties getSerializerProperties() {
         return SerializerProperties.DEFAULT;
     }

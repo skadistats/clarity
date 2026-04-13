@@ -35,6 +35,10 @@ public abstract class Field {
         return null;
     }
 
+    public boolean isHiddenFieldPath() {
+        return false;
+    }
+
     public StateMutation createMutation(Object decodedValue, int depth) {
         return new StateMutation.WriteValue(decodedValue);
     }

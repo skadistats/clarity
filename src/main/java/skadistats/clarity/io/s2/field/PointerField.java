@@ -24,6 +24,11 @@ public class PointerField extends SerializerField {
     }
 
     @Override
+    public boolean isHiddenFieldPath() {
+        return true;
+    }
+
+    @Override
     public SerializerProperties getSerializerProperties() {
         return serializerProperties;
     }
