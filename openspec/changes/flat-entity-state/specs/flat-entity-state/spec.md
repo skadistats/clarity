@@ -1,38 +1,79 @@
 ## ADDED Requirements
 
-### Requirement: PrimitiveType enum encapsulates typed byte[] access
+### Requirement: PrimitiveType sealed interface encapsulates typed byte[] access
 
-The system SHALL provide a `PrimitiveType` enum in the `skadistats.clarity.model.state` package. Each variant SHALL encapsulate the byte size, the `VarHandle` for byte[] access, and the `write(byte[], int, Object)` / `read(byte[], int) -> Object` logic for one value type. FlatEntityState SHALL delegate all type-specific read/write operations to PrimitiveType — it SHALL NOT contain type-specific logic itself.
+The system SHALL provide a `PrimitiveType` sealed interface in the `skadistats.clarity.model.state` package with two implementations: `Scalar` (enum) for fixed-size scalar types, and `VectorType` (record) for multi-element types parameterized by element scalar and count. FlatEntityState SHALL delegate all type-specific read/write operations to PrimitiveType — it SHALL NOT contain type-specific logic itself.
 
 The static VarHandle instances SHALL be created via `MethodHandles.byteArrayViewVarHandle` with `ByteOrder.LITTLE_ENDIAN`.
 
-#### Scenario: PrimitiveType variants and their mappings
+```java
+sealed interface PrimitiveType {
+    int size();
+    void write(byte[] data, int offset, Object value);
+    Object read(byte[] data, int offset);
 
-| PrimitiveType | size (bytes) | VarHandle | write | read |
+    enum Scalar implements PrimitiveType {
+        INT(4), FLOAT(4), LONG(8), BOOL(1);
+        // Each variant implements write/read via its VarHandle
+        // FLOAT additionally provides writeRaw(byte[], int, float) / readRaw for VectorType
+    }
+
+    record VectorType(Scalar element, int count) implements PrimitiveType {
+        // size = count * element.size()
+        // write: decompose Vector, N× element.writeRaw
+        // read: N× element.readRaw, reconstruct Vector
+    }
+}
+```
+
+#### Scenario: Scalar variants and their mappings
+
+| Scalar | size | VarHandle | write | read |
 |---|---|---|---|---|
 | INT | 4 | INT_VH | `INT_VH.set(data, offset, ((Integer)value).intValue())` | `(Integer) INT_VH.get(data, offset)` |
 | FLOAT | 4 | FLOAT_VH | `FLOAT_VH.set(data, offset, ((Float)value).floatValue())` | `(Float) FLOAT_VH.get(data, offset)` |
 | LONG | 8 | LONG_VH | `LONG_VH.set(data, offset, ((Long)value).longValue())` | `(Long) LONG_VH.get(data, offset)` |
 | BOOL | 1 | (none) | `data[offset] = ((Boolean)value) ? (byte)1 : (byte)0` | `data[offset] != 0` |
-| VECTOR2 | 8 | FLOAT_VH | decompose Vector into 2 floats at offset, offset+4 | reconstruct Vector from 2 floats |
-| VECTOR3 | 12 | FLOAT_VH | decompose Vector into 3 floats at offset, offset+4, offset+8 | reconstruct Vector from 3 floats |
 
-#### Scenario: Decoder type determines PrimitiveType
+#### Scenario: VectorType delegates element access to its Scalar
 
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with an int decoder (IntUnsignedDecoder, IntSignedDecoder, IntMinusOneDecoder, IntVarUnsignedDecoder, IntVarSignedDecoder)
-- **THEN** it assigns `PrimitiveType.INT`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a float decoder (FloatDefaultDecoder, FloatNoScaleDecoder, FloatCoordDecoder, FloatCoordMpDecoder, FloatCellCoordDecoder, FloatQuantizedDecoder, FloatNormalDecoder)
-- **THEN** it assigns `PrimitiveType.FLOAT`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a long decoder (LongUnsignedDecoder, LongSignedDecoder, LongVarUnsignedDecoder, LongVarSignedDecoder)
-- **THEN** it assigns `PrimitiveType.LONG`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a BoolDecoder
-- **THEN** it assigns `PrimitiveType.BOOL`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a VectorDecoder, VectorNormalDecoder, QAngleBitCountDecoder, QAngleNoBitCountDecoder, QAngleNoScaleDecoder, QAnglePitchYawOnlyDecoder, or QAnglePreciseDecoder
-- **THEN** it assigns `PrimitiveType.VECTOR3`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a VectorXYDecoder
-- **THEN** it assigns `PrimitiveType.VECTOR2`
-- **WHEN** the FieldLayoutBuilder encounters a ValueField with a VectorDefaultDecoder
-- **THEN** it assigns `PrimitiveType.VECTOR2` if dim=2, or `PrimitiveType.VECTOR3` if dim=3
+- **WHEN** `VectorType(FLOAT, 3).write(data, offset, value)` is called
+- **THEN** it decomposes the `Vector` into 3 floats and writes each via `FLOAT.writeRaw(data, offset + i * 4, v.getElement(i))`
+- **WHEN** `VectorType(FLOAT, 3).read(data, offset)` is called
+- **THEN** it reads 3 floats via `FLOAT.readRaw(data, offset + i * 4)` and reconstructs a `Vector`
+- **AND** `VectorType(FLOAT, 2)` handles Vector2D, `VectorType(FLOAT, 4)` handles Vector4D/Quaternion — no separate variants needed
+
+### Requirement: Each Decoder provides its own PrimitiveType
+
+The `Decoder` abstract class SHALL provide a `getPrimitiveType()` method (default: `null`). Each concrete decoder SHALL override this to return the `PrimitiveType` it produces. The FieldLayoutBuilder SHALL use `decoder.getPrimitiveType()` to determine the layout — no separate Decoder→PrimitiveType mapping.
+
+A return value of `null` indicates a reference type (String) — the FieldLayoutBuilder creates a `FieldLayout.Ref` instead of a `Primitive`.
+
+#### Scenario: Decoder PrimitiveType assignments
+
+- **WHEN** `IntVarUnsignedDecoder.getPrimitiveType()` is called → returns `Scalar.INT`
+- **WHEN** `IntVarSignedDecoder.getPrimitiveType()` is called → returns `Scalar.INT`
+- **WHEN** `IntUnsignedDecoder.getPrimitiveType()` is called → returns `Scalar.INT`
+- **WHEN** `IntSignedDecoder.getPrimitiveType()` is called → returns `Scalar.INT`
+- **WHEN** `IntMinusOneDecoder.getPrimitiveType()` is called → returns `Scalar.INT`
+- **WHEN** `FloatDefaultDecoder.getPrimitiveType()` is called → returns `Scalar.FLOAT`
+- **WHEN** any other float decoder's `getPrimitiveType()` is called → returns `Scalar.FLOAT`
+- **WHEN** any long decoder's `getPrimitiveType()` is called → returns `Scalar.LONG`
+- **WHEN** `BoolDecoder.getPrimitiveType()` is called → returns `Scalar.BOOL`
+- **WHEN** `VectorDecoder.getPrimitiveType()` is called → returns `new VectorType(Scalar.FLOAT, 3)`
+- **WHEN** `VectorNormalDecoder.getPrimitiveType()` is called → returns `new VectorType(Scalar.FLOAT, 3)`
+- **WHEN** `VectorXYDecoder.getPrimitiveType()` is called → returns `new VectorType(Scalar.FLOAT, 2)`
+- **WHEN** `VectorDefaultDecoder.getPrimitiveType()` is called → returns `new VectorType(Scalar.FLOAT, dim)` where `dim` is the decoder's dimension field
+- **WHEN** any QAngle decoder's `getPrimitiveType()` is called → returns `new VectorType(Scalar.FLOAT, 3)`
+- **WHEN** `StringZeroTerminatedDecoder.getPrimitiveType()` is called → returns `null`
+
+#### Scenario: FieldLayoutBuilder uses Decoder.getPrimitiveType()
+
+- **WHEN** the FieldLayoutBuilder encounters a ValueField
+- **AND** `valueField.getDecoder().getPrimitiveType()` returns a non-null PrimitiveType
+- **THEN** it creates `FieldLayout.Primitive(offset, primitiveType)` and advances the offset by `1 + primitiveType.size()`
+- **WHEN** `valueField.getDecoder().getPrimitiveType()` returns `null`
+- **THEN** it creates `FieldLayout.Ref(refIndex++)` without advancing the byte offset
 
 ### Requirement: FieldLayout tree mirrors Field hierarchy with offsets
 
@@ -43,10 +84,12 @@ sealed interface FieldLayout {
     record Primitive(int offset, PrimitiveType type) implements FieldLayout {}
     record Ref(int refIndex) implements FieldLayout {}
     record Composite(FieldLayout[] children) implements FieldLayout {}
-    record Array(int baseOffset, int stride, FieldLayout element) implements FieldLayout {}
+    record Array(int baseOffset, int stride, int length, FieldLayout element) implements FieldLayout {}
     record SubState(int refIndex, SubStateKind kind) implements FieldLayout {}
 }
 ```
+
+`Array.length` (from `ArrayField.getLength()`) is needed by `fieldPathIterator()` to know how many elements to scan.
 
 #### Scenario: FieldLayout variants and their Field counterparts
 
@@ -112,13 +155,14 @@ sealed interface SubStateKind {
 
 The system SHALL provide a `FlatEntityState` class implementing the `EntityState` interface. It SHALL store primitive values in a `byte[]` and reference types / sub-states in an `Object[]` sidecar.
 
-`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator and a `layout` cursor. When a SubState is encountered mid-traversal, the loop SHALL swap to the sub-FlatEntityState's data/refs/layout/base and `continue` to reprocess the current FieldPath index with the new context.
+`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` FlatEntityState reference. When a SubState is encountered mid-traversal, the loop SHALL first ensure the current state is modifiable (so its `refs[]` can be updated), then COW-clone the sub-state if it is non-modifiable, replace it in `refs[]`, swap `current` to the new sub-state, and `continue` to reprocess the current FieldPath index. This cascading COW ensures exclusive ownership at each level before writing.
 
-At the leaf, the method SHALL dispatch on the `StateMutation` type:
+At the leaf, the method SHALL dispatch on the `StateMutation` type, passing `current` to write operations:
 
 ```java
 public boolean applyMutation(FieldPath fpX, StateMutation op) {
     var fp = fpX.s2();
+    FlatEntityState current = this;
     byte[] data = this.data;
     Object[] refs = this.refs;
     FieldLayout layout = this.rootLayout;
@@ -132,9 +176,16 @@ public boolean applyMutation(FieldPath fpX, StateMutation op) {
             case Composite c -> layout = c.children[idx];
             case Array a     -> { base += a.baseOffset + idx * a.stride; layout = a.element; }
             case SubState s  -> {
+                current.ensureModifiable();
+                data = current.data; refs = current.refs;
                 var sub = (FlatEntityState) refs[s.refIndex];
-                data = sub.data;
-                refs = sub.refs;
+                if (!sub.modifiable) {
+                    sub = new FlatEntityState(sub.rootLayout, sub.data.clone(), sub.refs.clone());
+                    sub.modifiable = true;
+                    refs[s.refIndex] = sub;
+                }
+                current = sub;
+                data = sub.data; refs = sub.refs;
                 layout = sub.rootLayout;
                 base = 0;
                 continue;
@@ -147,23 +198,24 @@ public boolean applyMutation(FieldPath fpX, StateMutation op) {
 
     // leaf: dispatch on StateMutation
     return switch (op) {
-        case StateMutation.WriteValue wv -> writeValue(layout, data, refs, base, wv.value());
+        case StateMutation.WriteValue wv -> writeValue(current, layout, base, wv.value());
         case StateMutation.ResizeVector rv -> resizeVector(layout, refs, rv.count());
         case StateMutation.SwitchPointer sp -> switchPointer(layout, refs, sp.newSerializer());
     };
 }
 
-private boolean writeValue(FieldLayout layout, byte[] data, Object[] refs, int base, Object value) {
+private boolean writeValue(FlatEntityState target, FieldLayout layout, int base, Object value) {
     switch (layout) {
         case Primitive p -> {
-            ensureModifiable();
+            target.ensureModifiable();
+            var data = target.data;
             data[base + p.offset] = 1;
             p.type().write(data, base + p.offset + 1, value);
             return false;
         }
         case Ref r -> {
-            ensureModifiable();
-            refs[r.refIndex] = value;
+            target.ensureModifiable();
+            target.refs[r.refIndex] = value;
             return false;
         }
         default -> throw new IllegalStateException();
@@ -216,10 +268,10 @@ private boolean writeValue(FieldLayout layout, byte[] data, Object[] refs, int b
 #### Scenario: Traversal through SubState with context switch
 
 - **WHEN** `applyMutation` is called with FieldPath `[4, 2]` where children[4] is SubState(refIndex=0)
-- **THEN** i=0 advances layout to SubState
-- **AND** i=1 encounters SubState, swaps to sub-FlatEntityState (data, refs, layout, base=0), and `continue`s
+- **THEN** i=0 advances layout to SubState via Composite
+- **AND** i=1 encounters SubState, swaps `current` to sub-FlatEntityState (+ data, refs, layout, base=0), and `continue`s
 - **AND** i=1 is reprocessed with the sub-state's Array layout: `base = 0 + 2*stride`, layout = element
-- **AND** the WriteValue is applied in the sub-state's byte[]
+- **AND** the WriteValue calls `current.ensureModifiable()` (targeting the sub-state), re-reads `current.data`, and writes in the sub-state's byte[]
 
 #### Scenario: SubState as leaf (structural operation)
 
@@ -246,12 +298,14 @@ private boolean writeValue(FieldLayout layout, byte[] data, Object[] refs, int b
 
 ### Requirement: FlatEntityState supports copy-on-write
 
-`copy()` SHALL return a new FlatEntityState with:
-- `data` = `this.data.clone()`
-- `refs` = `this.refs.clone()` (shallow copy)
-- Both the original and the copy marked as `modifiable = false`
+`copy()` SHALL:
+1. Recursively mark all sub-FlatEntityStates in `refs[]` as `modifiable = false` (they become frozen snapshots)
+2. Clone `data` and `refs` (shallow copy)
+3. Mark both the original and the copy as `modifiable = false`
 
 On first write to a non-modifiable state, `ensureModifiable()` SHALL clone `data` and `refs` and set `modifiable = true`.
+
+On first write through a sub-state path, `applyMutation` SHALL COW-clone the sub-state object and replace it in the parent's `refs[]` before writing (see applyMutation SubState traversal). This cascading COW gives each parent exclusive ownership of its sub-states.
 
 #### Scenario: Copy and modify independently
 
@@ -260,13 +314,16 @@ On first write to a non-modifiable state, `ensureModifiable()` SHALL clone `data
 - **THEN** `ensureModifiable()` clones byte[] and refs[] before writing
 - **AND** the original's data is unchanged
 
-#### Scenario: SubState COW
+#### Scenario: SubState COW — clone-and-replace at boundary
 
 - **WHEN** a FlatEntityState is copied and the copy's sub-state is written to
-- **THEN** the sub-FlatEntityState in refs[] is shared (shallow copy)
-- **AND** the sub-state itself handles COW independently (its own modifiable flag)
-- **AND** the copy's `ensureModifiable()` clones refs[], giving it its own reference to the sub-state
-- **AND** the sub-state's `ensureModifiable()` clones its own data when first written
+- **THEN** `copy()` has marked all sub-states as `modifiable = false` (frozen snapshots)
+- **AND** both original and copy's `refs[]` point to the same sub-state objects (shallow clone)
+- **WHEN** `applyMutation` traverses through a SubState on the copy
+- **THEN** it first calls `current.ensureModifiable()` — the copy's `refs[]` is now exclusively owned
+- **AND** it clones the sub-state object (`new FlatEntityState(sub.rootLayout, sub.data.clone(), sub.refs.clone())`)
+- **AND** it replaces `refs[s.refIndex]` with the clone — the original's refs still points to the frozen snapshot
+- **AND** writes proceed on the clone, leaving the original's sub-state unchanged
 
 ### Requirement: FlatEntityState provides fieldPathIterator
 
