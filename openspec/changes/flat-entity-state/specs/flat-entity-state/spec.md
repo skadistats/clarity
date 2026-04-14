@@ -150,11 +150,11 @@ The system SHALL provide a `SubStateKind` sealed interface to hold the layout me
 ```java
 sealed interface SubStateKind {
     record Vector(int elementBytes, FieldLayout elementLayout) implements SubStateKind {}
-    record Pointer(int pointerId, FieldLayout[] layouts, int[] layoutBytes) implements SubStateKind {}
+    record Pointer(int pointerId, Serializer[] serializers, FieldLayout[] layouts, int[] layoutBytes) implements SubStateKind {}
 }
 ```
 
-`SubStateKind.Pointer` carries the `pointerId` so that `FlatEntityState` can update `pointerSerializers[]` (inherited from `AbstractS2EntityState`) without accessing the Field hierarchy during mutation traversal.
+`SubStateKind.Pointer` carries the `pointerId` so that `FlatEntityState` can update `pointerSerializers[]` (inherited from `AbstractS2EntityState`) without accessing the Field hierarchy during mutation traversal. It also carries a parallel `Serializer[]` reference (same array as in `PointerField`) so that `lookupLayoutIndex(newSerializer)` can map a `StateMutation.SwitchPointer.newSerializer()` to the corresponding entry in `layouts[]` / `layoutBytes[]` via reference equality.
 
 #### Scenario: VectorField produces SubState with Vector kind
 
@@ -221,9 +221,16 @@ Sub-states for VectorField and PointerField are `Entry` instances living in `Fla
 
 ### Requirement: FlatEntityState dispatches on StateMutation via applyMutation
 
-`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `FlatEntityState.refs`, COW-clone it if non-modifiable (calling `ensureRefsModifiable()` first so the refs container itself is writable), update `refs.set(slot, clone)`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index.
+`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `FlatEntityState.refs`, COW-clone it if non-modifiable (calling `ensureRefsModifiable()` first so the refs container itself is writable), update `refs.set(slot, clone)`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index. Descent through a SubState consumes no fp index.
 
-**Invariant:** A `WriteValue` over a SubState-traversed path requires that the SubState was previously initialized via `ResizeVector` or `SwitchPointer`. The decode protocol guarantees this.
+The SubState branch MUST NOT include its own `if (i == last) break` check. SubState-as-leaf operations (`SwitchPointer`, `ResizeVector`, or any other op targeting the SubState position itself) reach the dispatch via the Composite/Array branch advancing `layout = SubState` on the last idx and the loop's terminal break. Adding a break inside the SubState branch would prevent the final descent for transitional `WriteValue` operations whose leaf lives inside the sub-Entry.
+
+**Lazy sub-Entry creation:** When the flag byte at `base + s.offset` is 0 mid-traversal, `applyMutation` SHALL lazy-create the sub-Entry to mirror `NestedArrayEntityState`'s implicit creation:
+- **Pointer with `serializers.length == 1`**: create sub-Entry with `layouts[0]` / `layoutBytes[0]`, allocate slot, set flag, set `pointerSerializers[pointerId] = serializers[0]`.
+- **Pointer with `serializers.length > 1`**: throw — the protocol must emit `SwitchPointer` before any inner write.
+- **Vector**: create sub-Entry sized to fit `nextIdx + 1` elements (`Array(0, elementBytes, nextIdx+1, elementLayout)`).
+
+After any descent through `SubState(Vector)`, if the sub-Entry's `Array.length < nextIdx + 1`, `applyMutation` SHALL grow the sub-Entry via byte[] reallocation and update its `rootLayout` with the new length. This mirrors `NestedArrayEntityState.ensureNodeCapacity`'s `idx + 1` fallback.
 
 At the leaf, the method SHALL dispatch on the `StateMutation` type:
 
@@ -339,17 +346,17 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **WHEN** `applyMutation` receives a `ResizeVector(count)` at a SubState(Vector) leaf with no existing sub-Entry (flag=0)
 - **AND** count > 0
 - **THEN** a sub-Entry with `byte[count * elementBytes]` is created, a slot is allocated in `refs`, the slot-index and flag are stored in the parent's byte[]
-- **AND** returns `true`
+- **AND** returns `false` (no occupied paths existed in the dropped tail; the fresh sub-Entry has no occupied paths)
 - **WHEN** a sub-Entry exists and `newCount != oldCount`
 - **AND** `sub.modifiable == false` (sub-Entry is shared with another FlatEntityState post-copy)
 - **THEN** `ensureRefsModifiable()` clones the refs container, `sub.copy()` creates a fresh Entry, `refs.set(slot, fresh)` replaces the shared Entry — **before** any in-place mutation
 - **AND** the original FlatEntityState still sees its unchanged sub-Entry in its own refs container
 - **WHEN** a sub-Entry exists and `newCount != oldCount`
-- **THEN** a new `byte[newCount * elementBytes]` is allocated, existing data is copied up to `min(oldCount, newCount) * elementBytes`, and `sub.data` is replaced with the new array (no `ensureModifiable()` clone needed — the data is overwritten wholesale)
+- **THEN** a new `byte[newCount * elementBytes]` is allocated, existing data is copied up to `min(oldCount, newCount) * elementBytes`, and `sub.data` is replaced with the new array
 - **AND** `sub.rootLayout` is replaced with a new `Array` record carrying the new length
 - **AND** `sub.modifiable` is set to `true` (the sub-Entry now owns its data)
 - **AND** on shrink, dropped tail slot-indices are orphaned in refs (no recursive cleanup — matches `NestedArrayEntityState.clearEntryRef`)
-- **AND** returns `true`
+- **AND** returns `true` iff any occupied path existed in the dropped tail `[newCount, oldCount)` (grow → false, shrink with only-empty tail → false)
 - **WHEN** `newCount == oldCount`
 - **THEN** no mutation occurs and returns `false`
 
@@ -359,7 +366,7 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **THEN** it reads `pointerId` from `SubStateKind.Pointer.pointerId()`
 - **AND** if flag was 1 AND (`newSerializer == null` OR `pointerSerializers[pointerId] != newSerializer`): the direct slot is freed via `freeRefSlot` (nested slots are orphaned), flag cleared, `pointerSerializers[pointerId] = null`
 - **AND** if `newSerializer != null` AND flag is now 0: a new sub-Entry is created with the pre-computed layout and bytes for `newSerializer`, a slot is allocated, slot-index and flag stored in parent's byte[], `pointerSerializers[pointerId] = newSerializer`
-- **AND** returns `true` iff the sub-Entry was created or removed
+- **AND** returns `true` iff the cleared old sub-Entry contained any occupied paths (fresh creation or switch-to-same-serializer → false)
 
 #### Scenario: Traversal through nested Composites (sub-serializer access)
 

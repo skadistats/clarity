@@ -2,6 +2,7 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
+import skadistats.clarity.model.state.PrimitiveType;
 
 @RegisterDecoder
 public final class QAngleNoBitCountDecoder extends Decoder {
@@ -15,6 +16,11 @@ public final class QAngleNoBitCountDecoder extends Decoder {
         if (b1) v[1] = bs.readBitCoord();
         if (b2) v[2] = bs.readBitCoord();
         return new Vector(v);
+    }
+
+    @Override
+    public PrimitiveType getPrimitiveType() {
+        return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);
     }
 
 }

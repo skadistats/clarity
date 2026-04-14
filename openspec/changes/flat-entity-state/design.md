@@ -138,7 +138,7 @@ sealed interface FieldLayout {
 
 sealed interface SubStateKind {
     record Vector(int elementBytes, FieldLayout elementLayout) implements SubStateKind {}
-    record Pointer(int pointerId, FieldLayout[] layouts, int[] layoutBytes) implements SubStateKind {}
+    record Pointer(int pointerId, Serializer[] serializers, FieldLayout[] layouts, int[] layoutBytes) implements SubStateKind {}
 }
 ```
 
@@ -153,7 +153,8 @@ sealed interface SubStateKind {
 - Slot-index lookup: `int slot = INT_VH.get(data, base + offset + 1); Object value = refs.get(slot);`
 
 **Key properties:**
-- `FieldLayout` contains NO references to `Field`, `Serializer`, or `Decoder`
+- `FieldLayout` contains NO references to `Field` or `Decoder`
+- `SubStateKind.Pointer` carries a parallel `Serializer[]` reference (same array PointerField holds) for `lookupLayoutIndex` — Serializers are immutable schema carriers, the practical choice over name-based or ID-based lookup
 - `Field` and `Serializer` contain NO references to `FieldLayout` or offsets
 - Complete separation of concerns: structure vs. storage
 - `SubStateKind.Pointer` carries `pointerId` so that `FlatEntityState` can update `pointerSerializers[]` without accessing the Field hierarchy
@@ -229,9 +230,21 @@ FlatEntityState traverses **only** the FieldLayout tree. No `field.getChild()` c
 
 The traversal uses a `base` accumulator (int, starts at 0) that is only modified by Array nodes. Composite nodes advance the layout cursor but leave `base` unchanged — their children have offsets that are already absolute within the current Entry's byte[].
 
-When a SubState is encountered mid-traversal, the loop reads the slot-index from `current.data[base + s.offset + 1]` via `INT_VH.get`, looks up the sub-Entry in `this.refs`, and swaps to the sub-Entry's context (data, layout, base=0). The `continue` reprocesses the current FieldPath index. The traversal tracks the `current` Entry so that COW (`ensureModifiable`) operates on the correct instance.
+When a SubState is encountered mid-traversal, the loop reads the slot-index from `current.data[base + s.offset + 1]` via `INT_VH.get`, looks up the sub-Entry in `this.refs`, and swaps to the sub-Entry's context (data, layout, base=0). The traversal tracks the `current` Entry so that COW (`ensureModifiable`) operates on the correct instance. Descent through a SubState consumes **no** fp index — the next iteration re-uses the same `i` against the sub-Entry's layout.
 
-**Invariant:** A `WriteValue` over a SubState-traversed path requires that the SubState was previously initialized via `ResizeVector` or `SwitchPointer`. The decode protocol guarantees this — no defensive check needed.
+**SubState-as-leaf vs. SubState-as-transition.** The two cases reach the dispatch differently:
+- *Leaf* (SwitchPointer, ResizeVector, or anything targeting the SubState position itself): the path's last idx points at the SubState's slot in its parent. The Composite/Array branch advances `layout = SubState` on that idx and the loop's terminal `if (i == last) break` fires. The SubState branch is never entered. Dispatch sees `layout = SubState`.
+- *Transition* (any mutation targeting a leaf inside the sub-Entry): the SubState is reached as the current `layout` at the start of an iteration. The SubState branch descends without consuming an idx.
+
+Therefore the SubState branch must NOT have its own `if (i == last) break` — that would prevent the final descent for transitional WriteValue/Read operations whose leaf lives in the sub-Entry.
+
+**Lazy creation of sub-Entries.** `NestedArrayEntityState` stores untyped `Object[]` and creates intermediate sub-Entries lazily via `subEntry(idx)`. The decode protocol relies on this for two cases:
+- **Pointer with single (default) serializer**: protocol may write into the sub-Entry without emitting `SwitchPointer`, since `PointerField.resolveSerializer` falls back to `defaultSerializer`. FLAT must lazy-create the sub-Entry using `layouts[0]` and set `pointerSerializers[pointerId] = serializers[0]`. For multi-polymorphic Pointers the protocol is required to emit `SwitchPointer` first; lazy-create throws if `serializers.length > 1`.
+- **Vector**: protocol may write elements directly without emitting `ResizeVector`. FLAT must lazy-create the vector sub-Entry sized to fit `nextIdx + 1` elements, and grow on subsequent descents whose nextIdx exceeds current `Array.length`.
+
+Both lazy creations happen in the SubState branch when the flag byte is 0, before reading the slot index.
+
+**Vector growth on traversal.** Even after a vector sub-Entry exists, a subsequent transition with `nextIdx >= currentLength` must extend the byte[] and update the `Array.length`. This mirrors `NestedArrayEntityState.ensureNodeCapacity`'s `idx + 1` fallback for Vector/Pointer parent fields.
 
 **Invariant:** `Primitive` and `Ref` only appear at leaves. `Composite`, `Array`, `SubState` only appear at branches (except SubState-as-leaf for structural ops).
 
@@ -485,13 +498,13 @@ Every storage slot in byte[] has a 1-byte flag prefix. Three slot schemas:
 - Created on first `ResizeVector(count>0)` or `SwitchPointer(newSerializer != null)`
 - Freed on `ResizeVector(0)`, `SwitchPointer(null)`, or when a Pointer switches serializer
 
-**Capacity-change semantics (derived from NestedArrayEntityState.java:223 `set()`):**
-- Primitive: flag transition 0→1 or 1→0 → `capacityChanged = true`
-- Ref: flag transition 0→1 or 1→0 → `capacityChanged = true`
-- SubState(Vector) ResizeVector: `true` iff `oldCount != newCount`
-- SubState(Pointer) SwitchPointer: `true` iff sub-Entry was created or removed
+**Capacity-change semantics — "the set of occupied FieldPaths changed":**
+- Primitive: flag transition 0→1 or 1→0 → `true`
+- Ref: flag transition 0→1 or 1→0 → `true`
+- SubState(Vector) ResizeVector: `true` iff any occupied path existed in the shrunk tail (grow alone never adds paths)
+- SubState(Pointer) SwitchPointer: `true` iff the cleared old sub-Entry contained any occupied paths (creating an empty sub-Entry alone never adds paths)
 
-This matches the NestedArrayEntityState semantic: "the set of occupied FieldPaths changed", which is the signal for `fieldPathIterator` invalidation.
+This is the signal for `fieldPathIterator` invalidation — we return true precisely when the iterator output would change. Creating empty capacity (grown vector slot, fresh pointer sub-Entry) adds no occupied paths and therefore returns false.
 
 ### D6: SubState handling
 
@@ -671,14 +684,14 @@ The exact contract for SubState-as-own-path must match NestedArrayEntityState's 
 
 ### D12: Capacity change return value
 
-`applyMutation` returns `true` iff **the set of occupied FieldPaths changed**. Derived from NestedArrayEntityState (lines 223, 270):
+`applyMutation` returns `true` iff **the set of occupied FieldPaths changed** — i.e., the `fieldPathIterator` output would differ before vs. after the mutation. Empty-capacity additions (grow, fresh pointer sub-Entry) do not count because they add no occupied paths.
 
 | Operation | Returns true when |
 |---|---|
 | WriteValue on Primitive | flag-byte transition 0→1 or 1→0 |
 | WriteValue on Ref | flag-byte transition 0→1 or 1→0 |
-| ResizeVector | `oldCount != newCount` |
-| SwitchPointer | sub-Entry was created or removed |
+| ResizeVector | any occupied path existed in `[newCount, oldCount)` (shrink dropped data); grow alone → false |
+| SwitchPointer | the cleared old sub-Entry contained any occupied paths; fresh creation alone → false |
 
 This signals that `fieldPathIterator` results are invalidated.
 

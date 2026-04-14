@@ -70,8 +70,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
                     node.set(idx, wv.value());
                     return capacityChanged;
                 } else if (mutation instanceof StateMutation.ResizeVector rv) {
-                    node.subEntry(idx).capacity(rv.count(), true);
-                    return true;
+                    return handleResizeVector(node, idx, rv.count());
                 } else if (mutation instanceof StateMutation.SwitchPointer sp) {
                     return handlePointerSwitch(node, idx, child, sp);
                 }
@@ -95,20 +94,51 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
     private boolean handlePointerSwitch(Entry node, int idx, Field field, StateMutation.SwitchPointer sp) {
         var newSerializer = sp.newSerializer();
-        if (field instanceof PointerField pf) {
-            var currentSerializer = pointerSerializers[pf.getPointerId()];
-            if (node.has(idx)) {
-                if (newSerializer == null || currentSerializer != newSerializer) {
-                    pointerSerializers[pf.getPointerId()] = null;
-                    node.clear(idx);
-                }
-            }
-            if (newSerializer != null && !node.has(idx)) {
-                pointerSerializers[pf.getPointerId()] = newSerializer;
-                node.subEntry(idx);
+        if (!(field instanceof PointerField pf)) return false;
+        var currentSerializer = pointerSerializers[pf.getPointerId()];
+        if (currentSerializer == newSerializer) return false;
+        var removedOccupied = false;
+        if (node.has(idx)) {
+            removedOccupied = hasAnyOccupiedPath(node.subEntry(idx));
+            pointerSerializers[pf.getPointerId()] = null;
+            node.clear(idx);
+        }
+        if (newSerializer != null) {
+            pointerSerializers[pf.getPointerId()] = newSerializer;
+            node.subEntry(idx);
+        }
+        return removedOccupied;
+    }
+
+    private boolean handleResizeVector(Entry node, int idx, int newCount) {
+        var oldCount = node.isSub(idx) ? node.subEntry(idx).length() : 0;
+        if (oldCount == newCount) return false;
+        var droppedOccupied = false;
+        if (newCount < oldCount) {
+            var sub = node.subEntry(idx);
+            for (var i = newCount; i < oldCount && !droppedOccupied; i++) {
+                if (hasOccupiedSlot(sub, i)) droppedOccupied = true;
             }
         }
-        return capacityChanged;
+        node.subEntry(idx).capacity(newCount, true);
+        return droppedOccupied;
+    }
+
+    private boolean hasAnyOccupiedPath(Entry entry) {
+        for (var i = 0; i < entry.length(); i++) {
+            if (hasOccupiedSlot(entry, i)) return true;
+        }
+        return false;
+    }
+
+    private boolean hasOccupiedSlot(Entry entry, int i) {
+        if (!entry.has(i)) return false;
+        var v = entry.get(i);
+        if (v instanceof EntryRef ref) {
+            var sub = entries.get(ref.idx);
+            return sub != null && hasAnyOccupiedPath(sub);
+        }
+        return true;
     }
 
     @Override

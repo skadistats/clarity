@@ -22,6 +22,10 @@ public class VectorField extends Field {
         this.elementField = elementField;
     }
 
+    public Field getElementField() {
+        return elementField;
+    }
+
     @Override
     public boolean isHiddenFieldPath() {
         return true;

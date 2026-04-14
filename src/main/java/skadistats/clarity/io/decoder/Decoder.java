@@ -1,5 +1,7 @@
 package skadistats.clarity.io.decoder;
 
+import skadistats.clarity.model.state.PrimitiveType;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,5 +29,9 @@ public abstract class Decoder {
             throw new IllegalStateException("No decoder ID registered for " + getClass().getName());
         }
         this.id = assignedId;
+    }
+
+    public PrimitiveType getPrimitiveType() {
+        return null;
     }
 }

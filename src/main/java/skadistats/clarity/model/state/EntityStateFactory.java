@@ -7,6 +7,7 @@ public class EntityStateFactory {
 
     private final S1EntityStateType s1Type;
     private final S2EntityStateType s2Type;
+    private final FieldLayoutBuilder layoutBuilder = new FieldLayoutBuilder();
     private int pointerCount;
 
     public EntityStateFactory(S1EntityStateType s1Type, S2EntityStateType s2Type) {
@@ -23,7 +24,7 @@ public class EntityStateFactory {
     }
 
     public EntityState forS2(SerializerField field) {
-        return s2Type.createState(field, pointerCount);
+        return s2Type.createState(field, pointerCount, layoutBuilder);
     }
 
 }

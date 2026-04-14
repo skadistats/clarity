@@ -1,6 +1,7 @@
 package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.model.state.PrimitiveType;
 
 @RegisterDecoder
 public final class FloatDefaultDecoder extends Decoder {
@@ -20,6 +21,11 @@ public final class FloatDefaultDecoder extends Decoder {
     public static Float decode(BitStream bs, FloatDefaultDecoder d) {
         var v = bs.readUBitInt(d.bitCount) * d.decodeMultiplier;
         return d.minValue + (d.maxValue - d.minValue) * v;
+    }
+
+    @Override
+    public PrimitiveType getPrimitiveType() {
+        return PrimitiveType.Scalar.FLOAT;
     }
 
 }

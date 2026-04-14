@@ -41,11 +41,13 @@ public class TreeMapEntityState extends AbstractS2EntityState {
         } else if (mutation instanceof StateMutation.ResizeVector rv) {
             return trimEntries(fp, rv.count());
         } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            var cleared = clearSubEntries(fp);
             var field = getFieldForFieldPath(fp);
-            if (field instanceof PointerField pf) {
-                pointerSerializers[pf.getPointerId()] = sp.newSerializer();
-            }
+            if (!(field instanceof PointerField pf)) return false;
+            var newSerializer = sp.newSerializer();
+            var currentSerializer = pointerSerializers[pf.getPointerId()];
+            if (currentSerializer == newSerializer) return false;
+            var cleared = clearSubEntries(fp);
+            pointerSerializers[pf.getPointerId()] = newSerializer;
             return cleared;
         }
         throw new IllegalStateException();

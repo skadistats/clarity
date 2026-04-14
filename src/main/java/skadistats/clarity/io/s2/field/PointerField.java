@@ -48,6 +48,10 @@ public class PointerField extends Field {
         this.pointerId = pointerId;
     }
 
+    public Serializer[] getSerializers() {
+        return serializers;
+    }
+
     private Serializer resolveSerializer(AbstractS2EntityState state) {
         var ser = state.getPointerSerializer(pointerId);
         return ser != null ? ser : defaultSerializer;

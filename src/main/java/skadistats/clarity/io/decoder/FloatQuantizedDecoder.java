@@ -5,6 +5,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
+import skadistats.clarity.model.state.PrimitiveType;
 
 import static skadistats.clarity.LogChannel.decoder;
 
@@ -188,6 +189,11 @@ public final class FloatQuantizedDecoder extends Decoder {
         }
         var v = bs.readUBitInt(d.bitCount) * d.decodeMultiplier;
         return d.minValue + (d.maxValue - d.minValue) * v;
+    }
+
+    @Override
+    public PrimitiveType getPrimitiveType() {
+        return PrimitiveType.Scalar.FLOAT;
     }
 
 }

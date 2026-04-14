@@ -2,6 +2,7 @@ package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
+import skadistats.clarity.model.state.PrimitiveType;
 
 @RegisterDecoder
 public final class VectorDecoder extends Decoder {
@@ -27,6 +28,11 @@ public final class VectorDecoder extends Decoder {
             if (s) v[2] = -v[2];
         }
         return new Vector(v);
+    }
+
+    @Override
+    public PrimitiveType getPrimitiveType() {
+        return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);
     }
 
 }

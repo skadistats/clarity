@@ -20,6 +20,10 @@ public class ArrayField extends Field {
         return length;
     }
 
+    public Field getElementField() {
+        return elementField;
+    }
+
     @Override
     public Field getChild(AbstractS2EntityState state, int idx) {
         return elementField;
