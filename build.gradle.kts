@@ -3,6 +3,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.gradlex.extra-java-module-info") version "1.14"
+    id("me.champeau.jmh") version "0.7.2"
 }
 
 group = "com.skadistats"
@@ -37,6 +38,7 @@ dependencies {
     annotationProcessor(sourceSets["processor"].output)
     annotationProcessor("com.palantir.javapoet:javapoet:0.14.0")
     testImplementation("org.testng:testng:7.8.0")
+    jmhRuntimeOnly("ch.qos.logback:logback-classic:1.5.20")
 }
 
 extraJavaModuleInfo {
@@ -106,5 +108,31 @@ signing {
         gradle.taskGraph.allTasks.any { it.name.startsWith("publishAggregation") }
     })
     sign(publishing.publications["mavenJava"])
+}
+
+tasks.register("bench") {
+    description = "Run the entity state benchmark harness. Pass args with -PbenchArgs=\"...\"."
+    group = "benchmark"
+    dependsOn("jmhCompileGeneratedClasses")
+    doLast {
+        val cp = (files(
+            "build/jmh-generated-classes",
+            "build/jmh-generated-resources",
+        ) + sourceSets["jmh"].runtimeClasspath).asPath
+        val javaHome = System.getProperty("java.home")
+        val userArgs = (project.findProperty("benchArgs") as? String)
+            ?.split(" ")?.filter { it.isNotBlank() } ?: emptyList()
+        val cmd = listOf(
+            "$javaHome/bin/java",
+            "-Xmx4g",
+            "-cp", cp,
+            "skadistats.clarity.bench.Main",
+        ) + userArgs
+        val pb = ProcessBuilder(cmd)
+        pb.directory(rootDir)
+        pb.inheritIO()
+        val exit = pb.start().waitFor()
+        if (exit != 0) throw GradleException("bench exited with $exit")
+    }
 }
 
