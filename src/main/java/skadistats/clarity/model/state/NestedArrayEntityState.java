@@ -186,11 +186,31 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         markFree(entryRef.idx);
     }
 
+    private void releaseEntryRef(EntryRef entryRef) {
+        var e = entries.get(entryRef.idx);
+        if (e != null) {
+            for (var slot : e.state) {
+                if (slot instanceof EntryRef child) {
+                    releaseEntryRef(child);
+                }
+            }
+        }
+        clearEntryRef(entryRef);
+    }
+
     private void markFree(int i) {
         if (freeEntries == null) {
             freeEntries = new ArrayDeque<>();
         }
         freeEntries.add(i);
+    }
+
+    int slabSize() {
+        return entries.size();
+    }
+
+    int freeSlotCount() {
+        return freeEntries == null ? 0 : freeEntries.size();
     }
 
 
@@ -247,8 +267,8 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
                 state = newState;
                 modifiable = true;
             }
-            if (state[idx] instanceof EntryRef) {
-                clearEntryRef((EntryRef) state[idx]);
+            if (state[idx] instanceof EntryRef ref) {
+                releaseEntryRef(ref);
             }
             if ((state[idx] == null) ^ (value == null)) {
                 capacityChanged = true;
@@ -290,6 +310,11 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
             if (wantedSize > curSize) {
                 newState = new Object[wantedSize];
             } else if (shrinkIfNeeded) {
+                for (var i = wantedSize; i < curSize; i++) {
+                    if (state[i] instanceof EntryRef ref) {
+                        releaseEntryRef(ref);
+                    }
+                }
                 newState = wantedSize == 0 ? EMPTY_STATE : new Object[wantedSize];
             }
 

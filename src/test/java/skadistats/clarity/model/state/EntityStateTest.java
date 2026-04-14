@@ -747,4 +747,158 @@ public class EntityStateTest {
         assertFalse(ps.contains(fp(0, 2)));
         assertFalse(ps.contains(fp(0, 3)));
     }
+
+    // ---------- Slab hygiene: recursive release of freelist slots ----------
+
+    @DataProvider(name = "slabImpls")
+    public Object[][] slabImpls() {
+        return new Object[][] {
+            {TestStateFactory.NESTED_ARRAY},
+            {TestStateFactory.FLAT},
+        };
+    }
+
+    private static int slabSize(EntityState st) {
+        if (st instanceof NestedArrayEntityState n) return n.slabSize();
+        if (st instanceof FlatEntityState f) return f.slabSize();
+        throw new UnsupportedOperationException(st.getClass().getName());
+    }
+
+    private static int freeSlotCount(EntityState st) {
+        if (st instanceof NestedArrayEntityState n) return n.freeSlotCount();
+        if (st instanceof FlatEntityState f) return f.freeSlotCount();
+        throw new UnsupportedOperationException(st.getClass().getName());
+    }
+
+    private static int liveSlabCount(EntityState st) {
+        return slabSize(st) - freeSlotCount(st);
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void switchPointerToNullReleasesNestedSubtree(String impl) {
+        var leaf = serializer("Leaf", named("x", intField()));
+        var mid = serializer("Mid", named("p", pointerField(leaf)));
+        var outer = serializer("Outer", named("p", pointerField(mid)));
+        var st = makeState(impl, outer);
+
+        var baseline = liveSlabCount(st);
+
+        switchPtr(st, fp(0), mid);
+        switchPtr(st, fp(0, 0), leaf);
+        write(st, fp(0, 0, 0), 42);
+
+        assertTrue(liveSlabCount(st) > baseline, "slab grew while building subtree");
+
+        switchPtr(st, fp(0), null);
+
+        assertEquals(liveSlabCount(st), baseline,
+            "clearing outer pointer must recursively release inner mid and leaf slots");
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void switchPointerToDifferentSerializerReleasesOldSubtree(String impl) {
+        var leaf = serializer("Leaf", named("x", intField()));
+        var a = serializer("A", named("p", pointerField(leaf)));
+        var b = serializer("B", named("n", intField()));
+        var outer = serializer("Outer", named("p", pointerField(a, b)));
+        var st = makeState(impl, outer);
+
+        switchPtr(st, fp(0), a);
+        switchPtr(st, fp(0, 0), leaf);
+        write(st, fp(0, 0, 0), 1);
+
+        var afterA = liveSlabCount(st);
+
+        switchPtr(st, fp(0), b);
+        write(st, fp(0, 0), 2);
+
+        var afterB = liveSlabCount(st);
+        assertTrue(afterB < afterA,
+            "switching to a simpler serializer should release the deeper old subtree");
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void resizeVectorShrinkReleasesDroppedSubEntries(String impl) {
+        var element = serializer("E", named("s", stringField()));
+        var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
+        var st = makeState(impl, ser);
+
+        resize(st, fp(0), 5);
+        for (var i = 0; i < 5; i++) write(st, fp(0, i, 0), "v" + i);
+
+        var afterGrow = liveSlabCount(st);
+
+        resize(st, fp(0), 2);
+
+        var afterShrink = liveSlabCount(st);
+        assertTrue(afterShrink < afterGrow,
+            "shrinking a vector of sub-entries must release the dropped tail's slab slots");
+        assertEquals(read(st, fp(0, 0, 0)), "v0");
+        assertEquals(read(st, fp(0, 1, 0)), "v1");
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void resizeVectorToZeroReleasesAllElementSubEntries(String impl) {
+        var element = serializer("E", named("s", stringField()));
+        var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
+        var st = makeState(impl, ser);
+
+        resize(st, fp(0), 4);
+        for (var i = 0; i < 4; i++) write(st, fp(0, i, 0), "v" + i);
+
+        var populated = liveSlabCount(st);
+
+        resize(st, fp(0), 0);
+
+        var emptied = liveSlabCount(st);
+        assertTrue(emptied < populated, "resize to 0 must release all element slots");
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void freedSlotsAreReusedBySubsequentAllocations(String impl) {
+        var leaf = serializer("Leaf", named("x", intField()));
+        var outer = serializer("Outer", named("p", pointerField(leaf)));
+        var st = makeState(impl, outer);
+
+        switchPtr(st, fp(0), leaf);
+        write(st, fp(0, 0), 1);
+        var afterFirstAlloc = slabSize(st);
+        var liveAfterFirst = liveSlabCount(st);
+
+        switchPtr(st, fp(0), null);
+        assertTrue(freeSlotCount(st) > 0, "freelist populated after clearing pointer");
+
+        switchPtr(st, fp(0), leaf);
+        write(st, fp(0, 0), 2);
+
+        assertEquals(slabSize(st), afterFirstAlloc,
+            "slab size stable — freed slots were reused instead of appending new ones");
+        assertEquals(liveSlabCount(st), liveAfterFirst,
+            "live slab count returns to the pre-clear baseline");
+    }
+
+    @Test(dataProvider = "slabImpls")
+    public void releaseOnCopyDoesNotAffectOriginal(String impl) {
+        var element = serializer("E", named("s", stringField()));
+        var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
+        var st = makeState(impl, ser);
+
+        resize(st, fp(0), 4);
+        for (var i = 0; i < 4; i++) write(st, fp(0, i, 0), "v" + i);
+
+        var stLiveBefore = liveSlabCount(st);
+        var cp = st.copy();
+
+        resize(cp, fp(0), 1);
+
+        assertTrue(liveSlabCount(cp) < stLiveBefore,
+            "release on the copy reduced its live slab count");
+        assertEquals(liveSlabCount(st), stLiveBefore,
+            "original's live slab count is unchanged after release on copy");
+        for (var i = 0; i < 4; i++) {
+            assertEquals(read(st, fp(0, i, 0)), "v" + i,
+                "original's data at index " + i + " intact");
+        }
+        assertEquals(read(cp, fp(0, 0, 0)), "v0", "copy retained surviving element");
+    }
 }

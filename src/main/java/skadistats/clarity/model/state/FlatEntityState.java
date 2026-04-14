@@ -167,6 +167,10 @@ public class FlatEntityState extends AbstractS2EntityState {
             for (var i = newCount; i < oldCount && !droppedOccupied; i++) {
                 droppedOccupied = hasAnyOccupiedPath(sub, v.elementLayout(), i * v.elementBytes());
             }
+            ensureRefsModifiable();
+            for (var i = newCount; i < oldCount; i++) {
+                releaseRefsInEntry(sub, v.elementLayout(), i * v.elementBytes());
+            }
         }
         if (!sub.modifiable) {
             ensureRefsModifiable();
@@ -198,7 +202,7 @@ public class FlatEntityState extends AbstractS2EntityState {
             var oldSub = (Entry) refs.get(oldSlot);
             removedOccupied = hasAnyOccupiedPath(oldSub, oldSub.rootLayout, 0);
             ensureRefsModifiable();
-            freeRefSlot(oldSlot);
+            releaseRefSlot(oldSlot);
             current.data[flagPos] = 0;
             pointerSerializers[p.pointerId()] = null;
             hadSub = false;
@@ -402,6 +406,43 @@ public class FlatEntityState extends AbstractS2EntityState {
     private void freeRefSlot(int slot) {
         refs.set(slot, null);
         freeSlots.addLast(slot);
+    }
+
+    private void releaseRefSlot(int slot) {
+        if (refs.get(slot) instanceof Entry e) {
+            releaseRefsInEntry(e, e.rootLayout, 0);
+        }
+        freeRefSlot(slot);
+    }
+
+    private void releaseRefsInEntry(Entry e, FieldLayout layout, int base) {
+        if (layout instanceof FieldLayout.Composite c) {
+            for (var child : c.children()) {
+                releaseRefsInEntry(e, child, base);
+            }
+        } else if (layout instanceof FieldLayout.Array a) {
+            for (var i = 0; i < a.length(); i++) {
+                releaseRefsInEntry(e, a.element(), base + a.baseOffset() + i * a.stride());
+            }
+        } else if (layout instanceof FieldLayout.Ref r) {
+            if (e.data[base + r.offset()] != 0) {
+                var innerSlot = (int) INT_VH.get(e.data, base + r.offset() + 1);
+                freeRefSlot(innerSlot);
+            }
+        } else if (layout instanceof FieldLayout.SubState s) {
+            if (e.data[base + s.offset()] != 0) {
+                var innerSlot = (int) INT_VH.get(e.data, base + s.offset() + 1);
+                releaseRefSlot(innerSlot);
+            }
+        }
+    }
+
+    int slabSize() {
+        return refs.size();
+    }
+
+    int freeSlotCount() {
+        return freeSlots.size();
     }
 
     private void ensureRefsModifiable() {
