@@ -17,35 +17,46 @@
 
 ## 3. FieldLayout + SubStateKind
 
-- [ ] 3.1 Create `FieldLayout` sealed interface with records: `Primitive(int offset, PrimitiveType type)`, `Ref(int refIndex)`, `Composite(FieldLayout[] children)`, `Array(int baseOffset, int stride, int length, FieldLayout element)`, `SubState(int refIndex, SubStateKind kind)`
-- [ ] 3.2 Create `SubStateKind` sealed interface with records: `Vector(int elementBytes, int elementRefs, FieldLayout elementLayout)`, `Pointer(FieldLayout[] layouts, int[] layoutBytes, int[] layoutRefs)`
+- [ ] 3.1 Create `FieldLayout` sealed interface with records: `Primitive(int offset, PrimitiveType type)`, `Ref(int offset)`, `Composite(FieldLayout[] children)`, `Array(int baseOffset, int stride, int length, FieldLayout element)`, `SubState(int offset, SubStateKind kind)` — all positions are **byte offsets** into the containing Entry's byte[]; no refIndex counters
+- [ ] 3.2 Create `SubStateKind` sealed interface with records: `Vector(int elementBytes, FieldLayout elementLayout)`, `Pointer(int pointerId, FieldLayout[] layouts, int[] layoutBytes)` — no elementRefs / layoutRefs tracking
 
-## 4. FieldLayoutBuilder
+## 4. Field Accessors + FieldLayoutBuilder
 
-- [ ] 4.1 Create `FieldLayoutBuilder` that walks a Serializer's Field hierarchy and produces a FieldLayout tree, totalBytes, and totalRefs
-- [ ] 4.2 Use `decoder.getPrimitiveType()` to determine layout type — non-null → Primitive, null → Ref
-- [ ] 4.3 Implement SerializerField flattening: recurse with same offset cursor
-- [ ] 4.4 Implement ArrayField handling: element layout at offset 0, Array node with absolute baseOffset, stride, and length from ArrayField.getLength()
-- [ ] 4.5 Implement VectorField handling: element layout at offset 0, SubState with Vector kind
-- [ ] 4.6 Implement PointerField handling: SubState with Pointer kind, pre-computed layouts for all possible child serializers
-- [ ] 4.7 Add layout caching per Serializer
+- [ ] 4.1 Add `getElementField()` getter to `ArrayField`
+- [ ] 4.2 Add `getElementField()` getter to `VectorField`
+- [ ] 4.3 Add `getSerializers()` getter to `PointerField`
+- [ ] 4.4 Create `FieldLayoutBuilder` that walks a Serializer's Field hierarchy and returns `(FieldLayout subtree, int totalBytes)` — recursively, so parent Array/Vector can use element totalBytes as stride. No refIndex tracking.
+- [ ] 4.5 Use `decoder.getPrimitiveType()` to determine layout type — non-null → Primitive, null → Ref
+- [ ] 4.6 Implement SerializerField flattening: recurse with same offset cursor, children's offsets continue from parent
+- [ ] 4.7 Implement ArrayField handling: build element layout at offset 0 (via sub-cursor), capture element totalBytes as `stride`, create `Array(baseOffset=cursor, stride, length, elementLayout)`, advance cursor by `length * stride`. Works uniformly for arrays of primitives, composites, refs, and sub-states.
+- [ ] 4.8 Implement VectorField handling: build element layout at offset 0, capture `elementBytes`, create `SubState(offset=cursor, Vector(elementBytes, elementLayout))`, advance cursor by `1 + 4`
+- [ ] 4.9 Implement PointerField handling: for each possible child Serializer, recursively build layout starting at offset 0, capture `layoutBytes[i]`; create `SubState(offset=cursor, Pointer(pointerId, layouts[], layoutBytes[]))`, advance cursor by `1 + 4`
+- [ ] 4.10 Implement ValueField (primitive): create `Primitive(offset=cursor, type)`, advance cursor by `1 + type.size`
+- [ ] 4.11 Implement ValueField (String): create `Ref(offset=cursor)`, advance cursor by `1 + 4` (flag + slot-index bytes)
+- [ ] 4.12 Add layout caching per Serializer
 
 ## 5. FlatEntityState Implementation
 
-- [ ] 5.1 Create `FlatEntityState implements EntityState` with `byte[] data`, `Object[] refs`, `FieldLayout rootLayout`, `boolean modifiable`
-- [ ] 5.2 Implement `applyMutation(FieldPath, StateMutation)`: while-loop FieldLayout traversal with `current` FlatEntityState tracking, cascading SubState COW (ensureModifiable + clone-and-replace), dispatch on StateMutation at leaf
-- [ ] 5.3 Implement `getValueForFieldPath`: same traversal (read-only, no COW), leaf read with presence flag check for Primitives, null check for Refs
-- [ ] 5.4 Implement WriteValue handling: `current.ensureModifiable()`, re-read data, flag byte + `PrimitiveType.write`; for Ref: re-read refs, direct `refs[]` store
-- [ ] 5.5 Implement ResizeVector handling: resize sub-FlatEntityState byte[]/refs[] to count * element size
-- [ ] 5.6 Implement SwitchPointer handling: replace sub-FlatEntityState with new layout from SubStateKind.Pointer
-- [ ] 5.7 Implement `copy()`: `markSubStatesNonModifiable()` (recursive), `data.clone()`, `refs.clone()`, both marked non-modifiable
-- [ ] 5.8 Implement `ensureModifiable()`: clone data + refs on first write to non-modifiable state
-- [ ] 5.9 Implement `fieldPathIterator()`: walk FieldLayout tree, check presence flags / non-null refs, use Array.length for element count, delegate to sub-states for nested FieldPaths
+- [ ] 5.1 Create `FlatEntityState extends AbstractS2EntityState` with global fields `ArrayList<Object> refs`, `Deque<Integer> freeSlots`, `boolean refsModifiable`, `Entry rootEntry`; constructor takes `(SerializerField rootField, int pointerCount, FieldLayout rootLayout, int totalBytes)`; copy constructor calls `super(other)`, shares refs/freeSlots (setting refsModifiable=false on both sides), calls `rootEntry.copy()`
+- [ ] 5.2 Create inner `Entry` class with `FieldLayout rootLayout`, `byte[] data`, `boolean modifiable` — NO refs field; methods `ensureModifiable()` (clones data only), `copy()` (recursively marks sub-Entries non-modifiable, returns new Entry sharing byte[])
+- [ ] 5.3 Implement `applyMutation(FieldPath, StateMutation)`: while-loop FieldLayout traversal; on SubState mid-traversal, read slot-index from current.data via INT_VH, look up sub-Entry in `FlatEntityState.refs`, COW-clone (ensureRefsModifiable + sub.copy + refs.set) if non-modifiable; dispatch on StateMutation at leaf
+- [ ] 5.4 Implement `getValueForFieldPath`: same traversal (read-only, no COW), leaf read with presence flag check for Primitives, slot-lookup via `refs.get(INT_VH.get(data, offset+1))` for Refs
+- [ ] 5.5 Implement WriteValue handling with **capacity-change XOR semantics** (derived from NestedArrayEntityState.java:223):
+  - Primitive: flag transition 0↔1 → return true; value==null clears flag
+  - Ref with non-null value: allocate slot if flag was 0, or reuse existing slot; flag transition 0→1 → return true; flag=1→1 update → return false
+  - Ref with null value: free slot, clear flag; flag transition 1→0 → return true
+- [ ] 5.6 Implement ResizeVector handling: if flag=0 and count>0, allocate slot and create sub-Entry with `byte[count * elementBytes]`; if flag=1, resize sub-Entry's byte[] (dropped tail slots are orphaned per NestedArrayEntityState behavior); return true iff oldCount != newCount
+- [ ] 5.7 Implement SwitchPointer handling: read `pointerId` from `SubStateKind.Pointer.pointerId()`, free direct slot and clear flag on remove (no recursive cleanup — matches NestedArrayEntityState.clearEntryRef); create new sub-Entry on set with pre-computed layout from SubStateKind.Pointer
+- [ ] 5.8 Implement `copy()` on FlatEntityState: delegates to copy constructor
+- [ ] 5.9 Implement `Entry.copy()`: walk layout tree to mark all sub-Entries as modifiable=false; return new Entry sharing byte[] with modifiable=false
+- [ ] 5.10 Implement `Entry.ensureModifiable()`: clone byte[] on first write to non-modifiable Entry
+- [ ] 5.11 Implement `ensureRefsModifiable()` on FlatEntityState: clone refs ArrayList and freeSlots Deque on first ref/sub-state write
+- [ ] 5.12 Implement `allocateRefSlot()` and `freeRefSlot(int)` helpers using the freeSlots free-list (mirrors NestedArrayEntityState.createEntryRef/clearEntryRef at lines 142-164)
+- [ ] 5.13 Implement `fieldPathIterator()`: walk FieldLayout tree recursively, check flag byte for Primitives/Refs/SubStates; for SubStates with flag=1, descend into sub-Entry via slot lookup; use Array.length for element count
 
 ## 6. Factory Integration
 
 - [ ] 6.1 Add `FLAT` variant to `S2EntityStateType` enum with factory method that creates FlatEntityState using FieldLayoutBuilder
-- [ ] 6.2 Integrate layout building into entity creation path
 
 ## 7. Test Infrastructure
 
@@ -77,6 +88,8 @@ All tests run against NESTED_ARRAY, TREE_MAP, and FLAT via TestNG `@DataProvider
 - [ ] 7.3.7 Sub-serializer access: write/read at [compositeIdx, fieldIdx]
 - [ ] 7.3.8 Array element access: write/read at [arrayIdx, elementIdx]
 - [ ] 7.3.9 Nested: array inside sub-serializer, sub-serializer inside array
+- [ ] 7.3.9a Array with String element: write/read different elements independently, verify no slot-index collision
+- [ ] 7.3.9b Array with composite element containing String + int: write/read all slots independently
 
 **Copy independence:**
 - [ ] 7.3.10 copy() then write on original — copy unchanged
@@ -96,6 +109,17 @@ All tests run against NESTED_ARRAY, TREE_MAP, and FLAT via TestNG `@DataProvider
 - [ ] 7.3.20 copy() then write into sub-state (vector element) — original sub-state unchanged
 - [ ] 7.3.21 copy() then resize vector on copy — original vector unchanged
 - [ ] 7.3.22 Both sides write to same sub-state path after copy — independent
+
+**Capacity-change return value (per NestedArrayEntityState.java:223 semantics):**
+- [ ] 7.3.22a WriteValue on unset Primitive → returns true (0→1 flag transition)
+- [ ] 7.3.22b WriteValue on already-set Primitive with new value → returns false
+- [ ] 7.3.22c WriteValue with null on set Primitive → returns true (1→0 flag transition)
+- [ ] 7.3.22d WriteValue on unset Ref → returns true, allocates slot
+- [ ] 7.3.22e WriteValue with null on set Ref → returns true, frees slot
+- [ ] 7.3.22f ResizeVector with same count → returns false
+- [ ] 7.3.22g ResizeVector with different count → returns true
+- [ ] 7.3.22h SwitchPointer to new serializer → returns true; to same serializer → returns false
+- [ ] 7.3.22i Validate that results match NestedArrayEntityState exactly on identical inputs
 
 **fieldPathIterator:**
 - [ ] 7.3.23 Empty state — iterator yields nothing
