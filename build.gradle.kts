@@ -136,3 +136,28 @@ tasks.register("bench") {
     }
 }
 
+tasks.register("traceBench") {
+    description = "Run the mutation-trace benchmark harness. Pass args with -PbenchArgs=\"...\"."
+    group = "benchmark"
+    dependsOn("jmhCompileGeneratedClasses")
+    doLast {
+        val cp = (files(
+            "build/jmh-generated-classes",
+            "build/jmh-generated-resources",
+        ) + sourceSets["jmh"].runtimeClasspath).asPath
+        val javaHome = System.getProperty("java.home")
+        val userArgs = (project.findProperty("benchArgs") as? String)
+            ?.split(" ")?.filter { it.isNotBlank() } ?: emptyList()
+        val cmd = listOf(
+            "$javaHome/bin/java",
+            "-cp", cp,
+            "skadistats.clarity.bench.TraceMain",
+        ) + userArgs
+        val pb = ProcessBuilder(cmd)
+        pb.directory(rootDir)
+        pb.inheritIO()
+        val exit = pb.start().waitFor()
+        if (exit != 0) throw GradleException("traceBench exited with $exit")
+    }
+}
+

@@ -34,6 +34,10 @@ public class S2DTClass implements DTClass {
         return field.getSerializer();
     }
 
+    public SerializerField getField() {
+        return field;
+    }
+
     @Override
     public void setEntityStateFactory(EntityStateFactory factory) {
         this.entityStateFactory = factory;

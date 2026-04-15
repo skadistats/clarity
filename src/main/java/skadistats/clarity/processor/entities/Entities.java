@@ -13,6 +13,7 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
+import skadistats.clarity.io.MutationListener;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.DTClass;
@@ -81,6 +82,8 @@ public class Entities {
     private ClientFrame.Capsule resetCapsule;
 
     private final List<Runnable> queuedUpdates = new ArrayList<>();
+
+    private MutationListener mutationListener;
 
     private final Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
@@ -488,8 +491,8 @@ public class Entities {
     }
 
     private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState baseline, FieldChanges changes) {
-        var newState = baseline.copy();
-        changes.applyTo(newState);
+        var newState = copyState(baseline);
+        applySetupChanges(changes, newState);
         var entity = entityRegistry.create(
                 dtClass.getClassId(),
                 eIdx, serial,
@@ -506,7 +509,7 @@ public class Entities {
             baselineRegistry.updateEntityBaseline(
                     message.getBaseline(),
                     eIdx,
-                    newState.copy()
+                    copyState(newState)
             );
         }
     }
@@ -523,8 +526,8 @@ public class Entities {
         var wasActive = entity.isActive();
         var eIdx = entity.getIndex();
 
-        var newState = baseline.copy();
-        changes.applyTo(newState);
+        var newState = copyState(baseline);
+        applySetupChanges(changes, newState);
         entity.setState(newState);
         entity.setActive(true);
         logModification("RECREATE", entity);
@@ -532,7 +535,7 @@ public class Entities {
             baselineRegistry.updateEntityBaseline(
                     message.getBaseline(),
                     eIdx,
-                    newState.copy()
+                    copyState(newState)
             );
         }
         if (!wasActive) {
@@ -548,7 +551,7 @@ public class Entities {
 
     private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
         assert silent || (entity.isExistent() && entity.isActive());
-        var capacityChanged = changes.applyTo(entity.getState());
+        var capacityChanged = applyUpdateChanges(changes, entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
             if (capacityChanged) {
@@ -655,7 +658,7 @@ public class Entities {
         var baselineIdx = baselineRegistry.getClassBaselineIndex(clsId, entityIdx);
         if (baselineIdx == -1) {
             log.error("Baseline index for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
-            return cls.getEmptyState();
+            return newEmptyState(cls);
         }
         s = baselineRegistry.getClassBaselineState(baselineIdx);
         if (s != null) {
@@ -664,9 +667,9 @@ public class Entities {
         var raw = baselineRegistry.getClassBaselineData(baselineIdx);
         if (raw == null || raw.size() == 0) {
             log.error("Baseline data for class %s (%d) not found. Continuing anyway, but data might be missing!", cls.getDtName(), clsId);
-            return cls.getEmptyState();
+            return newEmptyState(cls);
         }
-        s = cls.getEmptyState();
+        s = newEmptyState(cls);
         var stream = BitStream.createBitStream(raw);
         var changes = fieldReader.readFields(stream, cls, s, false);
         var remaining = stream.remaining();
@@ -674,12 +677,60 @@ public class Entities {
             log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);
         }
         try {
-            changes.applyTo(s);
+            applySetupChanges(changes, s);
         } catch (RuntimeException ex) {
             throw new RuntimeException("baseline applyTo failed for class " + cls.getDtName() + " (id=" + clsId + ")", ex);
         }
         baselineRegistry.setClassBaselineState(baselineIdx, s);
         return s;
+    }
+
+    public void setMutationListener(MutationListener mutationListener) {
+        this.mutationListener = mutationListener;
+    }
+
+    private EntityState newEmptyState(DTClass cls) {
+        var s = cls.getEmptyState();
+        if (mutationListener != null) {
+            mutationListener.onBirthEmpty(s, cls);
+        }
+        return s;
+    }
+
+    private EntityState copyState(EntityState src) {
+        var s = src.copy();
+        if (mutationListener != null) {
+            mutationListener.onBirthCopy(s, src);
+        }
+        return s;
+    }
+
+    private boolean applySetupChanges(FieldChanges changes, EntityState state) {
+        if (mutationListener == null) {
+            return changes.applyTo(state);
+        }
+        var fps = changes.getFieldPaths();
+        var muts = changes.getMutations();
+        var capacityChanged = false;
+        for (var i = 0; i < fps.length; i++) {
+            mutationListener.onSetupMutation(state, fps[i], muts[i]);
+            capacityChanged |= state.applyMutation(fps[i], muts[i]);
+        }
+        return capacityChanged;
+    }
+
+    private boolean applyUpdateChanges(FieldChanges changes, EntityState state) {
+        if (mutationListener == null) {
+            return changes.applyTo(state);
+        }
+        var fps = changes.getFieldPaths();
+        var muts = changes.getMutations();
+        var capacityChanged = false;
+        for (var i = 0; i < fps.length; i++) {
+            mutationListener.onUpdateMutation(state, fps[i], muts[i]);
+            capacityChanged |= state.applyMutation(fps[i], muts[i]);
+        }
+        return capacityChanged;
     }
 
     public Entity getByIndex(int index) {

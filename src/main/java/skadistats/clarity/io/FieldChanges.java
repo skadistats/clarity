@@ -31,4 +31,8 @@ public class FieldChanges {
         return fieldPaths;
     }
 
+    public StateMutation[] getMutations() {
+        return mutations;
+    }
+
 }
