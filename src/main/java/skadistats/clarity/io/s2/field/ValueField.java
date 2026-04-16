@@ -26,4 +26,9 @@ public class ValueField extends Field {
         return decoder;
     }
 
+    @Override
+    public boolean isPrimitiveLeaf() {
+        return true;
+    }
+
 }

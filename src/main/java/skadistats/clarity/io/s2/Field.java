@@ -40,8 +40,20 @@ public abstract class Field {
         return false;
     }
 
+    public boolean isPrimitiveLeaf() {
+        return false;
+    }
+
     public StateMutation createMutation(Object decodedValue, int depth) {
         return new StateMutation.WriteValue(decodedValue);
+    }
+
+    // Transforms the raw decoded value into the form state.write expects for
+    // this field's leaf kind. Default is identity (primitive / ref leaves).
+    // PointerField overrides to resolve Pointer -> Serializer; VectorField
+    // validates the count.
+    public Object prepareForWrite(Object decodedValue, int depth) {
+        return decodedValue;
     }
 
     public String toString() {

@@ -32,6 +32,12 @@ public class ObjectArrayEntityState implements EntityState {
     }
 
     @Override
+    public boolean write(FieldPath fp, Object decoded) {
+        state[fp.s1().idx()] = decoded;
+        return false;
+    }
+
+    @Override
     public <T> T getValueForFieldPath(FieldPath fp) {
         return (T) state[fp.s1().idx()];
     }

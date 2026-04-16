@@ -11,6 +11,7 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.AbstractS2EntityState;
 import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.FlatEntityState;
 import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.util.TextTable;
 
@@ -58,6 +59,17 @@ public class S2FieldReader extends FieldReader {
     private Field resolveField(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
+            f = f.getChild(state, fp.get(i));
+            if (f == null) {
+                throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
+            }
+        }
+        return f;
+    }
+
+    private Field resolveFieldDebug(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
+        Field f = state.getRootField();
+        for (int i = 0; i <= fp.last(); i++) {
             if (f instanceof PointerField pf) {
                 f = pf.getChild(fp.get(i), state, pointerOverrides[pf.getPointerId()]);
             } else {
@@ -85,20 +97,22 @@ public class S2FieldReader extends FieldReader {
             fieldPaths[n++] = mfp.unmodifiable();
         }
 
-        var result = new FieldChanges(fieldPaths, n);
-        Arrays.fill(pointerOverrides, null);
+        var isFlat = state instanceof FlatEntityState;
+        var fes = isFlat ? (FlatEntityState) state : null;
+        var capacityChanged = false;
         for (var r = 0; r < n; r++) {
             var fp = fieldPaths[r].s2();
             var field = resolveField(state, dtClass, fp);
-            var decoded = DecoderDispatch.decode(bs, field.getDecoder());
-            var mutation = field.createMutation(decoded, fp.last() + 1);
-            result.setMutation(r, mutation);
-            if (mutation instanceof StateMutation.SwitchPointer sp) {
-                pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+            if (isFlat && field.isPrimitiveLeaf()) {
+                capacityChanged |= fes.decodeInto(fp, field.getDecoder(), bs);
+            } else {
+                var decoded = DecoderDispatch.decode(bs, field.getDecoder());
+                var writeValue = field.prepareForWrite(decoded, fp.last() + 1);
+                capacityChanged |= state.write(fp, writeValue);
             }
         }
 
-        return result;
+        return new FieldChanges(fieldPaths, n, capacityChanged);
     }
 
     private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
@@ -129,7 +143,7 @@ public class S2FieldReader extends FieldReader {
             Arrays.fill(pointerOverrides, null);
             for (var r = 0; r < n; r++) {
                 var fp = fieldPaths[r].s2();
-                var field = resolveField(state, dtClass, fp);
+                var field = resolveFieldDebug(state, dtClass, fp);
                 var decoder = field.getDecoder();
                 var offsBefore = bs.pos();
                 var decoded = DecoderDispatch.decode(bs, decoder);

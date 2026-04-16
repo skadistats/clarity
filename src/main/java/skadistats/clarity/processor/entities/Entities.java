@@ -486,13 +486,13 @@ public class Entities {
 
     private void queueEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
-        var changes = fieldReader.readFields(stream, dtClass, baseline, debug);
-        queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, baseline, changes));
+        var newState = copyState(baseline);
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug);
+        applySetupChanges(changes, newState);
+        queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, newState));
     }
 
-    private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState baseline, FieldChanges changes) {
-        var newState = copyState(baseline);
-        applySetupChanges(changes, newState);
+    private void executeEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState newState) {
         var entity = entityRegistry.create(
                 dtClass.getClassId(),
                 eIdx, serial,
@@ -517,17 +517,17 @@ public class Entities {
     private void queueEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         var dtClass = entity.getDtClass();
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), entity.getIndex(), message.getIsDelta());
-        var changes = fieldReader.readFields(stream, dtClass, baseline, debug);
-        queueUpdate(() -> executeEntityRecreate(entity, message, baseline, changes));
+        var newState = copyState(baseline);
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug);
+        applySetupChanges(changes, newState);
+        queueUpdate(() -> executeEntityRecreate(entity, message, newState));
     }
 
-    private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState baseline, FieldChanges changes) {
+    private void executeEntityRecreate(Entity entity, CommonNetMessages.CSVCMsg_PacketEntities message, EntityState newState) {
         var oldState = entity.getState();
         var wasActive = entity.isActive();
         var eIdx = entity.getIndex();
 
-        var newState = copyState(baseline);
-        applySetupChanges(changes, newState);
         entity.setState(newState);
         entity.setActive(true);
         logModification("RECREATE", entity);
@@ -545,13 +545,14 @@ public class Entities {
     }
 
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
-        var changes = fieldReader.readFields(stream, entity.getDtClass(), entity.getState(), debug);
-        queueUpdate(() -> executeEntityUpdate(entity, changes, silent));
+        var state = entity.getState();
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), state, debug);
+        var capacityChanged = applyUpdateChanges(changes, state);
+        queueUpdate(() -> executeEntityUpdate(entity, changes, silent, capacityChanged));
     }
 
-    private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent) {
+    private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent, boolean capacityChanged) {
         assert silent || (entity.isExistent() && entity.isActive());
-        var capacityChanged = applyUpdateChanges(changes, entity.getState());
         logModification("UPDATE", entity);
         if (!silent) {
             if (capacityChanged) {
@@ -706,6 +707,9 @@ public class Entities {
     }
 
     private boolean applySetupChanges(FieldChanges changes, EntityState state) {
+        if (changes.getMutations() == null) {
+            return changes.capacityChanged();
+        }
         if (mutationListener == null) {
             return changes.applyTo(state);
         }
@@ -720,6 +724,9 @@ public class Entities {
     }
 
     private boolean applyUpdateChanges(FieldChanges changes, EntityState state) {
+        if (changes.getMutations() == null) {
+            return changes.capacityChanged();
+        }
         if (mutationListener == null) {
             return changes.applyTo(state);
         }

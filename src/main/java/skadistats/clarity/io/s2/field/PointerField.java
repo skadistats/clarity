@@ -82,10 +82,14 @@ public class PointerField extends Field {
 
     @Override
     public StateMutation createMutation(Object decodedValue, int depth) {
+        return new StateMutation.SwitchPointer((Serializer) prepareForWrite(decodedValue, depth));
+    }
+
+    @Override
+    public Object prepareForWrite(Object decodedValue, int depth) {
         var p = (Pointer) decodedValue;
         var typeIndex = p.getTypeIndex();
-        var newSerializer = typeIndex != null ? serializers[typeIndex] : null;
-        return new StateMutation.SwitchPointer(newSerializer);
+        return typeIndex != null ? serializers[typeIndex] : null;
     }
 
 }

@@ -12,6 +12,15 @@ public interface EntityState {
 
     // returns true if capacity has changed
     boolean applyMutation(FieldPath fp, StateMutation mutation);
+
+    // Direct-write entry point used by field readers on the hot path.
+    // decoded shape depends on the leaf kind at fp:
+    //   Primitive / Ref / InlineString leaf -> the decoded value itself
+    //   SubState-Pointer leaf               -> a Serializer (or null)
+    //   SubState-Vector leaf                -> an Integer length
+    // Returns true if capacity has changed.
+    boolean write(FieldPath fp, Object decoded);
+
     <T> T getValueForFieldPath(FieldPath fp);
 
     Iterator<FieldPath> fieldPathIterator();

@@ -1,8 +1,10 @@
 package skadistats.clarity.model.state;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
+import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
+import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
@@ -32,25 +34,43 @@ public class TreeMapEntityState extends AbstractS2EntityState {
     public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
         var fp = (S2LongFieldPath) fpX;
         if (mutation instanceof StateMutation.WriteValue wv) {
-            var value = wv.value();
-            if (value != null) {
-                return state.put(fp, value) == null;
-            } else {
-                return state.remove(fp) != null;
-            }
+            return writeValue(fp, wv.value());
         } else if (mutation instanceof StateMutation.ResizeVector rv) {
             return trimEntries(fp, rv.count());
         } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            var field = getFieldForFieldPath(fp);
-            if (!(field instanceof PointerField pf)) return false;
-            var newSerializer = sp.newSerializer();
-            var currentSerializer = pointerSerializers[pf.getPointerId()];
-            if (currentSerializer == newSerializer) return false;
-            var cleared = clearSubEntries(fp);
-            pointerSerializers[pf.getPointerId()] = newSerializer;
-            return cleared;
+            return switchPointer(fp, sp.newSerializer());
         }
         throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean write(FieldPath fpX, Object decoded) {
+        var fp = (S2LongFieldPath) fpX;
+        var field = getFieldForFieldPath(fp);
+        if (field instanceof PointerField) {
+            return switchPointer(fp, (Serializer) decoded);
+        }
+        if (field instanceof VectorField) {
+            return trimEntries(fp, (Integer) decoded);
+        }
+        return writeValue(fp, decoded);
+    }
+
+    private boolean writeValue(S2LongFieldPath fp, Object value) {
+        if (value != null) {
+            return state.put(fp, value) == null;
+        }
+        return state.remove(fp) != null;
+    }
+
+    private boolean switchPointer(S2LongFieldPath fp, Serializer newSerializer) {
+        var field = getFieldForFieldPath(fp);
+        if (!(field instanceof PointerField pf)) return false;
+        var currentSerializer = pointerSerializers[pf.getPointerId()];
+        if (currentSerializer == newSerializer) return false;
+        var cleared = clearSubEntries(fp);
+        pointerSerializers[pf.getPointerId()] = newSerializer;
+        return cleared;
     }
 
     private boolean trimEntries(S2LongFieldPath fp, int count) {

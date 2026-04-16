@@ -179,6 +179,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         throw new IllegalStateException("decodeInto on unknown leaf layout: " + layout);
     }
 
+    @Override
     public boolean write(FieldPath fpX, Object decoded) {
         var fp = fpX.s2();
         Entry current = rootEntryWritable();

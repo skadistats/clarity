@@ -1,9 +1,11 @@
 package skadistats.clarity.model.state;
 
 import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.ArrayField;
 import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
+import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.model.FieldPath;
 
 import java.util.ArrayDeque;
@@ -100,9 +102,40 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
                 } else if (mutation instanceof StateMutation.ResizeVector rv) {
                     return handleResizeVector(node, idx, rv.count());
                 } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-                    return handlePointerSwitch(node, idx, child, sp);
+                    return handlePointerSwitch(node, idx, child, sp.newSerializer());
                 }
                 throw new IllegalStateException();
+            }
+            field = child;
+            node = subEntryForWrite(node, idx);
+            i++;
+        }
+    }
+
+    @Override
+    public boolean write(FieldPath fpX, Object decoded) {
+        var fp = fpX.s2();
+        Field field = rootField;
+        Entry node = rootEntryWritable();
+        var last = fp.last();
+        capacityChanged = false;
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            if (node.length() <= idx) {
+                ensureNodeCapacity(field, node, idx);
+            }
+            var child = field.getChild(this, idx);
+            if (i == last) {
+                if (child instanceof PointerField) {
+                    return handlePointerSwitch(node, idx, child, (Serializer) decoded);
+                }
+                if (child instanceof VectorField) {
+                    return handleResizeVector(node, idx, (Integer) decoded);
+                }
+                node.set(idx, decoded);
+                return capacityChanged;
             }
             field = child;
             node = subEntryForWrite(node, idx);
@@ -131,8 +164,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         }
     }
 
-    private boolean handlePointerSwitch(Entry node, int idx, Field field, StateMutation.SwitchPointer sp) {
-        var newSerializer = sp.newSerializer();
+    private boolean handlePointerSwitch(Entry node, int idx, Field field, Serializer newSerializer) {
         if (!(field instanceof PointerField pf)) return false;
         var currentSerializer = pointerSerializers[pf.getPointerId()];
         if (currentSerializer == newSerializer) return false;

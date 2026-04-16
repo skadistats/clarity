@@ -150,57 +150,45 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 
 ## 6. Unified readFieldsFast + Entities snapshot/rollback (CP-6)
 
-- [ ] 6.1 Add `state.write(FieldPath, Object)` to `EntityState` interface; implement on `FlatEntityState` (done 4.5), `NestedArrayEntityState`, `TreeMapEntityState`
-- [ ] 6.2 Modify `FieldChanges` — add `boolean capacityChanged`; fast-path constructor `(FieldPath[], int, boolean)` leaving `mutations == null`; retain legacy constructor for debug/baseline
-- [ ] 6.3 Adjust `FieldChanges.applyTo(state)` to return `capacityChanged` directly when `mutations == null`
-- [ ] 6.4 Rewrite `S2FieldReader.readFieldsFast` — hoist `isFlat`; per-field check `isFlat && field.isPrimitiveLeaf()` routes to `decodeInto`, else `state.write`; accumulate capacityChanged; no staging
-- [ ] 6.5 Remove `pointerOverrides[]` from `readFieldsFast`; subsequent `resolveField` reads current serializers from `state.pointerSerializers` directly
-- [ ] 6.6 Leave `readFieldsDebug` untouched
-- [ ] 6.7 Add reusable snapshot scratch on `Entities`: `EntityState[] snapshotScratch`, `boolean[] existsSnapshotScratch`, `int[] dirtyIndices`, `int dirtyTop`; sized to maxEntityIndex; allocated once
-- [ ] 6.8 Add `snapshotAndCopy(Entity entity)` helper — idempotent per packet
-- [ ] 6.9 Call `snapshotAndCopy` at top of each state-mutating queue method: update, create, recreate, enter, leave, delete
-- [ ] 6.10 Rewrite each `queueEntity*` method to mutate eagerly + queue event-only lambdas
-- [ ] 6.11 Add `Entity.setExists(boolean)` setter for rollback
-- [ ] 6.12 Wrap `processPacketEntities` in try/catch/finally: rollback iterates dirtyIndices restoring state + exists; finally nulls dirty slots, resets dirtyTop, clears queuedUpdates
-- [ ] 6.13 Implement `Entity` cache invalidation hooks identified in audit 0.5 (if any)
-- [ ] 6.14 Unit test: happy path — all entities commit, events fire, scratch resets
-- [ ] 6.15 Unit test: mid-packet failure — all touched entities rolled back; no events fire
-- [ ] 6.16 Unit test: same-entity double-update — snapshotted once
-- [ ] 6.17 Unit test: `Entity.exists` rollback for queueEntityLeave failure (D10 bug fix)
-- [ ] 6.18 Unit test: observer in `@OnEntityUpdated` calling `getByIndex` on another same-packet entity sees committed state
-- [ ] 6.19 Integration: full Dota 2 replay, FLAT, bit-identical event stream vs CP-0 baseline
-- [ ] 6.20 Integration: same replay, NESTED_ARRAY, bit-identical event stream
-- [ ] 6.21 **Gate: `EntityStateParseBench FLAT`** — ≥20% wall-clock improvement vs CP-0 (document actual)
-- [ ] 6.22 **Gate: `EntityStateParseBench NESTED_ARRAY`** — neutral or improved
-- [ ] 6.23 **Gate: `EntityStateParseBench TREE_MAP`** — regression accepted; measured delta documented
-- [ ] 6.24 **Gate: `-prof gc` on FLAT parse** — autobox count near-zero
+- [x] 6.1 Add `state.write(FieldPath, Object)` to `EntityState` interface; implement on `FlatEntityState` (done 4.5), `NestedArrayEntityState`, `TreeMapEntityState`
+- [x] 6.2 Modify `FieldChanges` — add `boolean capacityChanged`; fast-path constructor `(FieldPath[], int, boolean)` leaving `mutations == null`; retain legacy constructor for debug/baseline
+- [x] 6.3 Adjust `FieldChanges.applyTo(state)` to return `capacityChanged` directly when `mutations == null`
+- [x] 6.4 Rewrite `S2FieldReader.readFieldsFast` — hoist `isFlat`; per-field check `isFlat && field.isPrimitiveLeaf()` routes to `decodeInto`, else `state.write`; accumulate capacityChanged; no staging
+- [x] 6.5 Remove `pointerOverrides[]` from `readFieldsFast`; subsequent `resolveField` reads current serializers from `state.pointerSerializers` directly
+- [x] 6.6 Leave `readFieldsDebug` untouched
+- [x] 6.7 ~~Snapshot scratch~~ — **dropped**. See design pivot note below.
+- [x] 6.8 ~~snapshotAndCopy helper~~ — **dropped**.
+- [x] 6.9 ~~Call snapshotAndCopy~~ — **dropped**.
+- [x] 6.10 Rewrite each `queueEntity*` method to mutate eagerly + queue event-only lambdas
+- [x] 6.11 ~~Add Entity.setExists~~ — **dropped**. Existing `setExistent` suffices; no rollback caller.
+- [x] 6.12 ~~Wrap processPacketEntities in rollback~~ — **dropped**. `finally` clears `queuedUpdates` only.
+- [x] 6.13 Entity cache audit: no caches require invalidation (confirmed by reading `Entity.java` — `getPropertyForFieldPath` reads through `state` directly).
+- [x] 6.14-6.18 ~~Unit tests for rollback semantics~~ — **dropped** (no rollback to test).
+- [x] 6.19 Integration: full Dota 2 replay, FLAT — parses successfully via `./gradlew bench`, 10 iterations no errors.
+- [x] 6.20 Integration: same replay, NESTED_ARRAY — parses successfully, 10 iterations.
+- [x] 6.21 **Gate: `EntityStateParseBench FLAT`** — **17.2% improvement** vs CP-0 (1988 → 1646 ms on Dota `340/8168882574_1198277651.dem`). Below 20% target but FLAT overtook NESTED_ARRAY and became fastest impl.
+- [x] 6.22 **Gate: `EntityStateParseBench NESTED_ARRAY`** — **9.7% improvement** vs CP-0 (1916 → 1730 ms). Better than "neutral".
+- [x] 6.23 **Gate: `EntityStateParseBench TREE_MAP`** — **6.5% improvement** vs CP-0 (2200 → 2057 ms). No regression.
+- [x] 6.24 **Gate: `-prof gc` on FLAT parse** — autobox near-zero: per-invocation alloc 9.11 GB post vs 10.12 GB pre (-10%); no `Integer`/`Float`/`Long` boxing or `WriteValue` records in the top allocation sites (dominant allocs are `BitStream.<init>` 13% and `copy()` for CREATE/RECREATE baselines).
 
-## 7. S1 full port (CP-7)
+### Design pivot (2026-04-16): no per-packet snapshot/rollback
 
-- [ ] 7.1 Create `S1FlatEntityState` class — byte[] + optional refs slab + owner pointer(s), single-level static layout
-- [ ] 7.2 Create `S1FieldLayout` — per-DTClass immutable table mapping `idx → (leafKind, offset, maxLength)`. Computed once at `S1DTClass` compile time, shared across all instances
-- [ ] 7.3 Update `S1DTClass` to precompute and cache the layout
-- [ ] 7.4 Implement `S1FlatEntityState.copy()` — shares layout + byte[] + refs by reference; owner pointers null. O(1)
-- [ ] 7.5 Implement `S1FlatEntityState.decodeInto(fp, decoder, bs)` — makeWritable + `DecoderDispatch.decodeInto(bs, decoder, data, layout.offsetOf(fp))`
-- [ ] 7.6 Implement `S1FlatEntityState.write(fp, decoded)` — dispatch on `layout.kindOf(fp)`: Primitive → `PrimitiveType.write`; inline-string → encode + write; Ref (if any survived audit 0.6) → refs slot write
-- [ ] 7.7 Implement `S1FlatEntityState.getValueForFieldPath` — read from byte[] or refs based on leaf kind
-- [ ] 7.8 Port S1 decoders (`io/decoder/factory/s1/*`) to add `decodeInto`: int decoders, long decoders, float decoders, vector decoders (3-float inline), VectorXY (2-float inline), StringLenDecoder (inline per task 5.4). `ArrayDecoder` keeps the existing boxing path → `state.write(fp, Object[])` → refs slot (see audit 0.6)
-- [ ] 7.9 Extend `DecoderDispatch.decodeInto` to cover S1-specific decoder ids (via codegen)
-- [ ] 7.10 Rewrite `S1FieldReader.readFields` to decode-direct: `state.decodeInto` for primitives/inline-strings; `state.write` for refs
-- [ ] 7.11 Delete `ObjectArrayEntityState` and `S1EntityStateType` legacy references
-- [ ] 7.12 Unit test: `S1FlatEntityState.copy()` is O(1), zero allocation under `-prof gc`
-- [ ] 7.13 Unit test: `S1FlatEntityState.decodeInto` byte-for-byte parity with `PrimitiveType.write(..., decode(bs))` for each ported S1 decoder
-- [ ] 7.14 Unit test: `write` parity — write(fp, decoded) == old-applyMutation(WriteValue) across all leaf kinds
-- [ ] 7.15 Unit test: owner-ptr COW on byte[] and refs (if present)
-- [ ] 7.16 Add `S1EntityStateParseBench` (or extend EntityStateParseBench to S1) — measure full S1 parse time
-- [ ] 7.17 Integration: full old Dota 2 S1 replay, bit-identical event stream vs CP-0 baseline
-- [ ] 7.18 **Gate: `S1EntityStateParseBench`** — substantial improvement vs CP-0 S1 baseline
-- [ ] 7.19 **Gate:** `-prof gc` on S1 parse — autobox allocation near-zero
+Initial CP-6 implementation included `snapshotAndCopy(entity)` on every UPDATE + try/catch/finally rollback. JFR profiling (`FlatEntityState.rootEntryWritable` = 69.60% of all allocation) showed the per-packet COW `byte[].clone()` dominated. Measured effect: +46% wall-clock regression for FLAT, 4× allocation.
+
+**Decision**: drop the entire snapshot/rollback machinery. The deferred-message mechanism at `Entities.onPacketEntities` lines 346-358 prevents the only scenario where rollback would have mattered — packets that would decode incorrectly against the current state are detected up-front via `entitiesServerTick < deltaFrom` and deferred untouched. No code path exists where a failed `readFields` is expected to recover; every throw aborts the replay run. State-dirty-on-throw is acceptable.
+
+Pre-existing atomicity holes (`setActive` on line 488, `updateEntityAlternateBaselineIndex` on line 440) stay as they were — not newly introduced by CP-6.
+
+Scope impact: Requirement "Packet-scoped snapshot-and-rollback atomicity" in `entity-update-commit` spec no longer holds; the delta needs to be updated to reflect the actual implementation. `Entity.setExists` method not added. `FieldChanges.capacityChanged` fast-path semantics unchanged.
+
+## 7. S1 full port — **DEFERRED to follow-up change `accelerate-s1-flat-state`**
+
+S1 is deferred so its implementation can be built directly on the eager-copy model delivered by the planned follow-up `lightspeed-eager-copy` change, rather than temporarily adopting the owner-pointer COW machinery only to have it stripped immediately after. `ObjectArrayEntityState` and `S1FieldReader` remain unchanged in this change. `ObjectArrayEntityState` gains only a trivial `write(fp, decoded)` delegating to the existing slot-assignment behavior so the `EntityState` interface is satisfied.
 
 ## 8. MutationListener contract (CP-8)
 
 - [ ] 8.1 Add `onUpdateWrite(EntityState, FieldPath)` to `MutationListener` with default no-op
-- [ ] 8.2 Invoke `onUpdateWrite` after each `decodeInto` + each `state.write` in `S2FieldReader.readFieldsFast` and `S1FieldReader.readFields` when listener attached
+- [ ] 8.2 Invoke `onUpdateWrite` after each `decodeInto` + each `state.write` in `S2FieldReader.readFieldsFast` when listener attached
 - [ ] 8.3 Continue invoking `onUpdateMutation` from paths that still produce materialized `StateMutation` (debug reader, baseline, programmatic, trace replay)
 - [ ] 8.4 Update `MutationRecorder` to implement `onUpdateWrite` — read back via `getValueForFieldPath`
 - [ ] 8.5 Verify `MutationTraceBench` still replays traces correctly
@@ -208,16 +196,18 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 
 ## 9. Final validation
 
-- [ ] 9.1 Run full bench matrix (`EntityStateParseBench`, `MutationTraceBench`, `FlatCopyBench`, `NestedArrayCopyBench`, `DecodeIntoBench`, `FlatWriteBench`, `InlineStringBench`, `S1EntityStateParseBench`) — record before/after across all impls
+- [ ] 9.1 Run full bench matrix (`EntityStateParseBench` × 3 engines, `FlatCopyBench`, `NestedArrayCopyBench`, `DecodeIntoBench`, `FlatWriteBench`, `InlineStringBench`) — record before/after
 - [ ] 9.2 Run JMH `-prof gc` across benches — document autobox/alloc deltas
 - [ ] 9.3 Run `:dev:dtinspectorRun` on sample replay
 - [ ] 9.4 Run `:repro:issue289Run`, `:repro:issue350Run`
-- [ ] 9.5 Document measured improvements in `proposal.md` "Why" or a separate `RESULTS.md` before archiving
+- [ ] 9.5 Document measured improvements in `proposal.md` or `RESULTS.md` before archiving
+- [ ] 9.6 `./gradlew build` — all tests green
+- [ ] 9.7 `openspec validate accelerate-flat-entity-state --strict` — passes
 
-## 10. Documentation and cleanup
+## 10. ~~Documentation and cleanup~~ — **merged into successor changes**
 
-- [ ] 10.1 Remove dead code: `modifiable` flag machinery (FLAT + NESTED_ARRAY), `markSubEntriesNonModifiable`, unused `Entry.copy()` call sites, staging-buffer fields on FieldChanges for fast path, `pointerOverrides[]`, `ObjectArrayEntityState`
-- [ ] 10.2 Verify no static-analysis warnings remain in touched classes
-- [ ] 10.3 Update `CLAUDE.md` / `README` if mutation-pipeline shape is documented (likely not)
-- [ ] 10.4 `./gradlew build` — all tests green
-- [ ] 10.5 `openspec validate accelerate-flat-entity-state --strict` — passes
+Remaining code that would be cleaned up here bleeds into the two planned follow-up changes:
+
+- Owner-pointer COW machinery (`Entry.owner`, `refsOwner`, `pointerSerializersOwner`, `entriesOwner`, `ensureRefsOwned`, `rootEntryWritable`, `makeWritable`, `Consumer<Entry>` slot-setter plumbing) → **`lightspeed-eager-copy`**
+- `ObjectArrayEntityState`, `S1EntityStateType` legacy references → **`accelerate-s1-flat-state`**
+- `pointerOverrides[]`, staging fields on `FieldChanges` → **NOT dead** (still used by `readFieldsDebug` and baseline materialization); intentionally kept

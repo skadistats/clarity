@@ -58,6 +58,11 @@ public class VectorField extends Field {
 
     @Override
     public StateMutation createMutation(Object decodedValue, int depth) {
+        return new StateMutation.ResizeVector((Integer) prepareForWrite(decodedValue, depth));
+    }
+
+    @Override
+    public Object prepareForWrite(Object decodedValue, int depth) {
         var count = (Integer) decodedValue;
         var maxLength = S2LongFieldPathFormat.maxIndexAtDepth(depth) + 1;
         if (count < 0 || count > maxLength) {
@@ -67,7 +72,7 @@ public class VectorField extends Field {
                 count, getType(), depth, maxLength
             );
         }
-        return new StateMutation.ResizeVector(count);
+        return count;
     }
 
 }
