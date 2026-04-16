@@ -1,6 +1,6 @@
 ## Purpose
 
-FlatEntityState with byte[]-backed Entry storage, FieldLayout-driven traversal, and global refs slab for sub-entries and value references. Dispatches on StateMutation at the leaf. Supports two-axis copy-on-write.
+FlatEntityState with byte[]-backed Entry storage, FieldLayout-driven traversal, and global refs slab for sub-entries and value references. Dispatches on StateMutation at the leaf. `copy()` is an eager deep copy.
 ## Requirements
 ### Requirement: PrimitiveType sealed interface encapsulates typed byte[] access
 
@@ -186,23 +186,20 @@ The system SHALL provide a `FlatEntityState` class extending `AbstractS2EntitySt
 `FlatEntityState` additionally holds:
 - `Object[] refs` + `int refsSize` — global container for **sub-Entry instances only** (Strings are stored inline in the composite byte[] via the inline-string leaf shape; the mixed Strings-and-sub-Entries design is removed). `refsSize` is the logical length; grow via `Arrays.copyOf` when `refsSize == refs.length`
 - `int[] freeSlots` + `int freeSlotsTop` — global free-list stack for refs recycling
-- `FlatEntityState refsOwner` — owner pointer for the refs slab pair; `refsOwner == this` means this state may mutate `refs` and `freeSlots` in place, otherwise first mutation clones both via `Arrays.copyOf` and sets owner
-- `FlatEntityState pointerSerializersOwner` — owner pointer for the `pointerSerializers` array; same semantics
 - `Entry rootEntry` — the root Entry containing the flat primitive storage (including inline-string bytes)
 
 The inner `Entry` class is a pure byte[] container. It holds:
 - `FieldLayout rootLayout` — the layout tree for this Entry's scope
 - `byte[] data` — primitive value bytes and slot-indices for refs/sub-states
-- `FlatEntityState owner` — owner pointer; `owner == <the FlatEntityState about to write>` means the write may proceed in place, otherwise the write clones `data` and produces a new Entry whose `owner` is set to the writing state
 
 Sub-states for VectorField and PointerField are `Entry` instances living in `FlatEntityState.refs` at dynamically-allocated slot indices. They have NO refs of their own — all String values and nested sub-Entries across all nesting levels live in the single `FlatEntityState.refs` container. They do NOT carry their own pointerSerializers — pointer tracking is global on the outer `FlatEntityState`.
 
-The previous `boolean modifiable` / `boolean refsModifiable` / `boolean pointerSerializersModifiable` flag machinery SHALL be removed in favor of the owner-pointer mechanism above. `markSubEntriesNonModifiable` SHALL be removed.
+There SHALL be no owner-pointer or modifiable-flag machinery on `FlatEntityState`, `Entry`, `refs`, `freeSlots`, or `pointerSerializers`. Every mutation path writes directly; `copy()` allocates an independent state graph up front (see `FlatEntityState.copy() is an eager deep copy`).
 
 #### Scenario: Sub-states are Entry instances in FlatEntityState.refs
 
 - **WHEN** a VectorField or PointerField sub-state is created
-- **THEN** an `Entry` instance is created with its own `byte[] data`, `rootLayout`, and `owner = <creating FlatEntityState>`
+- **THEN** an `Entry` instance is created with its own `byte[] data` and `rootLayout`
 - **AND** a slot is allocated in `FlatEntityState.refs` via `allocateRefSlot()`
 - **AND** the Entry is stored at that slot via `refs` write
 - **AND** the slot-index is stored in the parent Entry's `byte[]` at the SubState's offset+1
@@ -224,16 +221,9 @@ The previous `boolean modifiable` / `boolean refsModifiable` / `boolean pointerS
 - **WHEN** a WriteValue with `value == null` is applied to a Ref with flag=1
 - **THEN** the slot-index is read, `freeRefSlot(slot)` marks the slot reusable, and the flag is cleared
 
-#### Scenario: Owner pointer governs Entry mutability
-
-- **WHEN** a write needs to mutate an Entry and `entry.owner == writingState`
-- **THEN** the write proceeds in place on `entry.data`
-- **WHEN** a write needs to mutate an Entry and `entry.owner != writingState`
-- **THEN** `entry.data` is cloned, a new Entry `{owner = writingState, data = clonedData, rootLayout = entry.rootLayout}` is produced, and the reference that pointed at the old Entry (either `rootEntry` or a refs slot) is updated to point at the new Entry
-
 ### Requirement: FlatEntityState dispatches on StateMutation via applyMutation
 
-`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `FlatEntityState.refs`, COW-clone it if non-modifiable (calling `ensureRefsModifiable()` first so the refs container itself is writable), update `refs.set(slot, clone)`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index. Descent through a SubState consumes no fp index.
+`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `FlatEntityState.refs`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index. Descent through a SubState consumes no fp index.
 
 The SubState branch MUST NOT include its own `if (i == last) break` check. SubState-as-leaf operations (`SwitchPointer`, `ResizeVector`, or any other op targeting the SubState position itself) reach the dispatch via the Composite/Array branch advancing `layout = SubState` on the last idx and the loop's terminal break. Adding a break inside the SubState branch would prevent the final descent for transitional `WriteValue` operations whose leaf lives inside the sub-Entry.
 
@@ -263,12 +253,7 @@ public boolean applyMutation(FieldPath fpX, StateMutation op) {
             case SubState s  -> {
                 if (i == last) break;  // SubState-as-leaf → structural op below
                 int slot = (int) INT_VH.get(current.data, base + s.offset + 1);
-                Entry sub = (Entry) refs.get(slot);
-                if (!sub.modifiable) {
-                    ensureRefsModifiable();
-                    sub = sub.copy();
-                    refs.set(slot, sub);
-                }
+                Entry sub = (Entry) refs[slot];
                 current = sub;
                 layout = sub.rootLayout;
                 base = 0;
@@ -290,7 +275,6 @@ public boolean applyMutation(FieldPath fpX, StateMutation op) {
 private boolean writeValue(Entry target, FieldLayout layout, int base, Object value) {
     switch (layout) {
         case Primitive p -> {
-            target.ensureModifiable();
             byte[] data = target.data;
             int flagPos = base + p.offset;
             byte oldFlag = data[flagPos];
@@ -300,19 +284,16 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
             return (oldFlag != 0) ^ willSet;
         }
         case Ref r -> {
-            target.ensureModifiable();
             byte[] data = target.data;
             int flagPos = base + r.offset;
             byte oldFlag = data[flagPos];
             if (value == null) {
                 if (oldFlag == 0) return false;
-                ensureRefsModifiable();
                 int slot = (int) INT_VH.get(data, flagPos + 1);
                 freeRefSlot(slot);
                 data[flagPos] = 0;
                 return true;
             }
-            ensureRefsModifiable();
             int slot;
             if (oldFlag != 0) {
                 slot = (int) INT_VH.get(data, flagPos + 1);
@@ -321,7 +302,7 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
                 INT_VH.set(data, flagPos + 1, slot);
                 data[flagPos] = 1;
             }
-            refs.set(slot, value);
+            refs[slot] = value;
             return oldFlag == 0;
         }
         default -> throw new IllegalStateException();
@@ -344,10 +325,10 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **THEN** `allocateRefSlot()` returns a new slot (from free-list or by appending to refs)
 - **AND** `INT_VH.set(data, offset+1, slot)` writes the slot-index
 - **AND** flag is set to 1
-- **AND** `refs.set(slot, value)` stores the value
+- **AND** `refs[slot] = value` stores the value
 - **AND** returns `true` (capacity changed)
 - **WHEN** `applyMutation` receives a `WriteValue(non-null value)` and the leaf is a Ref with flag=1
-- **THEN** the existing slot is read from `data[offset+1]` and `refs.set(slot, value)` updates in place
+- **THEN** the existing slot is read from `data[offset+1]` and `refs[slot] = value` updates in place
 - **AND** returns `false`
 - **WHEN** `applyMutation` receives a `WriteValue(null)` and the leaf is a Ref with flag=1
 - **THEN** `freeRefSlot(slot)` releases the slot and flag is set to 0
@@ -360,13 +341,8 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **THEN** a sub-Entry with `byte[count * elementBytes]` is created, a slot is allocated in `refs`, the slot-index and flag are stored in the parent's byte[]
 - **AND** returns `false` (no occupied paths existed in the dropped tail; the fresh sub-Entry has no occupied paths)
 - **WHEN** a sub-Entry exists and `newCount != oldCount`
-- **AND** `sub.modifiable == false` (sub-Entry is shared with another FlatEntityState post-copy)
-- **THEN** `ensureRefsModifiable()` clones the refs container, `sub.copy()` creates a fresh Entry, `refs.set(slot, fresh)` replaces the shared Entry — **before** any in-place mutation
-- **AND** the original FlatEntityState still sees its unchanged sub-Entry in its own refs container
-- **WHEN** a sub-Entry exists and `newCount != oldCount`
 - **THEN** a new `byte[newCount * elementBytes]` is allocated, existing data is copied up to `min(oldCount, newCount) * elementBytes`, and `sub.data` is replaced with the new array
 - **AND** `sub.rootLayout` is replaced with a new `Array` record carrying the new length
-- **AND** `sub.modifiable` is set to `true` (the sub-Entry now owns its data)
 - **AND** on shrink, dropped tail slot-indices are orphaned in refs (no recursive cleanup — matches `NestedArrayEntityState.clearEntryRef`)
 - **AND** returns `true` iff any occupied path existed in the dropped tail `[newCount, oldCount)` (grow → false, shrink with only-empty tail → false)
 - **WHEN** `newCount == oldCount`
@@ -398,7 +374,7 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 
 - **WHEN** `applyMutation` is called with FieldPath `[4, 2]` where children[4] is SubState(offset=O)
 - **THEN** i=0 advances layout to SubState via Composite
-- **AND** i=1 encounters SubState, reads `slot = INT_VH.get(current.data, base+O+1)`, `sub = refs.get(slot)`, COW-clones sub if non-modifiable, swaps `current=sub, layout=sub.rootLayout, base=0`, and `continue`s
+- **AND** i=1 encounters SubState, reads `slot = INT_VH.get(current.data, base+O+1)`, `sub = (Entry) refs[slot]`, swaps `current=sub, layout=sub.rootLayout, base=0`, and `continue`s
 - **AND** i=1 is reprocessed with the sub-Entry's Array layout: `base = 0 + 2*stride`, layout = element
 - **AND** the WriteValue targets the sub-Entry's byte[]
 
@@ -426,73 +402,40 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **WHEN** the flag byte is 0
 - **THEN** return `null`
 
-### Requirement: FlatEntityState supports two-axis copy-on-write
+### Requirement: FlatEntityState.copy() is an eager deep copy
 
-FlatEntityState SHALL implement COW on multiple independent lazy axes via owner-pointer checks:
-1. **Per-Entry**: each Entry has an `owner` reference; a write by a state whose identity does not match `entry.owner` clones `entry.data`, produces a new Entry, and updates the referring slot.
-2. **Global refs**: `FlatEntityState.refsOwner` reference; a write that needs to mutate the refs slab or freeSlots clones both containers (via `Arrays.copyOf` on `refs` and `freeSlots`) if `refsOwner != this` and sets `refsOwner = this`. `refs` and `freeSlots` are always cloned together — they represent a single logical allocator state.
-3. **pointerSerializers**: `FlatEntityState.pointerSerializersOwner` reference; a `SwitchPointer` that needs to update `pointerSerializers[pointerId]` clones the array if the owner does not match, then sets the owner to `this`.
+`FlatEntityState.copy()` SHALL return a state that is fully independent of the original at the moment of return. No byte[] array, `refs` slot, `Entry` instance, `freeSlots` array, or `pointerSerializers` array SHALL be shared with the original after `copy()` returns. Subsequent mutations on either state SHALL NOT be observable from the other, without any additional per-write bookkeeping.
 
-`copy()` SHALL be O(1). It SHALL:
-1. Set the new state's `rootField` to the original's `rootField`
-2. Share the `pointerSerializers` array by reference; neither state's `pointerSerializersOwner` equals the new state until first SwitchPointer write
-3. Share the `refs` slab and `freeSlots` by reference; neither state's `refsOwner` equals the new state until first refs-touching write
-4. Share the `rootEntry` by reference; neither state's identity matches `rootEntry.owner` until first write through the root
-5. NOT walk the FieldLayout tree, NOT call any per-Entry bookkeeping, NOT allocate the `pointerSerializers` clone
+`copy()` SHALL:
+1. Clone `pointerSerializers` via `Arrays.copyOf`.
+2. Clone `refs` via `Arrays.copyOf(refs, refs.length)` (preserving slot indices at their original positions).
+3. Clone `freeSlots` via `Arrays.copyOf(freeSlots, freeSlots.length)` and copy `freeSlotsTop`.
+4. Clone `rootEntry` as a new `Entry` instance with `rootLayout` shared by reference (layout is immutable) and `data` cloned via `Arrays.copyOf`.
+5. For each slot `i` in `0..refsSize-1`, if `refs[i]` is an `Entry` instance, replace the cloned `refs[i]` with a freshly cloned `Entry` (recursively cloning `data` and any descendant sub-Entries). Non-`Entry` slot values (refs holding plain values other than sub-Entries — none after inline-string migration, but defensive) are left as shared references.
 
-`copy()` SHALL NOT read or write any byte[], SHALL NOT visit any sub-Entry, and SHALL NOT perform work proportional to the entity's size.
+Slot stability SHALL be preserved — every sub-Entry in the clone occupies the same slot index it occupied in the original.
 
-On first write to an Entry whose `owner` differs from the writing state, the write path SHALL clone `data`, construct a new Entry with `owner = <writing state>`, and update the reference that pointed to the old Entry.
+`copy()` SHALL NOT walk the FieldLayout tree. The sub-Entry traversal walks `refs` directly; FieldLayout shape is not needed to enumerate reachable Entries because the `refs` slab is the single back-reference container for all sub-Entries.
 
-On first write that reaches a Ref/SubState leaf where `refsOwner != writingState`, the refs slab and freeSlots SHALL both be cloned and `refsOwner` set to the writing state, before the ref write proceeds.
-
-On first write of type `SwitchPointer` where `pointerSerializersOwner != writingState`, the `pointerSerializers` array SHALL be cloned and `pointerSerializersOwner` set to the writing state.
-
-Slot indices stored in byte[] remain valid across COW — they index into whichever `refs` container the current FlatEntityState currently owns.
-
-#### Scenario: copy() is O(1)
+#### Scenario: copy() returns fully independent state
 
 - **WHEN** `copy()` is invoked on a FlatEntityState
-- **THEN** the method completes in constant time regardless of entity size, sub-Entry count, or field count
-- **AND** no FieldLayout traversal occurs
-- **AND** no `byte[]` allocation occurs
-- **AND** no Entry object is constructed
-- **AND** no pre-existing sub-Entries in the refs slab are visited
+- **THEN** the returned state's `rootEntry`, `rootEntry.data`, `refs`, `freeSlots`, `pointerSerializers`, and every sub-`Entry` reachable through `refs` are newly allocated
+- **AND** no byte[] or array in the returned state is `==` to any byte[] or array in the original
+- **AND** every mutation on the copy (primitive write, ref write, sub-state resize, pointer switch) leaves the original's observable state unchanged
+- **AND** vice versa
 
-#### Scenario: Copy and modify independently (primitive writes only)
+#### Scenario: Slot indices are preserved across copy
 
-- **WHEN** a FlatEntityState is copied via `copy()`
-- **AND** the first write on the copy is a Primitive WriteValue on the root Entry
-- **THEN** the copy detects `rootEntry.owner != this`, clones `rootEntry.data`, creates a new Entry with `owner = copy`, and replaces its own `rootEntry` reference
-- **AND** the refs slab is NOT cloned (no ref write occurred)
-- **AND** the original state's `rootEntry` is unchanged
+- **WHEN** the original has a sub-Entry at `refs[k]` reachable via slot-index `k` in some parent Entry's byte[]
+- **THEN** the copy has the sub-Entry clone at `refs[k]` reachable via the same slot-index `k` in the copy's cloned parent byte[]
+- **AND** the byte[] slot-indices stored in data bytes do not need rewriting
 
-#### Scenario: Copy and modify refs independently
+#### Scenario: Subsequent writes do not cross-affect
 
-- **WHEN** a FlatEntityState is copied
-- **AND** the first write on the copy writes a new String value to a Ref
-- **THEN** the copy clones `rootEntry.data` (owner mismatch)
-- **AND** the copy clones the `refs` slab and `freeSlots` (refsOwner mismatch) and sets `refsOwner = copy`
-- **AND** the copy allocates a slot in its own refs; the original's refs is unchanged
-
-#### Scenario: SubState COW — clone-and-replace at boundary
-
-- **WHEN** a FlatEntityState is copied and the copy traverses through a SubState to write a leaf value
-- **THEN** the traversal reads the slot-index from `current.data[base+s.offset+1]`
-- **AND** looks up the sub-Entry in the refs slab (initially the same instance on both sides)
-- **AND** if the sub-Entry's `owner != copy`: the refs slab is cloned if needed (refsOwner check), the sub-Entry's `data` is cloned, a replacement Entry with `owner = copy` is constructed, and the refs slot is updated
-- **AND** the replacement sub-Entry keeps the same slot-index in its byte[] — slot stability across COW
-- **AND** writes proceed on the replacement sub-Entry, the original's sub-Entry is unchanged
-
-#### Scenario: SubState COW applies to SubState-as-leaf mutations too
-
-- **WHEN** a FlatEntityState is copied and the copy applies `ResizeVector` to an existing vector sub-Entry
-- **AND** the sub-Entry's `owner != copy`
-- **THEN** the sub-Entry is cloned, the copy is placed at its slot in the (now-owned) refs, and the clone's `owner` is set to `copy` — before any in-place mutation of `data` or `rootLayout`
-- **AND** the original's sub-Entry remains unmodified in the original's refs container
-- **WHEN** a FlatEntityState is copied and the copy applies `SwitchPointer` to an existing pointer sub-Entry
-- **THEN** `pointerSerializers` is cloned first if its owner does not match the copy
-- **AND** no in-place mutation of the existing sub-Entry occurs — the old sub-Entry is either freed (direct slot in the copy's refs) or replaced by a newly constructed Entry, so no clone of the shared sub-Entry object is needed
+- **WHEN** `copy()` is invoked and the copy is then mutated via `applyMutation`, `write`, `decodeInto`, or any structural mutation
+- **THEN** no ownership check or clone-on-write operation occurs during the mutation — the write proceeds directly on the copy's independently-allocated data
+- **AND** the original's state is bit-for-bit unchanged
 
 ### Requirement: FlatEntityState provides fieldPathIterator
 
@@ -581,7 +524,7 @@ The transitive release SHALL be triggered from both mutation primitives that rem
 - `switchPointer` when an existing sub-Entry is replaced or cleared (the slot formerly occupied by the old sub-Entry)
 - `resizeVector` shrink when the truncated tail of `sub.data` contains `FieldLayout.Ref` or `FieldLayout.SubState` slot indices
 
-The walk SHALL only read `data` byte arrays (which may be shared under COW) and SHALL only mutate `this.refs` and `this.freeSlots` (per-copy after `ensureRefsModifiable`). It SHALL NOT modify any shared `data` content. `ensureRefsModifiable` SHALL be called before any `freeRefSlot` invocation performed during the release walk.
+The walk SHALL read `data` byte arrays and mutate `this.refs` and `this.freeSlots` directly; no sharing check or clone step is required because `data`, `refs`, and `freeSlots` are owned outright by `this` after `copy()` performs eager deep cloning.
 
 Plain `FieldLayout.Ref` leaves hold arbitrary `Object` values (not sub-Entries); their slots SHALL be freed non-recursively via `freeRefSlot`. `FieldLayout.SubState` slots hold sub-Entries and SHALL be released recursively.
 
@@ -598,21 +541,12 @@ Plain `FieldLayout.Ref` leaves hold arbitrary `Object` values (not sub-Entries);
 - **GIVEN** a vector sub-Entry whose element layout contains `FieldLayout.Ref` or `FieldLayout.SubState` positions, and element indices `[M..N-1]` are about to be dropped by a shrink from length `N` to `M`
 - **WHEN** `resizeVector` applies the shrink
 - **THEN** for each element index `i` in `[M..N-1]`, every occupied Ref or SubState slot reachable through that element is returned to `freeSlots` before `sub.data` is reallocated
-- **AND** `ensureRefsModifiable` is called prior to those `freeRefSlot` operations
-
-#### Scenario: Release preserves two-axis COW
-
-- **GIVEN** two FlatEntityState copies `A` and `B` that share the same `refs` container (both with `refsModifiable = false`) and the same Entry `data` byte arrays
-- **WHEN** `B` performs a release walk as part of `switchPointer` or `resizeVector`
-- **THEN** `B` first calls `ensureRefsModifiable` so that the mutations hit a per-copy `refs` and `freeSlots`
-- **AND** `A.refs` and `A.freeSlots` are unchanged
-- **AND** no shared `data` byte array is mutated during the walk
 
 ### Requirement: FlatEntityState provides decodeInto for primitive decode-direct path
 
 `FlatEntityState` SHALL provide a method `decodeInto(FieldPath fp, Decoder decoder, BitStream bs)` that traverses the FieldLayout tree to the leaf layout for `fp` and dispatches to the decoder's static `decodeInto` method, writing decoded bytes directly into the Entry's `byte[]` without producing an intermediate boxed `Object` or allocating a `StateMutation.WriteValue` record.
 
-The traversal SHALL be identical in shape to `applyMutation`: Composite/Array/SubState cases walk the layout and accumulate `base`; `makeWritable` ownership checks are applied along the path as sub-Entries are reached. Lazy sub-Entry creation (Pointer with `serializers.length == 1`, Vector sized to `nextIdx + 1`) and vector growth on traversal are identical to `applyMutation`'s behavior.
+The traversal SHALL be identical in shape to `applyMutation`: Composite/Array/SubState cases walk the layout and accumulate `base`; SubState descent is a direct pointer-chase (`sub = (Entry) refs[slot]`) with no ownership check. Lazy sub-Entry creation (Pointer with `serializers.length == 1`, Vector sized to `nextIdx + 1`) and vector growth on traversal are identical to `applyMutation`'s behavior.
 
 At the leaf:
 

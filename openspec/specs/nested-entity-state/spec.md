@@ -54,7 +54,7 @@ The transitive release SHALL be triggered from both mutation primitives that rem
 - `Entry.set(idx, value)` when `state[idx]` was an `EntryRef`
 - `Entry.capacity(wantedSize, true)` when the shrink discards slots containing `EntryRef`s
 
-The walk SHALL only read `state[]` arrays (which may be shared under COW) and SHALL only mutate `this.entries` and `this.freeEntries` (which are per-copy). It SHALL NOT modify any shared `state[]` content.
+The walk SHALL read `state[]` arrays and mutate `this.entries` and `this.freeEntries` directly; no sharing check or clone step is required because `state[]`, `entries`, and `freeEntries` are owned outright by `this` after `copy()` performs eager deep cloning.
 
 #### Scenario: Overwriting an EntryRef releases its whole subtree
 
@@ -70,73 +70,6 @@ The walk SHALL only read `state[]` arrays (which may be shared under COW) and SH
 - **WHEN** `Entry.capacity(M, true)` is called (shrink)
 - **THEN** every `EntryRef` at indices `M..N-1` is recursively released before `state[]` is reallocated
 - **AND** every Entry transitively reachable from those EntryRefs is returned to the freelist
-
-#### Scenario: Release preserves COW
-
-- **GIVEN** two copies `A` and `B` that share a `state[]` array containing `EntryRef(r)`
-- **WHEN** `B` releases `EntryRef(r)` via a shrink or overwrite
-- **THEN** `B.entries[r]` is set to null and `r` is added to `B.freeEntries`
-- **AND** `A.entries[r]` remains the original Entry
-- **AND** `A.freeEntries` is unchanged
-- **AND** neither copy mutates the shared `state[]` array during the walk
-
-### Requirement: NestedArrayEntityState provides O(1) copy-on-write via owner pointers
-
-`NestedArrayEntityState` SHALL provide constant-time `copy()` via owner-pointer lazy COW. The per-`Entry` `boolean modifiable` flag SHALL be replaced by a `NestedArrayEntityState owner` pointer on each `Entry`. Ownership of the slab (the `entries` list and its companion `freeEntries` deque) SHALL be governed by a new `entriesOwner` field on `NestedArrayEntityState`. Ownership of the `pointerSerializers` array SHALL be governed by `pointerSerializersOwner` (shared with the `flat-entity-state` capability, on `AbstractS2EntityState`).
-
-`copy()` SHALL:
-1. Share `entries` by reference
-2. Share `freeEntries` by reference
-3. Share `pointerSerializers` by reference (owner = null)
-4. Set `entriesOwner = null` on the new state (meaning: not owned until first slab-mutating write)
-5. Leave per-Entry `owner` references untouched — the new state's identity will not match them, so first write through any Entry triggers per-Entry COW
-6. NOT construct any `Entry` wrappers
-7. NOT allocate an `ArrayList` or `ArrayDeque`
-8. NOT iterate `entries` to rebuild the `freeEntries` deque (today's `markFree` loop is removed)
-
-On first write that needs to mutate the slab (`createEntryRef`, `clearEntryRef`, `releaseEntryRef`, or any path that calls `markFree` or `entries.set`):
-- If `entriesOwner != this`: clone `entries` (new `ArrayList<>(entries)`) and `freeEntries` (new `ArrayDeque<>(freeEntries)` or null if original is null) together, and set `entriesOwner = this`
-- `entries` and `freeEntries` SHALL always be cloned together — they represent one logical allocator state
-
-On first write that needs to mutate an `Entry` (its `state` array contents, or its `state.length` via `capacity`):
-- Invoke the slab-ownership check first (above)
-- If `entries.get(slot).owner != this`: construct a new `Entry` with a cloned `state` array and `owner = this`, assign it at `entries.set(slot, cloned)`
-- The per-Entry `owner` pointer also governs the `state` array — a single pointer is sufficient; the state array is never shared between two Entries with distinct owners
-
-Slot indices (`EntryRef.idx`) remain valid across COW — they index into whichever `entries` container the current state currently owns.
-
-The previous `Entry.modifiable` flag machinery SHALL be removed in favor of the owner-pointer mechanism above.
-
-#### Scenario: copy() is O(1)
-
-- **WHEN** `copy()` is invoked on a NestedArrayEntityState
-- **THEN** the method completes in constant time regardless of entity size or sub-entry count
-- **AND** no `Entry` object is constructed
-- **AND** no `ArrayList` is allocated
-- **AND** no `ArrayDeque` is allocated
-- **AND** no iteration over `entries` occurs
-
-#### Scenario: First write clones slab once
-
-- **WHEN** a NestedArrayEntityState is copied via `copy()`
-- **AND** the copy performs its first state-mutating write
-- **THEN** the copy detects `entriesOwner != this`, clones `entries` and `freeEntries` together, and sets `entriesOwner = this`
-- **AND** the original NestedArrayEntityState's `entries` and `freeEntries` remain unmodified
-
-#### Scenario: First write to a sub-Entry clones only that Entry
-
-- **WHEN** a NestedArrayEntityState is copied and the copy writes to a sub-Entry at slab index k
-- **THEN** the slab is cloned (if not already), the `Entry` at index k is cloned (wrapper + `state` array), and the clone is placed at `entries[k]` with `owner = copy`
-- **AND** entries at indices other than k are untouched
-- **AND** the original's `Entry` at index k remains in the original's `entries`
-
-#### Scenario: Copy and modify independently
-
-- **WHEN** a NestedArrayEntityState is copied
-- **AND** several writes land on the copy across different sub-entries
-- **THEN** exactly those sub-entries whose `state` arrays were written to have their state arrays cloned
-- **AND** sub-entries not touched by the copy's writes remain shared by reference with the original
-- **AND** the original's state is observably unchanged
 
 ### Requirement: NestedArrayEntityState provides a unified direct-write method
 
@@ -156,7 +89,7 @@ The previous `Entry.modifiable` flag machinery SHALL be removed in favor of the 
 
 `S2FieldReader.readFieldsFast` SHALL mutate `NestedArrayEntityState` in place as each field is decoded, via `state.write(fp, decoded)`. No staging of mutations into `FieldChanges.mutations[]` SHALL occur on the fast path.
 
-Packet-level atomicity is provided by the caller (`Entities.processAndRunPacketEntities`) via snapshot-before-decode and rollback-on-failure — see the `entity-update-commit` capability. Because `copy()` is now O(1), the snapshot cost per touched entity is negligible.
+Packet-level atomicity is provided by the `entity-update-commit` capability: `readFields` throwing aborts the replay run; `queuedUpdates` are cleared in the `finally` block; no state rollback is attempted. `copy()` is eager (see `NestedArrayEntityState.copy() is an eager deep copy`) and is invoked only at baseline materialization and consumer-side snapshot points, not for per-packet atomicity.
 
 #### Scenario: Fast-path decode mutates NestedArrayEntityState immediately
 
@@ -165,8 +98,39 @@ Packet-level atomicity is provided by the caller (`Entities.processAndRunPacketE
 - **AND** no entry is appended to `FieldChanges.mutations[]`
 - **AND** the accumulated `capacityChanged` bit is updated from the return value of `write`
 
-#### Scenario: Atomicity via snapshot-and-rollback
+#### Scenario: Atomicity via throw-aborts-replay
 
 - **WHEN** a packet decode throws after `NestedArrayEntityState` has been partially mutated in place
-- **THEN** the entity's pre-packet state (captured via `snapshotAndCopy` in `Entities`) is restored via `entity.setState(snapshot)`
-- **AND** no observer sees the partial mutations
+- **THEN** the exception propagates through `processAndRunPacketEntities`, which clears `queuedUpdates` in its `finally` block
+- **AND** the replay run is expected to abort; no rollback of the partial mutations is performed
+
+### Requirement: NestedArrayEntityState.copy() is an eager deep copy
+
+`NestedArrayEntityState.copy()` SHALL return a state that is fully independent of the original at the moment of return. No `entries` list, `Entry` instance, `state[]` array, `freeEntries` deque, or `pointerSerializers` array SHALL be shared with the original after `copy()` returns. Subsequent mutations on either state SHALL NOT be observable from the other, without any additional per-write bookkeeping.
+
+`copy()` SHALL:
+1. Clone `pointerSerializers` via `Arrays.copyOf`.
+2. Allocate a new `ArrayList<Entry>(entries.size())`; for each non-null `Entry` in the original's `entries`, append a freshly cloned `Entry` with `Arrays.copyOf(state, state.length)`. Null slots are preserved as null.
+3. Clone `freeEntries` as a new `ArrayDeque<>(freeEntries)` (or null, matching the original's state).
+
+Slot stability SHALL be preserved — every Entry in the clone occupies the same slab index it occupied in the original. `EntryRef.idx` values embedded in `state[]` arrays remain valid in the clone.
+
+#### Scenario: copy() returns fully independent state
+
+- **WHEN** `copy()` is invoked on a NestedArrayEntityState
+- **THEN** the returned state's `entries` list, every non-null `Entry` and its `state[]` array, `freeEntries` deque, and `pointerSerializers` array are newly allocated
+- **AND** no `Entry`, `state[]`, deque, or array in the returned state is `==` to any in the original
+- **AND** every mutation on the copy (set, capacity, createEntryRef, clearEntryRef, releaseEntryRef) leaves the original's observable state unchanged
+- **AND** vice versa
+
+#### Scenario: Slot indices are preserved across copy
+
+- **WHEN** the original has an Entry at `entries.get(k)` referenced by `EntryRef(k)` stored in some parent Entry's `state[]`
+- **THEN** the copy has the Entry clone at `entries.get(k)` referenced by the same `EntryRef(k)` in the copy's cloned parent `state[]`
+- **AND** the `EntryRef.idx` values stored in cloned `state[]` arrays do not need rewriting
+
+#### Scenario: Subsequent writes do not cross-affect
+
+- **WHEN** `copy()` is invoked and the copy is then mutated via `applyMutation`, `write`, or any structural mutation
+- **THEN** no ownership check or clone-on-write operation occurs during the mutation — the write proceeds directly on the copy's independently-allocated data
+- **AND** the original's state is bit-for-bit unchanged
