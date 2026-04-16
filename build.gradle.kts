@@ -161,3 +161,29 @@ tasks.register("traceBench") {
     }
 }
 
+tasks.register("copyBench") {
+    description = "Run the FlatCopyBench micro. Pass args with -PbenchArgs=\"...\"."
+    group = "benchmark"
+    dependsOn("jmhCompileGeneratedClasses")
+    doLast {
+        val cp = (files(
+            "build/jmh-generated-classes",
+            "build/jmh-generated-resources",
+        ) + sourceSets["jmh"].runtimeClasspath).asPath
+        val javaHome = System.getProperty("java.home")
+        val userArgs = (project.findProperty("benchArgs") as? String)
+            ?.split(" ")?.filter { it.isNotBlank() } ?: emptyList()
+        val cmd = listOf(
+            "$javaHome/bin/java",
+            "-Xmx16g",
+            "-cp", cp,
+            "skadistats.clarity.bench.FlatCopyMain",
+        ) + userArgs
+        val pb = ProcessBuilder(cmd)
+        pb.directory(rootDir)
+        pb.inheritIO()
+        val exit = pb.start().waitFor()
+        if (exit != 0) throw GradleException("copyBench exited with $exit")
+    }
+}
+
