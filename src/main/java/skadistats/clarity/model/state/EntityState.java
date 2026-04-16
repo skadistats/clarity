@@ -1,5 +1,7 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.util.TextTable;
 
@@ -20,6 +22,12 @@ public interface EntityState {
     //   SubState-Vector leaf                -> an Integer length
     // Returns true if capacity has changed.
     boolean write(FieldPath fp, Object decoded);
+
+    // Decode the next value directly from `bs` into the slot at `fp`.
+    // Implementations that store boxed values fall back to write(fp, decoded)
+    // after a boxed decode; flat-byte-backed implementations may write bytes
+    // directly without allocating a wrapper. Returns true if capacity has changed.
+    boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs);
 
     <T> T getValueForFieldPath(FieldPath fp);
 

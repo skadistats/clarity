@@ -1,5 +1,7 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.ArrayField;
@@ -78,6 +80,11 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
             node = subEntryForWrite(node, idx);
             i++;
         }
+    }
+
+    @Override
+    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
+        throw new UnsupportedOperationException("decodeInto is implemented only on FlatEntityState (S2) and S1FlatEntityState (S1)");
     }
 
     @Override

@@ -1,5 +1,8 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.util.SimpleIterator;
@@ -34,6 +37,12 @@ public class ObjectArrayEntityState implements EntityState {
     @Override
     public boolean write(FieldPath fp, Object decoded) {
         state[fp.s1().idx()] = decoded;
+        return false;
+    }
+
+    @Override
+    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
+        state[fp.s1().idx()] = DecoderDispatch.decode(bs, decoder);
         return false;
     }
 

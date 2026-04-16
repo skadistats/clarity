@@ -111,6 +111,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         throw new IllegalStateException("unknown mutation: " + mutation);
     }
 
+    @Override
     public boolean decodeInto(FieldPath fpX, Decoder decoder, BitStream bs) {
         var fp = fpX.s2();
         Entry current = rootEntry;

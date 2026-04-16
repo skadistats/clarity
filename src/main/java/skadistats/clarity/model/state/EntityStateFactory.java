@@ -1,6 +1,6 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.io.s1.ReceiveProp;
+import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.io.s2.field.SerializerField;
 
 public class EntityStateFactory {
@@ -19,8 +19,8 @@ public class EntityStateFactory {
         this.pointerCount = pointerCount;
     }
 
-    public EntityState forS1(ReceiveProp[] receiveProps) {
-        return s1Type.createState(receiveProps);
+    public EntityState forS1(S1DTClass dtClass) {
+        return s1Type.createState(dtClass);
     }
 
     public EntityState forS2(SerializerField field) {

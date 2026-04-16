@@ -5,6 +5,7 @@ import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
+import skadistats.clarity.model.state.S1FlatLayout;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,7 @@ public class S1DTClass implements DTClass {
     private Map<String, Integer> propsByName;
     private S1DTClass superClass;
     private EntityStateFactory entityStateFactory;
+    private S1FlatLayout flatLayout;
 
     public S1DTClass(String dtName, SendTable sendTable) {
         this.dtName = dtName;
@@ -42,7 +44,14 @@ public class S1DTClass implements DTClass {
 
     @Override
     public EntityState getEmptyState() {
-        return entityStateFactory.forS1(receiveProps);
+        return entityStateFactory.forS1(this);
+    }
+
+    public S1FlatLayout getFlatLayout() {
+        if (flatLayout == null) {
+            flatLayout = S1FlatLayout.build(receiveProps);
+        }
+        return flatLayout;
     }
 
     public String getNameForFieldPath(FieldPath fp) {

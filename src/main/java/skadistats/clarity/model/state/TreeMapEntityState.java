@@ -1,6 +1,8 @@
 package skadistats.clarity.model.state;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
@@ -41,6 +43,11 @@ public class TreeMapEntityState extends AbstractS2EntityState {
             return switchPointer(fp, sp.newSerializer());
         }
         throw new IllegalStateException();
+    }
+
+    @Override
+    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
+        throw new UnsupportedOperationException("decodeInto is implemented only on FlatEntityState (S2) and S1FlatEntityState (S1)");
     }
 
     @Override
