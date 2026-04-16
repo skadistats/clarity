@@ -5,7 +5,6 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.s1.ReceiveProp;
 import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.EngineType;
@@ -40,7 +39,6 @@ public class TempEntities {
         if (evTempEntity.isListenedTo()) {
             var stream = BitStream.createBitStream(message.getEntityData());
             S1DTClass cls = null;
-            ReceiveProp[] receiveProps = null;
             // Source 1 sends num_entries=0 to mean "1 entry"
             var count = Math.max(1, message.getNumEntries());
             while (count-- > 0) {
@@ -51,11 +49,9 @@ public class TempEntities {
                 }
                 if (stream.readBitFlag()) {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
-                    receiveProps = cls.getReceiveProps();
                 }
                 var state = cls.getEmptyState();
-                var changes = fieldReader.readFields(stream, cls, null, false, false);
-                changes.applyTo(state);
+                fieldReader.readFields(stream, cls, state, false, false);
 
                 var handle = engineType.emptyHandle();
                 var te = new Entity(

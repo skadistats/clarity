@@ -22,7 +22,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
 
     protected final Source source;
     protected LoopController loopController;
-    protected S1EntityStateType s1EntityStateType = S1EntityStateType.OBJECT_ARRAY;
+    protected S1EntityStateType s1EntityStateType = S1EntityStateType.FLAT;
     protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
 
     /* tick the user is at the end of */
