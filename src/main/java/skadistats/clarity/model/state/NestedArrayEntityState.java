@@ -100,10 +100,12 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         var removedOccupied = false;
         if (node.has(idx)) {
             removedOccupied = hasAnyOccupiedPath(node.subEntry(idx));
+            ensurePointerSerializersOwned();
             pointerSerializers[pf.getPointerId()] = null;
             node.clear(idx);
         }
         if (newSerializer != null) {
+            ensurePointerSerializersOwned();
             pointerSerializers[pf.getPointerId()] = newSerializer;
             node.subEntry(idx);
         }

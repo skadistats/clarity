@@ -11,16 +11,27 @@ import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 public abstract class AbstractS2EntityState implements EntityState {
 
     protected final SerializerField rootField;
-    protected final Serializer[] pointerSerializers;
+    protected Serializer[] pointerSerializers;
+    protected AbstractS2EntityState pointerSerializersOwner;
 
     protected AbstractS2EntityState(SerializerField rootField, int pointerCount) {
         this.rootField = rootField;
         this.pointerSerializers = new Serializer[pointerCount];
+        this.pointerSerializersOwner = this;
     }
 
     protected AbstractS2EntityState(AbstractS2EntityState other) {
         this.rootField = other.rootField;
-        this.pointerSerializers = other.pointerSerializers.clone();
+        this.pointerSerializers = other.pointerSerializers;
+        this.pointerSerializersOwner = null;
+        other.pointerSerializersOwner = null;
+    }
+
+    protected void ensurePointerSerializersOwned() {
+        if (pointerSerializersOwner != this) {
+            pointerSerializers = pointerSerializers.clone();
+            pointerSerializersOwner = this;
+        }
     }
 
     public SerializerField getRootField() {

@@ -6,37 +6,47 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 import static skadistats.clarity.model.state.PrimitiveType.INT_VH;
 
 public class FlatEntityState extends AbstractS2EntityState {
 
-    private List<Object> refs;
-    private Deque<Integer> freeSlots;
-    private boolean refsModifiable;
-    private final Entry rootEntry;
+    private static final Object[] EMPTY_REFS = {};
+    private static final int[] EMPTY_FREE_SLOTS = {};
+
+    private Object[] refs;
+    private int refsSize;
+    private int[] freeSlots;
+    private int freeSlotsTop;
+    private FlatEntityState refsOwner;
+    private Entry rootEntry;
 
     public FlatEntityState(SerializerField rootField, int pointerCount,
                            FieldLayout rootLayout, int totalBytes) {
         super(rootField, pointerCount);
-        this.refs = new ArrayList<>();
-        this.freeSlots = new ArrayDeque<>();
-        this.refsModifiable = true;
-        this.rootEntry = new Entry(rootLayout, new byte[totalBytes], true);
+        this.refs = EMPTY_REFS;
+        this.refsSize = 0;
+        this.freeSlots = EMPTY_FREE_SLOTS;
+        this.freeSlotsTop = 0;
+        this.refsOwner = this;
+        this.rootEntry = new Entry(rootLayout, new byte[totalBytes], this);
     }
 
     private FlatEntityState(FlatEntityState other) {
         super(other);
         this.refs = other.refs;
+        this.refsSize = other.refsSize;
         this.freeSlots = other.freeSlots;
-        this.refsModifiable = false;
-        other.refsModifiable = false;
-        this.rootEntry = other.rootEntry.copy();
+        this.freeSlotsTop = other.freeSlotsTop;
+        this.refsOwner = null;
+        other.refsOwner = null;
+        this.rootEntry = other.rootEntry;
+        other.rootEntry.owner = null;
     }
 
     @Override
@@ -47,7 +57,7 @@ public class FlatEntityState extends AbstractS2EntityState {
     @Override
     public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
         var fp = fpX.s2();
-        Entry current = this.rootEntry;
+        Entry current = rootEntryWritable();
         FieldLayout layout = current.rootLayout;
         var base = 0;
         var last = fp.last();
@@ -70,12 +80,8 @@ public class FlatEntityState extends AbstractS2EntityState {
                     lazyCreateSubEntry(current, base, s, nextIdx);
                 }
                 var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs.get(slot);
-                if (!sub.modifiable) {
-                    ensureRefsModifiable();
-                    sub = sub.copy();
-                    refs.set(slot, sub);
-                }
+                var sub = (Entry) refs[slot];
+                sub = makeWritable(sub, e -> refs[slot] = e);
                 if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
                     growVectorIfNeeded(sub, v, nextIdx + 1);
                 }
@@ -102,7 +108,6 @@ public class FlatEntityState extends AbstractS2EntityState {
 
     private boolean writeValue(Entry target, FieldLayout layout, int base, Object value) {
         if (layout instanceof FieldLayout.Primitive p) {
-            target.ensureModifiable();
             var data = target.data;
             var flagPos = base + p.offset();
             var oldFlag = data[flagPos];
@@ -112,19 +117,18 @@ public class FlatEntityState extends AbstractS2EntityState {
             return (oldFlag != 0) ^ willSet;
         }
         if (layout instanceof FieldLayout.Ref r) {
-            target.ensureModifiable();
             var data = target.data;
             var flagPos = base + r.offset();
             var oldFlag = data[flagPos];
             if (value == null) {
                 if (oldFlag == 0) return false;
-                ensureRefsModifiable();
+                ensureRefsOwned();
                 var slot = (int) INT_VH.get(data, flagPos + 1);
                 freeRefSlot(slot);
                 data[flagPos] = 0;
                 return true;
             }
-            ensureRefsModifiable();
+            ensureRefsOwned();
             int slot;
             if (oldFlag != 0) {
                 slot = (int) INT_VH.get(data, flagPos + 1);
@@ -133,7 +137,7 @@ public class FlatEntityState extends AbstractS2EntityState {
                 INT_VH.set(data, flagPos + 1, slot);
                 data[flagPos] = 1;
             }
-            refs.set(slot, value);
+            refs[slot] = value;
             return oldFlag == 0;
         }
         throw new IllegalStateException("WriteValue on non-leaf layout: " + layout);
@@ -147,18 +151,17 @@ public class FlatEntityState extends AbstractS2EntityState {
         var flagPos = base + s.offset();
         if (data[flagPos] == 0) {
             if (newCount == 0) return false;
-            current.ensureModifiable();
-            ensureRefsModifiable();
+            ensureRefsOwned();
             var array = new FieldLayout.Array(0, v.elementBytes(), newCount, v.elementLayout());
-            var sub = new Entry(array, new byte[newCount * v.elementBytes()], true);
+            var sub = new Entry(array, new byte[newCount * v.elementBytes()], this);
             var slot = allocateRefSlot();
-            refs.set(slot, sub);
+            refs[slot] = sub;
             INT_VH.set(current.data, flagPos + 1, slot);
             current.data[flagPos] = 1;
             return false;
         }
         var slot = (int) INT_VH.get(data, flagPos + 1);
-        var sub = (Entry) refs.get(slot);
+        var sub = (Entry) refs[slot];
         var oldArray = (FieldLayout.Array) sub.rootLayout;
         var oldCount = oldArray.length();
         if (oldCount == newCount) return false;
@@ -167,21 +170,16 @@ public class FlatEntityState extends AbstractS2EntityState {
             for (var i = newCount; i < oldCount && !droppedOccupied; i++) {
                 droppedOccupied = hasAnyOccupiedPath(sub, v.elementLayout(), i * v.elementBytes());
             }
-            ensureRefsModifiable();
+            ensureRefsOwned();
             for (var i = newCount; i < oldCount; i++) {
                 releaseRefsInEntry(sub, v.elementLayout(), i * v.elementBytes());
             }
         }
-        if (!sub.modifiable) {
-            ensureRefsModifiable();
-            sub = sub.copy();
-            refs.set(slot, sub);
-        }
+        sub = makeWritable(sub, e -> refs[slot] = e);
         var newData = new byte[newCount * v.elementBytes()];
         System.arraycopy(sub.data, 0, newData, 0, Math.min(sub.data.length, newData.length));
         sub.data = newData;
         sub.rootLayout = new FieldLayout.Array(0, v.elementBytes(), newCount, v.elementLayout());
-        sub.modifiable = true;
         return droppedOccupied;
     }
 
@@ -197,23 +195,23 @@ public class FlatEntityState extends AbstractS2EntityState {
         var removedOccupied = false;
 
         if (hadSub) {
-            current.ensureModifiable();
             var oldSlot = (int) INT_VH.get(current.data, flagPos + 1);
-            var oldSub = (Entry) refs.get(oldSlot);
+            var oldSub = (Entry) refs[oldSlot];
             removedOccupied = hasAnyOccupiedPath(oldSub, oldSub.rootLayout, 0);
-            ensureRefsModifiable();
+            ensureRefsOwned();
+            ensurePointerSerializersOwned();
             releaseRefSlot(oldSlot);
             current.data[flagPos] = 0;
             pointerSerializers[p.pointerId()] = null;
             hadSub = false;
         }
         if (newSerializer != null) {
-            current.ensureModifiable();
             var layoutIdx = lookupLayoutIndex(p, newSerializer);
-            var sub = new Entry(p.layouts()[layoutIdx], new byte[p.layoutBytes()[layoutIdx]], true);
-            ensureRefsModifiable();
+            var sub = new Entry(p.layouts()[layoutIdx], new byte[p.layoutBytes()[layoutIdx]], this);
+            ensureRefsOwned();
+            ensurePointerSerializersOwned();
             var slot = allocateRefSlot();
-            refs.set(slot, sub);
+            refs[slot] = sub;
             INT_VH.set(current.data, flagPos + 1, slot);
             current.data[flagPos] = 1;
             pointerSerializers[p.pointerId()] = newSerializer;
@@ -243,7 +241,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         if (layout instanceof FieldLayout.SubState s) {
             if (entry.data[base + s.offset()] == 0) return false;
             var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
-            var sub = (Entry) refs.get(slot);
+            var sub = (Entry) refs[slot];
             return hasAnyOccupiedPath(sub, sub.rootLayout, 0);
         }
         return false;
@@ -278,7 +276,7 @@ public class FlatEntityState extends AbstractS2EntityState {
             } else if (layout instanceof FieldLayout.SubState s) {
                 if (current.data[base + s.offset()] == 0) return null;
                 var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs.get(slot);
+                var sub = (Entry) refs[slot];
                 current = sub;
                 layout = sub.rootLayout;
                 base = 0;
@@ -297,7 +295,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         if (layout instanceof FieldLayout.Ref r) {
             if (current.data[base + r.offset()] == 0) return null;
             var slot = (int) INT_VH.get(current.data, base + r.offset() + 1);
-            return (T) refs.get(slot);
+            return (T) refs[slot];
         }
         return null;
     }
@@ -333,7 +331,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         } else if (layout instanceof FieldLayout.SubState s) {
             if (entry.data[base + s.offset()] != 0) {
                 var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
-                var sub = (Entry) refs.get(slot);
+                var sub = (Entry) refs[slot];
                 walk(sub, sub.rootLayout, 0, indices, depth, out);
             }
         }
@@ -357,8 +355,7 @@ public class FlatEntityState extends AbstractS2EntityState {
      * SwitchPointer / ResizeVector before any inner write.
      */
     private void lazyCreateSubEntry(Entry parent, int base, FieldLayout.SubState s, int hintIdx) {
-        parent.ensureModifiable();
-        ensureRefsModifiable();
+        ensureRefsOwned();
         Entry sub;
         if (s.kind() instanceof FieldLayout.SubStateKind.Pointer p) {
             if (p.serializers().length != 1) {
@@ -366,26 +363,27 @@ public class FlatEntityState extends AbstractS2EntityState {
                     "cannot lazy-create sub-Entry for Pointer with " + p.serializers().length
                     + " serializers (expected explicit SwitchPointer first), pointerId=" + p.pointerId());
             }
-            sub = new Entry(p.layouts()[0], new byte[p.layoutBytes()[0]], true);
+            sub = new Entry(p.layouts()[0], new byte[p.layoutBytes()[0]], this);
+            ensurePointerSerializersOwned();
             pointerSerializers[p.pointerId()] = p.serializers()[0];
         } else if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
             // Lazy-create vector sized to fit the upcoming element index.
             // Mirrors NestedArrayEntityState's auto-growing capacity on writes.
             var length = hintIdx + 1;
             var array = new FieldLayout.Array(0, v.elementBytes(), length, v.elementLayout());
-            sub = new Entry(array, new byte[length * v.elementBytes()], true);
+            sub = new Entry(array, new byte[length * v.elementBytes()], this);
         } else {
             throw new IllegalStateException("unknown SubState kind: " + s.kind());
         }
         var slot = allocateRefSlot();
-        refs.set(slot, sub);
+        refs[slot] = sub;
         INT_VH.set(parent.data, base + s.offset() + 1, slot);
         parent.data[base + s.offset()] = 1;
     }
 
     /**
      * Grow a vector sub-Entry to fit at least `requiredLength` elements.
-     * Caller is responsible for ensuring `sub` is modifiable.
+     * Caller must have made `sub` writable via `makeWritable`.
      * Mirrors NestedArrayEntityState's capacity-extension behavior on writes.
      */
     private static void growVectorIfNeeded(Entry sub, FieldLayout.SubStateKind.Vector v, int requiredLength) {
@@ -397,19 +395,44 @@ public class FlatEntityState extends AbstractS2EntityState {
         sub.rootLayout = new FieldLayout.Array(0, v.elementBytes(), requiredLength, v.elementLayout());
     }
 
+    private Entry rootEntryWritable() {
+        if (rootEntry.owner != this) {
+            rootEntry = new Entry(rootEntry.rootLayout, rootEntry.data.clone(), this);
+        }
+        return rootEntry;
+    }
+
+    private Entry makeWritable(Entry e, Consumer<Entry> slotSetter) {
+        if (e.owner == this) return e;
+        // The slotSetter writes to refs[slot], so we need the refs array owned.
+        ensureRefsOwned();
+        var clone = new Entry(e.rootLayout, e.data.clone(), this);
+        slotSetter.accept(clone);
+        return clone;
+    }
+
     private int allocateRefSlot() {
-        if (!freeSlots.isEmpty()) return freeSlots.removeFirst();
-        refs.add(null);
-        return refs.size() - 1;
+        if (freeSlotsTop > 0) {
+            return freeSlots[--freeSlotsTop];
+        }
+        if (refsSize == refs.length) {
+            var newCap = refs.length == 0 ? 8 : refs.length * 2;
+            refs = Arrays.copyOf(refs, newCap);
+        }
+        return refsSize++;
     }
 
     private void freeRefSlot(int slot) {
-        refs.set(slot, null);
-        freeSlots.addLast(slot);
+        refs[slot] = null;
+        if (freeSlotsTop == freeSlots.length) {
+            var newCap = freeSlots.length == 0 ? 8 : freeSlots.length * 2;
+            freeSlots = Arrays.copyOf(freeSlots, newCap);
+        }
+        freeSlots[freeSlotsTop++] = slot;
     }
 
     private void releaseRefSlot(int slot) {
-        if (refs.get(slot) instanceof Entry e) {
+        if (refs[slot] instanceof Entry e) {
             releaseRefsInEntry(e, e.rootLayout, 0);
         }
         freeRefSlot(slot);
@@ -438,65 +461,54 @@ public class FlatEntityState extends AbstractS2EntityState {
     }
 
     int slabSize() {
-        return refs.size();
+        return refsSize;
     }
 
     int freeSlotCount() {
-        return freeSlots.size();
+        return freeSlotsTop;
     }
 
-    private void ensureRefsModifiable() {
-        if (!refsModifiable) {
-            refs = new ArrayList<>(refs);
-            freeSlots = new ArrayDeque<>(freeSlots);
-            refsModifiable = true;
+    byte[] rootDataForTest() {
+        return rootEntry.data;
+    }
+
+    Object[] refsArrayForTest() {
+        return refs;
+    }
+
+    skadistats.clarity.io.s2.Serializer[] pointerSerializersForTest() {
+        return pointerSerializers;
+    }
+
+    byte[] subEntryDataForTest(int slot) {
+        return ((Entry) refs[slot]).data;
+    }
+
+    private void ensureRefsOwned() {
+        if (refsOwner != this) {
+            refs = refs.length == 0 ? EMPTY_REFS : refs.clone();
+            freeSlots = freeSlots.length == 0 ? EMPTY_FREE_SLOTS : freeSlots.clone();
+            // Invalidate ownership on shared sub-Entries so per-Entry makeWritable
+            // sees a mismatch and clones. Sub-Entries may still be held by other
+            // FlatEntityStates via their own refs[] — mutating them in place would
+            // leak changes across the snapshot boundary.
+            for (var i = 0; i < refsSize; i++) {
+                if (refs[i] instanceof Entry e) e.owner = null;
+            }
+            refsOwner = this;
         }
     }
 
-    final class Entry {
+    static final class Entry {
 
         FieldLayout rootLayout;
         byte[] data;
-        boolean modifiable;
+        FlatEntityState owner;
 
-        Entry(FieldLayout rootLayout, byte[] data, boolean modifiable) {
+        Entry(FieldLayout rootLayout, byte[] data, FlatEntityState owner) {
             this.rootLayout = rootLayout;
             this.data = data;
-            this.modifiable = modifiable;
-        }
-
-        Entry copy() {
-            markSubEntriesNonModifiable(rootLayout, 0);
-            modifiable = false;
-            return new Entry(rootLayout, data, false);
-        }
-
-        void ensureModifiable() {
-            if (!modifiable) {
-                data = data.clone();
-                modifiable = true;
-            }
-        }
-
-        private void markSubEntriesNonModifiable(FieldLayout layout, int base) {
-            if (layout instanceof FieldLayout.Composite c) {
-                for (var child : c.children()) {
-                    markSubEntriesNonModifiable(child, base);
-                }
-            } else if (layout instanceof FieldLayout.Array a) {
-                for (var i = 0; i < a.length(); i++) {
-                    markSubEntriesNonModifiable(a.element(), base + a.baseOffset() + i * a.stride());
-                }
-            } else if (layout instanceof FieldLayout.SubState s) {
-                if (data[base + s.offset()] != 0) {
-                    var slot = (int) INT_VH.get(data, base + s.offset() + 1);
-                    var sub = (Entry) refs.get(slot);
-                    if (sub.modifiable) {
-                        sub.markSubEntriesNonModifiable(sub.rootLayout, 0);
-                        sub.modifiable = false;
-                    }
-                }
-            }
+            this.owner = owner;
         }
     }
 }
