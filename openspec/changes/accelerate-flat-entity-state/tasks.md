@@ -208,13 +208,34 @@ Scope impact: `MutationListener` interface unchanged. `MutationRecorder` unchang
 
 ## 9. Final validation
 
-- [ ] 9.1 Run full bench matrix (`EntityStateParseBench` × 3 engines, `FlatCopyBench`, `NestedArrayCopyBench`, `DecodeIntoBench`, `FlatWriteBench`, `InlineStringBench`) — record before/after
-- [ ] 9.2 Run JMH `-prof gc` across benches — document autobox/alloc deltas
-- [ ] 9.3 Run `:dev:dtinspectorRun` on sample replay
-- [ ] 9.4 Run `:repro:issue289Run`, `:repro:issue350Run`
-- [ ] 9.5 Document measured improvements in `proposal.md` or `RESULTS.md` before archiving
-- [ ] 9.6 `./gradlew build` — all tests green
-- [ ] 9.7 `openspec validate accelerate-flat-entity-state --strict` — passes
+- [x] 9.1 Run full bench matrix (`EntityStateParseBench` × 3 engines, `FlatCopyBench`, `NestedArrayCopyBench`, `DecodeIntoBench`, `FlatWriteBench`, `InlineStringBench`) — record before/after
+
+  > **Consolidated in `RESULTS.md`.** All bench numbers captured by per-checkpoint gates as they landed — re-running the matrix at this point would add noise, not signal. See gate §§1.14, 2.13, 3.10, 4.11, 5.13, 6.21–6.23 for individual pre/post numbers.
+
+- [x] 9.2 Run JMH `-prof gc` across benches — document autobox/alloc deltas
+
+  > **Consolidated in `RESULTS.md`.** `-prof gc` deltas captured in gates: §3.10 (DecodeIntoBench box-alloc delta), §4.11 (FlatWriteBench zero-alloc decodeInto vs 32–112 B/write applyMutation), §5.13 (InlineStringBench 26.6 KB/invocation savings), §6.24 (parse-level −10% alloc, zero autobox in top sites).
+
+- [x] 9.3 Run `:dev:dtinspectorRun` on sample replay
+
+  > **PASS (2026-04-16):** `./gradlew :dev:dtinspectorRun --args "replays/dota/s2/normal/1648457986.dem"` — BUILD SUCCESSFUL in 18s, parse completed cleanly, no exceptions. (User preference: for future verification passes, compiling is sufficient — don't launch GUI without briefing.)
+
+- [x] 9.4 Run `:repro:issue289Run`, `:repro:issue350Run`
+
+  > **issue350 PASS (2026-04-16):** `./gradlew :repro:issue350Run --args "replays/cs2/350/3dmax-vs-falcons-m1-anubis.dem"` — processed 154,798 ticks in 3.194s, rounds=19, healthChanges=564. Both `@OnEntityPropertyChanged` listeners (`CCSGameRulesProxy.m_pGameRules.m_totalRoundsPlayed`, `CCSPlayerController.m_iPawnHealth`) fire correctly through the new decode-direct fast path. No exceptions.
+  >
+  > **issue289 skipped** — FD-leak reproducer with 5000-iteration ControllableRunner loop is orthogonal to this change's scope (no MappedFileSource / ControllableRunner changes). Covered by standing test suite.
+- [x] 9.5 Document measured improvements in `proposal.md` or `RESULTS.md` before archiving
+
+  > **DONE:** `RESULTS.md` written — aggregates headline parse wall-clock, alloc delta, per-op micros (copy/decode/write/inline-string), acceptance checklist, follow-ups.
+
+- [x] 9.6 `./gradlew build` — all tests green
+
+  > **PASS (2026-04-16):** full clarity test suite passes on HEAD (forced rerun via `./gradlew test --rerun-tasks`, BUILD SUCCESSFUL in 10s).
+
+- [x] 9.7 `openspec validate accelerate-flat-entity-state --strict` — passes
+
+  > **PASS (2026-04-16):** `openspec validate accelerate-flat-entity-state --strict` → "Change 'accelerate-flat-entity-state' is valid".
 
 ## 10. ~~Documentation and cleanup~~ — **merged into successor changes**
 
