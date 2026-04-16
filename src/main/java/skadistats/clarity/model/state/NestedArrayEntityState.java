@@ -14,35 +14,63 @@ import java.util.List;
 
 public class NestedArrayEntityState extends AbstractS2EntityState {
 
-    private final List<Entry> entries;
+    private List<Entry> entries;
     private Deque<Integer> freeEntries;
+    private NestedArrayEntityState entriesOwner;
     private boolean capacityChanged;
 
     public NestedArrayEntityState(SerializerField field, int pointerCount) {
         super(field, pointerCount);
         entries = new ArrayList<>(20);
+        freeEntries = new ArrayDeque<>();
+        entriesOwner = this;
         entries.add(new Entry());
     }
 
     private NestedArrayEntityState(NestedArrayEntityState other) {
         super(other);
-        var otherSize = other.entries.size();
-        entries = new ArrayList<>(otherSize + 4);
-        for (var i = 0; i < otherSize; i++) {
-            var e = other.entries.get(i);
-            if (e == null) {
-                entries.add(null);
-                markFree(i);
-            } else {
-                var modifiable = e.state.length == 0;
-                e.modifiable = modifiable;
-                entries.add(new Entry(e.state, modifiable));
-            }
-        }
+        entries = other.entries;
+        freeEntries = other.freeEntries;
+        entriesOwner = null;
+        other.entriesOwner = null;
+        // Invalidate root-Entry ownership so writes on either side trigger clone.
+        // Non-root Entries are invalidated lazily during ensureEntriesOwned, which
+        // fires on the first write (descent always starts at root).
+        var root = other.entries.get(0);
+        if (root != null) root.owner = null;
     }
 
     private Entry rootEntry() {
         return entries.get(0);
+    }
+
+    private Entry rootEntryWritable() {
+        return makeWritable(entries.get(0), 0);
+    }
+
+    private void ensureEntriesOwned() {
+        if (entriesOwner != this) {
+            entries = new ArrayList<>(entries);
+            freeEntries = new ArrayDeque<>(freeEntries);
+            // Invalidate ownership on shared Entry wrappers so per-Entry makeWritable
+            // sees a mismatch and clones. Entry wrappers may still be held by other
+            // NestedArrayEntityStates via their own entries list.
+            for (var e : entries) {
+                if (e != null) e.owner = null;
+            }
+            entriesOwner = this;
+        }
+    }
+
+    private Entry makeWritable(Entry e, int slot) {
+        if (e.owner == this) return e;
+        // slot assignment writes to entries, so we need the entries list owned.
+        ensureEntriesOwned();
+        var src = e.state;
+        var newState = src.length == 0 ? EMPTY_STATE : src.clone();
+        var clone = new Entry(newState);
+        entries.set(slot, clone);
+        return clone;
     }
 
     @Override
@@ -54,7 +82,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
     public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
         var fp = fpX.s2();
         Field field = rootField;
-        Entry node = rootEntry();
+        Entry node = rootEntryWritable();
         var last = fp.last();
         capacityChanged = false;
 
@@ -77,9 +105,20 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
                 throw new IllegalStateException();
             }
             field = child;
-            node = node.subEntry(idx);
+            node = subEntryForWrite(node, idx);
             i++;
         }
+    }
+
+    private Entry subEntryForWrite(Entry parent, int idx) {
+        if (!parent.isSub(idx)) {
+            var fresh = new Entry();
+            var ref = createEntryRef(fresh);
+            parent.set(idx, ref);
+            return fresh;
+        }
+        var entryRef = (EntryRef) parent.get(idx);
+        return makeWritable(entries.get(entryRef.idx), entryRef.idx);
     }
 
     private void ensureNodeCapacity(Field parentField, Entry node, int idx) {
@@ -99,7 +138,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         if (currentSerializer == newSerializer) return false;
         var removedOccupied = false;
         if (node.has(idx)) {
-            removedOccupied = hasAnyOccupiedPath(node.subEntry(idx));
+            removedOccupied = hasAnyOccupiedPath(subEntryForWrite(node, idx));
             ensurePointerSerializersOwned();
             pointerSerializers[pf.getPointerId()] = null;
             node.clear(idx);
@@ -107,7 +146,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         if (newSerializer != null) {
             ensurePointerSerializersOwned();
             pointerSerializers[pf.getPointerId()] = newSerializer;
-            node.subEntry(idx);
+            subEntryForWrite(node, idx);
         }
         return removedOccupied;
     }
@@ -122,7 +161,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
                 if (hasOccupiedSlot(sub, i)) droppedOccupied = true;
             }
         }
-        node.subEntry(idx).capacity(newCount, true);
+        subEntryForWrite(node, idx).capacity(newCount, true);
         return droppedOccupied;
     }
 
@@ -172,8 +211,9 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
     }
 
     private EntryRef createEntryRef(Entry entry) {
+        ensureEntriesOwned();
         int i;
-        if (freeEntries == null || freeEntries.isEmpty()) {
+        if (freeEntries.isEmpty()) {
             i = entries.size();
             entries.add(entry);
         } else {
@@ -184,11 +224,13 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
     }
 
     private void clearEntryRef(EntryRef entryRef) {
+        ensureEntriesOwned();
         entries.set(entryRef.idx, null);
-        markFree(entryRef.idx);
+        markFreeAlreadyOwned(entryRef.idx);
     }
 
     private void releaseEntryRef(EntryRef entryRef) {
+        ensureEntriesOwned();
         var e = entries.get(entryRef.idx);
         if (e != null) {
             for (var slot : e.state) {
@@ -200,10 +242,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         clearEntryRef(entryRef);
     }
 
-    private void markFree(int i) {
-        if (freeEntries == null) {
-            freeEntries = new ArrayDeque<>();
-        }
+    private void markFreeAlreadyOwned(int i) {
         freeEntries.add(i);
     }
 
@@ -212,7 +251,19 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
     }
 
     int freeSlotCount() {
-        return freeEntries == null ? 0 : freeEntries.size();
+        return freeEntries.size();
+    }
+
+    List<Entry> entriesForTest() {
+        return entries;
+    }
+
+    Deque<Integer> freeEntriesForTest() {
+        return freeEntries;
+    }
+
+    skadistats.clarity.io.s2.Serializer[] pointerSerializersForTest() {
+        return pointerSerializers;
     }
 
 
@@ -235,15 +286,15 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
     public class Entry implements NestedEntityState {
 
         private Object[] state;
-        private boolean modifiable;
+        private NestedArrayEntityState owner;
 
         private Entry() {
-            this(EMPTY_STATE, true);
+            this(EMPTY_STATE);
         }
 
-        private Entry(Object[] state, boolean modifiable) {
+        private Entry(Object[] state) {
             this.state = state;
-            this.modifiable = modifiable;
+            this.owner = NestedArrayEntityState.this;
         }
 
         @Override
@@ -263,12 +314,8 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
         @Override
         public void set(int idx, Object value) {
-            if (!modifiable) {
-                var newState = new Object[state.length];
-                System.arraycopy(state, 0, newState, 0, state.length);
-                state = newState;
-                modifiable = true;
-            }
+            // Caller must have made this Entry writable (owner == outer) before
+            // invoking set. Entry.state has been exclusively owned since makeWritable.
             if (state[idx] instanceof EntryRef ref) {
                 releaseEntryRef(ref);
             }
@@ -323,7 +370,6 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
             if (newState != null) {
                 System.arraycopy(state, 0, newState, 0, Math.min(curSize, wantedSize));
                 state = newState;
-                modifiable = true;
                 capacityChanged = true;
             }
             return this;
@@ -331,7 +377,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
         @Override
         public String toString() {
-            return "Entry[modifiable=" + modifiable + ", size=" + state.length + "]";
+            return "Entry[owner=" + (owner == null ? "null" : "set") + ", size=" + state.length + "]";
         }
 
     }

@@ -52,18 +52,18 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 
 ## 2. Owner-pointer COW — NestedArrayEntityState (CP-2)
 
-- [ ] 2.1 Replace `Entry.modifiable` (boolean) with `Entry.owner` (NestedArrayEntityState); single owner covers the state array too
-- [ ] 2.2 Add `entriesOwner` field governing the `entries` list and `freeEntries` deque as a pair
-- [ ] 2.3 Rewrite copy constructor: share `entries` / `freeEntries` / per-Entry refs by reference; set `entriesOwner = null`; no `markFree` loop, no Entry wrapper allocations
-- [ ] 2.4 Add `ensureEntriesOwned()` helper — clones entries + freeEntries together if owner mismatches
-- [ ] 2.5 Add `makeWritable(Entry e, int slot)` — clones Entry wrapper + state array if per-Entry owner mismatches
-- [ ] 2.6 Update `Entry.set`, `Entry.capacity`, `Entry.subEntry` to use owner-pointer path
-- [ ] 2.7 Update `createEntryRef`, `clearEntryRef`, `releaseEntryRef`, `markFree` to call `ensureEntriesOwned` before mutating
-- [ ] 2.8 Audit `AbstractS2EntityState` — remove any eager pointerSerializers clone; gate by `pointerSerializersOwner` from 1.5
-- [ ] 2.9 Unit test: `copy()` zero Entry allocations, zero ArrayList/Deque allocations
-- [ ] 2.10 Unit test: copy → write to sub-entry at slab index k → clones only entries[k]
-- [ ] 2.11 Unit test: parity — applied trace on copy + original produces identical states; original unchanged
-- [ ] 2.12 Add `NestedArrayCopyBench` micro
+- [x] 2.1 Replace `Entry.modifiable` (boolean) with `Entry.owner` (NestedArrayEntityState); single owner covers the state array too. Entry remains a non-static inner class so `new Entry()` implicitly binds to the current outer — the owner-ptr model leverages this: after `makeWritable`, owner==outer and the Entry's outer references (for `releaseEntryRef` etc.) are guaranteed correct
+- [x] 2.2 Add `entriesOwner` field governing the `entries` list and `freeEntries` deque as a pair
+- [x] 2.3 Rewrite copy constructor: share `entries` / `freeEntries` / per-Entry refs by reference; set `entriesOwner = null` on both sides; also invalidate `root.owner = null` so the first write on either side trips makeWritable (non-root entries invalidated lazily on first `ensureEntriesOwned`). No Entry wrapper allocations at copy time
+- [x] 2.4 Add `ensureEntriesOwned()` helper — clones entries + freeEntries together if owner mismatches; iterates entries once to null sub-Entry owners (O(entriesSize) amortized, not O(layout-node-count))
+- [x] 2.5 Add `makeWritable(Entry e, int slot)` — clones Entry wrapper + state array if owner mismatches; new Entry is bound to the cloning FES via inner-class semantics, so its `releaseEntryRef`/`capacityChanged` writes hit the right outer
+- [x] 2.6 Update `Entry.set`, `Entry.capacity`, `Entry.subEntry` — removed the internal `modifiable` clone branch. These methods now precondition on `owner == outer this`, enforced by callers via `rootEntryWritable`/`subEntryForWrite`/`makeWritable`
+- [x] 2.7 Update `createEntryRef`, `clearEntryRef`, `releaseEntryRef` to call `ensureEntriesOwned` before mutating. `markFree` was merged into `clearEntryRef` (no standalone caller survived the refactor)
+- [x] 2.8 Audit `AbstractS2EntityState` — eager `pointerSerializers.clone()` already removed in CP-1 as part of 1.5. Confirmed: copy ctor shares by reference, writes gated by `ensurePointerSerializersOwned`
+- [x] 2.9 Unit test: `copy()` zero Entry allocations, zero ArrayList/Deque allocations (NestedArrayEntityStateCowTest.copyZeroContainerAllocations)
+- [x] 2.10 Unit test: copy → write to sub-entry at slab index k → clones only entries[k] (NestedArrayEntityStateCowTest.writeToSubEntryClonesOnlyTouchedSlab)
+- [x] 2.11 Unit test: parity — applied trace on copy + original produces identical states; original unchanged (NestedArrayEntityStateCowTest.tracedWritesOnCopyMatchApplyingToFresh). Bonus: copyThenSwitchPointerClonesPointerSerializersInCopyOnly
+- [x] 2.12 `NestedArrayCopyBench` — covered by `FlatCopyBench` which is parameterized `@Param({"FLAT", "NESTED_ARRAY"})`. One JMH class measures both impls' copy() pass
 - [ ] 2.13 **Gate: `NestedArrayCopyBench`** — O(1) in copy(); zero alloc under `-prof gc`
 - [ ] 2.14 **Gate: `EntityStateParseBench NESTED_ARRAY`** — no regression vs CP-0
 
