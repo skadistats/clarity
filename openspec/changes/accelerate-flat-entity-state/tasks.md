@@ -187,12 +187,24 @@ S1 is deferred so its implementation can be built directly on the eager-copy mod
 
 ## 8. MutationListener contract (CP-8)
 
-- [ ] 8.1 Add `onUpdateWrite(EntityState, FieldPath)` to `MutationListener` with default no-op
-- [ ] 8.2 Invoke `onUpdateWrite` after each `decodeInto` + each `state.write` in `S2FieldReader.readFieldsFast` when listener attached
-- [ ] 8.3 Continue invoking `onUpdateMutation` from paths that still produce materialized `StateMutation` (debug reader, baseline, programmatic, trace replay)
-- [ ] 8.4 Update `MutationRecorder` to implement `onUpdateWrite` — read back via `getValueForFieldPath`
-- [ ] 8.5 Verify `MutationTraceBench` still replays traces correctly
-- [ ] 8.6 **Gate:** `dtinspector` smoke test — runs cleanly on a sample replay
+- [x] 8.1 ~~Add `onUpdateWrite(EntityState, FieldPath)` to `MutationListener`~~ — **dropped**. See design pivot note below.
+- [x] 8.2 ~~Invoke `onUpdateWrite` from `readFieldsFast`~~ — **dropped**.
+- [x] 8.3 ~~Continue invoking `onUpdateMutation`~~ — **kept** (listener attached takes the materialized path that already invokes `onSetupMutation` / `onUpdateMutation`).
+- [x] 8.4 ~~Update `MutationRecorder` to implement `onUpdateWrite`~~ — **dropped** (`MutationRecorder` unchanged; its existing `onSetupMutation` / `onUpdateMutation` now capture both setup and update paths correctly).
+- [x] 8.5 Verify `MutationTraceBench` replays traces correctly — **PASS** via `SmokeTraceMain`: 12.7 MB Dota replay produced 2433 births (with non-empty setups) + 1,950,801 update mutations; materialize + replay succeeded on all 3 impls (NESTED_ARRAY, TREE_MAP, FLAT) with no exceptions.
+- [x] 8.6 **Gate:** `dtinspector` + Clarity Analyzer smoke tests — **PASS**. `dtinspector` parses `replays/dota/s2/normal/1648457986.dem` cleanly in headless mode (only failure is `HeadlessException` on the post-parse Swing `JFrame` instantiation, unrelated to parsing). Clarity Analyzer (at `../clarity-analyzer`, `next` branch, composite-build via `includeBuild("../clarity")`) compiles against the modified clarity sources and runs cleanly against a sample replay (user-verified interactively).
+
+### Design pivot (2026-04-16): listener bypasses the fast path
+
+Initial CP-8 plan was a new `onUpdateWrite(state, fp)` callback and `MutationRecorder.getValueForFieldPath(fp)` to re-read the value. Two blocking gaps surfaced during implementation:
+
+1. **SubState leaves can't be re-read.** `FlatEntityState.getValueForFieldPath` handles `Primitive` / `InlineString` / `Ref` only; returns `null` for `SubState-Pointer` / `SubState-Vector` leaves. `MutationRecorder` would capture `WriteValue(null)` for pointer-switches and vector-resizes, and `BirthMaterializer` replay via `state.applyMutation(fp, WriteValue(null))` throws on SubState leaves (`writeValue` throws "WriteValue on non-leaf layout" at `FlatEntityState.java:289`). Any packet containing a team-change or inventory-resize crashes the bench.
+
+2. **Baseline setup is never observed on the fast path.** Baseline materialization calls `readFields(..., debug=false)` → `readFieldsFast` → `mutations == null` → `applySetupChanges` early-returns without notifying the listener. `MutationRecorder.setupMutations` stays empty for every birth; `BirthMaterializer` replays "empty + no setup" instead of the actual baseline shape. The bench then dispatches updates against blank states.
+
+**Decision**: when a `MutationListener` is attached, bypass the fast path entirely. `S2FieldReader.readFields` gains a `materialize` flag (third boolean); `Entities` passes `mutationListener != null` at all four call sites. A new private `readFieldsMaterialized` path produces `FieldChanges.mutations[]` via the legacy `field.createMutation(decoded, depth)` pipeline (same shape as `readFieldsDebug` minus the `TextTable` printing). Pointer-resolution during this path uses `resolveFieldDebug` + `pointerOverrides[]`, since mutations are applied later by `applyUpdateChanges` / `applySetupChanges` rather than in-place. The existing `onSetupMutation` / `onUpdateMutation` callbacks cover both setup and update; `MutationListener` gains no new methods.
+
+Scope impact: `MutationListener` interface unchanged. `MutationRecorder` unchanged. `FieldReader.readFields(...)` signature gained a `materialize` parameter; a final 4-arg overload (`readFields(bs, dtClass, state, debug)`) delegates with `materialize = false`, preserving external API compat. New smoke harness at `src/jmh/java/skadistats/clarity/bench/SmokeTraceMain.java` (gradle task `smokeTraceRun -Preplay=<path>`) runs capture + materialize + replay end-to-end as a §8.5 verifier.
 
 ## 9. Final validation
 

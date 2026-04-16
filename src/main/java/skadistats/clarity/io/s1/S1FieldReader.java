@@ -31,7 +31,7 @@ public abstract class S1FieldReader extends FieldReader {
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug) {
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug, boolean materialize) {
         var dtClass = dtClassGeneric.s1();
         try {
             if (debug) {

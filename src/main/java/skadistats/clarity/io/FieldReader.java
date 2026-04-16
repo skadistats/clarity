@@ -14,7 +14,12 @@ public abstract class FieldReader {
 
     protected final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
 
-    public abstract FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug);
+    public abstract FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug, boolean materialize);
+
+    public final FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug) {
+        return readFields(bs, dtClass, state, debug, false);
+    }
+
     public abstract int readDeletions(BitStream bs, int indexBits, int[] deletions);
 
 }

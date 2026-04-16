@@ -54,7 +54,7 @@ public class TempEntities {
                     receiveProps = cls.getReceiveProps();
                 }
                 var state = cls.getEmptyState();
-                var changes = fieldReader.readFields(stream, cls, null, false);
+                var changes = fieldReader.readFields(stream, cls, null, false, false);
                 changes.applyTo(state);
 
                 var handle = engineType.emptyHandle();

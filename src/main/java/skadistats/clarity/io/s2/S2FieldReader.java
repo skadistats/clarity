@@ -52,8 +52,10 @@ public class S2FieldReader extends FieldReader {
         .build();
 
     @Override
-    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug) {
-        return debug ? readFieldsDebug(bs, dtClassGeneric, state) : readFieldsFast(bs, dtClassGeneric, state);
+    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug, boolean materialize) {
+        if (debug) return readFieldsDebug(bs, dtClassGeneric, state);
+        if (materialize) return readFieldsMaterialized(bs, dtClassGeneric, state);
+        return readFieldsFast(bs, dtClassGeneric, state);
     }
 
     private Field resolveField(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
@@ -113,6 +115,36 @@ public class S2FieldReader extends FieldReader {
         }
 
         return new FieldChanges(fieldPaths, n, capacityChanged);
+    }
+
+    private FieldChanges readFieldsMaterialized(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
+        var dtClass = dtClassGeneric.s2();
+        var state = (AbstractS2EntityState) entityState;
+
+        var n = 0;
+        var mfp = S2ModifiableFieldPath.newInstance();
+        while (true) {
+            var opId = bs.readFieldOpId();
+            if (opId == FieldOp.FIELD_PATH_ENCODE_FINISH) {
+                break;
+            }
+            FieldOp.execute(opId, mfp, bs);
+            fieldPaths[n++] = mfp.unmodifiable();
+        }
+
+        var result = new FieldChanges(fieldPaths, n);
+        Arrays.fill(pointerOverrides, null);
+        for (var r = 0; r < n; r++) {
+            var fp = fieldPaths[r].s2();
+            var field = resolveFieldDebug(state, dtClass, fp);
+            var decoded = DecoderDispatch.decode(bs, field.getDecoder());
+            var mutation = field.createMutation(decoded, fp.last() + 1);
+            result.setMutation(r, mutation);
+            if (mutation instanceof StateMutation.SwitchPointer sp) {
+                pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+            }
+        }
+        return result;
     }
 
     private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {

@@ -487,7 +487,7 @@ public class Entities {
     private void queueEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         var newState = copyState(baseline);
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug);
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug, mutationListener != null);
         applySetupChanges(changes, newState);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, newState));
     }
@@ -518,7 +518,7 @@ public class Entities {
         var dtClass = entity.getDtClass();
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), entity.getIndex(), message.getIsDelta());
         var newState = copyState(baseline);
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug);
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug, mutationListener != null);
         applySetupChanges(changes, newState);
         queueUpdate(() -> executeEntityRecreate(entity, message, newState));
     }
@@ -546,7 +546,7 @@ public class Entities {
 
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
         var state = entity.getState();
-        var changes = fieldReader.readFields(stream, entity.getDtClass(), state, debug);
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), state, debug, mutationListener != null);
         var capacityChanged = applyUpdateChanges(changes, state);
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent, capacityChanged));
     }
@@ -672,7 +672,7 @@ public class Entities {
         }
         s = newEmptyState(cls);
         var stream = BitStream.createBitStream(raw);
-        var changes = fieldReader.readFields(stream, cls, s, false);
+        var changes = fieldReader.readFields(stream, cls, s, false, mutationListener != null);
         var remaining = stream.remaining();
         if (remaining < 0 || remaining > 7) {
             log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);

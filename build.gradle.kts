@@ -136,6 +136,23 @@ tasks.register("bench") {
     }
 }
 
+tasks.register<JavaExec>("smokeTraceRun") {
+    description = "Run SmokeTraceMain to exercise trace capture + materialize + replay. Pass -Preplay=<path>."
+    group = "benchmark"
+    classpath = sourceSets["jmh"].runtimeClasspath
+    mainClass.set("skadistats.clarity.bench.SmokeTraceMain")
+    jvmArgs = listOf("-Xmx4g")
+    workingDir = rootDir
+    standardOutput = System.out
+    errorOutput = System.err
+    outputs.upToDateWhen { false }
+    doFirst {
+        val replay = project.findProperty("replay") as? String
+            ?: throw GradleException("pass -Preplay=<path>")
+        args = listOf(replay)
+    }
+}
+
 tasks.register("traceBench") {
     description = "Run the mutation-trace benchmark harness. Pass args with -PbenchArgs=\"...\"."
     group = "benchmark"
