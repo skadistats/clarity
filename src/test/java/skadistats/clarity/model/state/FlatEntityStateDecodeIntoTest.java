@@ -247,51 +247,35 @@ public class FlatEntityStateDecodeIntoTest {
         assertEquals(capB, capA, "second switch returns the same capacity-change signal");
     }
 
-    // ---------- 4.9: decodeInto / write after copy() triggers COW on touched path only ----------
+    // ---------- decodeInto / write after copy() preserves independence ----------
 
     @Test
-    public void decodeIntoAfterCopyClonesRootOnlyForPrimitive() {
+    public void decodeIntoAfterCopyLeavesOriginalUnchanged() {
         var ser = serializer("S", named("a", intField()));
         var st = makeFlat(ser);
         st.applyMutation(fp(0), new StateMutation.WriteValue(1));
 
-        var stRootBefore = st.rootDataForTest();
-        var stRefsBefore = st.refsArrayForTest();
-
         var cp = (FlatEntityState) st.copy();
-        assertSame(cp.rootDataForTest(), stRootBefore, "copy shares root byte[]");
-
         cp.decodeInto(fp(0), intDecoder(), freshStream());
 
-        assertNotSame(cp.rootDataForTest(), stRootBefore, "cp root cloned by decodeInto");
-        assertSame(st.rootDataForTest(), stRootBefore, "original root unchanged");
-        assertSame(cp.refsArrayForTest(), stRefsBefore, "refs NOT cloned (primitive write)");
+        assertEquals(read(st, fp(0)), 1, "original unchanged by cp.decodeInto");
     }
 
     @Test
-    public void writeAfterCopyClonesRootOnlyForInlineString() {
+    public void writeAfterCopyLeavesInlineStringOriginalUnchanged() {
         var ser = serializer("S", named("s", stringField()));
         var st = makeFlat(ser);
         st.write(fp(0), "original");
 
-        var stRefsBefore = st.refsArrayForTest();
-        var stRootBefore = st.rootDataForTest();
-
         var cp = (FlatEntityState) st.copy();
-
         cp.write(fp(0), "replaced");
 
-        assertSame(cp.refsArrayForTest(), stRefsBefore,
-            "inline-string write must NOT clone refs (string lives in root byte[])");
-        assertNotSame(cp.rootDataForTest(), stRootBefore,
-            "cp root cloned on inline-string write");
-        assertSame(st.rootDataForTest(), stRootBefore, "original root unchanged");
         assertEquals(read(st, fp(0)), "original");
         assertEquals(read(cp, fp(0)), "replaced");
     }
 
     @Test
-    public void writeAfterCopyDoesNotClonePointerSerializersForInnerPrimitive() {
+    public void writeAfterCopyIsIndependentForInnerPrimitiveViaPointer() {
         var inner = serializer("I", named("x", intField()));
         var ptr = pointerField(inner);
         var ser = serializer("S", named("p", ptr));
@@ -299,13 +283,9 @@ public class FlatEntityStateDecodeIntoTest {
         st.applyMutation(fp(0), new StateMutation.SwitchPointer(inner));
         st.write(fp(0, 0), 1);
 
-        var stPsBefore = st.pointerSerializersForTest();
         var cp = (FlatEntityState) st.copy();
-
         cp.write(fp(0, 0), 99);
 
-        assertSame(cp.pointerSerializersForTest(), stPsBefore,
-            "pointerSerializers NOT cloned for inner primitive write");
         assertEquals(read(cp, fp(0, 0)), 99);
         assertEquals(read(st, fp(0, 0)), 1);
     }

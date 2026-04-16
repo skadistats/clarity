@@ -5,8 +5,6 @@ import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertSame;
 import static skadistats.clarity.model.state.TestFields.floatField;
 import static skadistats.clarity.model.state.TestFields.fp;
 import static skadistats.clarity.model.state.TestFields.intField;
@@ -17,11 +15,7 @@ import static skadistats.clarity.model.state.TestFields.serializer;
 import static skadistats.clarity.model.state.TestFields.serializerField;
 import static skadistats.clarity.model.state.TestFields.vectorFieldOf;
 
-/**
- * CP-2 tests: verify owner-pointer COW on NestedArrayEntityState shares the entries
- * list, freeEntries deque, and Entry wrappers by reference at copy time.
- */
-public class NestedArrayEntityStateCowTest {
+public class NestedArrayEntityStateCopyTest {
 
     private static NestedArrayEntityState make(Serializer root) {
         return new NestedArrayEntityState(rootField(root), 1024);
@@ -43,33 +37,25 @@ public class NestedArrayEntityStateCowTest {
         return s.getValueForFieldPath(fp);
     }
 
-    // ---------- 2.9: copy() shares containers by reference ----------
-
     @Test
-    public void copyZeroContainerAllocations() {
+    public void primitiveWritesAfterCopyAreIndependent() {
         var ser = serializer("S", named("a", intField()), named("b", floatField()));
         var st = make(ser);
         write(st, fp(0), 7);
         write(st, fp(1), 1.5f);
 
-        var entriesBefore = st.entriesForTest();
-        var freeBefore = st.freeEntriesForTest();
-        var pointerSerializersBefore = st.pointerSerializersForTest();
-
         var cp = (NestedArrayEntityState) st.copy();
+        write(cp, fp(0), 42);
+        write(st, fp(1), 9.9f);
 
-        assertSame(cp.entriesForTest(), entriesBefore,
-            "copy() must share entries list by reference");
-        assertSame(cp.freeEntriesForTest(), freeBefore,
-            "copy() must share freeEntries deque by reference");
-        assertSame(cp.pointerSerializersForTest(), pointerSerializersBefore,
-            "copy() must share pointerSerializers by reference");
+        assertEquals(read(st, fp(0)), 7);
+        assertEquals(read(st, fp(1)), 9.9f);
+        assertEquals(read(cp, fp(0)), 42);
+        assertEquals(read(cp, fp(1)), 1.5f);
     }
 
-    // ---------- 2.10: write to sub-entry clones only that slot ----------
-
     @Test
-    public void writeToSubEntryClonesOnlyTouchedSlab() {
+    public void writeToSubEntryAfterCopyIsIndependent() {
         var element = serializer("E", named("x", intField()), named("y", intField()));
         var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
         var st = make(ser);
@@ -79,32 +65,9 @@ public class NestedArrayEntityStateCowTest {
         write(st, fp(0, 1, 0), 20);
         write(st, fp(0, 2, 0), 30);
 
-        var stEntriesBefore = st.entriesForTest();
-        var rootBefore = stEntriesBefore.get(0);
-        // capture identity of each slab Entry wrapper
-        var preCopySlots = new Object[stEntriesBefore.size()];
-        for (int i = 0; i < stEntriesBefore.size(); i++) preCopySlots[i] = stEntriesBefore.get(i);
-
         var cp = (NestedArrayEntityState) st.copy();
-        assertSame(cp.entriesForTest(), stEntriesBefore, "entries list shared pre-write");
-
-        // mutate inside vector[1]
         write(cp, fp(0, 1, 0), 99);
 
-        // cp's entries list cloned, root cloned, and the vector sub-Entry + nested
-        // element-1 Entry cloned. Unrelated slots remain reference-equal to originals.
-        assertNotSame(cp.entriesForTest(), stEntriesBefore,
-            "cp entries cloned after write");
-        assertSame(st.entriesForTest(), stEntriesBefore,
-            "original entries list unchanged");
-
-        var stEntriesAfter = st.entriesForTest();
-        for (int i = 0; i < preCopySlots.length; i++) {
-            assertSame(stEntriesAfter.get(i), preCopySlots[i],
-                "original's entries[" + i + "] unchanged by cp's write");
-        }
-
-        // Data correctness
         assertEquals(read(st, fp(0, 0, 0)), 10);
         assertEquals(read(st, fp(0, 1, 0)), 20);
         assertEquals(read(st, fp(0, 2, 0)), 30);
@@ -112,8 +75,6 @@ public class NestedArrayEntityStateCowTest {
         assertEquals(read(cp, fp(0, 1, 0)), 99);
         assertEquals(read(cp, fp(0, 2, 0)), 30);
     }
-
-    // ---------- 2.11: trace-parity — applied sequence on copy == original+sequence ----------
 
     @Test
     public void tracedWritesOnCopyMatchApplyingToFresh() {
@@ -146,17 +107,52 @@ public class NestedArrayEntityStateCowTest {
                 "initial[" + i + "] matches fresh-path");
         }
 
-        // Snapshot retains pre-mutation state (rollback equivalence)
+        // Snapshot retains pre-mutation state
         assertEquals(read(snapshot, fp(0)), 1);
         assertEquals(read(snapshot, fp(1)), 2);
         assertEquals(read(snapshot, fp(2)), null);
         assertEquals(read(snapshot, fp(3)), null);
     }
 
-    // ---------- Bonus: SwitchPointer COW on pointerSerializers ----------
+    @Test
+    public void freedSlotReuseAfterCopyIsIndependent() {
+        // Create a state with a vector, shrink it to free slots, copy, then
+        // grow on both sides — both should reuse the freed slots without
+        // cross-contamination.
+        var element = serializer("E", named("x", intField()));
+        var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
+        var st = make(ser);
+
+        resize(st, fp(0), 3);
+        write(st, fp(0, 0, 0), 100);
+        write(st, fp(0, 1, 0), 200);
+        write(st, fp(0, 2, 0), 300);
+        // Shrink to 1 — frees slots for indices 1 and 2.
+        resize(st, fp(0), 1);
+
+        var cp = (NestedArrayEntityState) st.copy();
+
+        // Grow st and cp back to 3 — both should reuse the freed slots,
+        // each into its own entries list.
+        resize(st, fp(0), 3);
+        write(st, fp(0, 1, 0), 11);
+        write(st, fp(0, 2, 0), 22);
+
+        resize(cp, fp(0), 3);
+        write(cp, fp(0, 1, 0), 999);
+        write(cp, fp(0, 2, 0), 888);
+
+        assertEquals(read(st, fp(0, 0, 0)), 100);
+        assertEquals(read(st, fp(0, 1, 0)), 11);
+        assertEquals(read(st, fp(0, 2, 0)), 22);
+
+        assertEquals(read(cp, fp(0, 0, 0)), 100);
+        assertEquals(read(cp, fp(0, 1, 0)), 999);
+        assertEquals(read(cp, fp(0, 2, 0)), 888);
+    }
 
     @Test
-    public void copyThenSwitchPointerClonesPointerSerializersInCopyOnly() {
+    public void switchPointerAfterCopyIsIndependent() {
         var serA = serializer("A", named("a", intField()));
         var serB = serializer("B", named("b", intField()));
         var ptr = pointerField(serA, serB);
@@ -166,20 +162,11 @@ public class NestedArrayEntityStateCowTest {
         switchPtr(st, fp(0), serA);
         write(st, fp(0, 0), 42);
 
-        var stPsBefore = st.pointerSerializersForTest();
-
         var cp = (NestedArrayEntityState) st.copy();
-        assertSame(cp.pointerSerializersForTest(), stPsBefore,
-            "copy shares pointerSerializers by reference");
-
         switchPtr(cp, fp(0), serB);
 
-        assertNotSame(cp.pointerSerializersForTest(), stPsBefore,
-            "cp pointerSerializers cloned after SwitchPointer");
-        assertSame(st.pointerSerializersForTest(), stPsBefore,
-            "original pointerSerializers unchanged");
-
         assertEquals(read(st, fp(0, 0)), 42);
+
         write(cp, fp(0, 0), 7);
         assertEquals(read(st, fp(0, 0)), 42, "original sub-entry intact after cp switched pointer");
         assertEquals(read(cp, fp(0, 0)), 7);

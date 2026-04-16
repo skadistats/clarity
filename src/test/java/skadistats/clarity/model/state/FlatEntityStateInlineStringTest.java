@@ -127,26 +127,17 @@ public class FlatEntityStateInlineStringTest {
         assertThrows(IllegalStateException.class, () -> st.write(fp(0), tooLong));
     }
 
-    // ---------- 5.10: copy + inline-string write clones byte[] only, no refs clone ----------
+    // ---------- inline-string write after copy is independent ----------
 
     @Test
-    public void copyThenInlineStringWriteClonesRootOnly() {
+    public void inlineStringWriteAfterCopyIsIndependent() {
         var ser = serializer("S", named("s", stringField()));
         var st = makeFlat(ser);
         st.write(fp(0), "original");
 
-        var refsBefore = st.refsArrayForTest();
-        var rootBefore = st.rootDataForTest();
-
         var cp = (FlatEntityState) st.copy();
         cp.write(fp(0), "replaced");
 
-        assertSame(cp.refsArrayForTest(), refsBefore,
-            "refs slab must NOT be cloned — strings are inline in root byte[]");
-        assertNotSame(cp.rootDataForTest(), rootBefore,
-            "copy's root byte[] must be cloned on inline-string write");
-        assertSame(st.rootDataForTest(), rootBefore,
-            "original's root byte[] is untouched");
         assertEquals(st.getValueForFieldPath(fp(0)), "original");
         assertEquals(cp.getValueForFieldPath(fp(0)), "replaced");
     }
