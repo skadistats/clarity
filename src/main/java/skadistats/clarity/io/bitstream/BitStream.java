@@ -117,6 +117,28 @@ public abstract class BitStream {
         return new String(stringTemp, 0, o, StandardCharsets.UTF_8).intern();
     }
 
+    /**
+     * Reads up to {@code n} UTF-8 bytes directly into {@code data} starting at
+     * {@code offset}. Stops early on a zero byte (which is consumed from the
+     * bitstream but NOT written to {@code data}). Returns the number of bytes
+     * written — always {@code <= n}.
+     * <p>
+     * Used by inline-string decoding to skip the {@code stringTemp} scratch and
+     * the {@code String} allocation in {@link #readString}.
+     */
+    public int readStringInto(byte[] data, int offset, int n) {
+        var o = 0;
+        while (o < n) {
+            var c = (byte) readUBitInt(8);
+            if (c == 0) {
+                break;
+            }
+            data[offset + o] = c;
+            o++;
+        }
+        return o;
+    }
+
     public long readVarU(int max) {
         var m = ((max + 6) / 7) * 7;
         var s = 0;

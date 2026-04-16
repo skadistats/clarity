@@ -819,12 +819,16 @@ public class EntityStateTest {
 
     @Test(dataProvider = "slabImpls")
     public void resizeVectorShrinkReleasesDroppedSubEntries(String impl) {
-        var element = serializer("E", named("s", stringField()));
+        var leaf = serializer("Leaf", named("x", intField()));
+        var element = serializer("E", named("p", pointerField(leaf)));
         var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
         var st = makeState(impl, ser);
 
         resize(st, fp(0), 5);
-        for (var i = 0; i < 5; i++) write(st, fp(0, i, 0), "v" + i);
+        for (var i = 0; i < 5; i++) {
+            switchPtr(st, fp(0, i, 0), leaf);
+            write(st, fp(0, i, 0, 0), i);
+        }
 
         var afterGrow = liveSlabCount(st);
 
@@ -833,18 +837,22 @@ public class EntityStateTest {
         var afterShrink = liveSlabCount(st);
         assertTrue(afterShrink < afterGrow,
             "shrinking a vector of sub-entries must release the dropped tail's slab slots");
-        assertEquals(read(st, fp(0, 0, 0)), "v0");
-        assertEquals(read(st, fp(0, 1, 0)), "v1");
+        assertEquals(read(st, fp(0, 0, 0, 0)), 0);
+        assertEquals(read(st, fp(0, 1, 0, 0)), 1);
     }
 
     @Test(dataProvider = "slabImpls")
     public void resizeVectorToZeroReleasesAllElementSubEntries(String impl) {
-        var element = serializer("E", named("s", stringField()));
+        var leaf = serializer("Leaf", named("x", intField()));
+        var element = serializer("E", named("p", pointerField(leaf)));
         var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
         var st = makeState(impl, ser);
 
         resize(st, fp(0), 4);
-        for (var i = 0; i < 4; i++) write(st, fp(0, i, 0), "v" + i);
+        for (var i = 0; i < 4; i++) {
+            switchPtr(st, fp(0, i, 0), leaf);
+            write(st, fp(0, i, 0, 0), i);
+        }
 
         var populated = liveSlabCount(st);
 
@@ -879,12 +887,16 @@ public class EntityStateTest {
 
     @Test(dataProvider = "slabImpls")
     public void releaseOnCopyDoesNotAffectOriginal(String impl) {
-        var element = serializer("E", named("s", stringField()));
+        var leaf = serializer("Leaf", named("x", intField()));
+        var element = serializer("E", named("p", pointerField(leaf)));
         var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
         var st = makeState(impl, ser);
 
         resize(st, fp(0), 4);
-        for (var i = 0; i < 4; i++) write(st, fp(0, i, 0), "v" + i);
+        for (var i = 0; i < 4; i++) {
+            switchPtr(st, fp(0, i, 0), leaf);
+            write(st, fp(0, i, 0, 0), i);
+        }
 
         var stLiveBefore = liveSlabCount(st);
         var cp = st.copy();
@@ -896,9 +908,9 @@ public class EntityStateTest {
         assertEquals(liveSlabCount(st), stLiveBefore,
             "original's live slab count is unchanged after release on copy");
         for (var i = 0; i < 4; i++) {
-            assertEquals(read(st, fp(0, i, 0)), "v" + i,
+            assertEquals(read(st, fp(0, i, 0, 0)), i,
                 "original's data at index " + i + " intact");
         }
-        assertEquals(read(cp, fp(0, 0, 0)), "v0", "copy retained surviving element");
+        assertEquals(read(cp, fp(0, 0, 0, 0)), 0, "copy retained surviving element");
     }
 }

@@ -115,10 +115,10 @@ public class FlatEntityStateCowTest {
         assertEquals(read(cp, fp(0, 2, 0)), 30);
     }
 
-    // ---------- 1.12: copy then Ref-leaf write clones refs only in copy ----------
+    // ---------- 1.12 / CP-5: copy then inline-string write clones root only ----------
 
     @Test
-    public void copyThenStringWriteClonesRefsInCopyOnly() {
+    public void copyThenStringWriteClonesRootOnly() {
         var ser = serializer("S", named("s", stringField()));
         var st = makeFlat(ser);
         write(st, fp(0), "original");
@@ -131,12 +131,12 @@ public class FlatEntityStateCowTest {
 
         write(cp, fp(0), "replaced");
 
-        assertNotSame(cp.refsArrayForTest(), stRefsBefore,
-            "cp refs cloned after ref-leaf write");
-        assertSame(st.refsArrayForTest(), stRefsBefore,
-            "original refs array unchanged");
+        assertSame(cp.refsArrayForTest(), stRefsBefore,
+            "inline-string write must NOT clone refs — strings live inline in the root byte[]");
         assertNotSame(cp.rootDataForTest(), stRootBefore,
-            "cp root cloned (flag byte set on root entry)");
+            "cp root cloned (inline-string bytes and flag written)");
+        assertSame(st.rootDataForTest(), stRootBefore,
+            "original root byte[] unchanged");
         assertEquals(read(st, fp(0)), "original");
         assertEquals(read(cp, fp(0)), "replaced");
     }

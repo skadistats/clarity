@@ -3,6 +3,8 @@ package skadistats.clarity.model.state;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.DecoderDispatch;
+import skadistats.clarity.io.decoder.StringLenDecoder;
+import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
@@ -10,6 +12,7 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -155,6 +158,18 @@ public class FlatEntityState extends AbstractS2EntityState {
             DecoderDispatch.decodeInto(bs, decoder, data, flagPos + 1);
             return oldFlag == 0;
         }
+        if (layout instanceof FieldLayout.InlineString is) {
+            var data = current.data;
+            var flagPos = base + is.offset();
+            var oldFlag = data[flagPos];
+            data[flagPos] = 1;
+            if (decoder instanceof StringZeroTerminatedDecoder) {
+                StringZeroTerminatedDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
+            } else {
+                StringLenDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
+            }
+            return oldFlag == 0;
+        }
         if (layout instanceof FieldLayout.Ref) {
             return writeValue(current, layout, base, DecoderDispatch.decode(bs, decoder));
         }
@@ -201,7 +216,9 @@ public class FlatEntityState extends AbstractS2EntityState {
             i++;
         }
 
-        if (layout instanceof FieldLayout.Primitive || layout instanceof FieldLayout.Ref) {
+        if (layout instanceof FieldLayout.Primitive
+                || layout instanceof FieldLayout.InlineString
+                || layout instanceof FieldLayout.Ref) {
             return writeValue(current, layout, base, decoded);
         }
         if (layout instanceof FieldLayout.SubState s) {
@@ -224,6 +241,25 @@ public class FlatEntityState extends AbstractS2EntityState {
             data[flagPos] = willSet ? (byte) 1 : (byte) 0;
             if (willSet) p.type().write(data, flagPos + 1, value);
             return (oldFlag != 0) ^ willSet;
+        }
+        if (layout instanceof FieldLayout.InlineString is) {
+            var data = target.data;
+            var flagPos = base + is.offset();
+            var oldFlag = data[flagPos];
+            if (value == null) {
+                data[flagPos] = 0;
+                return oldFlag != 0;
+            }
+            var bytes = ((String) value).getBytes(StandardCharsets.UTF_8);
+            if (bytes.length > is.maxLength()) {
+                throw new IllegalStateException(
+                    "String length " + bytes.length + " exceeds leaf maxLength " + is.maxLength());
+            }
+            data[flagPos] = 1;
+            data[flagPos + 1] = (byte) (bytes.length & 0xFF);
+            data[flagPos + 2] = (byte) ((bytes.length >>> 8) & 0xFF);
+            System.arraycopy(bytes, 0, data, flagPos + 3, bytes.length);
+            return oldFlag == 0;
         }
         if (layout instanceof FieldLayout.Ref r) {
             var data = target.data;
@@ -343,6 +379,9 @@ public class FlatEntityState extends AbstractS2EntityState {
         if (layout instanceof FieldLayout.Primitive p) {
             return entry.data[base + p.offset()] != 0;
         }
+        if (layout instanceof FieldLayout.InlineString is) {
+            return entry.data[base + is.offset()] != 0;
+        }
         if (layout instanceof FieldLayout.Ref r) {
             return entry.data[base + r.offset()] != 0;
         }
@@ -400,6 +439,13 @@ public class FlatEntityState extends AbstractS2EntityState {
             if (current.data[base + p.offset()] == 0) return null;
             return (T) p.type().read(current.data, base + p.offset() + 1);
         }
+        if (layout instanceof FieldLayout.InlineString is) {
+            var data = current.data;
+            var flagPos = base + is.offset();
+            if (data[flagPos] == 0) return null;
+            var len = (data[flagPos + 1] & 0xFF) | ((data[flagPos + 2] & 0xFF) << 8);
+            return (T) new String(data, flagPos + 3, len, StandardCharsets.UTF_8);
+        }
         if (layout instanceof FieldLayout.Ref r) {
             if (current.data[base + r.offset()] == 0) return null;
             var slot = (int) INT_VH.get(current.data, base + r.offset() + 1);
@@ -430,6 +476,10 @@ public class FlatEntityState extends AbstractS2EntityState {
             }
         } else if (layout instanceof FieldLayout.Primitive p) {
             if (entry.data[base + p.offset()] != 0) {
+                out.add(buildFieldPath(indices, depth));
+            }
+        } else if (layout instanceof FieldLayout.InlineString is) {
+            if (entry.data[base + is.offset()] != 0) {
                 out.add(buildFieldPath(indices, depth));
             }
         } else if (layout instanceof FieldLayout.Ref r) {

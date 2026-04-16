@@ -1,6 +1,9 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.decoder.StringLenDecoder;
+import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
 import skadistats.clarity.io.s2.Field;
+import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.ArrayField;
 import skadistats.clarity.io.s2.field.PointerField;
@@ -17,6 +20,10 @@ public final class FieldLayoutBuilder {
 
     private static final int FLAG_BYTE = 1;
     private static final int SLOT_INDEX_BYTES = 4;
+    private static final int STRING_LENGTH_PREFIX_BYTES = 2;
+
+    /** Uniform reservation for strings without metadata bounds (S2 CUtlString, S2 CUtlSymbolLarge). */
+    public static final int UNBOUNDED_STRING_MAX_LENGTH = 512;
 
     private final Map<Serializer, Built> serializerCache = new HashMap<>();
 
@@ -73,12 +80,34 @@ public final class FieldLayoutBuilder {
             return new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
         }
         if (field instanceof ValueField vf) {
-            var primitive = vf.getDecoder().getPrimitiveType();
+            var decoder = vf.getDecoder();
+            var primitive = decoder.getPrimitiveType();
             if (primitive != null) {
                 return new Built(new FieldLayout.Primitive(offset, primitive), FLAG_BYTE + primitive.size());
+            }
+            if (decoder instanceof StringZeroTerminatedDecoder || decoder instanceof StringLenDecoder) {
+                var maxLength = stringMaxLength(vf.getType());
+                var layout = new FieldLayout.InlineString(offset, maxLength);
+                return new Built(layout, FLAG_BYTE + STRING_LENGTH_PREFIX_BYTES + maxLength);
             }
             return new Built(new FieldLayout.Ref(offset), FLAG_BYTE + SLOT_INDEX_BYTES);
         }
         throw new IllegalStateException("unsupported field type: " + field.getClass().getName());
+    }
+
+    /**
+     * Reserve size for an inline-string leaf. {@code char[N]} props use the declared
+     * {@code N}; unbounded strings (CUtlString, CUtlSymbolLarge) use the uniform
+     * 512-byte reservation grounded in the StringLenDecoder 9-bit wire cap.
+     */
+    private static int stringMaxLength(FieldType type) {
+        if ("char".equals(type.getBaseType()) && type.getElementCount() != null) {
+            try {
+                return Integer.parseInt(type.getElementCount());
+            } catch (NumberFormatException ignored) {
+                // Non-literal element count (e.g. a named constant) — fall through to uniform.
+            }
+        }
+        return UNBOUNDED_STRING_MAX_LENGTH;
     }
 }

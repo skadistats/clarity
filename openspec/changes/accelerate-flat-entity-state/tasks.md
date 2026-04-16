@@ -121,19 +121,32 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 
 ## 5. Inline strings in byte[] (CP-5)
 
-- [ ] 5.1 Extend FieldLayout: add inline-string leaf shape (`Primitive.String(offset, prefixBytes, maxLength)` or equivalent encoding on existing `Primitive`)
-- [ ] 5.2 Update FieldLayoutBuilder: emit inline-string leaves for all String props. Use declared `N` for `char[N]` (S2); use 512 for unbounded strings (S2 `CUtlString`, all S1 STRING). 2-byte length prefix uniformly
-- [ ] 5.3 Add `StringLenDecoder.decodeInto(BitStream, byte[], int offset)` — writes 2-byte length prefix + UTF-8 bytes; asserts decoded length ≤ slot's declared maxLength
-- [ ] 5.4 Extend `FlatEntityState.decodeInto` to handle the inline-string leaf shape (dispatch to `StringLenDecoder.decodeInto`)
-- [ ] 5.5 Extend `FlatEntityState.write` for inline-string leaf — decoded is a `String`, encode to UTF-8 bytes + length prefix, write inline
-- [ ] 5.6 Extend `FlatEntityState.getValueForFieldPath` for inline-string leaf — read length prefix, allocate String from bytes
-- [ ] 5.7 Refs slab becomes sub-Entry-only in S2. Audit `allocateRefSlot` / `freeRefSlot` call sites — all should now be sub-Entry lifecycle only
-- [ ] 5.8 Unit test: inline-string roundtrip — decode a String, verify byte-level layout, read back via `getValueForFieldPath`
-- [ ] 5.9 Unit test: string exceeding declared maxLength throws (schema-violation path)
-- [ ] 5.10 Unit test: copy + inline-string write triggers owner-pointer COW on byte[] only, no refs clone
-- [ ] 5.11 Add `InlineStringBench` micro — decode+read roundtrip, inline vs pre-change refs path
-- [ ] 5.12 **Gate: byte[] memory footprint** — per-entity-type byte[] growth ≤ 2 KB (documented in §0 audit)
-- [ ] 5.13 **Gate:** `getValueForFieldPath` for inline-string allocates exactly one String per call; no unexpected per-read allocations beyond that
+- [x] 5.1 Added `FieldLayout.InlineString(int offset, int maxLength)` as a new sealed subtype. Semantics: flag byte at `offset`, 2-byte LE length prefix at `offset+1..offset+2`, UTF-8 bytes at `offset+3..offset+3+length-1`. Total reservation `3 + maxLength`
+- [x] 5.2 FieldLayoutBuilder detects `ValueField`s whose decoder is `StringZeroTerminatedDecoder` or `StringLenDecoder` and emits `InlineString`. `char[N]` literals parsed from `FieldType.getElementCount()` (sizes observed in audit: 8, 18, 32, 33, 64, 128, 129, 161, 255, 256, 260, 512). Anything unbounded — `CUtlString`, `CUtlSymbolLarge`, `char[<named-const>]`, S1 `PropType.STRING` — falls back to `FieldLayoutBuilder.UNBOUNDED_STRING_MAX_LENGTH = 512`
+- [x] 5.3 `BitStream.readStringInto(byte[] data, int offset, int n)` added — zero-alloc direct read into target byte[], mirrors `readString`'s zero-terminator semantics. `StringLenDecoder.decodeIntoInline` and `StringZeroTerminatedDecoder.decodeIntoInline` added — 4-param signature `(bs, data, offset, maxLength)`. Named `decodeIntoInline` (not `decodeInto`) to bypass the standard codegen path: string decoders have no `primitiveType` and must never be routed via `DecoderDispatch.decodeInto`. No over-length assert in the decoder: StringLen's 9-bit wire cap (511) is always ≤ the 512 reservation, and StringZeroTerminated's `readStringInto(..., maxLength)` is naturally capped. Trust the data in the hot path
+- [x] 5.4 `FlatEntityState.decodeInto` routes `InlineString` leaves by `instanceof` check on the passed decoder (2 possibilities). Flag byte set before dispatch; returns `oldFlag == 0`
+- [x] 5.5 `FlatEntityState.write`/`writeValue` handles `InlineString`: encodes via `String.getBytes(UTF_8)`, writes 2-byte LE length + bytes inline. Over-length (programmatic write exceeding reserved span) throws `IllegalStateException` on the slow `write` path only
+- [x] 5.6 `FlatEntityState.getValueForFieldPath` reads length prefix, allocates `String(data, offset+3, len, UTF_8)` — one allocation per call
+- [x] 5.7 Refs slab audit for S2 FLAT:
+
+  > **Results (2026-04-16)**:
+  > - All `allocateRefSlot` / `freeRefSlot` / `releaseRefSlot` call sites in `FlatEntityState`: **4 live**, **2 vestigial**.
+  > - **Live (sub-Entry lifecycle only)**: `resizeVector` allocate, `switchPointer` release + allocate, `lazyCreateSubEntry` allocate. `releaseRefsInEntry` releases SubState slots recursively.
+  > - **Vestigial (unreachable for real S2 data post-CP-5)**: the `FieldLayout.Ref` branches in `writeValue` (allocate + free) and in `releaseRefsInEntry` (free). Retained because `S2DecoderFactory` could in principle produce a non-primitive non-string decoder for an unknown type — today the fallback path produces `IntVarUnsignedDecoder` (primitive), and every known type is primitive or string, so no Ref leaf is ever emitted in practice.
+  > - Tests `FlatEntityStateCowTest.copyThenStringWriteClonesRefsInCopyOnly` and `FlatEntityStateDecodeIntoTest.writeAfterCopyClonesRefsOnlyWhenRefTouched` were rewritten to assert the new "string write clones root only, not refs" invariant. `EntityStateTest` slab-release tests (`resizeVectorShrinkReleasesDroppedSubEntries`, `resizeVectorToZeroReleasesAllElementSubEntries`, `releaseOnCopyDoesNotAffectOriginal`) switched their vector element from an inner string to an inner pointer-to-leaf so each element still occupies a slab slot.
+
+- [x] 5.8 `FlatEntityStateInlineStringTest.inlineStringRoundtripViaWrite` + `inlineStringRoundtripViaDecodeInto` — both assert byte-level layout (flag/length-prefix/UTF-8) AND round-trip equality via `getValueForFieldPath`. Bonus: `inlineStringEmptyWriteReadsBackEmpty` (empty-string vs null distinguishable via flag byte) and `inlineStringWriteThenClear`
+- [x] 5.9 `FlatEntityStateInlineStringTest.writeExceedingMaxLengthThrows` — programmatic `write(fp, 513-byte-string)` on a 512-byte-reserved leaf throws `IllegalStateException`
+- [x] 5.10 `FlatEntityStateInlineStringTest.copyThenInlineStringWriteClonesRootOnly` — after `copy()`, a subsequent `write(fp, String)` clones the copy's root byte[] but NOT its refs slab; original's root and refs both unchanged
+- [x] 5.11 `InlineStringBench` (JMH) — parameterized on a 12-byte UTF-8 string. Two benchmarks: `decodeIntoThenRead` (zero-alloc decode + one String per read) vs `decodeAndWriteThenRead` (legacy `DecoderDispatch.decode` + `applyMutation(WriteValue)` still writes inline in the new layout, but pays the interned-String + `WriteValue` record + UTF-8 re-encode cost)
+- [x] 5.12 **Gate: byte[] memory footprint** — met by §0 audit (accepted ≤2 KB worst case: 4 × 514 = 2056 B for 4-unbounded-string game-mode serializers; median ~1.3 KB). No runtime check needed: `FieldLayoutBuilder` `totalBytes` accumulation is strictly bounded by `Σ (3 + maxLength)` over string leaves, which the audit already characterized
+- [x] 5.13 **Gate: `getValueForFieldPath` allocation** — PASS.
+
+  > **Results (2026-04-16)** via `InlineStringBench -prof gc -wi 2 -i 3 -f 1` on JDK 21:
+  > - `decodeIntoThenRead`: **6,537 ns/op**, **53,944 B/op** (≈ 32 KB per-invocation BitStream `stringTemp` + per-iter String allocation).
+  > - `decodeAndWriteThenRead`: **18,316 ns/op**, **80,570 B/op**.
+  > - Roundtrip **2.80× faster** with inline path; **26,626 B/invocation** less allocation (≈ 104 B/iter: interned-String + `WriteValue` record + UTF-8 encode scratch eliminated).
+  > - Per-read allocation on inline path is dominated by the expected `new String(data, off, len, UTF_8)` — one String + its backing char/byte array, no hidden per-read allocations beyond the single String construction.
 
 ## 6. Unified readFieldsFast + Entities snapshot/rollback (CP-6)
 

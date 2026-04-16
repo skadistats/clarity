@@ -269,7 +269,7 @@ public class FlatEntityStateDecodeIntoTest {
     }
 
     @Test
-    public void writeAfterCopyClonesRefsOnlyWhenRefTouched() {
+    public void writeAfterCopyClonesRootOnlyForInlineString() {
         var ser = serializer("S", named("s", stringField()));
         var st = makeFlat(ser);
         st.write(fp(0), "original");
@@ -281,9 +281,11 @@ public class FlatEntityStateDecodeIntoTest {
 
         cp.write(fp(0), "replaced");
 
-        assertNotSame(cp.refsArrayForTest(), stRefsBefore, "cp refs cloned after Ref write");
-        assertSame(st.refsArrayForTest(), stRefsBefore, "original refs unchanged");
-        assertNotSame(cp.rootDataForTest(), stRootBefore, "cp root cloned (flag byte set)");
+        assertSame(cp.refsArrayForTest(), stRefsBefore,
+            "inline-string write must NOT clone refs (string lives in root byte[])");
+        assertNotSame(cp.rootDataForTest(), stRootBefore,
+            "cp root cloned on inline-string write");
+        assertSame(st.rootDataForTest(), stRootBefore, "original root unchanged");
         assertEquals(read(st, fp(0)), "original");
         assertEquals(read(cp, fp(0)), "replaced");
     }
