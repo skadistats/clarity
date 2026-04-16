@@ -1,5 +1,9 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.DecoderDispatch;
+import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
@@ -101,9 +105,114 @@ public class FlatEntityState extends AbstractS2EntityState {
         } else if (mutation instanceof StateMutation.ResizeVector rv) {
             return resizeVector(current, layout, base, rv.count());
         } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            return switchPointer(current, layout, base, sp);
+            return switchPointer(current, layout, base, sp.newSerializer());
         }
         throw new IllegalStateException("unknown mutation: " + mutation);
+    }
+
+    public boolean decodeInto(FieldPath fpX, Decoder decoder, BitStream bs) {
+        var fp = fpX.s2();
+        Entry current = rootEntryWritable();
+        FieldLayout layout = current.rootLayout;
+        var base = 0;
+        var last = fp.last();
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            if (layout instanceof FieldLayout.Composite c) {
+                layout = c.children()[idx];
+            } else if (layout instanceof FieldLayout.Array a) {
+                base += a.baseOffset() + idx * a.stride();
+                layout = a.element();
+            } else if (layout instanceof FieldLayout.SubState s) {
+                var nextIdx = fp.get(i);
+                if (current.data[base + s.offset()] == 0) {
+                    lazyCreateSubEntry(current, base, s, nextIdx);
+                }
+                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                var sub = (Entry) refs[slot];
+                sub = makeWritable(sub, e -> refs[slot] = e);
+                if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
+                    growVectorIfNeeded(sub, v, nextIdx + 1);
+                }
+                current = sub;
+                layout = sub.rootLayout;
+                base = 0;
+                continue;
+            } else {
+                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+            }
+            if (i == last) break;
+            i++;
+        }
+
+        if (layout instanceof FieldLayout.Primitive p) {
+            var data = current.data;
+            var flagPos = base + p.offset();
+            var oldFlag = data[flagPos];
+            data[flagPos] = 1;
+            DecoderDispatch.decodeInto(bs, decoder, data, flagPos + 1);
+            return oldFlag == 0;
+        }
+        if (layout instanceof FieldLayout.Ref) {
+            return writeValue(current, layout, base, DecoderDispatch.decode(bs, decoder));
+        }
+        if (layout instanceof FieldLayout.SubState) {
+            throw new IllegalStateException("decodeInto called on SubState leaf: " + layout);
+        }
+        throw new IllegalStateException("decodeInto on unknown leaf layout: " + layout);
+    }
+
+    public boolean write(FieldPath fpX, Object decoded) {
+        var fp = fpX.s2();
+        Entry current = rootEntryWritable();
+        FieldLayout layout = current.rootLayout;
+        var base = 0;
+        var last = fp.last();
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            if (layout instanceof FieldLayout.Composite c) {
+                layout = c.children()[idx];
+            } else if (layout instanceof FieldLayout.Array a) {
+                base += a.baseOffset() + idx * a.stride();
+                layout = a.element();
+            } else if (layout instanceof FieldLayout.SubState s) {
+                var nextIdx = fp.get(i);
+                if (current.data[base + s.offset()] == 0) {
+                    lazyCreateSubEntry(current, base, s, nextIdx);
+                }
+                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                var sub = (Entry) refs[slot];
+                sub = makeWritable(sub, e -> refs[slot] = e);
+                if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
+                    growVectorIfNeeded(sub, v, nextIdx + 1);
+                }
+                current = sub;
+                layout = sub.rootLayout;
+                base = 0;
+                continue;
+            } else {
+                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+            }
+            if (i == last) break;
+            i++;
+        }
+
+        if (layout instanceof FieldLayout.Primitive || layout instanceof FieldLayout.Ref) {
+            return writeValue(current, layout, base, decoded);
+        }
+        if (layout instanceof FieldLayout.SubState s) {
+            if (s.kind() instanceof FieldLayout.SubStateKind.Pointer) {
+                return switchPointer(current, layout, base, (Serializer) decoded);
+            }
+            if (s.kind() instanceof FieldLayout.SubStateKind.Vector) {
+                return resizeVector(current, layout, base, (Integer) decoded);
+            }
+        }
+        throw new IllegalStateException("write on unknown leaf layout: " + layout);
     }
 
     private boolean writeValue(Entry target, FieldLayout layout, int base, Object value) {
@@ -183,11 +292,10 @@ public class FlatEntityState extends AbstractS2EntityState {
         return droppedOccupied;
     }
 
-    private boolean switchPointer(Entry current, FieldLayout layout, int base, StateMutation.SwitchPointer sp) {
+    private boolean switchPointer(Entry current, FieldLayout layout, int base, Serializer newSerializer) {
         if (!(layout instanceof FieldLayout.SubState s) || !(s.kind() instanceof FieldLayout.SubStateKind.Pointer p)) {
             throw new IllegalStateException("SwitchPointer on non-pointer substate: " + layout);
         }
-        var newSerializer = sp.newSerializer();
         var currentSerializer = pointerSerializers[p.pointerId()];
         if (currentSerializer == newSerializer) return false;
         var flagPos = base + s.offset();
@@ -247,7 +355,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         return false;
     }
 
-    private static int lookupLayoutIndex(FieldLayout.SubStateKind.Pointer p, skadistats.clarity.io.s2.Serializer newSerializer) {
+    private static int lookupLayoutIndex(FieldLayout.SubStateKind.Pointer p, Serializer newSerializer) {
         var serializers = p.serializers();
         for (var i = 0; i < serializers.length; i++) {
             if (serializers[i] == newSerializer) return i;
@@ -476,7 +584,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         return refs;
     }
 
-    skadistats.clarity.io.s2.Serializer[] pointerSerializersForTest() {
+    Serializer[] pointerSerializersForTest() {
         return pointerSerializers;
     }
 
