@@ -16,6 +16,10 @@ public final class IntUnsignedDecoder extends Decoder {
         return bs.readUBitInt(d.nBits);
     }
 
+    public static void decodeInto(BitStream bs, IntUnsignedDecoder d, byte[] data, int offset) {
+        PrimitiveType.INT_VH.set(data, offset, bs.readUBitInt(d.nBits));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

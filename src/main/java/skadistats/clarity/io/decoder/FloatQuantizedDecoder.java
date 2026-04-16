@@ -178,6 +178,14 @@ public final class FloatQuantizedDecoder extends Decoder {
     }
 
     public static Float decode(BitStream bs, FloatQuantizedDecoder d) {
+        return decodeFloat(bs, d);
+    }
+
+    public static void decodeInto(BitStream bs, FloatQuantizedDecoder d, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset, decodeFloat(bs, d));
+    }
+
+    private static float decodeFloat(BitStream bs, FloatQuantizedDecoder d) {
         if ((d.encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) {
             return d.minValue;
         }

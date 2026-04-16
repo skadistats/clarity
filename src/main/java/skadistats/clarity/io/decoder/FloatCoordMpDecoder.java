@@ -18,6 +18,10 @@ public final class FloatCoordMpDecoder extends Decoder {
         return bs.readCoordMp(bs, d.integral, d.lowPrecision);
     }
 
+    public static void decodeInto(BitStream bs, FloatCoordMpDecoder d, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset, bs.readCoordMp(bs, d.integral, d.lowPrecision));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

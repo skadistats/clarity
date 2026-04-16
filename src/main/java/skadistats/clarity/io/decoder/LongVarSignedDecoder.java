@@ -10,6 +10,10 @@ public final class LongVarSignedDecoder extends Decoder {
         return bs.readVarSLong();
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.LONG_VH.set(data, offset, bs.readVarSLong());
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.LONG;

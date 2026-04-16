@@ -10,6 +10,10 @@ public final class IntVarSignedDecoder extends Decoder {
         return bs.readVarSInt();
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.INT_VH.set(data, offset, bs.readVarSInt());
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

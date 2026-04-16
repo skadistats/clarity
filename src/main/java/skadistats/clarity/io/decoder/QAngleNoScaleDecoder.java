@@ -15,6 +15,12 @@ public final class QAngleNoScaleDecoder extends Decoder {
         return new Vector(v);
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset,     Float.intBitsToFloat(bs.readUBitInt(32)));
+        PrimitiveType.FLOAT_VH.set(data, offset + 4, Float.intBitsToFloat(bs.readUBitInt(32)));
+        PrimitiveType.FLOAT_VH.set(data, offset + 8, Float.intBitsToFloat(bs.readUBitInt(32)));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

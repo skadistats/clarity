@@ -20,6 +20,11 @@ public final class VectorXYDecoder extends Decoder {
         );
     }
 
+    public static void decodeInto(BitStream bs, VectorXYDecoder d, byte[] data, int offset) {
+        DecoderDispatch.decodeInto(bs, d.floatDecoder, data, offset);
+        DecoderDispatch.decodeInto(bs, d.floatDecoder, data, offset + 4);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 2);

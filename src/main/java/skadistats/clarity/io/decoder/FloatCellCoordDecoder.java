@@ -20,6 +20,10 @@ public final class FloatCellCoordDecoder extends Decoder {
         return bs.readCellCoord(d.nBits, d.integral, d.lowPrecision);
     }
 
+    public static void decodeInto(BitStream bs, FloatCellCoordDecoder d, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset, bs.readCellCoord(d.nBits, d.integral, d.lowPrecision));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

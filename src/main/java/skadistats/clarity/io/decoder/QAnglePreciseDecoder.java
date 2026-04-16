@@ -18,6 +18,15 @@ public final class QAnglePreciseDecoder extends Decoder {
         return new Vector(v);
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        var hasX = bs.readBitFlag();
+        var hasY = bs.readBitFlag();
+        var hasZ = bs.readBitFlag();
+        PrimitiveType.FLOAT_VH.set(data, offset,     hasX ? bs.readBitAngle(20) : 0f);
+        PrimitiveType.FLOAT_VH.set(data, offset + 4, hasY ? bs.readBitAngle(20) : 0f);
+        PrimitiveType.FLOAT_VH.set(data, offset + 8, hasZ ? bs.readBitAngle(20) : 0f);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

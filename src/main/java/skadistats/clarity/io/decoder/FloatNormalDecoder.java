@@ -10,6 +10,10 @@ public final class FloatNormalDecoder extends Decoder {
         return bs.readBitNormal();
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset, bs.readBitNormal());
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

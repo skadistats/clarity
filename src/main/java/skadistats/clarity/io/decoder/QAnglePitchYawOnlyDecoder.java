@@ -25,6 +25,18 @@ public final class QAnglePitchYawOnlyDecoder extends Decoder {
         return new Vector(v);
     }
 
+    public static void decodeInto(BitStream bs, QAnglePitchYawOnlyDecoder d, byte[] data, int offset) {
+        if ((d.nBits | 0x20) == 0x20) {
+            PrimitiveType.FLOAT_VH.set(data, offset,     Float.intBitsToFloat(bs.readUBitInt(32)));
+            PrimitiveType.FLOAT_VH.set(data, offset + 4, Float.intBitsToFloat(bs.readUBitInt(32)));
+        } else {
+            PrimitiveType.FLOAT_VH.set(data, offset,     bs.readBitAngle(d.nBits));
+            PrimitiveType.FLOAT_VH.set(data, offset + 4, bs.readBitAngle(d.nBits));
+        }
+        // Pitch/yaw only — third component matches decode()'s default of 0f.
+        PrimitiveType.FLOAT_VH.set(data, offset + 8, 0f);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

@@ -10,6 +10,10 @@ public final class BoolDecoder extends Decoder {
         return bs.readBitFlag();
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        data[offset] = bs.readBitFlag() ? (byte) 1 : (byte) 0;
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.BOOL;

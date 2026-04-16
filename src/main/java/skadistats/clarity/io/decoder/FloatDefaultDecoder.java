@@ -23,6 +23,11 @@ public final class FloatDefaultDecoder extends Decoder {
         return d.minValue + (d.maxValue - d.minValue) * v;
     }
 
+    public static void decodeInto(BitStream bs, FloatDefaultDecoder d, byte[] data, int offset) {
+        var v = bs.readUBitInt(d.bitCount) * d.decodeMultiplier;
+        PrimitiveType.FLOAT_VH.set(data, offset, d.minValue + (d.maxValue - d.minValue) * v);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

@@ -69,16 +69,16 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 
 ## 3. Decoder.decodeInto static dispatch (CP-3)
 
-- [ ] 3.1 Add `decodeInto` to int primitive decoders: IntSignedDecoder, IntUnsignedDecoder, IntMinusOneDecoder, IntVarSignedDecoder, IntVarUnsignedDecoder
-- [ ] 3.2 Add `decodeInto` to long primitive decoders: LongSignedDecoder, LongUnsignedDecoder, LongVarSignedDecoder, LongVarUnsignedDecoder
-- [ ] 3.3 Add `decodeInto` to float primitive decoders: FloatNoScaleDecoder, FloatCoordDecoder, FloatCoordMpDecoder, FloatCellCoordDecoder, FloatNormalDecoder, FloatQuantizedDecoder, FloatDefaultDecoder
-- [ ] 3.4 Add `decodeInto` to BoolDecoder
-- [ ] 3.5 Add `decodeInto` to compound primitive decoders: VectorDefaultDecoder, VectorDecoder, VectorXYDecoder, VectorNormalDecoder, QAngle* decoders — compose inner element `decodeInto` at `offset + i * stride`. (`ArrayDecoder` deferred — see audit 0.6.)
-- [ ] 3.6 Extend `decoder-codegen` to generate `DecoderDispatch.decodeInto(BitStream, Decoder, byte[], int)` — only primitive decoders get cases; default throws
-- [ ] 3.7 Unit test: for each primitive decoder, `decodeInto` byte-for-byte matches `PrimitiveType.write(..., decode(bs))`
-- [ ] 3.8 Add `DecodeIntoBench` micro — per-decoder comparison
-- [ ] 3.9 Update `decoder-codegen` spec delta if needed
-- [ ] 3.10 **Gate: `DecodeIntoBench`** — zero allocations under `-prof gc`; ns/op ≥ existing path
+- [x] 3.1 Add `decodeInto` to int primitive decoders: IntSignedDecoder, IntUnsignedDecoder, IntMinusOneDecoder, IntVarSignedDecoder, IntVarUnsignedDecoder
+- [x] 3.2 Add `decodeInto` to long primitive decoders: LongSignedDecoder, LongUnsignedDecoder, LongVarSignedDecoder, LongVarUnsignedDecoder
+- [x] 3.3 Add `decodeInto` to float primitive decoders: FloatNoScaleDecoder, FloatCoordDecoder, FloatCoordMpDecoder, FloatCellCoordDecoder, FloatNormalDecoder, FloatQuantizedDecoder, FloatDefaultDecoder. `FloatQuantizedDecoder` refactored to share logic via package-private `decodeFloat(bs, d)` helper (avoids duplicating the branch cascade)
+- [x] 3.4 Add `decodeInto` to BoolDecoder
+- [x] 3.5 Add `decodeInto` to compound primitive decoders: VectorDefaultDecoder, VectorDecoder, VectorXYDecoder, VectorNormalDecoder, QAngle* decoders. Compound decoders compose inner `DecoderDispatch.decodeInto` at `offset + i * 4` for primitive-inner cases; `VectorNormalDecoder` inlines the `read3BitNormal` logic to avoid the `float[3]` allocation; QAngle decoders explicitly zero skipped components to match `PrimitiveType.VectorType.write(new Vector(v))` byte layout. (`ArrayDecoder` deferred — see audit 0.6.)
+- [x] 3.6 Extended `DecoderAnnotationProcessor` to detect an optional `decodeInto` static method (3 or 4 params, validated shape) and generate `DecoderDispatch.decodeInto(BitStream, Decoder, byte[], int)` switch. Default throws `IllegalArgumentException("Decoder id <id> has no decodeInto")`
+- [x] 3.7 Parity test `DecoderDecodeIntoParityTest` — 27 cases covering all primitive decoders. Each asserts byte-for-byte equality AND identical bit consumption between `decodeInto` and `decode+PrimitiveType.write` on parallel bitstreams seeded with the same random bytes
+- [x] 3.8 Added `DecodeIntoBench` (JMH). Parameterized across INT_SIGNED, LONG_SIGNED, FLOAT_DEFAULT, VECTOR. Two benchmarks: `decodeInto` (direct byte[] write) vs `decodeThenWrite` (boxing path). `-prof gc` run reveals allocation delta
+- [x] 3.9 Added `specs/decoder-codegen/spec.md` delta — ADDED Requirements for `DecoderDispatch.decodeInto`, validation rules on decodeInto methods, coverage list of primitive decoders, parity invariant
+- [ ] 3.10 **Gate: `DecodeIntoBench`** — zero allocations under `-prof gc`; ns/op ≥ existing path. Pending user run (same procedure as 1.14/1.15)
 
 ## 4. FlatEntityState.decodeInto and write (CP-4)
 

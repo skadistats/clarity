@@ -16,6 +16,10 @@ public final class LongSignedDecoder extends Decoder {
         return bs.readSBitLong(d.nBits);
     }
 
+    public static void decodeInto(BitStream bs, LongSignedDecoder d, byte[] data, int offset) {
+        PrimitiveType.LONG_VH.set(data, offset, bs.readSBitLong(d.nBits));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.LONG;

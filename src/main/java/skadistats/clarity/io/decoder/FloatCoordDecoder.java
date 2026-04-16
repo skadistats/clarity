@@ -10,6 +10,10 @@ public final class FloatCoordDecoder extends Decoder {
         return bs.readBitCoord();
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.FLOAT_VH.set(data, offset, bs.readBitCoord());
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

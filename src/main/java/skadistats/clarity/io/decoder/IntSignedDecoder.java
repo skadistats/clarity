@@ -16,6 +16,10 @@ public final class IntSignedDecoder extends Decoder {
         return bs.readSBitInt(d.nBits);
     }
 
+    public static void decodeInto(BitStream bs, IntSignedDecoder d, byte[] data, int offset) {
+        PrimitiveType.INT_VH.set(data, offset, bs.readSBitInt(d.nBits));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

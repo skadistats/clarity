@@ -23,6 +23,12 @@ public final class VectorDefaultDecoder extends Decoder {
         return new Vector(result);
     }
 
+    public static void decodeInto(BitStream bs, VectorDefaultDecoder d, byte[] data, int offset) {
+        for (var i = 0; i < d.dim; i++) {
+            DecoderDispatch.decodeInto(bs, d.floatDecoder, data, offset + i * 4);
+        }
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, dim);

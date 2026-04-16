@@ -10,6 +10,10 @@ public final class IntMinusOneDecoder extends Decoder {
         return bs.readVarUInt() - 1;
     }
 
+    public static void decodeInto(BitStream bs, byte[] data, int offset) {
+        PrimitiveType.INT_VH.set(data, offset, bs.readVarUInt() - 1);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

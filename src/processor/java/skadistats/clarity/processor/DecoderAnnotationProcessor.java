@@ -79,7 +79,10 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 }
 
                 var stateful = decodeMethod.getParameters().size() == 2;
-                decoders.add(new DecoderInfo(typeElement, stateful));
+                var decodeIntoMethod = findDecodeIntoMethod(typeElement);
+                var hasDecodeInto = decodeIntoMethod != null
+                        && validateDecodeIntoMethod(typeElement, decodeIntoMethod);
+                decoders.add(new DecoderInfo(typeElement, stateful, hasDecodeInto));
             }
 
             if (hasErrors) return false;
@@ -150,6 +153,92 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
         }
 
         return decodeMethods.get(0);
+    }
+
+    private ExecutableElement findDecodeIntoMethod(TypeElement typeElement) {
+        var candidates = typeElement.getEnclosedElements().stream()
+                .filter(e -> e instanceof ExecutableElement)
+                .map(e -> (ExecutableElement) e)
+                .filter(e -> e.getSimpleName().contentEquals("decodeInto"))
+                .filter(e -> e.getModifiers().containsAll(Set.of(Modifier.PUBLIC, Modifier.STATIC)))
+                .toList();
+        if (candidates.isEmpty()) return null;
+        if (candidates.size() > 1) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "@RegisterDecoder class must have at most one public static decodeInto method, found " + candidates.size(),
+                    typeElement
+            );
+            return null;
+        }
+        return candidates.get(0);
+    }
+
+    private boolean validateDecodeIntoMethod(TypeElement typeElement, ExecutableElement decodeIntoMethod) {
+        var params = decodeIntoMethod.getParameters();
+        var types = processingEnv.getTypeUtils();
+        var elements = processingEnv.getElementUtils();
+
+        // Expected signatures:
+        //   stateless:  decodeInto(BitStream, byte[], int)
+        //   stateful:   decodeInto(BitStream, <Self>, byte[], int)
+        if (params.size() != 3 && params.size() != 4) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "decodeInto must have 3 (stateless) or 4 (stateful) parameters, found " + params.size(),
+                    decodeIntoMethod
+            );
+            return false;
+        }
+
+        var bitstreamType = elements.getTypeElement(BITSTREAM);
+        if (bitstreamType != null) {
+            var firstParamType = params.get(0).asType();
+            if (!types.isSameType(types.erasure(firstParamType), types.erasure(bitstreamType.asType()))) {
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "decodeInto first parameter must be BitStream",
+                        decodeIntoMethod
+                );
+                return false;
+            }
+        }
+
+        // Last two params: byte[], int
+        var dataParam = params.get(params.size() - 2).asType();
+        var dataParamStr = dataParam.toString();
+        if (!"byte[]".equals(dataParamStr)) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "decodeInto penultimate parameter must be byte[] (found " + dataParamStr + ")",
+                    decodeIntoMethod
+            );
+            return false;
+        }
+        var offsetParam = params.get(params.size() - 1).asType();
+        if (!"int".equals(offsetParam.toString())) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "decodeInto last parameter must be int",
+                    decodeIntoMethod
+            );
+            return false;
+        }
+
+        // If 4 params, second must match declaring class
+        if (params.size() == 4) {
+            var secondParamType = params.get(1).asType();
+            if (!types.isSameType(types.erasure(secondParamType), types.erasure(typeElement.asType()))) {
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "decodeInto second parameter must be " + typeElement.getSimpleName() + " (found " + secondParamType + ")",
+                        decodeIntoMethod
+                );
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private boolean validateDecodeMethod(TypeElement typeElement, ExecutableElement decodeMethod) {
@@ -232,22 +321,22 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
     }
 
     private void generateDecoderDispatch(List<DecoderInfo> decoders) throws IOException {
-        var switchCode = new StringBuilder();
-        switchCode.append("return switch (d.id) {\n");
+        var decodeSwitch = new StringBuilder();
+        decodeSwitch.append("return switch (d.id) {\n");
 
         for (var info : decoders) {
             var constantName = toUpperSnake(info.type.getSimpleName().toString());
             var decoderClassName = ClassName.get(info.type);
 
             if (info.stateful) {
-                switchCode.append(String.format(
+                decodeSwitch.append(String.format(
                         "    case DecoderIds.%s -> %s.%s.decode(bs, (%s.%s) d);\n",
                         constantName,
                         decoderClassName.packageName(), decoderClassName.simpleName(),
                         decoderClassName.packageName(), decoderClassName.simpleName()
                 ));
             } else {
-                switchCode.append(String.format(
+                decodeSwitch.append(String.format(
                         "    case DecoderIds.%s -> %s.%s.decode(bs);\n",
                         constantName,
                         decoderClassName.packageName(), decoderClassName.simpleName()
@@ -255,20 +344,54 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
             }
         }
 
-        switchCode.append("    default -> throw new IllegalArgumentException(\"Unknown decoder id: \" + d.id);\n");
-        switchCode.append("};\n");
+        decodeSwitch.append("    default -> throw new IllegalArgumentException(\"Unknown decoder id: \" + d.id);\n");
+        decodeSwitch.append("};\n");
 
-        var dispatchMethod = MethodSpec.methodBuilder("decode")
+        var decodeMethod = MethodSpec.methodBuilder("decode")
                 .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
                 .returns(Object.class)
                 .addParameter(BITSTREAM_CLASS, "bs")
                 .addParameter(DECODER_CLASS, "d")
-                .addCode(switchCode.toString())
+                .addCode(decodeSwitch.toString())
+                .build();
+
+        var decodeIntoSwitch = new StringBuilder();
+        decodeIntoSwitch.append("switch (d.id) {\n");
+        for (var info : decoders) {
+            if (!info.hasDecodeInto) continue;
+            var constantName = toUpperSnake(info.type.getSimpleName().toString());
+            var decoderClassName = ClassName.get(info.type);
+            if (info.stateful) {
+                decodeIntoSwitch.append(String.format(
+                        "    case DecoderIds.%s -> %s.%s.decodeInto(bs, (%s.%s) d, data, offset);\n",
+                        constantName,
+                        decoderClassName.packageName(), decoderClassName.simpleName(),
+                        decoderClassName.packageName(), decoderClassName.simpleName()
+                ));
+            } else {
+                decodeIntoSwitch.append(String.format(
+                        "    case DecoderIds.%s -> %s.%s.decodeInto(bs, data, offset);\n",
+                        constantName,
+                        decoderClassName.packageName(), decoderClassName.simpleName()
+                ));
+            }
+        }
+        decodeIntoSwitch.append("    default -> throw new IllegalArgumentException(\"Decoder id \" + d.id + \" has no decodeInto\");\n");
+        decodeIntoSwitch.append("}\n");
+
+        var decodeIntoMethod = MethodSpec.methodBuilder("decodeInto")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(BITSTREAM_CLASS, "bs")
+                .addParameter(DECODER_CLASS, "d")
+                .addParameter(byte[].class, "data")
+                .addParameter(int.class, "offset")
+                .addCode(decodeIntoSwitch.toString())
                 .build();
 
         var classBuilder = TypeSpec.classBuilder("DecoderDispatch")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
-                .addMethod(dispatchMethod);
+                .addMethod(decodeMethod)
+                .addMethod(decodeIntoMethod);
 
         JavaFile.builder(PACKAGE, classBuilder.build())
                 .skipJavaLangImports(true)
@@ -289,5 +412,5 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
         return UPPER_SNAKE.matcher(name).replaceAll("$1_$2").toUpperCase();
     }
 
-    private record DecoderInfo(TypeElement type, boolean stateful) {}
+    private record DecoderInfo(TypeElement type, boolean stateful, boolean hasDecodeInto) {}
 }
