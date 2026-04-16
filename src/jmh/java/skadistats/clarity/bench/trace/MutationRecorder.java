@@ -1,7 +1,6 @@
 package skadistats.clarity.bench.trace;
 
 import skadistats.clarity.io.MutationListener;
-import skadistats.clarity.io.s2.S2DTClass;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
@@ -37,9 +36,8 @@ public class MutationRecorder implements MutationListener {
         closeOpenBirth();
         var id = nextStateId++;
         stateIds.put(newState, id);
-        var field = ((S2DTClass) cls).getField();
         openBirthIdx = births.size();
-        births.add(new BirthRecipe(id, BirthKind.EMPTY, field, -1, null));
+        births.add(new BirthRecipe(id, BirthKind.EMPTY, cls, -1, null));
     }
 
     @Override
@@ -79,7 +77,7 @@ public class MutationRecorder implements MutationListener {
         var setup = openSetup.isEmpty()
                 ? BirthRecipe.NO_SETUP
                 : openSetup.toArray(new Mutation[0]);
-        births.set(openBirthIdx, new BirthRecipe(b.stateId(), b.kind(), b.field(), b.srcStateId(), setup));
+        births.set(openBirthIdx, new BirthRecipe(b.stateId(), b.kind(), b.cls(), b.srcStateId(), setup));
         openSetup.clear();
         openBirthIdx = -1;
     }

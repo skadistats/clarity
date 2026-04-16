@@ -1,7 +1,10 @@
 package skadistats.clarity.bench.trace;
 
+import skadistats.clarity.io.s1.S1DTClass;
+import skadistats.clarity.io.s2.S2DTClass;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.FieldLayoutBuilder;
+import skadistats.clarity.model.state.S1EntityStateType;
 import skadistats.clarity.model.state.S2EntityStateType;
 
 /**
@@ -16,6 +19,14 @@ public final class BirthMaterializer {
     }
 
     public static EntityState[] materialize(CapturedTrace trace, S2EntityStateType impl) {
+        return materialize(trace, S1EntityStateType.FLAT, impl);
+    }
+
+    public static EntityState[] materialize(CapturedTrace trace, S1EntityStateType s1Impl) {
+        return materialize(trace, s1Impl, S2EntityStateType.FLAT);
+    }
+
+    public static EntityState[] materialize(CapturedTrace trace, S1EntityStateType s1Impl, S2EntityStateType s2Impl) {
         var births = trace.births();
         var states = new EntityState[births.size()];
         var layoutBuilder = new FieldLayoutBuilder();
@@ -23,7 +34,16 @@ public final class BirthMaterializer {
 
         for (var b : births) {
             var state = switch (b.kind()) {
-                case EMPTY -> impl.createState(b.field(), pointerCount, layoutBuilder);
+                case EMPTY -> {
+                    var cls = b.cls();
+                    if (cls instanceof S1DTClass s1c) {
+                        yield s1Impl.createState(s1c);
+                    } else if (cls instanceof S2DTClass s2c) {
+                        yield s2Impl.createState(s2c.getField(), pointerCount, layoutBuilder);
+                    } else {
+                        throw new IllegalStateException("unknown DTClass type: " + cls.getClass());
+                    }
+                }
                 case COPY_OF -> states[b.srcStateId()].copy();
             };
             states[b.stateId()] = state;

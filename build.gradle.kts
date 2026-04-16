@@ -153,6 +153,89 @@ tasks.register<JavaExec>("smokeTraceRun") {
     }
 }
 
+tasks.register<JavaExec>("s1SmokeRun") {
+    description = "Run S1SmokeMain to parse one or more S1 replays end-to-end. Pass -Preplays=\"a.dem b.dem\"."
+    group = "benchmark"
+    classpath = sourceSets["jmh"].runtimeClasspath
+    mainClass.set("skadistats.clarity.bench.S1SmokeMain")
+    jvmArgs = listOf("-Xmx4g")
+    workingDir = rootDir
+    standardOutput = System.out
+    errorOutput = System.err
+    outputs.upToDateWhen { false }
+    doFirst {
+        val replays = project.findProperty("replays") as? String
+            ?: throw GradleException("pass -Preplays=\"<path1> <path2> ...\"")
+        args = replays.split(" ").filter { it.isNotBlank() }
+    }
+}
+
+tasks.register<JavaExec>("s1SmokeTraceRun") {
+    description = "Run S1SmokeTraceMain — capture trace from S1 replay then materialize+replay per impl."
+    group = "benchmark"
+    classpath = sourceSets["jmh"].runtimeClasspath
+    mainClass.set("skadistats.clarity.bench.S1SmokeTraceMain")
+    jvmArgs = listOf("-Xmx4g")
+    workingDir = rootDir
+    standardOutput = System.out
+    errorOutput = System.err
+    outputs.upToDateWhen { false }
+    doFirst {
+        val replay = project.findProperty("replay") as? String
+            ?: throw GradleException("pass -Preplay=<path>")
+        args = listOf(replay)
+    }
+}
+
+tasks.register("s1Bench") {
+    description = "Run S1EntityStateParseBench (OBJECT_ARRAY vs FLAT) on the chosen S1 replays. Pass -PbenchArgs=\"...\"."
+    group = "benchmark"
+    dependsOn("jmhCompileGeneratedClasses")
+    doLast {
+        val cp = (files(
+            "build/jmh-generated-classes",
+            "build/jmh-generated-resources",
+        ) + sourceSets["jmh"].runtimeClasspath).asPath
+        val javaHome = System.getProperty("java.home")
+        val userArgs = (project.findProperty("benchArgs") as? String)
+            ?.split(" ")?.filter { it.isNotBlank() } ?: emptyList()
+        val cmd = listOf(
+            "$javaHome/bin/java",
+            "-Xmx4g",
+            "-cp", cp,
+            "skadistats.clarity.bench.S1Main",
+        ) + userArgs
+        val pb = ProcessBuilder(cmd)
+        pb.directory(rootDir)
+        pb.inheritIO()
+        val exit = pb.start().waitFor()
+        if (exit != 0) throw GradleException("s1Bench exited with $exit")
+    }
+}
+
+tasks.register<JavaExec>("s1ParityCapture") {
+    description = "Capture entity create/update/delete event stream for parity diffing. Pass -Preplay=<path> -Pout=<file> [-Ptype=OBJECT_ARRAY|FLAT]."
+    group = "benchmark"
+    classpath = sourceSets["jmh"].runtimeClasspath
+    mainClass.set("skadistats.clarity.bench.S1ParityCaptureMain")
+    jvmArgs = listOf("-Xmx4g")
+    workingDir = rootDir
+    standardOutput = System.out
+    errorOutput = System.err
+    outputs.upToDateWhen { false }
+    doFirst {
+        val replay = project.findProperty("replay") as? String
+            ?: throw GradleException("pass -Preplay=<path>")
+        val out = project.findProperty("out") as? String
+            ?: throw GradleException("pass -Pout=<file>")
+        val type = project.findProperty("type") as? String ?: "OBJECT_ARRAY"
+        val materialize = project.findProperty("materialize") as? String
+        val a = mutableListOf(replay, out, type)
+        if (materialize == "true") a.add("--materialize")
+        args = a
+    }
+}
+
 tasks.register("traceBench") {
     description = "Run the mutation-trace benchmark harness. Pass args with -PbenchArgs=\"...\"."
     group = "benchmark"
