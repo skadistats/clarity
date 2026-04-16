@@ -78,7 +78,10 @@ Implementation order matches the checkpoints in `design.md`. Each section ends w
 - [x] 3.7 Parity test `DecoderDecodeIntoParityTest` — 27 cases covering all primitive decoders. Each asserts byte-for-byte equality AND identical bit consumption between `decodeInto` and `decode+PrimitiveType.write` on parallel bitstreams seeded with the same random bytes
 - [x] 3.8 Added `DecodeIntoBench` (JMH). Parameterized across INT_SIGNED, LONG_SIGNED, FLOAT_DEFAULT, VECTOR. Two benchmarks: `decodeInto` (direct byte[] write) vs `decodeThenWrite` (boxing path). `-prof gc` run reveals allocation delta
 - [x] 3.9 Added `specs/decoder-codegen/spec.md` delta — ADDED Requirements for `DecoderDispatch.decodeInto`, validation rules on decodeInto methods, coverage list of primitive decoders, parity invariant
-- [ ] 3.10 **Gate: `DecodeIntoBench`** — zero allocations under `-prof gc`; ns/op ≥ existing path. Pending user run (same procedure as 1.14/1.15)
+- [x] 3.10 **Gate: `DecodeIntoBench`** — PASS. With `BitStream` creation hoisted to `@Setup(Level.Invocation)`, the timed loop shows:
+  - `decodeInto` adds **0 bytes per decode** (baseline identical in both methods); `decodeThenWrite` adds 16 B (int/float box), 24 B (long box), or 96 B (vector object + float[3] + 3× Float box).
+  - Speedup: **1.24×–1.38× for scalars**, **1.68× for VECTOR**. Per-decode savings: ~0.6–0.9 ns scalar, ~4.6 ns vector.
+  - Run 2026-04-16 on Linux/JDK 21 with `-wi 3 -i 5 -f 1 -prof gc`.
 
 ## 4. FlatEntityState.decodeInto and write (CP-4)
 

@@ -49,6 +49,7 @@ public class DecodeIntoBench {
     private int bufSize;
 
     private byte[] dst;
+    private BitStream bs;
 
     private static final int ITERS = 256;
 
@@ -83,24 +84,27 @@ public class DecodeIntoBench {
         dst = new byte[bufSize];
     }
 
-    private BitStream fresh() {
-        return BitStream.createBitStream(ByteString.copyFrom(sourceBytes));
+    @Setup(Level.Invocation)
+    public void setupInvocation() {
+        // Fresh BitStream per invocation, hoisted out of the timed region so the
+        // bench measures only the decode loop's cost + allocation profile.
+        bs = BitStream.createBitStream(ByteString.copyFrom(sourceBytes));
     }
 
     @Benchmark
     public void decodeInto(Blackhole bh) {
-        var bs = fresh();
+        var s = bs;
         for (var i = 0; i < ITERS; i++) {
-            DecoderDispatch.decodeInto(bs, decoder, dst, 0);
+            DecoderDispatch.decodeInto(s, decoder, dst, 0);
             bh.consume(dst);
         }
     }
 
     @Benchmark
     public void decodeThenWrite(Blackhole bh) {
-        var bs = fresh();
+        var s = bs;
         for (var i = 0; i < ITERS; i++) {
-            var boxed = DecoderDispatch.decode(bs, decoder);
+            var boxed = DecoderDispatch.decode(s, decoder);
             primitiveType.write(dst, 0, boxed);
             bh.consume(dst);
         }
