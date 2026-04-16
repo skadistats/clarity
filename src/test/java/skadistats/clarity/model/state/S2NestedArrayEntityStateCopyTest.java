@@ -15,25 +15,25 @@ import static skadistats.clarity.model.state.TestFields.serializer;
 import static skadistats.clarity.model.state.TestFields.serializerField;
 import static skadistats.clarity.model.state.TestFields.vectorFieldOf;
 
-public class NestedArrayEntityStateCopyTest {
+public class S2NestedArrayEntityStateCopyTest {
 
-    private static NestedArrayEntityState make(Serializer root) {
-        return new NestedArrayEntityState(rootField(root), 1024);
+    private static S2NestedArrayEntityState make(Serializer root) {
+        return new S2NestedArrayEntityState(rootField(root), 1024);
     }
 
-    private static boolean write(NestedArrayEntityState s, FieldPath fp, Object v) {
+    private static boolean write(S2NestedArrayEntityState s, FieldPath fp, Object v) {
         return s.applyMutation(fp, new StateMutation.WriteValue(v));
     }
 
-    private static boolean resize(NestedArrayEntityState s, FieldPath fp, int count) {
+    private static boolean resize(S2NestedArrayEntityState s, FieldPath fp, int count) {
         return s.applyMutation(fp, new StateMutation.ResizeVector(count));
     }
 
-    private static boolean switchPtr(NestedArrayEntityState s, FieldPath fp, Serializer ser) {
+    private static boolean switchPtr(S2NestedArrayEntityState s, FieldPath fp, Serializer ser) {
         return s.applyMutation(fp, new StateMutation.SwitchPointer(ser));
     }
 
-    private static Object read(NestedArrayEntityState s, FieldPath fp) {
+    private static Object read(S2NestedArrayEntityState s, FieldPath fp) {
         return s.getValueForFieldPath(fp);
     }
 
@@ -44,7 +44,7 @@ public class NestedArrayEntityStateCopyTest {
         write(st, fp(0), 7);
         write(st, fp(1), 1.5f);
 
-        var cp = (NestedArrayEntityState) st.copy();
+        var cp = (S2NestedArrayEntityState) st.copy();
         write(cp, fp(0), 42);
         write(st, fp(1), 9.9f);
 
@@ -65,7 +65,7 @@ public class NestedArrayEntityStateCopyTest {
         write(st, fp(0, 1, 0), 20);
         write(st, fp(0, 2, 0), 30);
 
-        var cp = (NestedArrayEntityState) st.copy();
+        var cp = (S2NestedArrayEntityState) st.copy();
         write(cp, fp(0, 1, 0), 99);
 
         assertEquals(read(st, fp(0, 0, 0)), 10);
@@ -91,7 +91,7 @@ public class NestedArrayEntityStateCopyTest {
         write(initial, fp(1), 2);
 
         // The "snapshot + mutate" pattern
-        var snapshot = (NestedArrayEntityState) initial.copy();
+        var snapshot = (S2NestedArrayEntityState) initial.copy();
         write(initial, fp(2), 30);
         write(initial, fp(3), 40);
 
@@ -130,7 +130,7 @@ public class NestedArrayEntityStateCopyTest {
         // Shrink to 1 — frees slots for indices 1 and 2.
         resize(st, fp(0), 1);
 
-        var cp = (NestedArrayEntityState) st.copy();
+        var cp = (S2NestedArrayEntityState) st.copy();
 
         // Grow st and cp back to 3 — both should reuse the freed slots,
         // each into its own entries list.
@@ -162,7 +162,7 @@ public class NestedArrayEntityStateCopyTest {
         switchPtr(st, fp(0), serA);
         write(st, fp(0, 0), 42);
 
-        var cp = (NestedArrayEntityState) st.copy();
+        var cp = (S2NestedArrayEntityState) st.copy();
         switchPtr(cp, fp(0), serB);
 
         assertEquals(read(st, fp(0, 0)), 42);

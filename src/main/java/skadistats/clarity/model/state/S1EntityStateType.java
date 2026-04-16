@@ -7,7 +7,7 @@ public enum S1EntityStateType {
     OBJECT_ARRAY {
         @Override
         public EntityState createState(S1DTClass dtClass) {
-            return new ObjectArrayEntityState(dtClass.getReceiveProps().length);
+            return new S1ObjectArrayEntityState(dtClass.getReceiveProps().length);
         }
     },
 

@@ -9,22 +9,22 @@ import skadistats.clarity.util.SimpleIterator;
 
 import java.util.Iterator;
 
-public class ObjectArrayEntityState implements EntityState {
+public class S1ObjectArrayEntityState implements EntityState {
 
     private final Object[] state;
 
-    public ObjectArrayEntityState(int length) {
+    public S1ObjectArrayEntityState(int length) {
         state = new Object[length];
     }
 
-    private ObjectArrayEntityState(ObjectArrayEntityState other) {
+    private S1ObjectArrayEntityState(S1ObjectArrayEntityState other) {
         state = new Object[other.state.length];
         System.arraycopy(other.state, 0, state, 0, state.length);
     }
 
     @Override
     public EntityState copy() {
-        return new ObjectArrayEntityState(this);
+        return new S1ObjectArrayEntityState(this);
     }
 
     @Override

@@ -1,25 +1,14 @@
 package skadistats.clarity.bench;
 
 import com.google.protobuf.ByteString;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.decoder.FloatDefaultDecoder;
+import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.IntSignedDecoder;
 import skadistats.clarity.io.decoder.VectorDecoder;
-import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Serializer;
@@ -29,14 +18,14 @@ import skadistats.clarity.io.s2.field.ValueField;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.FieldLayoutBuilder;
-import skadistats.clarity.model.state.FlatEntityState;
+import skadistats.clarity.model.state.S2FlatEntityState;
 import skadistats.clarity.model.state.StateMutation;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * CP-4 micro: compares FlatEntityState primitive-leaf write via decodeInto (zero-box,
+ * CP-4 micro: compares S2FlatEntityState primitive-leaf write via decodeInto (zero-box,
  * zero-StateMutation-alloc) vs applyMutation(WriteValue(decode)) (boxing + record alloc).
  * Run with -prof gc to observe the allocation delta on the decodeInto path.
  */
@@ -56,7 +45,7 @@ public class FlatWriteBench {
 
     private byte[] sourceBytes;
     private Decoder decoder;
-    private FlatEntityState state;
+    private S2FlatEntityState state;
     private S2FieldPath fp;
     private BitStream bs;
 
@@ -78,7 +67,7 @@ public class FlatWriteBench {
             new String[]{"v"});
         var rf = new SerializerField(TYPE, root);
         var built = new FieldLayoutBuilder().buildSerializer(root);
-        state = new FlatEntityState(rf, 4, built.layout(), built.totalBytes());
+        state = new S2FlatEntityState(rf, 4, built.layout(), built.totalBytes());
 
         var mfp = S2ModifiableFieldPath.newInstance();
         mfp.set(0, 0);

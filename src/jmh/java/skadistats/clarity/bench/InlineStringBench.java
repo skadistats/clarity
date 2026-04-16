@@ -1,17 +1,7 @@
 package skadistats.clarity.bench;
 
 import com.google.protobuf.ByteString;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.decoder.StringLenDecoder;
@@ -24,11 +14,10 @@ import skadistats.clarity.io.s2.field.ValueField;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.state.FieldLayoutBuilder;
-import skadistats.clarity.model.state.FlatEntityState;
+import skadistats.clarity.model.state.S2FlatEntityState;
 import skadistats.clarity.model.state.StateMutation;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -60,7 +49,7 @@ public class InlineStringBench {
 
     private byte[] sourceBytes;
     private StringLenDecoder decoder;
-    private FlatEntityState state;
+    private S2FlatEntityState state;
     private S2FieldPath fp;
     private BitStream bs;
 
@@ -91,7 +80,7 @@ public class InlineStringBench {
             new String[]{"s"});
         var rf = new SerializerField(TYPE, root);
         var built = new FieldLayoutBuilder().buildSerializer(root);
-        state = new FlatEntityState(rf, 4, built.layout(), built.totalBytes());
+        state = new S2FlatEntityState(rf, 4, built.layout(), built.totalBytes());
 
         var mfp = S2ModifiableFieldPath.newInstance();
         mfp.set(0, 0);

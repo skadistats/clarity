@@ -1,10 +1,10 @@
 ## Purpose
 
-FlatEntityState with byte[]-backed Entry storage, FieldLayout-driven traversal, and global refs slab for sub-entries and value references. Dispatches on StateMutation at the leaf. `copy()` is an eager deep copy.
+S2FlatEntityState with byte[]-backed Entry storage, FieldLayout-driven traversal, and global refs slab for sub-entries and value references. Dispatches on StateMutation at the leaf. `copy()` is an eager deep copy.
 ## Requirements
 ### Requirement: PrimitiveType sealed interface encapsulates typed byte[] access
 
-The system SHALL provide a `PrimitiveType` sealed interface in the `skadistats.clarity.model.state` package with two implementations: `Scalar` (enum) for fixed-size scalar types, and `VectorType` (record) for multi-element types parameterized by element scalar and count. FlatEntityState SHALL delegate all type-specific read/write operations to PrimitiveType — it SHALL NOT contain type-specific logic itself.
+The system SHALL provide a `PrimitiveType` sealed interface in the `skadistats.clarity.model.state` package with two implementations: `Scalar` (enum) for fixed-size scalar types, and `VectorType` (record) for multi-element types parameterized by element scalar and count. S2FlatEntityState SHALL delegate all type-specific read/write operations to PrimitiveType — it SHALL NOT contain type-specific logic itself.
 
 The static VarHandle instances SHALL be created via `MethodHandles.byteArrayViewVarHandle` with `ByteOrder.LITTLE_ENDIAN`.
 
@@ -135,11 +135,11 @@ sealed interface FieldLayout {
 - **AND** the value is written/read at `offset + 1`
 - **WHEN** layout computation assigns a Ref slot
 - **THEN** the slot occupies `1 + 4` bytes (1 flag byte + int32 slot-index LE)
-- **AND** on first write the slot-index is dynamically allocated via `FlatEntityState.allocateRefSlot()` and stored at `offset + 1`
+- **AND** on first write the slot-index is dynamically allocated via `S2FlatEntityState.allocateRefSlot()` and stored at `offset + 1`
 - **AND** on read: `flag == 0 ? null : refs.get(INT_VH.get(data, offset + 1))`
 - **WHEN** layout computation assigns a SubState slot
 - **THEN** the slot occupies `1 + 4` bytes (same schema as Ref)
-- **AND** the slot holds an `Entry` instance in `FlatEntityState.refs`
+- **AND** the slot holds an `Entry` instance in `S2FlatEntityState.refs`
 - **WHEN** `applyMutation` writes a WriteValue to a Primitive at offset
 - **THEN** it sets `data[base + offset] = 1` (flag) and writes the value via `type.write(data, base + offset + 1, value)`
 - **WHEN** `getValueForFieldPath` reads from a Primitive where `data[base + offset] == 0`
@@ -156,7 +156,7 @@ sealed interface SubStateKind {
 }
 ```
 
-`SubStateKind.Pointer` carries the `pointerId` so that `FlatEntityState` can update `pointerSerializers[]` (inherited from `AbstractS2EntityState`) without accessing the Field hierarchy during mutation traversal. It also carries a parallel `Serializer[]` reference (same array as in `PointerField`) so that `lookupLayoutIndex(newSerializer)` can map a `StateMutation.SwitchPointer.newSerializer()` to the corresponding entry in `layouts[]` / `layoutBytes[]` via reference equality.
+`SubStateKind.Pointer` carries the `pointerId` so that `S2FlatEntityState` can update `pointerSerializers[]` (inherited from `S2AbstractEntityState`) without accessing the Field hierarchy during mutation traversal. It also carries a parallel `Serializer[]` reference (same array as in `PointerField`) so that `lookupLayoutIndex(newSerializer)` can map a `StateMutation.SwitchPointer.newSerializer()` to the corresponding entry in `layouts[]` / `layoutBytes[]` via reference equality.
 
 #### Scenario: VectorField produces SubState with Vector kind
 
@@ -174,16 +174,16 @@ sealed interface SubStateKind {
 - **AND** `layouts[]` contains the pre-computed FieldLayout for each possible child Serializer
 - **AND** `layoutBytes[]` contains the corresponding total byte size for each layout, used when allocating the sub-Entry's byte[]
 
-### Requirement: FlatEntityState extends AbstractS2EntityState with global refs and lean Entry
+### Requirement: S2FlatEntityState extends S2AbstractEntityState with global refs and lean Entry
 
-The system SHALL provide a `FlatEntityState` class extending `AbstractS2EntityState`. It SHALL own a global refs container (shared across all nesting levels) and a tree of `Entry` instances that each hold only a `byte[]`. This mirrors `NestedArrayEntityState`'s pattern of a global `List<Entry> entries` with a `Deque<Integer> freeEntries` free-list (NestedArrayEntityState.java:17-18, 142-164).
+The system SHALL provide a `S2FlatEntityState` class extending `S2AbstractEntityState`. It SHALL own a global refs container (shared across all nesting levels) and a tree of `Entry` instances that each hold only a `byte[]`. This mirrors `S2NestedArrayEntityState`'s pattern of a global `List<Entry> entries` with a `Deque<Integer> freeEntries` free-list.
 
-`FlatEntityState` inherits from `AbstractS2EntityState`:
+`S2FlatEntityState` inherits from `S2AbstractEntityState`:
 - `rootField` (SerializerField) — for field path name resolution and field navigation
 - `pointerSerializers[]` — global, flat pointer serializer tracking (shared across all nesting levels)
 - `getFieldForFieldPath()`, `getNameForFieldPath()`, `getFieldPathForName()`, `getTypeForFieldPath()` — operate on the Field hierarchy
 
-`FlatEntityState` additionally holds:
+`S2FlatEntityState` additionally holds:
 - `Object[] refs` + `int refsSize` — global container for **sub-Entry instances only** (Strings are stored inline in the composite byte[] via the inline-string leaf shape; the mixed Strings-and-sub-Entries design is removed). `refsSize` is the logical length; grow via `Arrays.copyOf` when `refsSize == refs.length`
 - `int[] freeSlots` + `int freeSlotsTop` — global free-list stack for refs recycling
 - `Entry rootEntry` — the root Entry containing the flat primitive storage (including inline-string bytes)
@@ -192,15 +192,15 @@ The inner `Entry` class is a pure byte[] container. It holds:
 - `FieldLayout rootLayout` — the layout tree for this Entry's scope
 - `byte[] data` — primitive value bytes and slot-indices for refs/sub-states
 
-Sub-states for VectorField and PointerField are `Entry` instances living in `FlatEntityState.refs` at dynamically-allocated slot indices. They have NO refs of their own — all String values and nested sub-Entries across all nesting levels live in the single `FlatEntityState.refs` container. They do NOT carry their own pointerSerializers — pointer tracking is global on the outer `FlatEntityState`.
+Sub-states for VectorField and PointerField are `Entry` instances living in `S2FlatEntityState.refs` at dynamically-allocated slot indices. They have NO refs of their own — all String values and nested sub-Entries across all nesting levels live in the single `S2FlatEntityState.refs` container. They do NOT carry their own pointerSerializers — pointer tracking is global on the outer `S2FlatEntityState`.
 
-There SHALL be no owner-pointer or modifiable-flag machinery on `FlatEntityState`, `Entry`, `refs`, `freeSlots`, or `pointerSerializers`. Every mutation path writes directly; `copy()` allocates an independent state graph up front (see `FlatEntityState.copy() is an eager deep copy`).
+There SHALL be no owner-pointer or modifiable-flag machinery on `S2FlatEntityState`, `Entry`, `refs`, `freeSlots`, or `pointerSerializers`. Every mutation path writes directly; `copy()` allocates an independent state graph up front (see `S2FlatEntityState.copy() is an eager deep copy`).
 
-#### Scenario: Sub-states are Entry instances in FlatEntityState.refs
+#### Scenario: Sub-states are Entry instances in S2FlatEntityState.refs
 
 - **WHEN** a VectorField or PointerField sub-state is created
 - **THEN** an `Entry` instance is created with its own `byte[] data` and `rootLayout`
-- **AND** a slot is allocated in `FlatEntityState.refs` via `allocateRefSlot()`
+- **AND** a slot is allocated in `S2FlatEntityState.refs` via `allocateRefSlot()`
 - **AND** the Entry is stored at that slot via `refs` write
 - **AND** the slot-index is stored in the parent Entry's `byte[]` at the SubState's offset+1
 - **AND** the SubState's flag byte (at offset) is set to 1
@@ -208,7 +208,7 @@ There SHALL be no owner-pointer or modifiable-flag machinery on `FlatEntityState
 #### Scenario: Dynamic ref slot allocation
 
 - **WHEN** a WriteValue on a Ref is applied and the flag byte was 0
-- **THEN** a slot is allocated from `FlatEntityState.refs` via `allocateRefSlot()` (reusing a free slot or appending)
+- **THEN** a slot is allocated from `S2FlatEntityState.refs` via `allocateRefSlot()` (reusing a free slot or appending)
 - **AND** the slot-index is written to `data[offset+1]` via `INT_VH.set`
 - **AND** the flag byte is set to 1
 - **AND** the refs slab stores the value at that slot
@@ -221,18 +221,18 @@ There SHALL be no owner-pointer or modifiable-flag machinery on `FlatEntityState
 - **WHEN** a WriteValue with `value == null` is applied to a Ref with flag=1
 - **THEN** the slot-index is read, `freeRefSlot(slot)` marks the slot reusable, and the flag is cleared
 
-### Requirement: FlatEntityState dispatches on StateMutation via applyMutation
+### Requirement: S2FlatEntityState dispatches on StateMutation via applyMutation
 
-`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `FlatEntityState.refs`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index. Descent through a SubState consumes no fp index.
+`applyMutation(FieldPath, StateMutation)` SHALL traverse the FieldLayout tree using a `base` accumulator, a `layout` cursor, and a `current` Entry reference. When a SubState is encountered mid-traversal, the loop SHALL read the slot-index from `current.data[base + s.offset + 1]`, look up the sub-Entry in `S2FlatEntityState.refs`, swap `current` to the sub-Entry, and `continue` to reprocess the current FieldPath index. Descent through a SubState consumes no fp index.
 
 The SubState branch MUST NOT include its own `if (i == last) break` check. SubState-as-leaf operations (`SwitchPointer`, `ResizeVector`, or any other op targeting the SubState position itself) reach the dispatch via the Composite/Array branch advancing `layout = SubState` on the last idx and the loop's terminal break. Adding a break inside the SubState branch would prevent the final descent for transitional `WriteValue` operations whose leaf lives inside the sub-Entry.
 
-**Lazy sub-Entry creation:** When the flag byte at `base + s.offset` is 0 mid-traversal, `applyMutation` SHALL lazy-create the sub-Entry to mirror `NestedArrayEntityState`'s implicit creation:
+**Lazy sub-Entry creation:** When the flag byte at `base + s.offset` is 0 mid-traversal, `applyMutation` SHALL lazy-create the sub-Entry to mirror `S2NestedArrayEntityState`'s implicit creation:
 - **Pointer with `serializers.length == 1`**: create sub-Entry with `layouts[0]` / `layoutBytes[0]`, allocate slot, set flag, set `pointerSerializers[pointerId] = serializers[0]`.
 - **Pointer with `serializers.length > 1`**: throw — the protocol must emit `SwitchPointer` before any inner write.
 - **Vector**: create sub-Entry sized to fit `nextIdx + 1` elements (`Array(0, elementBytes, nextIdx+1, elementLayout)`).
 
-After any descent through `SubState(Vector)`, if the sub-Entry's `Array.length < nextIdx + 1`, `applyMutation` SHALL grow the sub-Entry via byte[] reallocation and update its `rootLayout` with the new length. This mirrors `NestedArrayEntityState.ensureNodeCapacity`'s `idx + 1` fallback.
+After any descent through `SubState(Vector)`, if the sub-Entry's `Array.length < nextIdx + 1`, `applyMutation` SHALL grow the sub-Entry via byte[] reallocation and update its `rootLayout` with the new length. This mirrors `S2NestedArrayEntityState.ensureNodeCapacity`'s `idx + 1` fallback.
 
 At the leaf, the method SHALL dispatch on the `StateMutation` type:
 
@@ -343,7 +343,7 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **WHEN** a sub-Entry exists and `newCount != oldCount`
 - **THEN** a new `byte[newCount * elementBytes]` is allocated, existing data is copied up to `min(oldCount, newCount) * elementBytes`, and `sub.data` is replaced with the new array
 - **AND** `sub.rootLayout` is replaced with a new `Array` record carrying the new length
-- **AND** on shrink, dropped tail slot-indices are orphaned in refs (no recursive cleanup — matches `NestedArrayEntityState.clearEntryRef`)
+- **AND** on shrink, dropped tail slot-indices are orphaned in refs (no recursive cleanup — matches `S2NestedArrayEntityState.clearEntryRef`)
 - **AND** returns `true` iff any occupied path existed in the dropped tail `[newCount, oldCount)` (grow → false, shrink with only-empty tail → false)
 - **WHEN** `newCount == oldCount`
 - **THEN** no mutation occurs and returns `false`
@@ -402,9 +402,9 @@ private boolean writeValue(Entry target, FieldLayout layout, int base, Object va
 - **WHEN** the flag byte is 0
 - **THEN** return `null`
 
-### Requirement: FlatEntityState.copy() is an eager deep copy
+### Requirement: S2FlatEntityState.copy() is an eager deep copy
 
-`FlatEntityState.copy()` SHALL return a state that is fully independent of the original at the moment of return. No byte[] array, `refs` slot, `Entry` instance, `freeSlots` array, or `pointerSerializers` array SHALL be shared with the original after `copy()` returns. Subsequent mutations on either state SHALL NOT be observable from the other, without any additional per-write bookkeeping.
+`S2FlatEntityState.copy()` SHALL return a state that is fully independent of the original at the moment of return. No byte[] array, `refs` slot, `Entry` instance, `freeSlots` array, or `pointerSerializers` array SHALL be shared with the original after `copy()` returns. Subsequent mutations on either state SHALL NOT be observable from the other, without any additional per-write bookkeeping.
 
 `copy()` SHALL:
 1. Clone `pointerSerializers` via `Arrays.copyOf`.
@@ -419,7 +419,7 @@ Slot stability SHALL be preserved — every sub-Entry in the clone occupies the 
 
 #### Scenario: copy() returns fully independent state
 
-- **WHEN** `copy()` is invoked on a FlatEntityState
+- **WHEN** `copy()` is invoked on a S2FlatEntityState
 - **THEN** the returned state's `rootEntry`, `rootEntry.data`, `refs`, `freeSlots`, `pointerSerializers`, and every sub-`Entry` reachable through `refs` are newly allocated
 - **AND** no byte[] or array in the returned state is `==` to any byte[] or array in the original
 - **AND** every mutation on the copy (primitive write, ref write, sub-state resize, pointer switch) leaves the original's observable state unchanged
@@ -437,7 +437,7 @@ Slot stability SHALL be preserved — every sub-Entry in the clone occupies the 
 - **THEN** no ownership check or clone-on-write operation occurs during the mutation — the write proceeds directly on the copy's independently-allocated data
 - **AND** the original's state is bit-for-bit unchanged
 
-### Requirement: FlatEntityState provides fieldPathIterator
+### Requirement: S2FlatEntityState provides fieldPathIterator
 
 `fieldPathIterator()` SHALL iterate over all FieldPaths whose values have been set. It SHALL walk the FieldLayout tree and check presence flags for Primitives, non-null checks for Refs and SubStates. Structural operations (ResizeVector, SwitchPointer) do not store values, so their paths are naturally excluded.
 
@@ -485,17 +485,17 @@ Each recursive call SHALL return `(FieldLayout subtree, int totalBytes)`. Parent
 
 ### Requirement: Runner-configurable EntityStateType
 
-The `S2EntityStateType` enum SHALL include a `FLAT` variant that produces FlatEntityState instances. The default SHALL remain `NESTED_ARRAY`. The existing `withS2EntityState()` method on `AbstractFileRunner` already supports selecting the state type — only the `FLAT` enum variant needs to be added.
+The `S2EntityStateType` enum SHALL include a `FLAT` variant that produces S2FlatEntityState instances. The default SHALL remain `NESTED_ARRAY`. The existing `withS2EntityState()` method on `AbstractFileRunner` already supports selecting the state type — only the `FLAT` enum variant needs to be added.
 
-#### Scenario: Configure FlatEntityState via Runner
+#### Scenario: Configure S2FlatEntityState via Runner
 
 - **WHEN** `new SimpleRunner(source).withS2EntityState(S2EntityStateType.FLAT).runWith(processor)` is called
-- **THEN** all S2 entities created during the run use `FlatEntityState`
+- **THEN** all S2 entities created during the run use `S2FlatEntityState`
 
-#### Scenario: Default to NestedArrayEntityState
+#### Scenario: Default to S2NestedArrayEntityState
 
 - **WHEN** no `withS2EntityState()` is called
-- **THEN** all S2 entities use `NestedArrayEntityState`
+- **THEN** all S2 entities use `S2NestedArrayEntityState`
 
 ### Requirement: Field accessor methods for FieldLayoutBuilder
 
@@ -517,14 +517,14 @@ The following Field subclasses SHALL provide accessor methods for their internal
 
 ### Requirement: Refs slot release is transitive
 
-When `FlatEntityState` releases a `refs` slot that holds a sub-Entry, it SHALL also release every `FieldLayout.Ref` and `FieldLayout.SubState` slot transitively reachable through that Entry's `data` via its `rootLayout`, returning all of them to `freeSlots`. No sub-Entry or value-Ref SHALL remain in `refs` after its sole navigation path from the root has been removed.
+When `S2FlatEntityState` releases a `refs` slot that holds a sub-Entry, it SHALL also release every `FieldLayout.Ref` and `FieldLayout.SubState` slot transitively reachable through that Entry's `data` via its `rootLayout`, returning all of them to `freeSlots`. No sub-Entry or value-Ref SHALL remain in `refs` after its sole navigation path from the root has been removed.
 
 The transitive release SHALL be triggered from both mutation primitives that remove navigation edges:
 
 - `switchPointer` when an existing sub-Entry is replaced or cleared (the slot formerly occupied by the old sub-Entry)
 - `resizeVector` shrink when the truncated tail of `sub.data` contains `FieldLayout.Ref` or `FieldLayout.SubState` slot indices
 
-The walk SHALL read `data` byte arrays and mutate `this.refs` and `this.freeSlots` directly; no sharing check or clone step is required because `data`, `refs`, and `freeSlots` are owned outright by `this` after `copy()` performs eager deep cloning.
+The walk SHALL read `data` byte arrays and mutate `this.refs` and `this.freeSlots` directly; no sharing check or clone step is required because `data`, `refs`, and `freeSlots` are owned outright by `this` after `S2FlatEntityState.copy()` performs eager deep cloning.
 
 Plain `FieldLayout.Ref` leaves hold arbitrary `Object` values (not sub-Entries); their slots SHALL be freed non-recursively via `freeRefSlot`. `FieldLayout.SubState` slots hold sub-Entries and SHALL be released recursively.
 
@@ -542,9 +542,9 @@ Plain `FieldLayout.Ref` leaves hold arbitrary `Object` values (not sub-Entries);
 - **WHEN** `resizeVector` applies the shrink
 - **THEN** for each element index `i` in `[M..N-1]`, every occupied Ref or SubState slot reachable through that element is returned to `freeSlots` before `sub.data` is reallocated
 
-### Requirement: FlatEntityState provides decodeInto for primitive decode-direct path
+### Requirement: S2FlatEntityState provides decodeInto for primitive decode-direct path
 
-`FlatEntityState` SHALL provide a method `decodeInto(FieldPath fp, Decoder decoder, BitStream bs)` that traverses the FieldLayout tree to the leaf layout for `fp` and dispatches to the decoder's static `decodeInto` method, writing decoded bytes directly into the Entry's `byte[]` without producing an intermediate boxed `Object` or allocating a `StateMutation.WriteValue` record.
+`S2FlatEntityState` SHALL provide a method `decodeInto(FieldPath fp, Decoder decoder, BitStream bs)` that traverses the FieldLayout tree to the leaf layout for `fp` and dispatches to the decoder's static `decodeInto` method, writing decoded bytes directly into the Entry's `byte[]` without producing an intermediate boxed `Object` or allocating a `StateMutation.WriteValue` record.
 
 The traversal SHALL be identical in shape to `applyMutation`: Composite/Array/SubState cases walk the layout and accumulate `base`; SubState descent is a direct pointer-chase (`sub = (Entry) refs[slot]`) with no ownership check. Lazy sub-Entry creation (Pointer with `serializers.length == 1`, Vector sized to `nextIdx + 1`) and vector growth on traversal are identical to `applyMutation`'s behavior.
 
@@ -554,7 +554,7 @@ At the leaf:
 - **If the leaf layout is `Ref`**: `decodeInto` SHALL fall back to the boxing path — invoke `DecoderDispatch.decode(bs, decoder)` to produce an `Object`, then perform the equivalent of `WriteValue` on the Ref slot (flag byte, slot allocation if needed, store in refs slab). It SHALL return the capacity-change signal per the same rules as `applyMutation`/`WriteValue` on Ref.
 - **If the leaf layout is `SubState`**: `decodeInto` SHALL throw `IllegalStateException` — structural mutations (`ResizeVector`, `SwitchPointer`) do not go through `decodeInto`; callers must use `applyMutation` with the appropriate `StateMutation` variant.
 
-`decodeInto` SHALL NOT allocate any intermediate `StateMutation` record on the Primitive path. The autobox and record allocation that occur on `applyMutation(fp, WriteValue(decoded))` SHALL NOT occur on `decodeInto(fp, decoder, bs)` when the leaf is `Primitive`.
+`S2FlatEntityState.decodeInto` SHALL NOT allocate any intermediate `StateMutation` record on the Primitive path. The autobox and record allocation that occur on `applyMutation(fp, WriteValue(decoded))` SHALL NOT occur on `decodeInto(fp, decoder, bs)` when the leaf is `Primitive`.
 
 **Capacity-change semantics:** values decoded from the bitstream are never null. On the Primitive path, `decodeInto` returns true only for the null→value transition (`oldFlag == 0` before the write). It SHALL NOT produce value→null transitions; those arise exclusively via `WriteValue(null)` through `applyMutation`, or via structural mutations.
 
@@ -638,9 +638,9 @@ The length prefix encodes the actual string length in bytes; remaining bytes in 
 
 `StringLenDecoder` SHALL provide a `decodeInto(BitStream, byte[], int offset)` variant that reads the 9-bit length + UTF-8 bytes from the bitstream and writes them as `[length-prefix][utf8-bytes]` at `data[offset..]`. The decoder SHALL assert `decodedLength ≤ maxLength` for the target leaf — exceeding bounds is a schema violation, not a runtime-recoverable condition.
 
-`FlatEntityState.decodeInto(fp, decoder, bs)` at an inline-string leaf SHALL dispatch to the String decoder's `decodeInto` variant. `FlatEntityState.write(fp, decoded)` at an inline-string leaf SHALL encode the String to UTF-8 bytes and write the length-prefixed form inline.
+`S2FlatEntityState.decodeInto(fp, decoder, bs)` at an inline-string leaf SHALL dispatch to the String decoder's `decodeInto` variant. `S2FlatEntityState.write(fp, decoded)` at an inline-string leaf SHALL encode the String to UTF-8 bytes and write the length-prefixed form inline.
 
-`FlatEntityState.getValueForFieldPath(fp)` at an inline-string leaf SHALL read the length prefix and allocate a `String` from the UTF-8 bytes. This is a per-read allocation (unlike the refs-slab path, which returns a cached reference). Accepted trade-off — decode-time savings dominate in the replay-parsing workload.
+`S2FlatEntityState.getValueForFieldPath(fp)` at an inline-string leaf SHALL read the length prefix and allocate a `String` from the UTF-8 bytes. This is a per-read allocation (unlike the refs-slab path, which returns a cached reference). Accepted trade-off — decode-time savings dominate in the replay-parsing workload.
 
 #### Scenario: Inline string roundtrip
 
@@ -669,13 +669,13 @@ The length prefix encodes the actual string length in bytes; remaining bytes in 
 
 #### Scenario: refs slab holds only sub-Entry instances
 
-- **WHEN** a FlatEntityState is written to across any leaf shape
+- **WHEN** a S2FlatEntityState is written to across any leaf shape
 - **THEN** `refs` slot allocations only occur for sub-Entry creation (Pointer sub-states, Vector sub-Entries)
 - **AND** no `refs` slot is used for String values (when inline threshold is in effect for the prop)
 
-### Requirement: FlatEntityState provides a unified direct-write method
+### Requirement: S2FlatEntityState provides a unified direct-write method
 
-`FlatEntityState` SHALL provide a `write(FieldPath fp, Object decoded)` method that traverses the FieldLayout tree and dispatches on leaf shape, writing the decoded value directly without a `StateMutation` wrapper:
+`S2FlatEntityState` SHALL provide a `write(FieldPath fp, Object decoded)` method that traverses the FieldLayout tree and dispatches on leaf shape, writing the decoded value directly without a `StateMutation` wrapper:
 
 - **Primitive leaf (fixed-width)** → set flag byte to 1, call `PrimitiveType.write(data, offset, decoded)` to box-unbox the value into byte[]. Returns capacity-change `(oldFlag == 0) XOR (decoded == null)`.
 - **Primitive leaf (inline-string)** → encode `(String) decoded` to UTF-8 bytes, write length-prefix + bytes inline. Returns capacity-change on null↔value transition.
@@ -683,7 +683,7 @@ The length prefix encodes the actual string length in bytes; remaining bytes in 
 - **SubState-Pointer leaf** → `decoded` is a `Serializer` (or null). If different from current: clear existing sub-Entry via the existing pointer-switch logic, set `pointerSerializers[pointerId] = decoded`, lazily create the new sub-Entry shell. Returns true if the previous sub-Entry held occupied state.
 - **SubState-Vector leaf** → `decoded` is an `Integer` count. Resize the vector sub-Entry's capacity (same behavior as today's `handleResizeVector`). Returns true if the resize discarded occupied slots.
 
-`write` SHALL be equivalent in observable behavior to `applyMutation(fp, field.createMutation(decoded, fp.last() + 1))` on all leaf shapes — with no intermediate `StateMutation` allocation.
+`S2FlatEntityState.write` SHALL be equivalent in observable behavior to `applyMutation(fp, field.createMutation(decoded, fp.last() + 1))` on all leaf shapes — with no intermediate `StateMutation` allocation.
 
 #### Scenario: write on Primitive leaf
 

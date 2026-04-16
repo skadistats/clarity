@@ -65,7 +65,7 @@ No field reader on the hot path SHALL produce a `StateMutation` record. Both `S2
 
 `S2FieldReader.readFieldsFast` SHALL route per field:
 
-- **FLAT-family state + primitive leaf** (`state instanceof FlatEntityState && field.isPrimitiveLeaf()`): invoke `flatState.decodeInto(fp, decoder, bs)`. The `isFlat` check is hoisted to the top of the method; the per-field check collapses to `isFlat && field.isPrimitiveLeaf()`. No `StateMutation` is allocated; no `Object` is boxed by the decoder.
+- **FLAT-family state + primitive leaf** (`state instanceof S2FlatEntityState && field.isPrimitiveLeaf()`): invoke `flatState.decodeInto(fp, decoder, bs)`. The `isFlat` check is hoisted to the top of the method; the per-field check collapses to `isFlat && field.isPrimitiveLeaf()`. No `StateMutation` is allocated; no `Object` is boxed by the decoder.
 - **Everything else** (FLAT + non-primitive leaf, non-FLAT state, any leaf shape): decode via `DecoderDispatch.decode(bs, decoder)` to produce a value; invoke `state.write(fp, decoded)` immediately. The state's own leaf traversal dispatches on layout shape — no `StateMutation` wrapper.
 
 `S1FieldReader.readFields` SHALL route per field:
@@ -79,7 +79,7 @@ Readers SHALL NOT stage mutations into `FieldChanges.mutations[]` on the fast pa
 
 #### Scenario: S2 fast path + primitive leaf uses decodeInto
 
-- **WHEN** `readFieldsFast` processes a field whose state is `FlatEntityState` and whose leaf is Primitive
+- **WHEN** `readFieldsFast` processes a field whose state is `S2FlatEntityState` and whose leaf is Primitive
 - **THEN** it calls `flatState.decodeInto(fp, decoder, bs)`
 - **AND** no `StateMutation` is allocated
 - **AND** no `Integer`/`Float`/`Long`/`Boolean`/`Vector`/`String` object is allocated by the decoder
@@ -187,11 +187,11 @@ The `EntityState` interface SHALL provide `applyMutation(FieldPath, StateMutatio
 
 ### Requirement: Field classes lose state-manipulation methods
 
-The methods `setValue(NestedEntityState, int, int, Object)`, `getValue(NestedEntityState, int)`, `ensureCapacity(NestedEntityState, int)`, and `isHiddenFieldPath()` SHALL be removed from the `Field` class and all subclasses. `createMutation(Object)` SHALL be the only state-related method on Field.
+The methods `setValue(S2NestedEntityState, int, int, Object)`, `getValue(S2NestedEntityState, int)`, `ensureCapacity(S2NestedEntityState, int)`, and `isHiddenFieldPath()` SHALL be removed from the `Field` class and all subclasses. `createMutation(Object)` SHALL be the only state-related method on Field.
 
-#### Scenario: Field has no NestedEntityState dependency
+#### Scenario: Field has no S2NestedEntityState dependency
 
 - **WHEN** the Field class is inspected after this change
-- **THEN** it has no import of or reference to `NestedEntityState`
+- **THEN** it has no import of or reference to `S2NestedEntityState`
 - **AND** the methods `setValue`, `getValue`, `ensureCapacity`, `isHiddenFieldPath` do not exist
 - **AND** `createMutation(Object)` is the only method that relates to state operations

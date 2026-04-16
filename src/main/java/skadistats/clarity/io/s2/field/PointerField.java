@@ -6,7 +6,7 @@ import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Pointer;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.SerializerProperties;
-import skadistats.clarity.model.state.AbstractS2EntityState;
+import skadistats.clarity.model.state.S2AbstractEntityState;
 import skadistats.clarity.model.state.StateMutation;
 
 public class PointerField extends Field {
@@ -52,30 +52,30 @@ public class PointerField extends Field {
         return serializers;
     }
 
-    private Serializer resolveSerializer(AbstractS2EntityState state) {
+    private Serializer resolveSerializer(S2AbstractEntityState state) {
         var ser = state.getPointerSerializer(pointerId);
         return ser != null ? ser : defaultSerializer;
     }
 
     @Override
-    public Field getChild(AbstractS2EntityState state, int idx) {
+    public Field getChild(S2AbstractEntityState state, int idx) {
         var ser = resolveSerializer(state);
         return ser != null ? ser.getField(idx) : null;
     }
 
-    public Field getChild(int idx, AbstractS2EntityState state, Serializer override) {
+    public Field getChild(int idx, S2AbstractEntityState state, Serializer override) {
         var ser = override != null ? override : resolveSerializer(state);
         return ser != null ? ser.getField(idx) : null;
     }
 
     @Override
-    public Integer getChildIndex(AbstractS2EntityState state, String nameSegment) {
+    public Integer getChildIndex(S2AbstractEntityState state, String nameSegment) {
         var ser = resolveSerializer(state);
         return ser != null ? ser.getFieldIndex(nameSegment) : null;
     }
 
     @Override
-    public String getChildNameSegment(AbstractS2EntityState state, int idx) {
+    public String getChildNameSegment(S2AbstractEntityState state, int idx) {
         var ser = resolveSerializer(state);
         return ser != null ? ser.getFieldName(idx) : null;
     }

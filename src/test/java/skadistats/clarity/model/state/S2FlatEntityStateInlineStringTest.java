@@ -9,9 +9,7 @@ import skadistats.clarity.io.s2.Serializer;
 import java.nio.charset.StandardCharsets;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertThrows;
 import static skadistats.clarity.model.state.TestFields.fp;
 import static skadistats.clarity.model.state.TestFields.named;
@@ -23,12 +21,12 @@ import static skadistats.clarity.model.state.TestFields.stringField;
  * CP-5 tests: verify inline-string leaf decodeInto, write, getValueForFieldPath,
  * and copy-on-write behavior.
  */
-public class FlatEntityStateInlineStringTest {
+public class S2FlatEntityStateInlineStringTest {
 
-    private static FlatEntityState makeFlat(Serializer root) {
+    private static S2FlatEntityState makeFlat(Serializer root) {
         var rf = rootField(root);
         var built = new FieldLayoutBuilder().buildSerializer(rf.getSerializer());
-        return new FlatEntityState(rf, 1024, built.layout(), built.totalBytes());
+        return new S2FlatEntityState(rf, 1024, built.layout(), built.totalBytes());
     }
 
     /** Builds a BitStream encoding a single StringLenDecoder-formatted string. */
@@ -135,7 +133,7 @@ public class FlatEntityStateInlineStringTest {
         var st = makeFlat(ser);
         st.write(fp(0), "original");
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         cp.write(fp(0), "replaced");
 
         assertEquals(st.getValueForFieldPath(fp(0)), "original");

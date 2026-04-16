@@ -1,6 +1,6 @@
 package skadistats.clarity.model.state;
 
-public interface NestedEntityState {
+public interface S2NestedEntityState {
 
     int length();
 
@@ -11,8 +11,8 @@ public interface NestedEntityState {
     void clear(int idx);
 
     boolean isSub(int idx);
-    NestedEntityState sub(int idx);
+    S2NestedEntityState sub(int idx);
 
-    NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded);
+    S2NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded);
 
 }

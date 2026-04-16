@@ -3,7 +3,7 @@ package skadistats.clarity.io.s2.field;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.model.state.AbstractS2EntityState;
+import skadistats.clarity.model.state.S2AbstractEntityState;
 
 public class ArrayField extends Field {
 
@@ -25,17 +25,17 @@ public class ArrayField extends Field {
     }
 
     @Override
-    public Field getChild(AbstractS2EntityState state, int idx) {
+    public Field getChild(S2AbstractEntityState state, int idx) {
         return elementField;
     }
 
     @Override
-    public Integer getChildIndex(AbstractS2EntityState state, String nameSegment) {
+    public Integer getChildIndex(S2AbstractEntityState state, String nameSegment) {
         return Util.stringToArrayIdx(nameSegment);
     }
 
     @Override
-    public String getChildNameSegment(AbstractS2EntityState state, int idx) {
+    public String getChildNameSegment(S2AbstractEntityState state, int idx) {
         return Util.arrayIdxToString(idx);
     }
 

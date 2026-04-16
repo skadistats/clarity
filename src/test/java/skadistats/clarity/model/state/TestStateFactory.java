@@ -13,11 +13,11 @@ public interface TestStateFactory {
 
     static TestStateFactory of(String name) {
         return switch (name) {
-            case NESTED_ARRAY -> NestedArrayEntityState::new;
-            case TREE_MAP -> TreeMapEntityState::new;
+            case NESTED_ARRAY -> S2NestedArrayEntityState::new;
+            case TREE_MAP -> S2TreeMapEntityState::new;
             case FLAT -> (root, pc) -> {
                 var built = new FieldLayoutBuilder().buildSerializer(root.getSerializer());
-                return new FlatEntityState(root, pc, built.layout(), built.totalBytes());
+                return new S2FlatEntityState(root, pc, built.layout(), built.totalBytes());
             };
             default -> throw new IllegalArgumentException(name);
         };

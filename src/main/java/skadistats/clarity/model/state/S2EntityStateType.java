@@ -7,14 +7,14 @@ public enum S2EntityStateType {
     NESTED_ARRAY {
         @Override
         public EntityState createState(SerializerField field, int pointerCount, FieldLayoutBuilder layoutBuilder) {
-            return new NestedArrayEntityState(field, pointerCount);
+            return new S2NestedArrayEntityState(field, pointerCount);
         }
     },
 
     TREE_MAP {
         @Override
         public EntityState createState(SerializerField field, int pointerCount, FieldLayoutBuilder layoutBuilder) {
-            return new TreeMapEntityState(field, pointerCount);
+            return new S2TreeMapEntityState(field, pointerCount);
         }
     },
 
@@ -22,7 +22,7 @@ public enum S2EntityStateType {
         @Override
         public EntityState createState(SerializerField field, int pointerCount, FieldLayoutBuilder layoutBuilder) {
             var built = layoutBuilder.buildSerializer(field.getSerializer());
-            return new FlatEntityState(field, pointerCount, built.layout(), built.totalBytes());
+            return new S2FlatEntityState(field, pointerCount, built.layout(), built.totalBytes());
         }
     };
 

@@ -3,7 +3,6 @@ package skadistats.clarity.model.state;
 import com.google.protobuf.ByteString;
 import org.testng.annotations.Test;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
@@ -12,32 +11,19 @@ import java.util.Random;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
 import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
-import static skadistats.clarity.model.state.TestFields.floatField;
-import static skadistats.clarity.model.state.TestFields.floatDecoder;
-import static skadistats.clarity.model.state.TestFields.fp;
-import static skadistats.clarity.model.state.TestFields.intDecoder;
-import static skadistats.clarity.model.state.TestFields.intField;
-import static skadistats.clarity.model.state.TestFields.named;
-import static skadistats.clarity.model.state.TestFields.pointerField;
-import static skadistats.clarity.model.state.TestFields.rootField;
-import static skadistats.clarity.model.state.TestFields.serializer;
-import static skadistats.clarity.model.state.TestFields.serializerField;
-import static skadistats.clarity.model.state.TestFields.stringDecoder;
-import static skadistats.clarity.model.state.TestFields.stringField;
-import static skadistats.clarity.model.state.TestFields.vectorFieldOf;
+import static skadistats.clarity.model.state.TestFields.*;
 
-public class FlatEntityStateDecodeIntoTest {
+public class S2FlatEntityStateDecodeIntoTest {
 
     private static final long SEED = 0xC01D_CAFEL;
 
-    private static FlatEntityState makeFlat(Serializer root) {
+    private static S2FlatEntityState makeFlat(Serializer root) {
         var rf = rootField(root);
         var built = new FieldLayoutBuilder().buildSerializer(rf.getSerializer());
-        return new FlatEntityState(rf, 1024, built.layout(), built.totalBytes());
+        return new S2FlatEntityState(rf, 1024, built.layout(), built.totalBytes());
     }
 
     private static BitStream freshStream() {
@@ -54,7 +40,7 @@ public class FlatEntityStateDecodeIntoTest {
         return BitStream.createBitStream(ByteString.copyFrom(b));
     }
 
-    private static Object read(FlatEntityState s, FieldPath fp) {
+    private static Object read(S2FlatEntityState s, FieldPath fp) {
         return s.getValueForFieldPath(fp);
     }
 
@@ -255,7 +241,7 @@ public class FlatEntityStateDecodeIntoTest {
         var st = makeFlat(ser);
         st.applyMutation(fp(0), new StateMutation.WriteValue(1));
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         cp.decodeInto(fp(0), intDecoder(), freshStream());
 
         assertEquals(read(st, fp(0)), 1, "original unchanged by cp.decodeInto");
@@ -267,7 +253,7 @@ public class FlatEntityStateDecodeIntoTest {
         var st = makeFlat(ser);
         st.write(fp(0), "original");
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         cp.write(fp(0), "replaced");
 
         assertEquals(read(st, fp(0)), "original");
@@ -283,7 +269,7 @@ public class FlatEntityStateDecodeIntoTest {
         st.applyMutation(fp(0), new StateMutation.SwitchPointer(inner));
         st.write(fp(0, 0), 1);
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         cp.write(fp(0, 0), 99);
 
         assertEquals(read(cp, fp(0, 0)), 99);

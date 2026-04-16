@@ -13,23 +13,23 @@ import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 
 import java.util.Iterator;
 
-public class TreeMapEntityState extends AbstractS2EntityState {
+public class S2TreeMapEntityState extends S2AbstractEntityState {
 
     private final Object2ObjectAVLTreeMap<S2LongFieldPath, Object> state;
 
-    public TreeMapEntityState(SerializerField field, int pointerCount) {
+    public S2TreeMapEntityState(SerializerField field, int pointerCount) {
         super(field, pointerCount);
         state = new Object2ObjectAVLTreeMap<>();
     }
 
-    private TreeMapEntityState(TreeMapEntityState other) {
+    private S2TreeMapEntityState(S2TreeMapEntityState other) {
         super(other);
         state = other.state.clone();
     }
 
     @Override
     public EntityState copy() {
-        return new TreeMapEntityState(this);
+        return new S2TreeMapEntityState(this);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class TreeMapEntityState extends AbstractS2EntityState {
 
     @Override
     public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
-        throw new UnsupportedOperationException("decodeInto is implemented only on FlatEntityState (S2) and S1FlatEntityState (S1)");
+        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
     }
 
     @Override

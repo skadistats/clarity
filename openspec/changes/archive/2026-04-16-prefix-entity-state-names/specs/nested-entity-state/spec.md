@@ -1,7 +1,22 @@
-## Purpose
+## RENAMED Requirements
 
-S2NestedArrayEntityState with Entry-based nested array storage and own Field+Entry traversal, dispatching on StateMutation at the leaf. S2NestedEntityState is an internal interface used only by S2NestedArrayEntityState.
-## Requirements
+- FROM: `### Requirement: NestedEntityState interface`
+- TO: `### Requirement: S2NestedEntityState interface`
+
+- FROM: `### Requirement: NestedArrayEntityState owns its traversal`
+- TO: `### Requirement: S2NestedArrayEntityState owns its traversal`
+
+- FROM: `### Requirement: NestedArrayEntityState provides a unified direct-write method`
+- TO: `### Requirement: S2NestedArrayEntityState provides a unified direct-write method`
+
+- FROM: `### Requirement: NestedArrayEntityState mutates state in place during readFields`
+- TO: `### Requirement: S2NestedArrayEntityState mutates state in place during readFields`
+
+- FROM: `### Requirement: NestedArrayEntityState.copy() is an eager deep copy`
+- TO: `### Requirement: S2NestedArrayEntityState.copy() is an eager deep copy`
+
+## MODIFIED Requirements
+
 ### Requirement: S2NestedEntityState interface
 The `S2NestedEntityState` interface SHALL be an internal detail of `S2NestedArrayEntityState`. It SHALL NOT be used as a common interface for all S2 EntityState implementations. It SHALL continue to provide nested index-based state access with the methods: `get(int idx)`, `set(int idx, Object value)`, `has(int idx)`, `clear(int idx)`, `sub(int idx)`, `isSub(int idx)`, `length()`, `capacity(int wantedSize, boolean shrinkIfNeeded)`.
 

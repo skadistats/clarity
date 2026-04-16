@@ -1,8 +1,4 @@
-## Purpose
-
-Defines the contract for committing decoded field changes to entity state during packet processing. Field readers mutate entity state eagerly and in place; queued lambdas observe already-committed state and emit lifecycle events. Aborts on decode failure rather than rolling back.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Eager in-place state mutation during packet processing
 
@@ -30,31 +26,3 @@ For `queueEntityCreate` and `queueEntityRecreate`, the caller SHALL copy the per
 - **THEN** it allocates `newState = copyState(baseline)` before `fieldReader.readFields`
 - **AND** `fieldReader.readFields` mutates `newState` in place; the shared per-DTClass baseline is not modified
 - **AND** the queued lambda attaches `newState` to the entity via `entity.setState(newState)`
-
-### Requirement: Throw during packet processing aborts the replay run
-
-If any `Throwable` escapes `processPacketEntities` or a queued update lambda, `processAndRunPacketEntities` SHALL clear `queuedUpdates` in its `finally` block and rethrow. Entity state mutations that already landed before the throw REMAIN in place — they are not rolled back. The `Entities` class does not retain pre-packet snapshots and does not implement rollback.
-
-This design relies on the invariant that Clarity aborts the replay run on the first decode failure: no caller of `processAndRunPacketEntities` catches a throw and attempts to resume. In particular, the deferred-message mechanism at `Entities.onPacketEntities` does NOT re-deliver a failed packet — it defers packets strictly on the `entitiesServerTick < message.getDeltaFrom()` condition evaluated BEFORE any decode, so deferred-then-replayed packets have their delta-from prerequisite met and are expected to decode correctly.
-
-Observable guarantees on throw:
-- `queuedUpdates` is cleared; no queued events fire
-- `entitiesServerTick` is NOT advanced (the assignment at the start of `processAndRunPacketEntities` runs only after `processPacketEntities` returns cleanly)
-- No explicit state rollback; the replay run is expected to abort in response to the exception
-
-Pre-existing non-rollbackable eager mutations in the packet loop (`eEnt.setActive(...)` for PVS bits at `processPacketEntities`, `baselineRegistry.updateEntityAlternateBaselineIndex` for alternate baselines) continue to be non-rollbackable. They are not in scope for this change.
-
-#### Scenario: Decode failure clears queue and rethrows
-
-- **WHEN** `fieldReader.readFields` throws during `processPacketEntities`
-- **THEN** the `finally` block in `processAndRunPacketEntities` clears `queuedUpdates`
-- **AND** the exception propagates to the caller
-- **AND** `entitiesServerTick` is not advanced
-- **AND** no `@OnEntity*` event fires for the failing packet
-
-#### Scenario: Partial state after throw is acceptable
-
-- **WHEN** a packet has already mutated entity A's state before entity C's decode throws
-- **THEN** entity A's state reflects the partial packet-local mutations
-- **AND** no event fires for A (the queued lambda never runs)
-- **AND** the caller is expected to abort the replay run; continuing to parse subsequent packets is outside the contract

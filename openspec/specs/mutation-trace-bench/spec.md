@@ -82,7 +82,7 @@ path), against states that are already in their post-create shape.
 
 #### Scenario: EMPTY birth produces the requested impl
 - **WHEN** a BirthRecipe of kind `EMPTY` is materialized with `impl=FLAT`
-- **THEN** the resulting `EntityState` is a `FlatEntityState` built from the recipe's `SerializerField`
+- **THEN** the resulting `EntityState` is a `S2FlatEntityState` built from the recipe's `SerializerField`
 
 #### Scenario: COPY_OF birth clones its source
 - **WHEN** a BirthRecipe of kind `COPY_OF` with `srcStateId=S` is materialized

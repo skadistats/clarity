@@ -16,20 +16,20 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-public class NestedArrayEntityState extends AbstractS2EntityState {
+public class S2NestedArrayEntityState extends S2AbstractEntityState {
 
     private List<Entry> entries;
     private Deque<Integer> freeEntries;
     private boolean capacityChanged;
 
-    public NestedArrayEntityState(SerializerField field, int pointerCount) {
+    public S2NestedArrayEntityState(SerializerField field, int pointerCount) {
         super(field, pointerCount);
         entries = new ArrayList<>(20);
         entries.add(new Entry());
         // freeEntries is lazy-allocated when the first slot is freed.
     }
 
-    private NestedArrayEntityState(NestedArrayEntityState other) {
+    private S2NestedArrayEntityState(S2NestedArrayEntityState other) {
         super(other);
         var size = other.entries.size();
         entries = new ArrayList<>(size);
@@ -47,7 +47,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
     @Override
     public EntityState copy() {
-        return new NestedArrayEntityState(this);
+        return new S2NestedArrayEntityState(this);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
     @Override
     public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
-        throw new UnsupportedOperationException("decodeInto is implemented only on FlatEntityState (S2) and S1FlatEntityState (S1)");
+        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
     }
 
     @Override
@@ -212,7 +212,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        return new NestedArrayEntityStateIterator(rootEntry());
+        return new S2NestedArrayEntityStateIterator(rootEntry());
     }
 
     private EntryRef createEntryRef(Entry entry) {
@@ -274,7 +274,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
 
     private static final Object[] EMPTY_STATE = {};
 
-    public class Entry implements NestedEntityState {
+    public class Entry implements S2NestedEntityState {
 
         private Object[] state;
 
@@ -323,7 +323,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         }
 
         @Override
-        public NestedEntityState sub(int idx) {
+        public S2NestedEntityState sub(int idx) {
             return subEntry(idx);
         }
 
@@ -336,7 +336,7 @@ public class NestedArrayEntityState extends AbstractS2EntityState {
         }
 
         @Override
-        public NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
+        public S2NestedEntityState capacity(int wantedSize, boolean shrinkIfNeeded) {
             var curSize = state.length;
             if (wantedSize == curSize) {
                 return this;

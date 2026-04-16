@@ -9,9 +9,9 @@ import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
-import skadistats.clarity.model.state.AbstractS2EntityState;
 import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.FlatEntityState;
+import skadistats.clarity.model.state.S2AbstractEntityState;
+import skadistats.clarity.model.state.S2FlatEntityState;
 import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.util.TextTable;
 
@@ -58,7 +58,7 @@ public class S2FieldReader extends FieldReader {
         return readFieldsFast(bs, dtClassGeneric, state);
     }
 
-    private Field resolveField(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
+    private Field resolveField(S2AbstractEntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
             f = f.getChild(state, fp.get(i));
@@ -69,7 +69,7 @@ public class S2FieldReader extends FieldReader {
         return f;
     }
 
-    private Field resolveFieldDebug(AbstractS2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
+    private Field resolveFieldDebug(S2AbstractEntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
             if (f instanceof PointerField pf) {
@@ -86,7 +86,7 @@ public class S2FieldReader extends FieldReader {
 
     private FieldChanges readFieldsFast(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
         var dtClass = dtClassGeneric.s2();
-        var state = (AbstractS2EntityState) entityState;
+        var state = (S2AbstractEntityState) entityState;
         var n = 0;
         var mfp = S2ModifiableFieldPath.newInstance();
 
@@ -99,8 +99,8 @@ public class S2FieldReader extends FieldReader {
             fieldPaths[n++] = mfp.unmodifiable();
         }
 
-        var isFlat = state instanceof FlatEntityState;
-        var fes = isFlat ? (FlatEntityState) state : null;
+        var isFlat = state instanceof S2FlatEntityState;
+        var fes = isFlat ? (S2FlatEntityState) state : null;
         var capacityChanged = false;
         for (var r = 0; r < n; r++) {
             var fp = fieldPaths[r].s2();
@@ -119,7 +119,7 @@ public class S2FieldReader extends FieldReader {
 
     private FieldChanges readFieldsMaterialized(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
         var dtClass = dtClassGeneric.s2();
-        var state = (AbstractS2EntityState) entityState;
+        var state = (S2AbstractEntityState) entityState;
 
         var n = 0;
         var mfp = S2ModifiableFieldPath.newInstance();
@@ -149,7 +149,7 @@ public class S2FieldReader extends FieldReader {
 
     private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
         var dtClass = dtClassGeneric.s2();
-        var state = (AbstractS2EntityState) entityState;
+        var state = (S2AbstractEntityState) entityState;
         try {
             dataDebugTable.setTitle(dtClass.toString());
             dataDebugTable.clear();

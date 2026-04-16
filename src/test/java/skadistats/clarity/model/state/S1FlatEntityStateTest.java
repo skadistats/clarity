@@ -257,14 +257,14 @@ public class S1FlatEntityStateTest {
     // -------- fieldPathIterator --------
 
     @Test
-    public void fieldPathIteratorMatchesObjectArrayEntityState() {
+    public void fieldPathIteratorMatchesS1ObjectArrayEntityState() {
         var dt = dtClass(
             sp(PropType.INT, "i", 32, 0, 0, null),
             sp(PropType.STRING, "s", 0, 0, 0, null),
             sp(PropType.FLOAT, "f", 32, PropFlag.NO_SCALE, 0, null)
         );
         var flat = new S1FlatEntityState(dt);
-        var oa = new ObjectArrayEntityState(dt.getReceiveProps().length);
+        var oa = new S1ObjectArrayEntityState(dt.getReceiveProps().length);
 
         var it1 = flat.fieldPathIterator();
         var it2 = oa.fieldPathIterator();

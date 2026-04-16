@@ -13,20 +13,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
-import static skadistats.clarity.model.state.TestFields.arrayField;
-import static skadistats.clarity.model.state.TestFields.boolField;
-import static skadistats.clarity.model.state.TestFields.floatField;
-import static skadistats.clarity.model.state.TestFields.fp;
-import static skadistats.clarity.model.state.TestFields.intField;
-import static skadistats.clarity.model.state.TestFields.longField;
-import static skadistats.clarity.model.state.TestFields.named;
-import static skadistats.clarity.model.state.TestFields.pointerField;
-import static skadistats.clarity.model.state.TestFields.rootField;
-import static skadistats.clarity.model.state.TestFields.serializer;
-import static skadistats.clarity.model.state.TestFields.serializerField;
-import static skadistats.clarity.model.state.TestFields.stringField;
-import static skadistats.clarity.model.state.TestFields.vectorField;
-import static skadistats.clarity.model.state.TestFields.vectorFieldOf;
+import static skadistats.clarity.model.state.TestFields.*;
 
 public class EntityStateTest {
 
@@ -759,14 +746,14 @@ public class EntityStateTest {
     }
 
     private static int slabSize(EntityState st) {
-        if (st instanceof NestedArrayEntityState n) return n.slabSize();
-        if (st instanceof FlatEntityState f) return f.slabSize();
+        if (st instanceof S2NestedArrayEntityState n) return n.slabSize();
+        if (st instanceof S2FlatEntityState f) return f.slabSize();
         throw new UnsupportedOperationException(st.getClass().getName());
     }
 
     private static int freeSlotCount(EntityState st) {
-        if (st instanceof NestedArrayEntityState n) return n.freeSlotCount();
-        if (st instanceof FlatEntityState f) return f.freeSlotCount();
+        if (st instanceof S2NestedArrayEntityState n) return n.freeSlotCount();
+        if (st instanceof S2FlatEntityState f) return f.freeSlotCount();
         throw new UnsupportedOperationException(st.getClass().getName());
     }
 

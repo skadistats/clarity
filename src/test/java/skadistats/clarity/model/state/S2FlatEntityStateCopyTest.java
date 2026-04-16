@@ -15,31 +15,31 @@ import static skadistats.clarity.model.state.TestFields.serializer;
 import static skadistats.clarity.model.state.TestFields.stringField;
 import static skadistats.clarity.model.state.TestFields.vectorFieldOf;
 
-public class FlatEntityStateCopyTest {
+public class S2FlatEntityStateCopyTest {
 
-    private static FlatEntityState makeFlat(Serializer root) {
+    private static S2FlatEntityState makeFlat(Serializer root) {
         return makeFlat(root, 1024);
     }
 
-    private static FlatEntityState makeFlat(Serializer root, int pointerCount) {
+    private static S2FlatEntityState makeFlat(Serializer root, int pointerCount) {
         var rf = rootField(root);
         var built = new FieldLayoutBuilder().buildSerializer(rf.getSerializer());
-        return new FlatEntityState(rf, pointerCount, built.layout(), built.totalBytes());
+        return new S2FlatEntityState(rf, pointerCount, built.layout(), built.totalBytes());
     }
 
-    private static boolean write(FlatEntityState s, FieldPath fp, Object v) {
+    private static boolean write(S2FlatEntityState s, FieldPath fp, Object v) {
         return s.applyMutation(fp, new StateMutation.WriteValue(v));
     }
 
-    private static boolean resize(FlatEntityState s, FieldPath fp, int count) {
+    private static boolean resize(S2FlatEntityState s, FieldPath fp, int count) {
         return s.applyMutation(fp, new StateMutation.ResizeVector(count));
     }
 
-    private static boolean switchPtr(FlatEntityState s, FieldPath fp, Serializer ser) {
+    private static boolean switchPtr(S2FlatEntityState s, FieldPath fp, Serializer ser) {
         return s.applyMutation(fp, new StateMutation.SwitchPointer(ser));
     }
 
-    private static Object read(FlatEntityState s, FieldPath fp) {
+    private static Object read(S2FlatEntityState s, FieldPath fp) {
         return s.getValueForFieldPath(fp);
     }
 
@@ -50,7 +50,7 @@ public class FlatEntityStateCopyTest {
         write(st, fp(0), 7);
         write(st, fp(1), 1.5f);
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
 
         write(cp, fp(0), 42);
         write(st, fp(1), 9.9f);
@@ -72,7 +72,7 @@ public class FlatEntityStateCopyTest {
         write(st, fp(0, 1, 0), 20);
         write(st, fp(0, 2, 0), 30);
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         write(cp, fp(0, 1, 0), 99);
 
         assertEquals(read(st, fp(0, 0, 0)), 10);
@@ -89,7 +89,7 @@ public class FlatEntityStateCopyTest {
         var st = makeFlat(ser);
         write(st, fp(0), "original");
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         write(cp, fp(0), "replaced");
 
         assertEquals(read(st, fp(0)), "original");
@@ -107,7 +107,7 @@ public class FlatEntityStateCopyTest {
         switchPtr(st, fp(0), serA);
         write(st, fp(0, 0), 42);
 
-        var cp = (FlatEntityState) st.copy();
+        var cp = (S2FlatEntityState) st.copy();
         switchPtr(cp, fp(0), serB);
 
         assertEquals(read(st, fp(0, 0)), 42);

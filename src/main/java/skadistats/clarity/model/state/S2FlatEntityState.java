@@ -20,7 +20,7 @@ import java.util.List;
 
 import static skadistats.clarity.model.state.PrimitiveType.INT_VH;
 
-public class FlatEntityState extends AbstractS2EntityState {
+public class S2FlatEntityState extends S2AbstractEntityState {
 
     private static final Object[] EMPTY_REFS = {};
     private static final int[] EMPTY_FREE_SLOTS = {};
@@ -31,7 +31,7 @@ public class FlatEntityState extends AbstractS2EntityState {
     private int freeSlotsTop;
     private Entry rootEntry;
 
-    public FlatEntityState(SerializerField rootField, int pointerCount,
+    public S2FlatEntityState(SerializerField rootField, int pointerCount,
                            FieldLayout rootLayout, int totalBytes) {
         super(rootField, pointerCount);
         this.refs = EMPTY_REFS;
@@ -41,7 +41,7 @@ public class FlatEntityState extends AbstractS2EntityState {
         this.rootEntry = new Entry(rootLayout, new byte[totalBytes]);
     }
 
-    private FlatEntityState(FlatEntityState other) {
+    private S2FlatEntityState(S2FlatEntityState other) {
         super(other);
         this.refs = other.refs.length == 0 ? EMPTY_REFS : other.refs.clone();
         this.refsSize = other.refsSize;
@@ -57,7 +57,7 @@ public class FlatEntityState extends AbstractS2EntityState {
 
     @Override
     public EntityState copy() {
-        return new FlatEntityState(this);
+        return new S2FlatEntityState(this);
     }
 
     @Override
@@ -494,7 +494,7 @@ public class FlatEntityState extends AbstractS2EntityState {
 
     /**
      * Lazily create a sub-Entry when descending through an uninitialized SubState.
-     * NestedArrayEntityState does this implicitly via untyped Object[] storage.
+     * S2NestedArrayEntityState does this implicitly via untyped Object[] storage.
      * For FLAT we need a concrete layout, so this only works for cases where the
      * layout is unambiguous: Pointer with a single (default) serializer.
      * For ambiguous Pointers and Vectors, the protocol is expected to emit
@@ -512,7 +512,7 @@ public class FlatEntityState extends AbstractS2EntityState {
             pointerSerializers[p.pointerId()] = p.serializers()[0];
         } else if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
             // Lazy-create vector sized to fit the upcoming element index.
-            // Mirrors NestedArrayEntityState's auto-growing capacity on writes.
+            // Mirrors S2NestedArrayEntityState's auto-growing capacity on writes.
             var length = hintIdx + 1;
             var array = new FieldLayout.Array(0, v.elementBytes(), length, v.elementLayout());
             sub = new Entry(array, new byte[length * v.elementBytes()]);
@@ -527,7 +527,7 @@ public class FlatEntityState extends AbstractS2EntityState {
 
     /**
      * Grow a vector sub-Entry to fit at least `requiredLength` elements.
-     * Mirrors NestedArrayEntityState's capacity-extension behavior on writes.
+     * Mirrors S2NestedArrayEntityState's capacity-extension behavior on writes.
      */
     private static void growVectorIfNeeded(Entry sub, FieldLayout.SubStateKind.Vector v, int requiredLength) {
         var array = (FieldLayout.Array) sub.rootLayout;

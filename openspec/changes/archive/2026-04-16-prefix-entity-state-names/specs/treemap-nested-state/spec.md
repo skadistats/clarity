@@ -1,8 +1,9 @@
-## Purpose
+## RENAMED Requirements
 
-S2TreeMapEntityState implementation using sorted-map-based entity state storage with direct TreeMap operations and StateMutation dispatch.
+- FROM: `### Requirement: TreeMapEntityState implements EntityState directly`
+- TO: `### Requirement: S2TreeMapEntityState implements EntityState directly`
 
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: S2TreeMapEntityState implements EntityState directly
 `S2TreeMapEntityState` SHALL implement `EntityState` directly. It SHALL NOT extend `S2EntityState` or implement `S2NestedEntityState`. It SHALL use its existing `Object2ObjectAVLTreeMap<S2LongFieldPath, Object>` for storage.

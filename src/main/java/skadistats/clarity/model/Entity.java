@@ -3,8 +3,8 @@ package skadistats.clarity.model;
 import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.state.AbstractS2EntityState;
 import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.model.state.S2AbstractEntityState;
 
 public class Entity {
 
@@ -84,21 +84,21 @@ public class Entity {
     }
 
     public String getNameForFieldPath(FieldPath fp) {
-        if (state instanceof AbstractS2EntityState s2s) {
+        if (state instanceof S2AbstractEntityState s2s) {
             return s2s.getNameForFieldPath(fp);
         }
         return ((S1DTClass) dtClass).getNameForFieldPath(fp);
     }
 
     public FieldPath getFieldPathForName(String property) {
-        if (state instanceof AbstractS2EntityState s2s) {
+        if (state instanceof S2AbstractEntityState s2s) {
             return s2s.getFieldPathForName(property);
         }
         return ((S1DTClass) dtClass).getFieldPathForName(property);
     }
 
     public Field getFieldForFieldPath(FieldPath fp) {
-        return ((AbstractS2EntityState) state).getFieldForFieldPath((S2FieldPath) fp);
+        return ((S2AbstractEntityState) state).getFieldForFieldPath((S2FieldPath) fp);
     }
 
     /**
