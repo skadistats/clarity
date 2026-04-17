@@ -24,7 +24,7 @@ import java.util.Set;
  * Mismatches become compile errors.
  */
 @SupportedAnnotationTypes("*")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class ListenerValidationProcessor extends AbstractProcessor {
 
     private static final String USAGE_POINT_MARKER = "skadistats.clarity.event.UsagePointMarker";

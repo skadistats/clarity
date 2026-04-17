@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  * Generates {@code *_Event} classes for annotations marked with {@code @GenerateEvent}.
  */
 @SupportedAnnotationTypes("*")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class EventGenerationProcessor extends AbstractProcessor {
 
     private static final String GENERATE_EVENT = "skadistats.clarity.event.GenerateEvent";

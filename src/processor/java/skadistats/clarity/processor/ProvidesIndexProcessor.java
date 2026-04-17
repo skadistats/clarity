@@ -18,7 +18,7 @@ import java.util.TreeSet;
  * names to {@code META-INF/clarity/providers.txt}.
  */
 @SupportedAnnotationTypes("skadistats.clarity.event.Provides")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class ProvidesIndexProcessor extends AbstractProcessor {
 
     private static final String PROVIDES = "skadistats.clarity.event.Provides";

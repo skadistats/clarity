@@ -32,7 +32,7 @@ import java.util.regex.Pattern;
  * </ul>
  */
 @SupportedAnnotationTypes("skadistats.clarity.io.decoder.RegisterDecoder")
-@SupportedSourceVersion(SourceVersion.RELEASE_17)
+@SupportedSourceVersion(SourceVersion.RELEASE_21)
 public class DecoderAnnotationProcessor extends AbstractProcessor {
 
     private static final String REGISTER_DECODER = "skadistats.clarity.io.decoder.RegisterDecoder";
