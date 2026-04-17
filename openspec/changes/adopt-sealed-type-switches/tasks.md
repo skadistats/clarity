@@ -6,25 +6,25 @@
 - [x] 1.4 Build: `./gradlew clarity:build`.
 - [x] 1.5 Build clarity-analyzer (in its own repo dir: `/home/spheenik/projects/clarity/clarity-analyzer`).
 - [x] 1.6 Build clarity-examples (in `/home/spheenik/projects/clarity/clarity-examples`).
-- [ ] 1.7 Commit: `refactor(processor): seal UsagePoint and pattern-switch ExecutionModel dispatch`.
+- [x] 1.7 Commit: `refactor(processor): seal UsagePoint and pattern-switch ExecutionModel dispatch`.
 
 ## 2. Stage 2 — Seal Field
 
-- [ ] 2.1 Declare `public abstract sealed class Field permits ArrayField, PointerField, SerializerField, ValueField, VectorField` in `model/s2/Field.java`.
-- [ ] 2.2 Mark each subclass `final`: `ArrayField`, `PointerField`, `SerializerField`, `ValueField`, `VectorField`.
-- [ ] 2.3 Do not touch any call site in this commit — sealing alone is the deliverable. If the compiler flags an existing `instanceof` chain as newly-exhaustive-eligible, leave it for Stage 3.
-- [ ] 2.4 Build clarity + clarity-analyzer + clarity-examples.
-- [ ] 2.5 Commit: `refactor(model): seal Field and mark its subclasses final`.
+- [x] 2.1 Declare `public abstract sealed class Field permits ArrayField, PointerField, SerializerField, ValueField, VectorField` in `model/s2/Field.java`.
+- [x] 2.2 Mark each subclass `final`: `ArrayField`, `PointerField`, `SerializerField`, `ValueField`, `VectorField`.
+- [x] 2.3 Do not touch any call site in this commit — sealing alone is the deliverable. If the compiler flags an existing `instanceof` chain as newly-exhaustive-eligible, leave it for Stage 3.
+- [x] 2.4 Build clarity + clarity-analyzer + clarity-examples.
+- [x] 2.5 Commit: `refactor(model): seal Field and mark its subclasses final`.
 
 ## 3. Stage 3 — Convert Field / FieldLayout / StateMutation instanceof chains
 
-- [ ] 3.1 `state/FieldLayoutBuilder.java` (lines ~46, 56, 63, 69, 82): rewrite the `Field`-chain into an exhaustive pattern switch over the now-sealed `Field`. Keep the `ValueField`-specific decoder-kind sub-branch (lines ~88) as a nested switch on decoder kind only where it reads cleaner; do not force it into a single switch if the inner logic is asymmetric.
-- [ ] 3.2 `state/s2/S2FlatEntityState.java` — convert every `FieldLayout` / `StateMutation` / `SubStateKind` chain to exhaustive pattern switches. Sites: line 76 (layout walk), 126 (copy), 152 (lookup/read), 191 (iteration), 217 (write dispatch), 355 (deepclone Entry), 404 (sub-Entry iteration), 453 (release walk), 568 (transitive ref release). Also line 106 (`StateMutation` dispatch in `applyMutation`) and nested `SubStateKind` sites at 92 / 138 / 203 / 288 / 325 / 504.
-- [ ] 3.3 `state/s2/S2NestedArrayEntityState.java` — convert the `StateMutation` chain at line 133 and the `Field` chains at lines 98 / 161 / 171 to exhaustive pattern switches.
-- [ ] 3.4 `state/s2/S2TreeMapEntityState.java` — convert the `StateMutation` chain at line 71 and the `Field` chains at lines 54 / 57 / 90 to exhaustive pattern switches.
-- [ ] 3.5 Delete the terminal `throw new IllegalStateException(...)` branches that existed only to satisfy the compiler — exhaustive switches make them unreachable.
-- [ ] 3.6 Build clarity + clarity-analyzer + clarity-examples.
-- [ ] 3.7 Run `./gradlew clarity:test` (full test suite in the clarity repo).
+- [x] 3.1 `state/FieldLayoutBuilder.java` (lines ~46, 56, 63, 69, 82): rewrite the `Field`-chain into an exhaustive pattern switch over the now-sealed `Field`. Keep the `ValueField`-specific decoder-kind sub-branch (lines ~88) as a nested switch on decoder kind only where it reads cleaner; do not force it into a single switch if the inner logic is asymmetric.
+- [x] 3.2 `state/s2/S2FlatEntityState.java` — convert every `FieldLayout` / `StateMutation` / `SubStateKind` chain to exhaustive pattern switches. Sites: line 76 (layout walk), 126 (copy), 152 (lookup/read), 191 (iteration), 217 (write dispatch), 355 (deepclone Entry), 404 (sub-Entry iteration), 453 (release walk), 568 (transitive ref release). Also line 106 (`StateMutation` dispatch in `applyMutation`) and nested `SubStateKind` sites at 92 / 138 / 203 / 288 / 325 / 504.
+- [x] 3.3 `state/s2/S2NestedArrayEntityState.java` — convert the `StateMutation` chain at line 133 and the `Field` chains at lines 98 / 161 / 171 to exhaustive pattern switches.
+- [x] 3.4 `state/s2/S2TreeMapEntityState.java` — convert the `StateMutation` chain at line 71 and the `Field` chains at lines 54 / 57 / 90 to exhaustive pattern switches.
+- [x] 3.5 Delete the terminal `throw new IllegalStateException(...)` branches that existed only to satisfy the compiler — exhaustive switches make them unreachable.
+- [x] 3.6 Build clarity + clarity-analyzer + clarity-examples.
+- [x] 3.7 Run `./gradlew clarity:test` (full test suite in the clarity repo).
 - [ ] 3.8 Commit: `refactor(state): convert FieldLayout / StateMutation / Field dispatch to sealed pattern switches`.
 
 ## 4. Stage 4 — Migrate S1FlatLayout onto FieldLayout[]
