@@ -1,13 +1,14 @@
 package skadistats.clarity.model;
 
 import skadistats.clarity.ClarityException;
-import skadistats.clarity.model.engine.CsGoS1EngineType;
-import skadistats.clarity.model.engine.CsgoS2EngineType;
-import skadistats.clarity.model.engine.DeadlockEngineType;
-import skadistats.clarity.model.engine.DotaS1EngineType;
-import skadistats.clarity.model.engine.DotaS2EngineType;
-import skadistats.clarity.model.engine.PacketInstanceReaderCsGoS1;
-import skadistats.clarity.model.engine.PacketInstanceReaderProtobufDemo;
+import skadistats.clarity.engine.EngineType;
+import skadistats.clarity.engine.PacketInstanceReaderProtobufDemo;
+import skadistats.clarity.engine.s1.CsGoS1EngineType;
+import skadistats.clarity.engine.s1.DotaS1EngineType;
+import skadistats.clarity.engine.s1.PacketInstanceReaderCsGoS1;
+import skadistats.clarity.engine.s2.CsgoS2EngineType;
+import skadistats.clarity.engine.s2.DeadlockEngineType;
+import skadistats.clarity.engine.s2.DotaS2EngineType;
 import skadistats.clarity.source.Source;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 

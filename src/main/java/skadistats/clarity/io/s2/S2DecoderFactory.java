@@ -8,6 +8,7 @@ import skadistats.clarity.io.decoder.factory.s2.PointerFactory;
 import skadistats.clarity.io.decoder.factory.s2.QAngleDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.VectorDecoderFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
+import skadistats.clarity.model.s2.SerializerProperties;
 
 import java.util.HashMap;
 import java.util.Map;

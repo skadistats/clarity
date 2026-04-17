@@ -1,14 +1,14 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
-import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.state.EntityStateFactory;
-import skadistats.clarity.model.state.S1EntityStateType;
-import skadistats.clarity.model.state.S2EntityStateType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.source.Source;
+import skadistats.clarity.state.EntityStateFactory;
+import skadistats.clarity.state.s1.S1EntityStateType;
+import skadistats.clarity.state.s2.S2EntityStateType;
 
 import java.io.IOException;
 

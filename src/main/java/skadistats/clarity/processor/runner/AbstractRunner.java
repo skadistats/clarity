@@ -3,11 +3,11 @@ package skadistats.clarity.processor.runner;
 import org.slf4j.Logger;
 import skadistats.clarity.ClarityExceptionHandler;
 import skadistats.clarity.LogChannel;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.EngineType;
 
 @Provides({OnInit.class})
 public abstract class AbstractRunner implements Runner {

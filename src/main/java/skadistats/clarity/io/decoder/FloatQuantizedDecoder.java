@@ -5,7 +5,7 @@ import skadistats.clarity.ClarityException;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
-import skadistats.clarity.model.state.PrimitiveType;
+import skadistats.clarity.state.PrimitiveType;
 
 import static skadistats.clarity.LogChannel.decoder;
 

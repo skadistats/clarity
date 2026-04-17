@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.state.EntityState;
 
 public class Entity {
 

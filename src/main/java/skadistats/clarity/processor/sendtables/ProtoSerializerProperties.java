@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.io.s2.SerializerProperties;
-import skadistats.clarity.io.s2.SerializerId;
+import skadistats.clarity.model.s2.SerializerId;
+import skadistats.clarity.model.s2.SerializerProperties;
 
 public class ProtoSerializerProperties implements SerializerProperties {
 

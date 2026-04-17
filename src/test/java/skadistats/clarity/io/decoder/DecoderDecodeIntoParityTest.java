@@ -4,7 +4,7 @@ import com.google.protobuf.ByteString;
 import org.testng.annotations.Test;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.Vector;
-import skadistats.clarity.model.state.PrimitiveType;
+import skadistats.clarity.state.PrimitiveType;
 
 import java.util.Arrays;
 import java.util.Random;

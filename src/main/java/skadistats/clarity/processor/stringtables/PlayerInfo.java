@@ -1,15 +1,14 @@
 package skadistats.clarity.processor.stringtables;
 
 import com.google.protobuf.ByteString;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.model.csgo.PlayerInfoType;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.TreeMap;
 

@@ -3,7 +3,7 @@ package skadistats.clarity.processor.sendtables;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.state.EntityStateFactory;
+import skadistats.clarity.state.EntityStateFactory;
 
 import java.util.Iterator;
 import java.util.Map;

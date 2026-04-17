@@ -1,6 +1,6 @@
 package skadistats.clarity.io.decoder;
 
-import skadistats.clarity.model.state.PrimitiveType;
+import skadistats.clarity.state.PrimitiveType;
 
 import java.util.HashMap;
 import java.util.Map;

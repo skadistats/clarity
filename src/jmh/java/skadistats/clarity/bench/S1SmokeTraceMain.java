@@ -2,8 +2,8 @@ package skadistats.clarity.bench;
 
 import skadistats.clarity.bench.trace.BirthMaterializer;
 import skadistats.clarity.bench.trace.MutationTraceCapture;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.S1EntityStateType;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.s1.S1EntityStateType;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

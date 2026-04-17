@@ -1,9 +1,9 @@
 package skadistats.clarity.processor.sendtables;
 
-import skadistats.clarity.io.s2.FieldType;
-import skadistats.clarity.io.s2.SerializerId;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.GameVersionRange;
+import skadistats.clarity.model.s2.FieldType;
+import skadistats.clarity.model.s2.SerializerId;
 
 import java.util.ArrayList;
 import java.util.Collections;

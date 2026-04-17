@@ -1,11 +1,11 @@
 package skadistats.clarity.bench.trace;
 
-import skadistats.clarity.io.s1.S1DTClass;
-import skadistats.clarity.io.s2.S2DTClass;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.FieldLayoutBuilder;
-import skadistats.clarity.model.state.S1EntityStateType;
-import skadistats.clarity.model.state.S2EntityStateType;
+import skadistats.clarity.model.s1.S1DTClass;
+import skadistats.clarity.model.s2.S2DTClass;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.FieldLayoutBuilder;
+import skadistats.clarity.state.s1.S1EntityStateType;
+import skadistats.clarity.state.s2.S2EntityStateType;
 
 /**
  * Builds the {@code EntityState[]} that the trace bench will dispatch into. For each

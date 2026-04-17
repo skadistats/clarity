@@ -1,8 +1,8 @@
 package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.s2.Pointer;
-import skadistats.clarity.io.s2.SerializerId;
+import skadistats.clarity.model.s2.Pointer;
+import skadistats.clarity.model.s2.SerializerId;
 
 @RegisterDecoder
 public final class PointerDecoder extends Decoder {

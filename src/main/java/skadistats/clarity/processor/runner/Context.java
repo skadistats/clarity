@@ -1,8 +1,8 @@
 package skadistats.clarity.processor.runner;
 
+import skadistats.clarity.engine.ContextData;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Event;
-import skadistats.clarity.model.EngineType;
-import skadistats.clarity.model.engine.ContextData;
 
 import java.lang.annotation.Annotation;
 

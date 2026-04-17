@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.runner;
 
 import skadistats.clarity.ClarityExceptionHandler;
-import skadistats.clarity.model.EngineType;
+import skadistats.clarity.engine.EngineType;
 
 public interface Runner {
 

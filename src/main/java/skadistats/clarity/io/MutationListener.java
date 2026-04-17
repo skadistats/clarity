@@ -2,8 +2,8 @@ package skadistats.clarity.io;
 
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.StateMutation;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.StateMutation;
 
 /**
  * Optional listener that observes every {@link EntityState} construction and every mutation

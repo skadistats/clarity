@@ -1,6 +1,6 @@
 package skadistats.clarity.io.bitstream;
 
-import skadistats.clarity.io.s2.FieldOpHuffmanTree;
+import skadistats.clarity.model.s2.FieldOpHuffmanTree;
 import skadistats.clarity.platform.buffer.Buffer;
 
 public class BitStream64 extends BitStream {

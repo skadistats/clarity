@@ -3,7 +3,7 @@ package skadistats.clarity.io;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.state.EntityState;
 
 import java.io.PrintStream;
 

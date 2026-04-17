@@ -1,7 +1,7 @@
 package skadistats.clarity.io.decoder;
 
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.model.state.PrimitiveType;
+import skadistats.clarity.state.PrimitiveType;
 
 @RegisterDecoder
 public final class LongUnsignedDecoder extends Decoder {

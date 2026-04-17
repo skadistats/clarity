@@ -1,0 +1,122 @@
+package skadistats.clarity.model.s1;
+
+import skadistats.clarity.model.DTClass;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.EntityStateFactory;
+import skadistats.clarity.state.s1.S1FlatLayout;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public final class S1DTClass implements DTClass {
+
+    private final String dtName;
+    private final SendTable sendTable;
+    private int classId = -1;
+    private ReceiveProp[] receiveProps;
+    private int[] indexMapping;
+    private Map<String, Integer> propsByName;
+    private S1DTClass superClass;
+    private EntityStateFactory entityStateFactory;
+    private S1FlatLayout flatLayout;
+
+    public S1DTClass(String dtName, SendTable sendTable) {
+        this.dtName = dtName;
+        this.sendTable = sendTable;
+    }
+
+    @Override
+    public int getClassId() {
+        return classId;
+    }
+
+    @Override
+    public void setClassId(int classId) {
+        this.classId = classId;
+    }
+
+    @Override
+    public void setEntityStateFactory(EntityStateFactory factory) {
+        this.entityStateFactory = factory;
+    }
+
+    @Override
+    public EntityState getEmptyState() {
+        return entityStateFactory.forS1(this);
+    }
+
+    public S1FlatLayout getFlatLayout() {
+        if (flatLayout == null) {
+            flatLayout = S1FlatLayout.build(receiveProps);
+        }
+        return flatLayout;
+    }
+
+    public String getNameForFieldPath(S1FieldPath fp) {
+        return this.receiveProps[fp.idx()].getVarName();
+    }
+
+    public S1FieldPath getFieldPathForName(String name){
+        var idx = this.propsByName.get(name);
+        return idx != null ? new S1FieldPath(idx) : null;
+    }
+
+    public S1DTClass getSuperClass() {
+        return superClass;
+    }
+
+    public void setSuperClass(S1DTClass superClass) {
+        this.superClass = superClass;
+    }
+
+    public String getDtName() {
+        return dtName;
+    }
+
+    public boolean instanceOf(String dtName) {
+        var s = this;
+        while (s != null) {
+            if (s.getDtName().equals(dtName)) {
+                return true;
+            }
+            s = s.getSuperClass();
+        }
+        return false;
+    }
+
+    public boolean instanceOf(int classId) {
+        var s = this;
+        while (s != null) {
+            if (s.getClassId() == classId) {
+                return true;
+            }
+            s = s.getSuperClass();
+        }
+        return false;
+    }
+
+    public SendTable getSendTable() {
+        return sendTable;
+    }
+
+    public ReceiveProp[] getReceiveProps() {
+        return receiveProps;
+    }
+
+    public void setReceiveProps(ReceiveProp[] receiveProps) {
+        this.receiveProps = receiveProps;
+        this.propsByName = new HashMap<>();
+        for(var i = 0; i < receiveProps.length; ++i) {
+            this.propsByName.put(receiveProps[i].getVarName(), i);
+        }
+    }
+
+    public int[] getIndexMapping() {
+        return indexMapping;
+    }
+
+    public void setIndexMapping(int[] indexMapping) {
+        this.indexMapping = indexMapping;
+    }
+
+}

@@ -1,0 +1,29 @@
+package skadistats.clarity.state;
+
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import skadistats.clarity.model.DTClass;
+import skadistats.clarity.model.Entity;
+
+public class EntityRegistry {
+
+    private final Long2ObjectOpenHashMap<Entity> entities = new Long2ObjectOpenHashMap<>();
+
+    public Entity create(int dtClassId, int index, int serial, int handle, int spawnGroupHandle, DTClass dtClass) {
+        var uid = Entity.uid(dtClassId, handle);
+        var entity = entities.get(uid);
+        if (entity == null) {
+            entity = new Entity(index, serial, handle, dtClass);
+            entities.put(uid, entity);
+        }
+        entity.setState(null);
+        entity.setExistent(false);
+        entity.setActive(false);
+        entity.setSpawnGroupHandle(spawnGroupHandle);
+        return entity;
+    }
+
+    public Entity get(long uid) {
+        return entities.get(uid);
+    }
+
+}

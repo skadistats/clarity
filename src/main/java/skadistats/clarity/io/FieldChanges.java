@@ -1,8 +1,8 @@
 package skadistats.clarity.io;
 
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.StateMutation;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.StateMutation;
 
 import java.util.Arrays;
 import java.util.function.BiConsumer;

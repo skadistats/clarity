@@ -1,14 +1,14 @@
 package skadistats.clarity.processor.tempentities;
 
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.Entity;
+import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;

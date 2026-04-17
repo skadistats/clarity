@@ -6,7 +6,7 @@ import skadistats.clarity.io.decoder.QAngleNoBitCountDecoder;
 import skadistats.clarity.io.decoder.QAngleNoScaleDecoder;
 import skadistats.clarity.io.decoder.QAnglePitchYawOnlyDecoder;
 import skadistats.clarity.io.decoder.QAnglePreciseDecoder;
-import skadistats.clarity.io.s2.SerializerProperties;
+import skadistats.clarity.model.s2.SerializerProperties;
 
 public class QAngleDecoderFactory {
 

@@ -15,14 +15,18 @@ module com.skadistats.clarity {
     exports skadistats.clarity.io.decoder.factory.s2;
     exports skadistats.clarity.io.s1;
     exports skadistats.clarity.io.s2;
-    exports skadistats.clarity.io.s2.field;
     exports skadistats.clarity.logger;
     exports skadistats.clarity.model;
     exports skadistats.clarity.model.csgo;
-    exports skadistats.clarity.model.engine;
     exports skadistats.clarity.model.s1;
     exports skadistats.clarity.model.s2;
-    exports skadistats.clarity.model.state;
+    exports skadistats.clarity.model.s2.field;
+    exports skadistats.clarity.engine;
+    exports skadistats.clarity.engine.s1;
+    exports skadistats.clarity.engine.s2;
+    exports skadistats.clarity.state;
+    exports skadistats.clarity.state.s1;
+    exports skadistats.clarity.state.s2;
     exports skadistats.clarity.platform;
     exports skadistats.clarity.platform.buffer;
     // skadistats.clarity.processor is in the processor source set, exported via JAR bundling

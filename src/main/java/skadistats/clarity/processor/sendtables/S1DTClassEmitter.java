@@ -1,23 +1,22 @@
 package skadistats.clarity.processor.sendtables;
 
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
-import skadistats.clarity.io.s1.S1DTClass;
-import skadistats.clarity.io.s1.SendProp;
-import skadistats.clarity.io.s1.SendTable;
-import skadistats.clarity.io.s1.SendTableFlattener;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.EngineId;
-import skadistats.clarity.model.EngineType;
 import skadistats.clarity.model.s1.PropType;
+import skadistats.clarity.model.s1.S1DTClass;
+import skadistats.clarity.model.s1.SendProp;
+import skadistats.clarity.model.s1.SendTable;
+import skadistats.clarity.model.s1.SendTableFlattener;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 
 @Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = {EngineId.DOTA_S1, EngineId.CSGO_S1})

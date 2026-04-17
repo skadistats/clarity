@@ -1,8 +1,8 @@
 package skadistats.clarity.source;
 
 import skadistats.clarity.ClarityException;
+import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.model.EngineMagic;
-import skadistats.clarity.model.EngineType;
 
 import java.io.Closeable;
 import java.io.IOException;

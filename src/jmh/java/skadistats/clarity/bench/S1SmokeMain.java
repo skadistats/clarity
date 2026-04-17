@@ -1,9 +1,9 @@
 package skadistats.clarity.bench;
 
-import skadistats.clarity.model.state.S1EntityStateType;
 import skadistats.clarity.processor.entities.UsesEntities;
 import skadistats.clarity.processor.runner.SimpleRunner;
 import skadistats.clarity.source.MappedFileSource;
+import skadistats.clarity.state.s1.S1EntityStateType;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

@@ -1,8 +1,14 @@
 package skadistats.clarity.io.decoder.factory.s1;
 
-import skadistats.clarity.io.s1.SendProp;
-import skadistats.clarity.io.decoder.*;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.FloatCellCoordDecoder;
+import skadistats.clarity.io.decoder.FloatCoordDecoder;
+import skadistats.clarity.io.decoder.FloatCoordMpDecoder;
+import skadistats.clarity.io.decoder.FloatDefaultDecoder;
+import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
+import skadistats.clarity.io.decoder.FloatNormalDecoder;
 import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.SendProp;
 
 public class FloatDecoderFactory {
 

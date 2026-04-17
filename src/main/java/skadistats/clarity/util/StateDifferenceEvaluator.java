@@ -1,7 +1,7 @@
 package skadistats.clarity.util;
 
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
+import skadistats.clarity.state.EntityState;
 
 import java.util.ArrayList;
 import java.util.Iterator;

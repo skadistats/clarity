@@ -1,28 +1,17 @@
 package skadistats.clarity.bench;
 
 import com.google.protobuf.ByteString;
-import org.openjdk.jmh.annotations.Benchmark;
-import org.openjdk.jmh.annotations.BenchmarkMode;
-import org.openjdk.jmh.annotations.Fork;
-import org.openjdk.jmh.annotations.Level;
-import org.openjdk.jmh.annotations.Measurement;
-import org.openjdk.jmh.annotations.Mode;
-import org.openjdk.jmh.annotations.OutputTimeUnit;
-import org.openjdk.jmh.annotations.Param;
-import org.openjdk.jmh.annotations.Scope;
-import org.openjdk.jmh.annotations.Setup;
-import org.openjdk.jmh.annotations.State;
-import org.openjdk.jmh.annotations.Warmup;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.decoder.FloatDefaultDecoder;
+import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.IntSignedDecoder;
 import skadistats.clarity.io.decoder.LongSignedDecoder;
 import skadistats.clarity.io.decoder.VectorDecoder;
-import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
-import skadistats.clarity.model.state.PrimitiveType;
+import skadistats.clarity.state.PrimitiveType;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;

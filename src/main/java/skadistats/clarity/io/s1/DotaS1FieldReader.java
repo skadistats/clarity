@@ -1,6 +1,7 @@
 package skadistats.clarity.io.s1;
 
 import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
 
 public class DotaS1FieldReader extends S1FieldReader {

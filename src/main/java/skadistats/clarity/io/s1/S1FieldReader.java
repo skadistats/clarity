@@ -5,10 +5,11 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
-import skadistats.clarity.model.state.S1EntityState;
-import skadistats.clarity.model.state.S1FlatLayout;
-import skadistats.clarity.model.state.StateMutation;
+import skadistats.clarity.state.StateMutation;
+import skadistats.clarity.state.s1.S1EntityState;
+import skadistats.clarity.state.s1.S1FlatLayout;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;

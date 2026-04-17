@@ -64,7 +64,7 @@ The **ExecutionModel** automatically resolves dependencies, instantiates require
 - `ControllableRunner`: Allows seeking to specific ticks
 - `Context`: Provides access to engine type, tick, build number
 
-**EngineType** (`skadistats.clarity.model.engine`): Abstracts differences between game engines
+**EngineType** (`skadistats.clarity.engine`): Abstracts differences between game engines
 - `DOTA_S1`, `DOTA_S2`: Dota 2 on Source 1/2
 - `CSGO_S1`, `CSGO_S2`: CSGO/CS2 on Source 1/2
 - `DEADLOCK`: Deadlock on Source 2

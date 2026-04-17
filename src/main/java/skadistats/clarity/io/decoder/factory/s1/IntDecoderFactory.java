@@ -1,8 +1,12 @@
 package skadistats.clarity.io.decoder.factory.s1;
 
-import skadistats.clarity.io.s1.SendProp;
-import skadistats.clarity.io.decoder.*;
+import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.IntSignedDecoder;
+import skadistats.clarity.io.decoder.IntUnsignedDecoder;
+import skadistats.clarity.io.decoder.IntVarSignedDecoder;
+import skadistats.clarity.io.decoder.IntVarUnsignedDecoder;
 import skadistats.clarity.model.s1.PropFlag;
+import skadistats.clarity.model.s1.SendProp;
 
 public class IntDecoderFactory {
 

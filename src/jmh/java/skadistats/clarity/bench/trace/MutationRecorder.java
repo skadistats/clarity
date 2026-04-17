@@ -3,8 +3,8 @@ package skadistats.clarity.bench.trace;
 import skadistats.clarity.io.MutationListener;
 import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.FieldPath;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.StateMutation;
+import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.StateMutation;
 
 import java.util.ArrayList;
 import java.util.IdentityHashMap;
