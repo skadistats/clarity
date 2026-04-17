@@ -227,7 +227,7 @@ public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1Clari
                 var nTables = bs.readUBitInt(8);
                 for (var t = 0; t < nTables; t++) {
                     var tb = b.addTablesBuilder();
-                    tb.setTableName(bs.readString(4095));
+                    tb.setTableName(bs.readString(BitStream.MAX_STRING_LENGTH));
                     var nStrings = bs.readUBitInt(16);
                     for (var s = 0; s < nStrings; s++) {
                         readItem(bs, tb.addItemsBuilder());

@@ -6,6 +6,7 @@ import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.UsagePoint;
+import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
@@ -22,7 +23,7 @@ import java.util.TreeMap;
 
 public class BaseStringTableEmitter {
 
-    protected static final int MAX_NAME_LENGTH = 0x400;
+    protected static final int MAX_NAME_LENGTH = BitStream.MAX_STRING_LENGTH;
 
     protected static final int KEY_HISTORY_BITS = 5;
     protected static final int KEY_HISTORY_SIZE = (1 << KEY_HISTORY_BITS);

@@ -6,7 +6,7 @@ import skadistats.clarity.io.bitstream.BitStream;
 public final class StringZeroTerminatedDecoder extends Decoder {
 
     public static String decode(BitStream bs) {
-        return bs.readString(Integer.MAX_VALUE);
+        return bs.readString(BitStream.MAX_STRING_LENGTH);
     }
 
     /**

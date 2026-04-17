@@ -43,9 +43,11 @@ public abstract class BitStream {
     private static final int[] UBV_COUNT = {0, 4, 8, 28};
     private static final int[] UBVFP_COUNT = {2, 4, 10, 17, 31};
 
+    public static final int MAX_STRING_LENGTH = 512;
+    private static final ThreadLocal<byte[]> STRING_TEMP = ThreadLocal.withInitial(() -> new byte[MAX_STRING_LENGTH]);
+
     protected int len;
     protected int pos;
-    private final byte[] stringTemp = new byte[32768];
 
     public static BitStream createBitStream(ByteString input) {
         var bs = ClarityPlatform.createBitStream(ZeroCopy.extract(input));
@@ -102,19 +104,20 @@ public abstract class BitStream {
     }
 
     public String readString(int n) {
+        var buf = STRING_TEMP.get();
         var o = 0;
-        while (o < n) {
+        var limit = Math.min(n, MAX_STRING_LENGTH);
+        while (o < limit) {
             var c = (byte) readUBitInt(8);
             if (c == 0) {
                 break;
             }
-            stringTemp[o] = c;
-            o++;
+            buf[o++] = c;
         }
         if (o == 0) {
             return "";
         }
-        return new String(stringTemp, 0, o, StandardCharsets.UTF_8).intern();
+        return new String(buf, 0, o, StandardCharsets.UTF_8).intern();
     }
 
     /**

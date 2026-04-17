@@ -36,6 +36,10 @@ public class Resources {
     private final Map<Integer, SpawnGroupManifest> spawnGroupManifests = new HashMap<>();
     private final Map<Long, Entry> resourceHandles = new HashMap<>();
 
+    public GameSessionManifest getGameSessionManifest() {
+        return gameSessionManifest;
+    }
+
     public Collection<SpawnGroupManifest> getManifests() {
         return Collections.unmodifiableCollection(spawnGroupManifests.values());
     }
@@ -129,10 +133,10 @@ public class Resources {
         var nEntries = bs.readUBitInt(16);
 
         for (var i = 0; i < nTypes; i++) {
-            extHashes.add(storeHash(exts, bs.readString(Integer.MAX_VALUE)));
+            extHashes.add(storeHash(exts, bs.readString(BitStream.MAX_STRING_LENGTH)));
         }
         for (var i = 0; i < nDirs; i++) {
-            dirHashes.add(storeHash(dirs, bs.readString(Integer.MAX_VALUE)));
+            dirHashes.add(storeHash(dirs, bs.readString(BitStream.MAX_STRING_LENGTH)));
         }
         var bitsForType = Math.max(1, Util.calcBitsNeededFor(nTypes - 1));
         var bitsForDir = Math.max(1, Util.calcBitsNeededFor(nDirs - 1));
@@ -140,7 +144,7 @@ public class Resources {
         for (var i = 0; i < nEntries; i++) {
 
             var dirIdx = bs.readUBitInt(bitsForDir);
-            var file = bs.readString(Integer.MAX_VALUE);
+            var file = bs.readString(BitStream.MAX_STRING_LENGTH);
             var extIdx = bs.readUBitInt(bitsForType);
             var entry = new Entry(dirHashes.get(dirIdx), file, extHashes.get(extIdx));
 
@@ -196,6 +200,10 @@ public class Resources {
 
     public class Manifest {
         private final List<Entry> entries = new ArrayList<>();
+
+        public List<Entry> getEntries() {
+            return Collections.unmodifiableList(entries);
+        }
     }
 
     public class Entry {
@@ -207,6 +215,18 @@ public class Resources {
             this.dirHash = dirHash;
             this.name = name;
             this.extHash = extHash;
+        }
+
+        public String getDir() {
+            return dirs.get(dirHash);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getExtension() {
+            return exts.get(extHash);
         }
 
         @Override
