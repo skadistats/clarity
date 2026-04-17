@@ -3,6 +3,7 @@ package skadistats.clarity.state;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.s1.S1EntityStateType;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2EntityStateType;
 
 public class EntityStateFactory {

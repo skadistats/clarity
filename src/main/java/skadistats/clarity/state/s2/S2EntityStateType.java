@@ -2,7 +2,6 @@ package skadistats.clarity.state.s2;
 
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.EntityState;
-import skadistats.clarity.state.FieldLayoutBuilder;
 
 public enum S2EntityStateType {
 

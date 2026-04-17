@@ -1,4 +1,4 @@
-package skadistats.clarity.state;
+package skadistats.clarity.state.s2;
 
 import skadistats.clarity.io.decoder.StringLenDecoder;
 import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
@@ -10,6 +10,7 @@ import skadistats.clarity.model.s2.field.PointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
 import skadistats.clarity.model.s2.field.VectorField;
+import skadistats.clarity.state.FieldLayout;
 
 import java.util.HashMap;
 import java.util.Map;
