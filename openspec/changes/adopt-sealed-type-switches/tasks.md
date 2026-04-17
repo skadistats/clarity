@@ -29,13 +29,13 @@
 
 ## 4. Stage 4 — Migrate S1FlatLayout onto FieldLayout[]
 
-- [ ] 4.1 Check whether `accelerate-s1-flat-state` has landed. If it is still an open change, pause this stage and coordinate — fold the cleanup into that change instead of forking S1FlatLayout twice.
-- [ ] 4.2 In `state/s1/S1FlatLayout.java`: delete the `LeafKind` enum and the parallel `kinds` / `primTypes` / `maxLengths` / `offsets` arrays; replace with a single `FieldLayout[] leaves` field (leaves drawn from `FieldLayout.Primitive` / `InlineString` / `Ref`). Keep `dataBytes` and `refSlots` as aggregate fields.
-- [ ] 4.3 Update `S1FlatLayout.build(ReceiveProp[])` to construct `FieldLayout` records directly. Replace the `instanceof StringLenDecoder` predicate with the inline-string leaf construction (`FieldLayout.InlineString(offset, INLINE_STRING_MAX_LENGTH)`).
-- [ ] 4.4 In `state/s1/S1FlatEntityState.java` (lines ~71–78 and the corresponding write site): rewrite the `LeafKind` switch as an exhaustive pattern switch on `FieldLayout` (`case Primitive p -> …`, `case InlineString is -> …`, `case Ref r -> …`). The `Composite` / `Array` / `SubState` variants SHALL be unreachable for S1 leaves — rely on the sealed hierarchy's compile-time check (the compiler will force you to include them in the switch unless you constrain the array's static type to only the leaf variants; choose one: either a narrower sealed sub-hierarchy for leaves, or a `default -> throw` arm guarded by a comment explaining S1 doesn't produce those variants).
-- [ ] 4.5 Audit all call sites that previously called `layout.kinds()`, `layout.primTypes()`, `layout.maxLengths()`, `layout.offsets()`; replace with direct `leaves[idx]` access and pattern-match as needed.
-- [ ] 4.6 Build clarity + clarity-analyzer + clarity-examples.
-- [ ] 4.7 Run `./gradlew clarity:test`.
+- [x] 4.1 Check whether `accelerate-s1-flat-state` has landed. If it is still an open change, pause this stage and coordinate — fold the cleanup into that change instead of forking S1FlatLayout twice.
+- [x] 4.2 In `state/s1/S1FlatLayout.java`: delete the `LeafKind` enum and the parallel `kinds` / `primTypes` / `maxLengths` / `offsets` arrays; replace with a single `FieldLayout[] leaves` field (leaves drawn from `FieldLayout.Primitive` / `InlineString` / `Ref`). Keep `dataBytes` and `refSlots` as aggregate fields.
+- [x] 4.3 Update `S1FlatLayout.build(ReceiveProp[])` to construct `FieldLayout` records directly. Replace the `instanceof StringLenDecoder` predicate with the inline-string leaf construction (`FieldLayout.InlineString(offset, INLINE_STRING_MAX_LENGTH)`).
+- [x] 4.4 In `state/s1/S1FlatEntityState.java` (lines ~71–78 and the corresponding write site): rewrite the `LeafKind` switch as an exhaustive pattern switch on `FieldLayout` (`case Primitive p -> …`, `case InlineString is -> …`, `case Ref r -> …`). The `Composite` / `Array` / `SubState` variants SHALL be unreachable for S1 leaves — rely on the sealed hierarchy's compile-time check (the compiler will force you to include them in the switch unless you constrain the array's static type to only the leaf variants; choose one: either a narrower sealed sub-hierarchy for leaves, or a `default -> throw` arm guarded by a comment explaining S1 doesn't produce those variants).
+- [x] 4.5 Audit all call sites that previously called `layout.kinds()`, `layout.primTypes()`, `layout.maxLengths()`, `layout.offsets()`; replace with direct `leaves[idx]` access and pattern-match as needed.
+- [x] 4.6 Build clarity + clarity-analyzer + clarity-examples.
+- [x] 4.7 Run `./gradlew clarity:test`.
 - [ ] 4.8 Commit: `refactor(state): migrate S1FlatLayout to sealed FieldLayout array`.
 
 ## 5. Stage 5 — Retarget the decoder dispatch generator
