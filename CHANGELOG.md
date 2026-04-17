@@ -1,5 +1,43 @@
 # Clarity 2 Changelog
 
+## Unreleased
+
+**Breaking changes**
+
+* minimum runtime bumped to Java 21. Published jar no longer runs on
+  Java 17 JVMs. Exhaustive `switch` over sealed types (required by
+  this refactor) forces source=21, which javac couples to target=21.
+* `DTClass`, `FieldPath`, and `EntityState` are now sealed sum types.
+  * `DTClass permits S1DTClass, S2DTClass`
+  * `FieldPath permits S1FieldPath, S2FieldPath`
+  * `EntityState permits S1EntityState, S2EntityState`
+  * Removed: `DTClass.evaluate(Function, Function)`, `DTClass.s1()`,
+    `DTClass.s2()`, `FieldPath.s1()`, `FieldPath.s2()`.
+  * *Migration:* replace escape-hatch casts with exhaustive `switch`
+    over the sealed hierarchies (e.g.
+    `switch (dtClass) { case S1DTClass s1 -> …; case S2DTClass s2 -> …; }`).
+* Engine-typed write methods (`write`, `decodeInto`, `applyMutation`,
+  `getValueForFieldPath`) moved from the base `EntityState` onto
+  `S1EntityState` / `S2EntityState` with typed `S1FieldPath` /
+  `S2FieldPath` arguments. Static dispatch helpers
+  `EntityState.applyMutation(state, fp, mut)`,
+  `EntityState.applyMutations(state, fps, muts, beforeEach)`, and
+  `EntityState.getValueForFieldPath(state, fp)` cover callers that
+  hold a bare `EntityState`.
+* `S2AbstractEntityState` was merged into `S2EntityState` (sealed
+  abstract class, directly permitted by `EntityState`). The separate
+  interface no longer exists.
+* `FieldReader` became a generic interface
+  `FieldReader<D extends DTClass, FP extends FieldPath, S extends EntityState>`.
+  `S1FieldReader` and `S2FieldReader` bind the engine triple; entry-time
+  casts and per-field `FieldPath` casts inside the read loop are gone.
+  The mutable `FieldReader.DEBUG_STREAM` static moved to
+  `FieldReader.Debug.STREAM` (interface statics are implicitly final).
+* `FieldChanges` became generic `FieldChanges<FP extends FieldPath>` with
+  a typed `FP[] fieldPaths`. Mutation application delegates to the
+  static `EntityState.applyMutations` helpers; sealed dispatch lives in
+  one place.
+
 ## April 12, 2026: Version 4.0.0 released
 
 **Breaking changes**

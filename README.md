@@ -22,7 +22,7 @@ Clarity produces the following data you might be interested in from a replay. Ch
 
 # Requirements
 
-* Java (17 and above)
+* Java (21 and above)
 * Gradle (for building)
 
 # Usage

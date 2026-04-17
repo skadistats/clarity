@@ -33,7 +33,7 @@ Clarity is an open-source replay parser for Dota 2, CSGO, CS2, and Deadlock, wri
 
 ## Project Requirements
 
-- Java 17 or higher (configured in build.gradle.kts)
+- Java 21 or higher (configured in build.gradle.kts; exhaustive switch over sealed types requires source=target=21)
 - Gradle (use included wrapper: ./gradlew)
 - Dependencies managed via Maven Central
 

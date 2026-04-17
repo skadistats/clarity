@@ -67,7 +67,7 @@
 
 - [x] 9.1 `./gradlew build` in clarity-examples green with zero source edits
 - [x] 9.2 No `.s1()` / `.s2()` / `evaluate()` in any example source
-- [ ] 9.3 Smoke-test examples against a real replay — deferred (runtime smoke not blocking spec verification)
+- [x] 9.3 Smoke-test examples against a real replay — allchat, matchend, positionRun all clean on `replays/dota/s2/normal/1560294294.dem`
 - [x] 9.4 dtinspector compiled via `./gradlew :dev:dtinspectorPackage` as part of `./gradlew build`
 - [x] 9.5 clarity-examples toolchain bumped to JDK 21 in both root `build.gradle.kts` and `build-logic/src/main/kotlin/examples-base.gradle.kts`
 
@@ -79,6 +79,6 @@
 
 ## 11. Documentation
 
-- [ ] 11.1 CHANGELOG entry — pending
-- [ ] 11.2 CLAUDE.md / README.md note on JDK 21 floor — pending
-- [ ] 11.3 clarity-analyzer CHANGELOG — pending
+- [x] 11.1 CHANGELOG entry
+- [x] 11.2 CLAUDE.md / README.md note on JDK 21 floor (clarity + clarity-examples)
+- [x] 11.3 clarity-analyzer CHANGELOG — N/A (no CHANGELOG file exists)
