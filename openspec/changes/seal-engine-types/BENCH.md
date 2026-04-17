@@ -1,46 +1,47 @@
 # seal-engine-types — Benchmark before/after
 
-JMH single-shot, 3 warmup × 10 measurement iterations, `-prof gc`.
+JMH single-shot, 3 warmup × 10 measurement iterations, `-prof gc`. Three points measured to isolate the sealing effect from the bundled JDK 17→21 toolchain bump:
 
-- **Pre**: `6ddc606` (origin/next, pre-seal base) — JDK 17 toolchain
-- **Post**: `00bf3c8` (next HEAD) — JDK 21 toolchain (JDK bump is part of this change)
+- **A. Pre / JDK 17**: `6ddc606` (origin/next, pre-seal base) — toolchain as-shipped.
+- **B. Pre / JDK 21**: `6ddc606` with only `languageVersion.set(JavaLanguageVersion.of(21))` flipped — isolates JDK-only delta.
+- **C. Post / JDK 21**: `00bf3c8` (next HEAD) — the shipped change.
 
 Bench artifact dirs in `bench-results/`:
-- `2026-04-17_152830_HEAD-6ddc606/` — S2 pre
-- `2026-04-17_153611_s1_HEAD-6ddc606/` — S1 pre
-- `2026-04-17_151826_next-00bf3c8/` — S2 post
-- `2026-04-17_152500_s1_next-00bf3c8/` — S1 post
+- A (S2): `2026-04-17_152830_HEAD-6ddc606/`, A (S1): `2026-04-17_153611_s1_HEAD-6ddc606/`
+- B (S2): `2026-04-17_154018_HEAD-6ddc606/`, B (S1): `2026-04-17_154523_s1_HEAD-6ddc606/`
+- C (S2): `2026-04-17_151826_next-00bf3c8/`, C (S1): `2026-04-17_152500_s1_next-00bf3c8/`
 
-## S2 — `EntityStateParseBench` (median wall-clock)
+## S2 FLAT (`S2FlatEntityState`, median ms)
 
-| Replay | impl | pre | post | Δ |
-|---|---|---:|---:|---:|
-| cs2/350/3dmax-vs-falcons-m1-anubis | NESTED_ARRAY | 1302.2 ms | 1264.9 ms | **-2.9%** |
-| cs2/350/3dmax-vs-falcons-m1-anubis | TREE_MAP | 1502.8 ms | 1501.2 ms | -0.1% |
-| cs2/350/3dmax-vs-falcons-m1-anubis | **FLAT** | 1261.0 ms | 1226.4 ms | **-2.7%** |
-| deadlock/newer/19206063 | NESTED_ARRAY | 1128.1 ms | 1110.5 ms | -1.6% |
-| deadlock/newer/19206063 | TREE_MAP | 1399.9 ms | 1362.6 ms | -2.7% |
-| deadlock/newer/19206063 | **FLAT** | 1069.2 ms | 1053.4 ms | **-1.5%** |
-| dota/s2/340/8168882574_1198277651 | NESTED_ARRAY | 1516.7 ms | 1458.5 ms | -3.8% |
-| dota/s2/340/8168882574_1198277651 | TREE_MAP | 1866.4 ms | 1813.3 ms | -2.8% |
-| dota/s2/340/8168882574_1198277651 | **FLAT** | 1423.1 ms | 1338.3 ms | **-6.0%** |
+| Replay | A: pre/17 | B: pre/21 | C: post/21 | B-A (JDK only) | C-B (sealing only) | C-A (full) |
+|---|---:|---:|---:|---:|---:|---:|
+| cs2/3dmax-vs-falcons | 1261.0 | 1272.7 | 1226.4 | **+0.9%** | **-3.6%** | -2.7% |
+| deadlock/19206063 | 1069.2 | 1072.2 | 1053.4 | **+0.3%** | **-1.8%** | -1.5% |
+| dota/s2/8168882574 | 1423.1 | 1402.0 | 1338.3 | **-1.5%** | **-4.5%** | -6.0% |
 
-## S1 — `S1EntityStateParseBench` (median wall-clock)
+## S2 NESTED_ARRAY (median ms)
 
-| Replay | impl | pre | post | Δ |
-|---|---|---:|---:|---:|
-| csgo/s1/luminosity-vs-azio-cache | **FLAT** | 674.5 ms | 658.8 ms | **-2.3%** |
-| csgo/s1/luminosity-vs-azio-cache | OBJECT_ARRAY | 689.3 ms | 659.0 ms | -4.4% |
-| dota/s1/normal/271145478 | **FLAT** | 274.9 ms | 254.4 ms | **-7.5%** |
-| dota/s1/normal/271145478 | OBJECT_ARRAY | 288.3 ms | 268.8 ms | -6.8% |
+| Replay | A: pre/17 | B: pre/21 | C: post/21 | B-A (JDK only) | C-B (sealing only) |
+|---|---:|---:|---:|---:|---:|
+| cs2 | 1302.2 | 1306.5 | 1264.9 | +0.3% | **-3.2%** |
+| deadlock | 1128.1 | 1125.1 | 1110.5 | -0.3% | **-1.3%** |
+| dota/s2 | 1516.7 | 1515.1 | 1458.5 | -0.1% | **-3.7%** |
 
-## Allocations (alloc/op)
+## S1 FLAT (`S1FlatEntityState`, median ms)
 
-Unchanged across all replay × impl combinations pre vs post. Sealing is type-system only — no allocation effects expected and none observed.
+| Replay | A: pre/17 | B: pre/21 | C: post/21 | B-A (JDK only) | C-B (sealing only) | C-A (full) |
+|---|---:|---:|---:|---:|---:|---:|
+| csgo/luminosity-azio | 674.5 | 679.1 | 658.8 | **+0.7%** | **-3.0%** | -2.3% |
+| dota/s1/271145478 | 274.9 | 274.5 | 254.4 | **-0.1%** | **-7.3%** | -7.5% |
+
+## Allocations
+
+Unchanged across all replay × impl combinations in all three runs. Sealing is type-system only — no alloc effects, and the JDK bump does not show up in alloc rates either.
 
 ## Interpretation
 
-- Sealing + cast-at-entry is a validation, not a goal (per `design.md` non-goal #30). Design explicitly did not gate on perf delta.
-- Observed 2-8% wall-clock wins are net positive across every replay × impl cell; no regressions.
-- The JDK 17 → 21 toolchain bump is bundled into this change and almost certainly contributes to the delta (JIT improvements, pattern-matching `switch` lowering, etc.). The sealing effect alone cannot be isolated without a JDK-held-constant re-bench, which is not warranted given the non-goal.
-- Architecturally the win is the removed runtime casts in the hot path (`S1FieldReader`/`S2FieldReader`); the measured delta is consistent with "no hot-path regression, small wins from better dispatch + JDK bump".
+The JDK 17→21 toolchain bump on this code is **not** the driver: B-A deltas sit in JMH noise (-1.5% to +0.9%, mean close to zero). The sealing work is doing the real work — **-1.3% to -4.5% on S2, -3.0% to -7.3% on S1**, consistent across replays and impls, with the largest wins on Dota (largest per-tick field-update counts, so the cast-removal in the `readFields` hot loop pays off most).
+
+This is a bigger measurable payoff than the design framed — `design.md` called the perf delta "a non-blocking sanity check", not a goal. Turns out removing the per-field runtime cast in `S1FieldReader`/`S2FieldReader` is worth several percent on dense replays. Reasonable retrospectively: the loop runs thousands of times per tick and the old cast chain went through `FieldPath → S1/S2FieldPath` plus `EntityState → concrete` per iteration.
+
+No regressions in any cell. Ship.

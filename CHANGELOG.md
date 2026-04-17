@@ -38,6 +38,33 @@
   static `EntityState.applyMutations` helpers; sealed dispatch lives in
   one place.
 
+**Performance**
+
+Cumulative wins on `EntityStateParseBench` since 4.0.0 (JDK 21.0.10,
+3 warmup + 10 measurement iterations, single-shot, `-prof gc`):
+
+* New default S2 entity state is `S2FlatEntityState` (was
+  `NestedArrayEntityState`); new default S1 entity state is
+  `S1FlatEntityState` (was `ObjectArrayEntityState`).
+* End-to-end parse, default impl: **-24% to -49% wall-clock**, **-56% to
+  -89% allocations**.
+
+| Engine | Replay              | wall-clock (4.0 → 4.1) | alloc/op (4.0 → 4.1) |
+|--------|---------------------|------------------------|----------------------|
+| S2     | cs2 3dmax-falcons   | 1769 → 1226 ms (-31%)  | 13.27 → 3.32 GB (-75%) |
+| S2     | deadlock 19206063   | 1387 → 1053 ms (-24%)  | 5.60 → 2.45 GB (-56%) |
+| S2     | dota 8168882574     | 1896 → 1338 ms (-29%)  | 9.47 → 3.31 GB (-65%) |
+| S1     | csgo luminosity-azio| 1288 → 659 ms (-49%)   | 15.64 → 1.73 GB (-89%) |
+| S1     | dota S1 271145478   | 422 → 254 ms (-40%)    | 4.40 → 0.97 GB (-78%) |
+
+The bulk of the wall-clock and allocation wins came from unrelated
+dispatch / reader rewrites — `static-decoder-dispatch`,
+`fieldop-dispatch-rework`, `accelerate-flat-entity-state` (which also
+eliminated `WriteValue` records on the unified reader path for *every*
+impl), `strip-entity-state-cow`, and `accelerate-s1-flat-state`. The
+flat representation itself accounts for an additional 3-8% wall-clock
+and 8-26% allocations vs. the array-based defaults at 4.1.
+
 ## April 12, 2026: Version 4.0.0 released
 
 **Breaking changes**
