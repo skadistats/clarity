@@ -53,12 +53,12 @@ Tasks left as a record of what was attempted. Stage 5 specs deltas (`static-deco
 - [x] 5.6 Build clarity — verify the new `DecoderDispatch` is regenerated correctly by inspecting `build/generated/sources/annotationProcessor/java/main/skadistats/clarity/io/decoder/DecoderDispatch.java`. Confirm pattern cases + `default -> throw`; confirm `DecoderIds.java` is no longer emitted.
 - [x] 5.7 Build clarity-analyzer + clarity-examples.
 - [x] 5.8 Run `./gradlew clarity:test`.
-- [ ] 5.9 Run the JMH benchmark harness (`./gradlew bench`) on a representative Dota 2 S2 replay; compare parse-time against the pre-Stage-5 baseline.
-- [ ] 5.10 Commit: `refactor(decoder): dispatch via generated type-pattern switch, drop DecoderIds`.
+- [x] 5.9 Run the JMH benchmark harness (`./gradlew bench`) on a representative Dota 2 S2 replay; compare parse-time against the pre-Stage-5 baseline. **Outcome: consistent ~1-3% slowdown across all impls. Stage 5 reverted.**
+- [x] 5.10 Commit: `refactor(decoder): dispatch via generated type-pattern switch, drop DecoderIds`. **Landed as e3d09f0, reverted in dc04827 after bench showed regression.**
 
 ## 6. Verification
 
 - [ ] 6.1 Full repo-wide check: `./gradlew clean build` in clarity, clarity-analyzer, and clarity-examples. All three SHALL be green.
-- [ ] 6.2 Confirm no `instanceof` chains on `FieldLayout`, `StateMutation`, `SubStateKind`, `Field`, or `UsagePoint` remain in `src/main/java` (grep sweep; single-branch `instanceof` is fine). `Decoder` is not checked here — its dispatch is generated.
-- [ ] 6.3 Confirm `DecoderIds.java` is not regenerated and `Decoder.java` contains no `id` / `IDS` / `register` references.
+- [x] 6.2 Confirm no `instanceof` chains on `FieldLayout`, `StateMutation`, `SubStateKind`, `Field`, or `UsagePoint` remain in `src/main/java` (grep sweep; single-branch `instanceof` is fine). `Decoder` is not checked here — its dispatch is generated. **Verified: remaining hits are single-branch guards only.**
+- [x] 6.3 ~~Confirm `DecoderIds.java` is not regenerated and `Decoder.java` contains no `id` / `IDS` / `register` references.~~ **N/A: Stage 5 reverted. `DecoderIds.java` is regenerated, `Decoder.id` / `IDS` / `register` restored — as intended post-revert.**
 - [ ] 6.4 Run `openspec verify --change adopt-sealed-type-switches` (or the `opsx:verify` skill) before archiving.
