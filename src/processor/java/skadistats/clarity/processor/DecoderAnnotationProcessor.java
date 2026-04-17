@@ -1,8 +1,6 @@
 package skadistats.clarity.processor;
 
 import com.palantir.javapoet.ClassName;
-import com.palantir.javapoet.CodeBlock;
-import com.palantir.javapoet.FieldSpec;
 import com.palantir.javapoet.JavaFile;
 import com.palantir.javapoet.MethodSpec;
 import com.palantir.javapoet.TypeSpec;
@@ -22,14 +20,16 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Pattern;
 
 /**
- * Scans {@code @RegisterDecoder}-annotated classes and generates:
- * <ul>
- *   <li>{@code DecoderIds} — int constants for each decoder type</li>
- *   <li>{@code DecoderDispatch} — tableswitch-based static dispatch method</li>
- * </ul>
+ * Scans {@code @RegisterDecoder}-annotated classes and generates
+ * {@code DecoderDispatch} with type-pattern switches on {@code Decoder}.
+ * Every concrete decoder class annotated with {@code @RegisterDecoder}
+ * gets a case arm; unknown subtypes fall through to the {@code default}
+ * throw. This is "sealing by construction" — the generator covers the
+ * full {@code @RegisterDecoder} set without requiring {@code Decoder}
+ * itself to be a {@code sealed} class (which would force every new
+ * decoder to edit {@code Decoder.java}'s {@code permits} clause).
  */
 @SupportedAnnotationTypes("skadistats.clarity.io.decoder.RegisterDecoder")
 @SupportedSourceVersion(SourceVersion.RELEASE_21)
@@ -42,8 +42,6 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
 
     private static final ClassName DECODER_CLASS = ClassName.get(PACKAGE, "Decoder");
     private static final ClassName BITSTREAM_CLASS = ClassName.get("skadistats.clarity.io.bitstream", "BitStream");
-
-    private static final Pattern UPPER_SNAKE = Pattern.compile("([a-z0-9])([A-Z])");
 
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
@@ -89,7 +87,6 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
 
             decoders.sort(Comparator.comparing(d -> d.type.getSimpleName().toString()));
 
-            generateDecoderIds(decoders);
             generateDecoderDispatch(decoders);
 
         } catch (Exception e) {
@@ -288,63 +285,27 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
     // Code generation
     // -----------------------------------------------------------------------
 
-    private void generateDecoderIds(List<DecoderInfo> decoders) throws IOException {
-        var classBuilder = TypeSpec.classBuilder("DecoderIds")
-                .addModifiers(Modifier.PUBLIC, Modifier.FINAL);
-
-        var staticInit = CodeBlock.builder();
-
-        for (int i = 0; i < decoders.size(); i++) {
-            var info = decoders.get(i);
-            var constantName = toUpperSnake(info.type.getSimpleName().toString());
-            var decoderClassName = ClassName.get(info.type);
-
-            classBuilder.addField(FieldSpec.builder(int.class, constantName,
-                    Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                    .initializer("$L", i)
-                    .build());
-
-            staticInit.addStatement("$T.register($T.class, $L)", DECODER_CLASS, decoderClassName, constantName);
-        }
-
-        classBuilder.addField(FieldSpec.builder(int.class, "COUNT",
-                Modifier.PUBLIC, Modifier.STATIC, Modifier.FINAL)
-                .initializer("$L", decoders.size())
-                .build());
-
-        classBuilder.addStaticBlock(staticInit.build());
-
-        JavaFile.builder(PACKAGE, classBuilder.build())
-                .skipJavaLangImports(true)
-                .build()
-                .writeTo(processingEnv.getFiler());
-    }
-
     private void generateDecoderDispatch(List<DecoderInfo> decoders) throws IOException {
         var decodeSwitch = new StringBuilder();
-        decodeSwitch.append("return switch (d.id) {\n");
+        decodeSwitch.append("return switch (d) {\n");
 
         for (var info : decoders) {
-            var constantName = toUpperSnake(info.type.getSimpleName().toString());
             var decoderClassName = ClassName.get(info.type);
-
+            var fqn = decoderClassName.packageName() + "." + decoderClassName.simpleName();
             if (info.stateful) {
                 decodeSwitch.append(String.format(
-                        "    case DecoderIds.%s -> %s.%s.decode(bs, (%s.%s) d);\n",
-                        constantName,
-                        decoderClassName.packageName(), decoderClassName.simpleName(),
-                        decoderClassName.packageName(), decoderClassName.simpleName()
+                        "    case %s x -> %s.decode(bs, x);\n",
+                        fqn, fqn
                 ));
             } else {
                 decodeSwitch.append(String.format(
-                        "    case DecoderIds.%s -> %s.%s.decode(bs);\n",
-                        constantName,
-                        decoderClassName.packageName(), decoderClassName.simpleName()
+                        "    case %s x -> %s.decode(bs);\n",
+                        fqn, fqn
                 ));
             }
         }
 
-        decodeSwitch.append("    default -> throw new IllegalArgumentException(\"Unknown decoder id: \" + d.id);\n");
+        decodeSwitch.append("    default -> throw new IllegalStateException(\"Unknown decoder: \" + d.getClass());\n");
         decodeSwitch.append("};\n");
 
         var decodeMethod = MethodSpec.methodBuilder("decode")
@@ -356,27 +317,24 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 .build();
 
         var decodeIntoSwitch = new StringBuilder();
-        decodeIntoSwitch.append("switch (d.id) {\n");
+        decodeIntoSwitch.append("switch (d) {\n");
         for (var info : decoders) {
             if (!info.hasDecodeInto) continue;
-            var constantName = toUpperSnake(info.type.getSimpleName().toString());
             var decoderClassName = ClassName.get(info.type);
+            var fqn = decoderClassName.packageName() + "." + decoderClassName.simpleName();
             if (info.stateful) {
                 decodeIntoSwitch.append(String.format(
-                        "    case DecoderIds.%s -> %s.%s.decodeInto(bs, (%s.%s) d, data, offset);\n",
-                        constantName,
-                        decoderClassName.packageName(), decoderClassName.simpleName(),
-                        decoderClassName.packageName(), decoderClassName.simpleName()
+                        "    case %s x -> %s.decodeInto(bs, x, data, offset);\n",
+                        fqn, fqn
                 ));
             } else {
                 decodeIntoSwitch.append(String.format(
-                        "    case DecoderIds.%s -> %s.%s.decodeInto(bs, data, offset);\n",
-                        constantName,
-                        decoderClassName.packageName(), decoderClassName.simpleName()
+                        "    case %s x -> %s.decodeInto(bs, data, offset);\n",
+                        fqn, fqn
                 ));
             }
         }
-        decodeIntoSwitch.append("    default -> throw new IllegalArgumentException(\"Decoder id \" + d.id + \" has no decodeInto\");\n");
+        decodeIntoSwitch.append("    default -> throw new IllegalStateException(\"Decoder \" + d.getClass().getSimpleName() + \" has no decodeInto\");\n");
         decodeIntoSwitch.append("}\n");
 
         var decodeIntoMethod = MethodSpec.methodBuilder("decodeInto")
@@ -397,19 +355,6 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 .skipJavaLangImports(true)
                 .build()
                 .writeTo(processingEnv.getFiler());
-    }
-
-    // -----------------------------------------------------------------------
-    // Helpers
-    // -----------------------------------------------------------------------
-
-    private static String toUpperSnake(String className) {
-        // Remove "Decoder" suffix, then convert CamelCase to UPPER_SNAKE_CASE
-        var name = className;
-        if (name.endsWith("Decoder")) {
-            name = name.substring(0, name.length() - "Decoder".length());
-        }
-        return UPPER_SNAKE.matcher(name).replaceAll("$1_$2").toUpperCase();
     }
 
     private record DecoderInfo(TypeElement type, boolean stateful, boolean hasDecodeInto) {}
