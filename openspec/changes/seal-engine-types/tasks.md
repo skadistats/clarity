@@ -73,9 +73,9 @@
 
 ## 10. Benchmark
 
-- [ ] 10.1 JMH baseline — skipped for now; perf delta was a non-blocking sanity check per design
-- [ ] 10.2 Post-change JMH — skipped for now
-- [ ] 10.3 Record perf delta — skipped for now
+- [x] 10.1 JMH baseline — `6ddc606` (pre-seal base, JDK 17 toolchain): `./gradlew bench -PbenchArgs="--all"` + `./gradlew s1Bench` → `bench-results/2026-04-17_152830_HEAD-6ddc606/` and `bench-results/2026-04-17_153611_s1_HEAD-6ddc606/`
+- [x] 10.2 Post-change JMH — `00bf3c8` (HEAD, JDK 21 toolchain): same commands → `bench-results/2026-04-17_151826_next-00bf3c8/` and `bench-results/2026-04-17_152500_s1_next-00bf3c8/`
+- [x] 10.3 Record perf delta — see `BENCH.md` in this change dir. Headline: S2 FLAT Dota -6.0%, Deadlock -1.5%, CS2 -2.7%; S1 FLAT Dota -7.5%, CSGO -2.3%. Allocations unchanged across the board (sealing is type-system only, no alloc deltas expected). Note: JDK 17→21 toolchain bump is part of the change and contributes to the delta; effect is not isolable to sealing alone.
 
 ## 11. Documentation
 
