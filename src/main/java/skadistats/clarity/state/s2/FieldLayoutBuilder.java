@@ -44,56 +44,57 @@ public final class FieldLayoutBuilder {
     }
 
     private Built buildField(Field field, int offset) {
-        if (field instanceof SerializerField sf) {
-            var children = new FieldLayout[sf.getSerializer().getFieldCount()];
-            var cursor = offset;
-            for (var i = 0; i < children.length; i++) {
-                var built = buildField(sf.getSerializer().getField(i), cursor);
-                children[i] = built.layout;
-                cursor += built.totalBytes;
+        return switch (field) {
+            case SerializerField sf -> {
+                var children = new FieldLayout[sf.getSerializer().getFieldCount()];
+                var cursor = offset;
+                for (var i = 0; i < children.length; i++) {
+                    var built = buildField(sf.getSerializer().getField(i), cursor);
+                    children[i] = built.layout;
+                    cursor += built.totalBytes;
+                }
+                yield new Built(new FieldLayout.Composite(children), cursor - offset);
             }
-            return new Built(new FieldLayout.Composite(children), cursor - offset);
-        }
-        if (field instanceof ArrayField af) {
-            var elementBuilt = buildField(af.getElementField(), 0);
-            var stride = elementBuilt.totalBytes;
-            var length = af.getLength();
-            var layout = new FieldLayout.Array(offset, stride, length, elementBuilt.layout);
-            return new Built(layout, length * stride);
-        }
-        if (field instanceof VectorField vf) {
-            var elementBuilt = buildField(vf.getElementField(), 0);
-            var kind = new FieldLayout.SubStateKind.Vector(elementBuilt.totalBytes, elementBuilt.layout);
-            var layout = new FieldLayout.SubState(offset, kind);
-            return new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
-        }
-        if (field instanceof PointerField pf) {
-            var serializers = pf.getSerializers();
-            var layouts = new FieldLayout[serializers.length];
-            var layoutBytes = new int[serializers.length];
-            for (var i = 0; i < serializers.length; i++) {
-                var built = buildSerializer(serializers[i]);
-                layouts[i] = built.layout;
-                layoutBytes[i] = built.totalBytes;
+            case ArrayField af -> {
+                var elementBuilt = buildField(af.getElementField(), 0);
+                var stride = elementBuilt.totalBytes;
+                var length = af.getLength();
+                var layout = new FieldLayout.Array(offset, stride, length, elementBuilt.layout);
+                yield new Built(layout, length * stride);
             }
-            var kind = new FieldLayout.SubStateKind.Pointer(pf.getPointerId(), serializers, layouts, layoutBytes);
-            var layout = new FieldLayout.SubState(offset, kind);
-            return new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
-        }
-        if (field instanceof ValueField vf) {
-            var decoder = vf.getDecoder();
-            var primitive = decoder.getPrimitiveType();
-            if (primitive != null) {
-                return new Built(new FieldLayout.Primitive(offset, primitive), FLAG_BYTE + primitive.size());
+            case VectorField vf -> {
+                var elementBuilt = buildField(vf.getElementField(), 0);
+                var kind = new FieldLayout.SubStateKind.Vector(elementBuilt.totalBytes, elementBuilt.layout);
+                var layout = new FieldLayout.SubState(offset, kind);
+                yield new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
             }
-            if (decoder instanceof StringZeroTerminatedDecoder || decoder instanceof StringLenDecoder) {
-                var maxLength = stringMaxLength(vf.getType());
-                var layout = new FieldLayout.InlineString(offset, maxLength);
-                return new Built(layout, FLAG_BYTE + STRING_LENGTH_PREFIX_BYTES + maxLength);
+            case PointerField pf -> {
+                var serializers = pf.getSerializers();
+                var layouts = new FieldLayout[serializers.length];
+                var layoutBytes = new int[serializers.length];
+                for (var i = 0; i < serializers.length; i++) {
+                    var built = buildSerializer(serializers[i]);
+                    layouts[i] = built.layout;
+                    layoutBytes[i] = built.totalBytes;
+                }
+                var kind = new FieldLayout.SubStateKind.Pointer(pf.getPointerId(), serializers, layouts, layoutBytes);
+                var layout = new FieldLayout.SubState(offset, kind);
+                yield new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
             }
-            return new Built(new FieldLayout.Ref(offset), FLAG_BYTE + SLOT_INDEX_BYTES);
-        }
-        throw new IllegalStateException("unsupported field type: " + field.getClass().getName());
+            case ValueField vf -> {
+                var decoder = vf.getDecoder();
+                var primitive = decoder.getPrimitiveType();
+                if (primitive != null) {
+                    yield new Built(new FieldLayout.Primitive(offset, primitive), FLAG_BYTE + primitive.size());
+                }
+                if (decoder instanceof StringZeroTerminatedDecoder || decoder instanceof StringLenDecoder) {
+                    var maxLength = stringMaxLength(vf.getType());
+                    var layout = new FieldLayout.InlineString(offset, maxLength);
+                    yield new Built(layout, FLAG_BYTE + STRING_LENGTH_PREFIX_BYTES + maxLength);
+                }
+                yield new Built(new FieldLayout.Ref(offset), FLAG_BYTE + SLOT_INDEX_BYTES);
+            }
+        };
     }
 
     /**

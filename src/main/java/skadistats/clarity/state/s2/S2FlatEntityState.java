@@ -73,44 +73,41 @@ public final class S2FlatEntityState extends S2EntityState {
         var i = 0;
         while (true) {
             var idx = fp.get(i);
-            if (layout instanceof FieldLayout.Composite c) {
-                layout = c.children()[idx];
-            } else if (layout instanceof FieldLayout.Array a) {
-                base += a.baseOffset() + idx * a.stride();
-                layout = a.element();
-            } else if (layout instanceof FieldLayout.SubState s) {
-                // Descent through SubState consumes no fp index. SubState-as-leaf
-                // ops (SwitchPointer, ResizeVector) reach the dispatch via the
-                // Composite/Array branch advancing `layout = SubState` on the last
-                // idx and breaking — they never enter THIS branch.
-                var nextIdx = fp.get(i);
-                if (current.data[base + s.offset()] == 0) {
-                    lazyCreateSubEntry(current, base, s, nextIdx);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
                 }
-                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs[slot];
-                if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
-                    growVectorIfNeeded(sub, v, nextIdx + 1);
+                case FieldLayout.SubState s -> {
+                    // Descent through SubState consumes no fp index. SubState-as-leaf
+                    // ops (SwitchPointer, ResizeVector) reach the dispatch via the
+                    // Composite/Array branch advancing `layout = SubState` on the last
+                    // idx and breaking — they never enter THIS branch.
+                    if (current.data[base + s.offset()] == 0) {
+                        lazyCreateSubEntry(current, base, s, idx);
+                    }
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    var sub = (Entry) refs[slot];
+                    if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
+                        growVectorIfNeeded(sub, v, idx + 1);
+                    }
+                    current = sub;
+                    layout = sub.rootLayout;
+                    base = 0;
+                    continue;
                 }
-                current = sub;
-                layout = sub.rootLayout;
-                base = 0;
-                continue;
-            } else {
-                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
             }
             if (i == last) break;
             i++;
         }
 
-        if (mutation instanceof StateMutation.WriteValue wv) {
-            return writeValue(current, layout, base, wv.value());
-        } else if (mutation instanceof StateMutation.ResizeVector rv) {
-            return resizeVector(current, layout, base, rv.count());
-        } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            return switchPointer(current, layout, base, sp.newSerializer());
-        }
-        throw new IllegalStateException("unknown mutation: " + mutation);
+        return switch (mutation) {
+            case StateMutation.WriteValue wv    -> writeValue(current, layout, base, wv.value());
+            case StateMutation.ResizeVector rv  -> resizeVector(current, layout, base, rv.count());
+            case StateMutation.SwitchPointer sp -> switchPointer(current, layout, base, sp.newSerializer());
+        };
     }
 
     @Override
@@ -123,59 +120,57 @@ public final class S2FlatEntityState extends S2EntityState {
         var i = 0;
         while (true) {
             var idx = fp.get(i);
-            if (layout instanceof FieldLayout.Composite c) {
-                layout = c.children()[idx];
-            } else if (layout instanceof FieldLayout.Array a) {
-                base += a.baseOffset() + idx * a.stride();
-                layout = a.element();
-            } else if (layout instanceof FieldLayout.SubState s) {
-                var nextIdx = fp.get(i);
-                if (current.data[base + s.offset()] == 0) {
-                    lazyCreateSubEntry(current, base, s, nextIdx);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
                 }
-                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs[slot];
-                if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
-                    growVectorIfNeeded(sub, v, nextIdx + 1);
+                case FieldLayout.SubState s -> {
+                    if (current.data[base + s.offset()] == 0) {
+                        lazyCreateSubEntry(current, base, s, idx);
+                    }
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    var sub = (Entry) refs[slot];
+                    if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
+                        growVectorIfNeeded(sub, v, idx + 1);
+                    }
+                    current = sub;
+                    layout = sub.rootLayout;
+                    base = 0;
+                    continue;
                 }
-                current = sub;
-                layout = sub.rootLayout;
-                base = 0;
-                continue;
-            } else {
-                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
             }
             if (i == last) break;
             i++;
         }
 
-        if (layout instanceof FieldLayout.Primitive p) {
-            var data = current.data;
-            var flagPos = base + p.offset();
-            var oldFlag = data[flagPos];
-            data[flagPos] = 1;
-            DecoderDispatch.decodeInto(bs, decoder, data, flagPos + 1);
-            return oldFlag == 0;
-        }
-        if (layout instanceof FieldLayout.InlineString is) {
-            var data = current.data;
-            var flagPos = base + is.offset();
-            var oldFlag = data[flagPos];
-            data[flagPos] = 1;
-            if (decoder instanceof StringZeroTerminatedDecoder) {
-                StringZeroTerminatedDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
-            } else {
-                StringLenDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
+        return switch (layout) {
+            case FieldLayout.Primitive p -> {
+                var data = current.data;
+                var flagPos = base + p.offset();
+                var oldFlag = data[flagPos];
+                data[flagPos] = 1;
+                DecoderDispatch.decodeInto(bs, decoder, data, flagPos + 1);
+                yield oldFlag == 0;
             }
-            return oldFlag == 0;
-        }
-        if (layout instanceof FieldLayout.Ref) {
-            return writeValue(current, layout, base, DecoderDispatch.decode(bs, decoder));
-        }
-        if (layout instanceof FieldLayout.SubState) {
-            throw new IllegalStateException("decodeInto called on SubState leaf: " + layout);
-        }
-        throw new IllegalStateException("decodeInto on unknown leaf layout: " + layout);
+            case FieldLayout.InlineString is -> {
+                var data = current.data;
+                var flagPos = base + is.offset();
+                var oldFlag = data[flagPos];
+                data[flagPos] = 1;
+                if (decoder instanceof StringZeroTerminatedDecoder) {
+                    StringZeroTerminatedDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
+                } else {
+                    StringLenDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
+                }
+                yield oldFlag == 0;
+            }
+            case FieldLayout.Ref r -> writeValue(current, r, base, DecoderDispatch.decode(bs, decoder));
+            case FieldLayout.SubState s -> throw new IllegalStateException("decodeInto called on SubState leaf: " + s);
+            default -> throw new IllegalStateException("decodeInto on unknown leaf layout: " + layout);
+        };
     }
 
     @Override
@@ -188,100 +183,98 @@ public final class S2FlatEntityState extends S2EntityState {
         var i = 0;
         while (true) {
             var idx = fp.get(i);
-            if (layout instanceof FieldLayout.Composite c) {
-                layout = c.children()[idx];
-            } else if (layout instanceof FieldLayout.Array a) {
-                base += a.baseOffset() + idx * a.stride();
-                layout = a.element();
-            } else if (layout instanceof FieldLayout.SubState s) {
-                var nextIdx = fp.get(i);
-                if (current.data[base + s.offset()] == 0) {
-                    lazyCreateSubEntry(current, base, s, nextIdx);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
                 }
-                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs[slot];
-                if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
-                    growVectorIfNeeded(sub, v, nextIdx + 1);
+                case FieldLayout.SubState s -> {
+                    if (current.data[base + s.offset()] == 0) {
+                        lazyCreateSubEntry(current, base, s, idx);
+                    }
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    var sub = (Entry) refs[slot];
+                    if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
+                        growVectorIfNeeded(sub, v, idx + 1);
+                    }
+                    current = sub;
+                    layout = sub.rootLayout;
+                    base = 0;
+                    continue;
                 }
-                current = sub;
-                layout = sub.rootLayout;
-                base = 0;
-                continue;
-            } else {
-                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
             }
             if (i == last) break;
             i++;
         }
 
-        if (layout instanceof FieldLayout.Primitive
-                || layout instanceof FieldLayout.InlineString
-                || layout instanceof FieldLayout.Ref) {
-            return writeValue(current, layout, base, decoded);
-        }
-        if (layout instanceof FieldLayout.SubState s) {
-            if (s.kind() instanceof FieldLayout.SubStateKind.Pointer) {
-                return switchPointer(current, layout, base, (Serializer) decoded);
-            }
-            if (s.kind() instanceof FieldLayout.SubStateKind.Vector) {
-                return resizeVector(current, layout, base, (Integer) decoded);
-            }
-        }
-        throw new IllegalStateException("write on unknown leaf layout: " + layout);
+        return switch (layout) {
+            case FieldLayout.Primitive p    -> writeValue(current, p, base, decoded);
+            case FieldLayout.InlineString is -> writeValue(current, is, base, decoded);
+            case FieldLayout.Ref r          -> writeValue(current, r, base, decoded);
+            case FieldLayout.SubState s -> switch (s.kind()) {
+                case FieldLayout.SubStateKind.Pointer p -> switchPointer(current, s, base, (Serializer) decoded);
+                case FieldLayout.SubStateKind.Vector v  -> resizeVector(current, s, base, (Integer) decoded);
+            };
+            default -> throw new IllegalStateException("write on unknown leaf layout: " + layout);
+        };
     }
 
     private boolean writeValue(Entry target, FieldLayout layout, int base, Object value) {
-        if (layout instanceof FieldLayout.Primitive p) {
-            var data = target.data;
-            var flagPos = base + p.offset();
-            var oldFlag = data[flagPos];
-            var willSet = value != null;
-            data[flagPos] = willSet ? (byte) 1 : (byte) 0;
-            if (willSet) p.type().write(data, flagPos + 1, value);
-            return (oldFlag != 0) ^ willSet;
-        }
-        if (layout instanceof FieldLayout.InlineString is) {
-            var data = target.data;
-            var flagPos = base + is.offset();
-            var oldFlag = data[flagPos];
-            if (value == null) {
-                data[flagPos] = 0;
-                return oldFlag != 0;
+        return switch (layout) {
+            case FieldLayout.Primitive p -> {
+                var data = target.data;
+                var flagPos = base + p.offset();
+                var oldFlag = data[flagPos];
+                var willSet = value != null;
+                data[flagPos] = willSet ? (byte) 1 : (byte) 0;
+                if (willSet) p.type().write(data, flagPos + 1, value);
+                yield (oldFlag != 0) ^ willSet;
             }
-            var bytes = ((String) value).getBytes(StandardCharsets.UTF_8);
-            if (bytes.length > is.maxLength()) {
-                throw new IllegalStateException(
-                    "String length " + bytes.length + " exceeds leaf maxLength " + is.maxLength());
-            }
-            data[flagPos] = 1;
-            data[flagPos + 1] = (byte) (bytes.length & 0xFF);
-            data[flagPos + 2] = (byte) ((bytes.length >>> 8) & 0xFF);
-            System.arraycopy(bytes, 0, data, flagPos + 3, bytes.length);
-            return oldFlag == 0;
-        }
-        if (layout instanceof FieldLayout.Ref r) {
-            var data = target.data;
-            var flagPos = base + r.offset();
-            var oldFlag = data[flagPos];
-            if (value == null) {
-                if (oldFlag == 0) return false;
-                var slot = (int) INT_VH.get(data, flagPos + 1);
-                freeRefSlot(slot);
-                data[flagPos] = 0;
-                return true;
-            }
-            int slot;
-            if (oldFlag != 0) {
-                slot = (int) INT_VH.get(data, flagPos + 1);
-            } else {
-                slot = allocateRefSlot();
-                INT_VH.set(data, flagPos + 1, slot);
+            case FieldLayout.InlineString is -> {
+                var data = target.data;
+                var flagPos = base + is.offset();
+                var oldFlag = data[flagPos];
+                if (value == null) {
+                    data[flagPos] = 0;
+                    yield oldFlag != 0;
+                }
+                var bytes = ((String) value).getBytes(StandardCharsets.UTF_8);
+                if (bytes.length > is.maxLength()) {
+                    throw new IllegalStateException(
+                        "String length " + bytes.length + " exceeds leaf maxLength " + is.maxLength());
+                }
                 data[flagPos] = 1;
+                data[flagPos + 1] = (byte) (bytes.length & 0xFF);
+                data[flagPos + 2] = (byte) ((bytes.length >>> 8) & 0xFF);
+                System.arraycopy(bytes, 0, data, flagPos + 3, bytes.length);
+                yield oldFlag == 0;
             }
-            refs[slot] = value;
-            return oldFlag == 0;
-        }
-        throw new IllegalStateException("WriteValue on non-leaf layout: " + layout);
+            case FieldLayout.Ref r -> {
+                var data = target.data;
+                var flagPos = base + r.offset();
+                var oldFlag = data[flagPos];
+                if (value == null) {
+                    if (oldFlag == 0) yield false;
+                    var slot = (int) INT_VH.get(data, flagPos + 1);
+                    freeRefSlot(slot);
+                    data[flagPos] = 0;
+                    yield true;
+                }
+                int slot;
+                if (oldFlag != 0) {
+                    slot = (int) INT_VH.get(data, flagPos + 1);
+                } else {
+                    slot = allocateRefSlot();
+                    INT_VH.set(data, flagPos + 1, slot);
+                    data[flagPos] = 1;
+                }
+                refs[slot] = value;
+                yield oldFlag == 0;
+            }
+            default -> throw new IllegalStateException("WriteValue on non-leaf layout: " + layout);
+        };
     }
 
     private boolean resizeVector(Entry current, FieldLayout layout, int base, int newCount) {
@@ -352,34 +345,29 @@ public final class S2FlatEntityState extends S2EntityState {
     }
 
     private boolean hasAnyOccupiedPath(Entry entry, FieldLayout layout, int base) {
-        if (layout instanceof FieldLayout.Composite c) {
-            for (var child : c.children()) {
-                if (hasAnyOccupiedPath(entry, child, base)) return true;
+        return switch (layout) {
+            case FieldLayout.Composite c -> {
+                for (var child : c.children()) {
+                    if (hasAnyOccupiedPath(entry, child, base)) yield true;
+                }
+                yield false;
             }
-            return false;
-        }
-        if (layout instanceof FieldLayout.Array a) {
-            for (var i = 0; i < a.length(); i++) {
-                if (hasAnyOccupiedPath(entry, a.element(), base + a.baseOffset() + i * a.stride())) return true;
+            case FieldLayout.Array a -> {
+                for (var i = 0; i < a.length(); i++) {
+                    if (hasAnyOccupiedPath(entry, a.element(), base + a.baseOffset() + i * a.stride())) yield true;
+                }
+                yield false;
             }
-            return false;
-        }
-        if (layout instanceof FieldLayout.Primitive p) {
-            return entry.data[base + p.offset()] != 0;
-        }
-        if (layout instanceof FieldLayout.InlineString is) {
-            return entry.data[base + is.offset()] != 0;
-        }
-        if (layout instanceof FieldLayout.Ref r) {
-            return entry.data[base + r.offset()] != 0;
-        }
-        if (layout instanceof FieldLayout.SubState s) {
-            if (entry.data[base + s.offset()] == 0) return false;
-            var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
-            var sub = (Entry) refs[slot];
-            return hasAnyOccupiedPath(sub, sub.rootLayout, 0);
-        }
-        return false;
+            case FieldLayout.Primitive p    -> entry.data[base + p.offset()] != 0;
+            case FieldLayout.InlineString is -> entry.data[base + is.offset()] != 0;
+            case FieldLayout.Ref r          -> entry.data[base + r.offset()] != 0;
+            case FieldLayout.SubState s -> {
+                if (entry.data[base + s.offset()] == 0) yield false;
+                var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
+                var sub = (Entry) refs[slot];
+                yield hasAnyOccupiedPath(sub, sub.rootLayout, 0);
+            }
+        };
     }
 
     private static int lookupLayoutIndex(FieldLayout.SubStateKind.Pointer p, Serializer newSerializer) {
@@ -401,44 +389,47 @@ public final class S2FlatEntityState extends S2EntityState {
         var i = 0;
         while (true) {
             var idx = fp.get(i);
-            if (layout instanceof FieldLayout.Composite c) {
-                layout = c.children()[idx];
-            } else if (layout instanceof FieldLayout.Array a) {
-                if (idx >= a.length()) return null;
-                base += a.baseOffset() + idx * a.stride();
-                layout = a.element();
-            } else if (layout instanceof FieldLayout.SubState s) {
-                if (current.data[base + s.offset()] == 0) return null;
-                var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
-                var sub = (Entry) refs[slot];
-                current = sub;
-                layout = sub.rootLayout;
-                base = 0;
-                continue;
-            } else {
-                throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    if (idx >= a.length()) return null;
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
+                }
+                case FieldLayout.SubState s -> {
+                    if (current.data[base + s.offset()] == 0) return null;
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    var sub = (Entry) refs[slot];
+                    current = sub;
+                    layout = sub.rootLayout;
+                    base = 0;
+                    continue;
+                }
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
             }
             if (i == last) break;
             i++;
         }
 
-        if (layout instanceof FieldLayout.Primitive p) {
-            if (current.data[base + p.offset()] == 0) return null;
-            return (T) p.type().read(current.data, base + p.offset() + 1);
-        }
-        if (layout instanceof FieldLayout.InlineString is) {
-            var data = current.data;
-            var flagPos = base + is.offset();
-            if (data[flagPos] == 0) return null;
-            var len = (data[flagPos + 1] & 0xFF) | ((data[flagPos + 2] & 0xFF) << 8);
-            return (T) new String(data, flagPos + 3, len, StandardCharsets.UTF_8);
-        }
-        if (layout instanceof FieldLayout.Ref r) {
-            if (current.data[base + r.offset()] == 0) return null;
-            var slot = (int) INT_VH.get(current.data, base + r.offset() + 1);
-            return (T) refs[slot];
-        }
-        return null;
+        return switch (layout) {
+            case FieldLayout.Primitive p -> {
+                if (current.data[base + p.offset()] == 0) yield null;
+                yield (T) p.type().read(current.data, base + p.offset() + 1);
+            }
+            case FieldLayout.InlineString is -> {
+                var data = current.data;
+                var flagPos = base + is.offset();
+                if (data[flagPos] == 0) yield null;
+                var len = (data[flagPos + 1] & 0xFF) | ((data[flagPos + 2] & 0xFF) << 8);
+                yield (T) new String(data, flagPos + 3, len, StandardCharsets.UTF_8);
+            }
+            case FieldLayout.Ref r -> {
+                if (current.data[base + r.offset()] == 0) yield null;
+                var slot = (int) INT_VH.get(current.data, base + r.offset() + 1);
+                yield (T) refs[slot];
+            }
+            default -> null;
+        };
     }
 
     @Override
@@ -450,34 +441,35 @@ public final class S2FlatEntityState extends S2EntityState {
     }
 
     private void walk(Entry entry, FieldLayout layout, int base, int[] indices, int depth, List<FieldPath> out) {
-        if (layout instanceof FieldLayout.Composite c) {
-            var children = c.children();
-            for (var i = 0; i < children.length; i++) {
-                indices[depth] = i;
-                walk(entry, children[i], base, indices, depth + 1, out);
+        switch (layout) {
+            case FieldLayout.Composite c -> {
+                var children = c.children();
+                for (var i = 0; i < children.length; i++) {
+                    indices[depth] = i;
+                    walk(entry, children[i], base, indices, depth + 1, out);
+                }
             }
-        } else if (layout instanceof FieldLayout.Array a) {
-            for (var i = 0; i < a.length(); i++) {
-                indices[depth] = i;
-                walk(entry, a.element(), base + a.baseOffset() + i * a.stride(), indices, depth + 1, out);
+            case FieldLayout.Array a -> {
+                for (var i = 0; i < a.length(); i++) {
+                    indices[depth] = i;
+                    walk(entry, a.element(), base + a.baseOffset() + i * a.stride(), indices, depth + 1, out);
+                }
             }
-        } else if (layout instanceof FieldLayout.Primitive p) {
-            if (entry.data[base + p.offset()] != 0) {
-                out.add(buildFieldPath(indices, depth));
+            case FieldLayout.Primitive p -> {
+                if (entry.data[base + p.offset()] != 0) out.add(buildFieldPath(indices, depth));
             }
-        } else if (layout instanceof FieldLayout.InlineString is) {
-            if (entry.data[base + is.offset()] != 0) {
-                out.add(buildFieldPath(indices, depth));
+            case FieldLayout.InlineString is -> {
+                if (entry.data[base + is.offset()] != 0) out.add(buildFieldPath(indices, depth));
             }
-        } else if (layout instanceof FieldLayout.Ref r) {
-            if (entry.data[base + r.offset()] != 0) {
-                out.add(buildFieldPath(indices, depth));
+            case FieldLayout.Ref r -> {
+                if (entry.data[base + r.offset()] != 0) out.add(buildFieldPath(indices, depth));
             }
-        } else if (layout instanceof FieldLayout.SubState s) {
-            if (entry.data[base + s.offset()] != 0) {
-                var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
-                var sub = (Entry) refs[slot];
-                walk(sub, sub.rootLayout, 0, indices, depth, out);
+            case FieldLayout.SubState s -> {
+                if (entry.data[base + s.offset()] != 0) {
+                    var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
+                    var sub = (Entry) refs[slot];
+                    walk(sub, sub.rootLayout, 0, indices, depth, out);
+                }
             }
         }
     }
@@ -500,24 +492,24 @@ public final class S2FlatEntityState extends S2EntityState {
      * SwitchPointer / ResizeVector before any inner write.
      */
     private void lazyCreateSubEntry(Entry parent, int base, FieldLayout.SubState s, int hintIdx) {
-        Entry sub;
-        if (s.kind() instanceof FieldLayout.SubStateKind.Pointer p) {
-            if (p.serializers().length != 1) {
-                throw new IllegalStateException(
-                    "cannot lazy-create sub-Entry for Pointer with " + p.serializers().length
-                    + " serializers (expected explicit SwitchPointer first), pointerId=" + p.pointerId());
+        Entry sub = switch (s.kind()) {
+            case FieldLayout.SubStateKind.Pointer p -> {
+                if (p.serializers().length != 1) {
+                    throw new IllegalStateException(
+                        "cannot lazy-create sub-Entry for Pointer with " + p.serializers().length
+                        + " serializers (expected explicit SwitchPointer first), pointerId=" + p.pointerId());
+                }
+                pointerSerializers[p.pointerId()] = p.serializers()[0];
+                yield new Entry(p.layouts()[0], new byte[p.layoutBytes()[0]]);
             }
-            sub = new Entry(p.layouts()[0], new byte[p.layoutBytes()[0]]);
-            pointerSerializers[p.pointerId()] = p.serializers()[0];
-        } else if (s.kind() instanceof FieldLayout.SubStateKind.Vector v) {
-            // Lazy-create vector sized to fit the upcoming element index.
-            // Mirrors S2NestedArrayEntityState's auto-growing capacity on writes.
-            var length = hintIdx + 1;
-            var array = new FieldLayout.Array(0, v.elementBytes(), length, v.elementLayout());
-            sub = new Entry(array, new byte[length * v.elementBytes()]);
-        } else {
-            throw new IllegalStateException("unknown SubState kind: " + s.kind());
-        }
+            case FieldLayout.SubStateKind.Vector v -> {
+                // Lazy-create vector sized to fit the upcoming element index.
+                // Mirrors S2NestedArrayEntityState's auto-growing capacity on writes.
+                var length = hintIdx + 1;
+                var array = new FieldLayout.Array(0, v.elementBytes(), length, v.elementLayout());
+                yield new Entry(array, new byte[length * v.elementBytes()]);
+            }
+        };
         var slot = allocateRefSlot();
         refs[slot] = sub;
         INT_VH.set(parent.data, base + s.offset() + 1, slot);
@@ -565,24 +557,31 @@ public final class S2FlatEntityState extends S2EntityState {
     }
 
     private void releaseRefsInEntry(Entry e, FieldLayout layout, int base) {
-        if (layout instanceof FieldLayout.Composite c) {
-            for (var child : c.children()) {
-                releaseRefsInEntry(e, child, base);
+        switch (layout) {
+            case FieldLayout.Composite c -> {
+                for (var child : c.children()) {
+                    releaseRefsInEntry(e, child, base);
+                }
             }
-        } else if (layout instanceof FieldLayout.Array a) {
-            for (var i = 0; i < a.length(); i++) {
-                releaseRefsInEntry(e, a.element(), base + a.baseOffset() + i * a.stride());
+            case FieldLayout.Array a -> {
+                for (var i = 0; i < a.length(); i++) {
+                    releaseRefsInEntry(e, a.element(), base + a.baseOffset() + i * a.stride());
+                }
             }
-        } else if (layout instanceof FieldLayout.Ref r) {
-            if (e.data[base + r.offset()] != 0) {
-                var innerSlot = (int) INT_VH.get(e.data, base + r.offset() + 1);
-                freeRefSlot(innerSlot);
+            case FieldLayout.Ref r -> {
+                if (e.data[base + r.offset()] != 0) {
+                    var innerSlot = (int) INT_VH.get(e.data, base + r.offset() + 1);
+                    freeRefSlot(innerSlot);
+                }
             }
-        } else if (layout instanceof FieldLayout.SubState s) {
-            if (e.data[base + s.offset()] != 0) {
-                var innerSlot = (int) INT_VH.get(e.data, base + s.offset() + 1);
-                releaseRefSlot(innerSlot);
+            case FieldLayout.SubState s -> {
+                if (e.data[base + s.offset()] != 0) {
+                    var innerSlot = (int) INT_VH.get(e.data, base + s.offset() + 1);
+                    releaseRefSlot(innerSlot);
+                }
             }
+            case FieldLayout.Primitive p -> { /* primitives live inline — no refs to release */ }
+            case FieldLayout.InlineString is -> { /* inline-strings live inline — no refs to release */ }
         }
     }
 

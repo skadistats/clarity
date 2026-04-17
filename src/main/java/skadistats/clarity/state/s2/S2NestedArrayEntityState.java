@@ -95,14 +95,14 @@ public final class S2NestedArrayEntityState extends S2EntityState {
             }
             var child = field.getChild(this, idx);
             if (i == last) {
-                if (child instanceof PointerField) {
-                    return handlePointerSwitch(node, idx, child, (Serializer) decoded);
-                }
-                if (child instanceof VectorField) {
-                    return handleResizeVector(node, idx, (Integer) decoded);
-                }
-                node.set(idx, decoded);
-                return capacityChanged;
+                return switch (child) {
+                    case PointerField pf -> handlePointerSwitch(node, idx, pf, (Serializer) decoded);
+                    case VectorField vf  -> handleResizeVector(node, idx, (Integer) decoded);
+                    default -> {
+                        node.set(idx, decoded);
+                        yield capacityChanged;
+                    }
+                };
             }
             field = child;
             node = subEntryForWrite(node, idx);
@@ -130,15 +130,15 @@ public final class S2NestedArrayEntityState extends S2EntityState {
             }
             var child = field.getChild(this, idx);
             if (i == last) {
-                if (mutation instanceof StateMutation.WriteValue wv) {
-                    node.set(idx, wv.value());
-                    return capacityChanged;
-                } else if (mutation instanceof StateMutation.ResizeVector rv) {
-                    return handleResizeVector(node, idx, rv.count());
-                } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-                    return handlePointerSwitch(node, idx, child, sp.newSerializer());
-                }
-                throw new IllegalStateException();
+                return switch (mutation) {
+                    case StateMutation.WriteValue wv -> {
+                        node.set(idx, wv.value());
+                        yield capacityChanged;
+                    }
+                    case StateMutation.ResizeVector rv -> handleResizeVector(node, idx, rv.count());
+                    case StateMutation.SwitchPointer sp ->
+                            child instanceof PointerField pf && handlePointerSwitch(node, idx, pf, sp.newSerializer());
+                };
             }
             field = child;
             node = subEntryForWrite(node, idx);
@@ -158,17 +158,14 @@ public final class S2NestedArrayEntityState extends S2EntityState {
     }
 
     private void ensureNodeCapacity(Field parentField, Entry node, int idx) {
-        if (parentField instanceof SerializerField sf) {
-            node.capacity(sf.getSerializer().getFieldCount(), false);
-        } else if (parentField instanceof ArrayField af) {
-            node.capacity(af.getLength(), false);
-        } else {
-            node.capacity(idx + 1, false);
+        switch (parentField) {
+            case SerializerField sf -> node.capacity(sf.getSerializer().getFieldCount(), false);
+            case ArrayField af      -> node.capacity(af.getLength(), false);
+            default                 -> node.capacity(idx + 1, false);
         }
     }
 
-    private boolean handlePointerSwitch(Entry node, int idx, Field field, Serializer newSerializer) {
-        if (!(field instanceof PointerField pf)) return false;
+    private boolean handlePointerSwitch(Entry node, int idx, PointerField pf, Serializer newSerializer) {
         var currentSerializer = pointerSerializers[pf.getPointerId()];
         if (currentSerializer == newSerializer) return false;
         var removedOccupied = false;

@@ -50,14 +50,11 @@ public final class S2TreeMapEntityState extends S2EntityState {
     @Override
     public boolean write(S2FieldPath fpX, Object decoded) {
         var fp = (S2LongFieldPath) fpX;
-        var field = getFieldForFieldPath(fp);
-        if (field instanceof PointerField) {
-            return switchPointer(fp, (Serializer) decoded);
-        }
-        if (field instanceof VectorField) {
-            return trimEntries(fp, (Integer) decoded);
-        }
-        return writeValue(fp, decoded);
+        return switch (getFieldForFieldPath(fp)) {
+            case PointerField pf -> switchPointer(fp, pf, (Serializer) decoded);
+            case VectorField vf  -> trimEntries(fp, (Integer) decoded);
+            default              -> writeValue(fp, decoded);
+        };
     }
 
     @Override
@@ -68,14 +65,12 @@ public final class S2TreeMapEntityState extends S2EntityState {
     @Override
     public boolean applyMutation(S2FieldPath fpX, StateMutation mutation) {
         var fp = (S2LongFieldPath) fpX;
-        if (mutation instanceof StateMutation.WriteValue wv) {
-            return writeValue(fp, wv.value());
-        } else if (mutation instanceof StateMutation.ResizeVector rv) {
-            return trimEntries(fp, rv.count());
-        } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            return switchPointer(fp, sp.newSerializer());
-        }
-        throw new IllegalStateException();
+        return switch (mutation) {
+            case StateMutation.WriteValue wv    -> writeValue(fp, wv.value());
+            case StateMutation.ResizeVector rv  -> trimEntries(fp, rv.count());
+            case StateMutation.SwitchPointer sp -> getFieldForFieldPath(fp) instanceof PointerField pf
+                    && switchPointer(fp, pf, sp.newSerializer());
+        };
     }
 
     private boolean writeValue(S2LongFieldPath fp, Object value) {
@@ -85,9 +80,7 @@ public final class S2TreeMapEntityState extends S2EntityState {
         return state.remove(fp) != null;
     }
 
-    private boolean switchPointer(S2LongFieldPath fp, Serializer newSerializer) {
-        var field = getFieldForFieldPath(fp);
-        if (!(field instanceof PointerField pf)) return false;
+    private boolean switchPointer(S2LongFieldPath fp, PointerField pf, Serializer newSerializer) {
         var currentSerializer = pointerSerializers[pf.getPointerId()];
         if (currentSerializer == newSerializer) return false;
         var cleared = clearSubEntries(fp);

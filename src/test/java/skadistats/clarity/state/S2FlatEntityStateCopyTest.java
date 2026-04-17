@@ -3,6 +3,7 @@ package skadistats.clarity.state;
 import org.testng.annotations.Test;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 
 import static org.testng.Assert.assertEquals;

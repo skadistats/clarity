@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.StringLenDecoder;
 import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 
 import java.nio.charset.StandardCharsets;

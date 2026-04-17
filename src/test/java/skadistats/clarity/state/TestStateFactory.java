@@ -1,6 +1,7 @@
 package skadistats.clarity.state;
 
 import skadistats.clarity.model.s2.field.SerializerField;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 import skadistats.clarity.state.s2.S2NestedArrayEntityState;
 import skadistats.clarity.state.s2.S2TreeMapEntityState;
