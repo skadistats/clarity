@@ -13,7 +13,7 @@ import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
-import skadistats.clarity.state.FieldLayoutBuilder;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 

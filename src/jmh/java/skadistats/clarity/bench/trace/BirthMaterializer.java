@@ -3,7 +3,7 @@ package skadistats.clarity.bench.trace;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.state.EntityState;
-import skadistats.clarity.state.FieldLayoutBuilder;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s1.S1EntityStateType;
 import skadistats.clarity.state.s2.S2EntityStateType;
 
