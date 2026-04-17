@@ -7,7 +7,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
-public class InitializerMethod extends AbstractInvocationPoint<Initializer> {
+public final class InitializerMethod extends AbstractInvocationPoint<Initializer> {
 
     private MethodHandle methodHandle;
 

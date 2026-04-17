@@ -75,12 +75,10 @@ public class ExecutionModel {
             var ups = findUsagePoints(processorClass);
             for (var up : ups) {
                 usagePoints.add(up);
-                if (up instanceof EventListener) {
-                    requireEventListener((EventListener) up);
-                } else if (up instanceof InitializerMethod) {
-                    registerInitializer((InitializerMethod) up);
-                } else {
-                    requireProvider(up);
+                switch (up) {
+                    case EventListener<?> el -> requireEventListener(el);
+                    case InitializerMethod im -> registerInitializer(im);
+                    case UsagePoint<?> u -> requireProvider(u);
                 }
             }
         }

@@ -3,7 +3,7 @@ package skadistats.clarity.event;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-public class EventListener<A extends Annotation> extends AbstractInvocationPoint<A> {
+public final class EventListener<A extends Annotation> extends AbstractInvocationPoint<A> {
 
     final int order;
     private Object listenerSam;

@@ -6,7 +6,8 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
-public abstract class AbstractInvocationPoint<A extends Annotation> extends UsagePoint<A> implements InvocationPoint<A> {
+public abstract sealed class AbstractInvocationPoint<A extends Annotation> extends UsagePoint<A> implements InvocationPoint<A>
+        permits EventListener, InitializerMethod {
 
     public AbstractInvocationPoint(A annotation, Class<?> processorClass, Method method, UsagePointMarker marker) {
         super(annotation, processorClass, method, marker);

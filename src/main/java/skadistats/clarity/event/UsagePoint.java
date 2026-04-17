@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 import static skadistats.clarity.LogChannel.executionModel;
 
-public class UsagePoint<A extends Annotation> {
+public sealed class UsagePoint<A extends Annotation> permits AbstractInvocationPoint {
 
     protected static final Logger log = PrintfLoggerFactory.getLogger(executionModel);
 
