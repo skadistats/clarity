@@ -9,7 +9,7 @@ import skadistats.clarity.model.s2.SerializerProperties;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public class PointerField extends Field {
+public final class PointerField extends Field {
 
     private final Decoder decoder;
     private final SerializerProperties serializerProperties;

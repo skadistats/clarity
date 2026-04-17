@@ -11,7 +11,7 @@ import skadistats.clarity.model.s2.SerializerProperties;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public class VectorField extends Field {
+public final class VectorField extends Field {
 
     private static final IntVarUnsignedDecoder LENGTH_DECODER = new IntVarUnsignedDecoder();
 

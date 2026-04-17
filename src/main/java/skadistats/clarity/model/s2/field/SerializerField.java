@@ -5,7 +5,7 @@ import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public class SerializerField extends Field {
+public final class SerializerField extends Field {
 
     protected Serializer serializer;
 

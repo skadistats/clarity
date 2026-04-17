@@ -5,7 +5,7 @@ import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public class ArrayField extends Field {
+public final class ArrayField extends Field {
 
     private final Field elementField;
     private final int length;

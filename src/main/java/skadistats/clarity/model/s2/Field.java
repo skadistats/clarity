@@ -4,7 +4,12 @@ import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public abstract class Field {
+public abstract sealed class Field
+        permits skadistats.clarity.model.s2.field.ArrayField,
+                skadistats.clarity.model.s2.field.PointerField,
+                skadistats.clarity.model.s2.field.SerializerField,
+                skadistats.clarity.model.s2.field.ValueField,
+                skadistats.clarity.model.s2.field.VectorField {
 
     private final FieldType fieldType;
 

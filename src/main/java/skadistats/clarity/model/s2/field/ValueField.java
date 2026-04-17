@@ -5,7 +5,7 @@ import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.SerializerProperties;
 
-public class ValueField extends Field {
+public final class ValueField extends Field {
 
     private final Decoder decoder;
     private final SerializerProperties serializerProperties;
