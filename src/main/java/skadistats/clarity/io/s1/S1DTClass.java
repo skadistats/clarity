@@ -1,7 +1,6 @@
 package skadistats.clarity.io.s1;
 
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
@@ -10,7 +9,7 @@ import skadistats.clarity.model.state.S1FlatLayout;
 import java.util.HashMap;
 import java.util.Map;
 
-public class S1DTClass implements DTClass {
+public final class S1DTClass implements DTClass {
 
     private final String dtName;
     private final SendTable sendTable;
@@ -54,8 +53,8 @@ public class S1DTClass implements DTClass {
         return flatLayout;
     }
 
-    public String getNameForFieldPath(FieldPath fp) {
-        return this.receiveProps[fp.s1().idx()].getVarName();
+    public String getNameForFieldPath(S1FieldPath fp) {
+        return this.receiveProps[fp.idx()].getVarName();
     }
 
     public S1FieldPath getFieldPathForName(String name){

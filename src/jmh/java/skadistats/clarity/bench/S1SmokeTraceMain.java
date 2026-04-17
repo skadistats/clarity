@@ -2,6 +2,7 @@ package skadistats.clarity.bench;
 
 import skadistats.clarity.bench.trace.BirthMaterializer;
 import skadistats.clarity.bench.trace.MutationTraceCapture;
+import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.S1EntityStateType;
 
 import java.nio.file.Files;
@@ -35,7 +36,7 @@ public class S1SmokeTraceMain {
             var t2 = System.nanoTime();
             boolean acc = false;
             for (var m : trace.updateMutations()) {
-                acc ^= states[m.stateId()].applyMutation(m.fp(), m.mutation());
+                acc ^= EntityState.applyMutation(states[m.stateId()], m.fp(), m.mutation());
             }
             var replayMs = (System.nanoTime() - t2) / 1_000_000;
             System.out.printf("  %-13s materialize=%d ms, replay=%d ms, acc=%s%n",

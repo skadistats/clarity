@@ -1,10 +1,6 @@
 package skadistats.clarity.model;
 
-import skadistats.clarity.io.s1.S1DTClass;
-import skadistats.clarity.io.s2.Field;
-import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.S2AbstractEntityState;
 
 public class Entity {
 
@@ -84,24 +80,14 @@ public class Entity {
     }
 
     public String getNameForFieldPath(FieldPath fp) {
-        if (state instanceof S2AbstractEntityState s2s) {
-            return s2s.getNameForFieldPath(fp);
-        }
-        return ((S1DTClass) dtClass).getNameForFieldPath(fp);
+        return DTClass.getNameForFieldPath(dtClass, state, fp);
     }
 
     public FieldPath getFieldPathForName(String property) {
-        if (state instanceof S2AbstractEntityState s2s) {
-            return s2s.getFieldPathForName(property);
-        }
-        return ((S1DTClass) dtClass).getFieldPathForName(property);
+        return DTClass.getFieldPathForName(dtClass, state, property);
     }
 
-    public Field getFieldForFieldPath(FieldPath fp) {
-        return ((S2AbstractEntityState) state).getFieldForFieldPath((S2FieldPath) fp);
-    }
-
-    /**
+/**
      * Check if this entity contains the given property.
      *
      * @param property Name of the property
@@ -136,7 +122,7 @@ public class Entity {
     }
 
     public <T> T getPropertyForFieldPath(FieldPath fp) {
-        return (T) getState().getValueForFieldPath(fp);
+        return EntityState.getValueForFieldPath(getState(), fp);
     }
 
     @Override

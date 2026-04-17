@@ -1,37 +1,25 @@
 package skadistats.clarity.model.state;
 
-import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s1.S1FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Iterator;
+import java.util.function.BiConsumer;
 import java.util.function.Function;
 
-public interface EntityState {
-
-    EntityState copy();
-
-    // returns true if capacity has changed
-    boolean applyMutation(FieldPath fp, StateMutation mutation);
-
-    // Direct-write entry point used by field readers on the hot path.
-    // decoded shape depends on the leaf kind at fp:
-    //   Primitive / Ref / InlineString leaf -> the decoded value itself
-    //   SubState-Pointer leaf               -> a Serializer (or null)
-    //   SubState-Vector leaf                -> an Integer length
-    // Returns true if capacity has changed.
-    boolean write(FieldPath fp, Object decoded);
-
-    // Decode the next value directly from `bs` into the slot at `fp`.
-    // Implementations that store boxed values fall back to write(fp, decoded)
-    // after a boxed decode; flat-byte-backed implementations may write bytes
-    // directly without allocating a wrapper. Returns true if capacity has changed.
-    boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs);
-
-    <T> T getValueForFieldPath(FieldPath fp);
+public sealed interface EntityState permits S1EntityState, S2EntityState {
 
     Iterator<FieldPath> fieldPathIterator();
+
+    @SuppressWarnings("unchecked")
+    static <T> T getValueForFieldPath(EntityState state, FieldPath fp) {
+        return (T) switch (state) {
+            case S1EntityState s1 -> s1.getValueForFieldPath((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getValueForFieldPath((S2FieldPath) fp);
+        };
+    }
 
     default String dump(String title, Function<FieldPath, String> nameResolver) {
         final var table = new TextTable.Builder()
@@ -48,11 +36,40 @@ public interface EntityState {
             var fp = iter.next();
             table.setData(i, 0, fp);
             table.setData(i, 1, nameResolver.apply(fp));
-            table.setData(i, 2, getValueForFieldPath(fp));
+            table.setData(i, 2, getValueForFieldPath(this, fp));
             i++;
         }
 
         return table.toString();
+    }
+
+    EntityState copy();
+
+    static boolean applyMutation(EntityState state, FieldPath fp, StateMutation mutation) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.applyMutation((S1FieldPath) fp, mutation);
+            case S2EntityState s2 -> s2.applyMutation((S2FieldPath) fp, mutation);
+        };
+    }
+
+    static boolean applyMutations(EntityState state, FieldPath[] fps, StateMutation[] muts,
+                                   BiConsumer<FieldPath, StateMutation> beforeEach) {
+        var result = false;
+        switch (state) {
+            case S1EntityState s1 -> {
+                for (var i = 0; i < fps.length; i++) {
+                    if (beforeEach != null) beforeEach.accept(fps[i], muts[i]);
+                    result |= s1.applyMutation((S1FieldPath) fps[i], muts[i]);
+                }
+            }
+            case S2EntityState s2 -> {
+                for (var i = 0; i < fps.length; i++) {
+                    if (beforeEach != null) beforeEach.accept(fps[i], muts[i]);
+                    result |= s2.applyMutation((S2FieldPath) fps[i], muts[i]);
+                }
+            }
+        }
+        return result;
     }
 
 }

@@ -68,6 +68,7 @@ public class Entities {
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.entities);
 
     private int entityCount;
+    @SuppressWarnings("rawtypes")
     private FieldReader fieldReader;
     private int[] deletions;
     private int entitiesServerTick;
@@ -551,7 +552,7 @@ public class Entities {
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent, capacityChanged));
     }
 
-    private void executeEntityUpdate(Entity entity, FieldChanges changes, boolean silent, boolean capacityChanged) {
+    private void executeEntityUpdate(Entity entity, FieldChanges<?> changes, boolean silent, boolean capacityChanged) {
         assert silent || (entity.isExistent() && entity.isActive());
         logModification("UPDATE", entity);
         if (!silent) {
@@ -706,38 +707,16 @@ public class Entities {
         return s;
     }
 
-    private boolean applySetupChanges(FieldChanges changes, EntityState state) {
-        if (changes.getMutations() == null) {
-            return changes.capacityChanged();
-        }
-        if (mutationListener == null) {
-            return changes.applyTo(state);
-        }
-        var fps = changes.getFieldPaths();
-        var muts = changes.getMutations();
-        var capacityChanged = false;
-        for (var i = 0; i < fps.length; i++) {
-            mutationListener.onSetupMutation(state, fps[i], muts[i]);
-            capacityChanged |= state.applyMutation(fps[i], muts[i]);
-        }
-        return capacityChanged;
+    private boolean applySetupChanges(FieldChanges<?> changes, EntityState state) {
+        return mutationListener == null
+                ? changes.applyTo(state)
+                : changes.applyTo(state, (fp, mut) -> mutationListener.onSetupMutation(state, fp, mut));
     }
 
-    private boolean applyUpdateChanges(FieldChanges changes, EntityState state) {
-        if (changes.getMutations() == null) {
-            return changes.capacityChanged();
-        }
-        if (mutationListener == null) {
-            return changes.applyTo(state);
-        }
-        var fps = changes.getFieldPaths();
-        var muts = changes.getMutations();
-        var capacityChanged = false;
-        for (var i = 0; i < fps.length; i++) {
-            mutationListener.onUpdateMutation(state, fps[i], muts[i]);
-            capacityChanged |= state.applyMutation(fps[i], muts[i]);
-        }
-        return capacityChanged;
+    private boolean applyUpdateChanges(FieldChanges<?> changes, EntityState state) {
+        return mutationListener == null
+                ? changes.applyTo(state)
+                : changes.applyTo(state, (fp, mut) -> mutationListener.onUpdateMutation(state, fp, mut));
     }
 
     public Entity getByIndex(int index) {

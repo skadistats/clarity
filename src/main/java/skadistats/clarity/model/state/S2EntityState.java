@@ -1,24 +1,26 @@
 package skadistats.clarity.model.state;
 
+import skadistats.clarity.io.bitstream.BitStream;
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.s2.Field;
 import skadistats.clarity.io.s2.FieldType;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.io.s2.field.SerializerField;
-import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 
-public abstract class S2AbstractEntityState implements EntityState {
+public abstract sealed class S2EntityState implements EntityState
+        permits S2FlatEntityState, S2NestedArrayEntityState, S2TreeMapEntityState {
 
     protected final SerializerField rootField;
     protected Serializer[] pointerSerializers;
 
-    protected S2AbstractEntityState(SerializerField rootField, int pointerCount) {
+    protected S2EntityState(SerializerField rootField, int pointerCount) {
         this.rootField = rootField;
         this.pointerSerializers = new Serializer[pointerCount];
     }
 
-    protected S2AbstractEntityState(S2AbstractEntityState other) {
+    protected S2EntityState(S2EntityState other) {
         this.rootField = other.rootField;
         this.pointerSerializers = other.pointerSerializers.clone();
     }
@@ -44,8 +46,7 @@ public abstract class S2AbstractEntityState implements EntityState {
         return f;
     }
 
-    public String getNameForFieldPath(FieldPath fpX) {
-        var fp = fpX.s2();
+    public String getNameForFieldPath(S2FieldPath fp) {
         var sb = new StringBuilder();
 
         Field currentField = rootField;
@@ -86,5 +87,13 @@ public abstract class S2AbstractEntityState implements EntityState {
         var f = getFieldForFieldPath(fp);
         return f != null ? f.getType() : null;
     }
+
+    public abstract <T> T getValueForFieldPath(S2FieldPath fp);
+
+    public abstract boolean write(S2FieldPath fp, Object decoded);
+
+    public abstract boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs);
+
+    public abstract boolean applyMutation(S2FieldPath fp, StateMutation mutation);
 
 }

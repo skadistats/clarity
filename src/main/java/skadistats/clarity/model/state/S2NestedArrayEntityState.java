@@ -9,6 +9,7 @@ import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 
-public class S2NestedArrayEntityState extends S2AbstractEntityState {
+public final class S2NestedArrayEntityState extends S2EntityState {
 
     private List<Entry> entries;
     private Deque<Integer> freeEntries;
@@ -46,13 +47,74 @@ public class S2NestedArrayEntityState extends S2AbstractEntityState {
     }
 
     @Override
+    public Iterator<FieldPath> fieldPathIterator() {
+        return new S2NestedArrayEntityStateIterator(rootEntry());
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getValueForFieldPath(S2FieldPath fp) {
+        Field field = rootField;
+        Entry node = rootEntry();
+        var last = fp.last();
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            if (i == last) {
+                return (T) node.get(idx);
+            }
+            field = field.getChild(this, idx);
+            if (!node.isSub(idx)) {
+                return null;
+            }
+            node = node.subEntry(idx);
+            i++;
+        }
+    }
+
+    @Override
     public EntityState copy() {
         return new S2NestedArrayEntityState(this);
     }
 
     @Override
-    public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
-        var fp = fpX.s2();
+    public boolean write(S2FieldPath fp, Object decoded) {
+        Field field = rootField;
+        Entry node = rootEntry();
+        var last = fp.last();
+        capacityChanged = false;
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            if (node.length() <= idx) {
+                ensureNodeCapacity(field, node, idx);
+            }
+            var child = field.getChild(this, idx);
+            if (i == last) {
+                if (child instanceof PointerField) {
+                    return handlePointerSwitch(node, idx, child, (Serializer) decoded);
+                }
+                if (child instanceof VectorField) {
+                    return handleResizeVector(node, idx, (Integer) decoded);
+                }
+                node.set(idx, decoded);
+                return capacityChanged;
+            }
+            field = child;
+            node = subEntryForWrite(node, idx);
+            i++;
+        }
+    }
+
+    @Override
+    public boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs) {
+        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
+    }
+
+    @Override
+    public boolean applyMutation(S2FieldPath fp, StateMutation mutation) {
         Field field = rootField;
         Entry node = rootEntry();
         var last = fp.last();
@@ -75,42 +137,6 @@ public class S2NestedArrayEntityState extends S2AbstractEntityState {
                     return handlePointerSwitch(node, idx, child, sp.newSerializer());
                 }
                 throw new IllegalStateException();
-            }
-            field = child;
-            node = subEntryForWrite(node, idx);
-            i++;
-        }
-    }
-
-    @Override
-    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
-        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
-    }
-
-    @Override
-    public boolean write(FieldPath fpX, Object decoded) {
-        var fp = fpX.s2();
-        Field field = rootField;
-        Entry node = rootEntry();
-        var last = fp.last();
-        capacityChanged = false;
-
-        var i = 0;
-        while (true) {
-            var idx = fp.get(i);
-            if (node.length() <= idx) {
-                ensureNodeCapacity(field, node, idx);
-            }
-            var child = field.getChild(this, idx);
-            if (i == last) {
-                if (child instanceof PointerField) {
-                    return handlePointerSwitch(node, idx, child, (Serializer) decoded);
-                }
-                if (child instanceof VectorField) {
-                    return handleResizeVector(node, idx, (Integer) decoded);
-                }
-                node.set(idx, decoded);
-                return capacityChanged;
             }
             field = child;
             node = subEntryForWrite(node, idx);
@@ -185,34 +211,6 @@ public class S2NestedArrayEntityState extends S2AbstractEntityState {
             return sub != null && hasAnyOccupiedPath(sub);
         }
         return true;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getValueForFieldPath(FieldPath fpX) {
-        var fp = fpX.s2();
-        Field field = rootField;
-        Entry node = rootEntry();
-        var last = fp.last();
-
-        var i = 0;
-        while (true) {
-            var idx = fp.get(i);
-            if (i == last) {
-                return (T) node.get(idx);
-            }
-            field = field.getChild(this, idx);
-            if (!node.isSub(idx)) {
-                return null;
-            }
-            node = node.subEntry(idx);
-            i++;
-        }
-    }
-
-    @Override
-    public Iterator<FieldPath> fieldPathIterator() {
-        return new S2NestedArrayEntityStateIterator(rootEntry());
     }
 
     private EntryRef createEntryRef(Entry entry) {

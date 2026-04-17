@@ -1,7 +1,7 @@
 package skadistats.clarity.io.s2;
 
 import skadistats.clarity.io.decoder.Decoder;
-import skadistats.clarity.model.state.S2AbstractEntityState;
+import skadistats.clarity.model.state.S2EntityState;
 import skadistats.clarity.model.state.StateMutation;
 
 public abstract class Field {
@@ -24,15 +24,15 @@ public abstract class Field {
         return null;
     }
 
-    public Field getChild(S2AbstractEntityState state, int idx) {
+    public Field getChild(S2EntityState state, int idx) {
         return null;
     }
 
-    public Integer getChildIndex(S2AbstractEntityState state, String nameSegment) {
+    public Integer getChildIndex(S2EntityState state, String nameSegment) {
         return null;
     }
 
-    public String getChildNameSegment(S2AbstractEntityState state, int idx) {
+    public String getChildNameSegment(S2EntityState state, int idx) {
         return null;
     }
 

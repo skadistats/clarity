@@ -5,7 +5,7 @@ import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
 
-public class S2DTClass implements DTClass {
+public final class S2DTClass implements DTClass {
 
     private final SerializerField field;
     private int classId = -1;

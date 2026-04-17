@@ -6,6 +6,7 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.Random;
 
@@ -40,7 +41,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         return BitStream.createBitStream(ByteString.copyFrom(b));
     }
 
-    private static Object read(S2FlatEntityState s, FieldPath fp) {
+    private static Object read(S2FlatEntityState s, S2FieldPath fp) {
         return s.getValueForFieldPath(fp);
     }
 

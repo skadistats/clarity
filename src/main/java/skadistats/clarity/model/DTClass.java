@@ -2,14 +2,13 @@ package skadistats.clarity.model;
 
 import skadistats.clarity.io.s1.S1DTClass;
 import skadistats.clarity.io.s2.S2DTClass;
+import skadistats.clarity.model.s1.S1FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.EntityStateFactory;
+import skadistats.clarity.model.state.S2EntityState;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Function;
-
-public interface DTClass {
+public sealed interface DTClass permits S1DTClass, S2DTClass {
 
     String getDtName();
 
@@ -19,31 +18,18 @@ public interface DTClass {
     void setEntityStateFactory(EntityStateFactory factory);
     EntityState getEmptyState();
 
-    @Deprecated
-    default List<FieldPath> collectFieldPaths(EntityState state) {
-        List<FieldPath> result = new ArrayList<>();
-        var iter = state.fieldPathIterator();
-        while (iter.hasNext()) {
-            result.add(iter.next());
-        }
-        return result;
+    static String getNameForFieldPath(DTClass dtClass, EntityState state, FieldPath fp) {
+        return switch (dtClass) {
+            case S1DTClass s1 -> s1.getNameForFieldPath((S1FieldPath) fp);
+            case S2DTClass ignored -> ((S2EntityState) state).getNameForFieldPath((S2FieldPath) fp);
+        };
     }
 
-    default <V> V evaluate(Function<S1DTClass, V> s1, Function<S2DTClass, V> s2) {
-        if (this instanceof S2DTClass) {
-            return s2.apply((S2DTClass) this);
-        } else {
-            return s1.apply((S1DTClass) this);
-        }
-    }
-
-    default S1DTClass s1() {
-        return (S1DTClass) this;
-    }
-
-    default S2DTClass s2() {
-        return (S2DTClass) this;
+    static FieldPath getFieldPathForName(DTClass dtClass, EntityState state, String name) {
+        return switch (dtClass) {
+            case S1DTClass s1 -> s1.getFieldPathForName(name);
+            case S2DTClass ignored -> ((S2EntityState) state).getFieldPathForName(name);
+        };
     }
 
 }
-

@@ -9,7 +9,7 @@ import skadistats.clarity.util.SimpleIterator;
 
 import java.util.Iterator;
 
-public class S1ObjectArrayEntityState implements EntityState {
+public final class S1ObjectArrayEntityState implements S1EntityState {
 
     private final Object[] state;
 
@@ -23,35 +23,6 @@ public class S1ObjectArrayEntityState implements EntityState {
     }
 
     @Override
-    public EntityState copy() {
-        return new S1ObjectArrayEntityState(this);
-    }
-
-    @Override
-    public boolean applyMutation(FieldPath fp, StateMutation mutation) {
-        var wv = (StateMutation.WriteValue) mutation;
-        state[fp.s1().idx()] = wv.value();
-        return false;
-    }
-
-    @Override
-    public boolean write(FieldPath fp, Object decoded) {
-        state[fp.s1().idx()] = decoded;
-        return false;
-    }
-
-    @Override
-    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
-        state[fp.s1().idx()] = DecoderDispatch.decode(bs, decoder);
-        return false;
-    }
-
-    @Override
-    public <T> T getValueForFieldPath(FieldPath fp) {
-        return (T) state[fp.s1().idx()];
-    }
-
-    @Override
     public Iterator<FieldPath> fieldPathIterator() {
         return new SimpleIterator<>() {
             int i = 0;
@@ -61,6 +32,36 @@ public class S1ObjectArrayEntityState implements EntityState {
                 return i < state.length ? new S1FieldPath(i++) : null;
             }
         };
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getValueForFieldPath(S1FieldPath fp) {
+        return (T) state[fp.idx()];
+    }
+
+    @Override
+    public EntityState copy() {
+        return new S1ObjectArrayEntityState(this);
+    }
+
+    @Override
+    public boolean write(S1FieldPath fp, Object decoded) {
+        state[fp.idx()] = decoded;
+        return false;
+    }
+
+    @Override
+    public boolean decodeInto(S1FieldPath fp, Decoder decoder, BitStream bs) {
+        state[fp.idx()] = DecoderDispatch.decode(bs, decoder);
+        return false;
+    }
+
+    @Override
+    public boolean applyMutation(S1FieldPath fp, StateMutation mutation) {
+        var wv = (StateMutation.WriteValue) mutation;
+        state[fp.idx()] = wv.value();
+        return false;
     }
 
 }

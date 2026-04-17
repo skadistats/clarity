@@ -3,6 +3,7 @@ package skadistats.clarity.model.state;
 import org.testng.annotations.Test;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import static org.testng.Assert.assertEquals;
 import static skadistats.clarity.model.state.TestFields.floatField;
@@ -21,19 +22,19 @@ public class S2NestedArrayEntityStateCopyTest {
         return new S2NestedArrayEntityState(rootField(root), 1024);
     }
 
-    private static boolean write(S2NestedArrayEntityState s, FieldPath fp, Object v) {
+    private static boolean write(S2NestedArrayEntityState s, S2FieldPath fp, Object v) {
         return s.applyMutation(fp, new StateMutation.WriteValue(v));
     }
 
-    private static boolean resize(S2NestedArrayEntityState s, FieldPath fp, int count) {
+    private static boolean resize(S2NestedArrayEntityState s, S2FieldPath fp, int count) {
         return s.applyMutation(fp, new StateMutation.ResizeVector(count));
     }
 
-    private static boolean switchPtr(S2NestedArrayEntityState s, FieldPath fp, Serializer ser) {
+    private static boolean switchPtr(S2NestedArrayEntityState s, S2FieldPath fp, Serializer ser) {
         return s.applyMutation(fp, new StateMutation.SwitchPointer(ser));
     }
 
-    private static Object read(S2NestedArrayEntityState s, FieldPath fp) {
+    private static Object read(S2NestedArrayEntityState s, S2FieldPath fp) {
         return s.getValueForFieldPath(fp);
     }
 

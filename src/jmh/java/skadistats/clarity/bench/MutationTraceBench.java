@@ -68,7 +68,7 @@ public class MutationTraceBench {
         var muts = updateMutations;
         boolean acc = false;
         for (var m : muts) {
-            acc ^= st[m.stateId()].applyMutation(m.fp(), m.mutation());
+            acc ^= EntityState.applyMutation(st[m.stateId()], m.fp(), m.mutation());
         }
         bh.consume(acc);
     }

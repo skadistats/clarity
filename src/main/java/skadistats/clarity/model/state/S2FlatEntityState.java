@@ -20,7 +20,7 @@ import java.util.List;
 
 import static skadistats.clarity.model.state.PrimitiveType.INT_VH;
 
-public class S2FlatEntityState extends S2AbstractEntityState {
+public final class S2FlatEntityState extends S2EntityState {
 
     private static final Object[] EMPTY_REFS = {};
     private static final int[] EMPTY_FREE_SLOTS = {};
@@ -61,8 +61,7 @@ public class S2FlatEntityState extends S2AbstractEntityState {
     }
 
     @Override
-    public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
-        var fp = fpX.s2();
+    public boolean applyMutation(S2FieldPath fp, StateMutation mutation) {
         Entry current = rootEntry;
         FieldLayout layout = current.rootLayout;
         var base = 0;
@@ -112,8 +111,7 @@ public class S2FlatEntityState extends S2AbstractEntityState {
     }
 
     @Override
-    public boolean decodeInto(FieldPath fpX, Decoder decoder, BitStream bs) {
-        var fp = fpX.s2();
+    public boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs) {
         Entry current = rootEntry;
         FieldLayout layout = current.rootLayout;
         var base = 0;
@@ -178,8 +176,7 @@ public class S2FlatEntityState extends S2AbstractEntityState {
     }
 
     @Override
-    public boolean write(FieldPath fpX, Object decoded) {
-        var fp = fpX.s2();
+    public boolean write(S2FieldPath fp, Object decoded) {
         Entry current = rootEntry;
         FieldLayout layout = current.rootLayout;
         var base = 0;
@@ -392,8 +389,7 @@ public class S2FlatEntityState extends S2AbstractEntityState {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T getValueForFieldPath(FieldPath fpX) {
-        var fp = fpX.s2();
+    public <T> T getValueForFieldPath(S2FieldPath fp) {
         Entry current = this.rootEntry;
         FieldLayout layout = current.rootLayout;
         var base = 0;

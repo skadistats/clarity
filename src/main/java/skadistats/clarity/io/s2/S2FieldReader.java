@@ -6,18 +6,18 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.s2.field.PointerField;
-import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2ModifiableFieldPath;
-import skadistats.clarity.model.state.EntityState;
-import skadistats.clarity.model.state.S2AbstractEntityState;
+import skadistats.clarity.model.state.S2EntityState;
 import skadistats.clarity.model.state.S2FlatEntityState;
 import skadistats.clarity.model.state.StateMutation;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
 
-public class S2FieldReader extends FieldReader {
+public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2EntityState> {
+
+    protected final S2FieldPath[] fieldPaths = new S2FieldPath[MAX_PROPERTIES];
 
     private final Serializer[] pointerOverrides;
 
@@ -52,13 +52,13 @@ public class S2FieldReader extends FieldReader {
         .build();
 
     @Override
-    public FieldChanges readFields(BitStream bs, DTClass dtClassGeneric, EntityState state, boolean debug, boolean materialize) {
-        if (debug) return readFieldsDebug(bs, dtClassGeneric, state);
-        if (materialize) return readFieldsMaterialized(bs, dtClassGeneric, state);
-        return readFieldsFast(bs, dtClassGeneric, state);
+    public FieldChanges<S2FieldPath> readFields(BitStream bs, S2DTClass dtClass, S2EntityState state, boolean debug, boolean materialize) {
+        if (debug) return readFieldsDebug(bs, dtClass, state);
+        if (materialize) return readFieldsMaterialized(bs, dtClass, state);
+        return readFieldsFast(bs, dtClass, state);
     }
 
-    private Field resolveField(S2AbstractEntityState state, S2DTClass dtClass, S2FieldPath fp) {
+    private Field resolveField(S2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
             f = f.getChild(state, fp.get(i));
@@ -69,7 +69,7 @@ public class S2FieldReader extends FieldReader {
         return f;
     }
 
-    private Field resolveFieldDebug(S2AbstractEntityState state, S2DTClass dtClass, S2FieldPath fp) {
+    private Field resolveFieldDebug(S2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
             if (f instanceof PointerField pf) {
@@ -84,9 +84,7 @@ public class S2FieldReader extends FieldReader {
         return f;
     }
 
-    private FieldChanges readFieldsFast(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
-        var dtClass = dtClassGeneric.s2();
-        var state = (S2AbstractEntityState) entityState;
+    private FieldChanges<S2FieldPath> readFieldsFast(BitStream bs, S2DTClass dtClass, S2EntityState state) {
         var n = 0;
         var mfp = S2ModifiableFieldPath.newInstance();
 
@@ -103,7 +101,7 @@ public class S2FieldReader extends FieldReader {
         var fes = isFlat ? (S2FlatEntityState) state : null;
         var capacityChanged = false;
         for (var r = 0; r < n; r++) {
-            var fp = fieldPaths[r].s2();
+            var fp = fieldPaths[r];
             var field = resolveField(state, dtClass, fp);
             if (isFlat && field.isPrimitiveLeaf()) {
                 capacityChanged |= fes.decodeInto(fp, field.getDecoder(), bs);
@@ -114,13 +112,10 @@ public class S2FieldReader extends FieldReader {
             }
         }
 
-        return new FieldChanges(fieldPaths, n, capacityChanged);
+        return new FieldChanges<>(fieldPaths, n, capacityChanged);
     }
 
-    private FieldChanges readFieldsMaterialized(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
-        var dtClass = dtClassGeneric.s2();
-        var state = (S2AbstractEntityState) entityState;
-
+    private FieldChanges<S2FieldPath> readFieldsMaterialized(BitStream bs, S2DTClass dtClass, S2EntityState state) {
         var n = 0;
         var mfp = S2ModifiableFieldPath.newInstance();
         while (true) {
@@ -132,10 +127,10 @@ public class S2FieldReader extends FieldReader {
             fieldPaths[n++] = mfp.unmodifiable();
         }
 
-        var result = new FieldChanges(fieldPaths, n);
+        var result = new FieldChanges<>(fieldPaths, n);
         Arrays.fill(pointerOverrides, null);
         for (var r = 0; r < n; r++) {
-            var fp = fieldPaths[r].s2();
+            var fp = fieldPaths[r];
             var field = resolveFieldDebug(state, dtClass, fp);
             var decoded = DecoderDispatch.decode(bs, field.getDecoder());
             var mutation = field.createMutation(decoded, fp.last() + 1);
@@ -147,9 +142,8 @@ public class S2FieldReader extends FieldReader {
         return result;
     }
 
-    private FieldChanges readFieldsDebug(BitStream bs, DTClass dtClassGeneric, EntityState entityState) {
-        var dtClass = dtClassGeneric.s2();
-        var state = (S2AbstractEntityState) entityState;
+    private FieldChanges<S2FieldPath> readFieldsDebug(BitStream bs, S2DTClass dtClass, S2EntityState state) {
+
         try {
             dataDebugTable.setTitle(dtClass.toString());
             dataDebugTable.clear();
@@ -171,10 +165,10 @@ public class S2FieldReader extends FieldReader {
                 fieldPaths[n++] = mfp.unmodifiable();
             }
 
-            var result = new FieldChanges(fieldPaths, n);
+            var result = new FieldChanges<>(fieldPaths, n);
             Arrays.fill(pointerOverrides, null);
             for (var r = 0; r < n; r++) {
-                var fp = fieldPaths[r].s2();
+                var fp = fieldPaths[r];
                 var field = resolveFieldDebug(state, dtClass, fp);
                 var decoder = field.getDecoder();
                 var offsBefore = bs.pos();
@@ -201,8 +195,8 @@ public class S2FieldReader extends FieldReader {
             }
             return result;
         } finally {
-            dataDebugTable.print(DEBUG_STREAM);
-            opDebugTable.print(DEBUG_STREAM);
+            dataDebugTable.print(Debug.STREAM);
+            opDebugTable.print(Debug.STREAM);
         }
     }
 

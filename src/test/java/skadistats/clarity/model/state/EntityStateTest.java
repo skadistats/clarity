@@ -5,6 +5,7 @@ import org.testng.annotations.Test;
 import skadistats.clarity.io.s2.Serializer;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.Vector;
+import skadistats.clarity.model.s2.S2FieldPath;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,19 +39,19 @@ public class EntityStateTest {
     }
 
     private static boolean write(EntityState s, FieldPath fp, Object v) {
-        return s.applyMutation(fp, new StateMutation.WriteValue(v));
+        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.WriteValue(v));
     }
 
     private static boolean resize(EntityState s, FieldPath fp, int count) {
-        return s.applyMutation(fp, new StateMutation.ResizeVector(count));
+        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.ResizeVector(count));
     }
 
     private static boolean switchPtr(EntityState s, FieldPath fp, Serializer ser) {
-        return s.applyMutation(fp, new StateMutation.SwitchPointer(ser));
+        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.SwitchPointer(ser));
     }
 
     private static Object read(EntityState s, FieldPath fp) {
-        return s.getValueForFieldPath(fp);
+        return EntityState.getValueForFieldPath(s, fp);
     }
 
     private static Set<FieldPath> paths(EntityState s) {

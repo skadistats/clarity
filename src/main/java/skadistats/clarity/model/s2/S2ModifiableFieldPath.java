@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s2;
 
-public interface S2ModifiableFieldPath extends S2FieldPath {
+public sealed interface S2ModifiableFieldPath extends S2FieldPath permits S2LongModifiableFieldPath {
 
     static S2ModifiableFieldPath newInstance() {
         return new S2LongModifiableFieldPath();

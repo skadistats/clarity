@@ -53,8 +53,8 @@ public abstract class StateDifferenceEvaluator {
             if (Objects.equals(prev, cur)) {
                 if (prev == null) break;
                 if (!Objects.equals(
-                        prevState.getValueForFieldPath(prev),
-                        curState.getValueForFieldPath(prev)
+                        EntityState.getValueForFieldPath(prevState, prev),
+                        EntityState.getValueForFieldPath(curState, prev)
                 )) onPropertyChanged(prev);
                 advancePrev();
                 advanceCur();

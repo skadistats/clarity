@@ -7,19 +7,20 @@ import skadistats.clarity.model.state.EntityState;
 
 import java.io.PrintStream;
 
-public abstract class FieldReader {
+public interface FieldReader<D extends DTClass, FP extends FieldPath, S extends EntityState> {
 
-    public static final int MAX_PROPERTIES = 0x3FFF;
-    public static PrintStream DEBUG_STREAM = System.out;
+    int MAX_PROPERTIES = 0x3FFF;
 
-    protected final FieldPath[] fieldPaths = new FieldPath[MAX_PROPERTIES];
+    class Debug {
+        public static PrintStream STREAM = System.out;
+    }
 
-    public abstract FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug, boolean materialize);
+    FieldChanges<FP> readFields(BitStream bs, D dtClass, S state, boolean debug, boolean materialize);
 
-    public final FieldChanges readFields(BitStream bs, DTClass dtClass, EntityState state, boolean debug) {
+    default FieldChanges<FP> readFields(BitStream bs, D dtClass, S state, boolean debug) {
         return readFields(bs, dtClass, state, debug, false);
     }
 
-    public abstract int readDeletions(BitStream bs, int indexBits, int[] deletions);
+    int readDeletions(BitStream bs, int indexBits, int[] deletions);
 
 }

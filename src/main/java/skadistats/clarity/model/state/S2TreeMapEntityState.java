@@ -8,12 +8,13 @@ import skadistats.clarity.io.s2.field.PointerField;
 import skadistats.clarity.io.s2.field.SerializerField;
 import skadistats.clarity.io.s2.field.VectorField;
 import skadistats.clarity.model.FieldPath;
+import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPath;
 import skadistats.clarity.model.s2.S2LongFieldPathFormat;
 
 import java.util.Iterator;
 
-public class S2TreeMapEntityState extends S2AbstractEntityState {
+public final class S2TreeMapEntityState extends S2EntityState {
 
     private final Object2ObjectAVLTreeMap<S2LongFieldPath, Object> state;
 
@@ -28,30 +29,24 @@ public class S2TreeMapEntityState extends S2AbstractEntityState {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public Iterator<FieldPath> fieldPathIterator() {
+        return (Iterator<FieldPath>) (Iterator<?>) state.keySet().iterator();
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getValueForFieldPath(S2FieldPath fp) {
+        return (T) state.get((S2LongFieldPath) fp);
+    }
+
+    @Override
     public EntityState copy() {
         return new S2TreeMapEntityState(this);
     }
 
     @Override
-    public boolean applyMutation(FieldPath fpX, StateMutation mutation) {
-        var fp = (S2LongFieldPath) fpX;
-        if (mutation instanceof StateMutation.WriteValue wv) {
-            return writeValue(fp, wv.value());
-        } else if (mutation instanceof StateMutation.ResizeVector rv) {
-            return trimEntries(fp, rv.count());
-        } else if (mutation instanceof StateMutation.SwitchPointer sp) {
-            return switchPointer(fp, sp.newSerializer());
-        }
-        throw new IllegalStateException();
-    }
-
-    @Override
-    public boolean decodeInto(FieldPath fp, Decoder decoder, BitStream bs) {
-        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
-    }
-
-    @Override
-    public boolean write(FieldPath fpX, Object decoded) {
+    public boolean write(S2FieldPath fpX, Object decoded) {
         var fp = (S2LongFieldPath) fpX;
         var field = getFieldForFieldPath(fp);
         if (field instanceof PointerField) {
@@ -61,6 +56,24 @@ public class S2TreeMapEntityState extends S2AbstractEntityState {
             return trimEntries(fp, (Integer) decoded);
         }
         return writeValue(fp, decoded);
+    }
+
+    @Override
+    public boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs) {
+        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
+    }
+
+    @Override
+    public boolean applyMutation(S2FieldPath fpX, StateMutation mutation) {
+        var fp = (S2LongFieldPath) fpX;
+        if (mutation instanceof StateMutation.WriteValue wv) {
+            return writeValue(fp, wv.value());
+        } else if (mutation instanceof StateMutation.ResizeVector rv) {
+            return trimEntries(fp, rv.count());
+        } else if (mutation instanceof StateMutation.SwitchPointer sp) {
+            return switchPointer(fp, sp.newSerializer());
+        }
+        throw new IllegalStateException();
     }
 
     private boolean writeValue(S2LongFieldPath fp, Object value) {
@@ -126,18 +139,6 @@ public class S2TreeMapEntityState extends S2AbstractEntityState {
             return S2LongFieldPathFormat.set(base, depth, idx + 1);
         }
         return Long.MAX_VALUE;
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getValueForFieldPath(FieldPath fp) {
-        return (T) state.get((S2LongFieldPath) fp);
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public Iterator<FieldPath> fieldPathIterator() {
-        return (Iterator<FieldPath>) (Iterator<?>) state.keySet().iterator();
     }
 
 }

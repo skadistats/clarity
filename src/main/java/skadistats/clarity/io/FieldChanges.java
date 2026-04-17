@@ -4,40 +4,28 @@ import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.state.EntityState;
 import skadistats.clarity.model.state.StateMutation;
 
-public class FieldChanges {
+import java.util.Arrays;
+import java.util.function.BiConsumer;
 
-    private final FieldPath[] fieldPaths;
+public class FieldChanges<FP extends FieldPath> {
+
+    private final FP[] fieldPaths;
     private final StateMutation[] mutations;
     private final boolean capacityChanged;
 
-    public FieldChanges(FieldPath[] source, int n, boolean capacityChanged) {
-        this.fieldPaths = new FieldPath[n];
-        System.arraycopy(source, 0, this.fieldPaths, 0, n);
+    public FieldChanges(FP[] source, int n, boolean capacityChanged) {
+        this.fieldPaths = Arrays.copyOf(source, n);
         this.mutations = null;
         this.capacityChanged = capacityChanged;
     }
 
-    public FieldChanges(FieldPath[] source, int n) {
-        this.fieldPaths = new FieldPath[n];
-        System.arraycopy(source, 0, this.fieldPaths, 0, n);
+    public FieldChanges(FP[] source, int n) {
+        this.fieldPaths = Arrays.copyOf(source, n);
         this.mutations = new StateMutation[n];
         this.capacityChanged = false;
     }
 
-    public boolean applyTo(EntityState state) {
-        if (mutations == null) return capacityChanged;
-        var result = false;
-        for (var i = 0; i < fieldPaths.length; i++) {
-            result |= state.applyMutation(fieldPaths[i], mutations[i]);
-        }
-        return result;
-    }
-
-    public void setMutation(int idx, StateMutation mutation) {
-        mutations[idx] = mutation;
-    }
-
-    public FieldPath[] getFieldPaths() {
+    public FP[] getFieldPaths() {
         return fieldPaths;
     }
 
@@ -47,6 +35,18 @@ public class FieldChanges {
 
     public boolean capacityChanged() {
         return capacityChanged;
+    }
+
+    public boolean applyTo(EntityState state) {
+        return applyTo(state, null);
+    }
+
+    public boolean applyTo(EntityState state, BiConsumer<FieldPath, StateMutation> beforeEach) {
+        return mutations == null ? capacityChanged : EntityState.applyMutations(state, fieldPaths, mutations, beforeEach);
+    }
+
+    public void setMutation(int idx, StateMutation mutation) {
+        mutations[idx] = mutation;
     }
 
 }

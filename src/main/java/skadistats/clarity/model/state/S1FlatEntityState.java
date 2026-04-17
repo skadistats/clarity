@@ -15,7 +15,7 @@ import java.util.Iterator;
 
 import static skadistats.clarity.model.state.PrimitiveType.INT_VH;
 
-public final class S1FlatEntityState implements EntityState {
+public final class S1FlatEntityState implements S1EntityState {
 
     private static final Object[] EMPTY_REFS = {};
     private static final int[] EMPTY_FREE_SLOTS = {};
@@ -49,31 +49,42 @@ public final class S1FlatEntityState implements EntityState {
     }
 
     @Override
+    public Iterator<FieldPath> fieldPathIterator() {
+        var n = layout.kinds().length;
+        return new SimpleIterator<>() {
+            int i = 0;
+
+            @Override
+            public FieldPath readNext() {
+                return i < n ? new S1FieldPath(i++) : null;
+            }
+        };
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T> T getValueForFieldPath(S1FieldPath fpX) {
+        var idx = fpX.idx();
+        var offset = layout.offsets()[idx];
+        if (data[offset] == 0) return null;
+        return (T) switch (layout.kinds()[idx]) {
+            case PRIMITIVE -> layout.primTypes()[idx].read(data, offset + 1);
+            case INLINE_STRING -> {
+                var len = (data[offset + 1] & 0xFF) | ((data[offset + 2] & 0xFF) << 8);
+                yield new String(data, offset + 3, len, StandardCharsets.UTF_8);
+            }
+            case REF -> refs[(int) INT_VH.get(data, offset + 1)];
+        };
+    }
+
+    @Override
     public EntityState copy() {
         return new S1FlatEntityState(this);
     }
 
     @Override
-    public boolean decodeInto(FieldPath fpX, Decoder decoder, BitStream bs) {
-        var idx = fpX.s1().idx();
-        var offset = layout.offsets()[idx];
-        switch (layout.kinds()[idx]) {
-            case PRIMITIVE -> {
-                data[offset] = 1;
-                DecoderDispatch.decodeInto(bs, decoder, data, offset + 1);
-            }
-            case INLINE_STRING -> {
-                data[offset] = 1;
-                StringLenDecoder.decodeIntoInline(bs, data, offset + 1, layout.maxLengths()[idx]);
-            }
-            case REF -> throw new IllegalStateException("decodeInto called on REF leaf, idx=" + idx);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean write(FieldPath fpX, Object decoded) {
-        var idx = fpX.s1().idx();
+    public boolean write(S1FieldPath fpX, Object decoded) {
+        var idx = fpX.idx();
         var offset = layout.offsets()[idx];
         switch (layout.kinds()[idx]) {
             case PRIMITIVE -> {
@@ -100,38 +111,27 @@ public final class S1FlatEntityState implements EntityState {
     }
 
     @Override
-    public boolean applyMutation(FieldPath fp, StateMutation mutation) {
+    public boolean decodeInto(S1FieldPath fpX, Decoder decoder, BitStream bs) {
+        var idx = fpX.idx();
+        var offset = layout.offsets()[idx];
+        switch (layout.kinds()[idx]) {
+            case PRIMITIVE -> {
+                data[offset] = 1;
+                DecoderDispatch.decodeInto(bs, decoder, data, offset + 1);
+            }
+            case INLINE_STRING -> {
+                data[offset] = 1;
+                StringLenDecoder.decodeIntoInline(bs, data, offset + 1, layout.maxLengths()[idx]);
+            }
+            case REF -> throw new IllegalStateException("decodeInto called on REF leaf, idx=" + idx);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean applyMutation(S1FieldPath fp, StateMutation mutation) {
         var wv = (StateMutation.WriteValue) mutation;
         return write(fp, wv.value());
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <T> T getValueForFieldPath(FieldPath fpX) {
-        var idx = fpX.s1().idx();
-        var offset = layout.offsets()[idx];
-        if (data[offset] == 0) return null;
-        return (T) switch (layout.kinds()[idx]) {
-            case PRIMITIVE -> layout.primTypes()[idx].read(data, offset + 1);
-            case INLINE_STRING -> {
-                var len = (data[offset + 1] & 0xFF) | ((data[offset + 2] & 0xFF) << 8);
-                yield new String(data, offset + 3, len, StandardCharsets.UTF_8);
-            }
-            case REF -> refs[(int) INT_VH.get(data, offset + 1)];
-        };
-    }
-
-    @Override
-    public Iterator<FieldPath> fieldPathIterator() {
-        var n = layout.kinds().length;
-        return new SimpleIterator<>() {
-            int i = 0;
-
-            @Override
-            public FieldPath readNext() {
-                return i < n ? new S1FieldPath(i++) : null;
-            }
-        };
     }
 
     private void writeInlineString(int offset, String value, int maxLength) {

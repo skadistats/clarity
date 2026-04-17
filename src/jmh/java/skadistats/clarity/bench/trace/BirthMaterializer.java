@@ -48,7 +48,7 @@ public final class BirthMaterializer {
             };
             states[b.stateId()] = state;
             for (var m : b.setupMutations()) {
-                state.applyMutation(m.fp(), m.mutation());
+                EntityState.applyMutation(state, m.fp(), m.mutation());
             }
         }
         return states;

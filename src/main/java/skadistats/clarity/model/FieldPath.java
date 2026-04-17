@@ -3,14 +3,5 @@ package skadistats.clarity.model;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 
-public interface FieldPath {
-
-    default S1FieldPath s1() {
-        return (S1FieldPath) this;
-    }
-
-    default S2FieldPath s2() {
-        return (S2FieldPath) this;
-    }
-
+public sealed interface FieldPath permits S1FieldPath, S2FieldPath {
 }
