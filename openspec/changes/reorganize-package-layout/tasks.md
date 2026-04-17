@@ -51,6 +51,7 @@ Execution is driven by a single script built from the move table in `proposal.md
 
 ## 5. Commit + archive
 
-- [ ] 5.1 One commit per repo, message `refactor: reorganize package layout — see openspec/changes/reorganize-package-layout/`.
-- [ ] 5.2 Update `clarity/CHANGELOG.md` under an unreleased section: note that this is an internal restructure, list the moved packages at a high level, call out the import-path-only breakage for downstream users that reference `EngineType` / state / schema types.
+- [x] 5.1 One commit per repo, message `refactor: reorganize package layout — see openspec/changes/reorganize-package-layout/`.
+    - clarity, clarity-analyzer, clarity-examples each committed on `next`. Plus follow-up commit in clarity bumping annotation processors to `@SupportedSourceVersion(SourceVersion.RELEASE_21)` to eliminate the RELEASE_17 warnings that surfaced during verification builds.
+- [x] 5.2 Update `clarity/CHANGELOG.md` under an unreleased section: note that this is an internal restructure, list the moved packages at a high level, call out the import-path-only breakage for downstream users that reference `EngineType` / state / schema types.
 - [ ] 5.3 Archive the change: `openspec archive reorganize-package-layout`.

@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+**Internal restructure**
+
+* package layout reorganized so that every horizontal concern has a
+  consistent `(root, s1, s2)` shape. No behavior change. Import-path
+  updates are the only migration.
+  * new top-level packages: `skadistats.clarity.engine` (holds
+    `EngineType`, `AbstractEngineType`, concrete engine types split
+    into `engine/s1/`, `engine/s2/`, plus `PacketInstanceReader*`),
+    and `skadistats.clarity.state` (entity-state storage — abstract
+    `EntityState`, registries, field layout at root; concrete impls
+    under `state/s1/` and `state/s2/`).
+  * schema types (`SendProp`, `SendTable`, `ReceiveProp`, `Serializer`,
+    `Field`, `FieldType`, `Pointer`, `FieldOp`, `S1DTClass`,
+    `S2DTClass`, ...) move from `io/s{1,2}/` to `model/s{1,2}/` so the
+    abstract `DTClass` and its concrete subclasses finally sit in the
+    same top-level package.
+  * `io/` shrinks to field-reading only (`FieldReader`, `FieldChanges`,
+    `MutationListener`, `S1FieldReader`, `S2FieldReader`, decoder
+    factories).
+  * `processor/`, `source/`, `event/`, `io/bitstream/`, `io/decoder/`
+    are unchanged.
+  * `@On*` event-handler parameter types all stay at their current
+    paths (`Entity`, `FieldPath`, `GameEvent`, `StringTable`,
+    `DTClass`, `CombatLogEntry`). User code that only writes event
+    handlers needs no changes.
+  * Downstream code that imported `EngineType` from
+    `skadistats.clarity.model` or referenced schema/state internals
+    from `model.engine.*`, `model.state.*`, or `io.s{1,2}.*` needs
+    import-path updates.
+
 **Breaking changes**
 
 * minimum runtime bumped to Java 21. Published jar no longer runs on
