@@ -38,16 +38,21 @@
 - [x] 4.7 Run `./gradlew clarity:test`.
 - [ ] 4.8 Commit: `refactor(state): migrate S1FlatLayout to sealed FieldLayout array`.
 
-## 5. Stage 5 — Retarget the decoder dispatch generator
+## 5. Stage 5 — Retarget the decoder dispatch generator (ATTEMPTED, REVERTED)
 
-- [ ] 5.1 Mark every `@RegisterDecoder` decoder class `final`. Do NOT seal `Decoder` — the `@RegisterDecoder` set is the source of truth; the generator provides coverage-by-construction; a `permits` clause would duplicate that and break the single-file-per-new-decoder ergonomic.
-- [ ] 5.2 Delete `Decoder.id`, `Decoder.IDS`, `Decoder.register(Class, int)`, the static `Class.forName("DecoderIds")` bootstrap, and the exception handling around it. `Decoder`'s constructor becomes `protected Decoder() {}` with an empty body.
-- [ ] 5.3 Retarget the annotation processor that currently emits `DecoderIds.java` and the `DecoderDispatch.java` int-switch: it SHALL now emit **only** `DecoderDispatch.java`, using a type-pattern switch on `Decoder`. The emitted `decode` body SHALL be `return switch (d) { case XDecoder x -> XDecoder.decode(bs, x); … default -> throw new IllegalStateException("Unknown decoder: " + d.getClass()); }`. Stateless decoders use the ignore-the-pattern-variable form `case XDecoder x -> XDecoder.decode(bs);`.
-- [ ] 5.4 Retarget the `decodeInto` generator arm similarly: type-pattern switch with explicit cases only for decoders declaring `decodeInto`, plus the `default -> throw` arm (which absorbs both unknown subclasses and registered decoders without a `decodeInto` method).
-- [ ] 5.5 Delete the `DecoderIds.java` generator code path and any `DecoderIds`-referencing templates from the processor module.
-- [ ] 5.6 Build clarity — verify the new `DecoderDispatch` is regenerated correctly by inspecting `build/generated/sources/annotationProcessor/java/main/skadistats/clarity/io/decoder/DecoderDispatch.java`. Confirm pattern cases + `default -> throw`; confirm `DecoderIds.java` is no longer emitted.
-- [ ] 5.7 Build clarity-analyzer + clarity-examples.
-- [ ] 5.8 Run `./gradlew clarity:test`.
+**Outcome: reverted after benchmarking.** A back-to-back JMH A/B (3 warmup + 10 measurement, same hardware state, Dota 2 S2 replay) showed Stage 5 consistently ~1–3% slower across all entity-state impls vs the stages 1–4 baseline. Hotspot.log inspection attributed the regression to the `typeSwitch` invokedynamic: 5 levels of LambdaForm/MethodHandle indirection, a ~25% larger C2 nmethod (~14KB vs ~11KB), and extra uncommon_traps during warmup that the generated int-switch tableswitch avoided. Sealing `Decoder` did not change this — `SwitchBootstraps.typeSwitch` does not special-case sealed hierarchies, so the dispatch cost was identical with or without the `permits` clause. See the revert commit message for numbers.
+
+Tasks left as a record of what was attempted. Stage 5 specs deltas (`static-decoder-dispatch`, `decoder-codegen`) were dropped since the change no longer modifies those capabilities.
+
+
+- [x] 5.1 Mark every `@RegisterDecoder` decoder class `final`. Do NOT seal `Decoder` — the `@RegisterDecoder` set is the source of truth; the generator provides coverage-by-construction; a `permits` clause would duplicate that and break the single-file-per-new-decoder ergonomic.
+- [x] 5.2 Delete `Decoder.id`, `Decoder.IDS`, `Decoder.register(Class, int)`, the static `Class.forName("DecoderIds")` bootstrap, and the exception handling around it. `Decoder`'s constructor becomes `protected Decoder() {}` with an empty body.
+- [x] 5.3 Retarget the annotation processor that currently emits `DecoderIds.java` and the `DecoderDispatch.java` int-switch: it SHALL now emit **only** `DecoderDispatch.java`, using a type-pattern switch on `Decoder`. The emitted `decode` body SHALL be `return switch (d) { case XDecoder x -> XDecoder.decode(bs, x); … default -> throw new IllegalStateException("Unknown decoder: " + d.getClass()); }`. Stateless decoders use the ignore-the-pattern-variable form `case XDecoder x -> XDecoder.decode(bs);`.
+- [x] 5.4 Retarget the `decodeInto` generator arm similarly: type-pattern switch with explicit cases only for decoders declaring `decodeInto`, plus the `default -> throw` arm (which absorbs both unknown subclasses and registered decoders without a `decodeInto` method).
+- [x] 5.5 Delete the `DecoderIds.java` generator code path and any `DecoderIds`-referencing templates from the processor module.
+- [x] 5.6 Build clarity — verify the new `DecoderDispatch` is regenerated correctly by inspecting `build/generated/sources/annotationProcessor/java/main/skadistats/clarity/io/decoder/DecoderDispatch.java`. Confirm pattern cases + `default -> throw`; confirm `DecoderIds.java` is no longer emitted.
+- [x] 5.7 Build clarity-analyzer + clarity-examples.
+- [x] 5.8 Run `./gradlew clarity:test`.
 - [ ] 5.9 Run the JMH benchmark harness (`./gradlew bench`) on a representative Dota 2 S2 replay; compare parse-time against the pre-Stage-5 baseline.
 - [ ] 5.10 Commit: `refactor(decoder): dispatch via generated type-pattern switch, drop DecoderIds`.
 

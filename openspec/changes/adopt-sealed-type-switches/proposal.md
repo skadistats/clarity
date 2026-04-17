@@ -12,7 +12,7 @@ Each stage is an isolated commit, verified by compiling `clarity`, `clarity-anal
 - **Stage 2 — Seal `Field`** (`model/s2/Field.java` + 5 subclasses): `sealed permits ArrayField, PointerField, SerializerField, ValueField, VectorField`; mark each subclass `final`. No call-site changes in this commit.
 - **Stage 3 — Convert `Field` / `FieldLayout` / `StateMutation` `instanceof` chains to exhaustive switches** across `state/FieldLayoutBuilder.java`, `state/s2/S2FlatEntityState.java`, `state/s2/S2NestedArrayEntityState.java`, `state/s2/S2TreeMapEntityState.java`. Unlocked by Stage 2 for `Field`; the others rely on already-sealed bases.
 - **Stage 4 — Migrate `S1FlatLayout` onto `FieldLayout[]`**: drop the `LeafKind` enum and the parallel `kinds` / `primTypes` / `maxLengths` / `offsets` arrays; reuse `FieldLayout.Primitive` / `InlineString` / `Ref`. Rewrite `S1FlatEntityState` read/write as exhaustive switches on the sealed `FieldLayout`.
-- **Stage 5 — **BREAKING** replace int-id dispatch with type-pattern dispatch**: `Decoder` stays non-sealed (the `@RegisterDecoder` annotation set is the source of truth for concrete decoders; hand-maintaining a `permits` clause alongside it would defeat the "drop a file, rebuild" ergonomic — the processor effectively provides sealing-by-construction). Retarget the annotation processor to emit `DecoderDispatch.decode` / `decodeInto` as type-pattern switches with an explicit `case XDecoder x -> …` arm per `@RegisterDecoder` class and a terminal `default -> throw` arm. Remove `Decoder.id`, the static `IDS` map, the `Class.forName("DecoderIds")` bootstrap, and the generated `DecoderIds` class. Pattern variables replace the per-case cast.
+- ~~**Stage 5 — replace int-id dispatch with type-pattern dispatch**~~ **ATTEMPTED, REVERTED.** Retargeted the annotation processor to emit `DecoderDispatch` as a type-pattern switch on `Decoder` (with `default -> throw`), removed `Decoder.id` / `IDS` / `DecoderIds`. A back-to-back JMH A/B showed a consistent ~1–3% slowdown across all entity-state impls on a Dota 2 S2 replay. Hotspot.log attributed it to the `typeSwitch` invokedynamic's 5-level LambdaForm/MethodHandle chain and the ~25% larger C2 nmethod. Sealing `Decoder` did not recover the cost — the bootstrap does not special-case sealed hierarchies. The generated-int-dispatch design was the right one; reverted.
 
 ## Capabilities
 
@@ -22,10 +22,9 @@ Each stage is an isolated commit, verified by compiling `clarity`, `clarity-anal
 
 ### Modified Capabilities
 
-- `static-decoder-dispatch`: the "Automatic ID assignment" requirement and the `Decoder.id` field are removed. `DecoderDispatch.decode` / `decodeInto` dispatch via type-pattern switch on `Decoder`, not on `d.id`. The generated `DecoderIds` class is no longer part of the contract. All other requirements (static decode methods, `DecoderDispatch` as the single call site, nested composition) remain.
-- `decoder-codegen`: the annotation processor is retargeted to emit type-pattern switches in `DecoderDispatch` (both `decode` and `decodeInto`) using pattern variables. The `DecoderIds` generation step and the `Decoder.register` / `IDS` / `Class.forName` machinery are removed. `Decoder` remains a non-sealed abstract class — exhaustiveness is enforced by the generator covering every `@RegisterDecoder` class; a `default -> throw` arm closes the switch. `@RegisterDecoder` validation, `decodeInto` validation, and the "primitive decoders implement decodeInto" coverage requirement are unchanged.
+~~`static-decoder-dispatch` / `decoder-codegen`~~ — Stage 5 was reverted, so these capabilities are unchanged by this change.
 
-Stages 1–4 touch only internal implementation (class sealing, `instanceof`→`switch` rewrites, parallel-array→record-array replacement in `S1FlatLayout`) without altering any spec-level requirement — no delta spec files are emitted for those stages.
+All remaining stages (1–4) touch only internal implementation (class sealing, `instanceof`→`switch` rewrites, parallel-array→record-array replacement in `S1FlatLayout`) without altering any spec-level requirement — no delta spec files are emitted for those stages.
 
 ## Impact
 
