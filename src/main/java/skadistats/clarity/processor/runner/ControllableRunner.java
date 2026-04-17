@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.TreeSet;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.function.Consumer;
 
 /**
  * Asynchronous runner that processes a replay in a background thread and supports
@@ -40,6 +41,7 @@ public class ControllableRunner extends AbstractFileRunner {
 
     private Thread runnerThread;
     private Exception runnerException;
+    private Consumer<Throwable> onException;
 
     private final TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
     private int resetRelevantOffset = -1;
@@ -272,6 +274,13 @@ public class ControllableRunner extends AbstractFileRunner {
                 } finally {
                     lock.unlock();
                 }
+                if (!(e instanceof InterruptedException) && onException != null) {
+                    try {
+                        onException.accept(e);
+                    } catch (Throwable t) {
+                        log.error("onException handler threw", t);
+                    }
+                }
             }
             log.debug("runner finished");
             runnerThread = null;
@@ -280,6 +289,10 @@ public class ControllableRunner extends AbstractFileRunner {
         runnerThread.setDaemon(false);
         runnerThread.start();
         return this;
+    }
+
+    public void setOnException(Consumer<Throwable> onException) {
+        this.onException = onException;
     }
 
     public boolean isResetting() {
