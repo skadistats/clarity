@@ -7,9 +7,9 @@ import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
+import skadistats.clarity.state.FieldLayout;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s1.S1EntityState;
-import skadistats.clarity.state.s1.S1FlatLayout;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
@@ -43,13 +43,13 @@ public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPat
         var layout = dtClass.getFlatLayout();
         var receiveProps = dtClass.getReceiveProps();
         var n = readIndices(bs, dtClass);
-        var kinds = layout.kinds();
+        var leaves = layout.leaves();
 
         for (var ci = 0; ci < n; ci++) {
             var fp = fieldPaths[ci];
             var o = fp.idx();
             var decoder = receiveProps[o].getSendProp().getDecoder();
-            if (kinds[o] == S1FlatLayout.LeafKind.REF) {
+            if (leaves[o] instanceof FieldLayout.Ref) {
                 state.write(fp, DecoderDispatch.decode(bs, decoder));
             } else {
                 state.decodeInto(fp, decoder, bs);

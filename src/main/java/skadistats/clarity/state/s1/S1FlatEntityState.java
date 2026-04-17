@@ -8,6 +8,7 @@ import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.FieldLayout;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.util.SimpleIterator;
 
@@ -52,7 +53,7 @@ public final class S1FlatEntityState implements S1EntityState {
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        var n = layout.kinds().length;
+        var n = layout.leaves().length;
         return new SimpleIterator<>() {
             int i = 0;
 
@@ -66,16 +67,25 @@ public final class S1FlatEntityState implements S1EntityState {
     @Override
     @SuppressWarnings("unchecked")
     public <T> T getValueForFieldPath(S1FieldPath fpX) {
-        var idx = fpX.idx();
-        var offset = layout.offsets()[idx];
-        if (data[offset] == 0) return null;
-        return (T) switch (layout.kinds()[idx]) {
-            case PRIMITIVE -> layout.primTypes()[idx].read(data, offset + 1);
-            case INLINE_STRING -> {
+        var leaf = layout.leaves()[fpX.idx()];
+        return (T) switch (leaf) {
+            case FieldLayout.Primitive p -> {
+                var offset = p.offset();
+                if (data[offset] == 0) yield null;
+                yield p.type().read(data, offset + 1);
+            }
+            case FieldLayout.InlineString is -> {
+                var offset = is.offset();
+                if (data[offset] == 0) yield null;
                 var len = (data[offset + 1] & 0xFF) | ((data[offset + 2] & 0xFF) << 8);
                 yield new String(data, offset + 3, len, StandardCharsets.UTF_8);
             }
-            case REF -> refs[(int) INT_VH.get(data, offset + 1)];
+            case FieldLayout.Ref r -> {
+                var offset = r.offset();
+                if (data[offset] == 0) yield null;
+                yield refs[(int) INT_VH.get(data, offset + 1)];
+            }
+            default -> throw new IllegalStateException("S1 layout produced non-leaf: " + leaf);
         };
     }
 
@@ -86,18 +96,20 @@ public final class S1FlatEntityState implements S1EntityState {
 
     @Override
     public boolean write(S1FieldPath fpX, Object decoded) {
-        var idx = fpX.idx();
-        var offset = layout.offsets()[idx];
-        switch (layout.kinds()[idx]) {
-            case PRIMITIVE -> {
+        var leaf = layout.leaves()[fpX.idx()];
+        switch (leaf) {
+            case FieldLayout.Primitive p -> {
+                var offset = p.offset();
                 data[offset] = 1;
-                layout.primTypes()[idx].write(data, offset + 1, decoded);
+                p.type().write(data, offset + 1, decoded);
             }
-            case INLINE_STRING -> {
+            case FieldLayout.InlineString is -> {
+                var offset = is.offset();
                 data[offset] = 1;
-                writeInlineString(offset + 1, (String) decoded, layout.maxLengths()[idx]);
+                writeInlineString(offset + 1, (String) decoded, is.maxLength());
             }
-            case REF -> {
+            case FieldLayout.Ref r -> {
+                var offset = r.offset();
                 int slot;
                 if (data[offset] == 0) {
                     slot = allocateRefSlot();
@@ -108,24 +120,27 @@ public final class S1FlatEntityState implements S1EntityState {
                 }
                 refs[slot] = decoded;
             }
+            default -> throw new IllegalStateException("S1 layout produced non-leaf: " + leaf);
         }
         return false;
     }
 
     @Override
     public boolean decodeInto(S1FieldPath fpX, Decoder decoder, BitStream bs) {
-        var idx = fpX.idx();
-        var offset = layout.offsets()[idx];
-        switch (layout.kinds()[idx]) {
-            case PRIMITIVE -> {
+        var leaf = layout.leaves()[fpX.idx()];
+        switch (leaf) {
+            case FieldLayout.Primitive p -> {
+                var offset = p.offset();
                 data[offset] = 1;
                 DecoderDispatch.decodeInto(bs, decoder, data, offset + 1);
             }
-            case INLINE_STRING -> {
+            case FieldLayout.InlineString is -> {
+                var offset = is.offset();
                 data[offset] = 1;
-                StringLenDecoder.decodeIntoInline(bs, data, offset + 1, layout.maxLengths()[idx]);
+                StringLenDecoder.decodeIntoInline(bs, data, offset + 1, is.maxLength());
             }
-            case REF -> throw new IllegalStateException("decodeInto called on REF leaf, idx=" + idx);
+            case FieldLayout.Ref r -> throw new IllegalStateException("decodeInto called on REF leaf, idx=" + fpX.idx());
+            default -> throw new IllegalStateException("S1 layout produced non-leaf: " + leaf);
         }
         return false;
     }

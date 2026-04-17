@@ -12,6 +12,7 @@ import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.s1.SendProp;
 import skadistats.clarity.model.s1.SendTable;
+import skadistats.clarity.state.FieldLayout;
 import skadistats.clarity.state.s1.S1FlatEntityState;
 import skadistats.clarity.state.s1.S1FlatLayout;
 import skadistats.clarity.state.s1.S1ObjectArrayEntityState;
@@ -84,15 +85,15 @@ public class S1FlatEntityStateTest {
         var dt = dtClass(intProp, strProp, arrProp);
 
         var layout = dt.getFlatLayout();
-        assertEquals(layout.kinds()[0], S1FlatLayout.LeafKind.PRIMITIVE);
-        assertEquals(layout.kinds()[1], S1FlatLayout.LeafKind.INLINE_STRING);
-        assertEquals(layout.kinds()[2], S1FlatLayout.LeafKind.REF);
+        assertTrue(layout.leaves()[0] instanceof FieldLayout.Primitive);
+        assertTrue(layout.leaves()[1] instanceof FieldLayout.InlineString);
+        assertTrue(layout.leaves()[2] instanceof FieldLayout.Ref);
         assertEquals(layout.refSlots(), 1, "one REF leaf for the ARRAY prop");
-        assertEquals(layout.maxLengths()[1], S1FlatLayout.INLINE_STRING_MAX_LENGTH);
+        assertEquals(((FieldLayout.InlineString) layout.leaves()[1]).maxLength(), S1FlatLayout.INLINE_STRING_MAX_LENGTH);
         // offsets: int → 5 bytes (1 flag + 4); string → 515 (1 flag + 2 + 512); ref → 5 (1 flag + 4)
-        assertEquals(layout.offsets()[0], 0);
-        assertEquals(layout.offsets()[1], 5);
-        assertEquals(layout.offsets()[2], 5 + 515);
+        assertEquals(((FieldLayout.Primitive) layout.leaves()[0]).offset(), 0);
+        assertEquals(((FieldLayout.InlineString) layout.leaves()[1]).offset(), 5);
+        assertEquals(((FieldLayout.Ref) layout.leaves()[2]).offset(), 5 + 515);
         assertEquals(layout.dataBytes(), 5 + 515 + 5);
     }
 
