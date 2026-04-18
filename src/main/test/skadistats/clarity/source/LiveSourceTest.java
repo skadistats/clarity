@@ -61,9 +61,8 @@ public class LiveSourceTest {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                try {
-                    FileInputStream src = new FileInputStream(srcFile);
-                    FileOutputStream dst = new FileOutputStream(dstFile);
+                try (FileInputStream src = new FileInputStream(srcFile);
+                     FileOutputStream dst = new FileOutputStream(dstFile)) {
                     byte[] buf = new byte[8192];
                     int n = buf.length;
                     while (n == buf.length) {
@@ -71,7 +70,6 @@ public class LiveSourceTest {
                         dst.write(buf, 0, n);
                         Thread.sleep(25);
                     }
-
                 } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
