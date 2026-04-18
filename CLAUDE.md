@@ -80,3 +80,8 @@ Downstream (API changes here need a compat check against both; both
 composite-include this repo):
 - clarity-examples: `/home/spheenik/projects/clarity/clarity-examples`
 - clarity-analyzer: `/home/spheenik/projects/clarity/clarity-analyzer`
+
+Perf tooling (NOT a composite build — resolves clarity via `mavenLocal()`
+for snapshot candidates; publish first with `./gradlew publishToMavenLocal`):
+- clarity-bench: `/home/spheenik/projects/clarity/clarity-bench`
+  — cross-version JMH harness; see its README for usage
