@@ -5,7 +5,6 @@ import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.EntityState;
@@ -67,7 +66,7 @@ public abstract sealed class S2EntityState implements EntityState
     }
 
     public S2FieldPath getFieldPathForName(String fieldName) {
-        var fp = S2ModifiableFieldPath.newInstance();
+        var fp = S2FieldPath.newBuilder();
 
         Field currentField = rootField;
         var search = fieldName;
@@ -78,7 +77,7 @@ public abstract sealed class S2EntityState implements EntityState
             var fieldIdx = currentField.getChildIndex(this, segment);
             if (fieldIdx == null) return null;
             fp.cur(fieldIdx);
-            if (last) return fp.unmodifiable();
+            if (last) return fp.snapshot();
             fp.down();
             currentField = currentField.getChild(this, fieldIdx);
             search = search.substring(segment.length() + 1);

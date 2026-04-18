@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+**Configurable S2 field-path implementation**
+
+* `S2FieldPath` is now a sealed immutable key contract: it extends
+  `Comparable<S2FieldPath>` and carries range-op methods (`childAt`,
+  `upperBoundForSubtreeAt`). `S2ModifiableFieldPath` is gone — its
+  replacement, `S2FieldPathBuilder`, is a separate interface that is
+  NOT a `S2FieldPath`. This removes the false-sibling relationship
+  that forced concrete-type casts in `S2TreeMapEntityState`.
+* New enum `S2FieldPathType` pairs a concrete `S2FieldPath` impl with
+  its builder factory. Currently one constant: `LONG` (the production
+  default, backed by `S2LongFieldPath`/`S2LongFieldPathBuilder`).
+  Adding a new path impl requires one enum constant plus two classes.
+* New runner knob `withS2FieldPath(S2FieldPathType)` on
+  `AbstractFileRunner` (inherited by `SimpleRunner` and
+  `ControllableRunner`). Default stays `LONG`; no behaviour change
+  for existing users.
+* `FieldOp.execute` now takes `S2FieldPathBuilder` instead of
+  `S2ModifiableFieldPath`.
+* `S2TreeMapEntityState` keys on `S2FieldPath` directly with no casts
+  and no references to `S2LongFieldPathFormat`; range ops compose
+  through interface methods.
+
 **Internal restructure**
 
 * package layout reorganized so that every horizontal concern has a

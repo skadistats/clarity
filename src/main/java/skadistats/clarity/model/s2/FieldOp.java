@@ -88,7 +88,7 @@ public record FieldOp(int weight, String name) {
         new FieldOp(25474, "FieldPathEncodeFinish"),                    // 39
     };
 
-    public static void execute(int opId, S2ModifiableFieldPath mfp, BitStream bs) {
+    public static void execute(int opId, S2FieldPathBuilder mfp, BitStream bs) {
         switch (opId) {
             case PLUS_ONE:
                 mfp.inc(1);

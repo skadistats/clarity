@@ -7,6 +7,7 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.S2FieldReader;
 import skadistats.clarity.model.EngineId;
+import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.wire.deadlock.proto.EmbeddedPackets;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
@@ -58,6 +59,11 @@ public class DeadlockEngineType extends AbstractProtobufDemoEngineType {
     @Override
     public FieldReader getNewFieldReader(int pointerCount) {
         return new S2FieldReader(pointerCount);
+    }
+
+    @Override
+    public FieldReader getNewFieldReader(int pointerCount, S2FieldPathType pathType) {
+        return new S2FieldReader(pointerCount, pathType);
     }
 
     @Override

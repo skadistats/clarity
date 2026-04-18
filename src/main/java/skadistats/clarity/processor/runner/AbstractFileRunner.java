@@ -3,6 +3,7 @@ package skadistats.clarity.processor.runner;
 import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.source.Source;
@@ -24,6 +25,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected LoopController loopController;
     protected S1EntityStateType s1EntityStateType = S1EntityStateType.FLAT;
     protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
+    protected S2FieldPathType s2FieldPathType = S2FieldPathType.LONG;
 
     /* tick the user is at the end of */
     protected int tick;
@@ -37,7 +39,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     }
 
     protected void initAndRunWith(Object... processors) throws IOException {
-        var entityStateFactory = new EntityStateFactory(s1EntityStateType, s2EntityStateType);
+        var entityStateFactory = new EntityStateFactory(s1EntityStateType, s2EntityStateType, s2FieldPathType);
         initWithProcessors(this, getEngineType().getRegisteredProcessors(), source, entityStateFactory, processors);
         engineType.emitHeader();
         ((OnInputSource.Event) context.createEvent(OnInputSource.class)).raise(source, loopController);
@@ -81,6 +83,11 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
 
     public AbstractFileRunner withS2EntityState(S2EntityStateType type) {
         this.s2EntityStateType = type;
+        return this;
+    }
+
+    public AbstractFileRunner withS2FieldPath(S2FieldPathType type) {
+        this.s2FieldPathType = type;
         return this;
     }
 

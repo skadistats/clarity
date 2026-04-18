@@ -1,24 +1,4 @@
-## ADDED Requirements
-
-### Requirement: BitStream provides int-returning field op reader
-
-`BitStream` SHALL provide a `readFieldOpId()` method that returns the field op ordinal as a primitive `int`, without converting to a `FieldOpType` enum constant. The existing `readFieldOp()` method SHALL remain available for debug and backward-compatible use.
-
-#### Scenario: readFieldOpId returns correct ordinal
-- **WHEN** a BitStream contains the Huffman encoding for `PlusOne` (ordinal 0)
-- **THEN** `readFieldOpId()` SHALL return `0` and advance the bit position identically to `readFieldOp()`
-
-#### Scenario: readFieldOpId handles slow-path Huffman codes
-- **WHEN** a BitStream contains a Huffman code that requires more than 8 bits (slow path)
-- **THEN** `readFieldOpId()` SHALL return the correct ordinal and advance the bit position identically to `readFieldOp()`
-
-### Requirement: FieldOpType exposes ordinal constants
-
-`FieldOpType` SHALL expose `public static final int` constants for each field op ordinal (e.g., `OP_PLUS_ONE`, `OP_PLUS_TWO`, ..., `OP_FIELD_PATH_ENCODE_FINISH`). These constants SHALL be derived from `ordinal()` at class initialization time, ensuring they remain synchronized with enum declaration order.
-
-#### Scenario: Constants match enum ordinals
-- **WHEN** `FieldOpType` is loaded
-- **THEN** each `OP_*` constant SHALL equal the `ordinal()` of its corresponding enum constant (e.g., `OP_PLUS_ONE == PlusOne.ordinal()`)
+## MODIFIED Requirements
 
 ### Requirement: S2FieldReader uses switch dispatch for field ops
 

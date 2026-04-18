@@ -50,4 +50,8 @@ public class DTClasses {
         return pointerCount;
     }
 
+    public EntityStateFactory getEntityStateFactory() {
+        return entityStateFactory;
+    }
+
 }

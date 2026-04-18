@@ -7,8 +7,7 @@ import skadistats.clarity.io.decoder.StringLenDecoder;
 import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2LongFieldPathFormat;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.s2.S2FieldPathBuilder;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.EntityState;
@@ -435,52 +434,46 @@ public final class S2FlatEntityState extends S2EntityState {
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
         var out = new ArrayList<FieldPath>();
-        var indices = new int[S2LongFieldPathFormat.MAX_FIELDPATH_LENGTH];
-        walk(rootEntry, rootEntry.rootLayout, 0, indices, 0, out);
+        walk(rootEntry, rootEntry.rootLayout, 0, S2FieldPath.newBuilder(), 0, out);
         return out.iterator();
     }
 
-    private void walk(Entry entry, FieldLayout layout, int base, int[] indices, int depth, List<FieldPath> out) {
+    private void walk(Entry entry, FieldLayout layout, int base, S2FieldPathBuilder fp, int depth, List<FieldPath> out) {
         switch (layout) {
             case FieldLayout.Composite c -> {
                 var children = c.children();
+                if (depth > 0) fp.down();
                 for (var i = 0; i < children.length; i++) {
-                    indices[depth] = i;
-                    walk(entry, children[i], base, indices, depth + 1, out);
+                    fp.set(depth, i);
+                    walk(entry, children[i], base, fp, depth + 1, out);
                 }
+                if (depth > 0) fp.up(1);
             }
             case FieldLayout.Array a -> {
+                if (depth > 0) fp.down();
                 for (var i = 0; i < a.length(); i++) {
-                    indices[depth] = i;
-                    walk(entry, a.element(), base + a.baseOffset() + i * a.stride(), indices, depth + 1, out);
+                    fp.set(depth, i);
+                    walk(entry, a.element(), base + a.baseOffset() + i * a.stride(), fp, depth + 1, out);
                 }
+                if (depth > 0) fp.up(1);
             }
             case FieldLayout.Primitive p -> {
-                if (entry.data[base + p.offset()] != 0) out.add(buildFieldPath(indices, depth));
+                if (entry.data[base + p.offset()] != 0) out.add(fp.snapshot());
             }
             case FieldLayout.InlineString is -> {
-                if (entry.data[base + is.offset()] != 0) out.add(buildFieldPath(indices, depth));
+                if (entry.data[base + is.offset()] != 0) out.add(fp.snapshot());
             }
             case FieldLayout.Ref r -> {
-                if (entry.data[base + r.offset()] != 0) out.add(buildFieldPath(indices, depth));
+                if (entry.data[base + r.offset()] != 0) out.add(fp.snapshot());
             }
             case FieldLayout.SubState s -> {
                 if (entry.data[base + s.offset()] != 0) {
                     var slot = (int) INT_VH.get(entry.data, base + s.offset() + 1);
                     var sub = (Entry) refs[slot];
-                    walk(sub, sub.rootLayout, 0, indices, depth, out);
+                    walk(sub, sub.rootLayout, 0, fp, depth, out);
                 }
             }
         }
-    }
-
-    private static S2FieldPath buildFieldPath(int[] indices, int depth) {
-        var fp = S2ModifiableFieldPath.newInstance();
-        for (var i = 0; i < depth; i++) {
-            if (i > 0) fp.down();
-            fp.set(i, indices[i]);
-        }
-        return fp.unmodifiable();
     }
 
     /**

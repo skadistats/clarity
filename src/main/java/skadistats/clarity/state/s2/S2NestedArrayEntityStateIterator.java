@@ -2,8 +2,7 @@ package skadistats.clarity.state.s2;
 
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2LongFieldPathFormat;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.s2.S2FieldPathBuilder;
 import skadistats.clarity.state.s2.S2NestedArrayEntityState.Entry;
 
 import java.util.Iterator;
@@ -11,8 +10,8 @@ import java.util.NoSuchElementException;
 
 class S2NestedArrayEntityStateIterator implements Iterator<FieldPath> {
 
-    private final Entry[] entry = new Entry[S2LongFieldPathFormat.MAX_FIELDPATH_LENGTH];
-    private final S2ModifiableFieldPath fp = S2ModifiableFieldPath.newInstance();
+    private final Entry[] entry = new Entry[S2FieldPath.MAX_DEPTH];
+    private final S2FieldPathBuilder fp = S2FieldPath.newBuilder();
     private S2FieldPath next;
 
     public S2NestedArrayEntityStateIterator(Entry rootEntry) {
@@ -43,7 +42,7 @@ class S2NestedArrayEntityStateIterator implements Iterator<FieldPath> {
                 fp.down();
                 continue;
             }
-            var result = fp.unmodifiable();
+            var result = fp.snapshot();
             fp.inc(1);
             return result;
         }

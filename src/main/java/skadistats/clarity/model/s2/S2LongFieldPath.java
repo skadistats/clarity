@@ -1,6 +1,6 @@
 package skadistats.clarity.model.s2;
 
-public final class S2LongFieldPath implements S2FieldPath, Comparable<S2LongFieldPath> {
+public final class S2LongFieldPath implements S2FieldPath {
 
     private final long id;
 
@@ -23,16 +23,31 @@ public final class S2LongFieldPath implements S2FieldPath, Comparable<S2LongFiel
     }
 
     @Override
+    public S2FieldPath childAt(int index) {
+        var extended = S2LongFieldPathFormat.down(id);
+        var depth = S2LongFieldPathFormat.last(extended);
+        return new S2LongFieldPath(S2LongFieldPathFormat.set(extended, depth, index));
+    }
+
+    @Override
+    public S2FieldPath upperBoundForSubtreeAt(int depth) {
+        var idx = S2LongFieldPathFormat.get(id, depth);
+        if (idx >= S2LongFieldPathFormat.maxIndexAtDepth(depth)) {
+            return new S2LongFieldPath(Long.MAX_VALUE);
+        }
+        var last = S2LongFieldPathFormat.last(id);
+        var truncated = last > depth ? S2LongFieldPathFormat.up(id, last - depth) : id;
+        return new S2LongFieldPath(S2LongFieldPathFormat.set(truncated, depth, idx + 1));
+    }
+
+    @Override
     public String toString() {
         return asString();
     }
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof S2LongFieldPath) {
-            return id == ((S2LongFieldPath) o).id;
-        }
-        return false;
+        return o instanceof S2LongFieldPath other && id == other.id;
     }
 
     @Override
@@ -41,8 +56,8 @@ public final class S2LongFieldPath implements S2FieldPath, Comparable<S2LongFiel
     }
 
     @Override
-    public int compareTo(S2LongFieldPath o) {
-        return S2LongFieldPathFormat.compareTo(id, o.id);
+    public int compareTo(S2FieldPath o) {
+        return S2LongFieldPathFormat.compareTo(id, ((S2LongFieldPath) o).id);
     }
 
 }

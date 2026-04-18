@@ -12,13 +12,12 @@ import skadistats.clarity.io.decoder.VectorDecoder;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
-import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.StateMutation;
+import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 
 import java.util.Random;
@@ -69,9 +68,7 @@ public class FlatWriteBench {
         var built = new FieldLayoutBuilder().buildSerializer(root);
         state = new S2FlatEntityState(rf, 4, built.layout(), built.totalBytes());
 
-        var mfp = S2ModifiableFieldPath.newInstance();
-        mfp.set(0, 0);
-        fp = mfp.unmodifiable();
+        fp = S2FieldPath.of(0);
 
         // Pre-warm: first write trips capacity-change; subsequent writes hit the
         // steady-state path we want to measure.

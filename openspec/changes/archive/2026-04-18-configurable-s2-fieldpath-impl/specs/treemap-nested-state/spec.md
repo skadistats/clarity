@@ -1,8 +1,4 @@
-## Purpose
-
-S2TreeMapEntityState implementation using sorted-map-based entity state storage with direct TreeMap operations and StateMutation dispatch.
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: S2TreeMapEntityState implements EntityState directly
 `S2TreeMapEntityState` SHALL implement `EntityState` directly. It SHALL NOT extend `S2EntityState` or implement `S2NestedEntityState`. It SHALL use an `Object2ObjectAVLTreeMap<S2FieldPath, Object>` for storage, keyed on the sealed `S2FieldPath` interface — NOT on any concrete implementor. The map relies on `S2FieldPath`'s `Comparable<S2FieldPath>` contract for ordering; no concrete-type cast SHALL appear at the `write` / `applyMutation` boundary.
@@ -42,18 +38,3 @@ Range operations (sub-entry clear, vector trim) SHALL be expressed via interface
 - **WHEN** inspecting the source of `S2TreeMapEntityState`
 - **THEN** no reference to `S2LongFieldPath` appears outside type-narrowing that is strictly internal (e.g., generic diamond on construction)
 - **AND** no reference to `S2LongFieldPathFormat` appears at all
-
-### Requirement: capacityChanged tracking
-`S2TreeMapEntityState` SHALL track whether structural changes occurred during an `applyMutation` call. A structural change is any insertion of a new key or removal of an existing key.
-
-#### Scenario: New key inserted
-- **WHEN** `applyMutation` processes a `WriteValue` and the key did not previously exist in the map
-- **THEN** `applyMutation` returns true
-
-#### Scenario: Key removed
-- **WHEN** `applyMutation` processes a `ResizeVector` or `SwitchPointer` that removes entries
-- **THEN** `applyMutation` returns true
-
-#### Scenario: Value overwritten
-- **WHEN** `applyMutation` processes a `WriteValue` and the key already existed
-- **THEN** `applyMutation` returns false

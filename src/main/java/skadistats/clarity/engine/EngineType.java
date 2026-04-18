@@ -4,6 +4,7 @@ import com.google.protobuf.GeneratedMessage;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.EngineId;
+import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.Source;
 
@@ -34,6 +35,10 @@ public interface EngineType {
     boolean isUserMessage(Class<? extends GeneratedMessage> clazz);
 
     FieldReader getNewFieldReader(int pointerCount);
+
+    default FieldReader getNewFieldReader(int pointerCount, S2FieldPathType pathType) {
+        return getNewFieldReader(pointerCount);
+    }
 
     void emitHeader();
 

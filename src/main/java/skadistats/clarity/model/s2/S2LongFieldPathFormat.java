@@ -2,11 +2,18 @@ package skadistats.clarity.model.s2;
 
 import skadistats.clarity.ClarityException;
 
+import static skadistats.clarity.model.s2.S2FieldPath.MAX_DEPTH;
+
 public class S2LongFieldPathFormat {
 
     private static final int[] BITS_PER_COMPONENT = { 11, 12, 11, 8, 7, 4, 4 };
 
-    public static final int MAX_FIELDPATH_LENGTH = BITS_PER_COMPONENT.length;
+    static {
+        if (BITS_PER_COMPONENT.length != MAX_DEPTH) {
+            throw new IllegalStateException(
+                "BITS_PER_COMPONENT must have exactly " + MAX_DEPTH + " entries to match S2FieldPath.MAX_DEPTH");
+        }
+    }
 
     /**
      * Returns the highest index value that can be addressed at the given
@@ -15,17 +22,17 @@ public class S2LongFieldPathFormat {
      * no element at that depth can be addressed at all.
      */
     public static int maxIndexAtDepth(int depth) {
-        if (depth < 0 || depth >= MAX_FIELDPATH_LENGTH) {
+        if (depth < 0 || depth >= MAX_DEPTH) {
             return -1;
         }
         return (1 << BITS_PER_COMPONENT[depth]) - 1;
     }
 
-    private static final long[] CLEAR_MASK = new long[MAX_FIELDPATH_LENGTH - 1];
-    private static final long[] PRESENT_BIT = new long[MAX_FIELDPATH_LENGTH - 1];
-    private static final long[] VALUE_SHIFT = new long[MAX_FIELDPATH_LENGTH];
-    private static final long[] VALUE_MASK = new long[MAX_FIELDPATH_LENGTH];
-    private static final long[] OFFSET = new long[MAX_FIELDPATH_LENGTH];
+    private static final long[] CLEAR_MASK = new long[MAX_DEPTH - 1];
+    private static final long[] PRESENT_BIT = new long[MAX_DEPTH - 1];
+    private static final long[] VALUE_SHIFT = new long[MAX_DEPTH];
+    private static final long[] VALUE_MASK = new long[MAX_DEPTH];
+    private static final long[] OFFSET = new long[MAX_DEPTH];
     private static final long PRESENT_MASK;
 
     public static long set(long id, int i, int v) {
@@ -46,12 +53,12 @@ public class S2LongFieldPathFormat {
 
     public static long down(long id) {
         var l = last(id);
-        if (l + 1 >= MAX_FIELDPATH_LENGTH) {
+        if (l + 1 >= MAX_DEPTH) {
             throw new ClarityException(
                 "field path depth would exceed clarity's maximum of %d. " +
                 "This is a limitation of clarity's packed long field path format, " +
                 "not a problem with the replay. Please open a github issue and attach the demo so the bit layout can be adjusted.",
-                MAX_FIELDPATH_LENGTH
+                MAX_DEPTH
             );
         }
         return id | PRESENT_BIT[l];
@@ -75,7 +82,7 @@ public class S2LongFieldPathFormat {
 
     static {
         var bitCount = -1;
-        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        for (var i = 0; i < MAX_DEPTH; i++) {
             bitCount += BITS_PER_COMPONENT[i] + 1;
         }
         if (bitCount > 63) {
@@ -83,7 +90,7 @@ public class S2LongFieldPathFormat {
         }
         var cur = bitCount;
         var presentMaskAkku = 0L;
-        for (var i = 0; i < MAX_FIELDPATH_LENGTH; i++) {
+        for (var i = 0; i < MAX_DEPTH; i++) {
             OFFSET[i] = i == 0 ? 1L : 0L;
             if (i != 0) {
                 CLEAR_MASK[i - 1] = (-1L << cur) & ((1L << bitCount) - 1);

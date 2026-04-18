@@ -9,7 +9,7 @@ import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldOp;
 import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
+import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.PointerField;
 import skadistats.clarity.state.StateMutation;
@@ -24,9 +24,15 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
     protected final S2FieldPath[] fieldPaths = new S2FieldPath[MAX_PROPERTIES];
 
     private final Serializer[] pointerOverrides;
+    private final S2FieldPathType pathType;
 
     public S2FieldReader(int pointerCount) {
+        this(pointerCount, S2FieldPathType.LONG);
+    }
+
+    public S2FieldReader(int pointerCount, S2FieldPathType pathType) {
         this.pointerOverrides = new Serializer[pointerCount];
+        this.pathType = pathType;
     }
 
     private final TextTable dataDebugTable = new TextTable.Builder()
@@ -90,7 +96,7 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
 
     private FieldChanges<S2FieldPath> readFieldsFast(BitStream bs, S2DTClass dtClass, S2EntityState state) {
         var n = 0;
-        var mfp = S2ModifiableFieldPath.newInstance();
+        var mfp = pathType.newBuilder();
 
         while (true) {
             var opId = bs.readFieldOpId();
@@ -98,7 +104,7 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
                 break;
             }
             FieldOp.execute(opId, mfp, bs);
-            fieldPaths[n++] = mfp.unmodifiable();
+            fieldPaths[n++] = mfp.snapshot();
         }
 
         var isFlat = state instanceof S2FlatEntityState;
@@ -121,14 +127,14 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
 
     private FieldChanges<S2FieldPath> readFieldsMaterialized(BitStream bs, S2DTClass dtClass, S2EntityState state) {
         var n = 0;
-        var mfp = S2ModifiableFieldPath.newInstance();
+        var mfp = pathType.newBuilder();
         while (true) {
             var opId = bs.readFieldOpId();
             if (opId == FieldOp.FIELD_PATH_ENCODE_FINISH) {
                 break;
             }
             FieldOp.execute(opId, mfp, bs);
-            fieldPaths[n++] = mfp.unmodifiable();
+            fieldPaths[n++] = mfp.snapshot();
         }
 
         var result = new FieldChanges<>(fieldPaths, n);
@@ -154,19 +160,19 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
             opDebugTable.clear();
 
             var n = 0;
-            var mfp = S2ModifiableFieldPath.newInstance();
+            var mfp = pathType.newBuilder();
             while (true) {
                 var offsBefore = bs.pos();
                 var opId = bs.readFieldOpId();
                 FieldOp.execute(opId, mfp, bs);
                 opDebugTable.setData(n, 0, FieldOp.OPS[opId].name());
-                opDebugTable.setData(n, 1, mfp.unmodifiable());
+                opDebugTable.setData(n, 1, mfp.snapshot());
                 opDebugTable.setData(n, 2, bs.pos() - offsBefore);
                 opDebugTable.setData(n, 3, bs.toString(offsBefore, bs.pos()));
                 if (opId == FieldOp.FIELD_PATH_ENCODE_FINISH) {
                     break;
                 }
-                fieldPaths[n++] = mfp.unmodifiable();
+                fieldPaths[n++] = mfp.snapshot();
             }
 
             var result = new FieldChanges<>(fieldPaths, n);

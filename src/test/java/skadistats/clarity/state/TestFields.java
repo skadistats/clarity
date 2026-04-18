@@ -10,7 +10,6 @@ import skadistats.clarity.io.decoder.VectorDefaultDecoder;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2FieldPath;
-import skadistats.clarity.model.s2.S2ModifiableFieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.field.ArrayField;
@@ -119,12 +118,7 @@ public final class TestFields {
     }
 
     public static S2FieldPath fp(int... indices) {
-        var mfp = S2ModifiableFieldPath.newInstance();
-        for (var i = 0; i < indices.length; i++) {
-            if (i > 0) mfp.down();
-            mfp.set(i, indices[i]);
-        }
-        return mfp.unmodifiable();
+        return S2FieldPath.of(indices);
     }
 
     public record NamedField(String name, Field field) {}
