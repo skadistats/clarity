@@ -13,6 +13,22 @@ Replay parser for Dota 2, CS:GO, CS2, Deadlock. Source 1 + Source 2.
 Java 21 required — exhaustive switch over sealed types needs
 source=target=21. Don't lower it.
 
+## Release
+After publishing, bump source-tree versions to the next development
+SNAPSHOT (e.g. just-released `5.0.0` → bump to `5.1.0-SNAPSHOT`, or
+`6.0.0-SNAPSHOT` if the next cycle is a new major). Bump in lockstep:
+
+- `clarity/build.gradle.kts` — own `version`
+- `clarity-examples/build.gradle.kts` + `build-logic/src/main/kotlin/
+  examples-base.gradle.kts` — own version *and* both `clarity:<v>` pins
+- `clarity-analyzer/build.gradle.kts` — own version *and* the
+  `clarity:<v>` pin
+
+The source tree should always reflect what we're working on next, not
+what was last released. Composite builds substitute by `group:name`
+and ignore the version, so local dev is unaffected by the SNAPSHOT
+coordinates.
+
 ## Layout gotchas
 - `s1` / `s2` sub-packages are load-bearing: engine-specific code goes
   under the matching `io/`, `model/`, or `processor/` subtree.
@@ -58,7 +74,7 @@ sibling checkout existing) — no publish step needed during local dev.
 Upstream:
 - clarity-protobuf: `/home/spheenik/projects/clarity/clarity-protobuf`
   — wire defs. Pulled in via `includeBuild("../clarity-protobuf")` in
-  our `settings.gradle.kts`. Bumped independently; Java 17 on purpose.
+  our `settings.gradle.kts`. Bumped independently; Java 21 baseline.
 
 Downstream (API changes here need a compat check against both; both
 composite-include this repo):
