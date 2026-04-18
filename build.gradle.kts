@@ -3,7 +3,7 @@ plugins {
     id("maven-publish")
     id("signing")
     id("org.gradlex.extra-java-module-info") version "1.14"
-    id("me.champeau.jmh") version "0.7.2"
+    id("me.champeau.jmh") version "0.7.3"
 }
 
 group = "com.skadistats"
@@ -37,12 +37,12 @@ val processorImplementation by configurations
 dependencies {
     processorImplementation("com.palantir.javapoet:javapoet:0.14.0")
     api("com.skadistats:clarity-protobuf:[6.0,7.0)")
-    api("org.xerial.snappy:snappy-java:1.1.10.4")
-    api("org.slf4j:slf4j-api:2.0.7")
+    api("org.xerial.snappy:snappy-java:1.1.10.7")
+    api("org.slf4j:slf4j-api:2.0.17")
     annotationProcessor(sourceSets["processor"].output)
     annotationProcessor("com.palantir.javapoet:javapoet:0.14.0")
-    testImplementation("org.testng:testng:7.8.0")
-    jmhRuntimeOnly("ch.qos.logback:logback-classic:1.5.20")
+    testImplementation("org.testng:testng:7.11.0")
+    jmhRuntimeOnly("ch.qos.logback:logback-classic:1.5.32")
 }
 
 extraJavaModuleInfo {
