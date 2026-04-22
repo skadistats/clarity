@@ -51,7 +51,7 @@ public class TempEntities {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                 }
                 var state = cls.getEmptyState();
-                fieldReader.readFields(stream, cls, state, false, false);
+                fieldReader.readFields(stream, cls, state, false);
 
                 var handle = engineType.emptyHandle();
                 var te = new Entity(

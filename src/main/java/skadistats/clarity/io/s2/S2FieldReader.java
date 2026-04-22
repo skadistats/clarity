@@ -5,25 +5,24 @@ import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldOp;
 import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2FieldPathType;
-import skadistats.clarity.model.s2.Serializer;
-import skadistats.clarity.model.s2.field.PolymorphicPointerField;
+import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 import skadistats.clarity.util.TextTable;
 
-import java.util.Arrays;
+import java.util.function.BiConsumer;
 
 public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2EntityState> {
 
     protected final S2FieldPath[] fieldPaths = new S2FieldPath[MAX_PROPERTIES];
 
-    private final Serializer[] pointerOverrides;
     private final S2FieldPathType pathType;
 
     public S2FieldReader(int pointerCount) {
@@ -31,7 +30,6 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
     }
 
     public S2FieldReader(int pointerCount, S2FieldPathType pathType) {
-        this.pointerOverrides = new Serializer[pointerCount];
         this.pathType = pathType;
     }
 
@@ -62,9 +60,9 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
         .build();
 
     @Override
-    public FieldChanges<S2FieldPath> readFields(BitStream bs, S2DTClass dtClass, S2EntityState state, boolean debug, boolean materialize) {
-        if (debug) return readFieldsDebug(bs, dtClass, state);
-        if (materialize) return readFieldsMaterialized(bs, dtClass, state);
+    public FieldChanges<S2FieldPath> readFields(BitStream bs, S2DTClass dtClass, S2EntityState state, boolean debug, BiConsumer<FieldPath, StateMutation> onMutation) {
+        if (debug) return readFieldsDebug(bs, dtClass, state, onMutation);
+        if (onMutation != null) return readFieldsMaterialized(bs, dtClass, state, onMutation);
         return readFieldsFast(bs, dtClass, state);
     }
 
@@ -72,21 +70,6 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
             f = f.getChild(state, fp.get(i));
-            if (f == null) {
-                throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
-            }
-        }
-        return f;
-    }
-
-    private Field resolveFieldDebug(S2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
-        Field f = state.getRootField();
-        for (int i = 0; i <= fp.last(); i++) {
-            if (f instanceof PolymorphicPointerField pf) {
-                f = pf.getChild(fp.get(i), state, pointerOverrides[pf.getPointerId()]);
-            } else {
-                f = f.getChild(state, fp.get(i));
-            }
             if (f == null) {
                 throw new ClarityException("no field for class %s at %s!", dtClass.getDtName(), fp);
             }
@@ -125,7 +108,7 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
         return new FieldChanges<>(fieldPaths, n, capacityChanged);
     }
 
-    private FieldChanges<S2FieldPath> readFieldsMaterialized(BitStream bs, S2DTClass dtClass, S2EntityState state) {
+    private FieldChanges<S2FieldPath> readFieldsMaterialized(BitStream bs, S2DTClass dtClass, S2EntityState state, BiConsumer<FieldPath, StateMutation> onMutation) {
         var n = 0;
         var mfp = pathType.newBuilder();
         while (true) {
@@ -137,22 +120,19 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
             fieldPaths[n++] = mfp.snapshot();
         }
 
-        var result = new FieldChanges<>(fieldPaths, n);
-        Arrays.fill(pointerOverrides, null);
+        var capacityChanged = false;
         for (var r = 0; r < n; r++) {
             var fp = fieldPaths[r];
-            var field = resolveFieldDebug(state, dtClass, fp);
+            var field = resolveField(state, dtClass, fp);
             var decoded = DecoderDispatch.decode(bs, field.getDecoder());
             var mutation = field.createMutation(decoded, fp.last() + 1);
-            result.setMutation(r, mutation);
-            if (mutation instanceof StateMutation.SwitchPolymorphicPointer sp) {
-                pointerOverrides[((PolymorphicPointerField) field).getPointerId()] = sp.newSerializer();
-            }
+            capacityChanged |= EntityState.applyMutation(state, fp, mutation);
+            onMutation.accept(fp, mutation);
         }
-        return result;
+        return new FieldChanges<>(fieldPaths, n, capacityChanged);
     }
 
-    private FieldChanges<S2FieldPath> readFieldsDebug(BitStream bs, S2DTClass dtClass, S2EntityState state) {
+    private FieldChanges<S2FieldPath> readFieldsDebug(BitStream bs, S2DTClass dtClass, S2EntityState state, BiConsumer<FieldPath, StateMutation> onMutation) {
 
         try {
             dataDebugTable.setTitle(dtClass.toString());
@@ -175,19 +155,16 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
                 fieldPaths[n++] = mfp.snapshot();
             }
 
-            var result = new FieldChanges<>(fieldPaths, n);
-            Arrays.fill(pointerOverrides, null);
+            var capacityChanged = false;
             for (var r = 0; r < n; r++) {
                 var fp = fieldPaths[r];
-                var field = resolveFieldDebug(state, dtClass, fp);
+                var field = resolveField(state, dtClass, fp);
                 var decoder = field.getDecoder();
                 var offsBefore = bs.pos();
                 var decoded = DecoderDispatch.decode(bs, decoder);
                 var mutation = field.createMutation(decoded, fp.last() + 1);
-                result.setMutation(r, mutation);
-                if (mutation instanceof StateMutation.SwitchPolymorphicPointer sp) {
-                    pointerOverrides[((PolymorphicPointerField) field).getPointerId()] = sp.newSerializer();
-                }
+                capacityChanged |= EntityState.applyMutation(state, fp, mutation);
+                if (onMutation != null) onMutation.accept(fp, mutation);
 
                 var props = field.getSerializerProperties();
                 var type = state.getTypeForFieldPath(fp);
@@ -203,7 +180,7 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
                 dataDebugTable.setData(r, 9, bs.pos() - offsBefore);
                 dataDebugTable.setData(r, 10, bs.toString(offsBefore, bs.pos()));
             }
-            return result;
+            return new FieldChanges<>(fieldPaths, n, capacityChanged);
         } finally {
             dataDebugTable.print(Debug.STREAM);
             opDebugTable.print(Debug.STREAM);

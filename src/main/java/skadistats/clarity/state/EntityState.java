@@ -8,7 +8,6 @@ import skadistats.clarity.state.s2.S2EntityState;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Iterator;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 public sealed interface EntityState permits S1EntityState, S2EntityState {
@@ -52,26 +51,6 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
             case S1EntityState s1 -> s1.applyMutation((S1FieldPath) fp, mutation);
             case S2EntityState s2 -> s2.applyMutation((S2FieldPath) fp, mutation);
         };
-    }
-
-    static boolean applyMutations(EntityState state, FieldPath[] fps, StateMutation[] muts,
-                                   BiConsumer<FieldPath, StateMutation> beforeEach) {
-        var result = false;
-        switch (state) {
-            case S1EntityState s1 -> {
-                for (var i = 0; i < fps.length; i++) {
-                    if (beforeEach != null) beforeEach.accept(fps[i], muts[i]);
-                    result |= s1.applyMutation((S1FieldPath) fps[i], muts[i]);
-                }
-            }
-            case S2EntityState s2 -> {
-                for (var i = 0; i < fps.length; i++) {
-                    if (beforeEach != null) beforeEach.accept(fps[i], muts[i]);
-                    result |= s2.applyMutation((S2FieldPath) fps[i], muts[i]);
-                }
-            }
-        }
-        return result;
     }
 
 }

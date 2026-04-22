@@ -4,15 +4,18 @@ import skadistats.clarity.io.FieldChanges;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.DecoderDispatch;
+import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s1.PropFlag;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
+import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.FieldLayout;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s1.S1EntityState;
 import skadistats.clarity.util.TextTable;
 
 import java.util.Arrays;
+import java.util.function.BiConsumer;
 
 public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPath, S1EntityState> {
 
@@ -36,9 +39,9 @@ public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPat
     protected abstract int readIndices(BitStream bs, S1DTClass dtClass);
 
     @Override
-    public FieldChanges<S1FieldPath> readFields(BitStream bs, S1DTClass dtClass, S1EntityState state, boolean debug, boolean materialize) {
-        if (debug) return readFieldsDebug(bs, dtClass);
-        if (materialize) return readFieldsMaterialize(bs, dtClass);
+    public FieldChanges<S1FieldPath> readFields(BitStream bs, S1DTClass dtClass, S1EntityState state, boolean debug, BiConsumer<FieldPath, StateMutation> onMutation) {
+        if (debug) return readFieldsDebug(bs, dtClass, state, onMutation);
+        if (onMutation != null) return readFieldsMaterialize(bs, dtClass, state, onMutation);
 
         var layout = dtClass.getFlatLayout();
         var receiveProps = dtClass.getReceiveProps();
@@ -58,32 +61,38 @@ public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPat
         return new FieldChanges<>(fieldPaths, n, false);
     }
 
-    private FieldChanges<S1FieldPath> readFieldsMaterialize(BitStream bs, S1DTClass dtClass) {
+    private FieldChanges<S1FieldPath> readFieldsMaterialize(BitStream bs, S1DTClass dtClass, S1EntityState state, BiConsumer<FieldPath, StateMutation> onMutation) {
         var receiveProps = dtClass.getReceiveProps();
         var n = readIndices(bs, dtClass);
-        var result = new FieldChanges<>(fieldPaths, n);
+        var capacityChanged = false;
         for (var ci = 0; ci < n; ci++) {
-            var o = fieldPaths[ci].idx();
+            var fp = fieldPaths[ci];
+            var o = fp.idx();
             var decoded = DecoderDispatch.decode(bs, receiveProps[o].getSendProp().getDecoder());
-            result.setMutation(ci, new StateMutation.WriteValue(decoded));
+            var mutation = new StateMutation.WriteValue(decoded);
+            capacityChanged |= EntityState.applyMutation(state, fp, mutation);
+            onMutation.accept(fp, mutation);
         }
-        return result;
+        return new FieldChanges<>(fieldPaths, n, capacityChanged);
     }
 
-    private FieldChanges<S1FieldPath> readFieldsDebug(BitStream bs, S1DTClass dtClass) {
+    private FieldChanges<S1FieldPath> readFieldsDebug(BitStream bs, S1DTClass dtClass, S1EntityState state, BiConsumer<FieldPath, StateMutation> onMutation) {
         try {
             debugTable.setTitle(dtClass.getDtName());
             debugTable.clear();
 
             var n = readIndices(bs, dtClass);
-            var result = new FieldChanges<>(fieldPaths, n);
+            var capacityChanged = false;
             var receiveProps = dtClass.getReceiveProps();
             for (var ci = 0; ci < n; ci++) {
+                var fp = fieldPaths[ci];
                 var offsBefore = bs.pos();
-                var o = fieldPaths[ci].idx();
+                var o = fp.idx();
                 var sp = receiveProps[o].getSendProp();
                 var decoded = DecoderDispatch.decode(bs, sp.getDecoder());
-                result.setMutation(ci, new StateMutation.WriteValue(decoded));
+                var mutation = new StateMutation.WriteValue(decoded);
+                capacityChanged |= EntityState.applyMutation(state, fp, mutation);
+                if (onMutation != null) onMutation.accept(fp, mutation);
 
                 debugTable.setData(ci, 0, o);
                 debugTable.setData(ci, 1, receiveProps[o].getVarName());
@@ -96,7 +105,7 @@ public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPat
                 debugTable.setData(ci, 8, bs.pos() - offsBefore);
                 debugTable.setData(ci, 9, bs.toString(offsBefore, bs.pos()));
             }
-            return result;
+            return new FieldChanges<>(fieldPaths, n, capacityChanged);
         } finally {
             debugTable.print(Debug.STREAM);
         }

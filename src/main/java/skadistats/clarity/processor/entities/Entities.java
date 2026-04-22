@@ -34,6 +34,7 @@ import skadistats.clarity.state.BaselineRegistry;
 import skadistats.clarity.state.ClientFrame;
 import skadistats.clarity.state.EntityRegistry;
 import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
 import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
@@ -46,6 +47,7 @@ import java.util.IdentityHashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 import java.util.regex.Pattern;
 
 @Provides({
@@ -490,8 +492,8 @@ public class Entities {
     private void queueEntityCreate(int eIdx, int serial, int spawnGroupHandle, DTClass dtClass, CommonNetMessages.CSVCMsg_PacketEntities message, BitStream stream) {
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         var newState = copyState(baseline);
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug, mutationListener != null);
-        applySetupChanges(changes, newState);
+        BiConsumer<FieldPath, StateMutation> onCreate = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(newState, fp, m) : null;
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug, onCreate);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, newState));
     }
 
@@ -521,8 +523,8 @@ public class Entities {
         var dtClass = entity.getDtClass();
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), entity.getIndex(), message.getIsDelta());
         var newState = copyState(baseline);
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug, mutationListener != null);
-        applySetupChanges(changes, newState);
+        BiConsumer<FieldPath, StateMutation> onRecreate = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(newState, fp, m) : null;
+        var changes = fieldReader.readFields(stream, dtClass, newState, debug, onRecreate);
         queueUpdate(() -> executeEntityRecreate(entity, message, newState));
     }
 
@@ -549,8 +551,9 @@ public class Entities {
 
     private void queueEntityUpdate(Entity entity, BitStream stream, boolean silent) {
         var state = entity.getState();
-        var changes = fieldReader.readFields(stream, entity.getDtClass(), state, debug, mutationListener != null);
-        var capacityChanged = applyUpdateChanges(changes, state);
+        BiConsumer<FieldPath, StateMutation> onUpdate = mutationListener != null ? (fp, m) -> mutationListener.onUpdateMutation(state, fp, m) : null;
+        var changes = fieldReader.readFields(stream, entity.getDtClass(), state, debug, onUpdate);
+        var capacityChanged = changes.capacityChanged();
         queueUpdate(() -> executeEntityUpdate(entity, changes, silent, capacityChanged));
     }
 
@@ -674,16 +677,13 @@ public class Entities {
             return newEmptyState(cls);
         }
         s = newEmptyState(cls);
+        final var baselineState = s;
         var stream = BitStream.createBitStream(raw);
-        var changes = fieldReader.readFields(stream, cls, s, false, mutationListener != null);
+        BiConsumer<FieldPath, StateMutation> onBaseline = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(baselineState, fp, m) : null;
+        var changes = fieldReader.readFields(stream, cls, baselineState, false, onBaseline);
         var remaining = stream.remaining();
         if (remaining < 0 || remaining > 7) {
             log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);
-        }
-        try {
-            applySetupChanges(changes, s);
-        } catch (RuntimeException ex) {
-            throw new RuntimeException("baseline applyTo failed for class " + cls.getDtName() + " (id=" + clsId + ")", ex);
         }
         baselineRegistry.setClassBaselineState(baselineIdx, s);
         return s;
@@ -707,18 +707,6 @@ public class Entities {
             mutationListener.onBirthCopy(s, src);
         }
         return s;
-    }
-
-    private boolean applySetupChanges(FieldChanges<?> changes, EntityState state) {
-        return mutationListener == null
-                ? changes.applyTo(state)
-                : changes.applyTo(state, (fp, mut) -> mutationListener.onSetupMutation(state, fp, mut));
-    }
-
-    private boolean applyUpdateChanges(FieldChanges<?> changes, EntityState state) {
-        return mutationListener == null
-                ? changes.applyTo(state)
-                : changes.applyTo(state, (fp, mut) -> mutationListener.onUpdateMutation(state, fp, mut));
     }
 
     public Entity getByIndex(int index) {
