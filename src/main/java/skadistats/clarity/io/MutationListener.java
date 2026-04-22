@@ -16,7 +16,7 @@ import skadistats.clarity.state.StateMutation;
  */
 public interface MutationListener {
 
-    /** A fresh empty state was constructed via {@code cls.getEmptyState()}. */
+    /** A fresh empty state was constructed via {@code context.newEntityState(cls)}. */
     void onBirthEmpty(EntityState newState, DTClass cls);
 
     /** A new state was constructed by copying an existing one (e.g. {@code baseline.copy()}). */

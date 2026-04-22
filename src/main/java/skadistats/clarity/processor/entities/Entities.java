@@ -24,6 +24,7 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnReset;
 import skadistats.clarity.processor.reader.ResetPhase;
+import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.OnDTClassesComplete;
@@ -90,6 +91,8 @@ public class Entities {
 
     private final Int2ObjectSortedMap<CommonNetMessages.CSVCMsg_PacketEntities> deferredMessages = new Int2ObjectAVLTreeMap<>();
 
+    @Insert
+    private Context context;
     @Insert
     private EngineType engineType;
     @Insert
@@ -202,8 +205,7 @@ public class Entities {
 
     @OnDTClassesComplete
     public void onDTClassesComplete() {
-        fieldReader = engineType.getNewFieldReader(
-                dtClasses.getEntityStateFactory().getS2FieldPathType());
+        fieldReader = context.newFieldReader();
     }
 
     @OnReset
@@ -693,7 +695,7 @@ public class Entities {
     }
 
     private EntityState newEmptyState(DTClass cls) {
-        var s = cls.getEmptyState();
+        var s = context.newEntityState(cls);
         if (mutationListener != null) {
             mutationListener.onBirthEmpty(s, cls);
         }

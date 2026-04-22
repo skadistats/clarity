@@ -7,6 +7,7 @@ import skadistats.clarity.event.Insert;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.model.EngineId;
+import skadistats.clarity.processor.packet.PacketReader;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.processor.runner.Context;
@@ -29,8 +30,6 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     private final int serialBits;
     private final int indexMask;
     private final int emptyHandle;
-
-    protected final ContextData contextData = new ContextData();
 
     protected AbstractEngineType(EngineId id, PacketInstanceReader<H> packetInstanceReader, H header, boolean sendTablesContainer, int indexBits, int serialBits) {
         this.id = id;
@@ -99,11 +98,8 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
     }
 
     @Override
-    public Object[] getRegisteredProcessors() {
-        return new Object[] {
-                this,
-                packetInstanceReader.getPacketReader()
-        };
+    public PacketReader getPacketReader() {
+        return packetInstanceReader.getPacketReader();
     }
 
     @Override
@@ -118,9 +114,5 @@ public abstract class AbstractEngineType<H extends GeneratedMessage> implements 
         return id.toString();
     }
 
-    @Override
-    public ContextData getContextData() {
-        return contextData;
-    }
 
 }

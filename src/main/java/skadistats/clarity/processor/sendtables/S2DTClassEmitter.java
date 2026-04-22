@@ -11,7 +11,6 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
@@ -59,22 +58,7 @@ public class S2DTClassEmitter {
             dtClasses.byClassId.put(ct.getClassId(), dt);
         }
         dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
-        dtClasses.pointerCount = fieldGenerator.getPointerCount();
-        dtClasses.entityStateFactory.setPointerCount(dtClasses.pointerCount);
-        evClassesComplete.raise();
-    }
-
-    @OnMessage(CommonNetMessages.CSVCMsg_ClassInfo.class)
-    public void onServerClassInfo(CommonNetMessages.CSVCMsg_ClassInfo message) {
-        for (var ct : message.getClassesList()) {
-            DTClass dt = fieldGenerator.createDTClass(ct.getClassName());
-            evDtClass.raise(dt);
-            dt.setClassId(ct.getClassId());
-            dtClasses.byClassId.put(ct.getClassId(), dt);
-        }
-        dtClasses.classBits = Util.calcBitsNeededFor(dtClasses.byClassId.size() - 1);
-        dtClasses.pointerCount = fieldGenerator.getPointerCount();
-        dtClasses.entityStateFactory.setPointerCount(dtClasses.pointerCount);
+        ctx.setPointerCount(fieldGenerator.getPointerCount());
         evClassesComplete.raise();
     }
 

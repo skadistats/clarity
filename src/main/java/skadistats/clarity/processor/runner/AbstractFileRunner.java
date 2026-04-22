@@ -7,11 +7,11 @@ import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.state.EntityStateFactory;
 import skadistats.clarity.state.s1.S1EntityStateType;
 import skadistats.clarity.state.s2.S2EntityStateType;
 
 import java.io.IOException;
+import java.util.List;
 
 @Provides(value = {OnInputSource.class, OnTickStart.class, OnTickEnd.class}, runnerClass = { AbstractFileRunner.class })
 public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
@@ -38,9 +38,18 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         this.tick = -1;
     }
 
+    @Override
+    protected List<Object> infraProcessors() {
+        return List.of(this, engineType, engineType.getPacketReader(), source);
+    }
+
+    @Override
+    protected Context createContext(ExecutionModel em) {
+        return new Context(em, s1EntityStateType, s2EntityStateType, s2FieldPathType);
+    }
+
     protected void initAndRunWith(Object... processors) throws IOException {
-        var entityStateFactory = new EntityStateFactory(s1EntityStateType, s2EntityStateType, s2FieldPathType);
-        initWithProcessors(this, getEngineType().getRegisteredProcessors(), source, entityStateFactory, processors);
+        initWithProcessors(processors);
         engineType.emitHeader();
         ((OnInputSource.Event) context.createEvent(OnInputSource.class)).raise(source, loopController);
     }

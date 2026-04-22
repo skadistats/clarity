@@ -9,6 +9,8 @@ import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 
+import java.util.List;
+
 @Provides({OnInit.class})
 public abstract class AbstractRunner implements Runner {
 
@@ -25,9 +27,18 @@ public abstract class AbstractRunner implements Runner {
         this.engineType = engineType;
     }
 
-    private ExecutionModel createExecutionModel(Object... processors) {
+    protected List<Object> infraProcessors() {
+        return List.of(this);
+    }
+
+    protected abstract Context createContext(ExecutionModel em);
+
+    private ExecutionModel createExecutionModel(List<Object> infra, Object[] userProcessors) {
         var executionModel = new ExecutionModel(this);
-        addProcessorsToModel(executionModel, processors);
+        for (var p : infra) {
+            executionModel.addProcessor(p);
+        }
+        addProcessorsToModel(executionModel, userProcessors);
         return executionModel;
     }
 
@@ -41,9 +52,9 @@ public abstract class AbstractRunner implements Runner {
         }
     }
 
-    protected void initWithProcessors(Object... processors) {
-        var em = createExecutionModel(processors);
-        context = new Context(em, engineType.getContextData());
+    protected void initWithProcessors(Object... userProcessors) {
+        var em = createExecutionModel(infraProcessors(), userProcessors);
+        context = createContext(em);
         em.initialize(context);
         if (evInitRun != null) {
             evInitRun.raise();

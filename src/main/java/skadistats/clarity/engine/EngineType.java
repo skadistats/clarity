@@ -5,6 +5,7 @@ import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.s2.S2FieldPathType;
+import skadistats.clarity.processor.packet.PacketReader;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.Source;
 
@@ -47,7 +48,5 @@ public interface EngineType {
 
     <T extends GeneratedMessage> PacketInstance<T> getNextPacketInstance(Source source) throws IOException;
 
-    Object[] getRegisteredProcessors();
-
-    ContextData getContextData();
+    PacketReader getPacketReader();
 }

@@ -10,6 +10,7 @@ import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.Entity;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.processor.reader.OnMessage;
+import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
@@ -19,6 +20,8 @@ import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 @UsesDTClasses
 public class TempEntities {
 
+    @Insert
+    private Context context;
     @Insert
     private EngineType engineType;
     @Insert
@@ -31,7 +34,7 @@ public class TempEntities {
 
     @OnInit
     public void onInit() {
-        fieldReader = engineType.getNewFieldReader();
+        fieldReader = context.newFieldReader();
     }
 
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
@@ -50,7 +53,7 @@ public class TempEntities {
                 if (stream.readBitFlag()) {
                     cls = (S1DTClass) dtClasses.forClassId(stream.readUBitInt(dtClasses.getClassBits()) - 1);
                 }
-                var state = cls.getEmptyState();
+                var state = context.newEntityState(cls);
                 fieldReader.readFields(stream, cls, state, false);
 
                 var handle = engineType.emptyHandle();

@@ -5,7 +5,6 @@ import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.state.EntityState;
-import skadistats.clarity.state.EntityStateFactory;
 import skadistats.clarity.state.s2.S2EntityState;
 
 public sealed interface DTClass permits S1DTClass, S2DTClass {
@@ -14,9 +13,6 @@ public sealed interface DTClass permits S1DTClass, S2DTClass {
 
     int getClassId();
     void setClassId(int classId);
-
-    void setEntityStateFactory(EntityStateFactory factory);
-    EntityState getEmptyState();
 
     static String getNameForFieldPath(DTClass dtClass, EntityState state, FieldPath fp) {
         return switch (dtClass) {

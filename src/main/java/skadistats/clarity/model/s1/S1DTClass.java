@@ -1,8 +1,6 @@
 package skadistats.clarity.model.s1;
 
 import skadistats.clarity.model.DTClass;
-import skadistats.clarity.state.EntityState;
-import skadistats.clarity.state.EntityStateFactory;
 import skadistats.clarity.state.s1.S1FlatLayout;
 
 import java.util.HashMap;
@@ -17,7 +15,6 @@ public final class S1DTClass implements DTClass {
     private int[] indexMapping;
     private Map<String, Integer> propsByName;
     private S1DTClass superClass;
-    private EntityStateFactory entityStateFactory;
     private S1FlatLayout flatLayout;
 
     public S1DTClass(String dtName, SendTable sendTable) {
@@ -33,16 +30,6 @@ public final class S1DTClass implements DTClass {
     @Override
     public void setClassId(int classId) {
         this.classId = classId;
-    }
-
-    @Override
-    public void setEntityStateFactory(EntityStateFactory factory) {
-        this.entityStateFactory = factory;
-    }
-
-    @Override
-    public EntityState getEmptyState() {
-        return entityStateFactory.forS1(this);
     }
 
     public S1FlatLayout getFlatLayout() {
