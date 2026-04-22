@@ -67,6 +67,12 @@ Subsystem processors subscribe to those messages:
 - `modifiers`              — Dota buffs/debuffs
 - `tempentities`           — temporary visual effects
 
+## OpenSpec
+OpenSpec changes and specs belong in the repo they describe. Changes
+that touch the parser go here (`clarity/openspec/`); changes that touch
+examples or other downstream repos go in their own `openspec/`. Don't
+let the working directory decide — move them after creation if needed.
+
 ## Related repos
 All wired together as Gradle **composite builds** (conditional on the
 sibling checkout existing) — no publish step needed during local dev.
