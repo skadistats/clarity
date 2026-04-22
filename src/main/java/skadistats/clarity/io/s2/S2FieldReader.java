@@ -25,11 +25,11 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
 
     private final S2FieldPathType pathType;
 
-    public S2FieldReader(int pointerCount) {
-        this(pointerCount, S2FieldPathType.LONG);
+    public S2FieldReader() {
+        this(S2FieldPathType.LONG);
     }
 
-    public S2FieldReader(int pointerCount, S2FieldPathType pathType) {
+    public S2FieldReader(S2FieldPathType pathType) {
         this.pathType = pathType;
     }
 

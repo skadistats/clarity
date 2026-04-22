@@ -58,12 +58,12 @@ public class DeadlockEngineType extends AbstractProtobufDemoEngineType {
 
     @Override
     public FieldReader getNewFieldReader(int pointerCount) {
-        return new S2FieldReader(pointerCount);
+        return new S2FieldReader();
     }
 
     @Override
     public FieldReader getNewFieldReader(int pointerCount, S2FieldPathType pathType) {
-        return new S2FieldReader(pointerCount, pathType);
+        return new S2FieldReader(pathType);
     }
 
     @Override
