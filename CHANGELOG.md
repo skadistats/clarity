@@ -79,6 +79,15 @@
 * `S2AbstractEntityState` was merged into `S2EntityState` (sealed
   abstract class, directly permitted by `EntityState`). The separate
   interface no longer exists.
+* `DTClass.getFieldPathForName(String)` and
+  `DTClass.getNameForFieldPath(FieldPath)` are no longer instance
+  methods on `DTClass`. The dispatch moved to static helpers
+  `DTClass.getFieldPathForName(dtClass, state, name)` and
+  `DTClass.getNameForFieldPath(dtClass, state, fp)`, since S2 path
+  resolution now routes through the entity's `EntityState`.
+  *Migration:* if you hold an `Entity`, use the convenience methods
+  `entity.getFieldPathForName(name)` / `entity.getNameForFieldPath(fp)`
+  instead of going through `entity.getDtClass()`.
 * `FieldReader` became a generic interface
   `FieldReader<D extends DTClass, FP extends FieldPath, S extends EntityState>`.
   `S1FieldReader` and `S2FieldReader` bind the engine triple; entry-time
