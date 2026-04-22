@@ -1,9 +1,7 @@
 ## Purpose
 
 Typed state mutation interface (`StateMutation`) and `Field.createMutation` for polymorphic creation, replacing the untyped `Object` value in the write chain with explicit operation types.
-
 ## Requirements
-
 ### Requirement: StateMutation sealed interface models typed state operations
 
 The system SHALL provide a `StateMutation` sealed interface in the `skadistats.clarity.model.state` package with three record variants:
@@ -177,13 +175,31 @@ A fast-path constructor `FieldChanges(FieldPath[] paths, int length, boolean cap
 
 ### Requirement: EntityState.applyMutation replaces setValueForFieldPath
 
-The `EntityState` interface SHALL provide `applyMutation(FieldPath, StateMutation)` instead of `setValueForFieldPath(FieldPath, Object)`. The method SHALL return `true` if the mutation caused a capacity change. `getValueForFieldPath` SHALL remain unchanged.
+The sealed engine-specific sub-interfaces `S1EntityState` and `S2EntityState` SHALL each provide an `applyMutation` method accepting the engine-typed `FieldPath` subtype and a `StateMutation`: `S1EntityState.applyMutation(S1FieldPath, StateMutation)` and `S2EntityState.applyMutation(S2FieldPath, StateMutation)`. The base `EntityState` interface SHALL NOT declare any `applyMutation` method; callers that need to apply a mutation SHALL narrow their state reference to the appropriate sub-interface first (typically via `switch` or `instanceof` on the sealed hierarchy, or by relying on the engine context in which the call occurs).
 
-#### Scenario: applyMutation on EntityState
+Each `applyMutation` method SHALL return `true` if the mutation caused a capacity change, matching the previous return contract. `getValueForFieldPath(FieldPath)` SHALL remain unchanged and SHALL remain on the base `EntityState` interface.
 
-- **WHEN** `applyMutation(fp, mutation)` is called on any EntityState implementation
+The `setValueForFieldPath(FieldPath, Object)` method SHALL NOT exist on any of the interfaces or implementations.
+
+#### Scenario: applyMutation on S1EntityState
+
+- **WHEN** `applyMutation(S1FieldPath, StateMutation)` is called on any `S1EntityState` implementation
 - **THEN** the state applies the mutation according to its own storage model
 - **AND** returns true if the mutation caused a structural capacity change
+- **AND** the call site passes an `S1FieldPath` directly without requiring a runtime cast inside the method
+
+#### Scenario: applyMutation on S2EntityState
+
+- **WHEN** `applyMutation(S2FieldPath, StateMutation)` is called on any `S2EntityState` implementation
+- **THEN** the state applies the mutation according to its own storage model
+- **AND** returns true if the mutation caused a structural capacity change
+- **AND** the call site passes an `S2FieldPath` directly without requiring a runtime cast inside the method
+
+#### Scenario: Base EntityState has no applyMutation
+
+- **WHEN** the `EntityState` base interface is inspected
+- **THEN** it does NOT declare any method named `applyMutation`
+- **AND** any caller that holds a bare `EntityState` reference must narrow it via `switch` / `instanceof` over the sealed sub-interfaces before invoking `applyMutation`
 
 ### Requirement: Field classes lose state-manipulation methods
 
@@ -195,3 +211,4 @@ The methods `setValue(S2NestedEntityState, int, int, Object)`, `getValue(S2Neste
 - **THEN** it has no import of or reference to `S2NestedEntityState`
 - **AND** the methods `setValue`, `getValue`, `ensureCapacity`, `isHiddenFieldPath` do not exist
 - **AND** `createMutation(Object)` is the only method that relates to state operations
+
