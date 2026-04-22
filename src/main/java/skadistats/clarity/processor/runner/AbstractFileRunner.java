@@ -51,7 +51,8 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected void initAndRunWith(Object... processors) throws IOException {
         initWithProcessors(processors);
         engineType.emitHeader();
-        ((OnInputSource.Event) context.createEvent(OnInputSource.class)).raise(source, loopController);
+        OnInputSource.Event ev = context.createEvent(OnInputSource.class);
+        ev.raise(source, loopController);
     }
 
     protected void endTicksUntil(int untilTick) {

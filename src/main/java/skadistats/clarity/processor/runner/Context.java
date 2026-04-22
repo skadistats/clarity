@@ -107,8 +107,9 @@ public class Context {
         return millisPerTick;
     }
 
-    public <A extends Annotation> Event<A> createEvent(Class<A> eventType) {
-        return executionModel.createEvent(eventType);
+    @SuppressWarnings("unchecked")
+    public <A extends Annotation, E extends Event<A>> E createEvent(Class<A> eventType) {
+        return (E) executionModel.createEvent(eventType);
     }
 
 }
