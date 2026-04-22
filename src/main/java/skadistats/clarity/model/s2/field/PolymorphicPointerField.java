@@ -1,6 +1,7 @@
 package skadistats.clarity.model.s2.field;
 
 import skadistats.clarity.io.decoder.Decoder;
+import skadistats.clarity.io.decoder.PolymorphicPointerDecoder;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.Pointer;
@@ -9,20 +10,25 @@ import skadistats.clarity.model.s2.SerializerProperties;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 
-public final class PointerField extends Field {
+public final class PolymorphicPointerField extends Field {
 
     private final Decoder decoder;
     private final SerializerProperties serializerProperties;
     private final Serializer[] serializers;
-    private final Serializer defaultSerializer;
     private int pointerId;
 
-    public PointerField(FieldType fieldType, Decoder decoder, SerializerProperties serializerProperties, Serializer[] serializers) {
+    public PolymorphicPointerField(FieldType fieldType, SerializerProperties serializerProperties, Serializer[] serializers) {
         super(fieldType);
-        this.decoder = decoder;
+        this.decoder = new PolymorphicPointerDecoder(serializerProperties.getPolymorphicTypes());
         this.serializerProperties = serializerProperties;
         this.serializers = serializers;
-        this.defaultSerializer = serializers.length == 1 ? serializers[0] : null;
+    }
+
+    public PolymorphicPointerField(FieldType fieldType, Serializer[] serializers) {
+        super(fieldType);
+        this.decoder = null;
+        this.serializerProperties = null;
+        this.serializers = serializers;
     }
 
     @Override
@@ -53,8 +59,7 @@ public final class PointerField extends Field {
     }
 
     private Serializer resolveSerializer(S2EntityState state) {
-        var ser = state.getPointerSerializer(pointerId);
-        return ser != null ? ser : defaultSerializer;
+        return state.getPointerSerializer(pointerId);
     }
 
     @Override
@@ -82,7 +87,7 @@ public final class PointerField extends Field {
 
     @Override
     public StateMutation createMutation(Object decodedValue, int depth) {
-        return new StateMutation.SwitchPointer((Serializer) prepareForWrite(decodedValue, depth));
+        return new StateMutation.SwitchPolymorphicPointer(pointerId, (Serializer) prepareForWrite(decodedValue, depth));
     }
 
     @Override

@@ -114,8 +114,8 @@ public class S2FlatEntityStateDecodeIntoTest {
 
         var stA = makeFlat(ser);
         var stB = makeFlat(ser);
-        stA.applyMutation(fp(0), new StateMutation.SwitchPointer(inner));
-        stB.applyMutation(fp(0), new StateMutation.SwitchPointer(inner));
+        stA.applyMutation(fp(0), new StateMutation.SwitchFixedPointer(inner));
+        stB.applyMutation(fp(0), new StateMutation.SwitchFixedPointer(inner));
 
         var decoder = intDecoder();
         var bsA = freshStream();
@@ -216,13 +216,13 @@ public class S2FlatEntityStateDecodeIntoTest {
     public void writeOnPointerSubStateMatchesSwitchPointer() {
         var serA = serializer("A", named("a", intField()));
         var serB = serializer("B", named("b", intField()));
-        var ptr = pointerField(serA, serB);
+        var ptr = polymorphicPointerField(serA, serB);
         var ser = serializer("S", named("p", ptr));
 
         var stA = makeFlat(ser);
         var stB = makeFlat(ser);
 
-        stA.applyMutation(fp(0), new StateMutation.SwitchPointer(serA));
+        stA.applyMutation(fp(0), new StateMutation.SwitchPolymorphicPointer(ptr.getPointerId(), serA));
         stB.write(fp(0), serA);
         assertSame(stA.pointerSerializersForTest()[ptr.getPointerId()],
                    stB.pointerSerializersForTest()[ptr.getPointerId()]);
@@ -230,7 +230,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         // switch again — both sides agree on capacity-change
         stA.applyMutation(fp(0, 0), new StateMutation.WriteValue(42));
         stB.applyMutation(fp(0, 0), new StateMutation.WriteValue(42));
-        var capA = stA.applyMutation(fp(0), new StateMutation.SwitchPointer(serB));
+        var capA = stA.applyMutation(fp(0), new StateMutation.SwitchPolymorphicPointer(ptr.getPointerId(), serB));
         var capB = stB.write(fp(0), serB);
         assertEquals(capB, capA, "second switch returns the same capacity-change signal");
     }
@@ -268,7 +268,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         var ptr = pointerField(inner);
         var ser = serializer("S", named("p", ptr));
         var st = makeFlat(ser);
-        st.applyMutation(fp(0), new StateMutation.SwitchPointer(inner));
+        st.applyMutation(fp(0), new StateMutation.SwitchFixedPointer(inner));
         st.write(fp(0, 0), 1);
 
         var cp = (S2FlatEntityState) st.copy();

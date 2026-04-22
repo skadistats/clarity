@@ -7,7 +7,8 @@ import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.ArrayField;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.FixedPointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.VectorField;
 import skadistats.clarity.state.EntityState;
@@ -96,8 +97,9 @@ public final class S2NestedArrayEntityState extends S2EntityState {
             var child = field.getChild(this, idx);
             if (i == last) {
                 return switch (child) {
-                    case PointerField pf -> handlePointerSwitch(node, idx, pf, (Serializer) decoded);
-                    case VectorField vf  -> handleResizeVector(node, idx, (Integer) decoded);
+                    case PolymorphicPointerField ppf -> handlePolymorphicPointerSwitch(node, idx, ppf.getPointerId(), (Serializer) decoded);
+                    case FixedPointerField fpf       -> handleFixedPointerSwitch(node, idx, (Serializer) decoded);
+                    case VectorField vf              -> handleResizeVector(node, idx, (Integer) decoded);
                     default -> {
                         node.set(idx, decoded);
                         yield capacityChanged;
@@ -136,8 +138,8 @@ public final class S2NestedArrayEntityState extends S2EntityState {
                         yield capacityChanged;
                     }
                     case StateMutation.ResizeVector rv -> handleResizeVector(node, idx, rv.count());
-                    case StateMutation.SwitchPointer sp ->
-                            child instanceof PointerField pf && handlePointerSwitch(node, idx, pf, sp.newSerializer());
+                    case StateMutation.SwitchPolymorphicPointer sp -> handlePolymorphicPointerSwitch(node, idx, sp.pointerId(), sp.newSerializer());
+                    case StateMutation.SwitchFixedPointer sfp -> handleFixedPointerSwitch(node, idx, sfp.serializer());
                 };
             }
             field = child;
@@ -159,26 +161,38 @@ public final class S2NestedArrayEntityState extends S2EntityState {
 
     private void ensureNodeCapacity(Field parentField, Entry node, int idx) {
         switch (parentField) {
-            case SerializerField sf -> node.capacity(sf.getSerializer().getFieldCount(), false);
-            case ArrayField af      -> node.capacity(af.getLength(), false);
-            default                 -> node.capacity(idx + 1, false);
+            case SerializerField sf     -> node.capacity(sf.getSerializer().getFieldCount(), false);
+            case ArrayField af          -> node.capacity(af.getLength(), false);
+            case FixedPointerField fpf  -> node.capacity(fpf.getSerializer().getFieldCount(), false);
+            default                     -> node.capacity(idx + 1, false);
         }
     }
 
-    private boolean handlePointerSwitch(Entry node, int idx, PointerField pf, Serializer newSerializer) {
-        var currentSerializer = pointerSerializers[pf.getPointerId()];
+    private boolean handlePolymorphicPointerSwitch(Entry node, int idx, int pointerId, Serializer newSerializer) {
+        var currentSerializer = pointerSerializers[pointerId];
         if (currentSerializer == newSerializer) return false;
         var removedOccupied = false;
         if (node.has(idx)) {
             removedOccupied = hasAnyOccupiedPath(subEntryForWrite(node, idx));
-            pointerSerializers[pf.getPointerId()] = null;
+            pointerSerializers[pointerId] = null;
             node.clear(idx);
         }
         if (newSerializer != null) {
-            pointerSerializers[pf.getPointerId()] = newSerializer;
+            pointerSerializers[pointerId] = newSerializer;
             subEntryForWrite(node, idx);
         }
         return removedOccupied;
+    }
+
+    private boolean handleFixedPointerSwitch(Entry node, int idx, Serializer newSerializer) {
+        if (newSerializer != null) {
+            subEntryForWrite(node, idx);
+            return false;
+        }
+        if (!node.has(idx)) return false;
+        var removed = hasAnyOccupiedPath(subEntryForWrite(node, idx));
+        node.clear(idx);
+        return removed;
     }
 
     private boolean handleResizeVector(Entry node, int idx, int newCount) {

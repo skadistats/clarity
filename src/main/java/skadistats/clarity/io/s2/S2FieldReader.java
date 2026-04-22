@@ -11,7 +11,7 @@ import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.model.s2.Serializer;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.state.s2.S2EntityState;
 import skadistats.clarity.state.s2.S2FlatEntityState;
@@ -82,7 +82,7 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
     private Field resolveFieldDebug(S2EntityState state, S2DTClass dtClass, S2FieldPath fp) {
         Field f = state.getRootField();
         for (int i = 0; i <= fp.last(); i++) {
-            if (f instanceof PointerField pf) {
+            if (f instanceof PolymorphicPointerField pf) {
                 f = pf.getChild(fp.get(i), state, pointerOverrides[pf.getPointerId()]);
             } else {
                 f = f.getChild(state, fp.get(i));
@@ -145,8 +145,8 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
             var decoded = DecoderDispatch.decode(bs, field.getDecoder());
             var mutation = field.createMutation(decoded, fp.last() + 1);
             result.setMutation(r, mutation);
-            if (mutation instanceof StateMutation.SwitchPointer sp) {
-                pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+            if (mutation instanceof StateMutation.SwitchPolymorphicPointer sp) {
+                pointerOverrides[((PolymorphicPointerField) field).getPointerId()] = sp.newSerializer();
             }
         }
         return result;
@@ -185,8 +185,8 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
                 var decoded = DecoderDispatch.decode(bs, decoder);
                 var mutation = field.createMutation(decoded, fp.last() + 1);
                 result.setMutation(r, mutation);
-                if (mutation instanceof StateMutation.SwitchPointer sp) {
-                    pointerOverrides[((PointerField) field).getPointerId()] = sp.newSerializer();
+                if (mutation instanceof StateMutation.SwitchPolymorphicPointer sp) {
+                    pointerOverrides[((PolymorphicPointerField) field).getPointerId()] = sp.newSerializer();
                 }
 
                 var props = field.getSerializerProperties();

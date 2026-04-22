@@ -103,9 +103,15 @@ public final class S2FlatEntityState extends S2EntityState {
         }
 
         return switch (mutation) {
-            case StateMutation.WriteValue wv    -> writeValue(current, layout, base, wv.value());
-            case StateMutation.ResizeVector rv  -> resizeVector(current, layout, base, rv.count());
-            case StateMutation.SwitchPointer sp -> switchPointer(current, layout, base, sp.newSerializer());
+            case StateMutation.WriteValue wv          -> writeValue(current, layout, base, wv.value());
+            case StateMutation.ResizeVector rv         -> resizeVector(current, layout, base, rv.count());
+            case StateMutation.SwitchPolymorphicPointer sp        -> switchPolymorphicPointer(current, layout, base, sp.newSerializer());
+            case StateMutation.SwitchFixedPointer sfp  -> {
+                if (!(layout instanceof FieldLayout.SubState s)) {
+                    throw new IllegalStateException("SwitchFixedPointer on non-substate layout: " + layout);
+                }
+                yield switchFixedPointer(current, s, base, sfp.serializer());
+            }
         };
     }
 
@@ -213,8 +219,9 @@ public final class S2FlatEntityState extends S2EntityState {
             case FieldLayout.InlineString is -> writeValue(current, is, base, decoded);
             case FieldLayout.Ref r          -> writeValue(current, r, base, decoded);
             case FieldLayout.SubState s -> switch (s.kind()) {
-                case FieldLayout.SubStateKind.Pointer p -> switchPointer(current, s, base, (Serializer) decoded);
-                case FieldLayout.SubStateKind.Vector v  -> resizeVector(current, s, base, (Integer) decoded);
+                case FieldLayout.SubStateKind.PolymorphicPointer p      -> switchPolymorphicPointer(current, s, base, (Serializer) decoded);
+                case FieldLayout.SubStateKind.FixedPointer fixedPtr -> switchFixedPointer(current, s, base, (Serializer) decoded);
+                case FieldLayout.SubStateKind.Vector v        -> resizeVector(current, s, base, (Integer) decoded);
             };
             default -> throw new IllegalStateException("write on unknown leaf layout: " + layout);
         };
@@ -313,8 +320,8 @@ public final class S2FlatEntityState extends S2EntityState {
         return droppedOccupied;
     }
 
-    private boolean switchPointer(Entry current, FieldLayout layout, int base, Serializer newSerializer) {
-        if (!(layout instanceof FieldLayout.SubState s) || !(s.kind() instanceof FieldLayout.SubStateKind.Pointer p)) {
+    private boolean switchPolymorphicPointer(Entry current, FieldLayout layout, int base, Serializer newSerializer) {
+        if (!(layout instanceof FieldLayout.SubState s) || !(s.kind() instanceof FieldLayout.SubStateKind.PolymorphicPointer p)) {
             throw new IllegalStateException("SwitchPointer on non-pointer substate: " + layout);
         }
         var currentSerializer = pointerSerializers[p.pointerId()];
@@ -343,6 +350,32 @@ public final class S2FlatEntityState extends S2EntityState {
         return removedOccupied;
     }
 
+    private boolean switchFixedPointer(Entry current, FieldLayout layout, int base, Serializer newSerializer) {
+        if (!(layout instanceof FieldLayout.SubState s) || !(s.kind() instanceof FieldLayout.SubStateKind.FixedPointer fp)) {
+            throw new IllegalStateException("SwitchFixedPointer on non-fixed-pointer substate: " + layout);
+        }
+        var flagPos = base + s.offset();
+        var hadSub = current.data[flagPos] != 0;
+
+        if (newSerializer != null) {
+            if (hadSub) return false;
+            var sub = new Entry(fp.layout(), new byte[fp.layoutBytes()]);
+            var slot = allocateRefSlot();
+            refs[slot] = sub;
+            INT_VH.set(current.data, flagPos + 1, slot);
+            current.data[flagPos] = 1;
+            return false;
+        } else {
+            if (!hadSub) return false;
+            var oldSlot = (int) INT_VH.get(current.data, flagPos + 1);
+            var oldSub = (Entry) refs[oldSlot];
+            var removedOccupied = hasAnyOccupiedPath(oldSub, oldSub.rootLayout, 0);
+            releaseRefSlot(oldSlot);
+            current.data[flagPos] = 0;
+            return removedOccupied;
+        }
+    }
+
     private boolean hasAnyOccupiedPath(Entry entry, FieldLayout layout, int base) {
         return switch (layout) {
             case FieldLayout.Composite c -> {
@@ -369,7 +402,7 @@ public final class S2FlatEntityState extends S2EntityState {
         };
     }
 
-    private static int lookupLayoutIndex(FieldLayout.SubStateKind.Pointer p, Serializer newSerializer) {
+    private static int lookupLayoutIndex(FieldLayout.SubStateKind.PolymorphicPointer p, Serializer newSerializer) {
         var serializers = p.serializers();
         for (var i = 0; i < serializers.length; i++) {
             if (serializers[i] == newSerializer) return i;
@@ -486,7 +519,7 @@ public final class S2FlatEntityState extends S2EntityState {
      */
     private void lazyCreateSubEntry(Entry parent, int base, FieldLayout.SubState s, int hintIdx) {
         Entry sub = switch (s.kind()) {
-            case FieldLayout.SubStateKind.Pointer p -> {
+            case FieldLayout.SubStateKind.PolymorphicPointer p -> {
                 if (p.serializers().length != 1) {
                     throw new IllegalStateException(
                         "cannot lazy-create sub-Entry for Pointer with " + p.serializers().length
@@ -495,6 +528,8 @@ public final class S2FlatEntityState extends S2EntityState {
                 pointerSerializers[p.pointerId()] = p.serializers()[0];
                 yield new Entry(p.layouts()[0], new byte[p.layoutBytes()[0]]);
             }
+            case FieldLayout.SubStateKind.FixedPointer fp ->
+                new Entry(fp.layout(), new byte[fp.layoutBytes()]);
             case FieldLayout.SubStateKind.Vector v -> {
                 // Lazy-create vector sized to fit the upcoming element index.
                 // Mirrors S2NestedArrayEntityState's auto-growing capacity on writes.

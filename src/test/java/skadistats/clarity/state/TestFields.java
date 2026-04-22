@@ -13,7 +13,8 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.field.ArrayField;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.FixedPointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
 import skadistats.clarity.model.s2.field.VectorField;
@@ -110,11 +111,17 @@ public final class TestFields {
         return new VectorField(GENERIC_TYPE, element);
     }
 
-    public static PointerField pointerField(Serializer... serializers) {
-        // PointerDecoder expects bits but we don't use it for FieldLayoutBuilder purposes
-        var pf = new PointerField(GENERIC_TYPE, null, null, serializers);
-        pf.setPointerId(POINTER_ID_SEQ.getAndIncrement());
-        return pf;
+    public static Field pointerField(Serializer... serializers) {
+        if (serializers.length == 1) {
+            return new FixedPointerField(GENERIC_TYPE, serializers[0]);
+        }
+        return polymorphicPointerField(serializers);
+    }
+
+    public static PolymorphicPointerField polymorphicPointerField(Serializer... serializers) {
+        var ppf = new PolymorphicPointerField(GENERIC_TYPE, serializers);
+        ppf.setPointerId(POINTER_ID_SEQ.getAndIncrement());
+        return ppf;
     }
 
     public static S2FieldPath fp(int... indices) {

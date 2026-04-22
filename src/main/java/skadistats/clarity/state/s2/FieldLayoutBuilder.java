@@ -6,7 +6,8 @@ import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.ArrayField;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.FixedPointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
 import skadistats.clarity.model.s2.field.VectorField;
@@ -68,8 +69,8 @@ public final class FieldLayoutBuilder {
                 var layout = new FieldLayout.SubState(offset, kind);
                 yield new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
             }
-            case PointerField pf -> {
-                var serializers = pf.getSerializers();
+            case PolymorphicPointerField ppf -> {
+                var serializers = ppf.getSerializers();
                 var layouts = new FieldLayout[serializers.length];
                 var layoutBytes = new int[serializers.length];
                 for (var i = 0; i < serializers.length; i++) {
@@ -77,7 +78,13 @@ public final class FieldLayoutBuilder {
                     layouts[i] = built.layout;
                     layoutBytes[i] = built.totalBytes;
                 }
-                var kind = new FieldLayout.SubStateKind.Pointer(pf.getPointerId(), serializers, layouts, layoutBytes);
+                var kind = new FieldLayout.SubStateKind.PolymorphicPointer(ppf.getPointerId(), serializers, layouts, layoutBytes);
+                var layout = new FieldLayout.SubState(offset, kind);
+                yield new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
+            }
+            case FixedPointerField fpf -> {
+                var built = buildSerializer(fpf.getSerializer());
+                var kind = new FieldLayout.SubStateKind.FixedPointer(fpf.getSerializer(), built.layout, built.totalBytes);
                 var layout = new FieldLayout.SubState(offset, kind);
                 yield new Built(layout, FLAG_BYTE + SLOT_INDEX_BYTES);
             }

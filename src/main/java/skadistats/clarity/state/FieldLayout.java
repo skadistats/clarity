@@ -26,7 +26,9 @@ public sealed interface FieldLayout {
 
         record Vector(int elementBytes, FieldLayout elementLayout) implements SubStateKind {}
 
-        record Pointer(int pointerId, Serializer[] serializers,
+        record PolymorphicPointer(int pointerId, Serializer[] serializers,
                        FieldLayout[] layouts, int[] layoutBytes) implements SubStateKind {}
+
+        record FixedPointer(Serializer serializer, FieldLayout layout, int layoutBytes) implements SubStateKind {}
     }
 }

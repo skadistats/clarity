@@ -6,7 +6,8 @@ import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.FixedPointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.VectorField;
 import skadistats.clarity.state.EntityState;
@@ -48,9 +49,10 @@ public final class S2TreeMapEntityState extends S2EntityState {
     @Override
     public boolean write(S2FieldPath fp, Object decoded) {
         return switch (getFieldForFieldPath(fp)) {
-            case PointerField pf -> switchPointer(fp, pf, (Serializer) decoded);
-            case VectorField vf  -> trimEntries(fp, (Integer) decoded);
-            default              -> writeValue(fp, decoded);
+            case PolymorphicPointerField ppf -> switchPointer(fp, ppf.getPointerId(), (Serializer) decoded);
+            case FixedPointerField fpf       -> switchFixedPointer(fp, (Serializer) decoded);
+            case VectorField vf              -> trimEntries(fp, (Integer) decoded);
+            default                          -> writeValue(fp, decoded);
         };
     }
 
@@ -64,8 +66,8 @@ public final class S2TreeMapEntityState extends S2EntityState {
         return switch (mutation) {
             case StateMutation.WriteValue wv    -> writeValue(fp, wv.value());
             case StateMutation.ResizeVector rv  -> trimEntries(fp, rv.count());
-            case StateMutation.SwitchPointer sp -> getFieldForFieldPath(fp) instanceof PointerField pf
-                    && switchPointer(fp, pf, sp.newSerializer());
+            case StateMutation.SwitchPolymorphicPointer sp -> switchPointer(fp, sp.pointerId(), sp.newSerializer());
+            case StateMutation.SwitchFixedPointer sfp -> switchFixedPointer(fp, sfp.serializer());
         };
     }
 
@@ -76,12 +78,17 @@ public final class S2TreeMapEntityState extends S2EntityState {
         return state.remove(fp) != null;
     }
 
-    private boolean switchPointer(S2FieldPath fp, PointerField pf, Serializer newSerializer) {
-        var currentSerializer = pointerSerializers[pf.getPointerId()];
+    private boolean switchPointer(S2FieldPath fp, int pointerId, Serializer newSerializer) {
+        var currentSerializer = pointerSerializers[pointerId];
         if (currentSerializer == newSerializer) return false;
         var cleared = clearSubEntries(fp);
-        pointerSerializers[pf.getPointerId()] = newSerializer;
+        pointerSerializers[pointerId] = newSerializer;
         return cleared;
+    }
+
+    private boolean switchFixedPointer(S2FieldPath fp, Serializer newSerializer) {
+        if (newSerializer != null) return false;
+        return clearSubEntries(fp);
     }
 
     private boolean trimEntries(S2FieldPath fp, int count) {

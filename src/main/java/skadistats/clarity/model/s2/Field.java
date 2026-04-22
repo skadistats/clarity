@@ -6,7 +6,8 @@ import skadistats.clarity.state.s2.S2EntityState;
 
 public abstract sealed class Field
         permits skadistats.clarity.model.s2.field.ArrayField,
-                skadistats.clarity.model.s2.field.PointerField,
+                skadistats.clarity.model.s2.field.FixedPointerField,
+                skadistats.clarity.model.s2.field.PolymorphicPointerField,
                 skadistats.clarity.model.s2.field.SerializerField,
                 skadistats.clarity.model.s2.field.ValueField,
                 skadistats.clarity.model.s2.field.VectorField {

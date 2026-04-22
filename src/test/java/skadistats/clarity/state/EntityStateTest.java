@@ -6,6 +6,7 @@ import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.Vector;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.state.s2.S2EntityState;
 import skadistats.clarity.state.s2.S2FlatEntityState;
 import skadistats.clarity.state.s2.S2NestedArrayEntityState;
@@ -49,8 +50,12 @@ public class EntityStateTest {
         return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.ResizeVector(count));
     }
 
-    private static boolean switchPtr(EntityState s, FieldPath fp, Serializer ser) {
-        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.SwitchPointer(ser));
+    private static boolean switchPtr(EntityState s, FieldPath fp, PolymorphicPointerField ppf, Serializer ser) {
+        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.SwitchPolymorphicPointer(ppf.getPointerId(), ser));
+    }
+
+    private static boolean switchFixedPtr(EntityState s, FieldPath fp, Serializer ser) {
+        return ((S2EntityState) s).applyMutation((S2FieldPath) fp, new StateMutation.SwitchFixedPointer(ser));
     }
 
     private static Object read(EntityState s, FieldPath fp) {
@@ -380,7 +385,7 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), inner);
+        switchFixedPtr(st, fp(0), inner);
         write(st, fp(0, 0), 42);
         assertEquals(read(st, fp(0, 0)), 42);
     }
@@ -391,16 +396,16 @@ public class EntityStateTest {
     public void switchPointerSwitchClearsOld(String impl) {
         var innerA = serializer("A", named("x", intField()));
         var innerB = serializer("B", named("y", intField()));
-        var ptr = pointerField(innerA, innerB);
+        var ptr = polymorphicPointerField(innerA, innerB);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), innerA);
+        switchPtr(st, fp(0), ptr, innerA);
         write(st, fp(0, 0), 42);
-        switchPtr(st, fp(0), innerB);
+        switchPtr(st, fp(0), ptr, innerB);
         assertNull(read(st, fp(0, 0)));
     }
 
-    // ---------- 7.3.19 SwitchPointer: set to null ----------
+    // ---------- 7.3.19 SwitchFixedPointer: set to false ----------
 
     @Test(dataProvider = "impls")
     public void switchPointerSetNull(String impl) {
@@ -408,9 +413,9 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), inner);
+        switchFixedPtr(st, fp(0), inner);
         write(st, fp(0, 0), 42);
-        switchPtr(st, fp(0), null);
+        switchFixedPtr(st, fp(0), null);
         assertNull(read(st, fp(0, 0)));
     }
 
@@ -562,7 +567,7 @@ public class EntityStateTest {
         assertFalse(resize(st, fp(0), 2));
     }
 
-    // ---------- 7.3.22h SwitchPointer: fresh→false, clear populated→true, same→false ----------
+    // ---------- 7.3.22h SwitchFixedPointer: fresh→false, clear populated→true, same→false ----------
 
     @Test(dataProvider = "impls")
     public void switchPointerFreshReturnsFalse(String impl) {
@@ -570,7 +575,7 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        assertFalse(switchPtr(st, fp(0), inner));
+        assertFalse(switchFixedPtr(st, fp(0), inner));
     }
 
     @Test(dataProvider = "impls")
@@ -579,9 +584,9 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), inner);
+        switchFixedPtr(st, fp(0), inner);
         write(st, fp(0, 0), 42);
-        assertTrue(switchPtr(st, fp(0), null));
+        assertTrue(switchFixedPtr(st, fp(0), null));
     }
 
     @Test(dataProvider = "impls")
@@ -590,20 +595,20 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), inner);
-        assertFalse(switchPtr(st, fp(0), null));
+        switchFixedPtr(st, fp(0), inner);
+        assertFalse(switchFixedPtr(st, fp(0), null));
     }
 
     @Test(dataProvider = "impls")
     public void switchPointerSwitchPopulatedReturnsTrue(String impl) {
         var innerA = serializer("A", named("x", intField()));
         var innerB = serializer("B", named("y", intField()));
-        var ptr = pointerField(innerA, innerB);
+        var ptr = polymorphicPointerField(innerA, innerB);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), innerA);
+        switchPtr(st, fp(0), ptr, innerA);
         write(st, fp(0, 0), 42);
-        assertTrue(switchPtr(st, fp(0), innerB));
+        assertTrue(switchPtr(st, fp(0), ptr, innerB));
     }
 
     @Test(dataProvider = "impls")
@@ -612,8 +617,8 @@ public class EntityStateTest {
         var ptr = pointerField(inner);
         var outer = serializer("Outer", named("p", ptr));
         var st = makeState(impl, outer);
-        switchPtr(st, fp(0), inner);
-        assertFalse(switchPtr(st, fp(0), inner));
+        switchFixedPtr(st, fp(0), inner);
+        assertFalse(switchFixedPtr(st, fp(0), inner));
     }
 
     // ---------- 7.3.22i All 3 impls agree on same inputs ----------
@@ -622,7 +627,7 @@ public class EntityStateTest {
     public void allImplsAgreeOnMixedInputs() {
         var innerA = serializer("A", named("x", intField()));
         var innerB = serializer("B", named("y", intField()));
-        var ptr = pointerField(innerA, innerB);
+        var ptr = polymorphicPointerField(innerA, innerB);
         var vec = vectorFieldOf(intField());
         var rootSer = serializer("Root",
             named("n", intField()),
@@ -650,11 +655,11 @@ public class EntityStateTest {
             new Step("resize v=2 dropping", s -> resize(s, fp(2), 2)),
             new Step("resize v=5 regrow", s -> resize(s, fp(2), 5)),
             new Step("resize v=2 empty-tail", s -> resize(s, fp(2), 2)),
-            new Step("switch p→A fresh", s -> switchPtr(s, fp(3), innerA)),
-            new Step("switch p→A same", s -> switchPtr(s, fp(3), innerA)),
+            new Step("switch p→A fresh", s -> switchPtr(s, fp(3), ptr, innerA)),
+            new Step("switch p→A same", s -> switchPtr(s, fp(3), ptr, innerA)),
             new Step("write p.x=42", s -> write(s, fp(3, 0), 42)),
-            new Step("switch p→B populated", s -> switchPtr(s, fp(3), innerB)),
-            new Step("switch p→null empty", s -> switchPtr(s, fp(3), null)),
+            new Step("switch p→B populated", s -> switchPtr(s, fp(3), ptr, innerB)),
+            new Step("switch p→null empty", s -> switchPtr(s, fp(3), ptr, null)),
         };
         for (var step : steps) {
             var r0 = step.op.apply(states[0]);
@@ -774,13 +779,13 @@ public class EntityStateTest {
 
         var baseline = liveSlabCount(st);
 
-        switchPtr(st, fp(0), mid);
-        switchPtr(st, fp(0, 0), leaf);
+        switchFixedPtr(st, fp(0), mid);
+        switchFixedPtr(st, fp(0, 0), leaf);
         write(st, fp(0, 0, 0), 42);
 
         assertTrue(liveSlabCount(st) > baseline, "slab grew while building subtree");
 
-        switchPtr(st, fp(0), null);
+        switchFixedPtr(st, fp(0), null);
 
         assertEquals(liveSlabCount(st), baseline,
             "clearing outer pointer must recursively release inner mid and leaf slots");
@@ -791,16 +796,17 @@ public class EntityStateTest {
         var leaf = serializer("Leaf", named("x", intField()));
         var a = serializer("A", named("p", pointerField(leaf)));
         var b = serializer("B", named("n", intField()));
-        var outer = serializer("Outer", named("p", pointerField(a, b)));
+        var outerPtr = polymorphicPointerField(a, b);
+        var outer = serializer("Outer", named("p", outerPtr));
         var st = makeState(impl, outer);
 
-        switchPtr(st, fp(0), a);
-        switchPtr(st, fp(0, 0), leaf);
+        switchPtr(st, fp(0), outerPtr, a);
+        switchFixedPtr(st, fp(0, 0), leaf);
         write(st, fp(0, 0, 0), 1);
 
         var afterA = liveSlabCount(st);
 
-        switchPtr(st, fp(0), b);
+        switchPtr(st, fp(0), outerPtr, b);
         write(st, fp(0, 0), 2);
 
         var afterB = liveSlabCount(st);
@@ -817,7 +823,7 @@ public class EntityStateTest {
 
         resize(st, fp(0), 5);
         for (var i = 0; i < 5; i++) {
-            switchPtr(st, fp(0, i, 0), leaf);
+            switchFixedPtr(st, fp(0, i, 0), leaf);
             write(st, fp(0, i, 0, 0), i);
         }
 
@@ -841,7 +847,7 @@ public class EntityStateTest {
 
         resize(st, fp(0), 4);
         for (var i = 0; i < 4; i++) {
-            switchPtr(st, fp(0, i, 0), leaf);
+            switchFixedPtr(st, fp(0, i, 0), leaf);
             write(st, fp(0, i, 0, 0), i);
         }
 
@@ -859,15 +865,15 @@ public class EntityStateTest {
         var outer = serializer("Outer", named("p", pointerField(leaf)));
         var st = makeState(impl, outer);
 
-        switchPtr(st, fp(0), leaf);
+        switchFixedPtr(st, fp(0), leaf);
         write(st, fp(0, 0), 1);
         var afterFirstAlloc = slabSize(st);
         var liveAfterFirst = liveSlabCount(st);
 
-        switchPtr(st, fp(0), null);
+        switchFixedPtr(st, fp(0), null);
         assertTrue(freeSlotCount(st) > 0, "freelist populated after clearing pointer");
 
-        switchPtr(st, fp(0), leaf);
+        switchFixedPtr(st, fp(0), leaf);
         write(st, fp(0, 0), 2);
 
         assertEquals(slabSize(st), afterFirstAlloc,
@@ -885,7 +891,7 @@ public class EntityStateTest {
 
         resize(st, fp(0), 4);
         for (var i = 0; i < 4; i++) {
-            switchPtr(st, fp(0, i, 0), leaf);
+            switchFixedPtr(st, fp(0, i, 0), leaf);
             write(st, fp(0, i, 0, 0), i);
         }
 

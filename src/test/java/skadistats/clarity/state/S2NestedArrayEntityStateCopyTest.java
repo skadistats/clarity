@@ -3,6 +3,7 @@ package skadistats.clarity.state;
 import org.testng.annotations.Test;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.state.s2.S2NestedArrayEntityState;
 
 import static org.testng.Assert.assertEquals;
@@ -10,7 +11,7 @@ import static skadistats.clarity.state.TestFields.floatField;
 import static skadistats.clarity.state.TestFields.fp;
 import static skadistats.clarity.state.TestFields.intField;
 import static skadistats.clarity.state.TestFields.named;
-import static skadistats.clarity.state.TestFields.pointerField;
+import static skadistats.clarity.state.TestFields.polymorphicPointerField;
 import static skadistats.clarity.state.TestFields.rootField;
 import static skadistats.clarity.state.TestFields.serializer;
 import static skadistats.clarity.state.TestFields.serializerField;
@@ -30,8 +31,8 @@ public class S2NestedArrayEntityStateCopyTest {
         return s.applyMutation(fp, new StateMutation.ResizeVector(count));
     }
 
-    private static boolean switchPtr(S2NestedArrayEntityState s, S2FieldPath fp, Serializer ser) {
-        return s.applyMutation(fp, new StateMutation.SwitchPointer(ser));
+    private static boolean switchPtr(S2NestedArrayEntityState s, S2FieldPath fp, PolymorphicPointerField ppf, Serializer ser) {
+        return s.applyMutation(fp, new StateMutation.SwitchPolymorphicPointer(ppf.getPointerId(), ser));
     }
 
     private static Object read(S2NestedArrayEntityState s, S2FieldPath fp) {
@@ -156,15 +157,15 @@ public class S2NestedArrayEntityStateCopyTest {
     public void switchPointerAfterCopyIsIndependent() {
         var serA = serializer("A", named("a", intField()));
         var serB = serializer("B", named("b", intField()));
-        var ptr = pointerField(serA, serB);
+        var ptr = polymorphicPointerField(serA, serB);
         var ser = serializer("S", named("p", ptr));
 
         var st = make(ser);
-        switchPtr(st, fp(0), serA);
+        switchPtr(st, fp(0), ptr, serA);
         write(st, fp(0, 0), 42);
 
         var cp = (S2NestedArrayEntityState) st.copy();
-        switchPtr(cp, fp(0), serB);
+        switchPtr(cp, fp(0), ptr, serB);
 
         assertEquals(read(st, fp(0, 0)), 42);
 

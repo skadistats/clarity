@@ -4,7 +4,6 @@ import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.*;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
-import skadistats.clarity.io.decoder.factory.s2.PointerFactory;
 import skadistats.clarity.io.decoder.factory.s2.QAngleDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.VectorDecoderFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -39,9 +38,6 @@ public class S2DecoderFactory {
         FACTORIES.put("Vector4D", props -> VectorDecoderFactory.createDecoder(4, props));
         FACTORIES.put("Quaternion", props -> VectorDecoderFactory.createDecoder(4, props));
         FACTORIES.put("VectorWS", props -> VectorDecoderFactory.createDecoder(3, props));
-
-        // Pointer
-        FACTORIES.put("Pointer", PointerFactory::createDecoder);
     }
 
     private static final Map<String, Decoder> DECODERS = new HashMap<>();

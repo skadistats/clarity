@@ -11,7 +11,8 @@ import skadistats.clarity.model.s2.S2DTClass;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.field.ArrayField;
-import skadistats.clarity.model.s2.field.PointerField;
+import skadistats.clarity.model.s2.field.FixedPointerField;
+import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.ValueField;
 import skadistats.clarity.model.s2.field.VectorField;
@@ -147,14 +148,13 @@ public class FieldGenerator {
                 for (int i = 0; i < types.length; i++) {
                     typeSerializers[i] = serializers.get(types[i]);
                 }
-                var pf = new PointerField(
-                    elementType,
-                    S2DecoderFactory.createDecoder(fd.serializerProperties, "Pointer"),
-                    fd.serializerProperties,
-                    typeSerializers
-                );
-                pf.setPointerId(pointerCount++);
-                elementField = pf;
+                if (typeSerializers.length == 1) {
+                    elementField = new FixedPointerField(elementType, fd.serializerProperties, typeSerializers[0]);
+                } else {
+                    var ppf = new PolymorphicPointerField(elementType, fd.serializerProperties, typeSerializers);
+                    ppf.setPointerId(pointerCount++);
+                    elementField = ppf;
+                }
             } else {
                 elementField = new SerializerField(
                         elementType,
