@@ -203,7 +203,6 @@ public class Entities {
     @OnDTClassesComplete
     public void onDTClassesComplete() {
         fieldReader = engineType.getNewFieldReader(
-                dtClasses.getPointerCount(),
                 dtClasses.getEntityStateFactory().getS2FieldPathType());
     }
 

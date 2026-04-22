@@ -34,10 +34,10 @@ public interface EngineType {
     Class<? extends GeneratedMessage> userMessagePacketClassForKind(int kind);
     boolean isUserMessage(Class<? extends GeneratedMessage> clazz);
 
-    FieldReader getNewFieldReader(int pointerCount);
+    FieldReader getNewFieldReader();
 
-    default FieldReader getNewFieldReader(int pointerCount, S2FieldPathType pathType) {
-        return getNewFieldReader(pointerCount);
+    default FieldReader getNewFieldReader(S2FieldPathType pathType) {
+        return getNewFieldReader();
     }
 
     void emitHeader();

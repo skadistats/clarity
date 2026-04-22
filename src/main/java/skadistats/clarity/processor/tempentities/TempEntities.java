@@ -31,7 +31,7 @@ public class TempEntities {
 
     @OnInit
     public void onInit() {
-        fieldReader = engineType.getNewFieldReader(0);
+        fieldReader = engineType.getNewFieldReader();
     }
 
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)

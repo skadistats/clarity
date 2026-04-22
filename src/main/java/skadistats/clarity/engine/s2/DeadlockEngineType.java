@@ -55,14 +55,14 @@ public class DeadlockEngineType extends AbstractProtobufDemoEngineType {
     public boolean isUserMessage(Class<? extends GeneratedMessage> clazz) {
         return false;
     }
-
     @Override
-    public FieldReader getNewFieldReader(int pointerCount) {
-        return new S2FieldReader();
+    public FieldReader getNewFieldReader() {
+        return new S2FieldReader(S2FieldPathType.LONG);
     }
 
+
     @Override
-    public FieldReader getNewFieldReader(int pointerCount, S2FieldPathType pathType) {
+    public FieldReader getNewFieldReader(S2FieldPathType pathType) {
         return new S2FieldReader(pathType);
     }
 
