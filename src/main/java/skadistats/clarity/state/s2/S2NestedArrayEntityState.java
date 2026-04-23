@@ -12,6 +12,8 @@ import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.VectorField;
 import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.SparseStateDelta;
+import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
 
 import java.util.ArrayDeque;
@@ -65,7 +67,18 @@ public final class S2NestedArrayEntityState extends S2EntityState {
         while (true) {
             var idx = fp.get(i);
             if (i == last) {
-                return (T) node.get(idx);
+                // Hidden composite terminals store a sub-entry EntryRef at
+                // node.get(idx), not the originally-decoded value. Return
+                // what `write` would accept at the same fp, so that
+                // write(fp, get(fp)) is a semantic no-op — this is the
+                // contract `captureChanged`/`applyFrom` relies on.
+                var child = field.getChild(this, idx);
+                return switch (child) {
+                    case VectorField vf -> (T) (Integer) (node.isSub(idx) ? node.subEntry(idx).length() : 0);
+                    case FixedPointerField fpf -> (T) (node.isSub(idx) ? fpf.getSerializer() : null);
+                    case PolymorphicPointerField ppf -> (T) (node.isSub(idx) ? pointerSerializers[ppf.getPointerId()] : null);
+                    default -> (T) node.get(idx);
+                };
             }
             field = field.getChild(this, idx);
             if (!node.isSub(idx)) {
@@ -266,6 +279,85 @@ public final class S2NestedArrayEntityState extends S2EntityState {
 
     public int freeSlotCount() {
         return freeEntries == null ? 0 : freeEntries.size();
+    }
+
+    @Override
+    public int getInt(S2FieldPath fp) {
+        Object v = getValueForFieldPath(fp);
+        return v instanceof Integer i ? i : 0;
+    }
+
+    @Override
+    public long getLong(S2FieldPath fp) {
+        Object v = getValueForFieldPath(fp);
+        return v instanceof Long l ? l : 0L;
+    }
+
+    @Override
+    public float getFloat(S2FieldPath fp) {
+        Object v = getValueForFieldPath(fp);
+        return v instanceof Float f ? f : 0.0f;
+    }
+
+    @Override
+    public Object getObject(S2FieldPath fp) {
+        return getValueForFieldPath(fp);
+    }
+
+    @Override
+    public StateDelta captureChanged(S2FieldPath[] fps, int num) {
+        var delta = new SparseStateDelta(num, true);
+        for (var i = 0; i < num; i++) {
+            var fp = fps[i];
+            Object v = getValueForFieldPath(fp);
+            if (v == null) delta.putEmpty(i, fp);
+            else delta.putObject(i, fp, v);
+        }
+        return delta;
+    }
+
+    @Override
+    public void applyFrom(StateDelta delta, S2FieldPath fp) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyFrom requires a SparseStateDelta");
+        }
+        var i = sd.indexOf(fp);
+        if (i < 0) return;
+        applySlot(sd, i, fp);
+    }
+
+    @Override
+    public void applyAll(StateDelta delta) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyAll requires a SparseStateDelta");
+        }
+        var fields = sd.fields();
+        for (var i = 0; i < fields.length; i++) {
+            var fp = fields[i];
+            if (fp == null) continue;
+            applySlot(sd, i, (S2FieldPath) fp);
+        }
+    }
+
+    private void applySlot(SparseStateDelta sd, int i, S2FieldPath fp) {
+        // TAG_EMPTY represents "field was unset at capture time" — on the apply
+        // target this means clear. write() dispatches by terminal field type:
+        // leaf ValueField → node.set(idx, null); FixedPointer/PolymorphicPointer
+        // → switch(null); VectorField never receives null here because
+        // getValueForFieldPath returns Integer(0) for unset vectors, keeping
+        // the captured tag non-empty.
+        Object value = sd.tagAt(i) == SparseStateDelta.TAG_EMPTY ? null : deltaSlotAsObject(sd, i);
+        write(fp, value);
+    }
+
+    private static Object deltaSlotAsObject(SparseStateDelta sd, int i) {
+        return switch (sd.tagAt(i)) {
+            case SparseStateDelta.TAG_OBJECT -> sd.objAt(i);
+            case SparseStateDelta.TAG_INT    -> Integer.valueOf((int) sd.primAt(i));
+            case SparseStateDelta.TAG_LONG   -> Long.valueOf(sd.primAt(i));
+            case SparseStateDelta.TAG_FLOAT  -> Float.valueOf(Float.intBitsToFloat((int) sd.primAt(i)));
+            default -> null;
+        };
     }
 
 

@@ -1,8 +1,8 @@
 ## Context
 
-The flat state introduced by `flat-entity-state` and mutated in place by `inline-field-mutation-apply` already stores primitives — there is no object-per-field layer between decode and storage. The read side is the last mile:
+The flat state introduced by `flat-entity-state` and mutated in place by `inline-field-mutation-apply` already stores primitives — there is no object-per-field layer between decode and storage on the flat impls. The read side is the last mile:
 
-- `State.getValueForFieldPath(FieldPath)` returns `Object`, forcing `Integer.valueOf` / `Float.valueOf` on every call.
+- `EntityState.getValueForFieldPath(state, fp)` returns `Object`, forcing `Integer.valueOf` / `Float.valueOf` on every call (even for flat impls that hold the primitive directly).
 - `Entity.getProperty(FieldPath)` / `getProperty(String name)` funnel through the same path.
 - Listener dispatch via `@OnEntityPropertyChanged<T>` boxes by declaration.
 
@@ -15,23 +15,65 @@ A pull-side primitive API serves (1) directly. A sparse `StateDelta` serves (2) 
 
 ## Sketch
 
+The actual type in tree is `skadistats.clarity.state.EntityState` — a sealed
+interface `permits S1EntityState, S2EntityState`. Each branch is itself a
+sealed abstract class with concrete impls:
+
+- `S1EntityState` → `S1FlatEntityState`, `S1ObjectArrayEntityState`
+- `S2EntityState` → `S2FlatEntityState`, `S2NestedArrayEntityState`,
+  `S2NestedEntityState`, `S2TreeMapEntityState`
+
+Every concrete impl participates in the new API. There is no "single
+production implementation" shortcut — each needs its own primitive-getter
+body, matching the engine-specific `FieldPath` subtype
+(`S1FieldPath` / `S2FieldPath`). The engine-agnostic entry points mirror
+the existing `EntityState.getValueForFieldPath(state, fp)` static
+dispatcher pattern:
+
 ```java
-// clarity-core/model/state/
-public interface State {
-    // existing ...
-    Object getValueForFieldPath(FieldPath fp);        // unchanged; now layered
+// existing shape, for reference
+public sealed interface EntityState permits S1EntityState, S2EntityState {
+    static <T> T getValueForFieldPath(EntityState s, FieldPath fp) {
+        return (T) switch (s) {
+            case S1EntityState s1 -> s1.getValueForFieldPath((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getValueForFieldPath((S2FieldPath) fp);
+        };
+    }
+    EntityState copy();
+}
 
-    // new primitive getters
-    int   getInt  (FieldPath fp);
-    long  getLong (FieldPath fp);
-    float getFloat(FieldPath fp);
-    Object getObject(FieldPath fp);                   // Vector, String, handle, etc.
+// new additions
+public sealed interface EntityState permits S1EntityState, S2EntityState {
+    // ... existing ...
 
-    // new sparse capture
-    StateDelta captureChanged(FieldPath[] fps, int num);
+    // engine-agnostic static dispatchers (same pattern as getValueForFieldPath)
+    static int   getInt  (EntityState s, FieldPath fp) { /* switch to subtype */ }
+    static long  getLong (EntityState s, FieldPath fp) { /* switch to subtype */ }
+    static float getFloat(EntityState s, FieldPath fp) { /* switch to subtype */ }
+    static Object getObject(EntityState s, FieldPath fp) { /* switch to subtype */ }
 
-    // new in-place merge
-    void applyFrom(StateDelta delta, FieldPath fp);
+    static StateDelta captureChanged(EntityState s, FieldPath[] fps, int num) {
+        /* switch to subtype */
+    }
+
+    static void applyFrom(EntityState s, StateDelta delta, FieldPath fp) {
+        /* switch to subtype */
+    }
+
+    static void applyAll(EntityState s, StateDelta delta) {
+        /* switch to subtype; impl walks delta.fields() internally */
+    }
+}
+
+// each sealed subtype adds the engine-specific abstract methods
+public abstract sealed class S2EntityState implements EntityState /*…*/ {
+    public abstract int   getInt  (S2FieldPath fp);
+    public abstract long  getLong (S2FieldPath fp);
+    public abstract float getFloat(S2FieldPath fp);
+    public abstract Object getObject(S2FieldPath fp);
+    public abstract StateDelta captureChanged(S2FieldPath[] fps, int num);
+    public abstract void applyFrom(StateDelta delta, S2FieldPath fp);
+    public abstract void applyAll(StateDelta delta);
 }
 
 public interface StateDelta {
@@ -42,6 +84,21 @@ public interface StateDelta {
     Object getObject(FieldPath fp); // returns null if fp not in set or not an object field
 }
 ```
+
+`Entity` (not `EntityState`) gets convenience delegates with a single
+`FieldPath` arg; it resolves to the right engine internally via the
+same mechanism it already uses for `getProperty`.
+
+### `applyAll` vs `applyFrom`
+
+`applyAll(StateDelta)` is the ergonomic primitive: "absorb everything this
+delta covers." It walks `delta.fields()` and merges each field into the
+target. This is the shape the analyzer companion change wants (`for (fp
+: changed) fxState.applyFrom(delta, fp)` collapses to a single call).
+
+`applyFrom(StateDelta, FieldPath)` stays as the lower-level primitive for
+consumers who want to absorb a specific subset or interleave merges with
+other work. Both are callable; `applyAll` is the expected default.
 
 The concrete `StateDelta` implementation is sized to `num`. Its backing storage is shaped to match the source state it was captured from:
 
@@ -64,21 +121,61 @@ Chosen: zero/null. Throwing would force consumers to wrap every access in a cont
 
 ### Where do the primitive getters live?
 
-Chosen: on `State` directly. `Entity` gets one-line delegates. Putting the methods on a separate interface (`PrimitiveReadableState`) was considered but rejected — there is exactly one production implementation, and all other state-ish things (copies, test doubles) implement the same contract.
+Chosen: on `EntityState` (as static dispatchers) plus the engine-specific
+`S1EntityState` / `S2EntityState` abstract classes (as abstract methods
+with typed `FieldPath` args). `Entity` gets convenience delegates. A
+separate `PrimitiveReadableState` interface was considered but rejected:
+the sealed hierarchy already defines the full set of impls, and splitting
+the contract would just duplicate the sealing boilerplate. Every concrete
+impl — `S1FlatEntityState`, `S1ObjectArrayEntityState`,
+`S2FlatEntityState`, `S2NestedArrayEntityState`, `S2NestedEntityState`,
+`S2TreeMapEntityState` — implements the new methods; there is no
+"one production impl" shortcut.
 
-### Does `StateDelta` extend `State` or stand alone?
+### Allocation-free reads: flat vs. nested impls
+
+The "no allocation at the accessor boundary" contract is what the API
+promises — it does **not** promise that reading a primitive from every
+impl hits a pure primitive load.
+
+- Flat impls (`S1FlatEntityState`, `S2FlatEntityState`) store primitives
+  inline in a `byte[]` with a VarHandle read → true primitive load, no
+  allocation ever.
+- Nested/tree impls (`S2NestedArrayEntityState`, `S2NestedEntityState`,
+  `S2TreeMapEntityState`, `S1ObjectArrayEntityState`) store
+  already-boxed wrapper references. `getInt` there is a navigation +
+  `((Integer) ref).intValue()`. The unbox is free; the wrapper already
+  exists; no new allocation at the accessor boundary. Decode-side
+  allocation (the box written into the slot at decode time) is a
+  property of the storage impl, not of this API.
+
+The spec scenarios reflect this — see "Read-side contract is
+storage-shape agnostic" in the capability spec.
+
+### `getValueForFieldPath` vs. `getObject`
+
+For object-typed fields (`Vector`, `String`, handles, etc.) these return
+the same reference. `getValueForFieldPath` remains as the generic-typed
+escape hatch (returns `Object`, boxes primitive fields). `getObject`
+signals caller intent: "I know this is an object field." For primitive
+fields, `getObject` returns the boxed value (same as
+`getValueForFieldPath`), but callsites using `getObject` on a primitive
+field are almost certainly a bug — code review should flag them.
+
+### Does `StateDelta` extend `EntityState` or stand alone?
 
 Chosen: stand alone. A delta is sparse and has no notion of "the full field set"; operations like `getFieldPathIterator` don't make sense on it. Shared primitive accessors are a coincidence of vocabulary, not a subtype relationship.
 
 ### Merge direction
 
-Chosen: `State.applyFrom(delta, fp)` lives on `State`, not `StateDelta`. The target is the mutable party; the delta is read-only after creation. Keeps `StateDelta` safely publishable across threads without synchronization.
+Chosen: `applyFrom(state, delta, fp)` / `applyAll(state, delta)` live on `EntityState`, not `StateDelta`. The target is the mutable party; the delta is read-only after creation. Keeps `StateDelta` safely publishable across threads without synchronization.
 
 ## Risks and mitigations
 
-- **FieldPath identity vs. equality.** `captureChanged` looks up a slot per `FieldPath` in the input array; this must use the same identity model as the live state. Clarity's `FieldPath` already has correct `equals`/`hashCode` (used by listener dispatch), so a small identity-compatible index suffices; no new invariant.
+- **FieldPath identity vs. equality.** `captureChanged` looks up a slot per `FieldPath` in the input array; this must use the same identity model as the live state. Clarity's `S1FieldPath` / `S2FieldPath` already have correct `equals`/`hashCode` (used by listener dispatch), so a small identity-compatible index suffices; no new invariant.
 - **Mistyped access producing silent zero.** Mitigated by test coverage on the delta impl (scenario: pulling the wrong primitive type returns the default, documented behavior). The cost of supporting this is low and the alternative (exception) is worse at the consumer callsite.
-- **Binary compatibility.** `State` is an interface implemented only inside clarity; adding default methods on it is a recompile of downstream consumers. No `analyzer`-side `State` implementations exist. Confirmed via memory note on analyzer structure.
+- **Sealed hierarchy fan-out.** `EntityState` is sealed, as are its `S1EntityState` / `S2EntityState` branches. Adding abstract methods forces an implementation in all six concrete impls (no default-method shortcut once the method is abstract and typed). This is accepted cost — the spec contract applies uniformly across impls.
+- **Binary compatibility.** `EntityState` is a clarity-internal sealed interface; no out-of-tree `EntityState` implementations can exist (the seal prevents it). Downstream consumers only need recompile.
 
 ## Alternatives considered
 

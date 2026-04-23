@@ -9,6 +9,9 @@ import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
 import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.FieldLayout;
+import skadistats.clarity.state.PrimitiveType;
+import skadistats.clarity.state.SparseStateDelta;
+import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
 import skadistats.clarity.util.SimpleIterator;
 
@@ -16,7 +19,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 
+import static skadistats.clarity.state.PrimitiveType.FLOAT_VH;
 import static skadistats.clarity.state.PrimitiveType.INT_VH;
+import static skadistats.clarity.state.PrimitiveType.LONG_VH;
 
 public final class S1FlatEntityState implements S1EntityState {
 
@@ -169,5 +174,177 @@ public final class S1FlatEntityState implements S1EntityState {
             freeSlots = Arrays.copyOf(freeSlots, newCap);
         }
         return refsSize++;
+    }
+
+    @Override
+    public int getInt(S1FieldPath fp) {
+        var leaf = layout.leaves()[fp.idx()];
+        if (leaf instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.INT) {
+            var offset = p.offset();
+            if (data[offset] == 0) return 0;
+            return (int) INT_VH.get(data, offset + 1);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getLong(S1FieldPath fp) {
+        var leaf = layout.leaves()[fp.idx()];
+        if (leaf instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.LONG) {
+            var offset = p.offset();
+            if (data[offset] == 0) return 0L;
+            return (long) LONG_VH.get(data, offset + 1);
+        }
+        return 0L;
+    }
+
+    @Override
+    public float getFloat(S1FieldPath fp) {
+        var leaf = layout.leaves()[fp.idx()];
+        if (leaf instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.FLOAT) {
+            var offset = p.offset();
+            if (data[offset] == 0) return 0.0f;
+            return (float) FLOAT_VH.get(data, offset + 1);
+        }
+        return 0.0f;
+    }
+
+    @Override
+    public Object getObject(S1FieldPath fp) {
+        return getValueForFieldPath(fp);
+    }
+
+    @Override
+    public StateDelta captureChanged(S1FieldPath[] fps, int num) {
+        var delta = new SparseStateDelta(num, true);
+        for (var i = 0; i < num; i++) {
+            captureOne(delta, i, fps[i]);
+        }
+        return delta;
+    }
+
+    private void captureOne(SparseStateDelta delta, int i, S1FieldPath fp) {
+        var leaf = layout.leaves()[fp.idx()];
+        switch (leaf) {
+            case FieldLayout.Primitive p -> {
+                if (data[p.offset()] == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                var dataOff = p.offset() + 1;
+                if (p.type() == PrimitiveType.Scalar.INT) {
+                    delta.putInt(i, fp, (int) INT_VH.get(data, dataOff));
+                } else if (p.type() == PrimitiveType.Scalar.LONG) {
+                    delta.putLong(i, fp, (long) LONG_VH.get(data, dataOff));
+                } else if (p.type() == PrimitiveType.Scalar.FLOAT) {
+                    delta.putFloat(i, fp, (float) FLOAT_VH.get(data, dataOff));
+                } else {
+                    delta.putObject(i, fp, p.type().read(data, dataOff));
+                }
+            }
+            case FieldLayout.InlineString is -> {
+                if (data[is.offset()] == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                var offset = is.offset();
+                var len = (data[offset + 1] & 0xFF) | ((data[offset + 2] & 0xFF) << 8);
+                delta.putObject(i, fp, new String(data, offset + 3, len, StandardCharsets.UTF_8));
+            }
+            case FieldLayout.Ref r -> {
+                if (data[r.offset()] == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                delta.putObject(i, fp, refs[(int) INT_VH.get(data, r.offset() + 1)]);
+            }
+            default -> delta.putEmpty(i, fp);
+        }
+    }
+
+    @Override
+    public void applyFrom(StateDelta delta, S1FieldPath fp) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyFrom requires a SparseStateDelta");
+        }
+        var i = sd.indexOf(fp);
+        if (i < 0) return;
+        applySlot(sd, i, fp);
+    }
+
+    @Override
+    public void applyAll(StateDelta delta) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyAll requires a SparseStateDelta");
+        }
+        var fields = sd.fields();
+        for (var i = 0; i < fields.length; i++) {
+            var fp = fields[i];
+            if (fp == null) continue;
+            applySlot(sd, i, (S1FieldPath) fp);
+        }
+    }
+
+    private void applySlot(SparseStateDelta sd, int i, S1FieldPath fp) {
+        var tag = sd.tagAt(i);
+        if (tag == SparseStateDelta.TAG_EMPTY) return;
+        var leaf = layout.leaves()[fp.idx()];
+        switch (leaf) {
+            case FieldLayout.Primitive p -> {
+                var dataOff = p.offset() + 1;
+                switch (tag) {
+                    case SparseStateDelta.TAG_INT -> {
+                        if (p.type() == PrimitiveType.Scalar.INT) {
+                            INT_VH.set(data, dataOff, (int) sd.primAt(i));
+                            data[p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_LONG -> {
+                        if (p.type() == PrimitiveType.Scalar.LONG) {
+                            LONG_VH.set(data, dataOff, sd.primAt(i));
+                            data[p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_FLOAT -> {
+                        if (p.type() == PrimitiveType.Scalar.FLOAT) {
+                            FLOAT_VH.set(data, dataOff, Float.intBitsToFloat((int) sd.primAt(i)));
+                            data[p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_OBJECT -> {
+                        var value = sd.objAt(i);
+                        if (value != null) {
+                            p.type().write(data, dataOff, value);
+                            data[p.offset()] = 1;
+                        }
+                    }
+                    default -> { /* unreachable */ }
+                }
+            }
+            case FieldLayout.InlineString is -> {
+                if (tag != SparseStateDelta.TAG_OBJECT) return;
+                var value = sd.objAt(i);
+                if (value != null) {
+                    data[is.offset()] = 1;
+                    writeInlineString(is.offset() + 1, (String) value, is.maxLength());
+                }
+            }
+            case FieldLayout.Ref r -> {
+                if (tag != SparseStateDelta.TAG_OBJECT) return;
+                var value = sd.objAt(i);
+                if (value != null) {
+                    int slot;
+                    if (data[r.offset()] == 0) {
+                        slot = allocateRefSlot();
+                        INT_VH.set(data, r.offset() + 1, slot);
+                        data[r.offset()] = 1;
+                    } else {
+                        slot = (int) INT_VH.get(data, r.offset() + 1);
+                    }
+                    refs[slot] = value;
+                }
+            }
+            default -> { /* non-leaf — skip */ }
+        }
     }
 }

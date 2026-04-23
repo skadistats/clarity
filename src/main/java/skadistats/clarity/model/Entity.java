@@ -125,6 +125,46 @@ public class Entity {
         return EntityState.getValueForFieldPath(getState(), fp);
     }
 
+    public int getInt(FieldPath fp) {
+        return EntityState.getInt(getState(), fp);
+    }
+
+    public int getInt(String property) {
+        var fp = getFieldPathForName(property);
+        if (fp == null) throw new IllegalArgumentException("property " + property + " not found on entity of class " + getDtClass().getDtName());
+        return EntityState.getInt(getState(), fp);
+    }
+
+    public long getLong(FieldPath fp) {
+        return EntityState.getLong(getState(), fp);
+    }
+
+    public long getLong(String property) {
+        var fp = getFieldPathForName(property);
+        if (fp == null) throw new IllegalArgumentException("property " + property + " not found on entity of class " + getDtClass().getDtName());
+        return EntityState.getLong(getState(), fp);
+    }
+
+    public float getFloat(FieldPath fp) {
+        return EntityState.getFloat(getState(), fp);
+    }
+
+    public float getFloat(String property) {
+        var fp = getFieldPathForName(property);
+        if (fp == null) throw new IllegalArgumentException("property " + property + " not found on entity of class " + getDtClass().getDtName());
+        return EntityState.getFloat(getState(), fp);
+    }
+
+    public Object getObject(FieldPath fp) {
+        return EntityState.getObject(getState(), fp);
+    }
+
+    public Object getObject(String property) {
+        var fp = getFieldPathForName(property);
+        if (fp == null) throw new IllegalArgumentException("property " + property + " not found on entity of class " + getDtClass().getDtName());
+        return EntityState.getObject(getState(), fp);
+    }
+
     @Override
     public String toString() {
         var title = "idx: " + getIndex() + ", serial: " + getSerial() + ", class: " + getDtClass().getDtName();

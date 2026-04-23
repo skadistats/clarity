@@ -11,6 +11,8 @@ import skadistats.clarity.model.s2.field.PolymorphicPointerField;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.model.s2.field.VectorField;
 import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.SparseStateDelta;
+import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
 
 import java.util.Iterator;
@@ -110,6 +112,80 @@ public final class S2TreeMapEntityState extends S2EntityState {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public int getInt(S2FieldPath fp) {
+        Object v = state.get(fp);
+        return v instanceof Integer i ? i : 0;
+    }
+
+    @Override
+    public long getLong(S2FieldPath fp) {
+        Object v = state.get(fp);
+        return v instanceof Long l ? l : 0L;
+    }
+
+    @Override
+    public float getFloat(S2FieldPath fp) {
+        Object v = state.get(fp);
+        return v instanceof Float f ? f : 0.0f;
+    }
+
+    @Override
+    public Object getObject(S2FieldPath fp) {
+        return state.get(fp);
+    }
+
+    @Override
+    public StateDelta captureChanged(S2FieldPath[] fps, int num) {
+        var delta = new SparseStateDelta(num, true);
+        for (var i = 0; i < num; i++) {
+            var fp = fps[i];
+            Object v = state.get(fp);
+            if (v == null) delta.putEmpty(i, fp);
+            else delta.putObject(i, fp, v);
+        }
+        return delta;
+    }
+
+    @Override
+    public void applyFrom(StateDelta delta, S2FieldPath fp) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyFrom requires a SparseStateDelta");
+        }
+        var i = sd.indexOf(fp);
+        if (i < 0) return;
+        applySlot(sd, i, fp);
+    }
+
+    @Override
+    public void applyAll(StateDelta delta) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyAll requires a SparseStateDelta");
+        }
+        var fields = sd.fields();
+        for (var i = 0; i < fields.length; i++) {
+            var fp = fields[i];
+            if (fp == null) continue;
+            applySlot(sd, i, (S2FieldPath) fp);
+        }
+    }
+
+    private void applySlot(SparseStateDelta sd, int i, S2FieldPath fp) {
+        Object value = deltaSlotAsObject(sd, i);
+        if (value == null) return;
+        writeValue(fp, value);
+    }
+
+    private static Object deltaSlotAsObject(SparseStateDelta sd, int i) {
+        return switch (sd.tagAt(i)) {
+            case SparseStateDelta.TAG_OBJECT -> sd.objAt(i);
+            case SparseStateDelta.TAG_INT    -> Integer.valueOf((int) sd.primAt(i));
+            case SparseStateDelta.TAG_LONG   -> Long.valueOf(sd.primAt(i));
+            case SparseStateDelta.TAG_FLOAT  -> Float.valueOf(Float.intBitsToFloat((int) sd.primAt(i)));
+            default -> null;
+        };
     }
 
 }

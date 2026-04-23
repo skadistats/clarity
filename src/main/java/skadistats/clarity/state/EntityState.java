@@ -53,4 +53,67 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    static int getInt(EntityState state, FieldPath fp) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.getInt((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getInt((S2FieldPath) fp);
+        };
+    }
+
+    static long getLong(EntityState state, FieldPath fp) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.getLong((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getLong((S2FieldPath) fp);
+        };
+    }
+
+    static float getFloat(EntityState state, FieldPath fp) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.getFloat((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getFloat((S2FieldPath) fp);
+        };
+    }
+
+    static Object getObject(EntityState state, FieldPath fp) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.getObject((S1FieldPath) fp);
+            case S2EntityState s2 -> s2.getObject((S2FieldPath) fp);
+        };
+    }
+
+    static StateDelta captureChanged(EntityState state, FieldPath[] fps, int num) {
+        return switch (state) {
+            case S1EntityState s1 -> s1.captureChanged(toS1(fps, num), num);
+            case S2EntityState s2 -> s2.captureChanged(toS2(fps, num), num);
+        };
+    }
+
+    static void applyFrom(EntityState state, StateDelta delta, FieldPath fp) {
+        switch (state) {
+            case S1EntityState s1 -> s1.applyFrom(delta, (S1FieldPath) fp);
+            case S2EntityState s2 -> s2.applyFrom(delta, (S2FieldPath) fp);
+        }
+    }
+
+    static void applyAll(EntityState state, StateDelta delta) {
+        switch (state) {
+            case S1EntityState s1 -> s1.applyAll(delta);
+            case S2EntityState s2 -> s2.applyAll(delta);
+        }
+    }
+
+    private static S1FieldPath[] toS1(FieldPath[] src, int num) {
+        if (src instanceof S1FieldPath[] typed) return typed;
+        var out = new S1FieldPath[num];
+        for (var i = 0; i < num; i++) out[i] = (S1FieldPath) src[i];
+        return out;
+    }
+
+    private static S2FieldPath[] toS2(FieldPath[] src, int num) {
+        if (src instanceof S2FieldPath[] typed) return typed;
+        var out = new S2FieldPath[num];
+        for (var i = 0; i < num; i++) out[i] = (S2FieldPath) src[i];
+        return out;
+    }
+
 }

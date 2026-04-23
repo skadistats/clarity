@@ -1,8 +1,8 @@
 ## ADDED Requirements
 
-### Requirement: Primitive read contract on State and Entity
+### Requirement: Primitive read contract on EntityState and Entity
 
-`State` and `Entity` SHALL expose primitive-typed read accessors — `getInt(FieldPath)`, `getLong(FieldPath)`, `getFloat(FieldPath)`, and `getObject(FieldPath)` — that return the value at the given field path without allocating a wrapper object. The existing `Object`-typed read API (`getValueForFieldPath`, `getProperty`) SHALL continue to function and SHALL be implemented as a boxing layer over the primitive getters.
+`EntityState` and `Entity` SHALL expose primitive-typed read accessors — `getInt(FieldPath)`, `getLong(FieldPath)`, `getFloat(FieldPath)`, and `getObject(FieldPath)` — that return the value at the given field path without allocating a wrapper object at the accessor boundary. On `EntityState`, the engine-agnostic entry points are static (`EntityState.getInt(state, fp)` etc.), mirroring the existing `EntityState.getValueForFieldPath(state, fp)` shape; the concrete work is abstract methods on `S1EntityState` / `S2EntityState` taking engine-specific `FieldPath` subtypes. The existing `Object`-typed read API (`getValueForFieldPath`, `getProperty`) SHALL continue to function unchanged.
 
 #### Scenario: Primitive read round-trips a decoded value
 
@@ -31,7 +31,7 @@
 
 ### Requirement: Sparse StateDelta snapshot
 
-`State` SHALL expose `StateDelta captureChanged(FieldPath[] fps, int num)` that produces a sparse, immutable snapshot of the primitive values at exactly the first `num` field paths in the input array. The returned `StateDelta` SHALL provide the same primitive-read contract as `State` — `getInt`, `getLong`, `getFloat`, `getObject` — scoped to the captured set, plus `FieldPath[] fields()` to enumerate coverage. Allocation of a delta SHALL be proportional to `num`, not to total state size.
+`EntityState` SHALL expose `StateDelta captureChanged(FieldPath[] fps, int num)` (via the engine-specific methods on `S1EntityState` / `S2EntityState` and a static dispatcher on `EntityState`) that produces a sparse, immutable snapshot of the values at exactly the first `num` field paths in the input array. The returned `StateDelta` SHALL provide the same primitive-read contract as `EntityState` — `getInt`, `getLong`, `getFloat`, `getObject` — scoped to the captured set, plus `FieldPath[] fields()` to enumerate coverage. Allocation of a delta SHALL be proportional to `num`, not to total state size.
 
 #### Scenario: Capture of three changed fields
 
@@ -55,11 +55,20 @@
 
 ### Requirement: In-place delta merge
 
-`State` SHALL expose `applyFrom(StateDelta delta, FieldPath fp)` that writes the value for `fp` from `delta` into the corresponding flat slot of the target state, in place and without allocation. Fields of `delta` not named by `fp` in a given call SHALL NOT be touched on the target.
+`EntityState` SHALL expose two merge primitives:
+
+- `applyFrom(StateDelta delta, FieldPath fp)` — writes the value for `fp` from `delta` into the corresponding slot of the target state, in place and without allocation. Fields of `delta` not named by `fp` in a given call SHALL NOT be touched on the target.
+- `applyAll(StateDelta delta)` — the ergonomic default: writes every field covered by `delta.fields()` into the target, in place and without allocation. Fields not in `delta.fields()` SHALL NOT be touched. Equivalent in result to iterating `delta.fields()` and calling `applyFrom` for each, but implementations MAY dispatch internally by storage shape for a single pass.
+
+#### Scenario: applyAll absorbs every field of a delta
+
+- **WHEN** a consumer holds a persistent target state and receives a `StateDelta` whose `fields()` is `[fpA, fpB]`
+- **AND** the consumer calls `target.applyAll(delta)`
+- **THEN** `target.getInt(fpA)` SHALL return the value `delta.getInt(fpA)` returned; `target.getFloat(fpB)` SHALL return the value `delta.getFloat(fpB)` returned; no other fields of `target` SHALL have changed
 
 #### Scenario: Single-field merge into a long-lived target state
 
-- **WHEN** a consumer holds a persistent `State` instance `fxState` and receives a `StateDelta` containing `fpA`
+- **WHEN** a consumer holds a persistent `EntityState` instance `fxState` and receives a `StateDelta` containing `fpA`
 - **AND** the consumer calls `fxState.applyFrom(delta, fpA)`
 - **THEN** `fxState.getInt(fpA)` SHALL subsequently return the value `delta.getInt(fpA)` returned, and no other fields of `fxState` SHALL have changed
 
@@ -76,7 +85,7 @@
 
 ### Requirement: Allocation-free primitive reads
 
-A `getInt` / `getLong` / `getFloat` call on a fresh `State` SHALL allocate zero objects. A `getObject` call SHALL allocate nothing beyond what the stored reference already dictates (i.e., no wrappers around the stored object).
+A `getInt` / `getLong` / `getFloat` call on a flat `EntityState` (`S1FlatEntityState`, `S2FlatEntityState`) SHALL allocate zero objects. On nested/tree impls (`S1ObjectArrayEntityState`, `S2NestedArrayEntityState`, `S2NestedEntityState`, `S2TreeMapEntityState`) the same call SHALL allocate zero objects **at the accessor boundary** — the stored wrapper already exists; `getInt` returns `wrapper.intValue()`. A `getObject` call SHALL allocate nothing beyond what the stored reference already dictates (i.e., no wrappers around the stored object).
 
 #### Scenario: Read loop does not grow the heap
 

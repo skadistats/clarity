@@ -8,6 +8,7 @@ import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.EntityState;
+import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
 
 public abstract sealed class S2EntityState implements EntityState
@@ -96,5 +97,19 @@ public abstract sealed class S2EntityState implements EntityState
     public abstract boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs);
 
     public abstract boolean applyMutation(S2FieldPath fp, StateMutation mutation);
+
+    public abstract int getInt(S2FieldPath fp);
+
+    public abstract long getLong(S2FieldPath fp);
+
+    public abstract float getFloat(S2FieldPath fp);
+
+    public abstract Object getObject(S2FieldPath fp);
+
+    public abstract StateDelta captureChanged(S2FieldPath[] fps, int num);
+
+    public abstract void applyFrom(StateDelta delta, S2FieldPath fp);
+
+    public abstract void applyAll(StateDelta delta);
 
 }

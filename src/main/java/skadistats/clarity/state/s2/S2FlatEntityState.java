@@ -12,6 +12,9 @@ import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.model.s2.field.SerializerField;
 import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.FieldLayout;
+import skadistats.clarity.state.PrimitiveType;
+import skadistats.clarity.state.SparseStateDelta;
+import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
 
 import java.nio.charset.StandardCharsets;
@@ -20,7 +23,9 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import static skadistats.clarity.state.PrimitiveType.FLOAT_VH;
 import static skadistats.clarity.state.PrimitiveType.INT_VH;
+import static skadistats.clarity.state.PrimitiveType.LONG_VH;
 
 public final class S2FlatEntityState extends S2EntityState {
 
@@ -460,6 +465,23 @@ public final class S2FlatEntityState extends S2EntityState {
                 var slot = (int) INT_VH.get(current.data, base + r.offset() + 1);
                 yield (T) refs[slot];
             }
+            case FieldLayout.SubState s -> {
+                // Hidden composite terminals: return what `write` accepts, so
+                // write(fp, get(fp)) is a semantic no-op. captureChanged /
+                // applyFrom rely on this round-trip.
+                var flagPos = base + s.offset();
+                var isSet = current.data[flagPos] != 0;
+                yield switch (s.kind()) {
+                    case FieldLayout.SubStateKind.Vector v -> {
+                        if (!isSet) yield (T) (Integer) 0;
+                        var slot = (int) INT_VH.get(current.data, flagPos + 1);
+                        var sub = (Entry) refs[slot];
+                        yield (T) (Integer) ((FieldLayout.Array) sub.rootLayout).length();
+                    }
+                    case FieldLayout.SubStateKind.FixedPointer fixed -> (T) (isSet ? fixed.serializer() : null);
+                    case FieldLayout.SubStateKind.PolymorphicPointer poly -> (T) (isSet ? pointerSerializers[poly.pointerId()] : null);
+                };
+            }
             default -> null;
         };
     }
@@ -636,6 +658,285 @@ public final class S2FlatEntityState extends S2EntityState {
     byte[] subEntryDataForTest(int slot) {
         return ((Entry) refs[slot]).data;
     }
+
+    // -------------------------------------------------------------------
+    // Primitive read accessors
+    // -------------------------------------------------------------------
+
+    @Override
+    public int getInt(S2FieldPath fp) {
+        var loc = navigate(fp);
+        if (loc == null) return 0;
+        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.INT) {
+            if (loc.entry.data[loc.base + p.offset()] == 0) return 0;
+            return (int) INT_VH.get(loc.entry.data, loc.base + p.offset() + 1);
+        }
+        return 0;
+    }
+
+    @Override
+    public long getLong(S2FieldPath fp) {
+        var loc = navigate(fp);
+        if (loc == null) return 0L;
+        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.LONG) {
+            if (loc.entry.data[loc.base + p.offset()] == 0) return 0L;
+            return (long) LONG_VH.get(loc.entry.data, loc.base + p.offset() + 1);
+        }
+        return 0L;
+    }
+
+    @Override
+    public float getFloat(S2FieldPath fp) {
+        var loc = navigate(fp);
+        if (loc == null) return 0.0f;
+        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.FLOAT) {
+            if (loc.entry.data[loc.base + p.offset()] == 0) return 0.0f;
+            return (float) FLOAT_VH.get(loc.entry.data, loc.base + p.offset() + 1);
+        }
+        return 0.0f;
+    }
+
+    @Override
+    public Object getObject(S2FieldPath fp) {
+        return getValueForFieldPath(fp);
+    }
+
+    // -------------------------------------------------------------------
+    // Sparse capture / apply
+    // -------------------------------------------------------------------
+
+    @Override
+    public StateDelta captureChanged(S2FieldPath[] fps, int num) {
+        var delta = new SparseStateDelta(num, true);
+        for (var i = 0; i < num; i++) {
+            var fp = fps[i];
+            captureOne(delta, i, fp);
+        }
+        return delta;
+    }
+
+    private void captureOne(SparseStateDelta delta, int i, S2FieldPath fp) {
+        var loc = navigate(fp);
+        if (loc == null) {
+            delta.putEmpty(i, fp);
+            return;
+        }
+        switch (loc.layout) {
+            case FieldLayout.Primitive p -> {
+                if (loc.entry.data[loc.base + p.offset()] == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                var dataOff = loc.base + p.offset() + 1;
+                if (p.type() == PrimitiveType.Scalar.INT) {
+                    delta.putInt(i, fp, (int) INT_VH.get(loc.entry.data, dataOff));
+                } else if (p.type() == PrimitiveType.Scalar.LONG) {
+                    delta.putLong(i, fp, (long) LONG_VH.get(loc.entry.data, dataOff));
+                } else if (p.type() == PrimitiveType.Scalar.FLOAT) {
+                    delta.putFloat(i, fp, (float) FLOAT_VH.get(loc.entry.data, dataOff));
+                } else {
+                    delta.putObject(i, fp, p.type().read(loc.entry.data, dataOff));
+                }
+            }
+            case FieldLayout.InlineString is -> {
+                if (loc.entry.data[loc.base + is.offset()] == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                delta.putObject(i, fp, readInlineString(loc.entry.data, loc.base + is.offset()));
+            }
+            case FieldLayout.Ref r -> {
+                var flag = loc.entry.data[loc.base + r.offset()];
+                if (flag == 0) {
+                    delta.putEmpty(i, fp);
+                    return;
+                }
+                var slot = (int) INT_VH.get(loc.entry.data, loc.base + r.offset() + 1);
+                delta.putObject(i, fp, refs[slot]);
+            }
+            case FieldLayout.SubState s -> {
+                // Hidden composite terminal: capture the value the symmetric
+                // `write`/structural-mutation accepts. Vector → current length;
+                // FixedPointer → field.serializer()|null; PolymorphicPointer →
+                // currently-resolved serializer|null.
+                var flagPos = loc.base + s.offset();
+                var isSet = loc.entry.data[flagPos] != 0;
+                switch (s.kind()) {
+                    case FieldLayout.SubStateKind.Vector v -> {
+                        if (!isSet) {
+                            delta.putInt(i, fp, 0);
+                        } else {
+                            var slot = (int) INT_VH.get(loc.entry.data, flagPos + 1);
+                            var sub = (Entry) refs[slot];
+                            delta.putInt(i, fp, ((FieldLayout.Array) sub.rootLayout).length());
+                        }
+                    }
+                    case FieldLayout.SubStateKind.FixedPointer fixed -> {
+                        delta.putObject(i, fp, isSet ? fixed.serializer() : null);
+                    }
+                    case FieldLayout.SubStateKind.PolymorphicPointer poly -> {
+                        delta.putObject(i, fp, isSet ? pointerSerializers[poly.pointerId()] : null);
+                    }
+                }
+            }
+            default -> delta.putEmpty(i, fp);
+        }
+    }
+
+    private static String readInlineString(byte[] data, int flagPos) {
+        var len = (data[flagPos + 1] & 0xFF) | ((data[flagPos + 2] & 0xFF) << 8);
+        return new String(data, flagPos + 3, len, StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void applyFrom(StateDelta delta, S2FieldPath fp) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyFrom requires a SparseStateDelta");
+        }
+        var i = sd.indexOf(fp);
+        if (i < 0) return;
+        applySlot(sd, i, fp);
+    }
+
+    @Override
+    public void applyAll(StateDelta delta) {
+        if (!(delta instanceof SparseStateDelta sd)) {
+            throw new IllegalArgumentException("applyAll requires a SparseStateDelta");
+        }
+        var fields = sd.fields();
+        for (var i = 0; i < fields.length; i++) {
+            var fp = fields[i];
+            if (fp == null) continue;
+            applySlot(sd, i, (S2FieldPath) fp);
+        }
+    }
+
+    private void applySlot(SparseStateDelta sd, int i, S2FieldPath fp) {
+        var tag = sd.tagAt(i);
+        var loc = navigate(fp);
+        if (loc == null) return;
+        if (tag == SparseStateDelta.TAG_EMPTY) {
+            applyClear(loc);
+            return;
+        }
+        switch (loc.layout) {
+            case FieldLayout.Primitive p -> {
+                var dataOff = loc.base + p.offset() + 1;
+                switch (tag) {
+                    case SparseStateDelta.TAG_INT -> {
+                        if (p.type() == PrimitiveType.Scalar.INT) {
+                            INT_VH.set(loc.entry.data, dataOff, (int) sd.primAt(i));
+                            loc.entry.data[loc.base + p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_LONG -> {
+                        if (p.type() == PrimitiveType.Scalar.LONG) {
+                            LONG_VH.set(loc.entry.data, dataOff, sd.primAt(i));
+                            loc.entry.data[loc.base + p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_FLOAT -> {
+                        if (p.type() == PrimitiveType.Scalar.FLOAT) {
+                            FLOAT_VH.set(loc.entry.data, dataOff, Float.intBitsToFloat((int) sd.primAt(i)));
+                            loc.entry.data[loc.base + p.offset()] = 1;
+                        }
+                    }
+                    case SparseStateDelta.TAG_OBJECT -> {
+                        var value = sd.objAt(i);
+                        if (value != null) {
+                            p.type().write(loc.entry.data, dataOff, value);
+                            loc.entry.data[loc.base + p.offset()] = 1;
+                        }
+                    }
+                    default -> { /* unreachable */ }
+                }
+            }
+            case FieldLayout.InlineString is -> {
+                if (tag != SparseStateDelta.TAG_OBJECT) return;
+                writeValue(loc.entry, is, loc.base, sd.objAt(i));
+            }
+            case FieldLayout.Ref r -> {
+                if (tag != SparseStateDelta.TAG_OBJECT) return;
+                writeValue(loc.entry, r, loc.base, sd.objAt(i));
+            }
+            case FieldLayout.SubState s -> {
+                switch (s.kind()) {
+                    case FieldLayout.SubStateKind.Vector v -> {
+                        if (tag == SparseStateDelta.TAG_INT) {
+                            resizeVector(loc.entry, s, loc.base, (int) sd.primAt(i));
+                        }
+                    }
+                    case FieldLayout.SubStateKind.FixedPointer fixed -> {
+                        if (tag == SparseStateDelta.TAG_OBJECT) {
+                            switchFixedPointer(loc.entry, s, loc.base, (Serializer) sd.objAt(i));
+                        }
+                    }
+                    case FieldLayout.SubStateKind.PolymorphicPointer poly -> {
+                        if (tag == SparseStateDelta.TAG_OBJECT) {
+                            switchPolymorphicPointer(loc.entry, s, loc.base, (Serializer) sd.objAt(i));
+                        }
+                    }
+                }
+            }
+            default -> { /* non-leaf target — skip */ }
+        }
+    }
+
+    private void applyClear(Location loc) {
+        switch (loc.layout) {
+            case FieldLayout.Primitive p -> loc.entry.data[loc.base + p.offset()] = 0;
+            case FieldLayout.InlineString is -> writeValue(loc.entry, is, loc.base, null);
+            case FieldLayout.Ref r -> writeValue(loc.entry, r, loc.base, null);
+            case FieldLayout.SubState s -> {
+                switch (s.kind()) {
+                    case FieldLayout.SubStateKind.Vector v -> resizeVector(loc.entry, s, loc.base, 0);
+                    case FieldLayout.SubStateKind.FixedPointer fixed -> switchFixedPointer(loc.entry, s, loc.base, null);
+                    case FieldLayout.SubStateKind.PolymorphicPointer poly -> switchPolymorphicPointer(loc.entry, s, loc.base, null);
+                }
+            }
+            default -> { /* skip */ }
+        }
+    }
+
+    /**
+     * Shared navigation: walks the fp and returns the entry/layout/base at the
+     * leaf, or {@code null} if the path terminates early (missing sub-entry
+     * or out-of-bounds array index). Mirrors the read-side navigation used
+     * by {@code getValueForFieldPath} — does not materialize sub-entries.
+     */
+    private Location navigate(S2FieldPath fp) {
+        Entry current = rootEntry;
+        FieldLayout layout = current.rootLayout;
+        var base = 0;
+        var last = fp.last();
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    if (idx >= a.length()) return null;
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
+                }
+                case FieldLayout.SubState s -> {
+                    if (current.data[base + s.offset()] == 0) return null;
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    current = (Entry) refs[slot];
+                    layout = current.rootLayout;
+                    base = 0;
+                    continue;
+                }
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+            }
+            if (i == last) break;
+            i++;
+        }
+        return new Location(current, layout, base);
+    }
+
+    private record Location(Entry entry, FieldLayout layout, int base) {}
 
     static final class Entry {
 
