@@ -64,8 +64,12 @@ public class S2DecoderFactory {
         DECODERS.put("CUtlSymbolLarge", new StringZeroTerminatedDecoder());
         DECODERS.put("char", new StringZeroTerminatedDecoder());
         DECODERS.put("CUtlString", new StringZeroTerminatedDecoder());
+        DECODERS.put("CGlobalSymbol", new StringZeroTerminatedDecoder());
 
         DECODERS.put("CUtlStringToken", new IntVarUnsignedDecoder());
+
+        // Binary blob: varint length + payload bytes
+        DECODERS.put("CUtlBinaryBlock", new CUtlBinaryBlockDecoder());
 
         // Handles
         DECODERS.put("CHandle", new IntVarUnsignedDecoder());
@@ -85,6 +89,7 @@ public class S2DecoderFactory {
         DECODERS.put("HeroFacetKey_t", new LongVarUnsignedDecoder());
         DECODERS.put("BloodType", new IntUnsignedDecoder(8));
         DECODERS.put("HeroID_t", new IntVarSignedDecoder());
+        DECODERS.put("CTransform", new FloatNoScaleDecoder());
     }
 
 
