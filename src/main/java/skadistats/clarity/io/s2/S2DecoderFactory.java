@@ -64,8 +64,12 @@ public class S2DecoderFactory {
         DECODERS.put("CUtlSymbolLarge", new StringZeroTerminatedDecoder());
         DECODERS.put("char", new StringZeroTerminatedDecoder());
         DECODERS.put("CUtlString", new StringZeroTerminatedDecoder());
+        DECODERS.put("CGlobalSymbol", new StringZeroTerminatedDecoder());
 
         DECODERS.put("CUtlStringToken", new IntVarUnsignedDecoder());
+
+        // Binary blob: varint length + payload bytes
+        DECODERS.put("CUtlBinaryBlock", new CUtlBinaryBlockDecoder());
 
         // Handles
         DECODERS.put("CHandle", new IntVarUnsignedDecoder());
