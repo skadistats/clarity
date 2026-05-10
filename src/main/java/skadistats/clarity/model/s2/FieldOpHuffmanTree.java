@@ -7,7 +7,7 @@ import java.util.PriorityQueue;
 public class FieldOpHuffmanTree {
 
     public static final Node root;
-    public static final int[][] tree;
+    public static final int[] tree;
 
     /**
      * N-bit lookup table for fast Huffman decoding.
@@ -31,7 +31,7 @@ public class FieldOpHuffmanTree {
             int node = 0;
             boolean resolved = false;
             for (int bit = 0; bit < LOOKUP_BITS; bit++) {
-                node = tree[node][(v >> bit) & 1];
+                node = tree[(node << 1) | ((v >> bit) & 1)];
                 if (node < 0) {
                     lookup[v] = (bit + 1) | ((-node - 1) << 8);
                     resolved = true;
@@ -67,13 +67,13 @@ public class FieldOpHuffmanTree {
         return akku.size() - 1;
     }
 
-    private static int[][] reverseTree(List<int[]> akku) {
+    private static int[] reverseTree(List<int[]> akku) {
         var r = akku.size() - 1;
-        var reverse = new int[r + 1][2];
+        var reverse = new int[(r + 1) * 2];
         for (var i = 0; i <= r; i++) {
             for (var j = 0; j <= 1; j++) {
                 var s = akku.get(r - i)[j];
-                reverse[i][j] = s < 0 ? s : r - s;
+                reverse[(i << 1) | j] = s < 0 ? s : r - s;
             }
         }
         return reverse;
@@ -81,10 +81,11 @@ public class FieldOpHuffmanTree {
 
     private void dump(int i, String prefix) {
         for (var s = 0; s < 2; s++) {
-            if (tree[i][s] < 0) {
-                System.out.println(FieldOp.OPS[- tree[i][s] - 1].name() + ": " + prefix + s);
+            var v = tree[(i << 1) | s];
+            if (v < 0) {
+                System.out.println(FieldOp.OPS[- v - 1].name() + ": " + prefix + s);
             } else {
-                dump(tree[i][s], prefix + s);
+                dump(v, prefix + s);
             }
         }
     }

@@ -71,7 +71,7 @@ public class BitStream64 extends BitStream {
         v = buffer.get(offs);
         while (true) {
             pos++;
-            i = FieldOpHuffmanTree.tree[i][(int)((v >>> s) & 1L)];
+            i = FieldOpHuffmanTree.tree[(i << 1) | (int)((v >>> s) & 1L)];
             if (i < 0) {
                 return -i - 1;
             }
