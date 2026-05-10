@@ -824,6 +824,16 @@ public class S1CombatLogEntry implements CombatLogEntry {
         return 0;
     }
 
+    @Override
+    public boolean hasHealFromRegen() {
+        return false;
+    }
+
+    @Override
+    public boolean isHealFromRegen() {
+        return false;
+    }
+
     public String toString() {
         return e.toString();
     }

@@ -126,6 +126,24 @@ impl), `strip-entity-state-cow`, and `accelerate-s1-flat-state`. The
 flat representation itself accounts for an additional 3-8% wall-clock
 and 8-26% allocations vs. the array-based defaults at 4.1.
 
+## May 10, 2026: Version 4.0.1 released
+
+**Fixes**
+
+* fix #353: register S2 decoders for `CUtlBinaryBlock` (varint length +
+  payload bytes) and `CGlobalSymbol` (null-terminated string). Both
+  types previously fell back to the 32-bit varint decoder, under-reading
+  the bit stream and causing `Entity not found for update at index N`
+  on CS2 demos that exercise these field types (observed on builds
+  10772+).
+* fix: `CombatLogEntry` now exposes `heal_from_regen`.
+
+**Dependency bumps**
+
+* clarity-protobuf: `[6.0,7.0)` → `[6.1,7.0)`. Brings in
+  `CCSUsrMsg_WeaponMagDrop` (CSGO_S2/389) and
+  `CMsgDOTACombatLogEntry.heal_from_regen`.
+
 ## April 12, 2026: Version 4.0.0 released
 
 **Breaking changes**

@@ -165,4 +165,6 @@ public interface CombatLogEntry {
     int getTrackedStatId();
     boolean hasModifierPurgedDuration();
     float getModifierPurgedDuration();
+    boolean hasHealFromRegen();
+    boolean isHealFromRegen();
 }
