@@ -36,7 +36,6 @@ import skadistats.clarity.state.ClientFrame;
 import skadistats.clarity.state.EntityRegistry;
 import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.StateMutation;
-import skadistats.clarity.util.SimpleIterator;
 import skadistats.clarity.util.StateDifferenceEvaluator;
 import skadistats.clarity.wire.shared.common.proto.CommonNetMessages;
 import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
@@ -45,11 +44,14 @@ import skadistats.clarity.wire.shared.demo.proto.Demo;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.BiConsumer;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Provides({
         UsesEntities.class,
@@ -719,36 +721,36 @@ public class Entities {
         return e == null || e.getHandle() != handle ? null : e;
     }
 
-    public Iterator<Entity> getAllByPredicate(final java.util.function.Predicate<Entity> predicate) {
-        return new SimpleIterator<>() {
-            int i = -1;
-
-            @Override
-            public Entity readNext() {
-                while (++i < entityCount) {
-                    var e = getByIndex(i);
-                    if (e != null && predicate.test(e)) {
-                        return e;
-                    }
-                }
-                return null;
-            }
-        };
+    /**
+     * Returns a stream of every currently-live entity in ascending
+     * entity-index order. Empty index slots are skipped.
+     *
+     * <p>Callers express cardinality explicitly via stream terminal
+     * operations: {@code stream().filter(p).findFirst()} for any
+     * single match, {@code stream().filter(p).forEach(...)} for all
+     * matches. There is intentionally no single-result convenience
+     * method — a DT class can have many live entities, so a
+     * single-match shape would silently hide multiplicity.
+     *
+     * @see #byDtName(String)
+     */
+    public Stream<Entity> stream() {
+        return IntStream.range(0, entityCount)
+                .mapToObj(this::getByIndex)
+                .filter(Objects::nonNull);
     }
 
-    public Entity getByPredicate(java.util.function.Predicate<Entity> predicate) {
-        var iter = getAllByPredicate(predicate);
-        return iter.hasNext() ? iter.next() : null;
-    }
-
-    public Iterator<Entity> getAllByDtName(final String dtClassName) {
-        return getAllByPredicate(
-                e -> dtClassName.equals(e.getDtClass().getDtName()));
-    }
-
-    public Entity getByDtName(final String dtClassName) {
-        var iter = getAllByDtName(dtClassName);
-        return iter.hasNext() ? iter.next() : null;
+    /**
+     * Predicate factory matching entities whose
+     * {@code DTClass.getDtName()} equals {@code dtName} exactly
+     * (case-sensitive). Intended for use with {@link #stream()}:
+     * <pre>{@code
+     * entities.stream().filter(Entities.byDtName("CDOTAGamerulesProxy"))
+     *         .findFirst().ifPresent(...);
+     * }</pre>
+     */
+    public static Predicate<Entity> byDtName(String dtName) {
+        return e -> dtName.equals(e.getDtClass().getDtName());
     }
 
 }

@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+**Modernised `Entities` query API (BREAKING)**
+
+The four legacy `Entities` query methods predate Java 8 streams and
+have been removed in favour of a single stream-returning method plus
+a static predicate factory. Two of the removed methods
+(`getByPredicate`, `getByDtName`) silently picked the first match
+when multiple entities were live — a recurring source of subtle bugs,
+since DT classes routinely have many live instances (heroes, players,
+abilities, …). The new shape forces callers to express cardinality
+explicitly via stream terminal operations.
+
+| Old API | New API |
+|---|---|
+| `entities.getAllByPredicate(p)` | `entities.stream().filter(p)` (returns `Stream<Entity>` instead of `Iterator<Entity>`) |
+| `entities.getByPredicate(p)` | `entities.stream().filter(p).findFirst().orElse(null)` |
+| `entities.getAllByDtName(name)` | `entities.stream().filter(Entities.byDtName(name))` |
+| `entities.getByDtName(name)` | `entities.stream().filter(Entities.byDtName(name)).findFirst().orElse(null)` |
+
+`Entities.stream()` yields every live entity in ascending entity-index
+order, skipping empty slots. `Entities.byDtName(String)` is a static
+`Predicate<Entity>` factory; import statically for fluent reads.
+
+In the same cleanup pass, the legacy hand-rolled iterator helpers
+`skadistats.clarity.util.SimpleIterator` and
+`skadistats.clarity.util.Iterators` (originally written in 2015 to
+shed Guava on a Java 7 baseline) have been deleted. `SimpleIterator`
+mimicked Guava's `AbstractIterator`; its only public-API caller was
+`Entities.getAllByPredicate`. Two internal `fieldPathIterator`
+implementations on S1 entity states have been rewritten as plain
+anonymous `Iterator<FieldPath>` instances. `util.Iterators` had no
+remaining callers.
+
+`EntityState.fieldPathIterator()` is unchanged — it still returns
+`Iterator<FieldPath>`, since `StateDifferenceEvaluator` walks two of
+them in lockstep with merge-sort logic and cannot use streams.
+
 **CS2 naming cleanup (BREAKING)**
 
 The `EngineId` enum and adjacent class/package names previously called

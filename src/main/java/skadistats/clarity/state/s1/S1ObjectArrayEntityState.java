@@ -9,9 +9,9 @@ import skadistats.clarity.state.EntityState;
 import skadistats.clarity.state.SparseStateDelta;
 import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
-import skadistats.clarity.util.SimpleIterator;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public final class S1ObjectArrayEntityState implements S1EntityState {
 
@@ -28,12 +28,18 @@ public final class S1ObjectArrayEntityState implements S1EntityState {
 
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
-        return new SimpleIterator<>() {
+        return new Iterator<>() {
             int i = 0;
 
             @Override
-            public FieldPath readNext() {
-                return i < state.length ? new S1FieldPath(i++) : null;
+            public boolean hasNext() {
+                return i < state.length;
+            }
+
+            @Override
+            public FieldPath next() {
+                if (i >= state.length) throw new NoSuchElementException();
+                return new S1FieldPath(i++);
             }
         };
     }

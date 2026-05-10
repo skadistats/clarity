@@ -13,11 +13,11 @@ import skadistats.clarity.state.PrimitiveType;
 import skadistats.clarity.state.SparseStateDelta;
 import skadistats.clarity.state.StateDelta;
 import skadistats.clarity.state.StateMutation;
-import skadistats.clarity.util.SimpleIterator;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import static skadistats.clarity.state.PrimitiveType.FLOAT_VH;
 import static skadistats.clarity.state.PrimitiveType.INT_VH;
@@ -59,12 +59,18 @@ public final class S1FlatEntityState implements S1EntityState {
     @Override
     public Iterator<FieldPath> fieldPathIterator() {
         var n = layout.leaves().length;
-        return new SimpleIterator<>() {
+        return new Iterator<>() {
             int i = 0;
 
             @Override
-            public FieldPath readNext() {
-                return i < n ? new S1FieldPath(i++) : null;
+            public boolean hasNext() {
+                return i < n;
+            }
+
+            @Override
+            public FieldPath next() {
+                if (i >= n) throw new NoSuchElementException();
+                return new S1FieldPath(i++);
             }
         };
     }
