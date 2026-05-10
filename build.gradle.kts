@@ -6,7 +6,7 @@ plugins {
 }
 
 group = "com.skadistats"
-version = "4.0.0"
+version = "4.0.1"
 
 java {
     toolchain {
@@ -31,7 +31,7 @@ val processorImplementation by configurations
 
 dependencies {
     processorImplementation("com.palantir.javapoet:javapoet:0.14.0")
-    api("com.skadistats:clarity-protobuf:[6.0,7.0)")
+    api("com.skadistats:clarity-protobuf:[6.1,7.0)")
     api("org.xerial.snappy:snappy-java:1.1.10.4")
     api("org.slf4j:slf4j-api:2.0.7")
     annotationProcessor(sourceSets["processor"].output)
