@@ -2,6 +2,44 @@
 
 ## Unreleased
 
+**CS2 naming cleanup (BREAKING)**
+
+The `EngineId` enum and adjacent class/package names previously called
+the Source-2-era CS engine `CSGO_S2`, but Valve renamed CS:GO to
+**Counter-Strike 2** when the engine cut over in September 2023. CSGO
+and CS2 are distinct products, not the same product on two engines.
+The naming has been corrected throughout:
+
+* `EngineId.CSGO_S2` → `EngineId.CS2`
+* `EngineId.CSGO_S1` → `EngineId.CSGO`
+  (`DOTA_S1` / `DOTA_S2` / `DEADLOCK` unchanged — Dota 2 legitimately
+  spans two engines under one product name; Deadlock is single-engine.)
+* `engine/s1/CsGoS1EngineType` → `engine/s1/CsgoEngineType`
+* `engine/s2/CsgoS2EngineType` → `engine/s2/Cs2EngineType`
+* `engine/s1/PacketInstanceReaderCsGoS1` → `PacketInstanceReaderCsgo`
+* `model.csgo.PlayerInfoType` (used by both CSGO and CS2) →
+  `model.cs.PlayerInfoType`
+* clarity-protobuf wire-package tree restructured to reflect product
+  reality:
+  * `wire.csgo.common.proto.*`  → `wire.cs.common.proto.*`
+  * `wire.csgo.s1.proto.*`      → `wire.cs.csgo.proto.*`
+  * `wire.csgo.s2.proto.*`      → `wire.cs.cs2.proto.*`
+  * Outer-class names follow plain-camel acronym casing:
+    `CSGOCommonGcMessages` → `CsCommonGcMessages`,
+    `CSGOS1NetMessages` → `CsgoNetMessages`,
+    `CSGOS2ClarityMessages` → `Cs2ClarityMessages`, etc.
+* `module-info.java` exports updated to `skadistats.clarity.model.cs`
+  and the new `wire.cs.*` packages.
+
+The `gameId` literal `"csgo"` produced by Valve's demo header is
+unchanged — Valve's install directory is still called `csgo` even for
+CS2 demos, so `EngineMagic.S2.determineEngineType` still matches that
+literal verbatim and dispatches to the new `EngineId.CS2`.
+
+No behavioural change. Pure rename + package move; on-wire format,
+parsing logic, and observable replay output are byte-identical to
+pre-rename. Downstream consumers update imports and switch cases.
+
 **Configurable S2 field-path implementation**
 
 * `S2FieldPath` is now a sealed immutable key contract: it extends

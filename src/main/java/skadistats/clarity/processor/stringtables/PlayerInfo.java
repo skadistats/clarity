@@ -7,12 +7,12 @@ import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.StringTable;
-import skadistats.clarity.model.csgo.PlayerInfoType;
+import skadistats.clarity.model.cs.PlayerInfoType;
 
 import java.util.Map;
 import java.util.TreeMap;
 
-@Provides(value = {UsesPlayerInfo.class, OnPlayerInfo.class}, engine = { EngineId.CSGO_S1, EngineId.CSGO_S2})
+@Provides(value = {UsesPlayerInfo.class, OnPlayerInfo.class}, engine = { EngineId.CSGO, EngineId.CS2})
 @UsesStringTable("userinfo")
 public class PlayerInfo {
 
@@ -29,10 +29,10 @@ public class PlayerInfo {
         PlayerInfoType current = null;
         if (value != null && value.size() != 0) {
             switch (engineType.getId()) {
-                case CSGO_S1:
+                case CSGO:
                     current = PlayerInfoType.createS1(value);
                     break;
-                case CSGO_S2:
+                case CS2:
                     current = PlayerInfoType.createS2(value);
                     break;
                 default:

@@ -8,15 +8,15 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.s2.S2FieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.model.s2.S2FieldPathType;
-import skadistats.clarity.wire.csgo.s2.EmbeddedPackets;
+import skadistats.clarity.wire.cs.cs2.EmbeddedPackets;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.demo.proto.DemoNetMessages;
 
 import java.util.regex.Pattern;
 
-public class CsgoS2EngineType extends AbstractProtobufDemoEngineType {
+public class Cs2EngineType extends AbstractProtobufDemoEngineType {
 
-    public CsgoS2EngineType(EngineId id, PacketInstanceReader<Demo.CDemoFileHeader> packetInstanceReader, Demo.CDemoFileHeader header, int infoOffset) {
+    public Cs2EngineType(EngineId id, PacketInstanceReader<Demo.CDemoFileHeader> packetInstanceReader, Demo.CDemoFileHeader header, int infoOffset) {
         super(
                 id,
                 packetInstanceReader,

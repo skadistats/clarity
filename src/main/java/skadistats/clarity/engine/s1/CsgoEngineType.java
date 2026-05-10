@@ -5,23 +5,23 @@ import skadistats.clarity.engine.AbstractEngineType;
 import skadistats.clarity.engine.PacketInstanceReader;
 import skadistats.clarity.io.FieldReader;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.s1.CsGoFieldReader;
+import skadistats.clarity.io.s1.CsgoFieldReader;
 import skadistats.clarity.model.EngineId;
 import skadistats.clarity.processor.reader.OnMessage;
 import skadistats.clarity.processor.reader.OnPostEmbeddedMessage;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.csgo.s1.EmbeddedPackets;
-import skadistats.clarity.wire.csgo.s1.UserMessagePackets;
-import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
-import skadistats.clarity.wire.csgo.s1.proto.CSGOS1NetMessages;
+import skadistats.clarity.wire.cs.csgo.EmbeddedPackets;
+import skadistats.clarity.wire.cs.csgo.UserMessagePackets;
+import skadistats.clarity.wire.cs.csgo.proto.CsgoClarityMessages;
+import skadistats.clarity.wire.cs.csgo.proto.CsgoNetMessages;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.io.IOException;
 
-public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.CsGoDemoHeader> {
+public class CsgoEngineType extends AbstractEngineType<CsgoClarityMessages.CsgoDemoHeader> {
 
-    public CsGoS1EngineType(EngineId id, PacketInstanceReader<CSGOS1ClarityMessages.CsGoDemoHeader> packetInstanceReader, CSGOS1ClarityMessages.CsGoDemoHeader header) {
+    public CsgoEngineType(EngineId id, PacketInstanceReader<CsgoClarityMessages.CsgoDemoHeader> packetInstanceReader, CsgoClarityMessages.CsgoDemoHeader header) {
         super(
                 id,
                 packetInstanceReader,
@@ -32,8 +32,8 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
         );
     }
 
-    @OnMessage(CSGOS1NetMessages.CSVCMsg_ServerInfo.class)
-    protected void onServerInfo(CSGOS1NetMessages.CSVCMsg_ServerInfo serverInfo) {
+    @OnMessage(CsgoNetMessages.CSVCMsg_ServerInfo.class)
+    protected void onServerInfo(CsgoNetMessages.CSVCMsg_ServerInfo serverInfo) {
         ctx.setMillisPerTick(serverInfo.getTickInterval() * 1000.0f);
     }
 
@@ -74,7 +74,7 @@ public class CsGoS1EngineType extends AbstractEngineType<CSGOS1ClarityMessages.C
 
     @Override
     public FieldReader getNewFieldReader() {
-        return new CsGoFieldReader();
+        return new CsgoFieldReader();
     }
 
     @Override

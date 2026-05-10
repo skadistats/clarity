@@ -56,7 +56,7 @@ public class Clarity {
      * iterating the rest of the replay.
      *
      * <p>Supported for Dota S1, Dota S2, CSGO S2 (CS2) and Deadlock demos. CSGO
-     * Source 1 demos use a different header type ({@code CsGoDemoHeader}) and
+     * Source 1 demos use a different header type ({@code CsgoDemoHeader}) and
      * are not supported by this helper.
      *
      * @param fileName path and name of the file on disk

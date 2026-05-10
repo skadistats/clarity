@@ -4,7 +4,7 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.model.s1.S1DTClass;
 import skadistats.clarity.model.s1.S1FieldPath;
 
-public class CsGoFieldReader extends S1FieldReader{
+public class CsgoFieldReader extends S1FieldReader{
 
     @Override
     protected int readIndices(BitStream bs, S1DTClass dtClass) {

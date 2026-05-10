@@ -3,10 +3,10 @@ package skadistats.clarity.model;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.engine.PacketInstanceReaderProtobufDemo;
-import skadistats.clarity.engine.s1.CsGoS1EngineType;
+import skadistats.clarity.engine.s1.CsgoEngineType;
 import skadistats.clarity.engine.s1.DotaS1EngineType;
-import skadistats.clarity.engine.s1.PacketInstanceReaderCsGoS1;
-import skadistats.clarity.engine.s2.CsgoS2EngineType;
+import skadistats.clarity.engine.s1.PacketInstanceReaderCsgo;
+import skadistats.clarity.engine.s2.Cs2EngineType;
 import skadistats.clarity.engine.s2.DeadlockEngineType;
 import skadistats.clarity.engine.s2.DotaS2EngineType;
 import skadistats.clarity.source.Source;
@@ -26,12 +26,12 @@ public enum EngineMagic {
             return new DotaS1EngineType(EngineId.DOTA_S1, packetInstanceReader, header, infoOffset);
         }
     },
-    CSGO_S1("HL2DEMO\0") {
+    CSGO("HL2DEMO\0") {
         @Override
         public EngineType determineEngineType(Source source) throws IOException {
-            var packetInstanceReader = new PacketInstanceReaderCsGoS1();
+            var packetInstanceReader = new PacketInstanceReaderCsgo();
             var header = packetInstanceReader.readHeader(source);
-            return new CsGoS1EngineType(EngineId.CSGO_S1, packetInstanceReader, header);
+            return new CsgoEngineType(EngineId.CSGO, packetInstanceReader, header);
         }
     },
     S2("PBDEMS2\0") {
@@ -58,7 +58,7 @@ public enum EngineMagic {
             }
             switch(gameId) {
                 case "csgo":
-                    return new CsgoS2EngineType(EngineId.CSGO_S2, packetInstanceReader, header, infoOffset);
+                    return new Cs2EngineType(EngineId.CS2, packetInstanceReader, header, infoOffset);
                 case "dota":
                     return new DotaS2EngineType(EngineId.DOTA_S2, packetInstanceReader, header, infoOffset);
                 case "citadel":

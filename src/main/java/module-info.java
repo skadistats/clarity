@@ -17,7 +17,7 @@ module com.skadistats.clarity {
     exports skadistats.clarity.io.s2;
     exports skadistats.clarity.logger;
     exports skadistats.clarity.model;
-    exports skadistats.clarity.model.csgo;
+    exports skadistats.clarity.model.cs;
     exports skadistats.clarity.model.s1;
     exports skadistats.clarity.model.s2;
     exports skadistats.clarity.model.s2.field;

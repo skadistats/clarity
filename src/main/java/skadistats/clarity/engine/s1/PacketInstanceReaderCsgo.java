@@ -8,16 +8,16 @@ import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;
-import skadistats.clarity.wire.csgo.s1.proto.CSGOS1ClarityMessages;
+import skadistats.clarity.wire.cs.csgo.proto.CsgoClarityMessages;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.IOException;
 
-public class PacketInstanceReaderCsGoS1 extends PacketInstanceReader<CSGOS1ClarityMessages.CsGoDemoHeader> {
+public class PacketInstanceReaderCsgo extends PacketInstanceReader<CsgoClarityMessages.CsgoDemoHeader> {
 
     @Override
-    public CSGOS1ClarityMessages.CsGoDemoHeader readHeader(Source source) throws IOException {
-        return CSGOS1ClarityMessages.CsGoDemoHeader.newBuilder()
+    public CsgoClarityMessages.CsgoDemoHeader readHeader(Source source) throws IOException {
+        return CsgoClarityMessages.CsgoDemoHeader.newBuilder()
                 .setDemoprotocol(source.readFixedInt32())
                 .setNetworkprotocol(source.readFixedInt32())
                 .setServername(readHeaderString(source))

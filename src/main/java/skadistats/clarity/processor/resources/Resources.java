@@ -21,7 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Provides(value = {UsesResources.class}, engine = {EngineId.DOTA_S2, EngineId.CSGO_S2, EngineId.DEADLOCK})
+@Provides(value = {UsesResources.class}, engine = {EngineId.DOTA_S2, EngineId.CS2, EngineId.DEADLOCK})
 public class Resources {
 
     /*

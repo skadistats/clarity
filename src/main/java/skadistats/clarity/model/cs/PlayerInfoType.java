@@ -1,12 +1,11 @@
-package skadistats.clarity.model.csgo;
+package skadistats.clarity.model.cs;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.ZeroCopy;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.wire.Packet;
-import skadistats.clarity.wire.csgo.s2.proto.CSGOS2ClarityMessages;
+import skadistats.clarity.wire.cs.cs2.proto.Cs2ClarityMessages;
 
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
@@ -49,7 +48,7 @@ public class PlayerInfoType {
     }
 
     public static PlayerInfoType createS2(ByteString byteString) {
-        var msg = Packet.parse(CSGOS2ClarityMessages.PlayerInfo.class, byteString);
+        var msg = Packet.parse(Cs2ClarityMessages.PlayerInfo.class, byteString);
         return new PlayerInfoType(
                 -1L,
                 msg.getXuid(),
