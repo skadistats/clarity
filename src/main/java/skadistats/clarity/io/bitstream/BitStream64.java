@@ -22,7 +22,7 @@ public class BitStream64 extends BitStream {
         var end = (pos + n - 1) >> 6;
         var s = pos & 63;
         pos += n;
-        return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & MASKS[n]);
+        return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & (-1L >>> (64 - n)));
     }
 
     @Override
@@ -32,7 +32,7 @@ public class BitStream64 extends BitStream {
         var end = (pos + n - 1) >> 6;
         var s = pos & 63;
         pos += n;
-        return ((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & MASKS[n];
+        return ((buffer.get(start) >>> s) | (buffer.get(end) << (64 - s))) & (-1L >>> (64 - n));
     }
 
     @Override

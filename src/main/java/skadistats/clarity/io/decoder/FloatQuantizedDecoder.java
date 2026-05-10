@@ -134,7 +134,7 @@ public final class FloatQuantizedDecoder extends Decoder {
         if (nBits == 32) {
             highValue = 0xFFFFFFFEL;
         } else {
-            highValue = BitStream.MASKS[nBits];
+            highValue = (1L << nBits) - 1;
         }
 
         float highLowMul;

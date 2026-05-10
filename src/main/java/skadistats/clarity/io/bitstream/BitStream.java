@@ -20,26 +20,6 @@ public abstract class BitStream {
     private static final int NORMAL_FRACTIONAL_BITS = 11;
     private static final float NORMAL_FRACTIONAL_RESOLUTION = (1.0f / ((1 << NORMAL_FRACTIONAL_BITS) - 1));
 
-    public static final long[] MASKS = {
-        0x0L,               0x1L,                0x3L,                0x7L,
-        0xfL,               0x1fL,               0x3fL,               0x7fL,
-        0xffL,              0x1ffL,              0x3ffL,              0x7ffL,
-        0xfffL,             0x1fffL,             0x3fffL,             0x7fffL,
-        0xffffL,            0x1ffffL,            0x3ffffL,            0x7ffffL,
-        0xfffffL,           0x1fffffL,           0x3fffffL,           0x7fffffL,
-        0xffffffL,          0x1ffffffL,          0x3ffffffL,          0x7ffffffL,
-        0xfffffffL,         0x1fffffffL,         0x3fffffffL,         0x7fffffffL,
-        0xffffffffL,        0x1ffffffffL,        0x3ffffffffL,        0x7ffffffffL,
-        0xfffffffffL,       0x1fffffffffL,       0x3fffffffffL,       0x7fffffffffL,
-        0xffffffffffL,      0x1ffffffffffL,      0x3ffffffffffL,      0x7ffffffffffL,
-        0xfffffffffffL,     0x1fffffffffffL,     0x3fffffffffffL,     0x7fffffffffffL,
-        0xffffffffffffL,    0x1ffffffffffffL,    0x3ffffffffffffL,    0x7ffffffffffffL,
-        0xfffffffffffffL,   0x1fffffffffffffL,   0x3fffffffffffffL,   0x7fffffffffffffL,
-        0xffffffffffffffL,  0x1ffffffffffffffL,  0x3ffffffffffffffL,  0x7ffffffffffffffL,
-        0xfffffffffffffffL, 0x1fffffffffffffffL, 0x3fffffffffffffffL, 0x7fffffffffffffffL,
-        0xffffffffffffffffL
-    };
-
     private static final int[] UBV_COUNT = {0, 4, 8, 28};
     private static final int[] UBVFP_COUNT = {2, 4, 10, 17, 31};
 
@@ -95,12 +75,12 @@ public abstract class BitStream {
 
     public long readSBitLong(int n) {
         var v = readUBitLong(n);
-        return (v & (1L << (n - 1))) == 0 ? v : v | (MASKS[64 - n] << n);
+        return (v & (1L << (n - 1))) == 0 ? v : v | (((1L << (64 - n)) - 1) << n);
     }
 
     public int readSBitInt(int n) {
         var v = readUBitInt(n);
-        return (v & (1 << (n - 1))) == 0 ? v : v | ((int)MASKS[32 - n] << n);
+        return (v & (1 << (n - 1))) == 0 ? v : v | (((1 << (32 - n)) - 1) << n);
     }
 
     public String readString(int n) {

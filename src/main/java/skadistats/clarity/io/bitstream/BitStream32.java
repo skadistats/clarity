@@ -22,7 +22,7 @@ public class BitStream32 extends BitStream {
         var end = (pos + n - 1) >> 5;
         var s = pos & 31;
         pos += n;
-        return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (32 - s))) & MASKS[n]);
+        return (int)(((buffer.get(start) >>> s) | (buffer.get(end) << (32 - s))) & (-1L >>> (64 - n)));
     }
 
     @Override
