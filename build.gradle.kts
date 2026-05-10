@@ -36,7 +36,7 @@ val processorImplementation by configurations
 
 dependencies {
     processorImplementation("com.palantir.javapoet:javapoet:0.14.0")
-    api("com.skadistats:clarity-protobuf:[7.0,8.0)")
+    api("com.skadistats:clarity-protobuf:7.0-SNAPSHOT")
     api("org.xerial.snappy:snappy-java:1.1.10.7")
     api("org.slf4j:slf4j-api:2.0.17")
     annotationProcessor(sourceSets["processor"].output)
