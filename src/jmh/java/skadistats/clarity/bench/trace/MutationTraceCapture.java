@@ -3,9 +3,9 @@ package skadistats.clarity.bench.trace;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.processor.entities.Entities;
 import skadistats.clarity.processor.entities.UsesEntities;
+import skadistats.clarity.processor.runner.Context;
 import skadistats.clarity.processor.runner.OnInit;
 import skadistats.clarity.processor.runner.SimpleRunner;
-import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.OnDTClassesComplete;
 import skadistats.clarity.source.MappedFileSource;
 
@@ -38,7 +38,7 @@ public final class MutationTraceCapture {
         @Insert
         private Entities entities;
         @Insert
-        private DTClasses dtClasses;
+        private Context ctx;
 
         public RecorderInstaller(MutationRecorder recorder) {
             this.recorder = recorder;
@@ -51,7 +51,7 @@ public final class MutationTraceCapture {
 
         @OnDTClassesComplete
         public void onDTClassesComplete() {
-            pointerCount = dtClasses.getPointerCount();
+            pointerCount = ctx.getPointerCount();
         }
     }
 }

@@ -107,6 +107,10 @@ public class Context {
         return millisPerTick;
     }
 
+    public int getPointerCount() {
+        return pointerCount;
+    }
+
     @SuppressWarnings("unchecked")
     public <A extends Annotation, E extends Event<A>> E createEvent(Class<A> eventType) {
         return (E) executionModel.createEvent(eventType);
