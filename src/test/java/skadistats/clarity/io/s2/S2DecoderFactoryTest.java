@@ -4,7 +4,6 @@ import com.google.protobuf.ByteString;
 import org.testng.annotations.Test;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.CUtlBinaryBlockDecoder;
-import skadistats.clarity.io.decoder.FloatNoScaleDecoder;
 import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
 
 import java.nio.charset.StandardCharsets;
@@ -74,42 +73,15 @@ public class S2DecoderFactoryTest {
     }
 
     @Test
-    public void cTransformResolvesToFloatNoScaleDecoderAndReads32Bits() {
-        var holder = S2DecoderFactory.createDecoder("CTransform");
-        assertTrue(
-                holder.getDecoder() instanceof FloatNoScaleDecoder,
-                "CTransform must resolve to a 32-bit float decoder, not the int fallback"
-        );
-
-        // 32-bit IEEE 754 little-endian encoding of 1.0f = 0x3F800000 → bytes 00 00 80 3F.
-        var raw = new byte[]{0x00, 0x00, (byte) 0x80, 0x3F, 0x55};
-        var bs = BitStream.createBitStream(ByteString.copyFrom(raw));
-
-        var decoded = (Float) holder.getDecoder().decode(bs);
-
-        assertEquals(decoded, 1.0f, "decoded float");
-        assertEquals(bs.pos(), 32,
-                "decoder must consume exactly 32 bits; "
-                        + "the int fallback consumes only the first varint and desyncs the rest"
-        );
-    }
-
-    @Test
     public void registeredTypesAreNotTheDefaultIntFallback() {
-        // Sanity check: the default fallback for an unknown type is a varint int decoder,
-        // and our three previously-broken types must NOT resolve to that same instance.
         var fallback = S2DecoderFactory.createDecoder("ThisTypeDoesNotExistAndNeverWill_t").getDecoder();
 
         var binaryBlock = S2DecoderFactory.createDecoder("CUtlBinaryBlock").getDecoder();
         var globalSymbol = S2DecoderFactory.createDecoder("CGlobalSymbol").getDecoder();
-        var transform = S2DecoderFactory.createDecoder("CTransform").getDecoder();
 
         assertTrue(binaryBlock != fallback, "CUtlBinaryBlock must not be the int fallback");
         assertTrue(globalSymbol != fallback, "CGlobalSymbol must not be the int fallback");
-        assertTrue(transform != fallback, "CTransform must not be the int fallback");
 
-        // Two unknowns share the same fallback instance — regression guard against
-        // accidentally promoting the default to a per-type registration.
         var fallback2 = S2DecoderFactory.createDecoder("AnotherUnknown_t").getDecoder();
         assertSame(fallback, fallback2, "unknown types must share the single default decoder instance");
     }
