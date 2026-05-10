@@ -3,31 +3,17 @@ package skadistats.clarity.platform;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.bitstream.BitStream32;
-import skadistats.clarity.io.bitstream.BitStream64;
 import skadistats.clarity.logger.PrintfLoggerFactory;
 import skadistats.clarity.platform.buffer.VarHandleBuffer;
 
 import java.nio.MappedByteBuffer;
 import java.util.function.Consumer;
-import java.util.function.Function;
 
 public class ClarityPlatform {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
-    private static final boolean VM_64BIT = System.getProperty("os.arch").contains("64");
-
-    private static Function<byte[], BitStream> bitStreamConstructor;
     private static Consumer<MappedByteBuffer> byteBufferDisposer;
-
-    public static Function<byte[], BitStream> getBitStreamConstructor() {
-        return bitStreamConstructor;
-    }
-
-    public static void setBitStreamConstructor(Function<byte[], BitStream> bitStreamConstructor) {
-        ClarityPlatform.bitStreamConstructor = bitStreamConstructor;
-    }
 
     public static Consumer<MappedByteBuffer> getByteBufferDisposer() {
         return byteBufferDisposer;
@@ -38,14 +24,7 @@ public class ClarityPlatform {
     }
 
     public static BitStream createBitStream(byte[] data) {
-        if (bitStreamConstructor == null) {
-            synchronized (ClarityPlatform.class) {
-                if (bitStreamConstructor == null) {
-                    bitStreamConstructor = determineBitStreamConstructor();
-                }
-            }
-        }
-        return bitStreamConstructor.apply(data);
+        return new BitStream(new VarHandleBuffer(data));
     }
 
     public static void disposeMappedByteBuffer(MappedByteBuffer buf) {
@@ -57,14 +36,6 @@ public class ClarityPlatform {
             }
         }
         byteBufferDisposer.accept(buf);
-    }
-
-    private static Function<byte[], BitStream> determineBitStreamConstructor() {
-        if (ClarityPlatform.VM_64BIT) {
-            return data -> new BitStream64(new VarHandleBuffer.B64(data));
-        } else {
-            return data -> new BitStream32(new VarHandleBuffer.B32(data));
-        }
     }
 
     private static Consumer<MappedByteBuffer> determineByteBufferDisposer() {
