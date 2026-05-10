@@ -182,7 +182,7 @@ public class BitStream {
         if (o == 0) {
             return "";
         }
-        return new String(buf, 0, o, StandardCharsets.UTF_8).intern();
+        return new String(buf, 0, o, StandardCharsets.UTF_8);
     }
 
     /**
