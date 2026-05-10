@@ -820,6 +820,16 @@ public class S2CombatLogEntry implements CombatLogEntry {
         return e.getModifierPurgedDuration();
     }
 
+    @Override
+    public boolean hasHealFromRegen() {
+        return e.hasHealFromRegen();
+    }
+
+    @Override
+    public boolean isHealFromRegen() {
+        return e.getHealFromRegen();
+    }
+
     public String toString() {
         return e.toString();
     }
