@@ -77,7 +77,7 @@ public class BitStream {
                 var prev = buffer.get(idx);
                 for (var k = 0; k < bulk; k++) {
                     var next = buffer.get(idx + k + 1);
-                    buffer.put(dest, o, (prev >>> s) | (next << -s));
+                    buffer.put(dest, o, (prev >>> s) | (next << (64 - s)));
                     o += 8;
                     prev = next;
                 }
