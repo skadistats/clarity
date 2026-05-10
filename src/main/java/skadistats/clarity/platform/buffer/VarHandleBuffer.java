@@ -34,6 +34,16 @@ public class VarHandleBuffer {
         public int get(int n) {
             return (int) INT_VIEW.get(data, n * 4);
         }
+
+        @Override
+        public void copyBytesInto(int srcByteOffset, byte[] dst, int dstOffset, int len) {
+            System.arraycopy(data, srcByteOffset, dst, dstOffset, len);
+        }
+
+        @Override
+        public void put(byte[] dst, int dstOffset, int value) {
+            INT_VIEW.set(dst, dstOffset, value);
+        }
     }
 
     public static class B64 implements Buffer.B64 {
@@ -46,6 +56,16 @@ public class VarHandleBuffer {
         @Override
         public long get(int n) {
             return (long) LONG_VIEW.get(data, n * 8);
+        }
+
+        @Override
+        public void copyBytesInto(int srcByteOffset, byte[] dst, int dstOffset, int len) {
+            System.arraycopy(data, srcByteOffset, dst, dstOffset, len);
+        }
+
+        @Override
+        public void put(byte[] dst, int dstOffset, long value) {
+            LONG_VIEW.set(dst, dstOffset, value);
         }
     }
 }

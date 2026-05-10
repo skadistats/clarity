@@ -40,6 +40,25 @@ public class BitStream32 extends BitStream {
     @Override
     public void readBitsIntoByteArray(byte[] dest, int n) {
         var o = 0;
+        var idx = pos >> 5;
+        var s = pos & 31;
+        var bulk = n >>> 5;
+        if (bulk > 0) {
+            if (s == 0) {
+                buffer.copyBytesInto(idx << 2, dest, o, bulk << 2);
+                o += bulk << 2;
+            } else {
+                var prev = buffer.get(idx);
+                for (var k = 0; k < bulk; k++) {
+                    var next = buffer.get(idx + k + 1);
+                    buffer.put(dest, o, (prev >>> s) | (next << -s));
+                    o += 4;
+                    prev = next;
+                }
+            }
+            pos += bulk << 5;
+            n   -= bulk << 5;
+        }
         while (n > 8) {
             dest[o++] = (byte)readUBitInt(8);
             n -= 8;

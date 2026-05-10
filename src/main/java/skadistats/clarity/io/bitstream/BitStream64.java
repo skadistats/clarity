@@ -38,6 +38,25 @@ public class BitStream64 extends BitStream {
     @Override
     public void readBitsIntoByteArray(byte[] dest, int n) {
         var o = 0;
+        var idx = pos >> 6;
+        var s = pos & 63;
+        var bulk = n >>> 6;
+        if (bulk > 0) {
+            if (s == 0) {
+                buffer.copyBytesInto(idx << 3, dest, o, bulk << 3);
+                o += bulk << 3;
+            } else {
+                var prev = buffer.get(idx);
+                for (var k = 0; k < bulk; k++) {
+                    var next = buffer.get(idx + k + 1);
+                    buffer.put(dest, o, (prev >>> s) | (next << -s));
+                    o += 8;
+                    prev = next;
+                }
+            }
+            pos += bulk << 6;
+            n   -= bulk << 6;
+        }
         while (n > 8) {
             dest[o++] = (byte)readUBitInt(8);
             n -= 8;
