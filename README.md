@@ -27,25 +27,33 @@ Clarity produces the following data you might be interested in from a replay. Ch
 
 # Usage
 
-Depending on your project build, use one of the following
+Depending on your project build, use one of the following.
+
+> **Note:** the `next` branch tracks Clarity **5.0.0-SNAPSHOT**, the
+> in-development line for the upcoming 5.0 release. Snapshot artifacts
+> are published to Maven Central's snapshots repository
+> (`https://central.sonatype.com/repository/maven-snapshots/`); you'll
+> need to add it to your build to consume them. The latest stable
+> release line on `master` is the 4.x series — see the tagged commits
+> for those coordinates.
 
 ### Maven
 ```XML
 <dependency>
 	<groupId>com.skadistats</groupId>
 	<artifactId>clarity</artifactId>
-	<version>5.0.0</version>
+	<version>5.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
 ### Gradle (Groovy)
 ```
-    implementation group: 'com.skadistats', name: 'clarity', version: '5.0.0'
+    implementation group: 'com.skadistats', name: 'clarity', version: '5.0.0-SNAPSHOT'
 ```
 
 ### Gradle (Kotlin)
 ```
-    implementation("com.skadistats:clarity:5.0.0")
+    implementation("com.skadistats:clarity:5.0.0-SNAPSHOT")
 ```
 
 # Example Code
