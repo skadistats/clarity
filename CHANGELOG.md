@@ -2,6 +2,42 @@
 
 ## Unreleased
 
+**Opt-in per-class entity filter on the runner**
+
+`AbstractFileRunner.withEntityFilter(Predicate<DTClass>)` lets a consumer
+declare which entity classes they care about *before* parse starts.
+Entities whose class is rejected are consumed from the wire (bits
+advance via `FieldReader.skipFields`, so the cursor stays aligned) but
+no Java-side `Entity` is allocated, no listener fires, and
+`entities.getByIndex(id)` returns `null` for them — they are
+indistinguishable from ids that were never transmitted.
+
+The filter is immutable for the duration of the run; calling it after
+parse has started throws `IllegalStateException`. Filter exceptions
+propagate and terminate the parse. The default behavior (no filter set)
+is byte-identical to before.
+
+Measured on `dota/s2/340/8168882574_1198277651.dem` (modern S2 bench
+replay, NESTED_ARRAY, pure clarity parse): -19.9% off the unfiltered
+5.0 number with an odota-coverage filter (~12 class patterns
+accepting heroes, items, abilities, players, gamerules, wards,
+cosmetics). Stacked on the 4.0 → 5.0 internals work, that's a
+**2.06× cumulative speedup vs 3.1.3** for an odota-shaped Dota
+consumer (2049 ms → 996 ms).
+
+Mechanism: every `@RegisterDecoder` class now exposes a static
+`skip(BitStream[, Decoder])` method paired with `decode`. The
+annotation processor fails the build if a decoder lacks `skip`,
+locking in the parity invariant. `DecoderDispatch.skip(bs, d)`
+provides int-tableswitch dispatch matching the existing
+`decode`/`decodeInto` shape. `FieldReader` gains an abstract
+`skipFields(BitStream, DTClass)` with no `EntityState` parameter
+(skip touches neither). Five new BitStream helpers — `skipVarUInt`,
+`skipVarULong`, `skipUBitVar`, `skipBitCoord`, `skipCellCoord`,
+`skipCoordMp`, `skipBitNormal`, `skip3BitNormal`, `skipString` —
+mirror the existing `read*` methods so decoder skip bodies stay
+trivial.
+
 **Modernised `Entities` query API (BREAKING)**
 
 The four legacy `Entities` query methods predate Java 8 streams and
