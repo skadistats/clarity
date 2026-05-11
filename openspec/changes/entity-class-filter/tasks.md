@@ -1,3 +1,16 @@
+## Chunking / commit cadence
+
+This change is multi-session. Land in these chunks — each leaves the tree in a sane state and is independently committable:
+
+| Chunk | Groups | What lands | Why it's a stop point |
+|---|---|---|---|
+| **A. Foundations** | 1, 2 | Test utilities (`BitstreamBuilder`, `DecoderTestBase`) + BitStream `skipVarUInt`/`skipVarULong` | No API surface, no behavior change |
+| **B. Decoder skip methods** | 3 | ~30 static `skip` methods + curated branch-coverage tests | Build enforcement still OFF (4.2 not landed), so missing skips don't break the build. Skip methods exist but nothing dispatches to them yet. Largest chunk by volume — subdivide by category (3.1, 3.2, …) if smaller landings are preferred |
+| **C. Dispatch + enforcement** | 4 | Generator emits `DecoderDispatch.skip`; annotation processor fails build if any decoder is missing `skip` | One-way firewall: after this, every decoder MUST have skip forever |
+| **D. FieldReader + verifier** | 5, 6 | `FieldReader.skipFields` abstract + S2/S1 impls; `-Dclarity.test.skipParity=true` verifier | Skip path is fully callable but no consumer-visible API; parser still full-decodes |
+| **E. Consumer wiring** | 7, 8 | `BitSet skippedIds`, Entities CREATE/UPDATE/DELETE handling, reset clear, `withEntityFilter` on runner | Feature works end-to-end |
+| **F. Verification** | 9, 10 | End-to-end reject-everything parity test (with and without verifier flag), then bench measurement | Pure proof, no implementation |
+
 ## 1. Test infrastructure (depth, built first)
 
 - [ ] 1.1 Create `BitstreamBuilder` test utility in `src/test/java/skadistats/clarity/io/decoder/` — declarative wire-format builder (`bitstream().skip(n).add(value, bits).addVarUInt(n).addStringZ(s).build()`)
