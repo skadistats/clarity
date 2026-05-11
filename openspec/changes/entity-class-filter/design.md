@@ -18,19 +18,13 @@ Option 1 wins on simplicity: a filtered entity is *as if it were never transmitt
 
 Cost: a consumer who passes a too-narrow filter and later realizes they wanted the data sees `null` rather than getting partial info. This is a documented contract, not a bug — and it's symmetric with the existing behavior of "an entity id that was never transmitted returns null."
 
-## Tracking skipped ids: BitSet
+## Tracking filtered ids: DTClass[]
 
-The parser must remember which entity ids were skipped, because subsequent UPDATE messages reference the id without re-stating the class. Options:
+The parser must remember which entity ids were filtered AND the `DTClass` each was filtered at, because subsequent UPDATEs reference the id without re-stating the class, and `FieldReader.skipFields(BitStream, DTClass)` needs the class to walk the wire format.
 
-```
-BitSet                         O(1) get/set, MAX_ENTITIES/8 bytes (~1 KB)
-boolean[]                      O(1) get/set, MAX_ENTITIES bytes  (~8 KB)
-Set<Integer>                   O(1) avg but boxing per put + hash, ~16 B/entry
-Sentinel in entity slot array  O(1), zero extra memory, but pollutes
-                               the existing slot-typed-as-Entity invariant
-```
+A bare `BitSet` would track presence in ~1 KB but loses the class. A parallel `BitSet` + `DTClass[]` works but the BitSet becomes redundant once the array exists (`array[i] != null` is the presence check). A single `DTClass[entityCount]` is ~128 KB at the largest engine's index space, negligible against the existing per-entity allocations, and one source of truth.
 
-`BitSet` is the right answer: smallest, fastest, doesn't touch the existing entity-array invariant. Clear-on-delete to handle id reuse.
+`DTClass[] skippedClass` is the right answer. Clear-on-delete to handle id reuse; cleared in the `@OnReset` CLEAR phase alongside the entity collection and baseline registry.
 
 ## Skip-parity invariant
 

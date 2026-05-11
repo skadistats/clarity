@@ -13,6 +13,7 @@ import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2EntityStateType;
 
 import java.lang.annotation.Annotation;
+import java.util.function.Predicate;
 
 public class Context {
 
@@ -23,6 +24,7 @@ public class Context {
     private final S2EntityStateType s2EntityStateType;
     private final S2FieldPathType s2FieldPathType;
     private final FieldLayoutBuilder layoutBuilder;
+    private final Predicate<DTClass> entityFilter;
 
     // parse-time initialized (set-once)
     private int buildNumber = -1;
@@ -34,12 +36,13 @@ public class Context {
     private int pointerCount = 0;
     private boolean pointerCountSet;
 
-    public Context(ExecutionModel executionModel, S1EntityStateType s1EntityStateType, S2EntityStateType s2EntityStateType, S2FieldPathType s2FieldPathType) {
+    public Context(ExecutionModel executionModel, S1EntityStateType s1EntityStateType, S2EntityStateType s2EntityStateType, S2FieldPathType s2FieldPathType, Predicate<DTClass> entityFilter) {
         this.executionModel = executionModel;
         this.s1EntityStateType = s1EntityStateType;
         this.s2EntityStateType = s2EntityStateType;
         this.s2FieldPathType = s2FieldPathType;
         this.layoutBuilder = new FieldLayoutBuilder();
+        this.entityFilter = entityFilter;
     }
 
     // --- construction API ---
@@ -109,6 +112,10 @@ public class Context {
 
     public int getPointerCount() {
         return pointerCount;
+    }
+
+    public Predicate<DTClass> getEntityFilter() {
+        return entityFilter;
     }
 
     @SuppressWarnings("unchecked")

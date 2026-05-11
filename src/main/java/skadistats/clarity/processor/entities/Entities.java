@@ -42,6 +42,7 @@ import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.IdentityHashMap;
 import java.util.List;
@@ -83,6 +84,8 @@ public class Entities {
     private BaselineRegistry baselineRegistry;
 
     private ClientFrame entities;
+    private DTClass[] skippedClass;
+    private Predicate<DTClass> entityFilter;
 
     private boolean resetInProgress;
     private ClientFrame.Capsule resetCapsule;
@@ -203,6 +206,8 @@ public class Entities {
         entityCount = 1 << engineType.getIndexBits();
         entities = new ClientFrame(entityCount);
         deletions = new int[entityCount];
+        skippedClass = new DTClass[entityCount];
+        entityFilter = context.getEntityFilter();
     }
 
     @OnDTClassesComplete
@@ -222,6 +227,7 @@ public class Entities {
                 entities = new ClientFrame(entityCount);
                 baselineRegistry.clear();
                 deferredMessages.clear();
+                Arrays.fill(skippedClass, null);
                 break;
 
             case COMPLETE:
@@ -429,6 +435,11 @@ public class Entities {
                     if (engineType.getId().hasSpawnGroups()) {
                         spawnGroupHandle = stream.readVarUInt();
                     }
+                    if (entityFilter != null && !entityFilter.test(dtClass)) {
+                        skippedClass[eIdx] = dtClass;
+                        fieldReader.skipFields(stream, dtClass);
+                        break;
+                    }
                     if (eEnt != null) {
                         var handle = engineType.handleForIndexAndSerial(eIdx, serial);
                         if (eEnt.getUid() == Entity.uid(dtClassId, handle)) {
@@ -445,7 +456,18 @@ public class Entities {
 
                 case 0: // UPDATE
                     if (eEnt == null) {
-                        throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
+                        var skipped = skippedClass[eIdx];
+                        if (skipped == null) {
+                            throw new ClarityException("Entity not found for update at index %d. Entity update cannot be parsed!", eIdx);
+                        }
+                        if (message.getHasPvsVisBits() != 0) {
+                            var pvs = stream.readUBitInt(2);
+                            if ((pvs & 0x01) == 1) {
+                                break;
+                            }
+                        }
+                        fieldReader.skipFields(stream, skipped);
+                        break;
                     }
                     if (message.getHasPvsVisBits() != 0) {
                         var pvs = stream.readUBitInt(2);
@@ -469,6 +491,8 @@ public class Entities {
                             queueEntityLeave(eEnt);
                         }
                         queueEntityDelete(eEnt);
+                    } else if (skippedClass[eIdx] != null) {
+                        skippedClass[eIdx] = null;
                     }
                     break;
             }
@@ -484,6 +508,8 @@ public class Entities {
                         queueEntityLeave(eEnt);
                     }
                     queueEntityDelete(eEnt);
+                } else if (skippedClass[eIdx] != null) {
+                    skippedClass[eIdx] = null;
                 }
             }
         }

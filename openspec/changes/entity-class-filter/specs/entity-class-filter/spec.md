@@ -32,7 +32,7 @@ The runner SHALL accept an optional `Predicate<DTClass>` filter set before parse
 #### Scenario: Skipped-id tracking is cleared on reset
 
 - **WHEN** the parser performs an `@OnReset` (string-table reset / seek) and reaches the `CLEAR` phase
-- **THEN** the internal "this id is filtered" tracking (`BitSet skippedIds`) SHALL be cleared alongside the existing entity collection, baseline registry, and deferred-message reset, so that post-reset CREATEs are re-evaluated against the filter.
+- **THEN** the internal per-id tracking of the filtered class (`DTClass[] skippedClass`) SHALL be cleared alongside the existing entity collection, baseline registry, and deferred-message reset, so that post-reset CREATEs are re-evaluated against the filter.
 
 ### Requirement: Wire-stream consumption of filtered entities
 

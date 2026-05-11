@@ -8,7 +8,7 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 | **B. Decoder skip methods** | 3 | ~30 static `skip` methods + curated branch-coverage tests | Build enforcement still OFF (4.2 not landed), so missing skips don't break the build. Skip methods exist but nothing dispatches to them yet. Largest chunk by volume — subdivide by category (3.1, 3.2, …) if smaller landings are preferred |
 | **C. Dispatch + enforcement** | 4 | Generator emits `DecoderDispatch.skip`; annotation processor fails build if any decoder is missing `skip` | One-way firewall: after this, every decoder MUST have skip forever |
 | **D. FieldReader** | 5 | `FieldReader.skipFields` abstract + S2/S1 impls | Skip path is fully callable but no consumer-visible API; parser still full-decodes |
-| **E. Consumer wiring** | 6, 7 | `BitSet skippedIds`, Entities CREATE/UPDATE/DELETE handling, reset clear, `withEntityFilter` on runner | Feature works end-to-end |
+| **E. Consumer wiring** | 6, 7 | `DTClass[] skippedClass`, Entities CREATE/UPDATE/DELETE handling, reset clear, `withEntityFilter` on runner | Feature works end-to-end |
 | **F. Verification** | 8, 9 | End-to-end reject-everything parity test, then bench measurement | Pure proof, no implementation |
 
 ## 1. Test infrastructure (depth, built first)
@@ -48,18 +48,19 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 6. Entities processor changes
 
-- [ ] 6.1 Add `BitSet skippedIds` field; clear in `@OnReset` CLEAR phase alongside `entities` / `baselineRegistry` / `deferredMessages`
-- [ ] 6.2 On entity CREATE: consult the runner's filter (if set); on reject, mark `skippedIds.set(eIdx)`, skip-decode the CREATE body via `skipFields`, do NOT materialize an `Entity`, do NOT fire create/enter events, do NOT call `baselineRegistry.updateEntityBaseline`
-- [ ] 6.3 On entity UPDATE: if `skippedIds.get(eIdx)`, call `FieldReader.skipFields` and discard; do NOT fire updated/property events
-- [ ] 6.4 On entity DELETE: clear the bit (`skippedIds.clear(eIdx)`); do NOT fire deleted event for filtered ids
-- [ ] 6.5 Verify `entities.getById(skippedId)` returns `null` and collection-walking APIs (`getByPredicate`) exclude filtered ids — should fall out of "no Entity created" but assert it
+- [x] 6.1 Add `DTClass[] skippedClass` field sized to `entityCount`; clear in `@OnReset` CLEAR phase alongside `entities` / `baselineRegistry` / `deferredMessages`
+- [x] 6.2 On entity CREATE: consult the runner's filter (if set); on reject, store `skippedClass[eIdx] = dtClass`, skip-decode the CREATE body via `skipFields`, do NOT materialize an `Entity`, do NOT fire create/enter events, do NOT call `baselineRegistry.updateEntityBaseline`
+- [x] 6.3 On entity UPDATE: if `skippedClass[eIdx] != null`, call `FieldReader.skipFields(stream, skippedClass[eIdx])` and discard; do NOT fire updated/property events
+- [x] 6.4 On entity DELETE: clear the slot (`skippedClass[eIdx] = null`); do NOT fire deleted event for filtered ids
+- [ ] 6.5 Verify `entities.getByIndex(skippedId)` returns `null` and `entities.stream()` excludes filtered ids — should fall out of "no Entity created" but assert it (covered by chunk F end-to-end test)
 
 ## 7. Runner API
 
-- [ ] 7.1 Add `withEntityFilter(Predicate<DTClass>)` to `AbstractFileRunner` (and any sibling runner used by the public API)
-- [ ] 7.2 Pipe the filter into the Entities processor at processor-init time
-- [ ] 7.3 Throw `IllegalStateException` if `withEntityFilter` is called after parse has started
-- [ ] 7.4 Filter exceptions: do NOT catch — let them propagate and terminate the parse
+- [x] 7.1 Add `withEntityFilter(Predicate<DTClass>)` to `AbstractFileRunner` (and any sibling runner used by the public API)
+- [x] 7.2 Pipe the filter into the Entities processor at processor-init time
+- [x] 7.3 Throw `IllegalStateException` if `withEntityFilter` is called after parse has started
+- [x] 7.4 Filter exceptions: do NOT catch — let them propagate and terminate the parse
+- [ ] 7.5 Update `clarity-examples/README.md` — extend the "Context" surface snippet with `getEntityFilter()` and add a short section on `runner.withEntityFilter(...)` near the SimpleRunner introduction
 
 ## 8. End-to-end parity test
 

@@ -3,6 +3,7 @@ package skadistats.clarity.processor.runner;
 import skadistats.clarity.engine.EngineType;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;
+import skadistats.clarity.model.DTClass;
 import skadistats.clarity.model.s2.S2FieldPathType;
 import skadistats.clarity.processor.reader.OnTickEnd;
 import skadistats.clarity.processor.reader.OnTickStart;
@@ -12,6 +13,7 @@ import skadistats.clarity.state.s2.S2EntityStateType;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.function.Predicate;
 
 @Provides(value = {OnInputSource.class, OnTickStart.class, OnTickEnd.class}, runnerClass = { AbstractFileRunner.class })
 public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
@@ -26,6 +28,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected S1EntityStateType s1EntityStateType = S1EntityStateType.FLAT;
     protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
     protected S2FieldPathType s2FieldPathType = S2FieldPathType.LONG;
+    protected Predicate<DTClass> entityFilter;
 
     /* tick the user is at the end of */
     protected int tick;
@@ -45,7 +48,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
 
     @Override
     protected Context createContext(ExecutionModel em) {
-        return new Context(em, s1EntityStateType, s2EntityStateType, s2FieldPathType);
+        return new Context(em, s1EntityStateType, s2EntityStateType, s2FieldPathType, entityFilter);
     }
 
     protected void initAndRunWith(Object... processors) throws IOException {
@@ -98,6 +101,14 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
 
     public AbstractFileRunner withS2FieldPath(S2FieldPathType type) {
         this.s2FieldPathType = type;
+        return this;
+    }
+
+    public AbstractFileRunner withEntityFilter(Predicate<DTClass> filter) {
+        if (context != null) {
+            throw new IllegalStateException("entity filter cannot be set after parse has started");
+        }
+        this.entityFilter = filter;
         return this;
     }
 
