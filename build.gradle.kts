@@ -2,6 +2,7 @@ plugins {
     id("java-library")
     id("maven-publish")
     id("signing")
+    id("jacoco")
     id("org.gradlex.extra-java-module-info") version "1.14"
     id("me.champeau.jmh") version "0.7.3"
 }
