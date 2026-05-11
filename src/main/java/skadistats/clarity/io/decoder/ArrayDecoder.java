@@ -23,4 +23,11 @@ public final class ArrayDecoder extends Decoder {
         return result;
     }
 
+    public static void skip(BitStream bs, ArrayDecoder d) {
+        var count = bs.readUBitInt(d.nSizeBits);
+        for (var i = 0; i < count; i++) {
+            DecoderDispatch.skip(bs, d.decoder);
+        }
+    }
+
 }

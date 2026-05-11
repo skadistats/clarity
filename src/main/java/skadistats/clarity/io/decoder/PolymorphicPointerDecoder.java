@@ -23,4 +23,9 @@ public final class PolymorphicPointerDecoder extends Decoder {
         return new Pointer(index, description);
     }
 
+    public static void skip(BitStream bs, PolymorphicPointerDecoder d) {
+        if (!bs.readBitFlag()) return;
+        bs.skipUBitVar();
+    }
+
 }

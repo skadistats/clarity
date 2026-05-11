@@ -29,4 +29,9 @@ public final class StringLenDecoder extends Decoder {
         data[offset + 1] = (byte) ((written >>> 8) & 0xFF);
     }
 
+    public static void skip(BitStream bs) {
+        var wireLen = bs.readUBitInt(9);
+        bs.skip(wireLen * 8);
+    }
+
 }

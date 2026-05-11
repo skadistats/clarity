@@ -20,6 +20,10 @@ public final class IntSignedDecoder extends Decoder {
         PrimitiveType.INT_VH.set(data, offset, bs.readSBitInt(d.nBits));
     }
 
+    public static void skip(BitStream bs, IntSignedDecoder d) {
+        bs.skip(d.nBits);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

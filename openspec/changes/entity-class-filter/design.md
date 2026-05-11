@@ -140,19 +140,39 @@ v1 ships with **option A** (filter wins) and a documented warning. Option B is t
 
 ## Decoder skip categorization
 
-A naive "skip = decode and discard the result" framing is wrong: it lumps together decoders whose skip paths differ by orders of magnitude in cost. The codebase's ~30 concrete decoders sort into five structural categories, each with its own optimal skip strategy.
+A naive "skip = decode and discard the result" framing is wrong: it lumps together decoders whose skip paths differ by orders of magnitude in cost. The codebase's 32 concrete decoders sort into five structural categories, each with its own optimal skip strategy.
 
 | Category | Decoder examples | Skip strategy | Cost vs decode |
 |---|---|---|---|
-| **1. Bit-count** | Bool, IntUnsigned, IntSigned, LongUnsigned, LongSigned, FloatNoScale, FloatDefault, FloatCellCoord, FloatQuantized, FixedPointer | `bs.skip(n)` where `n` is the statically-known bit width | ≈0 — single pos increment |
-| **2. Length-then-skip** | StringLen, CUtlBinaryBlock | `var n = bs.readVarUInt(); bs.skip(n * 8);` — read the length prefix, advance past the body without copying bytes | very low — avoids the byte-by-byte copy + String/byte[] allocation that decode performs |
-| **3. Recursive composite** | Vector, VectorXY, VectorNormal, VectorDefault, Array | Call the component decoder's `skip` N times | inherits component cost; avoids per-component result wrappers and the composite container alloc |
-| **4. Conditional** | PolymorphicPointer, FloatCoord, FloatCoordMp, FloatNormal, QAngleNoBitCount, QAnglePitchYawOnly | Read the flag bit(s), then either `bs.skip(n)` or no-op per flag | roughly 1/3 to 1/2 of decode cost — the flag reads happen either way, but float arithmetic, sign handling, and wrapper allocation do not |
+| **1. Bit-count** | Bool, FixedPointer, IntSigned, IntUnsigned, LongSigned, LongUnsigned, FloatNoScale, FloatDefault, FloatCellCoord, FloatNormal, QAngleBitCount, QAngleNoScale, QAnglePitchYawOnly | `bs.skip(n)` where `n` is computable from constructor params (statically-known per decoder instance, sometimes selected by constructor-time flags as in FloatCellCoord/QAnglePitchYawOnly) | ≈0 — single pos increment |
+| **2. Length-then-skip** | CUtlBinaryBlock (`readVarUInt` length prefix); StringLen (`readUBitInt(9)` length prefix) | `var n = bs.readVarUInt(); bs.skip(n * 8);` — read the length, advance past the body without copying bytes. (StringLen reads a 9-bit length, not a varint.) | very low — avoids the byte-by-byte copy + String/byte[] allocation that decode performs |
+| **3. Recursive composite** | Vector, VectorXY, VectorNormal, VectorDefault, Array | Call the component decoder's `skip` N times (via `DecoderDispatch.skip`). VectorNormal is a special composite that consumes `read3BitNormal`'s bit pattern. | inherits component cost; avoids per-component result wrappers and the composite container alloc |
+| **4. Conditional** | PolymorphicPointer, FloatCoord, FloatCoordMp, FloatQuantized, QAngleNoBitCount, QAnglePrecise | Read the flag bit(s), then either `bs.skip(n)` or no-op per flag | roughly 1/3 to 1/2 of decode cost — the flag reads happen either way, but float arithmetic, sign handling, and wrapper allocation do not |
 | **5. Walking** | IntVarUnsigned, IntVarSigned, IntMinusOne, LongVarUnsigned, LongVarSigned, StringZeroTerminated | Must consume bits until a data-dependent terminator. For varints: `bs.skipVarUInt()` (SWAR pos-only path, see below). For zero-terminated strings: `while (bs.readUBitInt(8) != 0) {}` | ≈ decode minus the value extraction and boxing |
 
-**Categories 1–4 cover roughly 22 of the ~30 decoders.** All four are "fundamentally less work" than full decode, not "decode minus an allocation." Category 5 (~5–6 decoders) is the only case where skip cost is close to decode cost.
+**Categories 1–4 cover 26 of the 32 decoders.** All four are "fundamentally less work" than full decode, not "decode minus an allocation." Category 5 (6 decoders: 5 varint-family + StringZeroTerminated) is the only case where skip cost is close to decode cost.
 
 This matters for the savings estimate. A naive accounting would assume "skip ≈ decode allocations," giving the proposed 2–2.5× per-entity win. The categorization above means category 2 and 3 decoders (length-prefixed blobs and composites) save *much* more than just the wrapper allocation — they save the per-byte work and the per-component computation. Entity classes dominated by string/vector/array fields (which describe most of the projectile, decoration, and ambient-world classes a consumer typically filters out) benefit disproportionately.
+
+## Paired skip helpers on BitStream
+
+Decoders SHALL NOT replicate BitStream's bit-walking logic in their `skip` method. Wherever a decoder's `decode` calls a multi-step `read*` method on BitStream, a paired `skip*` helper lives next to it on BitStream and the decoder's `skip` delegates to that helper. This keeps wire-format knowledge in one place (BitStream) and decoders trivially short.
+
+Helpers added in this change:
+
+| Read method | Paired skip helper | Used by |
+|---|---|---|
+| `readVarUInt`, `readVarSInt`, varU-bit form of `readVarU(32)` | `skipVarUInt` | IntVar{Un,}Signed, IntMinusOne |
+| `readVarULong`, `readVarSLong`, `readVarU(64)` | `skipVarULong` | LongVar{Un,}Signed |
+| `readUBitVar` | `skipUBitVar` | PolymorphicPointer tail |
+| `readBitCoord` | `skipBitCoord` | FloatCoord, QAngleNoBitCount |
+| `readCellCoord` | `skipCellCoord` | FloatCellCoord |
+| `readCoordMp` | `skipCoordMp` | FloatCoordMp |
+| `readBitNormal` | `skipBitNormal` | FloatNormal |
+| `read3BitNormal` | `skip3BitNormal` | VectorNormal |
+| `readString` | `skipString` | StringZeroTerminated |
+
+Decoder-local logic (constructor-time flags, polymorphic dispatch to component decoders) stays in the decoder. The pairing rule is strict: if BitStream has the read logic, BitStream gets the skip helper.
 
 ## SWAR varint skip
 

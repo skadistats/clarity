@@ -47,6 +47,16 @@ public final class VectorDecoder extends Decoder {
         }
     }
 
+    public static void skip(BitStream bs, VectorDecoder d) {
+        DecoderDispatch.skip(bs, d.floatDecoder);
+        DecoderDispatch.skip(bs, d.floatDecoder);
+        if (d.normal) {
+            bs.skip(1);
+        } else {
+            DecoderDispatch.skip(bs, d.floatDecoder);
+        }
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

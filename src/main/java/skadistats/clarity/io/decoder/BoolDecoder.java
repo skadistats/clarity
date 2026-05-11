@@ -14,6 +14,10 @@ public final class BoolDecoder extends Decoder {
         data[offset] = bs.readBitFlag() ? (byte) 1 : (byte) 0;
     }
 
+    public static void skip(BitStream bs) {
+        bs.skip(1);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.BOOL;

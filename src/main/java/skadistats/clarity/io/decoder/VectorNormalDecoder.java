@@ -29,6 +29,10 @@ public final class VectorNormalDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset + 8, z);
     }
 
+    public static void skip(BitStream bs) {
+        bs.skip3BitNormal();
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

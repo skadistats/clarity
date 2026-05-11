@@ -185,6 +185,13 @@ public final class FloatQuantizedDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, decodeFloat(bs, d));
     }
 
+    public static void skip(BitStream bs, FloatQuantizedDecoder d) {
+        if ((d.encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) return;
+        if ((d.encodeFlags & QFE_ROUNDUP) != 0 && bs.readBitFlag()) return;
+        if ((d.encodeFlags & QFE_ENCODE_ZERO_EXACTLY) != 0 && bs.readBitFlag()) return;
+        bs.skip(d.bitCount);
+    }
+
     private static float decodeFloat(BitStream bs, FloatQuantizedDecoder d) {
         if ((d.encodeFlags & QFE_ROUNDDOWN) != 0 && bs.readBitFlag()) {
             return d.minValue;

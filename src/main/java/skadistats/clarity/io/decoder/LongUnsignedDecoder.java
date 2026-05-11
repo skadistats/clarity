@@ -20,6 +20,10 @@ public final class LongUnsignedDecoder extends Decoder {
         PrimitiveType.LONG_VH.set(data, offset, bs.readUBitLong(d.nBits));
     }
 
+    public static void skip(BitStream bs, LongUnsignedDecoder d) {
+        bs.skip(d.nBits);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.LONG;

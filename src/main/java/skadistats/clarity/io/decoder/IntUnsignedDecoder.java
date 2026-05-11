@@ -20,6 +20,10 @@ public final class IntUnsignedDecoder extends Decoder {
         PrimitiveType.INT_VH.set(data, offset, bs.readUBitInt(d.nBits));
     }
 
+    public static void skip(BitStream bs, IntUnsignedDecoder d) {
+        bs.skip(d.nBits);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

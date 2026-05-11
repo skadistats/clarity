@@ -27,6 +27,10 @@ public final class QAngleBitCountDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset + 8, bs.readBitAngle(d.nBits));
     }
 
+    public static void skip(BitStream bs, QAngleBitCountDecoder d) {
+        bs.skip(3 * d.nBits);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

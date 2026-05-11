@@ -82,7 +82,11 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 var decodeIntoMethod = findDecodeIntoMethod(typeElement);
                 var hasDecodeInto = decodeIntoMethod != null
                         && validateDecodeIntoMethod(typeElement, decodeIntoMethod);
-                decoders.add(new DecoderInfo(typeElement, stateful, hasDecodeInto));
+                var skipMethod = findSkipMethod(typeElement);
+                var hasSkip = skipMethod != null
+                        && validateSkipMethod(typeElement, skipMethod);
+                var skipStateful = hasSkip && skipMethod.getParameters().size() == 2;
+                decoders.add(new DecoderInfo(typeElement, stateful, hasDecodeInto, hasSkip, skipStateful));
             }
 
             if (hasErrors) return false;
@@ -153,6 +157,66 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
         }
 
         return decodeMethods.get(0);
+    }
+
+    private ExecutableElement findSkipMethod(TypeElement typeElement) {
+        var candidates = typeElement.getEnclosedElements().stream()
+                .filter(e -> e instanceof ExecutableElement)
+                .map(e -> (ExecutableElement) e)
+                .filter(e -> e.getSimpleName().contentEquals("skip"))
+                .filter(e -> e.getModifiers().containsAll(Set.of(Modifier.PUBLIC, Modifier.STATIC)))
+                .toList();
+        if (candidates.isEmpty()) return null;
+        if (candidates.size() > 1) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "@RegisterDecoder class must have at most one public static skip method, found " + candidates.size(),
+                    typeElement
+            );
+            return null;
+        }
+        return candidates.get(0);
+    }
+
+    private boolean validateSkipMethod(TypeElement typeElement, ExecutableElement skipMethod) {
+        var params = skipMethod.getParameters();
+        var types = processingEnv.getTypeUtils();
+
+        if (params.isEmpty() || params.size() > 2) {
+            processingEnv.getMessager().printMessage(
+                    Diagnostic.Kind.ERROR,
+                    "skip must have 1 (stateless) or 2 (stateful) parameters, found " + params.size(),
+                    skipMethod
+            );
+            return false;
+        }
+
+        var bitstreamType = processingEnv.getElementUtils().getTypeElement(BITSTREAM);
+        if (bitstreamType != null) {
+            var firstParamType = params.get(0).asType();
+            if (!types.isSameType(types.erasure(firstParamType), types.erasure(bitstreamType.asType()))) {
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "skip first parameter must be BitStream",
+                        skipMethod
+                );
+                return false;
+            }
+        }
+
+        if (params.size() == 2) {
+            var secondParamType = params.get(1).asType();
+            if (!types.isSameType(types.erasure(secondParamType), types.erasure(typeElement.asType()))) {
+                processingEnv.getMessager().printMessage(
+                        Diagnostic.Kind.ERROR,
+                        "skip second parameter must be " + typeElement.getSimpleName(),
+                        skipMethod
+                );
+                return false;
+            }
+        }
+
+        return true;
     }
 
     private ExecutableElement findDecodeIntoMethod(TypeElement typeElement) {
@@ -388,10 +452,42 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 .addCode(decodeIntoSwitch.toString())
                 .build();
 
+        var skipSwitch = new StringBuilder();
+        skipSwitch.append("switch (d.id) {\n");
+        for (var info : decoders) {
+            if (!info.hasSkip) continue;
+            var constantName = toUpperSnake(info.type.getSimpleName().toString());
+            var decoderClassName = ClassName.get(info.type);
+            if (info.skipStateful) {
+                skipSwitch.append(String.format(
+                        "    case DecoderIds.%s -> %s.%s.skip(bs, (%s.%s) d);\n",
+                        constantName,
+                        decoderClassName.packageName(), decoderClassName.simpleName(),
+                        decoderClassName.packageName(), decoderClassName.simpleName()
+                ));
+            } else {
+                skipSwitch.append(String.format(
+                        "    case DecoderIds.%s -> %s.%s.skip(bs);\n",
+                        constantName,
+                        decoderClassName.packageName(), decoderClassName.simpleName()
+                ));
+            }
+        }
+        skipSwitch.append("    default -> throw new IllegalArgumentException(\"Decoder id \" + d.id + \" has no skip\");\n");
+        skipSwitch.append("}\n");
+
+        var skipMethod = MethodSpec.methodBuilder("skip")
+                .addModifiers(Modifier.PUBLIC, Modifier.STATIC)
+                .addParameter(BITSTREAM_CLASS, "bs")
+                .addParameter(DECODER_CLASS, "d")
+                .addCode(skipSwitch.toString())
+                .build();
+
         var classBuilder = TypeSpec.classBuilder("DecoderDispatch")
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
                 .addMethod(decodeMethod)
-                .addMethod(decodeIntoMethod);
+                .addMethod(decodeIntoMethod)
+                .addMethod(skipMethod);
 
         JavaFile.builder(PACKAGE, classBuilder.build())
                 .skipJavaLangImports(true)
@@ -412,5 +508,5 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
         return UPPER_SNAKE.matcher(name).replaceAll("$1_$2").toUpperCase();
     }
 
-    private record DecoderInfo(TypeElement type, boolean stateful, boolean hasDecodeInto) {}
+    private record DecoderInfo(TypeElement type, boolean stateful, boolean hasDecodeInto, boolean hasSkip, boolean skipStateful) {}
 }

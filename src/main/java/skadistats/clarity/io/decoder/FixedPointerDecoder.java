@@ -9,4 +9,8 @@ public final class FixedPointerDecoder extends Decoder {
         return bs.readBitFlag();
     }
 
+    public static void skip(BitStream bs, FixedPointerDecoder d) {
+        bs.skip(1);
+    }
+
 }

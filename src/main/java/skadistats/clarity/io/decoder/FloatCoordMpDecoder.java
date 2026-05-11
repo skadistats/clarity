@@ -22,6 +22,10 @@ public final class FloatCoordMpDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, bs.readCoordMp(bs, d.integral, d.lowPrecision));
     }
 
+    public static void skip(BitStream bs, FloatCoordMpDecoder d) {
+        bs.skipCoordMp(d.integral, d.lowPrecision);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

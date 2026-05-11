@@ -23,4 +23,8 @@ public final class StringZeroTerminatedDecoder extends Decoder {
         data[offset + 1] = (byte) ((written >>> 8) & 0xFF);
     }
 
+    public static void skip(BitStream bs) {
+        bs.skipString(BitStream.MAX_STRING_LENGTH);
+    }
+
 }

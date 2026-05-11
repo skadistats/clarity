@@ -185,6 +185,13 @@ public class BitStream {
         return new String(buf, 0, o, StandardCharsets.UTF_8);
     }
 
+    public void skipString(int n) {
+        var limit = Math.min(n, MAX_STRING_LENGTH);
+        for (var i = 0; i < limit; i++) {
+            if (readUBitInt(8) == 0) return;
+        }
+    }
+
     /**
      * Reads up to {@code n} UTF-8 bytes directly into {@code data} starting at
      * {@code offset}. Stops early on a zero byte (which is consumed from the
@@ -268,6 +275,13 @@ public class BitStream {
         pos += peekBit(pos + 7) == 0 ? 8 : 16;
     }
 
+    public void skipUBitVar() {
+        // 6-bit header; top 2 bits select tail width (0/4/8/28). Peek bits 4 and 5
+        // without consuming, then advance by the total.
+        var a = (peekBit(pos + 5) << 1) | peekBit(pos + 4);
+        pos += 6 + UBV_COUNT[a];
+    }
+
     public int readUBitVar() {
         // Thanks to Robin Dietrich for providing a clean version of this code :-)
 
@@ -294,6 +308,13 @@ public class BitStream {
         return readUBitInt(UBVFP_COUNT[i]);
     }
 
+    public void skipBitCoord() {
+        var i = readBitFlag();
+        var f = readBitFlag();
+        if (!(i || f)) return;
+        pos += 1 + (i ? COORD_INTEGER_BITS : 0) + (f ? COORD_FRACTIONAL_BITS : 0);
+    }
+
     public float readBitCoord() {
         var i = readBitFlag(); // integer component present?
         var f = readBitFlag(); // fractional component present?
@@ -314,6 +335,10 @@ public class BitStream {
             return v + readUBitInt(COORD_FRACTIONAL_BITS_MP_LOWPRECISION) * COORD_RESOLUTION_LOWPRECISION;
         }
         return v + readUBitInt(COORD_FRACTIONAL_BITS) * COORD_RESOLUTION;
+    }
+
+    public void skipCellCoord(int n, boolean integral, boolean lowPrecision) {
+        pos += n + (integral ? 0 : (lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS));
     }
 
     public float readCoordMp(BitStream stream, boolean integral, boolean lowPrecision) {
@@ -341,6 +366,18 @@ public class BitStream {
         return sign ? -value : value;
     }
 
+    public void skipCoordMp(boolean integral, boolean lowPrecision) {
+        var inBounds = readBitFlag();
+        var hasInt = readBitFlag();
+        var intBits = inBounds ? COORD_INTEGER_BITS_MP : COORD_INTEGER_BITS;
+        if (integral) {
+            if (hasInt) pos += 1 + intBits;
+        } else {
+            var fracBits = lowPrecision ? COORD_FRACTIONAL_BITS_MP_LOWPRECISION : COORD_FRACTIONAL_BITS;
+            pos += 1 + (hasInt ? intBits : 0) + fracBits;
+        }
+    }
+
     public float readBitAngle(int n) {
         return readUBitInt(n) * 360.0f / (1 << n);
     }
@@ -349,6 +386,10 @@ public class BitStream {
         var s = readBitFlag();
         var v = (float) readUBitInt(NORMAL_FRACTIONAL_BITS) * NORMAL_FRACTIONAL_RESOLUTION;
         return s ? -v : v;
+    }
+
+    public void skipBitNormal() {
+        pos += 1 + NORMAL_FRACTIONAL_BITS;
     }
 
     public float[] read3BitNormal() {
@@ -362,6 +403,14 @@ public class BitStream {
         if (p < 1.0f) v[2] = (float) Math.sqrt(1.0f - p);
         if (s) v[2] = -v[2];
         return v;
+    }
+
+    public void skip3BitNormal() {
+        var hasX = readBitFlag();
+        var hasY = readBitFlag();
+        pos += (hasX ? 1 + NORMAL_FRACTIONAL_BITS : 0)
+             + (hasY ? 1 + NORMAL_FRACTIONAL_BITS : 0)
+             + 1;
     }
 
     public String toString() {

@@ -8,9 +8,11 @@ import skadistats.clarity.state.PrimitiveType;
 public final class QAnglePitchYawOnlyDecoder extends Decoder {
 
     private final int nBits;
+    private final int totalBits;
 
     public QAnglePitchYawOnlyDecoder(int nBits) {
         this.nBits = nBits;
+        this.totalBits = 2 * ((nBits | 0x20) == 0x20 ? 32 : nBits);
     }
 
     public static Vector decode(BitStream bs, QAnglePitchYawOnlyDecoder d) {
@@ -35,6 +37,10 @@ public final class QAnglePitchYawOnlyDecoder extends Decoder {
         }
         // Pitch/yaw only — third component matches decode()'s default of 0f.
         PrimitiveType.FLOAT_VH.set(data, offset + 8, 0f);
+    }
+
+    public static void skip(BitStream bs, QAnglePitchYawOnlyDecoder d) {
+        bs.skip(d.totalBits);
     }
 
     @Override

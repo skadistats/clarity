@@ -16,6 +16,10 @@ public final class FloatNoScaleDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, Float.intBitsToFloat(bs.readUBitInt(32)));
     }
 
+    public static void skip(BitStream bs) {
+        bs.skip(32);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

@@ -14,6 +14,10 @@ public final class FloatNormalDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, bs.readBitNormal());
     }
 
+    public static void skip(BitStream bs) {
+        bs.skipBitNormal();
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

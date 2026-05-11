@@ -25,12 +25,14 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 3. Per-decoder skip methods (category-by-category)
 
-- [ ] 3.1 Category 1 (bit-count) — add `skip` static to Bool, IntUnsigned, IntSigned, LongUnsigned, LongSigned, FloatNoScale, FloatDefault, FloatCellCoord, FloatQuantized, FixedPointer
-- [ ] 3.2 Category 2 (length-then-skip) — add `skip` static to StringLen, CUtlBinaryBlock
-- [ ] 3.3 Category 3 (recursive composite) — add `skip` static to Vector, VectorXY, VectorNormal, VectorDefault, Array (delegates to component's `skip`)
-- [ ] 3.4 Category 4 (conditional) — add `skip` static to PolymorphicPointer, FloatCoord, FloatCoordMp, FloatNormal, QAngleNoBitCount, QAnglePitchYawOnly (read flag bits, conditionally `bs.skip(n)` per flag)
-- [ ] 3.5 Category 5 (walking) — add `skip` static to IntVarUnsigned, IntVarSigned, IntMinusOne, LongVarUnsigned, LongVarSigned (use `skipVarUInt`/`skipVarULong`), StringZeroTerminated (`while (bs.readUBitInt(8) != 0) {}`)
-- [ ] 3.6 Per-decoder branch-coverage tests — one test file per concrete decoder (`<Name>DecoderTest`), exercising every internal branch per the design's coverage axes table; each test asserts both decode value AND skip parity
+- [x] 3.1 Category 1 (bit-count) — Bool, FixedPointer, IntSigned/Unsigned, LongSigned/Unsigned, FloatNoScale, FloatDefault, FloatCellCoord, FloatNormal, QAngleBitCount, QAngleNoScale, QAnglePitchYawOnly. (Note: design's category 1 list misclassified FloatQuantized — actually cat 4; FloatNormal and QAnglePitchYawOnly — actually cat 1.)
+- [x] 3.2 Category 2 (length-then-skip) — CUtlBinaryBlock; StringLen uses readUBitInt(9) prefix (not readVarUInt as design described) + `skip(n*8)`
+- [x] 3.3 Category 3 (recursive composite) — Vector, VectorXY, VectorNormal, VectorDefault, Array (use generated `DecoderDispatch.skip` for components)
+- [x] 3.4 Category 4 (conditional) — PolymorphicPointer, FloatCoord, FloatCoordMp, FloatQuantized, QAngleNoBitCount, QAnglePrecise. Read methods that have skip logic (readBitCoord, readCellCoord, readCoordMp, readBitNormal, read3BitNormal, readString, readUBitVar) have paired `skip*` helpers on `BitStream`.
+- [x] 3.5 Category 5 (walking) — IntVar*, LongVar*, IntMinusOne use new `BitStream.skipVarUInt/skipVarULong`; StringZeroTerminated uses `BitStream.skipString`. PolymorphicPointer's UBitVar tail uses `BitStream.skipUBitVar`.
+- [x] 3.6 Skip-parity tests — single `DecoderSkipParityTest` file with @Test per decoder; random-byte parity sweeps with bit-misaligned starts (0/1/3/7/13/31/63/65). Curated `BitstreamBuilder` inputs for decoders where random bytes produce pathological cases (StringLen, CUtlBinaryBlock, PolymorphicPointer).
+
+> Side benefit of chunk B: extended the annotation processor (`DecoderAnnotationProcessor`) to emit `DecoderDispatch.skip` alongside `decode`/`decodeInto`. Composite skips need dispatch to component skip, so this lands here rather than in chunk C. Build-time enforcement (fail if a decoder lacks `skip`) is still deferred to chunk C.
 
 ## 4. Decoder dispatch generator
 

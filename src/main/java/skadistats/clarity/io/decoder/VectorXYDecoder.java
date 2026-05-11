@@ -25,6 +25,11 @@ public final class VectorXYDecoder extends Decoder {
         DecoderDispatch.decodeInto(bs, d.floatDecoder, data, offset + 4);
     }
 
+    public static void skip(BitStream bs, VectorXYDecoder d) {
+        DecoderDispatch.skip(bs, d.floatDecoder);
+        DecoderDispatch.skip(bs, d.floatDecoder);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 2);

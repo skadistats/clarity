@@ -12,4 +12,9 @@ public final class CUtlBinaryBlockDecoder extends Decoder {
         return out;
     }
 
+    public static void skip(BitStream bs) {
+        var n = bs.readVarUInt();
+        bs.skip(n * 8);
+    }
+
 }

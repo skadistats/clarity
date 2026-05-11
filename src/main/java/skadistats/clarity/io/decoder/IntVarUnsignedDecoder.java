@@ -14,6 +14,10 @@ public final class IntVarUnsignedDecoder extends Decoder {
         PrimitiveType.INT_VH.set(data, offset, bs.readVarUInt());
     }
 
+    public static void skip(BitStream bs) {
+        bs.skipVarUInt();
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

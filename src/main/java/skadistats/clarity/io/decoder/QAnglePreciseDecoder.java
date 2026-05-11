@@ -27,6 +27,13 @@ public final class QAnglePreciseDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset + 8, hasZ ? bs.readBitAngle(20) : 0f);
     }
 
+    public static void skip(BitStream bs) {
+        var hasX = bs.readBitFlag();
+        var hasY = bs.readBitFlag();
+        var hasZ = bs.readBitFlag();
+        bs.skip((hasX ? 20 : 0) + (hasY ? 20 : 0) + (hasZ ? 20 : 0));
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, 3);

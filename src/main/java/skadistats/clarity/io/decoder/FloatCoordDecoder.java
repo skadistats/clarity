@@ -14,6 +14,10 @@ public final class FloatCoordDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, bs.readBitCoord());
     }
 
+    public static void skip(BitStream bs) {
+        bs.skipBitCoord();
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

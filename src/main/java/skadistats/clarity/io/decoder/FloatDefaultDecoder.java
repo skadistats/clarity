@@ -28,6 +28,10 @@ public final class FloatDefaultDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, d.minValue + (d.maxValue - d.minValue) * v);
     }
 
+    public static void skip(BitStream bs, FloatDefaultDecoder d) {
+        bs.skip(d.bitCount);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;

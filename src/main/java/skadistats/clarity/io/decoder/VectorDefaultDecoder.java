@@ -29,6 +29,12 @@ public final class VectorDefaultDecoder extends Decoder {
         }
     }
 
+    public static void skip(BitStream bs, VectorDefaultDecoder d) {
+        for (var i = 0; i < d.dim; i++) {
+            DecoderDispatch.skip(bs, d.floatDecoder);
+        }
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return new PrimitiveType.VectorType(PrimitiveType.Scalar.FLOAT, dim);

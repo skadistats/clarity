@@ -14,6 +14,10 @@ public final class IntMinusOneDecoder extends Decoder {
         PrimitiveType.INT_VH.set(data, offset, bs.readVarUInt() - 1);
     }
 
+    public static void skip(BitStream bs) {
+        bs.skipVarUInt();
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.INT;

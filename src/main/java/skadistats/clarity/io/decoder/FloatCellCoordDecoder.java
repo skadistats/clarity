@@ -24,6 +24,10 @@ public final class FloatCellCoordDecoder extends Decoder {
         PrimitiveType.FLOAT_VH.set(data, offset, bs.readCellCoord(d.nBits, d.integral, d.lowPrecision));
     }
 
+    public static void skip(BitStream bs, FloatCellCoordDecoder d) {
+        bs.skipCellCoord(d.nBits, d.integral, d.lowPrecision);
+    }
+
     @Override
     public PrimitiveType getPrimitiveType() {
         return PrimitiveType.Scalar.FLOAT;
