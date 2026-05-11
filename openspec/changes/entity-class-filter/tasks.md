@@ -60,7 +60,7 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 - [x] 7.2 Pipe the filter into the Entities processor at processor-init time
 - [x] 7.3 Throw `IllegalStateException` if `withEntityFilter` is called after parse has started
 - [x] 7.4 Filter exceptions: do NOT catch — let them propagate and terminate the parse
-- [ ] 7.5 Update `clarity-examples/README.md` — extend the "Context" surface snippet with `getEntityFilter()` and add a short section on `runner.withEntityFilter(...)` near the SimpleRunner introduction
+- [x] 7.5 Update `clarity-examples/README.md` — extend the "Context" surface snippet with `getEntityFilter()` and add a short section on `runner.withEntityFilter(...)` near the SimpleRunner introduction
 
 ## 8. End-to-end parity test
 
