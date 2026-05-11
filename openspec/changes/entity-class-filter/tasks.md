@@ -52,7 +52,7 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 - [x] 6.2 On entity CREATE: consult the runner's filter (if set); on reject, store `skippedClass[eIdx] = dtClass`, skip-decode the CREATE body via `skipFields`, do NOT materialize an `Entity`, do NOT fire create/enter events, do NOT call `baselineRegistry.updateEntityBaseline`
 - [x] 6.3 On entity UPDATE: if `skippedClass[eIdx] != null`, call `FieldReader.skipFields(stream, skippedClass[eIdx])` and discard; do NOT fire updated/property events
 - [x] 6.4 On entity DELETE: clear the slot (`skippedClass[eIdx] = null`); do NOT fire deleted event for filtered ids
-- [ ] 6.5 Verify `entities.getByIndex(skippedId)` returns `null` and `entities.stream()` excludes filtered ids — should fall out of "no Entity created" but assert it (covered by chunk F end-to-end test)
+- [x] 6.5 Verify `entities.getByIndex(skippedId)` returns `null` and `entities.stream()` excludes filtered ids — should fall out of "no Entity created" but assert it (covered by chunk F end-to-end test)
 
 ## 7. Runner API
 
@@ -64,8 +64,8 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 8. End-to-end parity test
 
-- [ ] 8.1 Add reject-everything parity test in `src/test/java/skadistats/clarity/processor/entities/`: parse with no filter, parse with `dt -> false`, assert bitstream pos sequence identical at every `CSVCMsg_PacketEntities` boundary
-- [ ] 8.2 Run against bench corpus replays: `dota/s2/normal/1560289528.dem`, `dota/s1/normal/271145478.dem` (mandatory); optionally `csgo/s2/issue-345/liquid-vs-betboom-m1-mirage.dem` and `deadlock/newer/19206063.dem`
+- [x] 8.1 Add reject-everything parity test in `src/test/java/skadistats/clarity/processor/entities/`: parse with no filter, parse with `dt -> false`, assert tick-count + packet-count parity AND that reject-all leaves no live entities; second test seeks deep with `ControllableRunner` and ticks forward to exercise post-reset UPDATE handling
+- [x] 8.2 Run against bench corpus replays: `dota/s2/normal/1560289528.dem`, `dota/s1/normal/271145478.dem` (mandatory); optionally `csgo/s2/issue-345/liquid-vs-betboom-m1-mirage.dem` and `deadlock/newer/19206063.dem`
 
 ## 9. Bench observation
 
