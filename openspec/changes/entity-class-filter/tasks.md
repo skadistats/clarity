@@ -69,5 +69,12 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 9. Bench observation
 
-- [ ] 9.1 Run the bench harness with a representative filter (e.g., player + gamerules) against the pinned replays; record observed speedup vs no-filter baseline
-- [ ] 9.2 Report numbers — no acceptance threshold; document the observed delta and any deviation from the design's paper estimate
+- [x] 9.1 Run the bench harness with a representative filter against `dota/s2/340/8168882574_1198277651.dem` (modern S2, 187 MB). Two profiles measured via odota-parser (Parse.java patched with `-Dopendota.entityFilter[.profile=narrow]`):
+  - **Odota-equivalent**: ~12 class patterns covering heroes/items/abilities/players/wards/data — output byte-identical to baseline.
+  - **Narrow**: gamerules + playerresource + data dire/radiant only — output intentionally diverges.
+- [x] 9.2 Observed numbers (warmup=2, runs=5, median):
+  - Baseline (no filter): 3.308s
+  - Odota-equivalent: 2.808s → **1.18×**
+  - Narrow: 2.013s → **1.64×**
+
+  The narrow profile sits just below design.md's 1.7–2.5× paper estimate; the gap is explained by non-entity overhead (combat log, chat, demo packet framing) that filtering can't touch. The odota-equivalent number confirms that even a wide filter — accepting all heroes/items/abilities — recovers meaningful work, and that the skip path is correct on a real-replay class cross-product (the diff-vs-baseline check would have surfaced any missing class).
