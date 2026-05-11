@@ -85,7 +85,14 @@ Rough estimate: 60–90 distinct branch cases across ~30 decoders. At 5–15 LoC
 
 ### Layer 2: End-to-end reject-everything parity test
 
-For each engine family represented in the test corpus (at minimum: one S1 replay, one S2 replay):
+For each engine family represented in the test corpus. Use the same replays the bench harness pins (resolved via `MANIFEST.sha256` in `replays/`):
+
+- **DOTA_S2:** `dota/s2/normal/1560289528.dem` (smallest full-size S2 — fast feedback)
+- **DOTA_S1:** `dota/s1/normal/271145478.dem`
+- **CS2 (optional, third engine arm):** `csgo/s2/issue-345/liquid-vs-betboom-m1-mirage.dem`
+- **Deadlock (optional):** `deadlock/newer/19206063.dem`
+
+Procedure:
 
 - Parse with no filter; record bitstream pos at every per-packet `CSVCMsg_PacketEntities` boundary.
 - Parse again with a filter that rejects every class; record same pos sequence.
@@ -198,7 +205,7 @@ What is eliminated, by decoder category:
 
 Rough back-of-envelope: with category-appropriate skip, the per-entity skip-path cost is somewhere in the 25–45% of full-decode cost range (down from the 50–60% the naive read-and-discard framing would have produced). Combined with 70–90% of entity volume being filtered out on typical narrow consumers, the workload-level win lands in the 1.7–2.5× range. That's a meaningful step-change relative to single-digit-percent micro-optimization, and the gap is wider than the original proposal suggested.
 
-**These are paper estimates.** The implementation MUST be benched against a real consumer workload (e.g., the bench harness with a filter equivalent to "only player + gamerules") before the proposal is considered to have delivered. If the win is materially smaller than the estimate, that's signal worth understanding — most likely it would mean the eliminated work was smaller than the model assumed, or the FieldOp-walk + resolveField overhead is bigger than expected.
+**These are paper estimates.** Bench against a representative consumer workload (e.g., the bench harness with a filter equivalent to "only player + gamerules") and report the observed speedup. There is no acceptance threshold — the feature ships regardless of where the number lands. A materially-smaller win than the estimate is still a useful signal: most likely it would mean the eliminated work was smaller than the model assumed, or the FieldOp-walk + resolveField overhead is bigger than expected.
 
 ## Out-of-scope alternatives
 

@@ -20,7 +20,7 @@ This proposal introduces an opt-in per-class entity filter. Filtered entities ne
 
 - **New: `BitStream.skipVarUInt()` and `BitStream.skipVarULong()`.** SWAR-based varint position update: peek 64 bits, find first byte without the continuation bit via `~word & 0x80…80` + `numberOfTrailingZeros`, advance `pos` by `(bytes * 8)`. No value extraction, no `Long.compress`, no masking. Earlier SWAR experiments on `readVarUInt` were flat because `Long.compress` cost on Zen 5 negated the savings; `skipVarUInt` does none of that work, so the SWAR is a genuine win for the walking-skip varint decoders (IntVarUnsigned, IntVarSigned, IntMinusOne, LongVarUnsigned, LongVarSigned, plus the length prefix in CUtlBinaryBlock and StringLen).
 
-- **New: `FieldReader.skipFields(BitStream, DTClass, EntityState)`.** Concrete implementations on both S2 and S1 field readers:
+- **New: abstract `FieldReader.skipFields(BitStream, DTClass)`.** No `EntityState` parameter — the skip path neither reads nor writes entity state. Method is abstract on the `FieldReader` interface; both engine implementations MUST override (no default fallback). Concrete implementations:
   - **S2:** structurally a stripped `readFieldsFast` — walks FieldOps + resolves the decoder per field, then calls `DecoderDispatch.skip` instead of `decode`.
   - **S1:** reuses the existing `readIndices` (which is engine-subclass-specific — CSGO vs DotaS1) to populate the changed-prop-index list, then calls `DecoderDispatch.skip` per index. S1 has no FieldOp Huffman walk, so its skip path is structurally cheaper than its decode path by an even larger margin than S2's.
 
@@ -52,7 +52,7 @@ This proposal introduces an opt-in per-class entity filter. Filtered entities ne
 - `src/main/java/skadistats/clarity/io/decoder/*Decoder.java` — add a static `skip` method to each of ~30 concrete decoder classes, using the category-appropriate strategy (bit-count, length-then-skip, recursive, conditional, or walking).
 - `src/main/java/skadistats/clarity/io/decoder/factory/` — annotation processor emits `DecoderDispatch.skip` alongside existing `decode` / `decodeInto`; build fails if a decoder is missing a `skip` static method.
 - `src/main/java/skadistats/clarity/io/bitstream/BitStream.java` — new `skipVarUInt` and `skipVarULong` methods.
-- `src/main/java/skadistats/clarity/io/FieldReader.java` — new `skipFields` method with a default delegating to `readFields` for safety (kept as a safety net for any future `FieldReader` implementation).
+- `src/main/java/skadistats/clarity/io/FieldReader.java` — new abstract `skipFields(BitStream, DTClass)` method on the interface. No default implementation; both engine impls override.
 - `src/main/java/skadistats/clarity/io/s2/S2FieldReader.java` — concrete S2 `skipFields` implementation.
 - `src/main/java/skadistats/clarity/io/s1/S1FieldReader.java` — concrete S1 `skipFields` implementation in the base class (relies on `readIndices`, which the engine-specific subclasses already implement); `CsgoFieldReader` and `DotaS1FieldReader` inherit it.
 - `src/main/java/skadistats/clarity/processor/entities/Entities.java` — `BitSet skippedIds`, filter consultation on CREATE, skip dispatch on UPDATE, bit-clear on DELETE.

@@ -24,6 +24,16 @@ The runner SHALL accept an optional `Predicate<DTClass>` filter set before parse
 - **WHEN** a caller attempts to set or modify the filter after parse has started
 - **THEN** the call SHALL throw an `IllegalStateException`.
 
+#### Scenario: Filter throws during evaluation
+
+- **WHEN** `filter.test(dtClass)` throws any exception during a CREATE
+- **THEN** the exception SHALL propagate out of packet processing and terminate the parse. The parser SHALL NOT swallow the exception, default to include/exclude, or attempt partial-state recovery.
+
+#### Scenario: Skipped-id tracking is cleared on reset
+
+- **WHEN** the parser performs an `@OnReset` (string-table reset / seek) and reaches the `CLEAR` phase
+- **THEN** the internal "this id is filtered" tracking (`BitSet skippedIds`) SHALL be cleared alongside the existing entity collection, baseline registry, and deferred-message reset, so that post-reset CREATEs are re-evaluated against the filter.
+
 ### Requirement: Wire-stream consumption of filtered entities
 
 Even when an entity is filtered, the parser SHALL consume the wire-format bits for that entity's CREATE and UPDATE messages exactly as a non-filtered parser would, so that the bitstream cursor remains aligned for the next entity in the packet. No allocation of decoded values, no state writes, no Java-side `Entity` allocation, and no consumer-side dispatch SHALL occur for filtered entities.
@@ -46,7 +56,7 @@ Even when an entity is filtered, the parser SHALL consume the wire-format bits f
 #### Scenario: Filtered CREATE does not update the baseline registry
 
 - **WHEN** a CREATE for a filtered class arrives with the `updateBaseline` flag set
-- **THEN** the parser SHALL NOT call `baselineRegistry.updateEntityBaseline(...)` for that entity, and the per-entity baseline registry slot for that `eIdx` SHALL remain unchanged. This is safe because per-entity baselines at a given `eIdx` are only consumed by future CREATEs at that same `eIdx`: a future CREATE of the same (filtered) class is itself filtered, and a future CREATE of a different class at that `eIdx` (entity-id reuse) draws from the per-class baseline in the `instancebaseline` stringtable, not from the per-entity slot.
+- **THEN** the parser SHALL NOT call `baselineRegistry.updateEntityBaseline(...)` for that entity, and the per-entity baseline registry slot for that `eIdx` SHALL remain unchanged. This is safe regardless of engine (S1 or S2) because the per-entity baseline slot at a given `eIdx` is only consumed by future CREATEs at that same `eIdx`, and: (a) a future same-class recreate stays filtered, so the slot is never queried; (b) a future different-class CREATE at the same `eIdx` requires an intervening DELETE, which calls `baselineRegistry.clearEntity(eIdx)` and wipes the slot before the new class's CREATE runs. The unified `Entities.executeEntityCreate` / `executeEntityDelete` code path makes this argument engine-agnostic.
 
 ### Requirement: Skip-parity invariant across decoders
 
@@ -85,24 +95,19 @@ A generated `DecoderDispatch.skip(BitStream, Decoder)` SHALL provide an int-tabl
 
 ### Requirement: New skipFields method on FieldReader
 
-`FieldReader` SHALL expose a `skipFields(BitStream, DTClass, EntityState)` method that walks the FieldOp section of an entity update and advances the bitstream past every field's value without allocating decoded results or writing to entity state. A default implementation that delegates to `readFields` (discarding the result) SHALL be provided for `FieldReader` implementations that have not been specialized for skipping.
+`FieldReader` SHALL expose an abstract `skipFields(BitStream, DTClass)` method that walks the FieldOp / changed-index section of an entity update and advances the bitstream past every field's value without allocating decoded results or touching entity state. The method takes no `EntityState` parameter — the skip path neither reads nor writes state. Every concrete `FieldReader` implementation SHALL override this method; there is no default fallback.
 
 #### Scenario: S2 skipFields advances bitstream identically to readFieldsFast
 
 - **GIVEN** a `CSVCMsg_PacketEntities` UPDATE delta and an `S2FieldReader`
 - **WHEN** `skipFields` is invoked at bitstream pos `P` for that update
-- **THEN** the bitstream pos after the call SHALL equal the pos that `readFieldsFast` would have produced for the same input, and no `EntityState` write SHALL have occurred during the call.
+- **THEN** the bitstream pos after the call SHALL equal the pos that `readFieldsFast` would have produced for the same input, and no entity state SHALL have been touched during the call.
 
 #### Scenario: S1 skipFields advances bitstream identically to readFields
 
 - **GIVEN** an S1 entity update delta and an `S1FieldReader` implementation (`CsgoFieldReader` or `DotaS1FieldReader`)
 - **WHEN** `skipFields` is invoked at bitstream pos `P` for that update
-- **THEN** the bitstream pos after the call SHALL equal the pos that `readFields` (no-debug, no-onMutation) would have produced for the same input, and no `EntityState` write SHALL have occurred during the call.
-
-#### Scenario: Default fallback for unspecialized FieldReader
-
-- **WHEN** `skipFields` is invoked on a `FieldReader` implementation that has not overridden it
-- **THEN** the default implementation SHALL delegate to `readFields(bs, dtClass, state, false, null)` and discard the returned `FieldChanges`. Behavior SHALL be correct (bitstream advances by the right amount) but SHALL NOT realize the performance benefit of a specialized skip path.
+- **THEN** the bitstream pos after the call SHALL equal the pos that `readFields` (no-debug, no-onMutation) would have produced for the same input, and no entity state SHALL have been touched during the call.
 
 ### Requirement: Filter-rejected entities are absent from queries
 
