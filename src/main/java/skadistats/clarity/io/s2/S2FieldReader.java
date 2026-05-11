@@ -185,6 +185,31 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
     }
 
     @Override
+    public void skipFields(BitStream bs, S2DTClass dtClass) {
+        var n = 0;
+        var mfp = pathType.newBuilder();
+        while (true) {
+            var opId = bs.readFieldOpId();
+            if (opId == FieldOp.FIELD_PATH_ENCODE_FINISH) {
+                break;
+            }
+            FieldOp.execute(opId, mfp, bs);
+            fieldPaths[n++] = mfp.snapshot();
+        }
+        for (var r = 0; r < n; r++) {
+            var fp = fieldPaths[r];
+            Field field = dtClass.getField();
+            for (int i = 0; i <= fp.last(); i++) {
+                field = field.getChild(null, fp.get(i));
+                if (field == null) {
+                    throw new ClarityException("no field for class %s at %s during skip!", dtClass.getDtName(), fp);
+                }
+            }
+            DecoderDispatch.skip(bs, field.getDecoder());
+        }
+    }
+
+    @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
         var n = bs.readUBitVar();
         var c = 0;

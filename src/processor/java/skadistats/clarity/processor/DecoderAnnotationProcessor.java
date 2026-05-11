@@ -85,7 +85,16 @@ public class DecoderAnnotationProcessor extends AbstractProcessor {
                 var skipMethod = findSkipMethod(typeElement);
                 var hasSkip = skipMethod != null
                         && validateSkipMethod(typeElement, skipMethod);
-                var skipStateful = hasSkip && skipMethod.getParameters().size() == 2;
+                if (!hasSkip) {
+                    processingEnv.getMessager().printMessage(
+                            Diagnostic.Kind.ERROR,
+                            "@RegisterDecoder class must have a public static skip method",
+                            typeElement
+                    );
+                    hasErrors = true;
+                    continue;
+                }
+                var skipStateful = skipMethod.getParameters().size() == 2;
                 decoders.add(new DecoderInfo(typeElement, stateful, hasDecodeInto, hasSkip, skipStateful));
             }
 

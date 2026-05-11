@@ -112,6 +112,16 @@ public abstract class S1FieldReader implements FieldReader<S1DTClass, S1FieldPat
     }
 
     @Override
+    public void skipFields(BitStream bs, S1DTClass dtClass) {
+        var receiveProps = dtClass.getReceiveProps();
+        var n = readIndices(bs, dtClass);
+        for (var ci = 0; ci < n; ci++) {
+            var o = fieldPaths[ci].idx();
+            DecoderDispatch.skip(bs, receiveProps[o].getSendProp().getDecoder());
+        }
+    }
+
+    @Override
     public int readDeletions(BitStream bs, int indexBits, int[] deletions) {
         var n = 0;
         while (bs.readBitFlag()) {

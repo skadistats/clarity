@@ -7,9 +7,9 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 | **A. Foundations** | 1, 2 | Test utilities (`BitstreamBuilder`, `DecoderTestBase`) + BitStream `skipVarUInt`/`skipVarULong` | No API surface, no behavior change |
 | **B. Decoder skip methods** | 3 | ~30 static `skip` methods + curated branch-coverage tests | Build enforcement still OFF (4.2 not landed), so missing skips don't break the build. Skip methods exist but nothing dispatches to them yet. Largest chunk by volume — subdivide by category (3.1, 3.2, …) if smaller landings are preferred |
 | **C. Dispatch + enforcement** | 4 | Generator emits `DecoderDispatch.skip`; annotation processor fails build if any decoder is missing `skip` | One-way firewall: after this, every decoder MUST have skip forever |
-| **D. FieldReader + verifier** | 5, 6 | `FieldReader.skipFields` abstract + S2/S1 impls; `-Dclarity.test.skipParity=true` verifier | Skip path is fully callable but no consumer-visible API; parser still full-decodes |
-| **E. Consumer wiring** | 7, 8 | `BitSet skippedIds`, Entities CREATE/UPDATE/DELETE handling, reset clear, `withEntityFilter` on runner | Feature works end-to-end |
-| **F. Verification** | 9, 10 | End-to-end reject-everything parity test (with and without verifier flag), then bench measurement | Pure proof, no implementation |
+| **D. FieldReader** | 5 | `FieldReader.skipFields` abstract + S2/S1 impls | Skip path is fully callable but no consumer-visible API; parser still full-decodes |
+| **E. Consumer wiring** | 6, 7 | `BitSet skippedIds`, Entities CREATE/UPDATE/DELETE handling, reset clear, `withEntityFilter` on runner | Feature works end-to-end |
+| **F. Verification** | 8, 9 | End-to-end reject-everything parity test, then bench measurement | Pure proof, no implementation |
 
 ## 1. Test infrastructure (depth, built first)
 
@@ -36,44 +36,37 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 4. Decoder dispatch generator
 
-- [ ] 4.1 Extend `@RegisterDecoder` annotation processor to emit `DecoderDispatch.skip(BitStream, Decoder)` as int-tableswitch on `decoder.id`, mirroring existing `decode` / `decodeInto`
-- [ ] 4.2 Build-time enforcement — annotation processor SHALL fail the build if any `@RegisterDecoder` class is missing a static `skip` method (or a `decode`)
-- [ ] 4.3 Default-case behavior — generated `skip` throws `IllegalArgumentException` on unknown id, matching `decode`
+- [x] 4.1 Extend `@RegisterDecoder` annotation processor to emit `DecoderDispatch.skip(BitStream, Decoder)` as int-tableswitch on `decoder.id`, mirroring existing `decode` / `decodeInto`
+- [x] 4.2 Build-time enforcement — annotation processor SHALL fail the build if any `@RegisterDecoder` class is missing a static `skip` method (or a `decode`)
+- [x] 4.3 Default-case behavior — generated `skip` throws `IllegalArgumentException` on unknown id, matching `decode`
 
 ## 5. FieldReader skip plumbing
 
-- [ ] 5.1 Add abstract `skipFields(BitStream, DTClass)` to the `FieldReader` interface (no `EntityState` param, no default impl)
-- [ ] 5.2 Implement `S2FieldReader.skipFields` — stripped `readFieldsFast`: walks FieldOps, resolves the decoder per field, calls `DecoderDispatch.skip`
-- [ ] 5.3 Implement `S1FieldReader.skipFields` in the abstract base — uses the existing engine-specific `readIndices` plus `DecoderDispatch.skip` per index; CsgoFieldReader and DotaS1FieldReader inherit
+- [x] 5.1 Add abstract `skipFields(BitStream, DTClass)` to the `FieldReader` interface (no `EntityState` param, no default impl)
+- [x] 5.2 Implement `S2FieldReader.skipFields` — stripped `readFieldsFast`: walks FieldOps, resolves the decoder per field, calls `DecoderDispatch.skip`
+- [x] 5.3 Implement `S1FieldReader.skipFields` in the abstract base — uses the existing engine-specific `readIndices` plus `DecoderDispatch.skip` per index; CsgoFieldReader and DotaS1FieldReader inherit
 
-## 6. Test-only runtime parity verifier
+## 6. Entities processor changes
 
-- [ ] 6.1 Add `-Dclarity.test.skipParity=true` flag handling
-- [ ] 6.2 Implement verifying wrapper around `DecoderDispatch.decode`: record pos, decode-record-pos, rewind, skip-record-pos, assert equal, rewind, decode-for-real
-- [ ] 6.3 Wire flag into the test classpath only (no production cost when disabled)
+- [ ] 6.1 Add `BitSet skippedIds` field; clear in `@OnReset` CLEAR phase alongside `entities` / `baselineRegistry` / `deferredMessages`
+- [ ] 6.2 On entity CREATE: consult the runner's filter (if set); on reject, mark `skippedIds.set(eIdx)`, skip-decode the CREATE body via `skipFields`, do NOT materialize an `Entity`, do NOT fire create/enter events, do NOT call `baselineRegistry.updateEntityBaseline`
+- [ ] 6.3 On entity UPDATE: if `skippedIds.get(eIdx)`, call `FieldReader.skipFields` and discard; do NOT fire updated/property events
+- [ ] 6.4 On entity DELETE: clear the bit (`skippedIds.clear(eIdx)`); do NOT fire deleted event for filtered ids
+- [ ] 6.5 Verify `entities.getById(skippedId)` returns `null` and collection-walking APIs (`getByPredicate`) exclude filtered ids — should fall out of "no Entity created" but assert it
 
-## 7. Entities processor changes
+## 7. Runner API
 
-- [ ] 7.1 Add `BitSet skippedIds` field; clear in `@OnReset` CLEAR phase alongside `entities` / `baselineRegistry` / `deferredMessages`
-- [ ] 7.2 On entity CREATE: consult the runner's filter (if set); on reject, mark `skippedIds.set(eIdx)`, skip-decode the CREATE body via `skipFields`, do NOT materialize an `Entity`, do NOT fire create/enter events, do NOT call `baselineRegistry.updateEntityBaseline`
-- [ ] 7.3 On entity UPDATE: if `skippedIds.get(eIdx)`, call `FieldReader.skipFields` and discard; do NOT fire updated/property events
-- [ ] 7.4 On entity DELETE: clear the bit (`skippedIds.clear(eIdx)`); do NOT fire deleted event for filtered ids
-- [ ] 7.5 Verify `entities.getById(skippedId)` returns `null` and collection-walking APIs (`getByPredicate`) exclude filtered ids — should fall out of "no Entity created" but assert it
+- [ ] 7.1 Add `withEntityFilter(Predicate<DTClass>)` to `AbstractFileRunner` (and any sibling runner used by the public API)
+- [ ] 7.2 Pipe the filter into the Entities processor at processor-init time
+- [ ] 7.3 Throw `IllegalStateException` if `withEntityFilter` is called after parse has started
+- [ ] 7.4 Filter exceptions: do NOT catch — let them propagate and terminate the parse
 
-## 8. Runner API
+## 8. End-to-end parity test
 
-- [ ] 8.1 Add `withEntityFilter(Predicate<DTClass>)` to `AbstractFileRunner` (and any sibling runner used by the public API)
-- [ ] 8.2 Pipe the filter into the Entities processor at processor-init time
-- [ ] 8.3 Throw `IllegalStateException` if `withEntityFilter` is called after parse has started
-- [ ] 8.4 Filter exceptions: do NOT catch — let them propagate and terminate the parse
+- [ ] 8.1 Add reject-everything parity test in `src/test/java/skadistats/clarity/processor/entities/`: parse with no filter, parse with `dt -> false`, assert bitstream pos sequence identical at every `CSVCMsg_PacketEntities` boundary
+- [ ] 8.2 Run against bench corpus replays: `dota/s2/normal/1560289528.dem`, `dota/s1/normal/271145478.dem` (mandatory); optionally `csgo/s2/issue-345/liquid-vs-betboom-m1-mirage.dem` and `deadlock/newer/19206063.dem`
 
-## 9. End-to-end parity test
+## 9. Bench observation
 
-- [ ] 9.1 Add reject-everything parity test in `src/test/java/skadistats/clarity/processor/entities/`: parse with no filter, parse with `dt -> false`, assert bitstream pos sequence identical at every `CSVCMsg_PacketEntities` boundary
-- [ ] 9.2 Run against bench corpus replays: `dota/s2/normal/1560289528.dem`, `dota/s1/normal/271145478.dem` (mandatory); optionally `csgo/s2/issue-345/liquid-vs-betboom-m1-mirage.dem` and `deadlock/newer/19206063.dem`
-- [ ] 9.3 Run the same test with `-Dclarity.test.skipParity=true` to exercise the Layer 3 runtime verifier on the real-replay input distribution
-
-## 10. Bench observation
-
-- [ ] 10.1 Run the bench harness with a representative filter (e.g., player + gamerules) against the pinned replays; record observed speedup vs no-filter baseline
-- [ ] 10.2 Report numbers — no acceptance threshold; document the observed delta and any deviation from the design's paper estimate
+- [ ] 9.1 Run the bench harness with a representative filter (e.g., player + gamerules) against the pinned replays; record observed speedup vs no-filter baseline
+- [ ] 9.2 Report numbers — no acceptance threshold; document the observed delta and any deviation from the design's paper estimate

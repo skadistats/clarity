@@ -46,7 +46,7 @@ The current state of decoder testing is thin: `DecoderDecodeIntoParityTest` (ran
 
 **Scope note: only valid wire-format inputs are in scope.** Decoders only ever see bits that Valve's encoder produced. Robustness testing against arbitrary random bytes (the "fuzz" framing) is not in scope: if a decoder crashes on a byte sequence Valve's encoder cannot produce, that's acceptable — no real replay reaches that input. Coverage is built from real-distribution inputs (real replays) plus curated wire-format-valid bit patterns (hand-crafted to exercise every decoder branch). Random bytes neither augment nor substitute for either source.
 
-Three layers:
+Two layers:
 
 ### Layer 1: Per-decoder branch coverage (depth)
 
@@ -102,21 +102,11 @@ This catches drift bugs that pass all decoder unit tests but fail on the actual 
 
 Slow (full parse twice per replay) but irreplaceable.
 
-### Layer 3 (test-only utility): runtime parity verifier
-
-A `-Dclarity.test.skipParity=true` flag flips `DecoderDispatch.decode` to a verifying wrapper that:
-
-1. Records `bs.pos` before the call.
-2. Performs the normal `decode`, records `p_decode`.
-3. Rewinds bs to the pre-call pos, calls `skip`, records `p_skip`.
-4. Asserts `p_decode == p_skip`; if not, throws with the decoder id and observed bit deltas.
-5. Rewinds bs to the pre-call pos one more time, calls `decode` again to leave the bitstream in the correct post-call state.
-
-Costs ~2-3× CPU per call but only when enabled. Useful for catching drift in any test that runs through `DecoderDispatch` — including non-decoder tests that happen to exercise wire-format parsing. **Most valuable when enabled alongside Layer 2's end-to-end parse**: every decoder invocation in the real-replay parse becomes an automatic skip-parity assertion at decoder granularity, effectively exercising the real-replay input distribution against the skip path with maximum precision (parity violations are reported per-decoder-call rather than only at packet boundaries). Build-time the flag is off; CI can run with it on.
+A runtime parity verifier (wrapping `DecoderDispatch.decode` to assert per-call that `decode` and `skip` agree on bit deltas) was considered as a Layer 3 and rejected. It would only localize drift bugs that Layer 2 already catches, and Layer 2's reject-everything arm goes through `skipFields` not `decode`, so the verifier wouldn't fire on the arm that does the work. Layer 1 + Layer 2 are sufficient.
 
 ### Coverage philosophy
 
-The goal is "make drift bugs loud" on inputs that can actually occur. Layer 1 (curated branch coverage) covers every internal decoder code path on hand-crafted wire-format-valid inputs. Layer 2 (end-to-end real replays) covers the cross-product of decoder × FieldOp × class on the real input distribution. Layer 3 (runtime verifier on Layer 2) closes the gap: every decoder invocation in real-replay parsing is automatically parity-checked, so anything Layer 1 missed surfaces as a per-call mismatch in the integration test.
+The goal is "make drift bugs loud" on inputs that can actually occur. Layer 1 (curated branch coverage) covers every internal decoder code path on hand-crafted wire-format-valid inputs. Layer 2 (end-to-end real replays) covers the cross-product of decoder × FieldOp × class on the real input distribution.
 
 Random-bytes input is explicitly NOT a coverage source. Decoders only see Valve's wire format; correctness on bit patterns Valve cannot produce is irrelevant. If garbage input causes a decoder to crash, that's acceptable.
 

@@ -25,4 +25,6 @@ public interface FieldReader<D extends DTClass, FP extends FieldPath, S extends 
 
     int readDeletions(BitStream bs, int indexBits, int[] deletions);
 
+    void skipFields(BitStream bs, D dtClass);
+
 }
