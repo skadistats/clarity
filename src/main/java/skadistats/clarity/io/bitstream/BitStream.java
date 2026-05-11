@@ -243,6 +243,31 @@ public class BitStream {
         return (int) readVarS(32);
     }
 
+    public void skipVarUInt() {
+        var offs = pos >> 6;
+        var s = pos & 63;
+        var word = (buffer.get(offs) >>> s) | (s == 0 ? 0L : buffer.get(offs + 1) << (64 - s));
+        var contMask = ~word & 0x0000_0080_8080_8080L;
+        if (contMask != 0) {
+            pos += ((Long.numberOfTrailingZeros(contMask) >>> 3) + 1) << 3;
+        } else {
+            pos += 40;
+        }
+    }
+
+    public void skipVarULong() {
+        var offs = pos >> 6;
+        var s = pos & 63;
+        var word = (buffer.get(offs) >>> s) | (s == 0 ? 0L : buffer.get(offs + 1) << (64 - s));
+        var contMask = ~word & 0x8080_8080_8080_8080L;
+        if (contMask != 0) {
+            pos += ((Long.numberOfTrailingZeros(contMask) >>> 3) + 1) << 3;
+            return;
+        }
+        pos += 64;
+        pos += peekBit(pos + 7) == 0 ? 8 : 16;
+    }
+
     public int readUBitVar() {
         // Thanks to Robin Dietrich for providing a clean version of this code :-)
 

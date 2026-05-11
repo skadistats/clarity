@@ -13,15 +13,15 @@ This change is multi-session. Land in these chunks — each leaves the tree in a
 
 ## 1. Test infrastructure (depth, built first)
 
-- [ ] 1.1 Create `BitstreamBuilder` test utility in `src/test/java/skadistats/clarity/io/decoder/` — declarative wire-format builder (`bitstream().skip(n).add(value, bits).addVarUInt(n).addStringZ(s).build()`)
-- [ ] 1.2 Create `DecoderTestBase` with shared helpers: `bitstream(...)`, `assertSkipParity(decoder, bs)` (decode + rewind + skip, compare pos deltas)
-- [ ] 1.3 Add a single smoke test using the builder to verify byte-aligned and bit-misaligned construction round-trip
+- [x] 1.1 Create `BitstreamBuilder` test utility in `src/test/java/skadistats/clarity/io/decoder/` — declarative wire-format builder (`bitstream().skip(n).add(value, bits).addVarUInt(n).addStringZ(s).build()`)
+- [x] 1.2 Create `DecoderTestBase` scaffold with `bitstream()` helper. `assertSkipParity` deferred to chunk B (depends on per-decoder skip methods)
+- [x] 1.3 Add a single smoke test using the builder to verify byte-aligned and bit-misaligned construction round-trip
 
 ## 2. BitStream skip-varint primitive
 
-- [ ] 2.1 Add `BitStream.skipVarUInt()` — SWAR peek-64 + NTZ + pos update (no value extraction, no Long.compress)
-- [ ] 2.2 Add `BitStream.skipVarULong()` — same shape, with slow-path fallback for the 9–10 byte case
-- [ ] 2.3 Unit-test both helpers with 1-byte / multi-byte / max-byte patterns at byte-aligned and bit-misaligned start positions, comparing against `readVarUInt`/`readVarULong` pos delta
+- [x] 2.1 Add `BitStream.skipVarUInt()` — SWAR peek-64 + NTZ + pos update (no value extraction, no Long.compress)
+- [x] 2.2 Add `BitStream.skipVarULong()` — same shape; 9/10-byte tail uses `peekBit` + arithmetic (no `read*` calls)
+- [x] 2.3 Unit-test both helpers with 1-byte / multi-byte / max-byte patterns at byte-aligned and bit-misaligned start positions, comparing against `readVarUInt`/`readVarULong` pos delta
 
 ## 3. Per-decoder skip methods (category-by-category)
 
