@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.reader;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.ByteString;
+import skadistats.clarity.protobuf.GeneratedMessage;
 import skadistats.clarity.event.EventBase;
 import skadistats.clarity.event.GenerateEvent;
 import skadistats.clarity.event.UsagePointMarker;

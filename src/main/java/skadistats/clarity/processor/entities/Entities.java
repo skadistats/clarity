@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.entities;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import it.unimi.dsi.fastutil.ints.Int2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectSortedMap;
 import org.slf4j.Logger;

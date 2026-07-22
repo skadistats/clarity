@@ -1,6 +1,6 @@
 package skadistats.clarity.model;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import skadistats.clarity.util.TextTable;
 
 import java.util.ArrayList;

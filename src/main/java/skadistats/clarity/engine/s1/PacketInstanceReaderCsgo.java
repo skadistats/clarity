@@ -1,7 +1,7 @@
 package skadistats.clarity.engine.s1;
 
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.engine.PacketInstanceReader;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.io.bitstream.BitStream;

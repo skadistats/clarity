@@ -2,6 +2,32 @@
 
 ## Unreleased
 
+**Vendored protobuf runtime relocated to `skadistats.clarity.protobuf` (BREAKING)**
+
+The protobuf runtime that `clarity-protobuf` vendors has moved out of
+`com.google.protobuf` into `skadistats.clarity.protobuf`. Clarity no
+longer squats on the `com.google.protobuf` namespace, so it can finally
+run alongside a stock `protobuf-java` in the same application — on the
+classpath (previously `IncompatibleClassChangeError`) and on the module
+path (previously a split-package `LayerInstantiationException`).
+
+Generated message classes have **not** moved — they remain in
+`skadistats.clarity.wire.*`. The common consumer shape, an `@OnMessage`
+handler with a generated message type in its signature, is unaffected
+and needs no edit.
+
+What breaks is code that references the runtime directly. Rewrite the
+import; the compiler flags every site:
+
+| Old | New |
+|---|---|
+| `com.google.protobuf.ByteString` | `skadistats.clarity.protobuf.ByteString` |
+| `com.google.protobuf.GeneratedMessage` | `skadistats.clarity.protobuf.GeneratedMessage` |
+| `com.google.protobuf.ZeroCopy` | `skadistats.clarity.protobuf.ZeroCopy` |
+
+To bridge clarity bytes into a stock protobuf 3.x message, wrap without
+copying via `UnsafeByteOperations.unsafeWrap(ZeroCopy.extract(bs))`.
+
 **Opt-in per-class entity filter on the runner**
 
 `AbstractFileRunner.withEntityFilter(Predicate<DTClass>)` lets a consumer

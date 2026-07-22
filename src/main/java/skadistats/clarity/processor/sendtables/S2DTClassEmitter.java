@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.sendtables;
 
-import com.google.protobuf.CodedInputStream;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.CodedInputStream;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.event.Insert;
 import skadistats.clarity.event.InsertEvent;
 import skadistats.clarity.event.Provides;

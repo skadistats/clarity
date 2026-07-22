@@ -1,7 +1,7 @@
 package skadistats.clarity.io.bitstream;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.ByteString;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.model.s2.FieldOpHuffmanTree;
 import skadistats.clarity.platform.ClarityPlatform;
 import skadistats.clarity.platform.buffer.Buffer;

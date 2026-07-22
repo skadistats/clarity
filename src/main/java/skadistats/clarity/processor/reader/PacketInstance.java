@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.reader;
 
-import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.GeneratedMessage;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.source.ResetRelevantKind;
 

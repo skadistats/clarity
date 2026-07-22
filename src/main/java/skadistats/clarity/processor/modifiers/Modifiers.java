@@ -1,8 +1,8 @@
 package skadistats.clarity.processor.modifiers;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.ByteString;
+import skadistats.clarity.protobuf.InvalidProtocolBufferException;
+import skadistats.clarity.protobuf.ZeroCopy;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.InsertEvent;

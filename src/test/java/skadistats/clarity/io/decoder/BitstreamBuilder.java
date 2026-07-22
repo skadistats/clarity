@@ -1,6 +1,6 @@
 package skadistats.clarity.io.decoder;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import skadistats.clarity.io.bitstream.BitStream;
 
 import java.nio.charset.StandardCharsets;

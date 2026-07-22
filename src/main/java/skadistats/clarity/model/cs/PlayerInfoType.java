@@ -1,7 +1,7 @@
 package skadistats.clarity.model.cs;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.ByteString;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.io.Util;
 import skadistats.clarity.wire.Packet;
 import skadistats.clarity.wire.cs.cs2.proto.Cs2ClarityMessages;

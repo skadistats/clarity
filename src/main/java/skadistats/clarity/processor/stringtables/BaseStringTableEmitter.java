@@ -1,6 +1,6 @@
 package skadistats.clarity.processor.stringtables;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import skadistats.clarity.event.EventListener;
 import skadistats.clarity.event.Initializer;
 import skadistats.clarity.event.Insert;

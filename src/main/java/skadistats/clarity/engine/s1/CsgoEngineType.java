@@ -1,6 +1,6 @@
 package skadistats.clarity.engine.s1;
 
-import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.GeneratedMessage;
 import skadistats.clarity.engine.AbstractEngineType;
 import skadistats.clarity.engine.PacketInstanceReader;
 import skadistats.clarity.io.FieldReader;

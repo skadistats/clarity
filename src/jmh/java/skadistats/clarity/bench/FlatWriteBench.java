@@ -1,6 +1,6 @@
 package skadistats.clarity.bench;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import org.openjdk.jmh.annotations.*;
 import skadistats.clarity.io.bitstream.BitStream;
 import skadistats.clarity.io.decoder.Decoder;

@@ -1,7 +1,7 @@
 package skadistats.clarity.processor.stringtables;
 
-import com.google.protobuf.ByteString;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.ByteString;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.ClarityException;
 import skadistats.clarity.event.Provides;
 import skadistats.clarity.io.Util;

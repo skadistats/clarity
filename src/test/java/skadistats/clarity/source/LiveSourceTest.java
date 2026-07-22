@@ -1,6 +1,6 @@
 package skadistats.clarity.source;
 
-import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.GeneratedMessage;
 import com.sun.management.UnixOperatingSystemMXBean;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;

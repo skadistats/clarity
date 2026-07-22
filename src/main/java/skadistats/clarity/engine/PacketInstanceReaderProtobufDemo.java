@@ -1,7 +1,7 @@
 package skadistats.clarity.engine;
 
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.ZeroCopy;
+import skadistats.clarity.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.ZeroCopy;
 import skadistats.clarity.processor.reader.PacketInstance;
 import skadistats.clarity.source.ResetRelevantKind;
 import skadistats.clarity.source.Source;

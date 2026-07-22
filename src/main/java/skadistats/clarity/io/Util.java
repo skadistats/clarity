@@ -1,6 +1,6 @@
 package skadistats.clarity.io;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import org.xerial.snappy.Snappy;
 
 import skadistats.clarity.source.Source;

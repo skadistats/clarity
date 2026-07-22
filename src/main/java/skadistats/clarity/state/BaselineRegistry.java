@@ -1,6 +1,6 @@
 package skadistats.clarity.state;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import skadistats.clarity.model.StringTable;
 
 public class BaselineRegistry {

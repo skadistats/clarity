@@ -1,6 +1,6 @@
 package skadistats.clarity.engine;
 
-import com.google.protobuf.GeneratedMessage;
+import skadistats.clarity.protobuf.GeneratedMessage;
 import org.slf4j.Logger;
 import skadistats.clarity.LogChannel;
 import skadistats.clarity.event.Insert;

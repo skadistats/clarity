@@ -1,6 +1,6 @@
 package skadistats.clarity;
 
-import com.google.protobuf.ByteString;
+import skadistats.clarity.protobuf.ByteString;
 import skadistats.clarity.source.InputStreamSource;
 import skadistats.clarity.source.MappedFileSource;
 import skadistats.clarity.source.Source;
