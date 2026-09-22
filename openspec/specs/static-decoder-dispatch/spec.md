@@ -1,5 +1,8 @@
-## Requirements
+## Purpose
 
+Static, non-virtual decoder dispatch. Decoder classes extend `Decoder` and expose static decode methods under automatically assigned ids, nested decoders compose through `Decoder`, and both the S1 and S2 read paths resolve through the generated `DecoderDispatch` rather than through virtual calls — with the S2 `Field` hierarchy holding the `Decoder` and its `SerializerProperties`, and `S2DecoderFactory` returning lambda factories.
+
+## Requirements
 ### Requirement: Decoder classes extend Decoder
 Each `@RegisterDecoder`-annotated decoder class SHALL be `final` and extend the handwritten `Decoder` abstract class. The class SHALL keep its existing fields, constructors, and initialization logic unchanged.
 

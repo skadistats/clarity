@@ -105,9 +105,17 @@ Both `S2NestedArrayEntityState` and `S2TreeMapEntityState` SHALL extend `S2Abstr
 
 `S2DTClass` SHALL NOT provide `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath`, or `getDecoderForFieldPath`.
 
+#### Scenario: Navigation is requested from the DTClass
+- **WHEN** `S2DTClass` is inspected for `getFieldForFieldPath`, `getNameForFieldPath`, `getFieldPathForName`, `getTypeForFieldPath` or `getDecoderForFieldPath`
+- **THEN** none of them SHALL be present, because navigation now depends on per-entity pointer state the DTClass does not hold
+
 ### Requirement: DTClass interface loses navigation methods
 
 `DTClass` interface SHALL NOT declare `getNameForFieldPath` or `getFieldPathForName`. `S1DTClass` SHALL keep these as concrete (non-override) methods.
+
+#### Scenario: The interface and the S1 implementation diverge
+- **WHEN** the `DTClass` interface and `S1DTClass` are inspected
+- **THEN** the interface SHALL declare neither `getNameForFieldPath` nor `getFieldPathForName`, while `S1DTClass` SHALL still provide both as concrete methods that override nothing
 
 ### Requirement: Entity provides unified navigation API
 
@@ -150,6 +158,14 @@ When a SwitchPointer mutation is created during decode, the new serializer SHALL
 
 `OnEntityPropertyChanged.Adapter.propertyMatches` SHALL accept an `Entity` parameter and use `entity.getNameForFieldPath(fp)` for property name resolution.
 
+#### Scenario: A property name is resolved during a change callback
+- **WHEN** `OnEntityPropertyChanged.Adapter.propertyMatches` resolves the name of a changed field path
+- **THEN** it SHALL do so through the `Entity` it is passed, via `entity.getNameForFieldPath(fp)`, rather than through the DTClass
+
 ### Requirement: pointerCount flows through EntityStateFactory
 
 `EntityStateFactory` SHALL receive `pointerCount` (from `FieldGenerator` via `S2DTClassEmitter`/`DTClasses`) and pass it to `S2EntityStateType.createState()` for allocation of the per-state pointer array.
+
+#### Scenario: A new entity state is allocated
+- **WHEN** `EntityStateFactory` creates a state through `S2EntityStateType.createState()`
+- **THEN** it SHALL pass the `pointerCount` it received from `FieldGenerator` via `S2DTClassEmitter`/`DTClasses`, so the per-state pointer array is allocated at the right size

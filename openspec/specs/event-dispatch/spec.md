@@ -1,5 +1,8 @@
-## ADDED Requirements
+## Purpose
 
+How events reach their listeners at runtime: annotation-nested event contracts and convention-based discovery, listener and filter binding through `LambdaMetafactory`, typed dispatch in `Event.raise`, per-discriminator partitioning for `OnMessage` and `OnPostEmbeddedMessage`, where `PropertyChange` dispatch lives, and the resulting simplification of `Context.createEvent`.
+
+## Requirements
 ### Requirement: Annotation-nested event contract
 
 Every annotation marked with `@UsagePointMarker(value = EVENT_LISTENER, ...)` SHALL declare its event contract through nested types in the annotation declaration itself.

@@ -1,5 +1,8 @@
-## ADDED Requirements
+## Purpose
 
+Generation of the event layer from the `@GenerateEvent` meta-annotation: the `EventBase` interface, event interfaces declared on annotations, generated `Event` classes that implement dispatch, the BUCKETED strategy's message-class dispatch, field-type detection for `ExecutionModel.injectEvent`, and the `EventContractDiscovery` fallback.
+
+## Requirements
 ### Requirement: @GenerateEvent meta-annotation
 The system SHALL provide a `@GenerateEvent` annotation with `@Target(ANNOTATION_TYPE)` and `@Retention(SOURCE)` in package `skadistats.clarity.event`. It SHALL have a `strategy` attribute of enum type `GenerateEvent.Strategy` with values `STANDARD` (default) and `BUCKETED`. When placed on an event annotation, it SHALL trigger the annotation processor to generate the Event implementation class using the specified strategy.
 

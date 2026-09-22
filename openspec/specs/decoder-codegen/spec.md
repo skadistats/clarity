@@ -1,5 +1,8 @@
-## Requirements
+## Purpose
 
+Annotation-driven generation of the decoder dispatch layer: the `@RegisterDecoder` annotation, the handwritten `Decoder` abstract class, and the `DecoderAnnotationProcessor` that emits `DecoderIds` and `DecoderDispatch` — including its stateless-versus-stateful dispatch detection, its validation rules, its independent registration, and the generated `DecoderDispatch.decodeInto`.
+
+## Requirements
 ### Requirement: @RegisterDecoder annotation
 The system SHALL provide a `@RegisterDecoder` annotation with `@Target(TYPE)` and `@Retention(SOURCE)` in package `skadistats.clarity.io.decoder`. When placed on a decoder class, it SHALL mark that class for processing by the `DecoderAnnotationProcessor`.
 

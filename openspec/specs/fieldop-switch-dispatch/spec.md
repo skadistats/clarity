@@ -1,5 +1,8 @@
-## ADDED Requirements
+## Purpose
 
+Replacing virtual field-op dispatch in `S2FieldReader` with a switch over `FieldOpType` ordinal constants, backed by an int-returning field-op reader on `BitStream`, keeping the fast and debug paths separate.
+
+## Requirements
 ### Requirement: BitStream provides int-returning field op reader
 
 `BitStream` SHALL provide a `readFieldOpId()` method that returns the field op ordinal as a primitive `int`, without converting to a `FieldOpType` enum constant. The existing `readFieldOp()` method SHALL remain available for debug and backward-compatible use.
