@@ -16,14 +16,17 @@ public class QAngleDecoderFactory implements DecoderFactory<Vector> {
         if ("qangle_pitch_yaw".equals(f.getEncoderType())) {
             return new QAnglePitchYawOnlyDecoder(bc);
         }
+        // A bit count of 32 means raw floats and takes precedence over the encoder name:
+        // CS2 declares CBodyComponentBaseModelEntity.m_angRotation as qangle_precise with
+        // 32 bits, and the server writes it as three full floats.
+        if (bc == 32) {
+            return new QAngleNoScaleDecoder();
+        }
         if ("qangle_precise".equals(f.getEncoderType())) {
             return new QAnglePreciseDecoder();
         }
         if (bc == 0) {
             return new QAngleNoBitCountDecoder();
-        }
-        if (bc == 32) {
-            return new QAngleNoScaleDecoder();
         }
         return new QAngleBitCountDecoder(bc);
     }
