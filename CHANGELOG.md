@@ -1,5 +1,16 @@
 # Clarity 2 Changelog
 
+## September 24, 2026: Version 4.0.2 released
+
+**Fixes**
+
+* fix #354: decode 32-bit `qangle_precise` QAngles as three raw floats.
+  CS2 declares `CBodyComponentBaseModelEntity.m_angRotation` (used by
+  `CFuncConveyor`) this way; decoding it with the precise encoding
+  desynced the bit stream and failed with `decoder desync: vector length
+  ... exceeds the structural maximum` on maps with conveyors (e.g.
+  `rush_001`). Thanks to @LukasW1337.
+
 ## May 10, 2026: Version 4.0.1 released
 
 **Fixes**
