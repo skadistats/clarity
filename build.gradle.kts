@@ -33,7 +33,7 @@ repositories {
     mavenCentral()
 }
 
-val processorImplementation by configurations
+val processorImplementation = configurations.named("processorImplementation")
 
 dependencies {
     processorImplementation("com.palantir.javapoet:javapoet:0.14.0")
