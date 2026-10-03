@@ -2,6 +2,8 @@ package skadistats.clarity.io.s2;
 
 import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.*;
+import skadistats.clarity.io.decoder.factory.s2.IntSignedDecoderFactory;
+import skadistats.clarity.io.decoder.factory.s2.IntUnsignedDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.DecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
@@ -25,7 +27,11 @@ public class S2DecoderFactory {
 
     static {
         // Unsigned ints
+        FACTORIES.put("uint8", new IntUnsignedDecoderFactory());
         FACTORIES.put("uint64", new LongUnsignedDecoderFactory());
+
+        // Signed ints
+        FACTORIES.put("int8", new IntSignedDecoderFactory());
 
         // Floats
         FACTORIES.put("float32", new FloatDecoderFactory());
@@ -50,12 +56,10 @@ public class S2DecoderFactory {
         DECODERS.put("bool", new BoolDecoder());
 
         // Unsigned ints
-        DECODERS.put("uint8", new IntVarUnsignedDecoder());
         DECODERS.put("uint16", new IntVarUnsignedDecoder());
         DECODERS.put("uint32", new IntVarUnsignedDecoder());
 
         // Signed ints
-        DECODERS.put("int8", new IntVarSignedDecoder());
         DECODERS.put("int16", new IntVarSignedDecoder());
         DECODERS.put("int32", new IntVarSignedDecoder());
         DECODERS.put("int64", new LongVarSignedDecoder());
