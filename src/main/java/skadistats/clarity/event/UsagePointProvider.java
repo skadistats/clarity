@@ -2,6 +2,9 @@ package skadistats.clarity.event;
 
 import java.lang.annotation.Annotation;
 
+/**
+ * A provider class together with one usage point annotation it provides.
+ */
 public class UsagePointProvider {
 
     private final Class<? extends Annotation> eventClass;

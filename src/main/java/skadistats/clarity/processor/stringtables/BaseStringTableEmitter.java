@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.TreeMap;
 
+/** Base class of the engine specific string table emitters; internal. */
 public class BaseStringTableEmitter {
 
     protected static final int MAX_NAME_LENGTH = BitStream.MAX_STRING_LENGTH;

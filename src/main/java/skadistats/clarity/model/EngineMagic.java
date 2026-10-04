@@ -15,8 +15,13 @@ import skadistats.clarity.wire.shared.demo.proto.Demo;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
+/**
+ * The magic header string at the start of a demo file, mapped to the logic
+ * that builds the matching {@link EngineType}.
+ */
 public enum EngineMagic {
 
+    /** {@code PBUFDEM\0}: Dota 2 Source 1 demo. */
     DOTA_S1("PBUFDEM\0") {
         @Override
         public EngineType determineEngineType(Source source) throws IOException {
@@ -26,6 +31,7 @@ public enum EngineMagic {
             return new DotaS1EngineType(EngineId.DOTA_S1, packetInstanceReader, header, infoOffset);
         }
     },
+    /** {@code HL2DEMO\0}: CS:GO Source 1 demo. */
     CSGO("HL2DEMO\0") {
         @Override
         public EngineType determineEngineType(Source source) throws IOException {
@@ -34,6 +40,10 @@ public enum EngineMagic {
             return new CsgoEngineType(EngineId.CSGO, packetInstanceReader, header);
         }
     },
+    /**
+     * {@code PBDEMS2\0}: Source 2 demo. The game (Dota 2, CS2 or Deadlock) is
+     * determined from the file header's game or game directory.
+     */
     S2("PBDEMS2\0") {
         private final Pattern GAMEDIR_MATCH = Pattern.compile(".*[/\\\\](\\w+)$");
         @Override
@@ -69,6 +79,9 @@ public enum EngineMagic {
         }
     };
 
+    /**
+     * @return the constant whose magic equals {@code magic}, or {@code null} if none does
+     */
     public static EngineMagic magicForString(String magic) {
         for (var em : values()) {
             if (em.magic.equals(magic)) {
@@ -84,5 +97,11 @@ public enum EngineMagic {
         this.magic = magic;
     }
 
+    /**
+     * Reads the remainder of the demo header from {@code source} (positioned
+     * just after the magic string) and builds the engine type.
+     *
+     * @throws skadistats.clarity.ClarityException for {@link #S2} if the game cannot be determined
+     */
     public abstract EngineType determineEngineType(Source source) throws IOException;
 }

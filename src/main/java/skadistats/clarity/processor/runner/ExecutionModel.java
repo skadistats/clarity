@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Internal: holds the processors of a run and wires their event listeners.
+ */
 public class ExecutionModel {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.executionModel);

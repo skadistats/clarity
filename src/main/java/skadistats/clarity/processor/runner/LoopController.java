@@ -4,6 +4,9 @@ import skadistats.clarity.source.ResetRelevantKind;
 
 import java.io.IOException;
 
+/**
+ * Internal: lets the runner steer the read loop (tick boundaries, seeking).
+ */
 public class LoopController {
 
     public enum Command {

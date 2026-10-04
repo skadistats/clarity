@@ -19,21 +19,44 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+/**
+ * Fires once per changed property of an entity: for every property present when the entity is
+ * created, and for every field path reported by {@link OnEntityUpdated} afterwards. It is
+ * dispatched from built-in listeners of {@link OnEntityCreated} and {@link OnEntityUpdated}
+ * (both {@code @Order(1000)}), so it follows those events for the same entity.
+ *
+ * <p>Handler signature: {@code void onX([Context ctx,] Entity e, FieldPath fp)}, where {@code fp} is
+ * the changed property; read its new value with the entity's getters, and obtain its name with
+ * {@link Entity#getNameForFieldPath(FieldPath)}.
+ *
+ * <p>Attributes:
+ * <ul>
+ * <li>{@code classPattern}: regular expression that must match the whole DT class name
+ * ({@link skadistats.clarity.model.DTClass#getDtName()}; full match). Default {@code ".*"}.</li>
+ * <li>{@code propertyPattern}: regular expression that must match the whole property name
+ * ({@link Entity#getNameForFieldPath(FieldPath)}; full match). Default {@code ".*"}.</li>
+ * </ul>
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
 @UsagePointMarker(value = UsagePointType.EVENT_LISTENER)
 public @interface OnEntityPropertyChanged {
+    /** Full-match regex against the entity's DT class name. */
     String classPattern() default ".*";
+    /** Full-match regex against the property name of the changed field path. */
     String propertyPattern() default ".*";
 
+    /** Handler signature for {@link OnEntityPropertyChanged}; implemented by the runtime, not by users. */
     interface Listener {
         void invoke(Entity e, FieldPath fp);
     }
 
+    /** Filter signature for {@link OnEntityPropertyChanged}; the runtime applies the patterns itself. */
     interface Filter {
         boolean test(Entity e, FieldPath fp);
     }
 
+    /** Event dispatcher for {@link OnEntityPropertyChanged}; applies the class and property patterns per listener. Used by the runtime. */
     final class Event extends skadistats.clarity.event.Event<OnEntityPropertyChanged> {
         private static final String MATCH_ALL = ".*";
         private static final Adapter[] EMPTY = new Adapter[0];
@@ -78,6 +101,7 @@ public @interface OnEntityPropertyChanged {
             }
         }
 
+        /** Created by the runner. */
         public Event(Runner runner, Class<OnEntityPropertyChanged> eventType, Set<EventListener<OnEntityPropertyChanged>> listeners) {
             super(runner, eventType, listeners);
             var els = listeners();
@@ -100,6 +124,7 @@ public @interface OnEntityPropertyChanged {
             return arr;
         }
 
+        /** Invokes every listener whose class and property patterns match. */
         public void raise(Entity e, FieldPath fp) {
             var interested = adaptersFor(e.getDtClass());
             for (var a : interested) {

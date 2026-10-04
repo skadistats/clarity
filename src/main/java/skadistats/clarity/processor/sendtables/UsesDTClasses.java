@@ -9,6 +9,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Declares that the annotated processor class or method needs {@link DTClasses}. This activates the DT class
+ * emitter of the replay's engine.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = { ElementType.TYPE, ElementType.METHOD })
 @UsagePointMarker(value = UsagePointType.FEATURE)

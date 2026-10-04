@@ -10,10 +10,34 @@ import skadistats.clarity.util.TextTable;
 import java.util.Iterator;
 import java.util.function.Function;
 
+/**
+ * The property values of one entity, addressed by {@link FieldPath}. The
+ * implementations are {@code S1EntityState} (Source 1) and
+ * {@code S2EntityState} (Source 2); the static accessors dispatch on the
+ * implementation and cast the {@link FieldPath} to the matching type.
+ *
+ * <p>The storage strategy is chosen per run: Source 1 uses
+ * {@code S1EntityStateType.FLAT} by default (alternative {@code OBJECT_ARRAY}),
+ * Source 2 uses {@code S2EntityStateType.NESTED_ARRAY} by default
+ * (alternatives {@code TREE_MAP}, {@code FLAT}), configurable on the runner with
+ * {@code withS1EntityState} / {@code withS2EntityState}.
+ *
+ * <p>States are mutated by the parser while it reads packets. Hold on to a
+ * {@link #copy()} or a {@link StateDelta} if values must survive later updates.
+ */
 public sealed interface EntityState permits S1EntityState, S2EntityState {
 
+    /**
+     * @return an iterator over the field paths of this state's fields
+     */
     Iterator<FieldPath> fieldPathIterator();
 
+    /**
+     * Reads the value for {@code fp}, boxing primitives. The value is cast
+     * unchecked to {@code T}; a wrong {@code T} fails with a
+     * {@link ClassCastException} at the call site. Prefer the primitive getters
+     * on hot paths.
+     */
     @SuppressWarnings("unchecked")
     static <T> T getValueForFieldPath(EntityState state, FieldPath fp) {
         return (T) switch (state) {
@@ -22,6 +46,12 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /**
+     * Renders all fields as a text table with field path, property name and value.
+     *
+     * @param title the table title
+     * @param nameResolver maps a field path to its property name, e.g. {@code entity::getNameForFieldPath}
+     */
     default String dump(String title, Function<FieldPath, String> nameResolver) {
         final var table = new TextTable.Builder()
                 .setFrame(TextTable.FRAME_COMPAT)
@@ -44,8 +74,12 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         return table.toString();
     }
 
+    /**
+     * @return an independent copy of this state
+     */
     EntityState copy();
 
+    /** Internal to the parser: applies a decoded mutation to the field at {@code fp}. */
     static boolean applyMutation(EntityState state, FieldPath fp, StateMutation mutation) {
         return switch (state) {
             case S1EntityState s1 -> s1.applyMutation((S1FieldPath) fp, mutation);

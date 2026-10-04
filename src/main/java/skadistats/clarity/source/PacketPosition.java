@@ -1,12 +1,23 @@
 package skadistats.clarity.source;
 
 
+/**
+ * Position of a reset-relevant packet in a {@link Source}: the tick it belongs to, its kind and its byte offset.
+ * Used by {@link skadistats.clarity.processor.runner.ControllableRunner} to plan seeks. Ordered by tick, then kind;
+ * {@code equals} ignores the offset.
+ */
 public class PacketPosition implements Comparable<PacketPosition> {
 
     private final int tick;
     private final ResetRelevantKind kind;
     private final int offset;
 
+    /**
+     * @param tick the packet's tick; {@code -1} if before the sync tick
+     * @param kind the kind of packet
+     * @param offset the byte offset in the source
+     * @return the position, or {@code null} if {@code kind} is {@code null}
+     */
     public static PacketPosition createPacketPosition(int tick, ResetRelevantKind kind, int offset) {
         if (kind != null) {
             return new PacketPosition(tick, kind, offset);
@@ -22,14 +33,23 @@ public class PacketPosition implements Comparable<PacketPosition> {
         this.offset = offset;
     }
 
+    /**
+     * @return the tick
+     */
     public int getTick() {
         return tick;
     }
 
+    /**
+     * @return the kind of packet
+     */
     public ResetRelevantKind getKind() {
         return kind;
     }
 
+    /**
+     * @return the byte offset in the source
+     */
     public int getOffset() {
         return offset;
     }

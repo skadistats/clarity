@@ -12,6 +12,11 @@ import skadistats.clarity.model.StringTable;
 import skadistats.clarity.processor.stringtables.OnStringTableEntry;
 import skadistats.clarity.wire.dota.common.proto.DOTAModifiers;
 
+/**
+ * Provides {@link OnModifierTableEntry}, decoded from the {@code "ActiveModifiers"} string table (Dota 2).
+ * <p>
+ * An entry that fails to parse is logged with a hex dump and raised as an incomplete message.
+ */
 @Provides({OnModifierTableEntry.class})
 public class Modifiers {
 
@@ -20,6 +25,7 @@ public class Modifiers {
     @InsertEvent
     private OnModifierTableEntry.Event evEntry;
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnStringTableEntry("ActiveModifiers")
     public void onTableEntry(StringTable table, int index, String key, ByteString value) throws InvalidProtocolBufferException {
         if (value != null) {
@@ -38,6 +44,14 @@ public class Modifiers {
         }
     }
 
+    /**
+     * Formats bytes as a hex dump, 16 bytes per row, each row prefixed with its decimal offset.
+     *
+     * @param array the data
+     * @param offset index of the first byte to dump
+     * @param length number of bytes to dump
+     * @return the formatted dump
+     */
     public static String formatHexDump(byte[] array, int offset, int length) {
         var builder = new StringBuilder();
         for (var rowOffset = offset; rowOffset < offset + length; rowOffset += 16) {

@@ -128,6 +128,7 @@ public class EventGenerationProcessor extends AbstractProcessor {
     ) {
         var classBuilder = TypeSpec.classBuilder(generatedName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addJavadoc("Generated dispatcher for {@link $T}; created by the runner, not by user code.\n", annotationClassName)
                 .superclass(superClass)
                 .addSuperinterface(eventInterface);
 
@@ -135,6 +136,7 @@ public class EventGenerationProcessor extends AbstractProcessor {
         classBuilder.addField(FieldSpec.builder(listenerArrayType, "listeners", Modifier.PRIVATE, Modifier.FINAL).build());
 
         var ctor = MethodSpec.constructorBuilder()
+                .addJavadoc("Called by the runner with the listeners registered for this event.\n")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(RUNNER, "runner")
                 .addParameter(ParameterizedTypeName.get(ClassName.get(Class.class), annotationClassName), "eventType")
@@ -225,6 +227,7 @@ public class EventGenerationProcessor extends AbstractProcessor {
 
         var classBuilder = TypeSpec.classBuilder(generatedName)
                 .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+                .addJavadoc("Generated dispatcher for {@link $T}; created by the runner, not by user code.\n", annotationClassName)
                 .superclass(superClass)
                 .addSuperinterface(eventInterface)
                 .addType(entryClass)
@@ -238,6 +241,7 @@ public class EventGenerationProcessor extends AbstractProcessor {
                 .addField(FieldSpec.builder(entryArrayType, "wildcardEntries", Modifier.PRIVATE, Modifier.FINAL).build());
 
         var ctor = MethodSpec.constructorBuilder()
+                .addJavadoc("Called by the runner with the listeners registered for this event.\n")
                 .addModifiers(Modifier.PUBLIC)
                 .addParameter(RUNNER, "runner")
                 .addParameter(ParameterizedTypeName.get(ClassName.get(Class.class), annotationClassName), "eventType")

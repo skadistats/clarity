@@ -5,9 +5,18 @@ import java.lang.reflect.Method;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Discovers the nested typed contract (Listener, Filter, Event) inside an
- * {@code @UsagePointMarker(EVENT_LISTENER)}-bearing annotation, following the
- * naming convention established by the typed-event-dispatch migration.
+ * Finds the nested {@code Listener} and {@code Filter} interfaces and the {@link Event} subclass
+ * of an event annotation, by name.
+ * <ul>
+ *   <li>{@code Listener}, {@code Filter}: nested interfaces; the first abstract method of each is used.</li>
+ *   <li>Event class: a nested non-interface class named {@code Event} that extends {@link Event},
+ *       otherwise the class {@code <AnnotationName>_Event} if it exists on the classpath
+ *       (see {@link GenerateEvent}).</li>
+ * </ul>
+ * <p>
+ * Results are cached per annotation type.
+ *
+ * @see Event
  */
 public class EventContractDiscovery {
 

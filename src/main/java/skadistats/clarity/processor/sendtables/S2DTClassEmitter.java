@@ -16,6 +16,7 @@ import skadistats.clarity.wire.shared.s2.proto.S2NetMessages;
 
 import java.io.IOException;
 
+/** Builds {@link skadistats.clarity.model.DTClass}es from Source 2 flattened serializers; internal. */
 @Provides(value = {OnDTClass.class, OnDTClassesComplete.class}, engine = {EngineId.DOTA_S2, EngineId.CS2, EngineId.DEADLOCK})
 public class S2DTClassEmitter {
 

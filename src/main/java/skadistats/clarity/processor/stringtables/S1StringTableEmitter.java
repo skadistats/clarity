@@ -14,6 +14,7 @@ import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
 import java.util.Objects;
 
+/** Emits string table events for Source 1 replays; internal. */
 @Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S1, EngineId.CSGO})
 @StringTableEmitter
 public class S1StringTableEmitter extends BaseStringTableEmitter {

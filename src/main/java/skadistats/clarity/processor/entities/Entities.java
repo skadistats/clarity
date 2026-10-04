@@ -54,6 +54,19 @@ import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+/**
+ * Tracks the entities of the replay and raises the {@code @OnEntity*} events as
+ * {@code CSVCMsg_PacketEntities} messages are processed. Entities are held in a table indexed by
+ * entity index; each is represented by a persistent {@link Entity} whose state is updated in place.
+ * Entities of classes rejected by the context's entity filter are skipped and never appear.
+ *
+ * <p>Declare {@link UsesEntities} on your processor and obtain the instance with an
+ * {@code @Insert Entities entities} field or {@code ctx.getProcessor(Entities.class)}.
+ *
+ * @see OnEntityCreated
+ * @see OnEntityUpdated
+ * @see OnEntityDeleted
+ */
 @Provides({
         UsesEntities.class,
         OnEntityCreated.class,
@@ -67,6 +80,7 @@ import java.util.stream.Stream;
 @UsesDTClasses
 public class Entities {
 
+    /** Name of the string table holding the per-class instance baselines. */
     public static final String BASELINE_TABLE = "instancebaseline";
 
     private static final int DEFERRED_MESSAGE_MAX = 20;
@@ -118,6 +132,7 @@ public class Entities {
     @InsertEvent
     private OnEntityUpdatesCompleted.Event evUpdatesCompleted;
 
+    /** Runtime hook: installs the {@code classPattern} filter of a {@link OnEntityCreated} listener. */
     @Initializer(OnEntityCreated.class)
     public void initOnEntityCreated(final EventListener<OnEntityCreated> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -127,6 +142,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: installs the {@code classPattern} filter of a {@link OnEntityDeleted} listener. */
     @Initializer(OnEntityDeleted.class)
     public void initOnEntityDeleted(final EventListener<OnEntityDeleted> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -136,6 +152,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: installs the {@code classPattern} filter of a {@link OnEntityUpdated} listener. */
     @Initializer(OnEntityUpdated.class)
     public void initOnEntityUpdated(final EventListener<OnEntityUpdated> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -145,6 +162,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: installs the {@code classPattern} filter of an {@link OnEntityPropertyCountChanged} listener. */
     @Initializer(OnEntityPropertyCountChanged.class)
     public void initPropertyCountChanged(final EventListener<OnEntityPropertyCountChanged> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -154,6 +172,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: installs the {@code classPattern} filter of a {@link OnEntityEntered} listener. */
     @Initializer(OnEntityEntered.class)
     public void initOnEntityEntered(final EventListener<OnEntityEntered> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -163,6 +182,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: installs the {@code classPattern} filter of a {@link OnEntityLeft} listener. */
     @Initializer(OnEntityLeft.class)
     public void initOnEntityLeft(final EventListener<OnEntityLeft> listener) {
         var classPattern = listener.getAnnotation().classPattern();
@@ -201,6 +221,7 @@ public class Entities {
     private final Map<String, ClassPatternMatcher> classPatternMatchers = new HashMap<>();
 
 
+    /** Runtime hook: allocates the entity table. */
     @OnInit
     public void onInit() {
         entityCount = 1 << engineType.getIndexBits();
@@ -210,11 +231,13 @@ public class Entities {
         entityFilter = context.getEntityFilter();
     }
 
+    /** Runtime hook: creates the field reader. */
     @OnDTClassesComplete
     public void onDTClassesComplete() {
         fieldReader = context.newFieldReader();
     }
 
+    /** Runtime hook: handles reset (seek) phases; events are suppressed during the reset and the net difference is raised on completion. */
     @OnReset
     public void onReset(Demo.CDemoStringTables packet, ResetPhase phase) {
         switch (phase) {
@@ -297,6 +320,7 @@ public class Entities {
         }
     }
 
+    /** Runtime hook: sets up the baseline registry. */
     @OnStringTableCreated
     public void onStringTableCreated(int numTables, StringTable table) {
         if (!BASELINE_TABLE.equals(table.getName())) {
@@ -305,6 +329,7 @@ public class Entities {
         baselineRegistry = new BaselineRegistry(table, entityCount);
     }
 
+    /** Runtime hook: tracks baseline table entries. */
     @OnStringTableEntry(BASELINE_TABLE)
     public void onBaselineEntry(StringTable table, int index, String key, ByteString value) {
         baselineRegistry.markClassBaselineDirty(index);
@@ -316,6 +341,7 @@ public class Entities {
         baselineRegistry.updateClassBaselineIndex(Integer.parseInt(key), index);
     }
 
+    /** Runtime hook: records the current server tick. */
     @OnMessage(CommonNetworkBaseTypes.CNETMsg_Tick.class)
     public void onMessage(CommonNetworkBaseTypes.CNETMsg_Tick message) {
         serverTick = message.getTick();
@@ -339,6 +365,7 @@ public class Entities {
         queuedUpdates.add(update);
     }
 
+    /** Runtime hook: applies a packet-entities message, or defers it until its delta base tick has been reached. */
     @OnMessage(CommonNetMessages.CSVCMsg_PacketEntities.class)
     public void onPacketEntities(CommonNetMessages.CSVCMsg_PacketEntities message) {
         if (message.getIsDelta()) {
@@ -718,6 +745,10 @@ public class Entities {
         return s;
     }
 
+    /**
+     * Sets a listener that is notified of every state mutation applied to entity and baseline
+     * states (birth, setup and update), or {@code null} to remove it.
+     */
     public void setMutationListener(MutationListener mutationListener) {
         this.mutationListener = mutationListener;
     }
@@ -738,10 +769,21 @@ public class Entities {
         return s;
     }
 
+    /**
+     * Returns the entity at the given index.
+     *
+     * @return the entity, or {@code null} if the slot is empty
+     */
     public Entity getByIndex(int index) {
         return entities.getEntity(index);
     }
 
+    /**
+     * Returns the entity for the given handle (index plus serial).
+     *
+     * @return the entity, or {@code null} if the slot is empty or holds an entity with a different
+     * serial
+     */
     public Entity getByHandle(int handle) {
         var e = getByIndex(engineType.indexForHandle(handle));
         return e == null || e.getHandle() != handle ? null : e;
@@ -758,6 +800,7 @@ public class Entities {
      * method — a DT class can have many live entities, so a
      * single-match shape would silently hide multiplicity.
      *
+     * @return a stream of the entities currently in the table
      * @see #byDtName(String)
      */
     public Stream<Entity> stream() {
@@ -774,6 +817,8 @@ public class Entities {
      * entities.stream().filter(Entities.byDtName("CDOTAGamerulesProxy"))
      *         .findFirst().ifPresent(...);
      * }</pre>
+     *
+     * @return a predicate that is true for entities of exactly that DT class
      */
     public static Predicate<Entity> byDtName(String dtName) {
         return e -> dtName.equals(e.getDtClass().getDtName());

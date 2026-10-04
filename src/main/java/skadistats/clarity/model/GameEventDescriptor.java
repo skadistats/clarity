@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Describes a game event type: id, name and the ordered list of its keys.
+ */
 public class GameEventDescriptor {
 
     private final int eventId;
@@ -12,6 +15,7 @@ public class GameEventDescriptor {
     private final Map<String, Integer> indexByKey = new HashMap<>();
 
 
+    /** Created by the parser from the game event list. */
     public GameEventDescriptor(int eventId, String name, String[] keys) {
         this.eventId = eventId;
         this.name = name;
@@ -21,18 +25,26 @@ public class GameEventDescriptor {
         }
     }
 
+    /** @return the numeric id game events of this type are sent with */
     public int getEventId() {
         return eventId;
     }
 
+    /** @return the event name */
     public String getName() {
         return name;
     }
 
+    /**
+     * @return the key names in value order; the backing array, do not modify
+     */
     public String[] getKeys() {
         return keys;
     }
 
+    /**
+     * @return the position of {@code key} in {@link #getKeys()}, or {@code null} if there is no such key
+     */
     public Integer getIndexForKey(String key) {
         return indexByKey.get(key);
     }

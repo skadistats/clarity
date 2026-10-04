@@ -32,6 +32,17 @@ import java.util.function.Consumer;
  *
  * <p>Failing to close the source will leak file descriptors and memory mappings
  * until the JVM Cleaner releases them — see issue #289.
+ *
+ * <p><b>Threading:</b> {@link #runWith(Object...)} starts a dedicated thread ({@code clarity-runner}) that
+ * runs all event listeners. {@link #seek(int)}, {@link #tick()} and {@link #setDemandedTick(int)} are meant to
+ * be called from a controlling thread and synchronize with the runner thread via a lock. {@link #seek(int)}
+ * and {@link #tick()} block until the runner thread has reached the requested tick, so the processors' state
+ * is stable when they return. {@link #halt()}, {@link #join()}, {@link #isRunning()}, {@link #isResetting()}
+ * and {@link #isAtEnd()} may be called from any thread. {@link #getTick()} is not synchronized.
+ *
+ * <p><b>Tick semantics:</b> after {@code runWith}, the runner stops at the end of tick 0. {@code tick()} moves
+ * to the end of the next tick, {@code seek(n)} to the end of tick {@code n}. At those points the listeners
+ * have been called for the tick, including {@code OnTickEnd}.
  */
 public class ControllableRunner extends AbstractFileRunner {
 
@@ -163,8 +174,12 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     };
 
+    /**
+     * Loop controller that serializes all loop control and reset-relevant-packet registration with the runner lock.
+     */
     public class LockingLoopController extends LoopController {
 
+        /** Internal. */
         public LockingLoopController(Func controllerFunc) {
             super(controllerFunc);
         }
@@ -240,15 +255,23 @@ public class ControllableRunner extends AbstractFileRunner {
         return new TreeSet<>(resetRelevantPackets.headSet(wanted, true));
     }
 
+    /**
+     * One step of a seek plan; internal.
+     */
     public static class ResetStep {
         private final LoopController.Command command;
         private final Integer offset;
+        /** Internal. */
         public ResetStep(LoopController.Command command, Integer offset) {
             this.command = command;
             this.offset = offset;
         }
     }
 
+    /**
+     * @param s the source to read from; the engine type is determined by reading its magic
+     * @throws IOException if the source does not contain a valid replay
+     */
     public ControllableRunner(Source s) throws IOException {
         super(s, s.determineEngineType());
         upcomingTick = tick;
@@ -256,6 +279,17 @@ public class ControllableRunner extends AbstractFileRunner {
         this.loopController = new LockingLoopController(normalLoopControl);
     }
 
+    /**
+     * Starts processing on a new non-daemon thread named {@code clarity-runner} and returns immediately.
+     * The thread runs up to the end of tick 0 and then waits for {@link #tick()}, {@link #seek(int)} or {@link #setDemandedTick(int)}.
+     *
+     * <p>If the runner thread terminates with an exception, it is logged, remembered, passed to the callback set
+     * with {@link #setOnException(Consumer)} (not for {@link InterruptedException}), and subsequently thrown as the cause
+     * of the {@link InterruptedException} from a waiting {@link #seek(int)} or {@link #tick()}.
+     *
+     * @param processors processor instances whose {@code @On*} methods are registered; arrays are flattened
+     * @return this runner
+     */
     public ControllableRunner runWith(final Object... processors) {
         runnerThread = new Thread(() -> {
             log.debug("runner started");
@@ -291,10 +325,18 @@ public class ControllableRunner extends AbstractFileRunner {
         return this;
     }
 
+    /**
+     * Sets a callback invoked on the runner thread when it dies with an exception other than {@link InterruptedException}.
+     *
+     * @param onException the callback
+     */
     public void setOnException(Consumer<Throwable> onException) {
         this.onException = onException;
     }
 
+    /**
+     * @return {@code true} while the runner is repositioning the source for a backwards or far-forward seek
+     */
     public boolean isResetting() {
         lock.lock();
         try {
@@ -304,10 +346,19 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
+    /**
+     * @return {@code true} while the runner thread exists, i.e. from {@code runWith} until the thread has finished
+     */
     public boolean isRunning() {
         return runnerThread != null;
     }
 
+    /**
+     * Requests to be positioned at the end of the given tick without waiting for it to be reached.
+     * The runner thread picks the request up at its next tick boundary. Use {@link #seek(int)} to block until done.
+     *
+     * @param demandedTick the tick to move to
+     */
     public void setDemandedTick(int demandedTick) {
         lock.lock();
         try {
@@ -335,6 +386,18 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
+    /**
+     * Moves to the end of the given tick and blocks until it has been reached.
+     *
+     * <p>Seeking forward by up to 5 ticks just processes the ticks in between. Otherwise the source is repositioned to
+     * the nearest preceding reset-relevant packets (full packets, string tables, sync) and processing resumes from there.
+     * For a source that cannot move backwards (e.g. {@link skadistats.clarity.source.InputStreamSource}), only forward
+     * seeking is possible.
+     *
+     * @param demandedTick the tick to move to
+     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread died with an exception
+     *                              (available via {@link Throwable#getCause()})
+     */
     public void seek(int demandedTick) throws InterruptedException {
         lock.lock();
         try {
@@ -347,6 +410,13 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
+    /**
+     * Advances by one tick and blocks until the end of that tick has been reached. If the runner has not yet
+     * reached the previously requested tick, waits for it first.
+     *
+     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread died with an exception
+     *                              (available via {@link Throwable#getCause()})
+     */
     public void tick() throws InterruptedException {
         lock.lock();
         try {
@@ -362,10 +432,16 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
+    /**
+     * @return {@code true} once the runner has reached the end of the replay data
+     */
     public boolean isAtEnd() {
         return upcomingTick == Integer.MAX_VALUE;
     }
 
+    /**
+     * Interrupts the runner thread, ending the run. Does not wait; call {@link #join()} afterwards.
+     */
     public void halt() {
         if (runnerThread != null && runnerThread.isAlive()) {
             runnerThread.interrupt();
@@ -384,6 +460,13 @@ public class ControllableRunner extends AbstractFileRunner {
         }
     }
 
+    /**
+     * Returns the last tick of the replay. Takes the runner lock; the source position is not changed while
+     * the runner is waiting.
+     *
+     * @return the last tick
+     * @throws RuntimeException wrapping the {@link IOException} if the last tick cannot be determined
+     */
     @Override
     public int getLastTick() {
         lock.lock();

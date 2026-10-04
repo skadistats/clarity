@@ -4,6 +4,13 @@ import skadistats.clarity.wire.dota.common.proto.DOTACombatLog;
 
 import java.util.List;
 
+/**
+ * A Dota 2 combat log entry, as a view over the Source 1 or Source 2
+ * representation. Call {@code hasX()} before reading an optional field; the
+ * Source 1 view reports most fields as present, the Source 2 view reflects the
+ * protobuf message. The {@code ...NameIdx} getters return indices into the
+ * combat log names string table, the {@code ...Name} getters the resolved names.
+ */
 public interface CombatLogEntry {
     boolean hasType();
     DOTACombatLog.DOTA_COMBATLOG_TYPES getType();

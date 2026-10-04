@@ -12,6 +12,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * Static helpers for reading metadata from replay files without running a full parse.
+ *
+ * <p>The {@code ...ForFile} and {@code ...ForStream} variants open their own source/stream, but only
+ * {@code headerForFile} closes it; for {@code infoForFile} and {@code metadataForFile} the mapping or file handle
+ * stays open until it is garbage collected. Use the {@code ...ForSource} variants with try-with-resources to control that.
+ */
 public class Clarity {
 
     /**

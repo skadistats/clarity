@@ -21,6 +21,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Resource manifests of a Source 2 replay, and a lookup from resource handle to resource path.
+ * <p>
+ * Applies to {@link EngineId#DOTA_S2}, {@link EngineId#CS2} and {@link EngineId#DEADLOCK}. Active when a processor
+ * declares {@link UsesResources}. The game session manifest is read from {@code CSVCMsg_ServerInfo} (and all state
+ * is reset when it arrives); spawn group manifests are read from the {@code CNETMsg_SpawnGroup_*} messages.
+ * Resource handles are 64-bit MurmurHash values of the full resource path.
+ */
 @Provides(value = {UsesResources.class}, engine = {EngineId.DOTA_S2, EngineId.CS2, EngineId.DEADLOCK})
 public class Resources {
 
@@ -36,10 +44,16 @@ public class Resources {
     private final Map<Integer, SpawnGroupManifest> spawnGroupManifests = new HashMap<>();
     private final Map<Long, Entry> resourceHandles = new HashMap<>();
 
+    /**
+     * @return the manifest sent with the server info, or {@code null} if no server info was seen yet
+     */
     public GameSessionManifest getGameSessionManifest() {
         return gameSessionManifest;
     }
 
+    /**
+     * @return an unmodifiable view of the manifests of all currently known spawn groups
+     */
     public Collection<SpawnGroupManifest> getManifests() {
         return Collections.unmodifiableCollection(spawnGroupManifests.values());
     }
@@ -52,6 +66,7 @@ public class Resources {
         resourceHandles.clear();
     }
 
+    /** Internal: resets all state and reads the game session manifest. */
     @OnMessage(DemoNetMessages.CSVCMsg_ServerInfo.class)
     public void onServerInfo(DemoNetMessages.CSVCMsg_ServerInfo message) throws IOException {
         clear();
@@ -59,6 +74,7 @@ public class Resources {
         addManifestData(gameSessionManifest, message.getGameSessionManifest());
     }
 
+    /** Internal: registers a new spawn group manifest. */
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Load.class)
     public void onLoad(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Load message) throws IOException {
         if (spawnGroupManifests.containsKey(message.getSpawngrouphandle())) {
@@ -73,6 +89,7 @@ public class Resources {
         addManifestData(m, message.getSpawngroupmanifest());
     }
 
+    /** Internal: adds entries to an existing spawn group manifest. */
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate.class)
     public void onManifestUpdate(S2NetworkBaseTypes.CNETMsg_SpawnGroup_ManifestUpdate message) throws IOException {
         var m = spawnGroupManifests.get(message.getSpawngrouphandle());
@@ -84,22 +101,36 @@ public class Resources {
         addManifestData(m, message.getSpawngroupmanifest());
     }
 
+    /** Internal: no-op. */
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted.class)
     public void onLoadCompleted(S2NetworkBaseTypes.CNETMsg_SpawnGroup_LoadCompleted message) {
     }
 
+    /** Internal: no-op. */
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick.class)
     public void onSetCreationTick(S2NetworkBaseTypes.CNETMsg_SpawnGroup_SetCreationTick message) {
     }
 
+    /** Internal: no-op, manifests are kept after unload. */
     @OnMessage(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Unload.class)
     public void onUnload(S2NetworkBaseTypes.CNETMsg_SpawnGroup_Unload message) {
     }
 
+    /**
+     * @param resourceHandle a 64-bit resource handle
+     * @return the entry for that handle, or {@code null} if the handle is not known from any manifest
+     */
     public Entry getEntryForResourceHandle(long resourceHandle) {
         return resourceHandles.get(resourceHandle);
     }
 
+    /**
+     * Registers a resource that is not listed in any manifest.
+     *
+     * @param dir directory, including the trailing slash
+     * @param name file name without extension
+     * @param extension file extension without the dot
+     */
     protected void addStaticResourceEntry(String dir, String name, String extension) {
         addEntryToResourceHandles(
                 new Entry(
@@ -110,6 +141,14 @@ public class Resources {
         );
     }
 
+    /**
+     * Decodes a serialized (optionally LZSS-compressed) manifest, adds its entries to {@code manifest} and
+     * registers them for handle lookup.
+     *
+     * @param manifest the manifest to add the entries to
+     * @param raw the serialized manifest data
+     * @throws IOException if the data cannot be read
+     */
     protected void addManifestData(Manifest manifest, ByteString raw) throws IOException {
 
         var bs = BitStream.createBitStream(raw);
@@ -177,35 +216,52 @@ public class Resources {
         return MurmurHash.hash64(value, 0xEDABCDEF);
     }
 
+    /** Manifest of a single spawn group. */
     public class SpawnGroupManifest extends Manifest {
         private int spawnGroupHandle;
         private int creationSequence;
         private boolean incomplete;
 
+        /**
+         * @return the handle of the spawn group, as in {@link skadistats.clarity.model.Entity#getSpawnGroupHandle()}
+         */
         public int getSpawnGroupHandle() {
             return spawnGroupHandle;
         }
 
+        /**
+         * @return the creation sequence sent with the spawn group load message
+         */
         public int getCreationSequence() {
             return creationSequence;
         }
 
+        /**
+         * @return the {@code manifestincomplete} flag of the latest load or manifest update message for this spawn
+         *         group
+         */
         public boolean isIncomplete() {
             return incomplete;
         }
     }
 
+    /** Manifest sent with the server info. */
     public class GameSessionManifest extends Manifest {
     }
 
+    /** A list of resource entries. */
     public class Manifest {
         private final List<Entry> entries = new ArrayList<>();
 
+        /**
+         * @return an unmodifiable view of the entries of this manifest
+         */
         public List<Entry> getEntries() {
             return Collections.unmodifiableList(entries);
         }
     }
 
+    /** A resource, identified by directory, name and extension. */
     public class Entry {
         private final long dirHash;
         private final String name;
@@ -217,18 +273,30 @@ public class Resources {
             this.extHash = extHash;
         }
 
+        /**
+         * @return the directory, including the trailing slash
+         */
         public String getDir() {
             return dirs.get(dirHash);
         }
 
+        /**
+         * @return the file name without extension
+         */
         public String getName() {
             return name;
         }
 
+        /**
+         * @return the file extension without the dot
+         */
         public String getExtension() {
             return exts.get(extHash);
         }
 
+        /**
+         * @return the full resource path, {@code dir + name + "." + extension}
+         */
         @Override
         public String toString() {
             return String.format("%s%s.%s", dirs.get(dirHash), name, exts.get(extHash));

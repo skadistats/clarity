@@ -11,6 +11,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+/** Per-build patches applied by {@link FieldGenerator}; internal. */
 public class FieldGeneratorPatches {
 
     private static final Map<GameVersionRange, PatchFunc> PATCHES_DOTA_S2 = new LinkedHashMap<>();

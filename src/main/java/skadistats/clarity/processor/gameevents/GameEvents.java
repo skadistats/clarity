@@ -17,6 +17,13 @@ import skadistats.clarity.wire.shared.common.proto.CommonNetworkBaseTypes;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Decodes game events from the replay.
+ * <p>
+ * Provides {@link OnGameEventDescriptor}, raised for each descriptor of the game event list, and
+ * {@link OnGameEvent}, raised for each game event. Events that arrive before the event list are buffered and raised
+ * after it. Events with an unknown event id are dropped with a warning.
+ */
 @Provides({ OnGameEventDescriptor.class, OnGameEvent.class})
 public class GameEvents {
 
@@ -30,6 +37,7 @@ public class GameEvents {
     @InsertEvent
     private OnGameEvent.Event evGameEvent;
 
+    /** Event handler bound by the runtime; not for direct use. */
     @Initializer(OnGameEventDescriptor.class)
     public void initOnGameEventDescriptor(final EventListener<OnGameEventDescriptor> eventListener) {
         var v = eventListener.getAnnotation().value();
@@ -38,6 +46,7 @@ public class GameEvents {
         }
     }
 
+    /** Event handler bound by the runtime; not for direct use. */
     @Initializer(OnGameEvent.class)
     public void initOnGameEvent(final EventListener<OnGameEvent> eventListener) {
         var v = eventListener.getAnnotation().value();
@@ -46,6 +55,7 @@ public class GameEvents {
         }
     }
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnMessage(CommonNetMessages.CSVCMsg_GameEventList.class)
     public void onGameEventList(CommonNetMessages.CSVCMsg_GameEventList message) {
         var descriptorMax = message.getDescriptors(message.getDescriptorsCount() - 1).getEventid();
@@ -75,6 +85,7 @@ public class GameEvents {
         }
     }
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnMessage(CommonNetworkBaseTypes.CSVCMsg_GameEvent.class)
     public void onGameEvent(CommonNetworkBaseTypes.CSVCMsg_GameEvent message) {
         if (descriptors == null) {

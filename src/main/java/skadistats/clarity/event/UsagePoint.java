@@ -8,6 +8,9 @@ import java.lang.reflect.Method;
 
 import static skadistats.clarity.LogChannel.executionModel;
 
+/**
+ * An occurrence of a usage point annotation on a processor class (or one of its methods).
+ */
 public sealed class UsagePoint<A extends Annotation> permits AbstractInvocationPoint {
 
     protected static final Logger log = PrintfLoggerFactory.getLogger(executionModel);

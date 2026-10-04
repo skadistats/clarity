@@ -25,6 +25,22 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
+/**
+ * Reads a replay file that is still being written, e.g. by a running game server. Memory-maps the file, watches
+ * its directory for changes and re-maps it when it changes; the read position is preserved.
+ *
+ * <p>Reads that need more data than is currently available block until the file grows. If no change arrives within the
+ * configured timeout, a {@link TimeoutException} is thrown; after {@link #stop()} or {@link #close()}, an
+ * {@link AbortedException}; once a {@code CDemoStop} message has been seen, reaching the end of data throws
+ * {@link java.io.EOFException} instead of blocking. {@link #forceTimeout()} makes all current and subsequent
+ * blocking reads fail with a {@link TimeoutException}.
+ *
+ * <p>The last tick follows the data written so far and is updated as the file grows
+ * (see {@link #notifyOnLastTickChanged(Runnable)}). The file need not exist yet.
+ *
+ * <p>Reading methods are synchronized with an internal lock, so {@link #stop()}, {@link #forceTimeout()} and
+ * {@link #close()} can be called from another thread. A daemon thread named {@code clarity-livesource-watcher} is started.
+ */
 public class LiveSource extends Source {
 
     protected static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
@@ -53,14 +69,29 @@ public class LiveSource extends Source {
     private final Condition fileChanged = lock.newCondition();
 
 
+    /**
+     * @param fileName path of the replay file
+     * @param timeout how long a read waits for new data before failing
+     * @param timeUnit unit of {@code timeout}
+     */
     public LiveSource(String fileName, long timeout, TimeUnit timeUnit) {
         this(Paths.get(fileName), timeout, timeUnit);
     }
 
+    /**
+     * @param file the replay file
+     * @param timeout how long a read waits for new data before failing
+     * @param timeUnit unit of {@code timeout}
+     */
     public LiveSource(File file, long timeout, TimeUnit timeUnit) {
         this(file.toPath(), timeout, timeUnit);
     }
 
+    /**
+     * @param filePath the replay file
+     * @param timeout how long a read waits for new data before failing
+     * @param timeUnit unit of {@code timeout}
+     */
     public LiveSource(Path filePath, long timeout, TimeUnit timeUnit) {
         this.timeout = timeout;
         this.timeUnit = timeUnit;
@@ -124,6 +155,12 @@ public class LiveSource extends Source {
         }
     }
 
+    /**
+     * Returns the last tick found in the data written so far. Does not move the position.
+     *
+     * @return the last tick; {@code 0} if no data is available yet
+     * @throws IOException if the last tick cannot be determined
+     */
     @Override
     public int getLastTick() throws IOException {
         lock.lock();
@@ -141,6 +178,11 @@ public class LiveSource extends Source {
         file = channel.map(FileChannel.MapMode.READ_ONLY, 0L, Files.size(filePath));
     }
 
+    /**
+     * Aborts pending and future reads, releases the mapping and stops the file watcher.
+     *
+     * @throws IOException if closing the channel fails
+     */
     @Override
     public void close() throws IOException {
         lock.lock();
@@ -167,6 +209,9 @@ public class LiveSource extends Source {
         }
     }
 
+    /**
+     * Aborts pending and future reads with an {@link AbortedException} and stops the file watcher, but keeps the mapping open.
+     */
     public void stop() {
         lock.lock();
         try {
@@ -184,6 +229,9 @@ public class LiveSource extends Source {
         }
     }
 
+    /**
+     * Makes blocked and subsequent reads fail immediately with a {@link TimeoutException}.
+     */
     public void forceTimeout() {
         lock.lock();
         try {
@@ -358,6 +406,11 @@ public class LiveSource extends Source {
         }
     }
 
+    /**
+     * Marks the end of the demo; subsequent reads past the available data throw {@link java.io.EOFException} instead of waiting.
+     *
+     * @param msg the stop message
+     */
     @OnMessage(Demo.CDemoStop.class)
     public void onDemoStop(Demo.CDemoStop msg) {
         lock.lock();
@@ -369,13 +422,21 @@ public class LiveSource extends Source {
         }
     }
 
+    /**
+     * Thrown when a read waited longer than the timeout for data, or after {@link #forceTimeout()}.
+     */
     public static class TimeoutException extends ClarityException {
+        /** Creates the exception with a {@link String#format} message. */
         public TimeoutException(String format, Object... parameters) {
             super(format, parameters);
         }
     }
 
+    /**
+     * Thrown when a read is attempted or pending after {@link #stop()} or {@link #close()}.
+     */
     public static class AbortedException extends ClarityException {
+        /** Creates the exception with a {@link String#format} message. */
         public AbortedException(String format, Object... parameters) {
             super(format, parameters);
         }

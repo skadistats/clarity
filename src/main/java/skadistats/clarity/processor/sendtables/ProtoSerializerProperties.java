@@ -3,6 +3,7 @@ package skadistats.clarity.processor.sendtables;
 import skadistats.clarity.model.s2.SerializerId;
 import skadistats.clarity.model.s2.SerializerProperties;
 
+/** Serializer properties backed by the protobuf serializer message; internal. */
 public class ProtoSerializerProperties implements SerializerProperties {
 
     Integer encodeFlags;

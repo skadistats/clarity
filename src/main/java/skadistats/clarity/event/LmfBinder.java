@@ -7,23 +7,26 @@ import java.lang.invoke.MethodType;
 import java.lang.reflect.Method;
 
 /**
- * Produces typed SAM instances (Listener / Filter) from a direct
- * {@link MethodHandle} via {@link LambdaMetafactory}.  The generated hidden
- * class is JIT-inlined as a direct virtual call — no {@code Object[]}
- * allocation, no {@code asSpreader} overhead.
+ * Creates instances of an annotation's {@code Listener} interface from a handler method
+ * using {@link LambdaMetafactory}.
+ * <p>
+ * Used by {@link AbstractInvocationPoint#bind(Context)}.
+ *
+ * @see AbstractInvocationPoint
+ * @see EventListener
  */
 public class LmfBinder {
 
     /**
-     * Creates a SAM instance by having LMF capture the given arguments
-     * (processor instance, optional Context) and delegate to the direct handle.
+     * Creates an instance of {@code samClass} that captures the given arguments
+     * (processor instance, optional Context) and delegates to the direct handle.
      *
      * @param lookup       a lookup with access to the target method
-     * @param samClass     the functional interface class (e.g. {@code OnEntityUpdated.Listener})
-     * @param samMethod    the single abstract method on samClass
+     * @param samClass     the interface to implement (e.g. {@code OnEntityUpdated.Listener})
+     * @param samMethod    its single abstract method
      * @param directHandle the <em>direct</em> (unreflected, not bound) MethodHandle
      * @param capturedArgs the arguments to capture (processor instance, optional Context)
-     * @return an instance of samClass whose SAM delegates to directHandle
+     * @return an instance of samClass whose method delegates to directHandle
      */
     public static Object bind(MethodHandles.Lookup lookup, Class<?> samClass, Method samMethod,
                                MethodHandle directHandle, Object[] capturedArgs) throws Throwable {

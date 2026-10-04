@@ -16,6 +16,12 @@ import skadistats.clarity.processor.sendtables.DTClasses;
 import skadistats.clarity.processor.sendtables.UsesDTClasses;
 import skadistats.clarity.wire.shared.s1.proto.S1NetMessages;
 
+/**
+ * Provides {@link OnTempEntity} for temporary entities.
+ * <p>
+ * Applies to {@link EngineId#DOTA_S1} and {@link EngineId#CSGO}. Temp entities are decoded only if a listener for
+ * {@link OnTempEntity} exists. They have no entity index or serial (the empty handle of the engine is used).
+ */
 @Provides(value = { OnTempEntity.class }, engine = { EngineId.DOTA_S1, EngineId.CSGO})
 @UsesDTClasses
 public class TempEntities {
@@ -32,11 +38,13 @@ public class TempEntities {
 
     private FieldReader fieldReader;
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnInit
     public void onInit() {
         fieldReader = context.newFieldReader();
     }
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnMessage(S1NetMessages.CSVCMsg_TempEntities.class)
     public void onTempEntities(S1NetMessages.CSVCMsg_TempEntities message) {
         if (evTempEntity.isListenedTo()) {

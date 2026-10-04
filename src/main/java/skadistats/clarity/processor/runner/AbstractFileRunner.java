@@ -15,6 +15,13 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Predicate;
 
+/**
+ * Base class of the runners that read a replay from a {@link Source}.
+ *
+ * <p>Provides the {@code with*} configuration methods. They return the runner for chaining and must be
+ * called before {@code runWith}. Raises {@link OnInputSource}, {@link skadistats.clarity.processor.reader.OnTickStart}
+ * and {@link skadistats.clarity.processor.reader.OnTickEnd}.
+ */
 @Provides(value = {OnInputSource.class, OnTickStart.class, OnTickEnd.class}, runnerClass = { AbstractFileRunner.class })
 public abstract class AbstractFileRunner extends AbstractRunner implements FileRunner {
 
@@ -35,6 +42,11 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     /* tick is synthetic (does not contain replay data) */
     protected boolean synthetic = true;
 
+    /**
+     * @param source the source to read from
+     * @param engineType the engine type determined from {@code source}
+     * @throws IOException if reading from the source fails
+     */
     public AbstractFileRunner(Source source, EngineType engineType) throws IOException {
         super(engineType);
         this.source = source;
@@ -51,6 +63,12 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         return new Context(em, s1EntityStateType, s2EntityStateType, s2FieldPathType, entityFilter);
     }
 
+    /**
+     * Initializes the processors, emits the replay header and raises {@link OnInputSource}, which starts the read loop.
+     *
+     * @param processors the processor instances
+     * @throws IOException if reading from the source fails
+     */
     protected void initAndRunWith(Object... processors) throws IOException {
         initWithProcessors(processors);
         engineType.emitHeader();
@@ -58,6 +76,11 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         ev.raise(source, loopController);
     }
 
+    /**
+     * Ends the current tick and, if {@code untilTick} is later, runs through synthetic ticks up to and including it.
+     *
+     * @param untilTick the last tick to end
+     */
     protected void endTicksUntil(int untilTick) {
         while (tick < untilTick) {
             evTickEnd.raise(synthetic);
@@ -69,41 +92,82 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         synthetic = false;
     }
 
+    /**
+     * Advances to the next tick and raises {@code OnTickStart}. The tick is synthetic if it is not {@code upcomingTick}.
+     *
+     * @param upcomingTick the next tick that carries replay data
+     */
     protected void startNewTick(int upcomingTick) {
         setTick(tick + 1);
         synthetic = tick != upcomingTick;
         evTickStart.raise(synthetic);
     }
 
+    /**
+     * @param tick the new current tick
+     */
     protected void setTick(int tick) {
         this.tick = tick;
     }
 
+    /**
+     * @return the current tick; {@code -1} before processing has started
+     */
     @Override
     public int getTick() {
         return tick;
     }
 
+    /**
+     * @return the source this runner reads from
+     */
     @Override
     public Source getSource() {
         return source;
     }
 
+    /**
+     * Selects the entity state implementation for Source 1 replays. Default is {@link S1EntityStateType#FLAT}.
+     *
+     * @param type the implementation
+     * @return this runner
+     */
     public AbstractFileRunner withS1EntityState(S1EntityStateType type) {
         this.s1EntityStateType = type;
         return this;
     }
 
+    /**
+     * Selects the entity state implementation for Source 2 replays. Default is {@link S2EntityStateType#NESTED_ARRAY}.
+     *
+     * @param type the implementation
+     * @return this runner
+     */
     public AbstractFileRunner withS2EntityState(S2EntityStateType type) {
         this.s2EntityStateType = type;
         return this;
     }
 
+    /**
+     * Selects the field path implementation for Source 2 replays. Default is {@link S2FieldPathType#LONG}.
+     *
+     * @param type the implementation
+     * @return this runner
+     */
     public AbstractFileRunner withS2FieldPath(S2FieldPathType type) {
         this.s2FieldPathType = type;
         return this;
     }
 
+    /**
+     * Restricts which entities are created. Entities whose {@link DTClass} does not satisfy the filter are
+     * skipped while parsing and never appear in {@link skadistats.clarity.processor.entities.Entities}.
+     * Default is no filter.
+     *
+     * @param filter predicate on the entity's class; {@code true} keeps the entity
+     * @return this runner
+     * @throws IllegalStateException if the run has already been started
+     */
     public AbstractFileRunner withEntityFilter(Predicate<DTClass> filter) {
         if (context != null) {
             throw new IllegalStateException("entity filter cannot be set after parse has started");
@@ -112,6 +176,12 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
         return this;
     }
 
+    /**
+     * Returns the last tick of the replay. This calls {@link Source#getLastTick()}, which may reposition the source.
+     *
+     * @return the last tick
+     * @throws IOException if the last tick cannot be determined
+     */
     public int getLastTick() throws IOException {
         return source.getLastTick();
     }

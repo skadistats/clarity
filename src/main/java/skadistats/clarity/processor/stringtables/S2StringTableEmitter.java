@@ -21,6 +21,7 @@ import java.util.Objects;
 
 import static skadistats.clarity.LogChannel.stringtables;
 
+/** Emits string table events for Source 2 replays; internal. */
 @Provides(value = {OnStringTableCreated.class, OnStringTableEntry.class, OnStringTableClear.class}, engine = { EngineId.DOTA_S2, EngineId.CS2, EngineId.DEADLOCK})
 @StringTableEmitter
 public class S2StringTableEmitter extends BaseStringTableEmitter {

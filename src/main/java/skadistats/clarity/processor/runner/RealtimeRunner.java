@@ -15,6 +15,14 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 
+/**
+ * A {@link SimpleRunner} that paces ticks to wall-clock time.
+ *
+ * <p>Before each tick starts, the calling thread sleeps until {@code startTime + delay + tick * tickInterval}.
+ * The tick interval is taken from the replay's {@code CSVCMsg_ServerInfo}; until it is seen, and before the
+ * sync tick, no pacing is applied. If the thread is interrupted while sleeping, the interrupt flag is set
+ * and processing continues without further waiting for that tick.
+ */
 public class RealtimeRunner extends SimpleRunner {
 
     private static final long SECOND_TO_NANOSECOND = NANOSECONDS.convert(1, SECONDS);
@@ -23,14 +31,33 @@ public class RealtimeRunner extends SimpleRunner {
     private final AtomicReference<Duration> delay = new AtomicReference<>();
     private Duration tickInterval;
 
+    /**
+     * Creates a runner with zero delay, starting now.
+     *
+     * @param s the source to read from
+     * @throws IOException if the source does not contain a valid replay
+     */
     public RealtimeRunner(Source s) throws IOException {
         this(s, Duration.ZERO);
     }
 
+    /**
+     * Creates a runner starting now.
+     *
+     * @param s the source to read from
+     * @param delay the delay added to every tick's scheduled time
+     * @throws IOException if the source does not contain a valid replay
+     */
     public RealtimeRunner(Source s, Duration delay) throws IOException {
         this(s, delay, now());
     }
 
+    /**
+     * @param s the source to read from
+     * @param delay the delay added to every tick's scheduled time
+     * @param startTime the wall-clock instant at which tick 0 is scheduled (before the delay)
+     * @throws IOException if the source does not contain a valid replay
+     */
     public RealtimeRunner(Source s, Duration delay, Instant startTime) throws IOException {
         super(s);
         setDelay(delay);
@@ -79,10 +106,18 @@ public class RealtimeRunner extends SimpleRunner {
         setTickInterval(serverInfo.getTickInterval());
     }
 
+    /**
+     * @return the current delay
+     */
     public Duration getDelay() {
         return delay.get();
     }
 
+    /**
+     * Sets the delay added to every tick's scheduled time. Safe to call from another thread while the runner is running.
+     *
+     * @param delay the new delay
+     */
     public void setDelay(Duration delay) {
         this.delay.set(delay);
     }

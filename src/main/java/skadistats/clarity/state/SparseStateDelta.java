@@ -3,7 +3,7 @@ package skadistats.clarity.state;
 import skadistats.clarity.model.FieldPath;
 
 /**
- * Concrete {@link StateDelta} backing.
+ * Concrete {@link StateDelta} implementation backing {@link EntityState#captureChanged}.
  *
  * Sized to exactly the number of captured field paths. Per-slot storage is
  * one of four shapes selected by a compact type tag:

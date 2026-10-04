@@ -29,6 +29,14 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Reads packets from the input source and raises the message events.
+ * <p>
+ * Provides {@link OnMessageContainer}, {@link OnMessage}, {@link OnPostEmbeddedMessage}, {@link OnReset} and
+ * {@link OnFullPacket}. Only available with {@link FileRunner}. Top-level messages that nobody listens to are
+ * skipped without parsing; embedded messages are unpacked from their containers. User messages are unpacked
+ * only if a listener for a user message class (or for any message) exists. Each unknown message kind is logged once.
+ */
 @Provides(value = {OnMessageContainer.class, OnMessage.class, OnPostEmbeddedMessage.class, OnReset.class, OnFullPacket.class}, runnerClass = {FileRunner.class})
 @UsesPacketReader
 public class InputSourceProcessor {
@@ -57,18 +65,21 @@ public class InputSourceProcessor {
 
     private final Set<Integer> alreadyLoggedUnknowns = new HashSet<>();
 
+    /** Internal: enables user message unpacking if a user message is listened to. */
     @Initializer(OnMessage.class)
     public void initOnMessageListener(final EventListener<OnMessage> listener) {
         var messageClass = listener.getAnnotation().value();
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
+    /** Internal: enables user message unpacking if a user message is listened to. */
     @Initializer(OnPostEmbeddedMessage.class)
     public void initOnPostEmbeddedMessageListener(final EventListener<OnPostEmbeddedMessage> listener) {
         var messageClass = listener.getAnnotation().value();
         unpackUserMessages |= messageClass == GeneratedMessage.class || engineType.isUserMessage(messageClass);
     }
 
+    /** Internal: filters container listeners by container class. */
     @Initializer(OnMessageContainer.class)
     public void initOnMessageContainerListener(final EventListener<OnMessageContainer> listener) {
         var containerClass = listener.getAnnotation().value();
@@ -85,6 +96,15 @@ public class InputSourceProcessor {
         }
     }
 
+    /**
+     * Main loop: reads the packets of the source one by one, asking the loop controller before each packet what to
+     * do (continue, seek, reset phases, break). Raises the reset events for the phases requested by the
+     * controller.
+     *
+     * @param src the source to read from
+     * @param ctl the loop controller
+     * @throws Exception if reading or parsing fails
+     */
     @OnInputSource
     public void processSource(Source src, LoopController ctl) throws Exception {
 
@@ -195,6 +215,14 @@ public class InputSourceProcessor {
         }
     }
 
+    /**
+     * Unpacks the embedded messages of a container and raises {@link OnMessage} and {@link OnPostEmbeddedMessage}
+     * for those that are listened to. Unknown embedded kinds are skipped.
+     *
+     * @param containerClass the class of the container message
+     * @param bytes the container payload
+     * @throws IOException if an embedded message has an invalid size
+     */
     @OnMessageContainer
     public void processEmbedded(Class<? extends GeneratedMessage> containerClass, ByteString bytes) throws IOException {
         var bs = BitStream.createBitStream(bytes);

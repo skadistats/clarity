@@ -10,20 +10,16 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 
 /**
- * A Source provides clarity with raw replay data.
- *
- * <p> At the moment, clarity supplies the following implementations:
+ * Provides a runner with raw replay data and supports repositioning.
  *
  * <ul>
- *     <li>{@link InputStreamSource}
- *         <p> This will allow clarity to read from an InputStream, for example from System.in or from sockets.
- *         It will not allow seeking backwards, so it is limited when using it with a {@link skadistats.clarity.processor.runner.ControllableRunner}
- *     </li>
- *     <li>{@link MappedFileSource}
- *         <p> This uses the operating systems memory mapping functions to map a file into memory.
- *         If the replay you are processing is local, it is strongly advised to use this implementation.
- *     </li>
+ *     <li>{@link MappedFileSource}: memory-maps a local file; random access. Use this for files on disk.</li>
+ *     <li>{@link InputStreamSource}: reads an {@link java.io.InputStream} (file, stdin, socket); forward only,
+ *         so it cannot be used for backwards seeks with a {@link skadistats.clarity.processor.runner.ControllableRunner}.</li>
+ *     <li>{@link LiveSource}: follows a replay file that is still being written, blocking for more data.</li>
  * </ul>
+ *
+ * <p>Runners do not close the source; the caller must. Sources are not thread-safe unless stated otherwise.
  */
 public abstract class Source implements Closeable {
 
@@ -31,6 +27,11 @@ public abstract class Source implements Closeable {
     private EngineType engineType;
     private Integer lastTick;
 
+    /**
+     * Registers a callback invoked when the source learns of a new last tick (only {@link LiveSource} does this).
+     *
+     * @param onLastTickChanged the callback; replaces a previously set one
+     */
     public void notifyOnLastTickChanged(Runnable onLastTickChanged) {
         this.onLastTickChanged = onLastTickChanged;
     }
@@ -153,6 +154,9 @@ public abstract class Source implements Closeable {
     /**
      * reads the magic of a demo file, identifying the engine type
      *
+     * <p> Must be called with the position at the start of the data; it consumes the magic and the engine's header.
+     *
+     * @return the engine type
      * @throws IOException if there is not enough data or if no valid magic was found
      */
     public EngineType determineEngineType() throws IOException {
@@ -168,6 +172,11 @@ public abstract class Source implements Closeable {
         }
     }
 
+    /**
+     * Sets the last tick and notifies the registered callback.
+     *
+     * @param lastTick the last tick
+     */
     protected void setLastTick(int lastTick) {
         this.lastTick = lastTick;
         if (onLastTickChanged != null) {
@@ -175,6 +184,12 @@ public abstract class Source implements Closeable {
         }
     }
 
+    /**
+     * Determines the last tick by scanning the data via the engine type; moves the position.
+     *
+     * @throws ClarityException if the engine type is not yet known
+     * @throws IOException if the data cannot be read
+     */
     protected void determineLastTick() throws IOException {
         if (engineType == null) {
             throw new ClarityException("cannot determine last tick before engine type is known");

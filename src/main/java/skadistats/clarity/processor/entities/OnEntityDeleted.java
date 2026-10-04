@@ -11,21 +11,38 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Fires when an entity ceases to exist: on a delete in a packet, when its index slot is taken by a
+ * different entity, and, after a reset (seek), for entities that no longer exist.
+ *
+ * <p>Handler signature: {@code void onX([Context ctx,] Entity e)}, where {@code e} is the removed
+ * entity. If the entity was active, {@link OnEntityLeft} fires before this event. At the time of
+ * the call the entity is no longer reachable through {@link Entities#getByIndex(int)} and
+ * {@link Entity#isExistent()} is {@code false}.
+ *
+ * <p>{@code classPattern}: regular expression that must match the whole DT class name
+ * ({@link skadistats.clarity.model.DTClass#getDtName()}; full match, not a find). Default {@code ".*"}
+ * matches all entities.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
 @UsagePointMarker(value = UsagePointType.EVENT_LISTENER)
 @GenerateEvent
 public @interface OnEntityDeleted {
+    /** Full-match regex against the entity's DT class name. */
     String classPattern() default ".*";
 
+    /** Handler signature for {@link OnEntityDeleted}; implemented by the runtime, not by users. */
     interface Listener {
         void invoke(Entity e);
     }
 
+    /** Per-listener filter for {@link OnEntityDeleted}; built by the runtime from the annotation attributes. */
     interface Filter {
         boolean test(Entity e);
     }
 
+    /** Event dispatcher for {@link OnEntityDeleted}; used by the runtime. */
     interface Event extends EventBase {
         void raise(Entity e);
     }

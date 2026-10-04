@@ -7,6 +7,9 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+/**
+ * A method marked with {@link Initializer}, bound to its processor instance.
+ */
 public final class InitializerMethod extends AbstractInvocationPoint<Initializer> {
 
     private MethodHandle methodHandle;

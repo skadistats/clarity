@@ -12,6 +12,13 @@ import skadistats.clarity.model.cs.PlayerInfoType;
 import java.util.Map;
 import java.util.TreeMap;
 
+/**
+ * Tracks player information from the {@code "userinfo"} string table.
+ * <p>
+ * Applies to {@link EngineId#CSGO} and {@link EngineId#CS2}. Active when a processor declares
+ * {@link UsesPlayerInfo} or listens to {@link OnPlayerInfo}. Raises {@link OnPlayerInfo} whenever the info for an
+ * entity index is added, changed or removed.
+ */
 @Provides(value = {UsesPlayerInfo.class, OnPlayerInfo.class}, engine = { EngineId.CSGO, EngineId.CS2})
 @UsesStringTable("userinfo")
 public class PlayerInfo {
@@ -24,6 +31,7 @@ public class PlayerInfo {
 
     private final Map<Integer, PlayerInfoType> playerInfos = new TreeMap<>();
 
+    /** Event handler bound by the runtime; not for direct use. */
     @OnStringTableEntry("userinfo")
     public void onEntry(StringTable table, int index, String key, ByteString value) {
         PlayerInfoType current = null;
@@ -54,10 +62,18 @@ public class PlayerInfo {
         evPlayerInfo.raise(i, current);
     }
 
+    /**
+     * @param i the entity index of the player (the {@code "userinfo"} table index plus one)
+     * @return the current player info for that entity index, or {@code null} if there is none
+     */
     public PlayerInfoType getPlayerInfoForEntityIndex(int i) {
         return playerInfos.get(i);
     }
 
+    /**
+     * @param userId the user id to look up
+     * @return the entity index of the player with that user id, or {@code null} if there is none
+     */
     public Integer getEntityIndexForUserId(final int userId) {
         for (var e : playerInfos.entrySet()) {
             if (e.getValue().getUserId() == userId) {

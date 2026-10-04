@@ -184,6 +184,15 @@ pre-rename. Downstream consumers update imports and switch cases.
   and no references to `S2LongFieldPathFormat`; range ops compose
   through interface methods.
 
+**API documentation**
+
+* Javadoc for the user-facing API: runners, `Context`, sources, every
+  `@On*` event annotation (when it fires, handler signature, attribute
+  semantics), the built-in processors, the model and state types, and
+  the `event` package for writing custom processors.
+* `package-info.java` overviews for the public packages, including a
+  minimal processor/runner example.
+
 **Internal restructure**
 
 * package layout reorganized so that every horizontal concern has a

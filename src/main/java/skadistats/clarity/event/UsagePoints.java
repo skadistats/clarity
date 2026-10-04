@@ -16,6 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Registry of {@link Provides} classes, loaded at class initialization from all {@code META-INF/clarity/providers.txt} resources on the classpath.
+ */
 public class UsagePoints {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.executionModel);

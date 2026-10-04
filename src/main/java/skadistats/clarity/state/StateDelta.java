@@ -15,13 +15,20 @@ import skadistats.clarity.model.FieldPath;
  */
 public interface StateDelta {
 
+    /**
+     * @return the captured field paths
+     */
     FieldPath[] fields();
 
+    /** The captured {@code int} value for {@code fp}, or 0 if not captured or not int-typed. */
     int getInt(FieldPath fp);
 
+    /** The captured {@code long} value for {@code fp}, or 0 if not captured or not long-typed. */
     long getLong(FieldPath fp);
 
+    /** The captured {@code float} value for {@code fp}, or 0 if not captured or not float-typed. */
     float getFloat(FieldPath fp);
 
+    /** The captured object value for {@code fp}, or {@code null} if not captured. */
     Object getObject(FieldPath fp);
 }

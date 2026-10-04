@@ -25,6 +25,7 @@ import java.util.Map;
 
 import static skadistats.clarity.LogChannel.sendtables;
 
+/** Generates field definitions from Source 2 serializers; internal. */
 public class FieldGenerator {
 
     private final Logger log = PrintfLoggerFactory.getLogger(sendtables);

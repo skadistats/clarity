@@ -6,6 +6,10 @@ import java.lang.annotation.Annotation;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;
 
+/**
+ * Base class for usage points whose method is bound to a processor instance: {@link EventListener} and {@link InitializerMethod}.
+ * Handler methods may take a leading {@link Context}, followed by the parameters of the nested {@code Listener} method.
+ */
 public abstract sealed class AbstractInvocationPoint<A extends Annotation> extends UsagePoint<A> implements InvocationPoint<A>
         permits EventListener, InitializerMethod {
 
