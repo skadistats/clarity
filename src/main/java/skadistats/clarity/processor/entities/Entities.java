@@ -277,7 +277,14 @@ public class Entities {
                                 emitEnteredEvent(entity);
                             }
                         } else {
+                            var wasActive = resetCapsule.isActive(eIdx);
+                            if (!wasActive && entity.isActive()) {
+                                emitEnteredEvent(entity);
+                            }
                             emitCompleteEntityChangeUpdatedEvents(resetCapsule.getState(eIdx), entity);
+                            if (wasActive && !entity.isActive()) {
+                                emitLeftEvent(entity);
+                            }
                         }
                     }
                 }
@@ -473,9 +480,7 @@ public class Entities {
                             queueEntityRecreate(eEnt, message, stream);
                             break;
                         }
-                        if (eEnt.isActive()) {
-                            queueEntityLeave(eEnt);
-                        }
+                        queueEntityLeave(eEnt);
                         queueEntityDelete(eEnt);
                     }
                     queueEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, stream);
@@ -498,25 +503,31 @@ public class Entities {
                     }
                     if (message.getHasPvsVisBits() != 0) {
                         var pvs = stream.readUBitInt(2);
-                        eEnt.setActive((pvs & 0x02) != 0);
-                        if ((pvs & 0x01) == 1) {
-                            break;
+                        var active = (pvs & 0x02) != 0;
+                        var hasData = (pvs & 0x01) == 0;
+                        if (active && !eEnt.isActive()) {
+                            queueEntityEnter(eEnt);
+                            if (hasData) queueEntityUpdate(eEnt, stream, false);
+                        } else if (!active && eEnt.isActive()) {
+                            if (hasData) queueEntityUpdate(eEnt, stream, false);
+                            queueEntityLeave(eEnt);
+                        } else if (hasData) {
+                            queueEntityUpdate(eEnt, stream, !active);
                         }
+                        break;
                     }
                     queueEntityUpdate(eEnt, stream, false);
                     break;
 
                 case 1: // LEAVE
-                    if (eEnt != null && eEnt.isActive()) {
+                    if (eEnt != null) {
                         queueEntityLeave(eEnt);
                     }
                     break;
 
                 case 3: // DELETE
                     if (eEnt != null) {
-                        if (eEnt.isActive()) {
-                            queueEntityLeave(eEnt);
-                        }
+                        queueEntityLeave(eEnt);
                         queueEntityDelete(eEnt);
                     } else if (skippedClass[eIdx] != null) {
                         skippedClass[eIdx] = null;
@@ -531,9 +542,7 @@ public class Entities {
                 eIdx = deletions[i];
                 eEnt = entities.getEntity(eIdx);
                 if (eEnt != null) {
-                    if (eEnt.isActive()) {
-                        queueEntityLeave(eEnt);
-                    }
+                    queueEntityLeave(eEnt);
                     queueEntityDelete(eEnt);
                 } else if (skippedClass[eIdx] != null) {
                     skippedClass[eIdx] = null;
@@ -549,7 +558,7 @@ public class Entities {
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), eIdx, message.getIsDelta());
         var newState = copyState(baseline);
         BiConsumer<FieldPath, StateMutation> onCreate = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(newState, fp, m) : null;
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug, onCreate);
+        fieldReader.readFields(stream, dtClass, newState, debug, onCreate);
         queueUpdate(() -> executeEntityCreate(eIdx, serial, spawnGroupHandle, dtClass, message, newState));
     }
 
@@ -580,7 +589,7 @@ public class Entities {
         var baseline = getBaseline(dtClass.getClassId(), message.getBaseline(), entity.getIndex(), message.getIsDelta());
         var newState = copyState(baseline);
         BiConsumer<FieldPath, StateMutation> onRecreate = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(newState, fp, m) : null;
-        var changes = fieldReader.readFields(stream, dtClass, newState, debug, onRecreate);
+        fieldReader.readFields(stream, dtClass, newState, debug, onRecreate);
         queueUpdate(() -> executeEntityRecreate(entity, message, newState));
     }
 
@@ -629,7 +638,7 @@ public class Entities {
     }
 
     private void executeEntityEnter(Entity entity) {
-        assert !entity.isActive();
+        if (entity.isActive()) return;
         entity.setActive(true);
         logModification("ENTER", entity);
         emitEnteredEvent(entity);
@@ -640,7 +649,7 @@ public class Entities {
     }
 
     private void executeEntityLeave(Entity entity) {
-        assert entity.isActive();
+        if (!entity.isActive()) return;
         entity.setActive(false);
         logModification("LEAVE", entity);
         emitLeftEvent(entity);
@@ -736,7 +745,7 @@ public class Entities {
         final var baselineState = s;
         var stream = BitStream.createBitStream(raw);
         BiConsumer<FieldPath, StateMutation> onBaseline = mutationListener != null ? (fp, m) -> mutationListener.onSetupMutation(baselineState, fp, m) : null;
-        var changes = fieldReader.readFields(stream, cls, baselineState, false, onBaseline);
+        fieldReader.readFields(stream, cls, baselineState, false, onBaseline);
         var remaining = stream.remaining();
         if (remaining < 0 || remaining > 7) {
             log.warn("Baseline for class %s (%d) has %d bits remaining after decode", cls.getDtName(), clsId, remaining);
@@ -770,7 +779,7 @@ public class Entities {
     }
 
     /**
-     * Returns the entity at the given index.
+     * Returns the entity at the given index. Inactive entities (see {@link Entity#isActive()}) are returned too.
      *
      * @return the entity, or {@code null} if the slot is empty
      */
@@ -790,14 +799,17 @@ public class Entities {
     }
 
     /**
-     * Returns a stream of every currently-live entity in ascending
-     * entity-index order. Empty index slots are skipped.
+     * Returns a stream of every existing entity in ascending
+     * entity-index order, including inactive ones (see
+     * {@link Entity#isActive()}). Empty index slots are skipped; use
+     * {@code stream().filter(Entity::isActive)} for only the entities
+     * currently in view.
      *
      * <p>Callers express cardinality explicitly via stream terminal
      * operations: {@code stream().filter(p).findFirst()} for any
      * single match, {@code stream().filter(p).forEach(...)} for all
      * matches. There is intentionally no single-result convenience
-     * method — a DT class can have many live entities, so a
+     * method — a DT class can have many entities, so a
      * single-match shape would silently hide multiplicity.
      *
      * @return a stream of the entities currently in the table
