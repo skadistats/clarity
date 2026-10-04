@@ -12,6 +12,7 @@ import skadistats.clarity.logger.PrintfLoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 
 import static skadistats.clarity.LogChannel.decoder;
 
@@ -20,6 +21,13 @@ public class S2DecoderFactory {
     private static final Logger log = PrintfLoggerFactory.getLogger(decoder);
 
     private static final Decoder DEFAULT_DECODER = new IntVarUnsignedDecoder();
+
+    private static final Map<String, BiFunction<DecoderProperties, String, Decoder>> ENCODERS = new HashMap<>();
+
+    static {
+        ENCODERS.put("fixed8", (props, type) -> "int8".equals(type) ? new IntSignedDecoder(8) : new IntUnsignedDecoder(8));
+        ENCODERS.put("fixed64", (props, type) -> new LongUnsignedDecoder(64));
+    }
 
     private static final Map<String, DecoderFactory> FACTORIES = new HashMap<>();
 
@@ -98,8 +106,12 @@ public class S2DecoderFactory {
 
     public static DecoderHolder createDecoder(DecoderProperties decoderProperties, String type) {
         Decoder decoder;
+        var encoderType = decoderProperties.getEncoderType();
+        var encoder = encoderType != null ? ENCODERS.get(encoderType) : null;
         var decoderFactory = FACTORIES.get(type);
-        if (decoderFactory != null) {
+        if (encoder != null) {
+            decoder = encoder.apply(decoderProperties, type);
+        } else if (decoderFactory != null) {
             decoder = decoderFactory.createDecoder(decoderProperties);
         } else {
             decoder = DECODERS.get(type);
