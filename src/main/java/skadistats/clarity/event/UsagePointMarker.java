@@ -38,11 +38,6 @@ public @interface UsagePointMarker {
     UsagePointType value();
 
     /**
-     * Currently not read by any code.
-     */
-    Class[] parameterClasses() default {};
-
-    /**
      * If true, the compile-time listener validation checks only the number of handler parameters
      * against the nested {@code Listener}, not their types (handler parameters may be subtypes,
      * e.g. a concrete message class for {@code OnMessage}). Without it, each parameter type must

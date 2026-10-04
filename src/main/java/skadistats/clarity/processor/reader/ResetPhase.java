@@ -15,8 +15,6 @@ public enum ResetPhase {
     ACCUMULATE,
     /** Apply the accumulated state; the entities of the last full packet are applied right after this phase. */
     APPLY,
-    /** Packets between the reset point and the wanted tick are being replayed. Not raised by {@code InputSourceProcessor}. */
-    FORWARD,
     /** The reset is finished and normal processing resumes. */
     COMPLETE
 }

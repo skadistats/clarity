@@ -193,6 +193,31 @@ pre-rename. Downstream consumers update imports and switch cases.
 * `package-info.java` overviews for the public packages, including a
   minimal processor/runner example.
 
+**Fixes and API cleanup**
+
+* `ControllableRunner`: `seek()` and `tick()` no longer block forever
+  once the runner thread has terminated (crash or `halt()`), including
+  calls made after it ended; they throw `InterruptedException` with the
+  runner's exception, if any, as cause. All waiters are woken, waits
+  survive spurious wakeups, and `halt()` no longer races the thread's
+  own cleanup.
+* `Entities`: on demos with PVS visibility bits, an entity entering or
+  leaving the client's view now raises `OnEntityEntered` /
+  `OnEntityLeft` instead of silently flipping `Entity.isActive()`.
+  After a seek, active-state changes of entities that survived the
+  reset raise the same events.
+* `Clarity.infoForFile` and `Clarity.metadataForFile` close the file
+  they open.
+* (BREAKING) The `with*` configuration methods of the file runners throw
+  `IllegalStateException` once `runWith` has been called, instead of
+  being silently ignored. For `ControllableRunner` this now also holds
+  right after `runWith` returns, before the runner thread has started.
+* (BREAKING) Removed `ResetPhase.FORWARD`, which was never raised.
+* (BREAKING) Removed `UsagePointMarker.parameterClasses`, which was not
+  read since the switch to typed event dispatch.
+  *Migration:* delete the attribute from custom event annotations; the
+  nested `Listener` interface defines the handler parameters.
+
 **Internal restructure**
 
 * package layout reorganized so that every horizontal concern has a
