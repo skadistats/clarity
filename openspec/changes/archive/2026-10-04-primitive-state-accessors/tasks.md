@@ -36,12 +36,15 @@
 - [x] 6.3 Unit: `applyFrom` merges a delta into a target state such that subsequent reads on the target match the delta values. Fields not in the delta are untouched.
 - [x] 6.4 Unit: unknown-field-path access on a delta returns zero/null per documented contract.
 - [x] 6.5 Unit: wrong-primitive-type access on a delta (e.g., `getInt` on a float field) returns zero, does not throw.
-- [ ] 6.6 Allocation regression: a `getInt` call on a fresh state allocates zero objects (JOL or allocation-profiler assertion, or a JMH -prof gc run that shows it).
+- [x] 6.6 Allocation regression: a `getInt` call on a fresh state allocates zero objects (JOL or allocation-profiler assertion, or a JMH -prof gc run that shows it).
+      `PrimitiveAccessorsAllocationTest` (ThreadMXBean allocated bytes, all three S2 impls). It caught
+      `S2FlatEntityState` allocating a 24-byte `Location` record per primitive read (not removed by
+      escape analysis); the primitive getters now walk the path in an allocation-free `readScalarBits`.
 
 ## 7. Downstream smoke
 
 - [x] 7.1 Rebuild clarity-analyzer against the local clarity sibling checkout; confirm it still compiles and starts (per `feedback_dtinspector_analyzer_compile_only` — compile, don't run GUI without briefing).
-- [ ] 7.2 Confirm the companion `sparse-state-delta-updates` change in clarity-analyzer can consume the new API without further clarity-side changes.
+- [x] 7.2 Confirm the companion `sparse-state-delta-updates` change in clarity-analyzer can consume the new API without further clarity-side changes.
 
 ## 8. Benchmark — analyzer-shaped consumer (go/no-go gate)
 
@@ -61,30 +64,39 @@ companion `sparse-state-delta-updates` change.
       one Dota S2 replay (`dota/s2/normal/1560289528.dem`, 40 MB):
       Baseline = 740 MB alloc/op; AnalyzerCopy = 3.38 GB alloc/op (delta
       attributable to `copy()` ≈ +2.64 GB, ~78% of total).
-- [ ] 8.3 Treatment run: swap `state.copy()` for
+- [x] 8.3 Treatment run: swap `state.copy()` for
       `state.captureChanged(fieldPaths, num)` and hold the resulting
       `StateDelta`s. Same replays, same `-prof gc`. Deferred — go/no-go
-      already answered by §8.2 baseline (78% ≫ 5% threshold).
-- [ ] 8.4 Also capture an alloc flamegraph (async-profiler `-e alloc -t`) on
+      already answered by §8.2 baseline (78% ≫ 5% threshold). *(dropped — see Closing notes)*
+- [x] 8.4 Also capture an alloc flamegraph (async-profiler `-e alloc -t`) on
       the baseline — confirms `S2FlatEntityState.copy` / `Entry.data.clone`
       are the line items, so we know where the bytes come from. Deferred
-      with §8.3.
+      with §8.3. *(dropped — see Closing notes)*
 - [x] 8.5 **Decision gate**: baseline `state.copy()` allocation = ~78% of
       total bytes — far above the 5% threshold. Companion change
       `sparse-state-delta-updates` is green-lit.
-- [ ] 8.6 Record numbers in `bench-results/` following existing convention;
+- [x] 8.6 Record numbers in `bench-results/` following existing convention;
       cross-link from this change's archive entry **and** from the
-      analyzer companion change's proposal.
+      analyzer companion change's proposal. *(dropped — see Closing notes)*
 
 ## 9. Read-side throughput benchmark (optional)
 
-- [ ] 9.1 Extend a JMH benchmark exercising read-heavy consumer patterns
+- [x] 9.1 Extend a JMH benchmark exercising read-heavy consumer patterns
       (per-tick hero-state aggregation across all entities of a class) to
       compare `getValueForFieldPath` vs `getInt`. Measure `allocs/op` and
       wall-clock before/after. Purely to validate the primitive-read API
-      claim; not a go/no-go for the change.
+      claim; not a go/no-go for the change. *(dropped — see Closing notes)*
 
 ## 10. Documentation
 
-- [ ] 10.1 Update the relevant Javadoc on `EntityState` / `Entity` to surface the primitive accessors alongside `getValueForFieldPath`.
-- [ ] 10.2 Add a short section to any consumer-facing API doc (if present) noting the primitive read contract and the `captureChanged` / `applyFrom` pattern for cross-thread snapshots.
+- [x] 10.1 Update the relevant Javadoc on `EntityState` / `Entity` to surface the primitive accessors alongside `getValueForFieldPath`.
+- [x] 10.2 Add a short section to any consumer-facing API doc (if present) noting the primitive read contract and the `captureChanged` / `applyFrom` pattern for cross-thread snapshots.
+      No API doc exists beyond Javadoc; covered by the 5.0 CHANGELOG entry.
+
+## Closing notes
+
+- 7.2: answered by the analyzer's `sparse-state-delta-updates` (commit `4018d39`), which consumes
+  `captureChanged` / `applyFrom` / `StateDelta` with no further clarity-side changes.
+- 8.3, 8.4, 8.6, 9.1: dropped at archive time. The go/no-go (8.5) was decided on the 8.2
+  baseline, and its numbers are recorded in 8.2 above (`bench-results/` is not tracked). The
+  read-side zero-allocation claim is covered by the 6.6 test instead of a JMH run.

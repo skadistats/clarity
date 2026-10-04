@@ -125,10 +125,23 @@ public class Entity {
         return EntityState.getValueForFieldPath(getState(), fp);
     }
 
+    /**
+     * Reads an {@code int} property without boxing; see
+     * {@link EntityState#getInt(EntityState, FieldPath)} for the default-value
+     * contract. The {@code long}, {@code float} and {@code Object} variants
+     * below follow the same pattern.
+     */
     public int getInt(FieldPath fp) {
         return EntityState.getInt(getState(), fp);
     }
 
+    /**
+     * Like {@link #getInt(FieldPath)}, resolving the property by name. Resolve
+     * the {@link FieldPath} once with {@link #getFieldPathForName} when
+     * reading repeatedly.
+     *
+     * @throws IllegalArgumentException if the entity has no such property
+     */
     public int getInt(String property) {
         var fp = getFieldPathForName(property);
         if (fp == null) throw new IllegalArgumentException("property " + property + " not found on entity of class " + getDtClass().getDtName());
@@ -155,6 +168,7 @@ public class Entity {
         return EntityState.getFloat(getState(), fp);
     }
 
+    /** See {@link EntityState#getObject(EntityState, FieldPath)}. */
     public Object getObject(FieldPath fp) {
         return EntityState.getObject(getState(), fp);
     }

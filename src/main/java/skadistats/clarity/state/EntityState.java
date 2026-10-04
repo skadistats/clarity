@@ -53,6 +53,12 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /**
+     * Reads an {@code int} property without boxing. Returns {@code 0} if the
+     * field is unset, the path does not resolve, or the field is not
+     * int-typed. Prefer this over {@link #getValueForFieldPath} on hot read
+     * paths; the latter boxes every primitive on the way out.
+     */
     static int getInt(EntityState state, FieldPath fp) {
         return switch (state) {
             case S1EntityState s1 -> s1.getInt((S1FieldPath) fp);
@@ -60,6 +66,7 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /** Like {@link #getInt}, for {@code long}-typed fields. */
     static long getLong(EntityState state, FieldPath fp) {
         return switch (state) {
             case S1EntityState s1 -> s1.getLong((S1FieldPath) fp);
@@ -67,6 +74,7 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /** Like {@link #getInt}, for {@code float}-typed fields. */
     static float getFloat(EntityState state, FieldPath fp) {
         return switch (state) {
             case S1EntityState s1 -> s1.getFloat((S1FieldPath) fp);
@@ -74,6 +82,11 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /**
+     * Reads a property of any type as an object (strings, vectors, handles,
+     * ...). Primitive fields come back boxed; use the primitive getters for
+     * those. Returns {@code null} if the field is unset.
+     */
     static Object getObject(EntityState state, FieldPath fp) {
         return switch (state) {
             case S1EntityState s1 -> s1.getObject((S1FieldPath) fp);
@@ -81,6 +94,15 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /**
+     * Captures the current values of {@code fps[0..num)} into a sparse
+     * {@link StateDelta}, without copying the rest of the state. Typical use
+     * is handing the fields changed by an {@code @OnEntityUpdated} event to
+     * another thread, which merges them into its own long-lived state with
+     * {@link #applyFrom} or {@link #applyAll} instead of taking a full
+     * {@link #copy()} per update. The delta is independent of {@code state}:
+     * later mutations of {@code state} do not affect it.
+     */
     static StateDelta captureChanged(EntityState state, FieldPath[] fps, int num) {
         return switch (state) {
             case S1EntityState s1 -> s1.captureChanged(toS1(fps, num), num);
@@ -88,6 +110,11 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         };
     }
 
+    /**
+     * Writes the value {@code delta} holds for {@code fp} into {@code state};
+     * a field captured as unset is cleared. {@code delta} must come from
+     * {@link #captureChanged} on a state of the same entity class.
+     */
     static void applyFrom(EntityState state, StateDelta delta, FieldPath fp) {
         switch (state) {
             case S1EntityState s1 -> s1.applyFrom(delta, (S1FieldPath) fp);
@@ -95,6 +122,10 @@ public sealed interface EntityState permits S1EntityState, S2EntityState {
         }
     }
 
+    /**
+     * Applies every field covered by {@code delta} to {@code state}, as by
+     * {@link #applyFrom}. Fields not covered by the delta are left untouched.
+     */
     static void applyAll(EntityState state, StateDelta delta) {
         switch (state) {
             case S1EntityState s1 -> s1.applyAll(delta);
