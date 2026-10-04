@@ -15,9 +15,8 @@ import java.io.InputStream;
 /**
  * Static helpers for reading metadata from replay files without running a full parse.
  *
- * <p>The {@code ...ForFile} and {@code ...ForStream} variants open their own source/stream, but only
- * {@code headerForFile} closes it; for {@code infoForFile} and {@code metadataForFile} the mapping or file handle
- * stays open until it is garbage collected. Use the {@code ...ForSource} variants with try-with-resources to control that.
+ * <p>The {@code ...ForFile} variants open and close the file themselves. The {@code ...ForStream} and
+ * {@code ...ForSource} variants leave closing the stream or source to the caller.
  */
 public class Clarity {
 
@@ -29,7 +28,9 @@ public class Clarity {
      * @throws IOException if the given file is non-existing or is no valid demo-file
      */
     public static Demo.CDemoFileInfo infoForFile(String fileName) throws IOException {
-        return infoForSource(new MappedFileSource(fileName));
+        try (var source = new MappedFileSource(fileName)) {
+            return infoForSource(source);
+        }
     }
 
     /**
@@ -117,7 +118,9 @@ public class Clarity {
      * @throws IOException if the given file is non-existing or is no valid metadata-file
      */
     public static DOTAS2MatchMetadata.CDOTAMatchMetadataFile metadataForFile(String fileName) throws IOException {
-        return metadataForStream(new FileInputStream(fileName));
+        try (var stream = new FileInputStream(fileName)) {
+            return metadataForStream(stream);
+        }
     }
 
     /**
