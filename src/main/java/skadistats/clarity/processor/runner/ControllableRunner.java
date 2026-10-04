@@ -50,8 +50,10 @@ public class ControllableRunner extends AbstractFileRunner {
     private final Condition wantedTickReached = lock.newCondition();
     private final Condition moreProcessingNeeded = lock.newCondition();
 
-    private Thread runnerThread;
+    private volatile Thread runnerThread;
     private Exception runnerException;
+    private boolean terminated;
+    private long ticksReached;
     private Consumer<Throwable> onException;
 
     private final TreeSet<PacketPosition> resetRelevantPackets = new TreeSet<>();
@@ -59,7 +61,7 @@ public class ControllableRunner extends AbstractFileRunner {
     private LinkedList<ResetStep> resetSteps;
 
     /* tick the processor is waiting at to be signaled to continue further processing */
-    private int upcomingTick;
+    private volatile int upcomingTick;
     /* tick we want to be at the end of */
     private int wantedTick;
     /* tick the user wanted to be at the end of */
@@ -91,6 +93,7 @@ public class ControllableRunner extends AbstractFileRunner {
                     log.debug("now at %d. Took %d microns.", tick, (System.nanoTime() - t0) / 1000);
                     t0 = 0;
                 }
+                ticksReached++;
                 wantedTickReached.signalAll();
                 moreProcessingNeeded.await();
                 if (demandedTick != null) {
@@ -284,36 +287,42 @@ public class ControllableRunner extends AbstractFileRunner {
      * The thread runs up to the end of tick 0 and then waits for {@link #tick()}, {@link #seek(int)} or {@link #setDemandedTick(int)}.
      *
      * <p>If the runner thread terminates with an exception, it is logged, remembered, passed to the callback set
-     * with {@link #setOnException(Consumer)} (not for {@link InterruptedException}), and subsequently thrown as the cause
-     * of the {@link InterruptedException} from a waiting {@link #seek(int)} or {@link #tick()}.
+     * with {@link #setOnException(Consumer)} (not for {@link InterruptedException}), and set as the cause of the
+     * {@link InterruptedException} thrown by {@link #seek(int)} and {@link #tick()}. Once the runner thread has
+     * terminated for any reason, including {@link #halt()}, those methods throw instead of blocking.
      *
      * @param processors processor instances whose {@code @On*} methods are registered; arrays are flattened
      * @return this runner
      */
     public ControllableRunner runWith(final Object... processors) {
+        markStarted();
         runnerThread = new Thread(() -> {
             log.debug("runner started");
+            Exception failure = null;
             try {
                 initAndRunWith(processors);
             } catch (Exception e) {
+                failure = e;
                 if (e instanceof InterruptedException) {
                     Thread.currentThread().interrupt();
                 } else {
                     log.error("Runner thread crashed", e);
                 }
+            } finally {
                 lock.lock();
                 try {
-                    runnerException = e;
-                    wantedTickReached.signal();
+                    runnerException = failure instanceof InterruptedException ? null : failure;
+                    terminated = true;
+                    wantedTickReached.signalAll();
                 } finally {
                     lock.unlock();
                 }
-                if (!(e instanceof InterruptedException) && onException != null) {
-                    try {
-                        onException.accept(e);
-                    } catch (Throwable t) {
-                        log.error("onException handler threw", t);
-                    }
+            }
+            if (failure != null && !(failure instanceof InterruptedException) && onException != null) {
+                try {
+                    onException.accept(failure);
+                } catch (Throwable t) {
+                    log.error("onException handler threw", t);
                 }
             }
             log.debug("runner finished");
@@ -371,19 +380,22 @@ public class ControllableRunner extends AbstractFileRunner {
     }
 
     private void waitForTickReached() throws InterruptedException {
-        wantedTickReached.await();
-        if (runnerException != null) {
-            throw new InterruptedException() {
-                @Override
-                public String getMessage() {
-                    return "Runner thread was terminated by an exception";
-                }
-                @Override
-                public synchronized Throwable getCause() {
-                    return runnerException;
-                }
-            };
+        var reached = ticksReached;
+        while (reached == ticksReached) {
+            if (terminated) {
+                throw terminatedException();
+            }
+            wantedTickReached.await();
         }
+    }
+
+    private InterruptedException terminatedException() {
+        if (runnerException == null) {
+            return new InterruptedException("Runner thread has terminated");
+        }
+        var e = new InterruptedException("Runner thread was terminated by an exception");
+        e.initCause(runnerException);
+        return e;
     }
 
     /**
@@ -395,8 +407,8 @@ public class ControllableRunner extends AbstractFileRunner {
      * seeking is possible.
      *
      * @param demandedTick the tick to move to
-     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread died with an exception
-     *                              (available via {@link Throwable#getCause()})
+     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread has terminated
+     *                              (its exception, if any, is available via {@link Throwable#getCause()})
      */
     public void seek(int demandedTick) throws InterruptedException {
         lock.lock();
@@ -414,8 +426,8 @@ public class ControllableRunner extends AbstractFileRunner {
      * Advances by one tick and blocks until the end of that tick has been reached. If the runner has not yet
      * reached the previously requested tick, waits for it first.
      *
-     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread died with an exception
-     *                              (available via {@link Throwable#getCause()})
+     * @throws InterruptedException if the calling thread is interrupted, or if the runner thread has terminated
+     *                              (its exception, if any, is available via {@link Throwable#getCause()})
      */
     public void tick() throws InterruptedException {
         lock.lock();
@@ -443,15 +455,16 @@ public class ControllableRunner extends AbstractFileRunner {
      * Interrupts the runner thread, ending the run. Does not wait; call {@link #join()} afterwards.
      */
     public void halt() {
-        if (runnerThread != null && runnerThread.isAlive()) {
-            runnerThread.interrupt();
+        var t = runnerThread;
+        if (t != null && t.isAlive()) {
+            t.interrupt();
         }
     }
 
     /**
-     * Waits for the runner thread to terminate. Call after {@link #halt()} (or
-     * after {@link #isAtEnd()} returns true) before closing the {@link Source}
-     * — otherwise the thread may still be reading from it.
+     * Waits for the runner thread to terminate. Call after {@link #halt()} before closing the {@link Source}
+     * — otherwise the thread may still be reading from it. The runner thread does not end on its own at the end
+     * of the replay; it keeps waiting for further commands, so call {@link #halt()} first.
      */
     public void join() throws InterruptedException {
         Thread t = runnerThread;

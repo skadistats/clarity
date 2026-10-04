@@ -36,6 +36,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
     protected S2FieldPathType s2FieldPathType = S2FieldPathType.LONG;
     protected Predicate<DTClass> entityFilter;
+    private volatile boolean started;
 
     /* tick the user is at the end of */
     protected int tick;
@@ -70,10 +71,25 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
      * @throws IOException if reading from the source fails
      */
     protected void initAndRunWith(Object... processors) throws IOException {
+        markStarted();
         initWithProcessors(processors);
         engineType.emitHeader();
         OnInputSource.Event ev = context.createEvent(OnInputSource.class);
         ev.raise(source, loopController);
+    }
+
+    /**
+     * Marks the run as started; afterwards the {@code with*} configuration methods throw. Called from
+     * {@code runWith} before processing begins, on the calling thread.
+     */
+    protected void markStarted() {
+        started = true;
+    }
+
+    private void checkNotStarted() {
+        if (started) {
+            throw new IllegalStateException("runner configuration cannot be changed after the run has started");
+        }
     }
 
     /**
@@ -131,8 +147,10 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
      *
      * @param type the implementation
      * @return this runner
+     * @throws IllegalStateException if the run has already been started
      */
     public AbstractFileRunner withS1EntityState(S1EntityStateType type) {
+        checkNotStarted();
         this.s1EntityStateType = type;
         return this;
     }
@@ -142,8 +160,10 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
      *
      * @param type the implementation
      * @return this runner
+     * @throws IllegalStateException if the run has already been started
      */
     public AbstractFileRunner withS2EntityState(S2EntityStateType type) {
+        checkNotStarted();
         this.s2EntityStateType = type;
         return this;
     }
@@ -153,8 +173,10 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
      *
      * @param type the implementation
      * @return this runner
+     * @throws IllegalStateException if the run has already been started
      */
     public AbstractFileRunner withS2FieldPath(S2FieldPathType type) {
+        checkNotStarted();
         this.s2FieldPathType = type;
         return this;
     }
@@ -169,9 +191,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
      * @throws IllegalStateException if the run has already been started
      */
     public AbstractFileRunner withEntityFilter(Predicate<DTClass> filter) {
-        if (context != null) {
-            throw new IllegalStateException("entity filter cannot be set after parse has started");
-        }
+        checkNotStarted();
         this.entityFilter = filter;
         return this;
     }

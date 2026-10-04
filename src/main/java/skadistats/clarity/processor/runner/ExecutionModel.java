@@ -211,8 +211,7 @@ public class ExecutionModel {
 
     private void processInjections() {
         for (var processor : processors.values()) {
-            var c = processor.getClass();
-            while (true) {
+            for (Class<?> c = processor.getClass(); c != Object.class; c = c.getSuperclass()) {
                 for (var field : c.getDeclaredFields()) {
                     for (var fieldAnnotation : field.getAnnotations()) {
                         if (fieldAnnotation instanceof Insert) {
@@ -225,10 +224,6 @@ public class ExecutionModel {
                             injectEvent(processor, field, (InsertEvent) fieldAnnotation);
                         }
                     }
-                }
-                c = c.getSuperclass();
-                if (c == Object.class) {
-                    break;
                 }
             }
         }
