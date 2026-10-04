@@ -1,5 +1,15 @@
 # Clarity 2 Changelog
 
+## October 4, 2026: Version 4.0.3 released
+
+**Fixes**
+
+* fix #355: honor the `fixed8` encoder on all S2 field types. Recent
+  Deadlock builds send `uint8`, `int8` and many enum and handle types
+  (`MoveType_t`, `RenderMode_t`, `AnimationAlgorithm_t`, ...) as 8 raw
+  bits; reading them as varints desynced the bit stream and failed with
+  `Entity not found for update`. Thanks to @Rupas1k for the report.
+
 ## September 24, 2026: Version 4.0.2 released
 
 **Fixes**
