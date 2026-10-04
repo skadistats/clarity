@@ -64,6 +64,30 @@ provides int-tableswitch dispatch matching the existing
 mirror the existing `read*` methods so decoder skip bodies stay
 trivial.
 
+**Primitive property accessors and sparse state snapshots**
+
+`Entity` and `EntityState` gain `getInt`, `getLong` and `getFloat`
+(by `FieldPath`, and on `Entity` also by property name) that read
+primitive properties without boxing. On the flat entity states they
+read straight from the backing slot and allocate nothing. Unset or
+differently-typed fields return `0`; the name-based variants throw
+`IllegalArgumentException` for unknown properties, like `getProperty`.
+`getObject` is the counterpart for non-primitive types. `getProperty` /
+`getValueForFieldPath` are unchanged.
+
+```java
+int health = hero.getInt("m_iHealth");
+```
+
+For handing entity changes to another thread (e.g. a UI),
+`EntityState.captureChanged(state, fieldPaths, num)` captures only the
+changed fields into a sparse, independent `StateDelta`. The receiving
+side merges it into its own long-lived state with
+`EntityState.applyFrom(state, delta, fp)` or `applyAll(state, delta)`,
+instead of taking a full `state.copy()` per update. In an
+analyzer-shaped benchmark, the per-update `copy()` accounted for ~78%
+of all allocated bytes; clarity-analyzer now uses the delta path.
+
 **Modernised `Entities` query API (BREAKING)**
 
 The four legacy `Entities` query methods predate Java 8 streams and
