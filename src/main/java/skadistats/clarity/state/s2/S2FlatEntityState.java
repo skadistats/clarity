@@ -665,35 +665,62 @@ public final class S2FlatEntityState extends S2EntityState {
 
     @Override
     public int getInt(S2FieldPath fp) {
-        var loc = navigate(fp);
-        if (loc == null) return 0;
-        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.INT) {
-            if (loc.entry.data[loc.base + p.offset()] == 0) return 0;
-            return (int) INT_VH.get(loc.entry.data, loc.base + p.offset() + 1);
-        }
-        return 0;
+        return (int) readScalarBits(fp, PrimitiveType.Scalar.INT);
     }
 
     @Override
     public long getLong(S2FieldPath fp) {
-        var loc = navigate(fp);
-        if (loc == null) return 0L;
-        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.LONG) {
-            if (loc.entry.data[loc.base + p.offset()] == 0) return 0L;
-            return (long) LONG_VH.get(loc.entry.data, loc.base + p.offset() + 1);
-        }
-        return 0L;
+        return readScalarBits(fp, PrimitiveType.Scalar.LONG);
     }
 
     @Override
     public float getFloat(S2FieldPath fp) {
-        var loc = navigate(fp);
-        if (loc == null) return 0.0f;
-        if (loc.layout instanceof FieldLayout.Primitive p && p.type() == PrimitiveType.Scalar.FLOAT) {
-            if (loc.entry.data[loc.base + p.offset()] == 0) return 0.0f;
-            return (float) FLOAT_VH.get(loc.entry.data, loc.base + p.offset() + 1);
+        return Float.intBitsToFloat((int) readScalarBits(fp, PrimitiveType.Scalar.FLOAT));
+    }
+
+    /**
+     * Allocation-free variant of {@link #navigate} for the primitive getters:
+     * walks the fp and returns the raw bits of the scalar at the leaf (float
+     * as its int bits), or 0 if the path terminates early, the leaf is not a
+     * scalar of the requested type, or the slot is unset.
+     */
+    private long readScalarBits(S2FieldPath fp, PrimitiveType.Scalar type) {
+        Entry current = rootEntry;
+        FieldLayout layout = current.rootLayout;
+        var base = 0;
+        var last = fp.last();
+
+        var i = 0;
+        while (true) {
+            var idx = fp.get(i);
+            switch (layout) {
+                case FieldLayout.Composite c -> layout = c.children()[idx];
+                case FieldLayout.Array a -> {
+                    if (idx >= a.length()) return 0L;
+                    base += a.baseOffset() + idx * a.stride();
+                    layout = a.element();
+                }
+                case FieldLayout.SubState s -> {
+                    if (current.data[base + s.offset()] == 0) return 0L;
+                    var slot = (int) INT_VH.get(current.data, base + s.offset() + 1);
+                    current = (Entry) refs[slot];
+                    layout = current.rootLayout;
+                    base = 0;
+                    continue;
+                }
+                default -> throw new IllegalStateException("non-branch layout at non-leaf position: " + layout);
+            }
+            if (i == last) break;
+            i++;
         }
-        return 0.0f;
+
+        if (!(layout instanceof FieldLayout.Primitive p) || p.type() != type) return 0L;
+        var data = current.data;
+        var off = base + p.offset();
+        if (data[off] == 0) return 0L;
+        if (type == PrimitiveType.Scalar.INT) return (int) INT_VH.get(data, off + 1);
+        if (type == PrimitiveType.Scalar.LONG) return (long) LONG_VH.get(data, off + 1);
+        return Float.floatToRawIntBits((float) FLOAT_VH.get(data, off + 1));
     }
 
     @Override
