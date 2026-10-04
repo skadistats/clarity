@@ -1,6 +1,6 @@
 # Clarity Changelog
 
-## Unreleased
+## October 4, 2026: Version 5.0.0 released
 
 Clarity 5.0 requires Java 21 and clarity-protobuf 7.0. Code that only
 writes `@On*` event handlers mostly needs import updates. Code that
@@ -236,9 +236,9 @@ every state implementation, and dropping copy-on-write from the entity
 states. The flat states account for 3-8% of the wall-clock and 8-13% of
 the allocation gain on Source 2 compared to `NESTED_ARRAY` on 5.0.
 
-The entity filter adds to that: on the Dota replay above, an
-OpenDota-shaped filter (heroes, items, abilities, players, game rules,
-wards, cosmetics) took another 19.9% off the unfiltered 5.0 time.
+The entity filter adds to that: in the OpenDota parser, filtering to
+the classes it reads takes another 12-14% off the parse time on Dota
+replays from 2023 to 2026.
 
 ### Fixes
 
