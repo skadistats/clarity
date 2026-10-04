@@ -1,23 +1,35 @@
-# Clarity 2 Changelog
+# Clarity Changelog
 
 ## Unreleased
 
-**Vendored protobuf runtime relocated to `skadistats.clarity.protobuf` (BREAKING)**
+Clarity 5.0 requires Java 21 and clarity-protobuf 7.0. Code that only
+writes `@On*` event handlers mostly needs import updates. Code that
+queries `Entities`, switches over `EngineId`, references the protobuf
+runtime directly or works with the schema and state internals needs the
+migrations below.
+
+### Breaking changes
+
+**Java 21 minimum**
+
+The published jar no longer runs on Java 17. The model types are sealed
+and dispatched with exhaustive `switch`, which needs source 21, and
+javac couples that to target 21.
+
+**Protobuf runtime relocated to `skadistats.clarity.protobuf`**
 
 The protobuf runtime that `clarity-protobuf` vendors has moved out of
-`com.google.protobuf` into `skadistats.clarity.protobuf`. Clarity no
-longer squats on the `com.google.protobuf` namespace, so it can finally
-run alongside a stock `protobuf-java` in the same application — on the
-classpath (previously `IncompatibleClassChangeError`) and on the module
-path (previously a split-package `LayerInstantiationException`).
+`com.google.protobuf`. Clarity no longer squats on that namespace, so it
+can finally run alongside a stock `protobuf-java` in the same
+application — on the classpath (previously
+`IncompatibleClassChangeError`) and on the module path (previously a
+split-package `LayerInstantiationException`).
 
 Generated message classes have **not** moved — they remain in
-`skadistats.clarity.wire.*`. The common consumer shape, an `@OnMessage`
-handler with a generated message type in its signature, is unaffected
-and needs no edit.
-
-What breaks is code that references the runtime directly. Rewrite the
-import; the compiler flags every site:
+`skadistats.clarity.wire.*`. An `@OnMessage` handler with a generated
+message type in its signature needs no edit. Code that references the
+runtime directly needs its imports rewritten; the compiler flags every
+site:
 
 | Old | New |
 |---|---|
@@ -28,52 +40,149 @@ import; the compiler flags every site:
 To bridge clarity bytes into a stock protobuf 3.x message, wrap without
 copying via `UnsafeByteOperations.unsafeWrap(ZeroCopy.extract(bs))`.
 
-**Opt-in per-class entity filter on the runner**
+**Stream-based `Entities` query API**
 
-`AbstractFileRunner.withEntityFilter(Predicate<DTClass>)` lets a consumer
-declare which entity classes they care about *before* parse starts.
-Entities whose class is rejected are consumed from the wire (bits
-advance via `FieldReader.skipFields`, so the cursor stays aligned) but
-no Java-side `Entity` is allocated, no listener fires, and
-`entities.getByIndex(id)` returns `null` for them — they are
-indistinguishable from ids that were never transmitted.
+The four legacy query methods have been replaced by one stream-returning
+method and a static predicate factory. Two of the removed methods
+(`getByPredicate`, `getByDtName`) silently picked the first match when
+several entities were live, a recurring source of subtle bugs. The new
+shape makes callers state the cardinality with a stream terminal
+operation.
 
-The filter is immutable for the duration of the run; calling it after
-parse has started throws `IllegalStateException`. Filter exceptions
-propagate and terminate the parse. The default behavior (no filter set)
-is byte-identical to before.
+| Old | New |
+|---|---|
+| `entities.getAllByPredicate(p)` | `entities.stream().filter(p)` (a `Stream<Entity>` instead of an `Iterator<Entity>`) |
+| `entities.getByPredicate(p)` | `entities.stream().filter(p).findFirst().orElse(null)` |
+| `entities.getAllByDtName(name)` | `entities.stream().filter(Entities.byDtName(name))` |
+| `entities.getByDtName(name)` | `entities.stream().filter(Entities.byDtName(name)).findFirst().orElse(null)` |
 
-Measured on `dota/s2/340/8168882574_1198277651.dem` (modern S2 bench
-replay, NESTED_ARRAY, pure clarity parse): -19.9% off the unfiltered
-5.0 number with an odota-coverage filter (~12 class patterns
-accepting heroes, items, abilities, players, gamerules, wards,
-cosmetics). Stacked on the 4.0 → 5.0 internals work, that's a
-**2.06× cumulative speedup vs 3.1.3** for an odota-shaped Dota
-consumer (2049 ms → 996 ms).
+`Entities.stream()` yields the entities in ascending index order,
+skipping empty slots. The helpers `skadistats.clarity.util.SimpleIterator`
+and `skadistats.clarity.util.Iterators` have been deleted along with
+them.
 
-Mechanism: every `@RegisterDecoder` class now exposes a static
-`skip(BitStream[, Decoder])` method paired with `decode`. The
-annotation processor fails the build if a decoder lacks `skip`,
-locking in the parity invariant. `DecoderDispatch.skip(bs, d)`
-provides int-tableswitch dispatch matching the existing
-`decode`/`decodeInto` shape. `FieldReader` gains an abstract
-`skipFields(BitStream, DTClass)` with no `EntityState` parameter
-(skip touches neither). Five new BitStream helpers — `skipVarUInt`,
-`skipVarULong`, `skipUBitVar`, `skipBitCoord`, `skipCellCoord`,
-`skipCoordMp`, `skipBitNormal`, `skip3BitNormal`, `skipString` —
-mirror the existing `read*` methods so decoder skip bodies stay
-trivial.
+**CS2 naming**
+
+The Source 2 Counter-Strike engine was called `CSGO_S2`, but CS:GO and
+Counter-Strike 2 are distinct products. Names have been corrected
+throughout:
+
+* `EngineId.CSGO_S2` → `EngineId.CS2`, `EngineId.CSGO_S1` → `EngineId.CSGO`
+  (`DOTA_S1`, `DOTA_S2` and `DEADLOCK` are unchanged)
+* `engine.s1.CsGoS1EngineType` → `CsgoEngineType`,
+  `engine.s2.CsgoS2EngineType` → `Cs2EngineType`,
+  `PacketInstanceReaderCsGoS1` → `PacketInstanceReaderCsgo`
+* `model.csgo.PlayerInfoType` → `model.cs.PlayerInfoType`
+* clarity-protobuf wire packages: `wire.csgo.common.proto` →
+  `wire.cs.common.proto`, `wire.csgo.s1.proto` → `wire.cs.csgo.proto`,
+  `wire.csgo.s2.proto` → `wire.cs.cs2.proto`. Outer classes use
+  plain-camel acronyms: `CSGOCommonGcMessages` → `CsCommonGcMessages`,
+  `CSGOS1NetMessages` → `CsgoNetMessages`, `CSGOS2ClarityMessages` →
+  `Cs2ClarityMessages`, etc.
+
+Parsing is unchanged; downstream code updates imports and switch cases.
+
+**Package layout**
+
+Every horizontal concern now has the same `(root, s1, s2)` shape:
+
+* new `skadistats.clarity.engine` for `EngineType`,
+  `AbstractEngineType`, the concrete engine types (`engine.s1`,
+  `engine.s2`) and the `PacketInstanceReader*` classes
+* new `skadistats.clarity.state` for entity-state storage: `EntityState`,
+  registries and field layout at the root, implementations in
+  `state.s1` and `state.s2`
+* schema types (`SendProp`, `SendTable`, `ReceiveProp`, `Serializer`,
+  `Field`, `FieldType`, `FieldOp`, `S1DTClass`, `S2DTClass`, ...) move
+  from `io.s1` / `io.s2` to `model.s1` / `model.s2`
+* `io` keeps field reading only (`FieldReader`, `FieldChanges`,
+  `MutationListener`, `S1FieldReader`, `S2FieldReader`, decoder
+  factories)
+
+The `@On*` handler parameter types (`Entity`, `FieldPath`, `GameEvent`,
+`StringTable`, `DTClass`, `CombatLogEntry`) keep their packages. Code
+that imported `EngineType` from `skadistats.clarity.model` or used
+`model.engine.*`, `model.state.*` or `io.s1.*` / `io.s2.*` needs
+import updates.
+
+**Sealed model types**
+
+* `DTClass permits S1DTClass, S2DTClass`, `FieldPath permits S1FieldPath,
+  S2FieldPath`, `EntityState permits S1EntityState, S2EntityState`.
+  Removed: `DTClass.evaluate(Function, Function)`, `DTClass.s1()`,
+  `DTClass.s2()`, `FieldPath.s1()`, `FieldPath.s2()`.
+  *Migration:* replace the escape hatches with an exhaustive `switch`,
+  e.g. `switch (dtClass) { case S1DTClass s1 -> …; case S2DTClass s2 -> …; }`.
+* `DTClass.getFieldPathForName(String)` and
+  `DTClass.getNameForFieldPath(FieldPath)` are now static helpers taking
+  the entity state, `DTClass.getFieldPathForName(dtClass, state, name)`,
+  because S2 path resolution depends on the entity's current state.
+  *Migration:* with an `Entity` at hand, use
+  `entity.getFieldPathForName(name)` / `entity.getNameForFieldPath(fp)`.
+* The engine-typed state methods (`write`, `decodeInto`, `applyMutation`,
+  `getValueForFieldPath`) moved from `EntityState` to `S1EntityState` /
+  `S2EntityState` with typed field path arguments. The static helpers
+  `EntityState.getValueForFieldPath(state, fp)` and
+  `EntityState.applyMutation(state, fp, mutation)` cover callers holding
+  a plain `EntityState`. `S2AbstractEntityState` was merged into
+  `S2EntityState`.
+* `FieldReader` became the generic interface
+  `FieldReader<D extends DTClass, FP extends FieldPath, S extends EntityState>`,
+  and `FieldChanges` became `FieldChanges<FP extends FieldPath>`. The
+  static `FieldReader.DEBUG_STREAM` moved to `FieldReader.Debug.STREAM`.
+* `S2ModifiableFieldPath` was replaced by `S2FieldPathBuilder`, which is
+  not itself an `S2FieldPath`; `FieldOp.execute` takes the builder.
+
+**Smaller changes**
+
+* The `with*` configuration methods of the file runners throw
+  `IllegalStateException` once `runWith` has been called, instead of
+  being silently ignored.
+* Removed `ResetPhase.FORWARD`, which was never raised.
+* Removed `UsagePointMarker.parameterClasses`, which was no longer read
+  since the switch to typed event dispatch.
+  *Migration:* delete the attribute from custom event annotations; the
+  nested `Listener` interface defines the handler parameters.
+* The annotation processor `EventAnnotationProcessor` was split into
+  `ListenerValidationProcessor`, `ProvidesIndexProcessor` and
+  `EventGenerationProcessor`; `DecoderAnnotationProcessor` is new. Builds
+  that pick up processors via service discovery need no change; builds
+  that name processors explicitly (`-processor`, Maven
+  `<annotationProcessors>`) must list the new classes.
+* `UsagePoint` is now sealed, and `EventListener` and `InitializerMethod`
+  are final.
+* Strings decoded from the bit stream are no longer interned. Compare
+  them with `equals`, not `==`.
+* `BitStream32` and `BitStream64` were merged into a single concrete
+  `BitStream`; `ClarityPlatform` no longer has the `VM_64BIT` flag or a
+  pluggable bit stream constructor.
+* `EntityStateFactory` and `ContextData` were removed; `Context` creates
+  entity states and field readers.
+* S2 pointer fields: `PointerField` → `PolymorphicPointerField`,
+  `PointerDecoder` → `PolymorphicPointerDecoder`; single-serializer
+  pointers now use the new `FixedPointerField` / `FixedPointerDecoder`.
+
+### New features
+
+**Per-class entity filter**
+
+`withEntityFilter(Predicate<DTClass>)` on the file runners declares
+which entity classes a consumer cares about before the parse starts.
+Entities of rejected classes are skipped on the wire: no `Entity` is
+allocated, no listener fires, and `entities.getByIndex(id)` returns
+`null` for them. The default (no filter) behaves exactly as before.
+Every decoder now has a `skip` counterpart to `decode`, enforced at
+build time by the annotation processor, so skipping cannot desync the
+bit stream.
 
 **Primitive property accessors and sparse state snapshots**
 
-`Entity` and `EntityState` gain `getInt`, `getLong` and `getFloat`
-(by `FieldPath`, and on `Entity` also by property name) that read
-primitive properties without boxing. On the flat entity states they
-read straight from the backing slot and allocate nothing. Unset or
-differently-typed fields return `0`; the name-based variants throw
-`IllegalArgumentException` for unknown properties, like `getProperty`.
-`getObject` is the counterpart for non-primitive types. `getProperty` /
-`getValueForFieldPath` are unchanged.
+`Entity` and `EntityState` gain `getInt`, `getLong` and `getFloat` (by
+`FieldPath`, and on `Entity` also by property name) that read primitive
+properties without boxing; on the flat entity states they allocate
+nothing. Unset or differently-typed fields return `0`; the name-based
+variants throw `IllegalArgumentException` for unknown properties, like
+`getProperty`. `getObject` is the counterpart for non-primitive types.
 
 ```java
 int health = hero.getInt("m_iHealth");
@@ -81,119 +190,55 @@ int health = hero.getInt("m_iHealth");
 
 For handing entity changes to another thread (e.g. a UI),
 `EntityState.captureChanged(state, fieldPaths, num)` captures only the
-changed fields into a sparse, independent `StateDelta`. The receiving
-side merges it into its own long-lived state with
-`EntityState.applyFrom(state, delta, fp)` or `applyAll(state, delta)`,
+changed fields into an independent `StateDelta`. The receiving side
+merges it into its own long-lived state with
+`EntityState.applyFrom(state, delta, fp)` or `applyAll(state, delta)`
 instead of taking a full `state.copy()` per update. In an
-analyzer-shaped benchmark, the per-update `copy()` accounted for ~78%
-of all allocated bytes; clarity-analyzer now uses the delta path.
+analyzer-shaped benchmark the per-update `copy()` accounted for ~78% of
+all allocated bytes; clarity-analyzer now uses the delta path.
 
-**Modernised `Entities` query API (BREAKING)**
+**Other additions**
 
-The four legacy `Entities` query methods predate Java 8 streams and
-have been removed in favour of a single stream-returning method plus
-a static predicate factory. Two of the removed methods
-(`getByPredicate`, `getByDtName`) silently picked the first match
-when multiple entities were live — a recurring source of subtle bugs,
-since DT classes routinely have many live instances (heroes, players,
-abilities, …). The new shape forces callers to express cardinality
-explicitly via stream terminal operations.
+* `withS1EntityState(S1EntityStateType)` and
+  `withS2EntityState(S2EntityStateType)` select the entity-state
+  storage: `FLAT` (default) or `OBJECT_ARRAY` for Source 1,
+  `NESTED_ARRAY` (default), `FLAT` or `TREE_MAP` for Source 2.
+* `withS2FieldPath(S2FieldPathType)` selects the S2 field path
+  implementation; `LONG` is currently the only one.
+* `ControllableRunner.setOnException(Consumer<Throwable>)` reports a
+  crash of the runner thread without blocking in `seek()` / `tick()`.
+* `Context.createEvent` returns the typed event, so the cast at the
+  call site can go.
+* `Resources.Manifest` and `Resources.Entry` have public getters for the
+  parsed resource paths.
 
-| Old API | New API |
-|---|---|
-| `entities.getAllByPredicate(p)` | `entities.stream().filter(p)` (returns `Stream<Entity>` instead of `Iterator<Entity>`) |
-| `entities.getByPredicate(p)` | `entities.stream().filter(p).findFirst().orElse(null)` |
-| `entities.getAllByDtName(name)` | `entities.stream().filter(Entities.byDtName(name))` |
-| `entities.getByDtName(name)` | `entities.stream().filter(Entities.byDtName(name)).findFirst().orElse(null)` |
+### Performance
 
-`Entities.stream()` yields every live entity in ascending entity-index
-order, skipping empty slots. `Entities.byDtName(String)` is a static
-`Predicate<Entity>` factory; import statically for fluent reads.
+<!-- TODO: refresh all numbers below after the benchmark re-run -->
 
-In the same cleanup pass, the legacy hand-rolled iterator helpers
-`skadistats.clarity.util.SimpleIterator` and
-`skadistats.clarity.util.Iterators` (originally written in 2015 to
-shed Guava on a Java 7 baseline) have been deleted. `SimpleIterator`
-mimicked Guava's `AbstractIterator`; its only public-API caller was
-`Entities.getAllByPredicate`. Two internal `fieldPathIterator`
-implementations on S1 entity states have been rewritten as plain
-anonymous `Iterator<FieldPath>` instances. `util.Iterators` had no
-remaining callers.
+Cumulative wins on `EntityStateParseBench` since 4.0.0 (JDK 21.0.10,
+3 warmup + 10 measurement iterations, single-shot, `-prof gc`), default
+entity states (`S1EntityStateType.FLAT`, previously `OBJECT_ARRAY`;
+`S2EntityStateType.NESTED_ARRAY`, unchanged):
 
-`EntityState.fieldPathIterator()` is unchanged — it still returns
-`Iterator<FieldPath>`, since `StateDifferenceEvaluator` walks two of
-them in lockstep with merge-sort logic and cannot use streams.
+| Engine | Replay              | wall-clock (4.0 → 5.0) | alloc/op (4.0 → 5.0) |
+|--------|---------------------|------------------------|----------------------|
+| S2     | cs2 3dmax-falcons   | 1769 → 1226 ms (-31%)  | 13.27 → 3.32 GB (-75%) |
+| S2     | deadlock 19206063   | 1387 → 1053 ms (-24%)  | 5.60 → 2.45 GB (-56%) |
+| S2     | dota 8168882574     | 1896 → 1338 ms (-29%)  | 9.47 → 3.31 GB (-65%) |
+| S1     | csgo luminosity-azio| 1288 → 659 ms (-49%)   | 15.64 → 1.73 GB (-89%) |
+| S1     | dota S1 271145478   | 422 → 254 ms (-40%)    | 4.40 → 0.97 GB (-78%) |
 
-**CS2 naming cleanup (BREAKING)**
+Most of this comes from the decoder and field-op dispatch rewrites, the
+reader rewrite that removed the intermediate `WriteValue` records for
+every state implementation, and dropping copy-on-write from the entity
+states.
 
-The `EngineId` enum and adjacent class/package names previously called
-the Source-2-era CS engine `CSGO_S2`, but Valve renamed CS:GO to
-**Counter-Strike 2** when the engine cut over in September 2023. CSGO
-and CS2 are distinct products, not the same product on two engines.
-The naming has been corrected throughout:
+The entity filter adds to that: on the Dota replay above, an
+OpenDota-shaped filter (heroes, items, abilities, players, game rules,
+wards, cosmetics) took another 19.9% off the unfiltered 5.0 time.
 
-* `EngineId.CSGO_S2` → `EngineId.CS2`
-* `EngineId.CSGO_S1` → `EngineId.CSGO`
-  (`DOTA_S1` / `DOTA_S2` / `DEADLOCK` unchanged — Dota 2 legitimately
-  spans two engines under one product name; Deadlock is single-engine.)
-* `engine/s1/CsGoS1EngineType` → `engine/s1/CsgoEngineType`
-* `engine/s2/CsgoS2EngineType` → `engine/s2/Cs2EngineType`
-* `engine/s1/PacketInstanceReaderCsGoS1` → `PacketInstanceReaderCsgo`
-* `model.csgo.PlayerInfoType` (used by both CSGO and CS2) →
-  `model.cs.PlayerInfoType`
-* clarity-protobuf wire-package tree restructured to reflect product
-  reality:
-  * `wire.csgo.common.proto.*`  → `wire.cs.common.proto.*`
-  * `wire.csgo.s1.proto.*`      → `wire.cs.csgo.proto.*`
-  * `wire.csgo.s2.proto.*`      → `wire.cs.cs2.proto.*`
-  * Outer-class names follow plain-camel acronym casing:
-    `CSGOCommonGcMessages` → `CsCommonGcMessages`,
-    `CSGOS1NetMessages` → `CsgoNetMessages`,
-    `CSGOS2ClarityMessages` → `Cs2ClarityMessages`, etc.
-* `module-info.java` exports updated to `skadistats.clarity.model.cs`
-  and the new `wire.cs.*` packages.
-
-The `gameId` literal `"csgo"` produced by Valve's demo header is
-unchanged — Valve's install directory is still called `csgo` even for
-CS2 demos, so `EngineMagic.S2.determineEngineType` still matches that
-literal verbatim and dispatches to the new `EngineId.CS2`.
-
-No behavioural change. Pure rename + package move; on-wire format,
-parsing logic, and observable replay output are byte-identical to
-pre-rename. Downstream consumers update imports and switch cases.
-
-**Configurable S2 field-path implementation**
-
-* `S2FieldPath` is now a sealed immutable key contract: it extends
-  `Comparable<S2FieldPath>` and carries range-op methods (`childAt`,
-  `upperBoundForSubtreeAt`). `S2ModifiableFieldPath` is gone — its
-  replacement, `S2FieldPathBuilder`, is a separate interface that is
-  NOT a `S2FieldPath`. This removes the false-sibling relationship
-  that forced concrete-type casts in `S2TreeMapEntityState`.
-* New enum `S2FieldPathType` pairs a concrete `S2FieldPath` impl with
-  its builder factory. Currently one constant: `LONG` (the production
-  default, backed by `S2LongFieldPath`/`S2LongFieldPathBuilder`).
-  Adding a new path impl requires one enum constant plus two classes.
-* New runner knob `withS2FieldPath(S2FieldPathType)` on
-  `AbstractFileRunner` (inherited by `SimpleRunner` and
-  `ControllableRunner`). Default stays `LONG`; no behaviour change
-  for existing users.
-* `FieldOp.execute` now takes `S2FieldPathBuilder` instead of
-  `S2ModifiableFieldPath`.
-* `S2TreeMapEntityState` keys on `S2FieldPath` directly with no casts
-  and no references to `S2LongFieldPathFormat`; range ops compose
-  through interface methods.
-
-**API documentation**
-
-* Javadoc for the user-facing API: runners, `Context`, sources, every
-  `@On*` event annotation (when it fires, handler signature, attribute
-  semantics), the built-in processors, the model and state types, and
-  the `event` package for writing custom processors.
-* `package-info.java` overviews for the public packages, including a
-  minimal processor/runner example.
-
-**Fixes and API cleanup**
+### Fixes
 
 * `ControllableRunner`: `seek()` and `tick()` no longer block forever
   once the runner thread has terminated (crash or `halt()`), including
@@ -208,117 +253,20 @@ pre-rename. Downstream consumers update imports and switch cases.
   reset raise the same events.
 * `Clarity.infoForFile` and `Clarity.metadataForFile` close the file
   they open.
-* (BREAKING) The `with*` configuration methods of the file runners throw
-  `IllegalStateException` once `runWith` has been called, instead of
-  being silently ignored. For `ControllableRunner` this now also holds
-  right after `runWith` returns, before the runner thread has started.
-* (BREAKING) Removed `ResetPhase.FORWARD`, which was never raised.
-* (BREAKING) Removed `UsagePointMarker.parameterClasses`, which was not
-  read since the switch to typed event dispatch.
-  *Migration:* delete the attribute from custom event annotations; the
-  nested `Listener` interface defines the handler parameters.
 
-**Internal restructure**
+### Documentation
 
-* package layout reorganized so that every horizontal concern has a
-  consistent `(root, s1, s2)` shape. No behavior change. Import-path
-  updates are the only migration.
-  * new top-level packages: `skadistats.clarity.engine` (holds
-    `EngineType`, `AbstractEngineType`, concrete engine types split
-    into `engine/s1/`, `engine/s2/`, plus `PacketInstanceReader*`),
-    and `skadistats.clarity.state` (entity-state storage — abstract
-    `EntityState`, registries, field layout at root; concrete impls
-    under `state/s1/` and `state/s2/`).
-  * schema types (`SendProp`, `SendTable`, `ReceiveProp`, `Serializer`,
-    `Field`, `FieldType`, `Pointer`, `FieldOp`, `S1DTClass`,
-    `S2DTClass`, ...) move from `io/s{1,2}/` to `model/s{1,2}/` so the
-    abstract `DTClass` and its concrete subclasses finally sit in the
-    same top-level package.
-  * `io/` shrinks to field-reading only (`FieldReader`, `FieldChanges`,
-    `MutationListener`, `S1FieldReader`, `S2FieldReader`, decoder
-    factories).
-  * `processor/`, `source/`, `event/`, `io/bitstream/`, `io/decoder/`
-    are unchanged.
-  * `@On*` event-handler parameter types all stay at their current
-    paths (`Entity`, `FieldPath`, `GameEvent`, `StringTable`,
-    `DTClass`, `CombatLogEntry`). User code that only writes event
-    handlers needs no changes.
-  * Downstream code that imported `EngineType` from
-    `skadistats.clarity.model` or referenced schema/state internals
-    from `model.engine.*`, `model.state.*`, or `io.s{1,2}.*` needs
-    import-path updates.
+* Javadoc for the user-facing API: runners, `Context`, sources, every
+  `@On*` event annotation (when it fires, handler signature, attribute
+  semantics), the built-in processors, the model and state types, and
+  the `event` package for writing custom processors.
+* `package-info.java` overviews for the public packages, including a
+  minimal processor/runner example.
 
-**Breaking changes**
+### Dependencies
 
-* minimum runtime bumped to Java 21. Published jar no longer runs on
-  Java 17 JVMs. Exhaustive `switch` over sealed types (required by
-  this refactor) forces source=21, which javac couples to target=21.
-* `DTClass`, `FieldPath`, and `EntityState` are now sealed sum types.
-  * `DTClass permits S1DTClass, S2DTClass`
-  * `FieldPath permits S1FieldPath, S2FieldPath`
-  * `EntityState permits S1EntityState, S2EntityState`
-  * Removed: `DTClass.evaluate(Function, Function)`, `DTClass.s1()`,
-    `DTClass.s2()`, `FieldPath.s1()`, `FieldPath.s2()`.
-  * *Migration:* replace escape-hatch casts with exhaustive `switch`
-    over the sealed hierarchies (e.g.
-    `switch (dtClass) { case S1DTClass s1 -> …; case S2DTClass s2 -> …; }`).
-* Engine-typed write methods (`write`, `decodeInto`, `applyMutation`,
-  `getValueForFieldPath`) moved from the base `EntityState` onto
-  `S1EntityState` / `S2EntityState` with typed `S1FieldPath` /
-  `S2FieldPath` arguments. Static dispatch helpers
-  `EntityState.applyMutation(state, fp, mut)`,
-  `EntityState.applyMutations(state, fps, muts, beforeEach)`, and
-  `EntityState.getValueForFieldPath(state, fp)` cover callers that
-  hold a bare `EntityState`.
-* `S2AbstractEntityState` was merged into `S2EntityState` (sealed
-  abstract class, directly permitted by `EntityState`). The separate
-  interface no longer exists.
-* `DTClass.getFieldPathForName(String)` and
-  `DTClass.getNameForFieldPath(FieldPath)` are no longer instance
-  methods on `DTClass`. The dispatch moved to static helpers
-  `DTClass.getFieldPathForName(dtClass, state, name)` and
-  `DTClass.getNameForFieldPath(dtClass, state, fp)`, since S2 path
-  resolution now routes through the entity's `EntityState`.
-  *Migration:* if you hold an `Entity`, use the convenience methods
-  `entity.getFieldPathForName(name)` / `entity.getNameForFieldPath(fp)`
-  instead of going through `entity.getDtClass()`.
-* `FieldReader` became a generic interface
-  `FieldReader<D extends DTClass, FP extends FieldPath, S extends EntityState>`.
-  `S1FieldReader` and `S2FieldReader` bind the engine triple; entry-time
-  casts and per-field `FieldPath` casts inside the read loop are gone.
-  The mutable `FieldReader.DEBUG_STREAM` static moved to
-  `FieldReader.Debug.STREAM` (interface statics are implicitly final).
-* `FieldChanges` became generic `FieldChanges<FP extends FieldPath>` with
-  a typed `FP[] fieldPaths`. Mutation application delegates to the
-  static `EntityState.applyMutations` helpers; sealed dispatch lives in
-  one place.
-
-**Performance**
-
-Cumulative wins on `EntityStateParseBench` since 4.0.0 (JDK 21.0.10,
-3 warmup + 10 measurement iterations, single-shot, `-prof gc`):
-
-* New default S2 entity state is `S2FlatEntityState` (was
-  `NestedArrayEntityState`); new default S1 entity state is
-  `S1FlatEntityState` (was `ObjectArrayEntityState`).
-* End-to-end parse, default impl: **-24% to -49% wall-clock**, **-56% to
-  -89% allocations**.
-
-| Engine | Replay              | wall-clock (4.0 → 4.1) | alloc/op (4.0 → 4.1) |
-|--------|---------------------|------------------------|----------------------|
-| S2     | cs2 3dmax-falcons   | 1769 → 1226 ms (-31%)  | 13.27 → 3.32 GB (-75%) |
-| S2     | deadlock 19206063   | 1387 → 1053 ms (-24%)  | 5.60 → 2.45 GB (-56%) |
-| S2     | dota 8168882574     | 1896 → 1338 ms (-29%)  | 9.47 → 3.31 GB (-65%) |
-| S1     | csgo luminosity-azio| 1288 → 659 ms (-49%)   | 15.64 → 1.73 GB (-89%) |
-| S1     | dota S1 271145478   | 422 → 254 ms (-40%)    | 4.40 → 0.97 GB (-78%) |
-
-The bulk of the wall-clock and allocation wins came from unrelated
-dispatch / reader rewrites — `static-decoder-dispatch`,
-`fieldop-dispatch-rework`, `accelerate-flat-entity-state` (which also
-eliminated `WriteValue` records on the unified reader path for *every*
-impl), `strip-entity-state-cow`, and `accelerate-s1-flat-state`. The
-flat representation itself accounts for an additional 3-8% wall-clock
-and 8-26% allocations vs. the array-based defaults at 4.1.
+* clarity-protobuf 7.0 (relocated protobuf runtime, CS2 package
+  restructure).
 
 ## October 4, 2026: Version 4.0.3 released
 
