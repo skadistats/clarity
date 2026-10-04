@@ -18,8 +18,8 @@ import java.util.function.Function;
  *
  * <p>The storage strategy is chosen per run: Source 1 uses
  * {@code S1EntityStateType.FLAT} by default (alternative {@code OBJECT_ARRAY}),
- * Source 2 uses {@code S2EntityStateType.NESTED_ARRAY} by default
- * (alternatives {@code TREE_MAP}, {@code FLAT}), configurable on the runner with
+ * Source 2 uses {@code S2EntityStateType.FLAT} by default
+ * (alternatives {@code NESTED_ARRAY}, {@code TREE_MAP}), configurable on the runner with
  * {@code withS1EntityState} / {@code withS2EntityState}.
  *
  * <p>States are mutated by the parser while it reads packets. Hold on to a

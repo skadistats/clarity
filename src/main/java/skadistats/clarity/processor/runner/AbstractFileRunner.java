@@ -33,7 +33,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     protected final Source source;
     protected LoopController loopController;
     protected S1EntityStateType s1EntityStateType = S1EntityStateType.FLAT;
-    protected S2EntityStateType s2EntityStateType = S2EntityStateType.NESTED_ARRAY;
+    protected S2EntityStateType s2EntityStateType = S2EntityStateType.FLAT;
     protected S2FieldPathType s2FieldPathType = S2FieldPathType.LONG;
     protected Predicate<DTClass> entityFilter;
     private volatile boolean started;
@@ -156,7 +156,7 @@ public abstract class AbstractFileRunner extends AbstractRunner implements FileR
     }
 
     /**
-     * Selects the entity state implementation for Source 2 replays. Default is {@link S2EntityStateType#NESTED_ARRAY}.
+     * Selects the entity state implementation for Source 2 replays. Default is {@link S2EntityStateType#FLAT}.
      *
      * @param type the implementation
      * @return this runner

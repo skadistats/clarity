@@ -151,6 +151,9 @@ import updates.
   `<annotationProcessors>`) must list the new classes.
 * `UsagePoint` is now sealed, and `EventListener` and `InitializerMethod`
   are final.
+* The default entity state is now `FLAT` for both engines (previously
+  `OBJECT_ARRAY` for Source 1 and `NESTED_ARRAY` for Source 2).
+  `withS1EntityState` / `withS2EntityState` select the old ones.
 * Strings decoded from the bit stream are no longer interned. Compare
   them with `equals`, not `==`.
 * `BitStream32` and `BitStream64` were merged into a single concrete
@@ -202,7 +205,7 @@ all allocated bytes; clarity-analyzer now uses the delta path.
 * `withS1EntityState(S1EntityStateType)` and
   `withS2EntityState(S2EntityStateType)` select the entity-state
   storage: `FLAT` (default) or `OBJECT_ARRAY` for Source 1,
-  `NESTED_ARRAY` (default), `FLAT` or `TREE_MAP` for Source 2.
+  `FLAT` (default), `NESTED_ARRAY` or `TREE_MAP` for Source 2.
 * `withS2FieldPath(S2FieldPathType)` selects the S2 field path
   implementation; `LONG` is currently the only one.
 * `ControllableRunner.setOnException(Consumer<Throwable>)` reports a
@@ -214,25 +217,24 @@ all allocated bytes; clarity-analyzer now uses the delta path.
 
 ### Performance
 
-<!-- TODO: refresh all numbers below after the benchmark re-run -->
+`parse` workload of [clarity-bench](https://github.com/spheenik/clarity-bench)
+(Ryzen 9 9950X, JDK 21.0.12), 4.0.3 against 5.0, each with its default
+entity states (5.0: `FLAT` for both engines; 4.0.3: `OBJECT_ARRAY` /
+`NESTED_ARRAY`):
 
-Cumulative wins on `EntityStateParseBench` since 4.0.0 (JDK 21.0.10,
-3 warmup + 10 measurement iterations, single-shot, `-prof gc`), default
-entity states (`S1EntityStateType.FLAT`, previously `OBJECT_ARRAY`;
-`S2EntityStateType.NESTED_ARRAY`, unchanged):
-
-| Engine | Replay              | wall-clock (4.0 → 5.0) | alloc/op (4.0 → 5.0) |
-|--------|---------------------|------------------------|----------------------|
-| S2     | cs2 3dmax-falcons   | 1769 → 1226 ms (-31%)  | 13.27 → 3.32 GB (-75%) |
-| S2     | deadlock 19206063   | 1387 → 1053 ms (-24%)  | 5.60 → 2.45 GB (-56%) |
-| S2     | dota 8168882574     | 1896 → 1338 ms (-29%)  | 9.47 → 3.31 GB (-65%) |
-| S1     | csgo luminosity-azio| 1288 → 659 ms (-49%)   | 15.64 → 1.73 GB (-89%) |
-| S1     | dota S1 271145478   | 422 → 254 ms (-40%)    | 4.40 → 0.97 GB (-78%) |
+| Engine | Replay               | wall-clock (4.0.3 → 5.0) | alloc/parse (4.0.3 → 5.0) |
+|--------|----------------------|--------------------------|---------------------------|
+| S2     | dota 8168882574      | 1828 → 1162 ms (-36%)    | 9.47 → 3.30 GB (-65%)     |
+| S2     | dota 1560289528      | 470 → 273 ms (-42%)      | 3.63 → 0.66 GB (-82%)     |
+| S2     | deadlock 19206063    | 1355 → 959 ms (-29%)     | 5.60 → 2.45 GB (-56%)     |
+| S2     | cs2 liquid-betboom   | 1472 → 941 ms (-36%)     | 11.81 → 2.87 GB (-76%)    |
+| S1     | dota S1 271145478    | 417 → 238 ms (-43%)      | 4.40 → 0.97 GB (-78%)     |
 
 Most of this comes from the decoder and field-op dispatch rewrites, the
 reader rewrite that removed the intermediate `WriteValue` records for
 every state implementation, and dropping copy-on-write from the entity
-states.
+states. The flat states account for 3-8% of the wall-clock and 8-13% of
+the allocation gain on Source 2 compared to `NESTED_ARRAY` on 5.0.
 
 The entity filter adds to that: on the Dota replay above, an
 OpenDota-shaped filter (heroes, items, abilities, players, game rules,
