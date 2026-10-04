@@ -262,6 +262,16 @@ impl), `strip-entity-state-cow`, and `accelerate-s1-flat-state`. The
 flat representation itself accounts for an additional 3-8% wall-clock
 and 8-26% allocations vs. the array-based defaults at 4.1.
 
+## October 4, 2026: Version 4.0.3 released
+
+**Fixes**
+
+* fix #355: honor the `fixed8` encoder on all S2 field types. Recent
+  Deadlock builds send `uint8`, `int8` and many enum and handle types
+  (`MoveType_t`, `RenderMode_t`, `AnimationAlgorithm_t`, ...) as 8 raw
+  bits; reading them as varints desynced the bit stream and failed with
+  `Entity not found for update`. Thanks to @Rupas1k for the report.
+
 ## September 24, 2026: Version 4.0.2 released
 
 **Fixes**

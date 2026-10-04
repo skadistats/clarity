@@ -3,7 +3,6 @@ package skadistats.clarity.io.s2;
 import org.slf4j.Logger;
 import skadistats.clarity.io.decoder.*;
 import skadistats.clarity.io.decoder.factory.s2.FloatDecoderFactory;
-import skadistats.clarity.io.decoder.factory.s2.LongUnsignedDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.QAngleDecoderFactory;
 import skadistats.clarity.io.decoder.factory.s2.VectorDecoderFactory;
 import skadistats.clarity.logger.PrintfLoggerFactory;
@@ -11,6 +10,7 @@ import skadistats.clarity.model.s2.SerializerProperties;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static skadistats.clarity.LogChannel.decoder;
@@ -21,12 +21,16 @@ public class S2DecoderFactory {
 
     private static final Decoder DEFAULT_DECODER = new IntVarUnsignedDecoder();
 
+    private static final Map<String, BiFunction<SerializerProperties, String, Decoder>> ENCODERS = new HashMap<>();
+
+    static {
+        ENCODERS.put("fixed8", (props, type) -> "int8".equals(type) ? new IntSignedDecoder(8) : new IntUnsignedDecoder(8));
+        ENCODERS.put("fixed64", (props, type) -> new LongUnsignedDecoder(64));
+    }
+
     private static final Map<String, Function<SerializerProperties, Decoder>> FACTORIES = new HashMap<>();
 
     static {
-        // Unsigned ints
-        FACTORIES.put("uint64", LongUnsignedDecoderFactory::createDecoder);
-
         // Floats
         FACTORIES.put("float32", FloatDecoderFactory::createDecoder);
         FACTORIES.put("CNetworkedQuantizedFloat", FloatDecoderFactory::createDecoder);
@@ -50,6 +54,7 @@ public class S2DecoderFactory {
         DECODERS.put("uint8", new IntVarUnsignedDecoder());
         DECODERS.put("uint16", new IntVarUnsignedDecoder());
         DECODERS.put("uint32", new IntVarUnsignedDecoder());
+        DECODERS.put("uint64", new LongVarUnsignedDecoder());
 
         // Signed ints
         DECODERS.put("int8", new IntVarSignedDecoder());
@@ -94,6 +99,13 @@ public class S2DecoderFactory {
     }
 
     public static Decoder createDecoder(SerializerProperties serializerProperties, String type) {
+        var encoderType = serializerProperties.getEncoderType();
+        if (encoderType != null) {
+            var encoder = ENCODERS.get(encoderType);
+            if (encoder != null) {
+                return encoder.apply(serializerProperties, type);
+            }
+        }
         var factory = FACTORIES.get(type);
         if (factory != null) {
             return factory.apply(serializerProperties);
