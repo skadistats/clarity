@@ -1,5 +1,16 @@
 # Clarity Changelog
 
+## October 5, 2026: Version 5.0.1 released
+
+### Fixes
+
+* Entity filter: when a CREATE for a class rejected by the filter
+  reused the index of an entity that passed the filter, the old entity
+  was not deleted. The next update at that index was decoded with the
+  old entity's class and failed with `no field for class ... at ...`
+  (reported in odota/parser#95). Only affects runs with
+  `withEntityFilter`.
+
 ## October 4, 2026: Version 5.0.0 released
 
 Clarity 5.0 requires Java 21 and clarity-protobuf 7.0. Code that only
