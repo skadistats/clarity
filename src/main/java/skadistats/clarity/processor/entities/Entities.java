@@ -472,8 +472,17 @@ public class Entities {
                     if (entityFilter != null && !entityFilter.test(dtClass)) {
                         skippedClass[eIdx] = dtClass;
                         fieldReader.skipFields(stream, dtClass);
+                        if (eEnt != null) {
+                            queueEntityLeave(eEnt);
+                            queueEntityDelete(eEnt);
+                        }
+                        if (message.getUpdateBaseline()) {
+                            var idx = eIdx;
+                            queueUpdate(() -> baselineRegistry.updateEntityBaseline(message.getBaseline(), idx, null));
+                        }
                         break;
                     }
+                    skippedClass[eIdx] = null;
                     if (eEnt != null) {
                         var handle = engineType.handleForIndexAndSerial(eIdx, serial);
                         if (eEnt.getUid() == Entity.uid(dtClassId, handle)) {
