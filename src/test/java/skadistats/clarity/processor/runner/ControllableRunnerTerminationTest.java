@@ -19,7 +19,7 @@ import static org.testng.Assert.expectThrows;
 public class ControllableRunnerTerminationTest {
 
     private static final String REPLAY_DIR =
-            System.getProperty("clarity.test.replayDir", "/home/spheenik/projects/replays");
+            System.getProperty("clarity.test.replayDir", System.getProperty("user.home") + "/projects/clarity/replays");
     private static final String REPLAY = "dota/s2/normal/1560289528.dem";
 
     private static Path replay() {

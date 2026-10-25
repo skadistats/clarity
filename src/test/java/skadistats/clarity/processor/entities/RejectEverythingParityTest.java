@@ -27,7 +27,7 @@ import static org.testng.Assert.assertTrue;
 public class RejectEverythingParityTest {
 
     private static final String REPLAY_DIR =
-            System.getProperty("clarity.test.replayDir", "/home/spheenik/projects/replays");
+            System.getProperty("clarity.test.replayDir", System.getProperty("user.home") + "/projects/clarity/replays");
 
     @DataProvider(name = "replays")
     public Object[][] replays() {

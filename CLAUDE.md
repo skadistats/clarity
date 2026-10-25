@@ -37,7 +37,7 @@ coordinates.
   Don't edit generated proto classes here. To update against upstream
   Valve protos, use the tool + runbook at
   `clarity-protobuf/tools/proto-sync/` (RUNBOOK.md).
-- `replays/` → `/home/spheenik/projects/replays`.
+- `replays/` → `../replays`, i.e. `~/projects/clarity/replays`.
 
 ## Parsing components (orientation)
 Bottom-up:
