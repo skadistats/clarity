@@ -2,15 +2,16 @@
 
 A benchmark and analysis of clarity against three other open-source Source 2 replay parsers: **demoparser2** (Rust, CS2), **demoinfocs-golang** (Go, CS2), and **manta** (Go, Dota 2).
 
-Last run: **2026-10-29** for Dota 2 (clarity 5.0.0, manta v1.5.2); the CS2 numbers are from the **2026-09-24** run (clarity `next` at `c9d00c17`) and were not re-run. The harness lives in [clarity-bench](https://github.com/spheenik/clarity-bench) under `parsers/`; raw results are in its `results/parsers/2026-10-29_ryzen9950x/` and `results/parsers/2026-09-24_ryzen9950x/`.
+Last run: **2026-10-29** for Dota 2 (clarity 5.0.0 and clarity `master@3be39a5d`, manta v1.5.2), plus a batch run with several parsers in one process; the other CS2 parsers are from the **2026-09-24** run (clarity `next` at `c9d00c17`) and were not re-run. The harness lives in [clarity-bench](https://github.com/spheenik/clarity-bench) under `parsers/`; raw results are in its `results/parsers/2026-10-29_ryzen9950x/` (5.0.0), `results/parsers/2026-10-29_ryzen9950x_master/`, `results/parsers/2026-10-29_ryzen9950x_batch/` and `results/parsers/2026-09-24_ryzen9950x/`.
 
 ## TL;DR
 
-- **manta is now faster than clarity on Dota 2, also at steady state.** manta v1.5.2 (dotabuff/manta#181 and #183) is ~1.25-1.3x faster wall-clock and needs ~1.4-1.5x less CPU per demo than a warmed-up clarity. One-shot it is 1.6-2.2x faster at ~3.4-6.5x less CPU.
+- **manta is faster than clarity on Dota 2, also at steady state.** manta v1.5.2 (dotabuff/manta#181 and #183) is ~1.25-1.3x faster wall-clock than clarity 5.0.0 and needs ~1.4-1.5x less CPU per demo. clarity `master` (two hot-path fixes after this comparison, −7-12% steady wall) narrows that to ~1.13-1.21x wall and ~1.25-1.4x CPU. One-shot manta is still 1.5-2x faster.
+- **Batch in one process** (8 parser threads, one JVM vs 8 goroutines): manta parses ~1.23x more demos per second at ~1.22x less CPU per demo, with ~250 MB RSS vs ~2.8 GB for clarity at `-Xmx2g`. ParallelGC is clarity's best collector there; SerialGC loses a third of the throughput.
 - **manta got ~2x faster again** since v1.5.0, and ~4.4x since the April build. Each of the two rounds measured here as roughly its own PR's claim (−24-26%, then −32-35%).
-- **On CS2 (2026-09-24 run)**, clarity has the fastest single-threaded decode, ~1.2x faster than single-threaded demoparser2 at steady state, with the lowest CPU cost per demo.
+- **On CS2 (2026-09-24 run)**, clarity has the fastest single-threaded decode, ~1.2x faster than single-threaded demoparser2 at steady state, with the lowest CPU cost per demo; clarity `master` is another 7% faster.
 - **Single-demo wall-clock** on CS2 is demoparser2's: 0.45s one-shot via fullpacket-parallel decode, at ~1.7x the CPU of its own single-threaded mode.
-- **Memory** is clarity's weak spot for batch: ~0.8-1.1 GB RSS per JVM (`-Xmx4g`, replay memory-mapped) vs 35-57 MB for the Go parsers.
+- **Memory** is clarity's weak spot: ~0.8-1.1 GB RSS for a single-parse JVM (`-Xmx4g`, replay memory-mapped) vs 35-57 MB for the Go parsers, and ~2.8 GB vs ~250 MB with 8 parsers in one process.
 
 ## Methodology
 
@@ -33,7 +34,7 @@ Last run: **2026-10-29** for Dota 2 (clarity 5.0.0, manta v1.5.2); the CS2 numbe
 
 | Parser | Version | Workload |
 |---|---|---|
-| clarity | 5.0.0 (Dota); `next@c9d00c17` (CS2) | `SimpleRunner` + `@UsesEntities`, no listeners (same as `dev:entityrun`) |
+| clarity | 5.0.0 and `master@3be39a5d` (Dota, CS2 re-check); `next@c9d00c17` (CS2) | `SimpleRunner` + `@UsesEntities`, no listeners (same as `dev:entityrun`) |
 | demoparser2 | 0.42.0 (and 0.41.1) | `parse_ticks(["X","Y","Z","health"])`; ST = `RAYON_NUM_THREADS=1` |
 | demoinfocs-golang | v5.2.0 (and v5.1.4) | `ParseToEnd()`, no handlers; ST = `MsgQueueBufferSize = 0` |
 | manta | v1.5.2 = `d4e4647` (and v1.5.1, v1.5.0, and `91f7979`, the April build) | `NewStreamParser` + `Start()`, no callbacks |
@@ -57,13 +58,14 @@ Run-to-run spread (max/min) in the Dota run was 1.5-8.4% for every cell (one-sho
 | demoinfocs v5.2.0 | default | 2.220s | 6.00s | 2.220s | 6.12s | 57 MB |
 | demoinfocs v5.2.0 | ST | 4.319s | 6.44s | 4.305s | 6.42s | 54 MB |
 
-The 2026-10-29 run re-measured clarity 5.0.0 on this demo at 1.375s one-shot / 1.114s steady (1.18s CPU), i.e. within ~5% of the row above on wall time (steady CPU −9%; the one-shot rounds were noisy, 19% spread); the other CS2 parsers were not re-run.
+The 2026-10-29 runs re-measured clarity on this demo: 5.0.0 at 1.375s one-shot / 1.114s steady (1.18s CPU), i.e. within ~5% of the row above on wall time (steady CPU −9%; the one-shot rounds were noisy, 19% spread), and `master@3be39a5d` at 1.290s one-shot (2.71s CPU) / 1.035s steady (1.12s CPU). The other CS2 parsers were not re-run.
 
 ### Dota 2 — 2016 match (61 MB)
 
 | Parser | Mode | One-shot wall | One-shot process CPU | Steady wall | Steady CPU | Peak RSS |
 |---|---|---:|---:|---:|---:|---:|
 | manta v1.5.2 | ST | **0.256s** | **0.29s** | **0.260s** | **0.29s** | 35 MB |
+| clarity master | ST | 0.509s | 1.79s | 0.286s | 0.35s | 0.8 GB |
 | clarity 5.0.0 | ST | 0.553s | 1.88s | 0.326s | 0.40s | 0.8 GB |
 
 ### Dota 2 — current build (187 MB)
@@ -71,7 +73,10 @@ The 2026-10-29 run re-measured clarity 5.0.0 on this demo at 1.375s one-shot / 1
 | Parser | Mode | One-shot wall | One-shot process CPU | Steady wall | Steady CPU | Peak RSS |
 |---|---|---:|---:|---:|---:|---:|
 | manta v1.5.2 | ST | **0.874s** | **1.00s** | **0.889s** | **1.05s** | 56 MB |
+| clarity master | ST | 1.316s | 3.25s | 1.070s | 1.48s | 1.0 GB |
 | clarity 5.0.0 | ST | 1.401s | 3.40s | 1.163s | 1.60s | 1.0 GB |
+
+The clarity master rows come from a second run the same day (clarity and manta only, load 1.3-2.3), in which manta measured 0.259s / 0.253s (2016) and 0.897s / 0.885s (2025) one-shot / steady, within 3% of the rows above. clarity `master@3be39a5d` adds two hot-path changes over 5.0.1: decoders stored in the flat state's layout leaves, so the per-field `resolveField` walk of the serializer tree is gone (−7-8% in an interleaved A/B), and a per-kind cache of the embedded-message listener lookups (−1.5%).
 
 manta and demoparser2 each support one game, so the comparison is per engine.
 
@@ -109,7 +114,29 @@ All numbers are one-shot medians on cs2-anubis.
 
 ### Batch throughput
 
-For batch work (many demos, one per worker), what matters is CPU seconds per demo at steady state. Idealized cost for 1000 demos on 32 hardware threads (1000 × steady CPU / 32, ignoring SMT and memory-bandwidth effects):
+#### Several parsers in one process (measured)
+
+The usual way to run clarity in batch is one JVM with a thread pool, each thread parsing its own demo. The batch harness (clarity-bench `parsers/batch/`) runs exactly that: N threads (goroutines for manta) pull demos from a shared queue, 12 demos per thread, after one warmup pass per thread. Demos: the four `dota/s2/normal` replays of the clarity A/B set (2015-2016 matches) plus dota-2025. clarity is `master@3be39a5d`; medians of 3 interleaved rounds, spread ≤ 3.4%, load ≤ 4. The G1 `-Xmx8g` and SerialGC rows come from a first matrix with the same setup (where ParallelGC `-Xmx8g` measured 2.59 / 8.40 / 14.13 demos/s, within 2% of its row here).
+
+| Parser | Config | N=1 demos/s | N=4 demos/s | N=8 demos/s | N=8 CPU / demo | N=8 peak RSS |
+|---|---|---:|---:|---:|---:|---:|
+| manta v1.5.2 | default | **3.02** | **9.95** | **17.81** | **0.46s** | **0.25 GB** |
+| clarity | ParallelGC `-Xmx2g` | 2.77 | 8.59 | 14.51 | 0.57s | 2.8 GB |
+| clarity | ParallelGC `-Xmx4g` | 2.63 | 8.39 | 13.94 | 0.57s | 4.8 GB |
+| clarity | ParallelGC `-Xmx8g` | 2.60 | 8.25 | 14.30 | 0.57s | 6.7 GB |
+| clarity | G1 `-Xmx4g` | 2.55 | 8.05 | 13.45 | 0.63s | 4.0 GB |
+| clarity | G1 `-Xmx8g` | 2.58 | 8.10 | 13.54 | 0.63s | 6.3 GB |
+| clarity | SerialGC `-Xmx8g` | 2.50 | 6.60 | 9.09 | 0.52s | 2.0 GB |
+
+- At 8 threads manta parses ~1.23x more demos per second at ~1.22x less CPU per demo. On this mostly older demo set the single-thread gap is smaller (1.09x).
+- **ParallelGC is clarity's best collector for batch**: ~4% more throughput and ~10% less CPU per demo than the default G1. **SerialGC is a loss with several parser threads**: it stops all of them for every collection (4.1 s of pauses in a ~10 s run at N=8), so throughput drops by a third even though CPU per demo looks lowest.
+- The heap grows to whatever `-Xmx` allows. `-Xmx2g` is enough for 8 parsers and costs no throughput (it was the fastest clarity row), at 2.8 GB RSS; that is still ~11x manta's 250 MB, partly because every running parse keeps its replay memory-mapped.
+- Both parsers lose per-demo efficiency with more threads (manta 0.37 → 0.46 CPU-s/demo, clarity 0.47 → 0.57 from N=1 to N=8), most likely from the lower all-core clock; this was not checked.
+- A single-parse JVM looks different: there G1's parallel GC workers add ~40% process CPU on top of the parse thread for many tiny young collections, which ParallelGC (−15%) or SerialGC (−27%) avoid. That only matters for one-parse-at-a-time use.
+
+#### Idealized from single-parse runs
+
+The original estimate below scales one parse's steady CPU to 1000 demos on 32 hardware threads (1000 × steady CPU / 32, ignoring SMT, clock and memory-bandwidth effects). The measured numbers above are more realistic:
 
 | Workload | Parser | Steady CPU / demo | 1000 demos / 32 threads |
 |---|---|---:|---:|
@@ -118,11 +145,12 @@ For batch work (many demos, one per worker), what matters is CPU seconds per dem
 | | demoparser2 MT | 2.41s | ~75s |
 | | demoinfocs default | 6.12s | ~191s |
 | Dota 2 (current, 187 MB) | manta v1.5.2 | 1.05s | ~33s |
-| | clarity | 1.60s | ~50s |
+| | clarity 5.0.0 | 1.60s | ~50s |
+| | clarity master | 1.48s | ~46s |
 
 This assumes a long-lived clarity worker that parses many demos per JVM. Launching one JVM per demo pays the one-shot CPU instead (2.87s on CS2, 3.40s on Dota), which puts clarity ~3.4x behind manta on Dota (1.00s); on CS2 it stays ahead of demoparser2 ST's one-shot 3.65s.
 
-Memory also caps batch parallelism: 32 clarity JVMs at ~1 GB each need ~32 GB, vs ~2 GB for 32 manta processes. The clarity heap was not tuned here (`-Xmx4g`, default G1); a smaller heap would likely cut RSS at some GC cost, but that wasn't measured.
+Running one JVM per worker would also multiply memory (~1 GB each); one JVM with a thread pool, as measured above, is the better setup.
 
 For demoparser2, fullpacket-parallel mode costs ~1.7x the CPU of ST, so for batch `RAYON_NUM_THREADS=1` across demos is the better configuration.
 
@@ -288,9 +316,9 @@ Apples-to-apples requires pinning all four.
 
 ## Takeaways for Clarity
 
-1. **Clarity has lost the Dota 2 lead.** manta v1.5.2 is ~1.25-1.3x faster at steady state and uses ~1.4-1.5x less CPU per demo. On CS2 clarity was still the fastest per core in the 2026-09-24 run. A warmed-up JFR profile of clarity on Dota (2026-10-29, entities only, no listeners) puts ~80% of CPU in the per-field work in `S2FieldReader`: field decode into the state, per-field `resolveField` walks of the serializer tree, field-path materialization, and the bit reader's buffer reads. Protobuf parsing and byte copies together are only ~3%, so manta's envelope and zero-copy work has no clarity equivalent worth porting; any gap-closing work has to be in the per-field path.
-2. **JVM warmup is a visible cost.** For one-shot use, a fresh JVM loses to manta by 1.6-2.2x on Dota. Batch consumers should keep one JVM per worker and parse many demos in it; worth stating in the docs. AppCDS or a CRaC/Leyden-style warm start would be the tools if one-shot latency ever matters.
-3. **Memory per worker is clarity's biggest batch disadvantage.** ~1 GB RSS per JVM vs <100 MB for the Go parsers limits how many workers fit on a box. A measured minimal-heap configuration would be worth documenting.
+1. **Clarity has lost the Dota 2 lead.** manta v1.5.2 was ~1.25-1.3x faster than clarity 5.0.0 at steady state and used ~1.4-1.5x less CPU per demo; on CS2 clarity was still the fastest per core in the 2026-09-24 run. A warmed-up JFR profile of clarity on Dota (2026-10-29, entities only, no listeners) put ~80% of CPU in the per-field work in `S2FieldReader`; protobuf parsing and byte copies together were only ~3%, so manta's envelope and zero-copy work has no clarity equivalent worth porting. Removing the per-field `resolveField` walk (decoders now live in the flat state's layout leaves) and caching the embedded-message listener lookups brought clarity `master` to ~1.13-1.21x behind. What remains in the profile is field-op decode, the layout walk plus value decode into the state, field-path snapshots, the `FieldChanges` copy and the queued update dispatch.
+2. **JVM warmup is a visible cost.** For one-shot use, a fresh JVM loses to manta by 1.5-2x on Dota. Batch consumers should keep one long-lived JVM and parse many demos in it; worth stating in the docs. AppCDS or a CRaC/Leyden-style warm start would be the tools if one-shot latency ever matters.
+3. **Batch setup: one JVM, a thread pool, ParallelGC, a modest heap.** With 8 parser threads, `-XX:+UseParallelGC -Xmx2g` was the fastest clarity configuration measured, ~4% ahead of default G1; SerialGC costs a third of the throughput. Memory is still clarity's biggest batch disadvantage: ~2.8 GB RSS for 8 parsers vs ~250 MB for manta.
 4. **Intra-demo parallelism remains a latency feature with meaningful engineering cost.** demoparser2's MT mode is ~5.8x faster wall-clock but ~1.7x more CPU; not worth porting for throughput.
 5. **Feature parity with demoinfocs for CS2 is a separable question.** Weapon tracking, bomb state, grenade lifecycle etc. would add CPU cost if implemented; that's a scope decision, not a performance decision.
 
@@ -305,4 +333,4 @@ python3 parsers/run.py --replays-root /path/to/replays \
   --clarity-label "next@$(git -C ../clarity rev-parse --short HEAD)" --record
 ```
 
-It builds every pinned parser version itself (Go modules, Python virtualenvs, the clarity side from `mavenLocal`), verifies the replays by sha256, and writes `results.json` and `summary.md` under `results/parsers/<date>_<host>/`. See `parsers/README.md` there for details.
+It builds every pinned parser version itself (Go modules, Python virtualenvs, the clarity side from `mavenLocal`), verifies the replays by sha256, and writes `results.json` and `summary.md` under `results/parsers/<date>_<host>/`. The one-process batch numbers come from `parsers/batch/run_batch.sh`. See `parsers/README.md` there for details.
