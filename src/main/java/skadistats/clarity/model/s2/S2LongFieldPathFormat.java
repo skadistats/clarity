@@ -17,7 +17,9 @@ public class S2LongFieldPathFormat {
 
     /**
      * Returns the highest index value that can be addressed at the given
-     * field path depth, i.e. {@code (1 << bitsAt(depth)) - 1}. Returns -1
+     * field path depth, i.e. {@code (1 << bitsAt(depth)) - 1 - offsetAt(depth)}.
+     * Component 0 stores its value shifted by one (so that the initial
+     * path value -1 is representable), which costs it the topmost value. Returns -1
      * if {@code depth} is outside the supported field path range, meaning
      * no element at that depth can be addressed at all.
      */
@@ -25,7 +27,7 @@ public class S2LongFieldPathFormat {
         if (depth < 0 || depth >= MAX_DEPTH) {
             return -1;
         }
-        return (1 << BITS_PER_COMPONENT[depth]) - 1;
+        return (1 << BITS_PER_COMPONENT[depth]) - 1 - (depth == 0 ? 1 : 0);
     }
 
     private static final long[] CLEAR_MASK = new long[MAX_DEPTH - 1];
