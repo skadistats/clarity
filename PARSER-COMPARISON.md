@@ -2,19 +2,24 @@
 
 A benchmark and analysis of clarity against three other open-source Source 2 replay parsers: **demoparser2** (Rust, CS2), **demoinfocs-golang** (Go, CS2), and **manta** (Go, Dota 2).
 
-Last run: **2026-09-24**, clarity `next` at `c9d00c17`. The harness lives in [clarity-bench](https://github.com/spheenik/clarity-bench) under `parsers/`; raw results are in its `results/parsers/2026-09-24_ryzen9950x/`.
+Last run: **2026-10-29** for Dota 2 (clarity 5.0.0, manta v1.5.2); the CS2 numbers are from the **2026-09-24** run (clarity `next` at `c9d00c17`) and were not re-run. The harness lives in [clarity-bench](https://github.com/spheenik/clarity-bench) under `parsers/`; raw results are in its `results/parsers/2026-10-29_ryzen9950x/` and `results/parsers/2026-09-24_ryzen9950x/`.
 
 ## TL;DR
 
-- **Steady state (long-lived process, the batch case)**, clarity has the fastest single-threaded decode on both games: ~1.5x faster than manta v1.5.0 on Dota 2 and ~1.2x faster than single-threaded demoparser2 on CS2, with the lowest CPU cost per demo of all parsers.
-- **One-shot runs (one demo per process)** include clarity's JIT warmup. There manta v1.5.0 now edges out clarity on a small 2016 Dota demo (0.51s vs 0.58s) and burns ~3x less CPU; clarity still wins on a current 187 MB Dota demo.
-- **manta got ~2.2x faster** since the April run (v1.5.0, dotabuff/manta#180). The previous "clarity is ~78% faster than manta" no longer holds one-shot; at steady state the gap is ~55%.
-- **Single-demo wall-clock** is still demoparser2's: 0.45s one-shot on CS2 via fullpacket-parallel decode, at ~1.7x the CPU of its own single-threaded mode.
-- **Memory** is clarity's weak spot for batch: ~0.8-1.4 GB RSS per JVM (`-Xmx4g`, replay memory-mapped) vs 40-85 MB for the Go parsers.
+- **manta is now faster than clarity on Dota 2, also at steady state.** manta v1.5.2 (dotabuff/manta#181 and #183) is ~1.25-1.3x faster wall-clock and needs ~1.4-1.5x less CPU per demo than a warmed-up clarity. One-shot it is 1.6-2.2x faster at ~3.4-6.5x less CPU.
+- **manta got ~2x faster again** since v1.5.0, and ~4.4x since the April build. Each of the two rounds measured here as roughly its own PR's claim (−24-26%, then −32-35%).
+- **On CS2 (2026-09-24 run)**, clarity has the fastest single-threaded decode, ~1.2x faster than single-threaded demoparser2 at steady state, with the lowest CPU cost per demo.
+- **Single-demo wall-clock** on CS2 is demoparser2's: 0.45s one-shot via fullpacket-parallel decode, at ~1.7x the CPU of its own single-threaded mode.
+- **Memory** is clarity's weak spot for batch: ~0.8-1.1 GB RSS per JVM (`-Xmx4g`, replay memory-mapped) vs 35-57 MB for the Go parsers.
 
 ## Methodology
 
-**Host**: AMD Ryzen 9 9950X (16c/32t), Linux 7.2.4, OpenJDK 21.0.12, Go 1.27.0, Python 3.14.7. Load average 1.0-1.5 during the run.
+**Host**: AMD Ryzen 9 9950X (16c/32t), OpenJDK 21.0.12.
+
+| Run | Kernel | Go | Python | Load average |
+|---|---|---|---|---|
+| 2026-10-29 (Dota 2) | 7.2.7 | 1.27.2 | 3.14.8 | 1.2-2.7 |
+| 2026-09-24 (CS2) | 7.2.4 | 1.27.0 | 3.14.7 | 1.0-1.5 |
 
 **Demos** (pinned by sha256 in the harness):
 
@@ -28,21 +33,21 @@ Last run: **2026-09-24**, clarity `next` at `c9d00c17`. The harness lives in [cl
 
 | Parser | Version | Workload |
 |---|---|---|
-| clarity | 5.0.0-SNAPSHOT, `next@c9d00c17` | `SimpleRunner` + `@UsesEntities`, no listeners (same as `dev:entityrun`) |
+| clarity | 5.0.0 (Dota); `next@c9d00c17` (CS2) | `SimpleRunner` + `@UsesEntities`, no listeners (same as `dev:entityrun`) |
 | demoparser2 | 0.42.0 (and 0.41.1) | `parse_ticks(["X","Y","Z","health"])`; ST = `RAYON_NUM_THREADS=1` |
 | demoinfocs-golang | v5.2.0 (and v5.1.4) | `ParseToEnd()`, no handlers; ST = `MsgQueueBufferSize = 0` |
-| manta | v1.5.0 = `0efe7e1` (and `91f7979`, the April build) | `NewStreamParser` + `Start()`, no callbacks |
+| manta | v1.5.2 = `d4e4647` (and v1.5.1, v1.5.0, and `91f7979`, the April build) | `NewStreamParser` + `Start()`, no callbacks |
 
 **Two measurements**:
 
 - **One-shot**: one parse per process, 7 rounds interleaved across all targets, median reported. The parse is timed inside the process (JVM startup excluded, JIT warmup included). Process CPU and peak RSS come from `/usr/bin/time` and include everything the process did.
 - **Steady state**: 10 parses in one process, median of iterations 4-10. Wall and CPU are measured around each parse inside the process.
 
-Run-to-run spread (max/min) was 1.7-8.3% for every cell.
+Run-to-run spread (max/min) in the Dota run was 1.5-8.4% for every cell (one-shot clarity is the noisiest, from JIT timing); the 2026-09-24 run had 1.7-8.3%.
 
 ## Results
 
-### CS2 — anubis (434 MB)
+### CS2 — anubis (434 MB), 2026-09-24 run
 
 | Parser | Mode | One-shot wall | One-shot process CPU | Steady wall | Steady CPU | Peak RSS |
 |---|---|---:|---:|---:|---:|---:|
@@ -52,44 +57,55 @@ Run-to-run spread (max/min) was 1.7-8.3% for every cell.
 | demoinfocs v5.2.0 | default | 2.220s | 6.00s | 2.220s | 6.12s | 57 MB |
 | demoinfocs v5.2.0 | ST | 4.319s | 6.44s | 4.305s | 6.42s | 54 MB |
 
+The 2026-10-29 run re-measured clarity 5.0.0 on this demo at 1.375s one-shot / 1.114s steady (1.18s CPU), i.e. within ~5% of the row above on wall time (steady CPU −9%; the one-shot rounds were noisy, 19% spread); the other CS2 parsers were not re-run.
+
 ### Dota 2 — 2016 match (61 MB)
 
 | Parser | Mode | One-shot wall | One-shot process CPU | Steady wall | Steady CPU | Peak RSS |
 |---|---|---:|---:|---:|---:|---:|
-| manta v1.5.0 | ST | **0.509s** | **0.65s** | 0.531s | 0.70s | 43 MB |
-| clarity next | ST | 0.577s | 1.98s | **0.340s** | **0.44s** | 0.8 GB |
+| manta v1.5.2 | ST | **0.256s** | **0.29s** | **0.260s** | **0.29s** | 35 MB |
+| clarity 5.0.0 | ST | 0.553s | 1.88s | 0.326s | 0.40s | 0.8 GB |
 
 ### Dota 2 — current build (187 MB)
 
 | Parser | Mode | One-shot wall | One-shot process CPU | Steady wall | Steady CPU | Peak RSS |
 |---|---|---:|---:|---:|---:|---:|
-| clarity next | ST | **1.474s** | 3.60s | **1.214s** | **1.78s** | 1.0-1.4 GB |
-| manta v1.5.0 | ST | 1.844s | **2.48s** | 1.860s | 2.52s | 80 MB |
+| manta v1.5.2 | ST | **0.874s** | **1.00s** | **0.889s** | **1.05s** | 56 MB |
+| clarity 5.0.0 | ST | 1.401s | 3.40s | 1.163s | 1.60s | 1.0 GB |
 
 manta and demoparser2 each support one game, so the comparison is per engine.
 
 ### Why one-shot and steady state differ for clarity
 
-A fresh JVM spends its first parse partly interpreted while the JIT compiles the hot path on background threads. On the 61 MB demo that is most of the run: 1.98 CPU-seconds one-shot vs 0.44 at steady state. Clarity reaches steady state from the second parse on (cs2-anubis: 1.43s, then 1.19s, 1.18s, ...). The Go parsers have no warmup: their first parse costs the same as the tenth. demoparser2 warms up modestly (1.66s, then ~1.44s).
+A fresh JVM spends its first parse partly interpreted while the JIT compiles the hot path on background threads. On the 61 MB demo that is most of the run: 1.88 CPU-seconds one-shot vs 0.40 at steady state. Clarity reaches steady state from the second parse on (cs2-anubis: 1.43s, then 1.19s, 1.18s, ...). The Go parsers have no warmup: their first parse costs the same as the tenth. demoparser2 warms up modestly (1.66s, then ~1.44s).
 
-"ST" is not strictly single-core for clarity: GC runs on its own threads, so steady-state CPU is 1.1-1.5x wall. Go's GC does the same for manta and demoinfocs (1.3-1.5x).
+"ST" is not strictly single-core for clarity: GC runs on its own threads, so steady-state CPU is 1.1-1.4x wall. Go's GC does the same for manta and demoinfocs; manta v1.5.2 now allocates so little that its steady CPU is only 1.1-1.2x wall.
 
-### What changed since the April 2026 run
+### manta across versions
 
-Old and new versions were benched side by side on the same machine, so these are the parsers' own changes:
+All four builds were benched side by side in the 2026-10-29 run (one-shot medians):
+
+| manta build | dota-2016 | dota-2025 | vs previous |
+|---|---:|---:|---|
+| `91f7979` (April 2026) | 1.139s | 3.852s | |
+| v1.5.0 (#180, June) | 0.497s | 1.823s | 2.1-2.3x faster |
+| v1.5.1 (#181, October) | 0.379s | 1.349s | −24% / −26% |
+| v1.5.2 (#183, October) | **0.256s** | **0.874s** | −32% / −35% |
+
+The two October rounds roughly match manta's own claims (#181: −24% sec/op; #183: −33%). The same v1.5.0 build ran within 1-3% of its 2026-09-24 one-shot numbers (steady state 1-8% faster), and clarity's Dota wall times moved by 4-5% (clarity 5.0.0 vs `next@c9d00c17`, different kernel and Go), so the environment is comparable across the two runs.
+
+### What changed between the April and September 2026 runs
+
+From the 2026-09-24 run, old and new versions benched side by side:
 
 | Parser | Old | New | Change |
 |---|---|---|---|
-| manta, dota-2016 | `91f7979`: 1.171s | v1.5.0: 0.509s | **2.3x faster** |
-| manta, dota-2025 | `91f7979`: 3.903s | v1.5.0: 1.844s | **2.1x faster** |
 | demoinfocs ST | v5.1.4: 5.332s | v5.2.0: 4.319s | 19% faster |
 | demoinfocs default | v5.1.4: 2.547s | v5.2.0: 2.220s | 13% faster |
 | demoparser2 MT | 0.41.1: 0.519s | 0.42.0: 0.449s | 13% faster |
 | demoparser2 ST | 0.41.1: 1.814s | 0.42.0: 1.670s | 8% faster |
 
-All numbers are one-shot medians on the same demos.
-
-Clarity's April number (1.68s on cs2-anubis) is not comparable: the old clarity build wasn't re-benched, and the environment changed (kernel, JDK, Go). The same old manta build runs ~10% faster here than in April while the same old demoinfocs build runs at the same speed, so environment drift is real but uneven.
+All numbers are one-shot medians on cs2-anubis.
 
 ### Batch throughput
 
@@ -97,16 +113,16 @@ For batch work (many demos, one per worker), what matters is CPU seconds per dem
 
 | Workload | Parser | Steady CPU / demo | 1000 demos / 32 threads |
 |---|---|---:|---:|
-| CS2 (anubis-sized) | clarity | 1.29s | ~40s |
+| CS2 (anubis-sized, 2026-09-24) | clarity | 1.29s | ~40s |
 | | demoparser2 ST | 1.45s | ~45s |
 | | demoparser2 MT | 2.41s | ~75s |
 | | demoinfocs default | 6.12s | ~191s |
-| Dota 2 (current, 187 MB) | clarity | 1.78s | ~56s |
-| | manta v1.5.0 | 2.52s | ~79s |
+| Dota 2 (current, 187 MB) | manta v1.5.2 | 1.05s | ~33s |
+| | clarity | 1.60s | ~50s |
 
-This assumes a long-lived clarity worker that parses many demos per JVM. Launching one JVM per demo pays the one-shot CPU instead (2.87s on CS2, 3.60s on Dota), which puts clarity behind manta on Dota (2.48s); on CS2 it stays ahead of demoparser2 ST's one-shot 3.65s.
+This assumes a long-lived clarity worker that parses many demos per JVM. Launching one JVM per demo pays the one-shot CPU instead (2.87s on CS2, 3.40s on Dota), which puts clarity ~3.4x behind manta on Dota (1.00s); on CS2 it stays ahead of demoparser2 ST's one-shot 3.65s.
 
-Memory also caps batch parallelism: 32 clarity JVMs at ~1.2 GB each need ~40 GB, vs ~3 GB for 32 manta processes. The clarity heap was not tuned here (`-Xmx4g`, default G1); a smaller heap would likely cut RSS at some GC cost, but that wasn't measured.
+Memory also caps batch parallelism: 32 clarity JVMs at ~1 GB each need ~32 GB, vs ~2 GB for 32 manta processes. The clarity heap was not tuned here (`-Xmx4g`, default G1); a smaller heap would likely cut RSS at some GC cost, but that wasn't measured.
 
 For demoparser2, fullpacket-parallel mode costs ~1.7x the CPU of ST, so for batch `RAYON_NUM_THREADS=1` across demos is the better configuration.
 
@@ -216,7 +232,18 @@ v1.5.0 (dotabuff/manta#180, June 2026) overhauled the hot path:
 - **Typed entity state**: a 24-byte tagged-union cell instead of `interface{}` boxing on the write path.
 - **Class baselines decoded once** and cloned per entity.
 
-Measured here as 2.1-2.3x faster than the April build. With no warmup and 40-85 MB RSS it is now the cheapest parser for one-shot Dota runs; at steady state clarity is still ~1.5x faster.
+v1.5.1 (dotabuff/manta#181, October 2026) went after allocations:
+- **Hand-rolled envelope decode** for `CDemoPacket`, `CSVCMsg_PacketEntities`, `CSVCMsg_UpdateStringTable` and `CNETMsg_Tick`: payloads are aliased instead of copied through the reflective protobuf unmarshal, used only when no user callback is registered for that message type (the PR reports −42% bytes allocated).
+- **Per-packet arena** for embedded message bodies, copied a word at a time from the bit-shifted stream.
+- **Entities in a dense slice** instead of a map, string-table slabs, slab-allocated baseline clones, and an event-id peek that skips unmarshalling unhandled game events.
+
+v1.5.2 (dotabuff/manta#183, October 2026), mostly CPU (it also cut allocated bytes by another 42%):
+- **Shift-merge byte copies** and **varint/ubitvar decode from a single accumulator peek** in the bit reader, with refills moved out of line so the fast paths inline.
+- **Field-path ops dispatched through a switch** of direct calls, keeping the path accumulator on the stack.
+- **16-byte state cell** (pointer + length + kind) instead of an interface, copy-on-write baseline clones, and alloc-free typed getters.
+- `CDemoFullPacket` string-table dumps are skipped when unused.
+
+v1.5.0 to v1.5.2 is ~2x faster, ~4.4x faster than the April build. With no warmup, 35-56 MB RSS and the lowest CPU per demo, it is now the fastest Dota 2 parser measured here both one-shot and at steady state.
 
 **Scope**: Dota 2 only. No CS2 support.
 
@@ -243,7 +270,7 @@ Measured here as 2.1-2.3x faster than the April build. With no warmup and 40-85 
 |---|---|---|
 | clarity | 64-bit register, batched refill | 8-bit peek into a 256-entry table (~1 KB, L1-resident), tree-walk fallback for the tail |
 | demoparser2 | 64-bit register (`bitter`), explicit refill/peek/consume | 17-bit peek into a 131072-entry table (~256 KB) |
-| manta v1.5.0 | 64-bit accumulator, 8-byte word refill | 8-bit lookup table over a flattened tree |
+| manta v1.5.2 | 64-bit accumulator, 8-byte word refill, single-peek varints | 8-bit lookup table over a flattened tree, switch-dispatched ops |
 | demoinfocs v5.2.0 | 64-bit accumulator, byte-at-a-time refill | flattened node array, one `readBoolean()` per tree level |
 
 Clarity, demoparser2 and now manta have converged on table-driven Huffman decode over a wide bit register; demoinfocs is the remaining bit-at-a-time walker. With decode techniques this close, steady-state differences come mostly from what each parser does per field after decoding (state layout, boxing, allocation) and from runtime (JIT vs AOT, GC).
@@ -261,8 +288,8 @@ Apples-to-apples requires pinning all four.
 
 ## Takeaways for Clarity
 
-1. **The decode path is still competitive, but the lead has narrowed.** At steady state clarity is the fastest per core on both games; manta closed most of the gap on Dota by adopting the same table-driven Huffman decode and word-at-a-time reads.
-2. **JVM warmup is now a visible cost.** For one-shot use on small demos, a fresh JVM loses to manta. Batch consumers should keep one JVM per worker and parse many demos in it; worth stating in the docs. AppCDS or a CRaC/Leyden-style warm start would be the tools if one-shot latency ever matters.
+1. **Clarity has lost the Dota 2 lead.** manta v1.5.2 is ~1.25-1.3x faster at steady state and uses ~1.4-1.5x less CPU per demo. On CS2 clarity was still the fastest per core in the 2026-09-24 run. A warmed-up JFR profile of clarity on Dota (2026-10-29, entities only, no listeners) puts ~80% of CPU in the per-field work in `S2FieldReader`: field decode into the state, per-field `resolveField` walks of the serializer tree, field-path materialization, and the bit reader's buffer reads. Protobuf parsing and byte copies together are only ~3%, so manta's envelope and zero-copy work has no clarity equivalent worth porting; any gap-closing work has to be in the per-field path.
+2. **JVM warmup is a visible cost.** For one-shot use, a fresh JVM loses to manta by 1.6-2.2x on Dota. Batch consumers should keep one JVM per worker and parse many demos in it; worth stating in the docs. AppCDS or a CRaC/Leyden-style warm start would be the tools if one-shot latency ever matters.
 3. **Memory per worker is clarity's biggest batch disadvantage.** ~1 GB RSS per JVM vs <100 MB for the Go parsers limits how many workers fit on a box. A measured minimal-heap configuration would be worth documenting.
 4. **Intra-demo parallelism remains a latency feature with meaningful engineering cost.** demoparser2's MT mode is ~5.8x faster wall-clock but ~1.7x more CPU; not worth porting for throughput.
 5. **Feature parity with demoinfocs for CS2 is a separable question.** Weapon tracking, bomb state, grenade lifecycle etc. would add CPU cost if implemented; that's a scope decision, not a performance decision.
