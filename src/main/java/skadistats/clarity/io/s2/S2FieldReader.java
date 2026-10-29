@@ -90,16 +90,33 @@ public class S2FieldReader implements FieldReader<S2DTClass, S2FieldPath, S2Enti
         var isFlat = state instanceof S2FlatEntityState;
         var fes = isFlat ? (S2FlatEntityState) state : null;
         var capacityChanged = false;
-        for (var r = 0; r < n; r++) {
-            var fp = fieldPaths[r];
-            var field = resolveField(state, dtClass, fp);
-            if (isFlat && field.isPrimitiveLeaf()) {
-                capacityChanged |= fes.decodeInto(fp, field.getDecoder(), bs);
-            } else {
+        var r = 0;
+        try {
+            for (; r < n; r++) {
+                var fp = fieldPaths[r];
+                if (isFlat) {
+                    var res = fes.decodeIntoLeaf(fp, bs);
+                    if (res >= 0) {
+                        capacityChanged |= res != 0;
+                        continue;
+                    }
+                }
+                var field = resolveField(state, dtClass, fp);
                 var decoded = DecoderDispatch.decode(bs, field.getDecoder());
                 var writeValue = field.prepareForWrite(decoded, fp.last() + 1);
                 capacityChanged |= state.write(fp, writeValue);
             }
+        } catch (ClarityException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            var fp = fieldPaths[r];
+            try {
+                resolveField(state, dtClass, fp);
+            } catch (ClarityException noField) {
+                throw noField;
+            } catch (RuntimeException ignored) {
+            }
+            throw new ClarityException(e, "failed to read field for class %s at %s!", dtClass.getDtName(), fp);
         }
 
         return new FieldChanges<>(fieldPaths, n, capacityChanged);

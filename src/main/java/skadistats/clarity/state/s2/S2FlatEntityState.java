@@ -1,7 +1,6 @@
 package skadistats.clarity.state.s2;
 
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.io.decoder.DecoderDispatch;
 import skadistats.clarity.io.decoder.StringLenDecoder;
 import skadistats.clarity.io.decoder.StringZeroTerminatedDecoder;
@@ -120,8 +119,7 @@ public final class S2FlatEntityState extends S2EntityState {
         };
     }
 
-    @Override
-    public boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs) {
+    public int decodeIntoLeaf(S2FieldPath fp, BitStream bs) {
         Entry current = rootEntry;
         FieldLayout layout = current.rootLayout;
         var base = 0;
@@ -156,31 +154,34 @@ public final class S2FlatEntityState extends S2EntityState {
             i++;
         }
 
-        return switch (layout) {
+        switch (layout) {
             case FieldLayout.Primitive p -> {
                 var data = current.data;
                 var flagPos = base + p.offset();
                 var oldFlag = data[flagPos];
                 data[flagPos] = 1;
-                DecoderDispatch.decodeInto(bs, decoder, data, flagPos + 1);
-                yield oldFlag == 0;
+                DecoderDispatch.decodeInto(bs, p.decoder(), data, flagPos + 1);
+                return oldFlag == 0 ? 1 : 0;
             }
             case FieldLayout.InlineString is -> {
                 var data = current.data;
                 var flagPos = base + is.offset();
                 var oldFlag = data[flagPos];
                 data[flagPos] = 1;
-                if (decoder instanceof StringZeroTerminatedDecoder) {
+                if (is.decoder() instanceof StringZeroTerminatedDecoder) {
                     StringZeroTerminatedDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
                 } else {
                     StringLenDecoder.decodeIntoInline(bs, data, flagPos + 1, is.maxLength());
                 }
-                yield oldFlag == 0;
+                return oldFlag == 0 ? 1 : 0;
             }
-            case FieldLayout.Ref r -> writeValue(current, r, base, DecoderDispatch.decode(bs, decoder));
-            case FieldLayout.SubState s -> throw new IllegalStateException("decodeInto called on SubState leaf: " + s);
-            default -> throw new IllegalStateException("decodeInto on unknown leaf layout: " + layout);
-        };
+            case FieldLayout.Ref r -> {
+                return writeValue(current, r, base, DecoderDispatch.decode(bs, r.decoder())) ? 1 : 0;
+            }
+            default -> {
+                return -1;
+            }
+        }
     }
 
     @Override

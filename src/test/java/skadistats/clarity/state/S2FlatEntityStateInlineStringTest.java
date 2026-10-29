@@ -3,7 +3,6 @@ package skadistats.clarity.state;
 import skadistats.clarity.protobuf.ByteString;
 import org.testng.annotations.Test;
 import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.StringLenDecoder;
 import skadistats.clarity.model.s2.Serializer;
 import skadistats.clarity.state.s2.FieldLayoutBuilder;
 import skadistats.clarity.state.s2.S2FlatEntityState;
@@ -79,9 +78,8 @@ public class S2FlatEntityStateInlineStringTest {
         var ser = serializer("S", named("s", stringField()));
         var st = makeFlat(ser);
 
-        var decoder = new StringLenDecoder();
         var bs = encodedStringStream("hello, clarity");
-        st.decodeInto(fp(0), decoder, bs);
+        st.decodeIntoLeaf(fp(0), bs);
 
         assertEquals(st.getValueForFieldPath(fp(0)), "hello, clarity",
             "decodeInto writes inline; getValueForFieldPath reads back the same String");

@@ -73,7 +73,7 @@ public class FlatWriteBench {
         // Pre-warm: first write trips capacity-change; subsequent writes hit the
         // steady-state path we want to measure.
         var pre = BitStream.createBitStream(ByteString.copyFrom(sourceBytes));
-        state.decodeInto(fp, decoder, pre);
+        state.decodeIntoLeaf(fp, pre);
     }
 
     @Setup(Level.Invocation)
@@ -87,10 +87,9 @@ public class FlatWriteBench {
         var s = bs;
         var st = state;
         var p = fp;
-        var dec = decoder;
         var cap = false;
         for (var i = 0; i < ITERS; i++) {
-            cap ^= st.decodeInto(p, dec, s);
+            cap ^= st.decodeIntoLeaf(p, s) == 1;
         }
         return cap;
     }

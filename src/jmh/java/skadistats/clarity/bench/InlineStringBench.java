@@ -86,7 +86,7 @@ public class InlineStringBench {
         // Pre-warm: first write trips capacity-change; subsequent writes hit the
         // steady-state path we want to measure.
         var pre = BitStream.createBitStream(ByteString.copyFrom(sourceBytes));
-        state.decodeInto(fp, decoder, pre);
+        state.decodeIntoLeaf(fp, pre);
     }
 
     @Setup(Level.Invocation)
@@ -103,10 +103,9 @@ public class InlineStringBench {
         var s = bs;
         var st = state;
         var p = fp;
-        var dec = decoder;
         var acc = 0;
         for (var i = 0; i < ITERS; i++) {
-            st.decodeInto(p, dec, s);
+            st.decodeIntoLeaf(p, s);
             var v = (String) st.getValueForFieldPath(p);
             acc += v.length();
         }

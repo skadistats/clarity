@@ -14,11 +14,10 @@ import java.util.Random;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertThrows;
 import static org.testng.Assert.assertTrue;
 import static skadistats.clarity.state.TestFields.*;
 
-public class S2FlatEntityStateDecodeIntoTest {
+public class S2FlatEntityStateDecodeIntoLeafTest {
 
     private static final long SEED = 0xC01D_CAFEL;
 
@@ -60,7 +59,7 @@ public class S2FlatEntityStateDecodeIntoTest {
 
         var decoded = DecoderDispatch.decode(bsA, decoder);
         var capA = stA.applyMutation(fp(0), new StateMutation.WriteValue(decoded));
-        var capB = stB.decodeInto(fp(0), decoder, bsB);
+        var capB = stB.decodeIntoLeaf(fp(0), bsB) == 1;
 
         assertEquals(bsB.pos(), bsA.pos(), "both paths consume identical bits");
         assertEquals(stB.rootDataForTest(), stA.rootDataForTest(), "byte-identical root data");
@@ -80,7 +79,7 @@ public class S2FlatEntityStateDecodeIntoTest {
 
         var decoded = DecoderDispatch.decode(bsA, decoder);
         stA.applyMutation(fp(0), new StateMutation.WriteValue(decoded));
-        stB.decodeInto(fp(0), decoder, bsB);
+        stB.decodeIntoLeaf(fp(0), bsB);
 
         assertEquals(stB.rootDataForTest(), stA.rootDataForTest(), "byte-identical root data");
     }
@@ -100,7 +99,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         var bsB = freshStream();
         var decoded = DecoderDispatch.decode(bsA, decoder);
         stA.applyMutation(fp(0, 2, 0), new StateMutation.WriteValue(decoded));
-        stB.decodeInto(fp(0, 2, 0), decoder, bsB);
+        stB.decodeIntoLeaf(fp(0, 2, 0), bsB);
 
         assertEquals(bsB.pos(), bsA.pos());
         assertEquals(read(stA, fp(0, 2, 0)), read(stB, fp(0, 2, 0)));
@@ -122,7 +121,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         var bsB = freshStream();
         var decoded = DecoderDispatch.decode(bsA, decoder);
         stA.applyMutation(fp(0, 0), new StateMutation.WriteValue(decoded));
-        stB.decodeInto(fp(0, 0), decoder, bsB);
+        stB.decodeIntoLeaf(fp(0, 0), bsB);
 
         assertEquals(read(stA, fp(0, 0)), read(stB, fp(0, 0)));
     }
@@ -139,7 +138,7 @@ public class S2FlatEntityStateDecodeIntoTest {
 
         var decoded = DecoderDispatch.decode(bsA, decoder);
         stA.applyMutation(fp(0), new StateMutation.WriteValue(decoded));
-        var capB = stB.decodeInto(fp(0), decoder, bsB);
+        var capB = stB.decodeIntoLeaf(fp(0), bsB) == 1;
 
         assertEquals(read(stB, fp(0)), read(stA, fp(0)),
             "decodeInto on Ref leaf matches WriteValue(decode) result");
@@ -147,14 +146,13 @@ public class S2FlatEntityStateDecodeIntoTest {
     }
 
     @Test
-    public void decodeIntoOnSubStateLeafThrows() {
+    public void decodeIntoLeafOnSubStateReturnsMinusOne() {
         var element = serializer("E", named("x", intField()));
         var ser = serializer("S", named("v", vectorFieldOf(serializerField(element))));
         var st = makeFlat(ser);
 
-        // fp(0) targets the vector substate as a leaf — structural mutation path
-        assertThrows(IllegalStateException.class,
-            () -> st.decodeInto(fp(0), intDecoder(), freshStream()));
+        // fp(0) targets the vector substate as a leaf — caller falls back to the write path
+        assertEquals(st.decodeIntoLeaf(fp(0), freshStream()), -1);
     }
 
     @Test
@@ -162,8 +160,8 @@ public class S2FlatEntityStateDecodeIntoTest {
         var ser = serializer("S", named("a", intField()));
         var st = makeFlat(ser);
 
-        var cap1 = st.decodeInto(fp(0), intDecoder(), freshStream());
-        var cap2 = st.decodeInto(fp(0), intDecoder(), freshStream());
+        var cap1 = st.decodeIntoLeaf(fp(0), freshStream()) == 1;
+        var cap2 = st.decodeIntoLeaf(fp(0), freshStream()) == 1;
 
         assertTrue(cap1, "first write: null→value returns true");
         assertFalse(cap2, "second write: value→value returns false");
@@ -244,7 +242,7 @@ public class S2FlatEntityStateDecodeIntoTest {
         st.applyMutation(fp(0), new StateMutation.WriteValue(1));
 
         var cp = (S2FlatEntityState) st.copy();
-        cp.decodeInto(fp(0), intDecoder(), freshStream());
+        cp.decodeIntoLeaf(fp(0), freshStream());
 
         assertEquals(read(st, fp(0)), 1, "original unchanged by cp.decodeInto");
     }

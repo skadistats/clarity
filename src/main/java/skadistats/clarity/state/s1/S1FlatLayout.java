@@ -31,13 +31,13 @@ public final class S1FlatLayout {
             var decoder = receiveProps[i].getSendProp().getDecoder();
             var primType = decoder.getPrimitiveType();
             if (primType != null) {
-                leaves[i] = new FieldLayout.Primitive(offset, primType);
+                leaves[i] = new FieldLayout.Primitive(offset, primType, decoder);
                 offset += 1 + primType.size();
             } else if (decoder instanceof StringLenDecoder) {
-                leaves[i] = new FieldLayout.InlineString(offset, INLINE_STRING_MAX_LENGTH);
+                leaves[i] = new FieldLayout.InlineString(offset, INLINE_STRING_MAX_LENGTH, decoder);
                 offset += 1 + 2 + INLINE_STRING_MAX_LENGTH;
             } else {
-                leaves[i] = new FieldLayout.Ref(offset);
+                leaves[i] = new FieldLayout.Ref(offset, decoder);
                 offset += 1 + 4;
                 refSlots++;
             }

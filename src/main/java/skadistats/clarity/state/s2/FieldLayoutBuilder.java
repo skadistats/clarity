@@ -92,14 +92,14 @@ public final class FieldLayoutBuilder {
                 var decoder = vf.getDecoder();
                 var primitive = decoder.getPrimitiveType();
                 if (primitive != null) {
-                    yield new Built(new FieldLayout.Primitive(offset, primitive), FLAG_BYTE + primitive.size());
+                    yield new Built(new FieldLayout.Primitive(offset, primitive, decoder), FLAG_BYTE + primitive.size());
                 }
                 if (decoder instanceof StringZeroTerminatedDecoder || decoder instanceof StringLenDecoder) {
                     var maxLength = stringMaxLength(vf.getType());
-                    var layout = new FieldLayout.InlineString(offset, maxLength);
+                    var layout = new FieldLayout.InlineString(offset, maxLength, decoder);
                     yield new Built(layout, FLAG_BYTE + STRING_LENGTH_PREFIX_BYTES + maxLength);
                 }
-                yield new Built(new FieldLayout.Ref(offset), FLAG_BYTE + SLOT_INDEX_BYTES);
+                yield new Built(new FieldLayout.Ref(offset, decoder), FLAG_BYTE + SLOT_INDEX_BYTES);
             }
         };
     }

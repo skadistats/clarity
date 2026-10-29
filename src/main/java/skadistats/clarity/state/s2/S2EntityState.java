@@ -1,7 +1,5 @@
 package skadistats.clarity.state.s2;
 
-import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.s2.Field;
 import skadistats.clarity.model.s2.FieldType;
 import skadistats.clarity.model.s2.S2FieldPath;
@@ -93,8 +91,6 @@ public abstract sealed class S2EntityState implements EntityState
     public abstract <T> T getValueForFieldPath(S2FieldPath fp);
 
     public abstract boolean write(S2FieldPath fp, Object decoded);
-
-    public abstract boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs);
 
     public abstract boolean applyMutation(S2FieldPath fp, StateMutation mutation);
 

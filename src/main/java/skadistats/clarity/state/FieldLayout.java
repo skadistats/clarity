@@ -1,12 +1,13 @@
 package skadistats.clarity.state;
 
+import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.s2.Serializer;
 
 public sealed interface FieldLayout {
 
-    record Primitive(int offset, PrimitiveType type) implements FieldLayout {}
+    record Primitive(int offset, PrimitiveType type, Decoder decoder) implements FieldLayout {}
 
-    record Ref(int offset) implements FieldLayout {}
+    record Ref(int offset, Decoder decoder) implements FieldLayout {}
 
     /**
      * Inline-string leaf. Reserves {@code 1 (flag) + 2 (length prefix) + maxLength}
@@ -14,7 +15,7 @@ public sealed interface FieldLayout {
      * {@code offset+1..offset+2}; UTF-8 bytes at {@code offset+3..offset+3+length-1}.
      * Bytes past the recorded length may hold stale data from prior writes.
      */
-    record InlineString(int offset, int maxLength) implements FieldLayout {}
+    record InlineString(int offset, int maxLength, Decoder decoder) implements FieldLayout {}
 
     record Composite(FieldLayout[] children) implements FieldLayout {}
 

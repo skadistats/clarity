@@ -1,8 +1,6 @@
 package skadistats.clarity.state.s2;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectAVLTreeMap;
-import skadistats.clarity.io.bitstream.BitStream;
-import skadistats.clarity.io.decoder.Decoder;
 import skadistats.clarity.model.FieldPath;
 import skadistats.clarity.model.s2.S2FieldPath;
 import skadistats.clarity.model.s2.Serializer;
@@ -56,11 +54,6 @@ public final class S2TreeMapEntityState extends S2EntityState {
             case VectorField vf              -> trimEntries(fp, (Integer) decoded);
             default                          -> writeValue(fp, decoded);
         };
-    }
-
-    @Override
-    public boolean decodeInto(S2FieldPath fp, Decoder decoder, BitStream bs) {
-        throw new UnsupportedOperationException("decodeInto is implemented only on S2FlatEntityState (S2) and S1FlatEntityState (S1)");
     }
 
     @Override
