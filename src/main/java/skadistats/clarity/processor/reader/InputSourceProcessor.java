@@ -26,6 +26,7 @@ import skadistats.clarity.wire.shared.demo.proto.Demo;
 
 import java.io.EOFException;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -43,7 +44,17 @@ public class InputSourceProcessor {
 
     private static final Logger log = PrintfLoggerFactory.getLogger(LogChannel.runner);
 
+    private static final int MAX_CACHED_KIND = 1 << 16;
+    private static final int COMPUTED = 1;
+    private static final int UNKNOWN = 2;
+    private static final int ON_MESSAGE = 4;
+    private static final int POST_EMBEDDED = 8;
+    private static final int USER_MESSAGE = 16;
+
     private boolean unpackUserMessages = false;
+    private byte[] kindFlags = new byte[1024];
+    @SuppressWarnings("unchecked")
+    private Class<? extends GeneratedMessage>[] kindClass = new Class[1024];
 
     @Insert
     private Context ctx;
@@ -238,33 +249,65 @@ public class InputSourceProcessor {
                         String.format("invalid embedded packet size: got %d remaining bits, but size is %d bits.", bs.remaining(), size * 8)
                 );
             }
-            var messageClass = engineType.embeddedPacketClassForKind(kind);
-            if (messageClass == null) {
+            Class<? extends GeneratedMessage> messageClass;
+            int flags;
+            if (kind > 0 && kind < MAX_CACHED_KIND) {
+                if (kind >= kindFlags.length) {
+                    kindFlags = Arrays.copyOf(kindFlags, Math.max(kind + 1, kindFlags.length * 2));
+                    kindClass = Arrays.copyOf(kindClass, kindFlags.length);
+                }
+                flags = kindFlags[kind];
+                if (flags == 0) {
+                    kindClass[kind] = engineType.embeddedPacketClassForKind(kind);
+                    flags = computeKindFlags(kindClass[kind]);
+                    kindFlags[kind] = (byte) flags;
+                }
+                messageClass = kindClass[kind];
+            } else {
+                messageClass = engineType.embeddedPacketClassForKind(kind);
+                flags = computeKindFlags(messageClass);
+            }
+            if ((flags & UNKNOWN) != 0) {
                 logUnknownMessage("embedded", kind);
                 bs.skip(size * 8);
-            } else {
-                if (evOnMessage.isListenedTo(messageClass) || evOnPostEmbeddedMessage.isListenedTo(messageClass) || (unpackUserMessages && messageClass == CommonNetMessages.CSVCMsg_UserMessage.class)) {
-                    var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
-                    if (evOnMessage.isListenedTo(messageClass)) {
-                        evOnMessage.raise(subMessage);
-                    }
-                    if (unpackUserMessages && messageClass == CommonNetMessages.CSVCMsg_UserMessage.class) {
-                        var userMessage = (CommonNetMessages.CSVCMsg_UserMessage) subMessage;
-                        var umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
-                        if (umClazz == null) {
-                            logUnknownMessage("usermessage", userMessage.getMsgType());
-                        } else {
-                            evOnMessage.raise(Packet.parse(umClazz, userMessage.getMsgData()));
-                        }
-                    }
-                    if (evOnPostEmbeddedMessage.isListenedTo(messageClass)) {
-                        evOnPostEmbeddedMessage.raise(subMessage, bs);
-                    }
-                } else {
-                    bs.skip(size * 8);
+            } else if ((flags & (ON_MESSAGE | POST_EMBEDDED | USER_MESSAGE)) != 0) {
+                var subMessage = Packet.parse(messageClass, ZeroCopy.wrap(packetReader.readFromBitStream(bs, size * 8)));
+                if ((flags & ON_MESSAGE) != 0) {
+                    evOnMessage.raise(subMessage);
                 }
+                if ((flags & USER_MESSAGE) != 0) {
+                    var userMessage = (CommonNetMessages.CSVCMsg_UserMessage) subMessage;
+                    var umClazz = engineType.userMessagePacketClassForKind(userMessage.getMsgType());
+                    if (umClazz == null) {
+                        logUnknownMessage("usermessage", userMessage.getMsgType());
+                    } else {
+                        evOnMessage.raise(Packet.parse(umClazz, userMessage.getMsgData()));
+                    }
+                }
+                if ((flags & POST_EMBEDDED) != 0) {
+                    evOnPostEmbeddedMessage.raise(subMessage, bs);
+                }
+            } else {
+                bs.skip(size * 8);
             }
         }
+    }
+
+    private int computeKindFlags(Class<? extends GeneratedMessage> messageClass) {
+        if (messageClass == null) {
+            return COMPUTED | UNKNOWN;
+        }
+        var flags = COMPUTED;
+        if (evOnMessage.isListenedTo(messageClass)) {
+            flags |= ON_MESSAGE;
+        }
+        if (evOnPostEmbeddedMessage.isListenedTo(messageClass)) {
+            flags |= POST_EMBEDDED;
+        }
+        if (unpackUserMessages && messageClass == CommonNetMessages.CSVCMsg_UserMessage.class) {
+            flags |= USER_MESSAGE;
+        }
+        return flags;
     }
 
 }
